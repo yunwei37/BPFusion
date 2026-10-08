@@ -38,7 +38,6 @@ int main(int argc, char **argv)
 	struct bpf_object *bo;
 	struct bpf_program *prog;
 	int err, ctl_fd, stats_fd;
-	long pg = sysconf(_SC_PAGESIZE);
 	struct bf_page *page;
 	struct bpf_tc_hook hook;
 	struct bpf_tc_opts opts;
