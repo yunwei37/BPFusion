@@ -18,7 +18,7 @@ LDLIBS   := -lbpf -lelf -lz -lpthread
 BPF_SRCS := $(wildcard bpf/*.bpf.c)
 BPF_OBJS := $(patsubst bpf/%.bpf.c,$(BUILD)/%.bpf.o,$(BPF_SRCS))
 TOOLS    := $(BUILD)/wake_probe $(BUILD)/client $(BUILD)/echo_udp \
-            $(BUILD)/bpfusion_load
+            $(BUILD)/bpfusion_load $(BUILD)/perfcount
 
 .PHONY: all probes tools executor clean run-probe run-executor
 
@@ -47,6 +47,9 @@ $(BUILD)/echo_udp: tools/echo_udp.c | $(BUILD)
 	$(CC) $(CFLAGS) $< -o $@
 $(BUILD)/bpfusion_load: tools/bpfusion_load.c bpf/include/bpfusion_queue.h | $(BUILD)
 	$(CC) $(CFLAGS) -Ibpf/include $< -o $@ $(LDLIBS)
+
+$(BUILD)/perfcount: tools/perfcount.c | $(BUILD)
+	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD)/executor: executor/executor.cu bpf/include/bpfusion_queue.h \
                    executor/cuda_timer.h | $(BUILD)

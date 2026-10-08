@@ -50,6 +50,8 @@ Measured results, with the honest costs, are in:
   netdevice** (veth across two netns), not loopback: no measurable penalty
 - `docs/findings/0007-concurrency-slo.md` — concurrency sweep: token goodput
   flat at ~119 tok/s, TTFT scales with queue depth (batch-1 executor)
+- `docs/findings/0008-instructions-per-token.md` — retired CPU instructions
+  per token (perf_event_open): ~40–50 M/token, i.e. Python is the CPU bottleneck
 
 ## Build
 

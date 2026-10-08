@@ -1,0 +1,10 @@
+=== BPFusion CPU instructions/token (saturated), 2026-10-08T06:54:21Z ===
+model=Qwen/Qwen2.5-0.5B-Instruct gen=16 host-Python HF decode, batch 1
+
+threads=4 gen=16 wall=8.12s tokens=960 (118 tok/s)
+executor instructions=46.264 G instructions/token=48.2e6 M
+
+threads=16 gen=16 wall=8.59s tokens=1088 (127 tok/s)
+executor instructions=46.719 G instructions/token=42.9e6 M
+
+reference: llm_load conc sweep = 119 tok/s single-stream
