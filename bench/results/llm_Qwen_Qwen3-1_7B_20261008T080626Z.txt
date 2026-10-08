@@ -1,0 +1,28 @@
+== BPFusion LLM matched run 20261008T080626Z ==
+host: Linux 7.3.0-070300rc3-generic  24 cpus
+gpu: NVIDIA GeForce RTX 5090, 610.57.04
+model: Qwen/Qwen3-1.7B (fp16, batch 1, host-Python executor)
+params: seconds=110 gen=32 rounds=6
+
+--- load ---
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:  44%|████▍     | 137/311 [00:00<00:00, 1337.30it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 1545.86it/s]
+executor: model loaded, page 0x77d39e7d2000, llm ring off 12856, slot 560B
+executor: TCP listener on 0.0.0.0:39403
+prompt='The capital of France is' prompt_tok=5 gen=32
+direct    TTFT us: p50=12993 min=12935 max=14476 | TPOT us: p50=12685.9 min=12640.6 max=12861.3
+bpfusion  TTFT us: p50=13075 min=12975 max=14207 | TPOT us: p50=12742.8 min=12591.7 max=12785.6
+bpfusion-tcp TTFT us: p50=15685 min=15284 max=15811 | TPOT us: p50=12716.4 min=12682.4 max=12740.4
+
+--- ingress stats ---
+seen pkts      455
+ip+udp/ip+tcp pkts 441
+magic pkts     0
+drops          0
+published      0
+drop: ctl busy 0
+drop: done busy 0
+llm magic      14
+llm busy       0
+tcp dest       224
+tcp magic      7
