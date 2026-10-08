@@ -1,0 +1,31 @@
+== BPFusion LLM TCP-path run 20261008T074651Z ==
+host: Linux 7.3.0-070300rc3-generic  24 cpus
+gpu: NVIDIA GeForce RTX 5090, 610.57.04
+model: Qwen/Qwen2.5-0.5B-Instruct (fp16, batch 1, host-Python executor)
+params: seconds=75 gen=32 rounds=6
+
+--- bench ---
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4956.03it/s]
+executor: model loaded, page 0x77f3c59d8000, llm ring off 12856, slot 560B
+executor: TCP listener on 0.0.0.0:39403
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4110.28it/s]
+prompt='The capital of France is' prompt_tok=5 gen=32
+direct    TTFT us: p50=9047 min=8931 max=9925 | TPOT us: p50=8308.0 min=8277.2 max=8349.0
+bpfusion  TTFT us: p50=8999 min=8832 max=9723 | TPOT us: p50=8236.4 min=8209.5 max=8278.1
+bpfusion-tcp TTFT us: p50=11624 min=11236 max=11808 | TPOT us: p50=8340.0 min=8298.6 max=8422.3
+text: ' Paris. It is the largest city in Europe and the third largest city in the world. It is located in the south'
+executor: served=20 last gen=32 tok 268.4 ms
+tcp reply path: TTFT us p50=11857 min=11314 max=12351 | TPOT us p50=8363.1 min=8330.5 max=8396.0
+
+--- ingress stats ---
+seen pkts      881
+ip+udp/ip+tcp pkts 867
+magic pkts     0
+drops          0
+published      0
+drop: ctl busy 0
+drop: done busy 0
+llm magic      20
+llm busy       0
+tcp dest       440
+tcp magic      13

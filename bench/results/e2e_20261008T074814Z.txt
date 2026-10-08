@@ -1,0 +1,70 @@
+== BPFusion end-to-end run 20261008T074814Z ==
+host: Linux 7.3.0-070300rc3-generic  24 cpus
+cmdline: BOOT_IMAGE=/boot/vmlinuz-7.3.0-070300rc3-generic root=UUID=85355174-a2ad-4e84-bf78-53fac30b89fb ro panic=10 lsm=landlock,lockdown,yama,integrity,apparmor,bpf splash quiet iommu=pt vt.handoff=7
+gpu: NVIDIA GeForce RTX 5090, 610.57.04
+params: seconds=25 work=8 batch=8 gpu_cpu=6 resp_cpu=7 idle=1
+
+--- daemon ---
+daemon: resident kernel, slots=64 work=8 gpu_cpu=6 resp_cpu=7 idle=1 (batch=8 ignored)
+daemon: globaltimer offset=-1791210731546657155 ns (spread 589 ns)
+
+--- client: verify (numeric agreement with the CPU reference) ---
+verify: GPU  y[0..3] = 0.000000 -0.000000 -0.000000 0.000000
+verify: CPU  y[0..3] = 0.000000 0.000000 -0.000000 -0.000000
+verify: max |GPU - CPU| = 1.341e-11 (OK)
+verify: resp magic=46504251 id=0 client_ns_echo=yes
+
+--- client: own (one request in flight) ---
+client: mode=own sent=2000 got=2000 lost=0
+round trip (client)                n=   2000  p50=   65768  p90=   68482  p99=  256358  max=    965665  mean=    72231 ns
+  parse -> GPU start               n=   2000  p50=     590  p90=    1287  p99=    1676  max=      2370  mean=      594 ns
+  GPU start -> GPU done            n=   2000  p50=   49984  p90=   51104  p99=   52224  max=    207232  mean=    49981 ns
+goodput: 13845 req/s (one at a time, 1/mean RTT)
+wall: 13889 req/s over 144 ms
+
+burst: depth=8 rounds=500 sent=4000 received=4000 lost=0
+pipelined completion (client)      n=   4000  p50=  284926  p90=  459979  p99=  854942  max=   1280234  mean=   276323 ns
+throughput: 16099 req/s (depth 8)
+
+--- client: paced (2000 req/s for 3000 ms) ---
+paced: sent=6001 received=6000 in 3000 ms -> 2000 req/s
+daemon: consumed=12002 published=12002 head=12002 drops=0 acked=12002
+daemon: drained=12002 served=12002 errors=0 futex_timeouts=0
+daemon: gpu batches busy=13480923 idle_polls=303833560 (busy_wall 2.8% of 25.00 s; wall 480 req/s)
+daemon: gpu kernel 0.60 s busy_wall 0.70 s wait 24.30 s -> occupancy 85.2% (bubble 0.10 s)
+GPU start -> GPU done              n=  12002  p50=   49696  p90=   50944  p99=   52032  max=    207232  mean=    49758 ns
+kernel parse -> GPU done           n=  12002  p50=   48929  p90=  333599  p99=  451357  max=    484821  mean=   113584 ns
+responder sendto()                 n=  12002  p50=    1800  p90=    2238  p99=    3990  max=     23221  mean=     1856 ns
+
+--- page/BPF counters ---
+seen pkts      24004
+ip+udp/ip+tcp pkts 12002
+magic pkts     12002
+drops          0
+published      12002
+drop: ctl busy 0
+drop: done busy 0
+llm magic      0
+llm busy       0
+tcp dest       0
+tcp magic      0
+head=12002 done_seq=12003 published=12002 acked=12002 drops=0 ready=1
+slot[0]: state=0 id=11968 client_ns=234967875104613 x[0]=0.190000 | done state=0 id=11968 y[0]=0.000000
+slot[1]: state=0 id=11969 client_ns=234967875604620 x[0]=0.320000 | done state=0 id=11969 y[0]=-0.000000
+slot[2]: state=0 id=11970 client_ns=234967876104604 x[0]=0.080000 | done state=0 id=11970 y[0]=0.000000
+slot[3]: state=0 id=11971 client_ns=234967876604606 x[0]=0.210000 | done state=0 id=11971 y[0]=-0.000000
+detached from lo
+
+=== baseline: userspace UDP echo (port 39401, tc hook still attached) ===
+echo_udp: port=39401 cpu=7
+--- baseline client: own (one request in flight) ---
+client: mode=own sent=2000 got=2000 lost=0
+round trip (client)                n=   2000  p50=    7134  p90=    7883  p99=   13495  max=    849046  mean=     8094 ns
+  parse -> GPU start               n=   2000  p50=       0  p90=       0  p99=       0  max=         0  mean=        0 ns
+  GPU start -> GPU done            n=   2000  p50=       0  p90=       0  p99=       0  max=         0  mean=        0 ns
+goodput: 123553 req/s (one at a time, 1/mean RTT)
+wall: 125000 req/s over 16 ms
+--- baseline client: burst (pipeline depth 8) ---
+burst: depth=8 rounds=500 sent=4000 received=4000 lost=0
+pipelined completion (client)      n=   4000  p50=   10288  p90=   14241  p99=   16350  max=    817290  mean=    11944 ns
+throughput: 381766 req/s (depth 8)

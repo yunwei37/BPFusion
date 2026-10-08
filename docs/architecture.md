@@ -42,6 +42,24 @@ The same page carries a second, independent token ring for the LLM path:
         |  prefill + decode; writes tok_out[k], bumps produced after each token
         v
   client polls the slot; TTFT/TPOT from successive `produced` bumps
+
+The LLM ring serves two transports. UDP (:39402) replies by having the client
+poll `produced` in the page (above). TCP (:39403) parses the same request from a
+stream segment at the tc hook, records `pad=1` + the peer in the slot, and the
+executor streams each token id as a LE `u32` back on the accepted socket
+(`0009`):
+
+```
+  client connect/send (TCP :39403)
+        |
+        v
+  tc ingress TCP branch -> llm_fill(pad=1, peer=saddr:sport) -> slot PENDING
+        |
+        v
+  resident LLM executor  ->  send(token) on the accepted socket (TCP_NODELAY)
+        |
+        v
+  client recv (len = gen*4 bytes)
 ```
 
 See `docs/findings/0005-resident-llm.md`.
@@ -88,11 +106,13 @@ completion the responder is still reading.
 | `tools/llm_load.py` | LLM concurrency sweep (goodput / TTFT / TPOT) |
 | `tools/perfcount.c` | per-PID instruction/cycle counting (perf_event_open) |
 | `tools/insn_token.py` | CPU instructions per generated token under load |
+| `tools/llm_tcp_client.py` | TCP LLM client (request in, tokens on the socket) |
 
 ## What is not here yet
 
-- TCP path (`sockops`/`sockmap` + kernel TX) — today the reply is a userspace
-  `sendto`, not an asynchronous kernel TX completion.
+- `sockops`/`sockmap` + kernel TX — today the TCP reply is a userspace `send` on
+  the accepted socket (`0009`), not an asynchronous kernel TX completion; the
+  ingress side already parses TCP at the tc hook.
 - **GPU-side tokenization and sampling** — the LLM executor is host Python
   driving HF `transformers`; prefill/decode run on the GPU but tokenize/detokenize
   and the token stream into the page are host work.

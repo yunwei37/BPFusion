@@ -25,9 +25,11 @@
 
 #include "bpfusion_queue.h"
 
-static const char *stats_name[] = {"seen pkts", "ip+udp pkts", "magic pkts",
-				   "drops", "published", "drop: ctl busy",
-				   "drop: done busy", "timeouts"};
+static const char *stats_name[] = {"seen pkts", "ip+udp/ip+tcp pkts",
+				   "magic pkts", "drops", "published",
+				   "drop: ctl busy", "drop: done busy",
+				   "llm magic", "llm busy",
+				   "tcp dest", "tcp magic"};
 
 int main(int argc, char **argv)
 {
@@ -68,7 +70,7 @@ int main(int argc, char **argv)
 			perror("mmap ctl");
 			return 1;
 		}
-		for (i = 0; i < 8; i++) {
+		for (i = 0; i < 11; i++) {
 			__u32 k = (__u32)i;
 
 			if (bpf_map_lookup_elem(stats_fd, &k, &v) == 0)

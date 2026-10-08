@@ -81,12 +81,42 @@ def bpfusion(page, s, dest, ids, n_gen):
     return ttft, tpot, page.slot(slot)[11][:n_gen]
 
 
+def bpfusion_tcp(host, port, ids, n_gen):
+    """Same request over TCP; tokens arrive on the accepted socket."""
+    n_prompt = len(ids)
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host, port))
+    s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+    hdr = struct.pack("<IIIIQ", BF_LLM_MAGIC, n_prompt, n_gen, 0,
+                      time.monotonic_ns())
+    t_send = time.perf_counter()
+    s.sendall(hdr + struct.pack(f"<{n_prompt}I", *ids))
+    stamps, toks, buf = [], [], b""
+    while len(toks) < n_gen:
+        chunk = s.recv(4096)
+        if not chunk:
+            break
+        buf += chunk
+        while len(buf) >= 4 and len(toks) < n_gen:
+            toks.append(struct.unpack("<I", buf[:4])[0])
+            stamps.append(time.perf_counter())
+            buf = buf[4:]
+    s.close()
+    if len(toks) < n_gen:
+        return None
+    ttft = (stamps[0] - t_send) * 1e6
+    tpot = (stamps[-1] - stamps[0]) / (n_gen - 1) * 1e6
+    return ttft, tpot, toks
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
     ap.add_argument("--prompt", default="The capital of France is")
     ap.add_argument("--gen", type=int, default=32)
     ap.add_argument("--rounds", type=int, default=5)
+    ap.add_argument("--tcp", action="store_true",
+                    help="also bench the TCP reply path")
     a = ap.parse_args()
 
     tok = AutoTokenizer.from_pretrained(a.model)
@@ -104,8 +134,13 @@ def main():
     bpfusion(page, s, dest, ids, 4)
 
     print(f"prompt={a.prompt!r} prompt_tok={len(ids)} gen={a.gen}")
-    for name, fn in (("direct", lambda: direct(model, tok, a.prompt, a.gen)),
-                     ("bpfusion", lambda: bpfusion(page, s, dest, ids, a.gen))):
+    routes = [("direct", lambda: direct(model, tok, a.prompt, a.gen)),
+              ("bpfusion", lambda: bpfusion(page, s, dest, ids, a.gen))]
+    if a.tcp:
+        bpfusion_tcp("127.0.0.1", 39403, ids, 4)  # warm
+        routes.append(("bpfusion-tcp",
+                       lambda: bpfusion_tcp("127.0.0.1", 39403, ids, a.gen)))
+    for name, fn in routes:
         tt, tp = [], []
         for _ in range(a.rounds):
             r = fn()

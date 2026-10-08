@@ -10,7 +10,7 @@
 #
 # The page is opened with bpf_obj_get + mmap (the same pinned object the C
 # executor uses), so this is the same queue, not a side channel.
-import argparse, ctypes, mmap, os, struct, sys, time
+import argparse, ctypes, mmap, os, socket, struct, sys, threading, time
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -19,6 +19,7 @@ SYSFS = "/sys/fs/bpf/bpfusion_ctl"
 
 BF_LLM_SLOTS = 8
 BF_LLM_MAX_TOK = 64
+BF_LLM_TCP_PORT = 39403
 
 # Must match struct bf_llm_slot in bpf/include/bpfusion_queue.h, in order.
 #   u32 state, n_gen, n_prompt, produced, addr_be; u16 port_be, pad;
@@ -84,12 +85,32 @@ class Page:
         struct.pack_into("<I", self.mm, off, BF_FREE)
 
 
+def tcp_accept_loop(lsock, conns, lock, stop):
+    """Accept client connections and keep them in a {peer_key: sock} map so the
+    executor can stream tokens back on the socket the request arrived on."""
+    lsock.settimeout(0.2)
+    while not stop[0]:
+        try:
+            c, peer = lsock.accept()
+        except socket.timeout:
+            continue
+        except OSError:
+            break
+        key = (peer[0], peer[1])
+        c.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        with lock:
+            conns[key] = c
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
     ap.add_argument("--seconds", type=int, default=30)
     ap.add_argument("--dtype", default="float16", choices=["float16", "float32"])
     ap.add_argument("--eager", action="store_true", help="disable CUDA graphs / compile")
+    ap.add_argument("--tcp", action="store_true",
+                    help="stream tokens back over the request's TCP socket")
+    ap.add_argument("--tcp-bind", default="0.0.0.0")
     a = ap.parse_args()
 
     torch.backends.cuda.matmul.allow_tf32 = True
@@ -102,6 +123,20 @@ def main():
     page = Page(mm, base)
     print(f"executor: model loaded, page {base:#x}, llm ring off {LLM_RING_OFF}, "
           f"slot {LLM_SLOT_SIZE}B", flush=True)
+
+    conns = {}
+    conns_lock = threading.Lock()
+    stop = [False]
+    if a.tcp:
+        lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        lsock.bind((a.tcp_bind, BF_LLM_TCP_PORT))
+        lsock.listen(64)
+        threading.Thread(target=tcp_accept_loop,
+                         args=(lsock, conns, conns_lock, stop),
+                         daemon=True).start()
+        print(f"executor: TCP listener on {a.tcp_bind}:{BF_LLM_TCP_PORT}",
+              flush=True)
 
     def generate(prompt_ids, n_gen):
         """Yield generated ids one at a time."""
@@ -126,23 +161,39 @@ def main():
         if head == seen:
             continue
         if head - seen > BF_LLM_SLOTS:
-            # More requests published than the ring holds: resync to the
-            # oldest still-live slot instead of chasing lost indices.
             seen = head - BF_LLM_SLOTS
         idx = seen % BF_LLM_SLOTS
         (state, n_gen, n_prompt, produced, addr_be, port_be, pad,
          client_ns, ingress_ns, gpu_done_ns, tok_in, tok_out) = page.slot(idx)
         if state != BF_PENDING:
-            # Dropped/skipped request: advance so we do not livelock here.
             seen += 1
             continue
         prompt = list(tok_in[:n_prompt])
+        # For a TCP request, find the accepted connection this segment came
+        # from so tokens can be streamed back on the same socket.
+        conn = None
+        if pad == 1:
+            key = (socket.inet_ntoa(struct.pack("<I", addr_be)),
+                   socket.ntohs(port_be))
+            # The accept thread may not have caught up with the segment yet;
+            # give it a moment before giving up on the reply socket.
+            for _ in range(50):
+                with conns_lock:
+                    conn = conns.get(key)
+                if conn is not None:
+                    break
+                time.sleep(0.002)
         t0 = time.perf_counter()
         k = 0
         for tid in generate(prompt, n_gen):
             page.set_tok_out(idx, k, tid)
             k += 1
             page.set_produced(idx, k)   # release: client sees the token
+            if conn is not None:
+                try:
+                    conn.sendall(struct.pack("<I", tid))
+                except OSError:
+                    conn = None
             if k >= n_gen:
                 break
         t1 = time.perf_counter()
@@ -153,6 +204,7 @@ def main():
             print(f"executor: served={served} last gen={k} tok "
                   f"{(t1-t0)*1e3:.1f} ms", flush=True)
 
+    stop[0] = True
     print(f"executor: exit served={served}", flush=True)
 
 

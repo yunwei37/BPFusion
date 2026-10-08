@@ -43,6 +43,7 @@ typedef unsigned short __u16;
  * after each token so a client can measure TTFT (first token) and TPOT
  * (inter-token) over the same kernel->page path. */
 #define BF_LLM_PORT 39402
+#define BF_LLM_TCP_PORT 39403 /* same LLM ring, over stream TCP */
 #define BF_LLM_MAGIC 0x514c4d51u /* 'Q','M','L','Q' little-endian */
 #define BF_LLM_SLOTS 8
 #define BF_LLM_MAX_TOK 64

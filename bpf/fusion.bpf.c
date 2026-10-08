@@ -30,6 +30,7 @@
 #endif
 #define ETH_P_IP 0x0800
 #define IPPROTO_UDP 17
+#define IPPROTO_TCP 6
 
 struct {
 	__uint(type, BPF_MAP_TYPE_ARRAY);
@@ -48,7 +49,7 @@ struct {
 /* Diagnostics, read by the daemon at exit. */
 struct {
 	__uint(type, BPF_MAP_TYPE_ARRAY);
-	__uint(max_entries, 8);
+	__uint(max_entries, 16);
 	__type(key, __u32);
 	__type(value, __u64);
 } stats SEC(".maps");
@@ -74,15 +75,18 @@ union bf_llm_hdr {
 	__u64 v;
 };
 
-static __always_inline int llm_ingress(struct __sk_buff *skb, __u32 l4,
-				       struct udphdr *udp, struct iphdr *ip)
+/* Fill the next LLM slot from a request whose payload starts at `payload`.
+ * `flags` = 0 for a UDP datagram (reply goes to addr_be/port_be), 1 for a TCP
+ * segment (reply goes to the accepted socket that addr_be/port_be identify). */
+static __always_inline int llm_fill(struct __sk_buff *skb, __u32 payload,
+				     __u32 addr_be, __u16 port_be, __u16 flags)
 {
 	struct bf_page *p;
 	struct bf_llm_slot *s;
 	union bf_llm_hdr h;
-	__u32 idx, zero = 0, i, off;
+	__u32 idx, zero = 0, i;
 
-	if (bpf_skb_load_bytes(skb, l4 + sizeof(*udp), &h, sizeof(h)) != 0)
+	if (bpf_skb_load_bytes(skb, payload, &h, sizeof(h)) != 0)
 		return TC_ACT_OK;
 	if (h.magic != BF_LLM_MAGIC)
 		return TC_ACT_OK;
@@ -100,26 +104,39 @@ static __always_inline int llm_ingress(struct __sk_buff *skb, __u32 l4,
 	if (s->state != BF_FREE) {
 		p->drops++;
 		bump(8); /* llm busy */
-		goto out;
+		return TC_ACT_OK;
 	}
-	off = l4 + sizeof(*udp) + sizeof(h);
+	payload += sizeof(h);
 #pragma unroll
 	for (i = 0; i < BF_LLM_MAX_TOK; i++) {
 		if (i < h.n_prompt &&
-		    bpf_skb_load_bytes(skb, off + i * 4, &s->tok_in[i], 4) != 0)
-			goto out;
+		    bpf_skb_load_bytes(skb, payload + i * 4,
+				       &s->tok_in[i], 4) != 0)
+			return TC_ACT_OK;
 	}
 	s->n_prompt = h.n_prompt;
 	s->n_gen = h.n_gen;
 	s->produced = 0;
-	s->addr_be = ip->saddr;
-	s->port_be = udp->source;
+	s->pad = flags;
+	s->addr_be = addr_be;
+	s->port_be = port_be;
 	s->client_ns = h.client_ns;
 	s->ingress_ns = bpf_ktime_get_ns();
 	p->llm[idx].state = BF_PENDING;
 	__sync_fetch_and_add(&p->llm_head, 1);
-out:
 	return TC_ACT_OK;
+}
+
+static __always_inline int llm_ingress(struct __sk_buff *skb, __u32 l4,
+				       struct udphdr *udp, struct iphdr *ip)
+{
+	return llm_fill(skb, l4 + sizeof(*udp), ip->saddr, udp->source, 0);
+}
+
+static __always_inline int llm_ingress_tcp(struct __sk_buff *skb, __u32 payload,
+					   struct tcphdr *tcp, struct iphdr *ip)
+{
+	return llm_fill(skb, payload, ip->saddr, tcp->source, 1);
 }
 
 SEC("classifier")
@@ -143,8 +160,30 @@ int ingress(struct __sk_buff *skb)
 		return TC_ACT_OK;
 	if (bpf_skb_load_bytes(skb, 14, &ip, sizeof(ip)) != 0)
 		return TC_ACT_OK;
-	if (ip.protocol != IPPROTO_UDP)
-		return TC_ACT_OK;
+	if (ip.protocol != IPPROTO_UDP) {
+		struct tcphdr tcp;
+		__u32 thl;
+
+		if (ip.protocol != IPPROTO_TCP)
+			return TC_ACT_OK;
+		bump(1);
+		l4 = 14 + (__u32)(ip.ihl * 4);
+		if (bpf_skb_load_bytes(skb, l4, &tcp, sizeof(tcp)) != 0)
+			return TC_ACT_OK;
+		/* Only the first payload segment matters: the client sends the
+		 * whole LLM request in one write. */
+		if (tcp.dest != bpf_htons(BF_LLM_TCP_PORT))
+			return TC_ACT_OK;
+		bump(9); /* tcp dest match */
+		thl = (__u32)(tcp.doff * 4);
+		if (bpf_skb_load_bytes(skb, l4 + thl, &h,
+				       sizeof(h.magic)) != 0)
+			return TC_ACT_OK;
+		if (h.magic != BF_LLM_MAGIC)
+			return TC_ACT_OK;
+		bump(10); /* tcp magic */
+		return llm_ingress_tcp(skb, l4 + thl, &tcp, &ip);
+	}
 	l4 = 14 + (__u32)(ip.ihl * 4);
 	if (bpf_skb_load_bytes(skb, l4, &udp, sizeof(udp)) != 0)
 		return TC_ACT_OK;
