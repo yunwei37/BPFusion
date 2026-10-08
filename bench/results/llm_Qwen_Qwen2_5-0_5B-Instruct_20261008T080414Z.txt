@@ -1,0 +1,27 @@
+== BPFusion LLM matched run 20261008T080414Z ==
+host: Linux 7.3.0-070300rc3-generic  24 cpus
+gpu: NVIDIA GeForce RTX 5090, 610.57.04
+model: Qwen/Qwen2.5-0.5B-Instruct (fp16, batch 1, host-Python executor)
+params: seconds=90 gen=32 rounds=6
+
+--- load ---
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4916.64it/s]
+executor: model loaded, page 0x75d750bcf000, llm ring off 12856, slot 560B
+executor: TCP listener on 0.0.0.0:39403
+prompt='The capital of France is' prompt_tok=5 gen=32
+direct    TTFT us: p50=9146 min=8956 max=9612 | TPOT us: p50=8346.9 min=8335.5 max=8365.0
+bpfusion  TTFT us: p50=9123 min=8989 max=10156 | TPOT us: p50=8299.1 min=8276.6 max=8336.2
+bpfusion-tcp TTFT us: p50=11638 min=11241 max=12064 | TPOT us: p50=8383.1 min=8357.7 max=8409.9
+
+--- ingress stats ---
+seen pkts      455
+ip+udp/ip+tcp pkts 441
+magic pkts     0
+drops          0
+published      0
+drop: ctl busy 0
+drop: done busy 0
+llm magic      14
+llm busy       0
+tcp dest       224
+tcp magic      7

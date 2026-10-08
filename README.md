@@ -54,6 +54,8 @@ Measured results, with the honest costs, are in:
   per token (perf_event_open): ~40–50 M/token, i.e. Python is the CPU bottleneck
 - `docs/findings/0009-tcp-path.md` — **current**: the TCP path — request in
   over TCP, tokens streamed back on the accepted socket (+2.6 ms TTFT, TPOT flat)
+- `docs/findings/0010-model-size.md` — **current**: matched 0.5B vs 1.5B
+  comparison; path overhead is size-independent, decode scales sub-linearly
 
 ## Build
 
@@ -82,6 +84,7 @@ Benchmarks:
 ./bench/run_batch_sweep.sh 4 "1 4 8 16 32 64"
 ./bench/run_saturation.sh "4 16 64" 32
 ./bench/run_llm_tcp.sh 70 32 6
+./bench/run_llm_model.sh Qwen/Qwen2.5-1.5B-Instruct 100 32 6
 ```
 
 Logs land in `bench/results/`.
