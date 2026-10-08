@@ -29,6 +29,23 @@ One picture of what runs today, and where each piece is measured.
   client recvfrom
 ```
 
+The same page carries a second, independent token ring for the LLM path:
+
+```
+  client sendto (UDP :39402)
+        |
+        v
+  llm_ingress (bpf/fusion.bpf.c)  ->  page.llm[idx].tok_in[], state=PENDING
+        |
+        v
+  resident LLM executor (executor/llm_executor.py, Qwen2.5-0.5B, fp16)
+        |  prefill + decode; writes tok_out[k], bumps produced after each token
+        v
+  client polls the slot; TTFT/TPOT from successive `produced` bumps
+```
+
+See `docs/findings/0005-resident-llm.md`.
+
 There is **no host/GPU control call on the steady-state path**: the kernel is
 launched once and stays resident; the host only drains the ingress doorbell and
 samples the completion ring for the histograms.
@@ -65,14 +82,18 @@ completion the responder is still reading.
 | `bpf/include/bpfusion_queue.h` | the canonical page layout (single source of truth) |
 | `executor/executor.cu` | resident kernel + responder thread + latency sampling |
 | `executor/cuda_timer.h` | `%globaltimer` ↔ `CLOCK_MONOTONIC` calibration |
-| `tools/bpfusion_load.c` | `attach`/`detach`/`stats`; owns pinned object lifetime |
-| `tools/client.c` | `verify`/`own`/`burst`/`paced` client |
+| `tools/client.c` | `verify`/`own`/`burst`/`paced` client (MLP path) |
+| `executor/llm_executor.py` | resident Qwen2.5 executor on the token ring |
+| `tools/llm_bench.py` | LLM TTFT/TPOT vs a direct in-process baseline |
 
 ## What is not here yet
 
 - TCP path (`sockops`/`sockmap` + kernel TX) — today the reply is a userspace
   `sendto`, not an asynchronous kernel TX completion.
-- A real model (tokenize/prefill/decode/sample) — today a fixed tiny MLP.
+- **GPU-side tokenization and sampling** — the LLM executor is host Python
+  driving HF `transformers`; prefill/decode run on the GPU but tokenize/detokenize
+  and the token stream into the page are host work.
+- A batched/served LLM (continuous batching, KV-cache sharing) — today batch 1.
 - Real-NIC measurement (the `tc` hook is on `lo`).
 - An asynchronous kernel→waiting-userspace wake to replace the doorbell poll
   (`bpf_send_signal` or a module); see `docs/findings/0001-ingress-wake.md`.

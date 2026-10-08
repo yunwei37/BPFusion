@@ -61,6 +61,67 @@ static __always_inline void bump(__u32 key)
 		__sync_fetch_and_add(v, 1);
 }
 
+/* LLM request: header magic + n_prompt + n_gen + client_ns, then n_prompt
+ * little-endian token ids. Written into the LLM ring; the executor generates. */
+union bf_llm_hdr {
+	struct {
+		__u32 magic;
+		__u32 n_prompt;
+		__u32 n_gen;
+		__u32 pad;
+		__u64 client_ns;
+	};
+	__u64 v;
+};
+
+static __always_inline int llm_ingress(struct __sk_buff *skb, __u32 l4,
+				       struct udphdr *udp, struct iphdr *ip)
+{
+	struct bf_page *p;
+	struct bf_llm_slot *s;
+	union bf_llm_hdr h;
+	__u32 idx, zero = 0, i, off;
+
+	if (bpf_skb_load_bytes(skb, l4 + sizeof(*udp), &h, sizeof(h)) != 0)
+		return TC_ACT_OK;
+	if (h.magic != BF_LLM_MAGIC)
+		return TC_ACT_OK;
+	if (h.n_prompt == 0 || h.n_prompt > BF_LLM_MAX_TOK)
+		return TC_ACT_OK;
+	if (h.n_gen == 0 || h.n_gen > BF_LLM_MAX_TOK)
+		return TC_ACT_OK;
+	bump(7); /* llm magic */
+
+	p = bpf_map_lookup_elem(&ctl, &zero);
+	if (!p)
+		return TC_ACT_OK;
+	idx = p->llm_head % BF_LLM_SLOTS;
+	s = &p->llm[idx];
+	if (s->state != BF_FREE) {
+		p->drops++;
+		bump(8); /* llm busy */
+		goto out;
+	}
+	off = l4 + sizeof(*udp) + sizeof(h);
+#pragma unroll
+	for (i = 0; i < BF_LLM_MAX_TOK; i++) {
+		if (i < h.n_prompt &&
+		    bpf_skb_load_bytes(skb, off + i * 4, &s->tok_in[i], 4) != 0)
+			goto out;
+	}
+	s->n_prompt = h.n_prompt;
+	s->n_gen = h.n_gen;
+	s->produced = 0;
+	s->addr_be = ip->saddr;
+	s->port_be = udp->source;
+	s->client_ns = h.client_ns;
+	s->ingress_ns = bpf_ktime_get_ns();
+	p->llm[idx].state = BF_PENDING;
+	__sync_fetch_and_add(&p->llm_head, 1);
+out:
+	return TC_ACT_OK;
+}
+
 SEC("classifier")
 int ingress(struct __sk_buff *skb)
 {
@@ -87,6 +148,8 @@ int ingress(struct __sk_buff *skb)
 	l4 = 14 + (__u32)(ip.ihl * 4);
 	if (bpf_skb_load_bytes(skb, l4, &udp, sizeof(udp)) != 0)
 		return TC_ACT_OK;
+	if (udp.dest == bpf_htons(BF_LLM_PORT))
+		return llm_ingress(skb, l4, &udp, &ip);
 	if (udp.dest != bpf_htons(BF_PORT))
 		return TC_ACT_OK;
 	bump(1); /* ip+udp */

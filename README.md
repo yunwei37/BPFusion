@@ -44,6 +44,8 @@ Measured results, with the honest costs, are in:
   lost-wakeup bugs, 41 µs idle RTT, throughput vs batch depth (superseded by 0004)
 - `docs/findings/0004-resident-kernel.md` — **current**: launch-once resident
   GPU kernel, ~28 k req/s, occupancy vs work, the `__ldcg`/L1-coherence pitfall
+- `docs/findings/0005-resident-llm.md` — **current**: real Qwen2.5-0.5B on
+  the packet→page→GPU→page path, TTFT/TPOT vs a direct in-process baseline
 
 ## Build
 

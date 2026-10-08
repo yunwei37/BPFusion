@@ -1,0 +1,11 @@
+=== BPFusion LLM path, 2026-10-08T05:55:14Z ===
+model=Qwen/Qwen2.5-0.5B-Instruct gen=32 rounds=8
+executor: executor: model loaded, page 0x773b16605000, llm ring off 12856, slot 560B
+
+prompt='The capital of France is' prompt_tok=5 gen=32
+direct    TTFT us: p50=9035 min=8939 max=9775 | TPOT us: p50=8390.7 min=8349.1 max=8413.8
+bpfusion  TTFT us: p50=9739 min=9623 max=10525 | TPOT us: p50=8955.3 min=8909.6 max=8977.7
+
+=== executor tail ===
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4613.79it/s]
+executor: model loaded, page 0x773b16605000, llm ring off 12856, slot 560B
