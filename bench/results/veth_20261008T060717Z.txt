@@ -1,0 +1,30 @@
+=== BPFusion over veth ( ->  via bfv1 tc ingress), 2026-10-08T06:07:20Z ===
+verify: GPU  y[0..3] = 0.000000 0.000000 -0.000000 -0.000000
+verify: CPU  y[0..3] = 0.000000 0.000000 -0.000000 -0.000000
+verify: max |GPU - CPU| = 2.602e-17 (OK)
+verify: resp magic=46504251 id=0 client_ns_echo=yes
+client: mode=own sent=2000 got=2000 lost=0
+round trip (client)                n=   2000  p50=   40824  p90=   42986  p99=  135475  max=    801884  mean=    44478 ns
+  parse -> GPU start               n=   2000  p50=       0  p90=     516  p99=     863  max=      4803  mean=      172 ns
+  GPU start -> GPU done            n=   2000  p50=   25568  p90=   25888  p99=   26176  max=     27712  mean=    25497 ns
+goodput: 22483 req/s (one at a time, 1/mean RTT)
+wall: 22472 req/s over 89 ms
+burst: depth=8 rounds=400 sent=3200 received=3200 lost=0
+pipelined completion (client)      n=   3200  p50=  169133  p90=  269011  p99=  528162  max=   1066396  mean=   164165 ns
+throughput: 26779 req/s (depth 8)
+
+seen pkts      5207
+ip+udp pkts    5201
+magic pkts     5201
+drops          0
+published      5201
+drop: ctl busy 0
+drop: done busy 0
+timeouts       0
+head=5201 done_seq=5201 published=5201 acked=5201 drops=0 ready=1
+slot[0]: state=0 id=5184 client_ns=228908586060136 x[0]=0.130000 | done state=0 id=5184 y[0]=0.000000
+slot[1]: state=0 id=5185 client_ns=228908586328859 x[0]=0.260000 | done state=0 id=5185 y[0]=0.000000
+slot[2]: state=0 id=5186 client_ns=228908586332379 x[0]=0.020000 | done state=0 id=5186 y[0]=-0.000000
+slot[3]: state=0 id=5187 client_ns=228908586335074 x[0]=0.150000 | done state=0 id=5187 y[0]=0.000000
+
+=== executor ===

@@ -152,7 +152,14 @@ int main(int argc, char **argv)
 	s = socket(AF_INET, SOCK_DGRAM, 0);
 	memset(&to, 0, sizeof(to));
 	to.sin_family = AF_INET;
-	to.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+	{
+		/* Default loopback; BF_DEST points the client at a veth/NIC
+		 * address so a tc ingress hook on a real device is exercised. */
+		const char *dst = getenv("BF_DEST");
+
+		to.sin_addr.s_addr = dst ? inet_addr(dst)
+					 : htonl(INADDR_LOOPBACK);
+	}
 	to.sin_port = htons((uint16_t)port);
 	{
 		int sz = 8 << 20;

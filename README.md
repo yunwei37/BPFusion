@@ -46,6 +46,8 @@ Measured results, with the honest costs, are in:
   GPU kernel, ~28 k req/s, occupancy vs work, the `__ldcg`/L1-coherence pitfall
 - `docs/findings/0005-resident-llm.md` — **current**: real Qwen2.5-0.5B on
   the packet→page→GPU→page path, TTFT/TPOT vs a direct in-process baseline
+- `docs/findings/0006-veth-netdevice.md` — the same path over a **real
+  netdevice** (veth across two netns), not loopback: no measurable penalty
 
 ## Build
 

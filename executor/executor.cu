@@ -399,7 +399,15 @@ int main(int argc, char **argv)
 	d.sock = socket(AF_INET, SOCK_DGRAM, 0);
 	memset(&addr, 0, sizeof(addr));
 	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+	{
+		/* Bind loopback by default; BF_BIND lets the responder live on
+		 * a veth/NIC so the reply leaves via the same device the tc
+		 * ingress hook watches. */
+		const char *ba = getenv("BF_BIND");
+
+		addr.sin_addr.s_addr = ba ? inet_addr(ba)
+					  : htonl(INADDR_LOOPBACK);
+	}
 	addr.sin_port = htons((uint16_t)port);
 	if (bind(d.sock, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
 		perror("bind");
