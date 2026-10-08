@@ -7,13 +7,27 @@ Status: measured on 2026-10-08 on the host described in
 - `bench/results/batch_sweep_20261008T030937Z.txt` — throughput vs batch depth
 - `bench/results/saturation_20261008T032028Z.txt` — GPU occupancy under overload
 
+> **Superseded for latency/throughput/occupancy by
+> [`0003-direct-page-and-wakeup.md`](0003-direct-page-and-wakeup.md).** The
+> numbers below were taken with copy-staging and the 20 ms idle-wakeup bug; the
+> path and correctness/verify sections still hold.
+
 ## Question
 
 Does a request go from the wire, through an eBPF ingress hook into an
-mmap'able kernel control page, through a resident GPU executor, and back out a
-socket — with the *GPU* result matching a CPU reference, and with the per-stage
-costs and the GPU idle time all visible? And how much of the wall time is the
-GPU actually executing versus waiting on the host staging path?
+mmap'able kernel control page, through a GPU (driven from userspace), and back
+out a socket — with the *GPU* result matching a CPU reference, and with the
+per-stage costs and the GPU idle time all visible? And how much of the wall
+time is the GPU actually executing versus waiting on the host staging path?
+
+**Proven scope (do not overclaim):** the daemon below is a **host-driven
+synthetic CUDA baseline**, not yet the target "resident GPU executor with no
+control plane". It does, per batch, a host-issued
+`cudaMemcpyAsync(H2D) → kernel launch → cudaMemcpyAsync(D2H) →
+cudaStreamSynchronize`, with `ctl`/`done` as separate `cudaMalloc` device
+buffers — there is **no** direct BPF-array↔device association and **no**
+launch-once resident kernel. That design is the next step; what is proven
+here is the eBPF-ingress → page → GPU → reply path and its measured costs.
 
 ## The path as built
 
@@ -159,10 +173,15 @@ so no number above is quoted in a vacuum.
 - **Loopback only.** The `tc` hook is on `lo`; NIC RX, DMA and the real
   interrupt path are not in any number here. No DPDK/AF_XDP.
 - **Timer spread.** `%globaltimer` was correlated to `CLOCK_MONOTONIC` at
-  startup; the per-run offset spread was 275–4694 ns across these runs, and
-  the GPU timestamps are published on the host clock using that offset, so the
-  `parse → GPU start` stage is meaningful (it was previously ~1.8e18 ns before
-  the offset was applied).
+  startup: `cuda_timer.h` shows the two counters' *rates* agree to
+  ~0.99988–0.99999 over a short sample, and the per-run offset spread was
+  275–4694 ns across these runs. The GPU timestamps are published on the host
+  clock using that offset, so the `parse → GPU start` stage is meaningful (it
+  was previously ~1.8e18 ns before the offset was applied). **Caveat:** close
+  rates do not prove a shared 1 GHz counter, and the offset-spread figure is
+  *variation*, not an absolute error bound — a fixed calibration bias or
+  within-run drift is not ruled out. Cross-clock stage latencies here are
+  accurate only to roughly the sample spread.
 - **Occupancy is host-observed.** `busy_wall` is a host measurement around the
   stream; a CUDA-graph or event-timed occupancy could tighten it but would not
   change the conclusion, because the bubble is host-side staging.
@@ -176,6 +195,10 @@ so no number above is quoted in a vacuum.
 2. The largest remaining non-GPU cost is the **per-batch host staging** (~27 µs
    for a 32-deep batch at `work=4`). Batching amortises it, which is why the
    throughput curve rises to a ~34 k req/s plateau.
-3. Next: push `work` past the launch-latency knee so the GPU, not the host
-   staging, is the bottleneck, and measure whether the bubble can be hidden by
-   double-buffering the pinned staging buffers.
+3. Next, in order: (a) remove the host request worker from the steady state —
+   associate the BPF page with device-visible memory and launch once — so the
+   "resident executor / no control plane" claim becomes true; (b) push `work`
+   past the launch-latency knee so the GPU, not host staging, is the
+   bottleneck; (c) replace the tiny MLP with a real small LLM (Qwen 0.6B/1.7B)
+   for a matched-executor comparison. The bubble above is the baseline the
+   next design must beat.

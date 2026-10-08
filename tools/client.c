@@ -256,11 +256,11 @@ int main(int argc, char **argv)
 	if (!strcmp(mode, "burst")) {
 		int d = burst; /* pipeline depth */
 		int rounds = n > 0 ? n : 200;
-		int sent = 0, recvd = 0, lost = 0;
+		int sent = 0, recvd = 0, lost = 0, consec = 0;
 		uint64_t t0 = now_ns(), t1 = 0;
 		uint32_t id = 0;
 
-		for (int r = 0; r < rounds; r++) {
+		for (int r = 0; r < rounds && consec < 20; r++) {
 			for (int i = 0; i < d; i++) {
 				if (send_req(s, &to, id++) > 0)
 					sent++;
@@ -274,8 +274,14 @@ int main(int argc, char **argv)
 
 				if (nr <= 0) {
 					lost++;
+					/* The server may exit mid-run; stop
+					 * rather than burn a 1 s timeout per
+					 * probe and hang the bench script. */
+					if (++consec >= 20)
+						break;
 					continue;
 				}
+				consec = 0;
 				recvd++;
 				if (got < rounds * d)
 					rtt[got++] = now_ns() - resp.client_ns;
@@ -294,6 +300,7 @@ int main(int argc, char **argv)
 	/* own: one request in flight at a time (latency view) */
 	{
 		uint64_t loop0 = now_ns();
+		int consec = 0;
 
 		for (int i = 0; i < n; i++) {
 			struct sockaddr_in from;
@@ -309,8 +316,17 @@ int main(int argc, char **argv)
 			if (r <= 0 || resp.magic != BF_MAGIC ||
 			    resp.y[0] != resp.y[0]) {
 				lost++;
+				/* The server may have exited mid-run; without
+				 * this, n requests each burn the 1 s recv
+				 * timeout and the bench script hangs. */
+				if (++consec >= 20) {
+					printf("client: aborting own after %d "
+					       "consecutive misses\n", consec);
+					break;
+				}
 				continue;
 			}
+			consec = 0;
 			rtt[got] = now_ns() - resp.client_ns;
 			if (resp.gpu_start_ns >= resp.ingress_ns)
 				srv_pre[got] = resp.gpu_start_ns -

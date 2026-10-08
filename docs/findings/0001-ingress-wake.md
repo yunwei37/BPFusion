@@ -65,23 +65,35 @@ numbers are only trustworthy *after* the sampling loop was forced onto
 ## Consequence for the BPFusion design
 
 A kernel module calling `wake_up()` on a wait-queue would cut the 2.4 µs p50 of
-the epoll path to roughly a task-scheduler wakeup, but it needs a module load
-and gives up the verifier-enforced programmability that is the point of the
-project. The measured cost of staying programmable is ~2.4 µs per wakeup, and
-only the *first* packet after an idle period pays it — a resident executor that
-drains a batch per wake pays it once per batch, not once per request.
+the epoll path to roughly a task-scheduler wakeup. That cost has **not been
+measured on this host** (no module was written); the comparison is an
+*inference* from first principles, not evidence. A module or a new
+device/completion kernel interface is also **not** "abandoning eBPF verifier
+programmability" — the target design already expects a new device/completion
+interface, with eBPF handling the request path.
 
-**Decision taken:** keep the pollable-map wakeup as the kernel↔userspace
-handoff, make the userspace GPU executor resident, and (finding 0002) do not
-poll per record at all — sleep on a futex that the executor itself bumps, and
-never spin during steady state. The kernel-module `wake_up()` remains the
-documented escape hatch if the measured GPU path turns out to be latency-bound
-on this hop.
+Until such an interface exists, the only programmable handoff is the pollable
+map, whose cost is ~2.4 µs per wakeup, and only the *first* packet after an
+idle period pays it — a consumer that drains a batch per wake pays it once per
+batch, not once per request.
+
+**Interim decision (labelled as such):** the current implementation hands the
+batch to a *userspace* thread. That makes it a **host-driven intermediate
+experiment**, not the final architecture: in the target path userspace only
+bootstraps/loads/inits/controls/telemetry, and there is no userspace request
+worker in the steady state. The userspace stage exists to get a real
+packet→GPU→packet number today and is not evidence that a CPU request worker
+is the target.
 
 ## Open items
 
 - No CPU pinning/`SCHED_FIFO` used; the p99 outliers are therefore an upper
   bound on the "unmanaged host" case and will be re-measured with pinning
   before any headline claim.
+- The p99 attribution (placement/scheduling rather than queueing) is an
+  *inference*: no control experiment with pinning was run for this table.
 - Loopback only: this measures the whole stack above the NIC, so the NIC RX
   contribution is *not* included. A real-NIC measurement is still owed.
+- The kernel-module `wake_up()` figure is unmeasured.
+
+

@@ -23,7 +23,6 @@
 #include <netinet/in.h>
 #include <pthread.h>
 #include <sched.h>
-#include <sys/epoll.h>
 #include <sys/mman.h>
 #include <sys/socket.h>
 #include <sys/syscall.h>
@@ -43,8 +42,17 @@
 
 // One request: `work` passes of a 16x16x16 triple with a leaky-ReLU, so the
 // measured latency is arithmetic rather than pure launch overhead.
-__global__ void bf_exec_kernel(struct bf_ctl_slot *in, struct bf_done_slot *out,
-			       unsigned int n, unsigned int work)
+//
+// The kernel operates **directly on the BPF control page**: that page is
+// registered as pinned, mapped host memory (cudaHostRegisterMapped) and the
+// device pointer aliases the same physical pages the eBPF ingress program
+// wrote. There is no per-batch staging copy. `base` is the global request
+// index of the first slot in this batch, and `offset` converts the GPU
+// %globaltimer into CLOCK_MONOTONIC on the GPU side so the host never has to
+// rewrite the timestamps.
+__global__ void bf_exec_kernel(struct bf_page *p, unsigned int base,
+			       unsigned int n, unsigned int work,
+			       long long offset)
 {
 	__shared__ float w1[16][16], w2[16][16], w3[16][16];
 	unsigned long long t_start = 0, t_done = 0;
@@ -60,14 +68,17 @@ __global__ void bf_exec_kernel(struct bf_ctl_slot *in, struct bf_done_slot *out,
 	if (t >= 16)
 		return;
 	for (unsigned int k = 0; k < n; k++) {
-		if (in[k].state != BF_PENDING)
+		unsigned int idx = (base + k) % BF_SLOTS;
+		struct bf_ctl_slot *in = &p->slots[idx];
+
+		if (in->state != BF_PENDING)
 			continue;
 		if (t == 0)
 			asm volatile("mov.u64 %0, %%globaltimer;" : "=l"(t_start));
 		float a[16], b[16];
 
 		for (int i = 0; i < 16; i++)
-			a[i] = in[k].x[i];
+			a[i] = in->x[i];
 		for (unsigned int w = 0; w < work; w++) {
 			for (int o = 0; o < 16; o++) {
 				float s = 0;
@@ -94,17 +105,23 @@ __global__ void bf_exec_kernel(struct bf_ctl_slot *in, struct bf_done_slot *out,
 				a[i] = b[i];
 		}
 		if (t == 0) {
+			struct bf_done_slot *out = &p->done[idx];
+
 			asm volatile("mov.u64 %0, %%globaltimer;" : "=l"(t_done));
-			out[k].id = in[k].id;
-			out[k].client_ns = in[k].client_ns;
-			out[k].ingress_ns = in[k].ingress_ns;
+			out->id = in->id;
+			out->client_ns = in->client_ns;
+			out->ingress_ns = in->ingress_ns;
 			for (int i = 0; i < 16; i++)
-				out[k].y[i] = a[i];
-			out[k].gpu_start_ns = t_start;
-			out[k].gpu_done_ns = t_done;
+				out->y[i] = a[i];
+			out->gpu_start_ns =
+				(unsigned long long)((long long)t_start + offset);
+			out->gpu_done_ns =
+				(unsigned long long)((long long)t_done + offset);
+			/* Publish to system scope before the state a host
+			 * reader gates on. */
 			__threadfence_system();
-			out[k].state = BF_DONE;
-			in[k].state = BF_FREE;
+			out->state = BF_DONE;
+			in->state = BF_FREE;
 		}
 	}
 }
@@ -154,6 +171,13 @@ static int futex_wait_ns(volatile uint32_t *w, uint32_t val, int ms)
 
 static int futex_wake(volatile uint32_t *w)
 {
+	/* Bump the futex word before waking. The responder reads the word,
+	 * re-checks its predicate, then FUTEX_WAITs on that value; if the
+	 * word never changes, a wake delivered between the read and the
+	 * wait is lost and the waiter blocks for its full timeout. The
+	 * increment makes the wait fail with EAGAIN in that race, which is
+	 * the standard lost-wakeup guard. */
+	__atomic_add_fetch(w, 1, __ATOMIC_RELEASE);
 	return syscall(SYS_futex, (void *)w, FUTEX_WAKE, 1, NULL, NULL, 0);
 }
 
@@ -282,7 +306,7 @@ int main(int argc, char **argv)
 	int port = 39400;
 	int cpu_gpu = 2, cpu_responder = 3;
 	int idle_mode = 0;
-	int ctl_fd, ep;
+	int ctl_fd;
 	struct sockaddr_in addr;
 	pthread_t th;
 	unsigned long served = 0, drained = 0;
@@ -336,12 +360,7 @@ int main(int argc, char **argv)
 				strerror(errno));
 			return 1;
 		}
-		ep = epoll_create1(0);
-		{
-			struct epoll_event ev = {.events = EPOLLIN};
-
-			epoll_ctl(ep, EPOLL_CTL_ADD, db_fd, &ev);
-		}
+		close(db_fd);
 	}
 
 	d.sock = socket(AF_INET, SOCK_DGRAM, 0);
@@ -362,10 +381,7 @@ int main(int argc, char **argv)
 	/* --- GPU side ------------------------------------------------------ */
 	{
 		cudaStream_t stream;
-		struct bf_ctl_slot *d_in;
-		struct bf_done_slot *d_out;
-		struct bf_ctl_slot *h_in;
-		struct bf_done_slot *h_out;
+		struct bf_page *d_page;   /* device alias of the BPF control page */
 		volatile uint64_t *ts_slot;
 		void *d_ts;
 		bf_timer_sync tinfo;
@@ -379,19 +395,34 @@ int main(int argc, char **argv)
 
 		cudaSetDevice(0);
 		cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking);
-		cudaMalloc((void **)&d_in, sizeof(struct bf_ctl_slot) * BF_SLOTS);
-		cudaMalloc((void **)&d_out, sizeof(struct bf_done_slot) * BF_SLOTS);
-		cudaMemset(d_in, 0, sizeof(struct bf_ctl_slot) * BF_SLOTS);
-		cudaMemset(d_out, 0, sizeof(struct bf_done_slot) * BF_SLOTS);
-		cudaHostAlloc(&h_in, sizeof(struct bf_ctl_slot) * BF_SLOTS,
-			      cudaHostAllocDefault);
-		cudaHostAlloc(&h_out, sizeof(struct bf_done_slot) * BF_SLOTS,
-			      cudaHostAllocDefault);
+		/* Publish the BPF page to the device: cudaHostRegisterMapped
+		 * pins it and cudaHostGetDevicePointer returns a pointer that
+		 * aliases the *same* physical pages the eBPF program wrote, so
+		 * bf_exec_kernel reads `slots[]` and writes `done[]` in place.
+		 * No per-batch staging copy. */
+		{
+			cudaError_t rc = cudaHostRegister(d.page, BF_PAGE_MMAP_BYTES,
+						  cudaHostRegisterMapped);
+
+			if (rc != cudaSuccess) {
+				fprintf(stderr, "cudaHostRegister(page): %s\n",
+					cudaGetErrorString(rc));
+				return 1;
+			}
+		}
+		{
+			cudaError_t rc = cudaHostGetDevicePointer((void **)&d_page,
+							  d.page, 0);
+
+			if (rc != cudaSuccess) {
+				fprintf(stderr, "cudaHostGetDevicePointer: %s\n",
+					cudaGetErrorString(rc));
+				return 1;
+			}
+		}
 		cudaHostAlloc((void **)&ts_slot, 8, cudaHostAllocMapped);
 		cudaHostGetDevicePointer(&d_ts, (void *)ts_slot, 0);
 		tinfo = bf_timer_sync_sample(ts_slot, d_ts, stream, 64);
-		memset(h_in, 0, sizeof(struct bf_ctl_slot) * BF_SLOTS);
-		memset(h_out, 0, sizeof(struct bf_done_slot) * BF_SLOTS);
 		rb = ring_buffer__new(bpf_obj_get("/sys/fs/bpf/bpfusion_db"),
 				      rb_sample, NULL, NULL);
 		if (!rb) {
@@ -414,93 +445,167 @@ int main(int argc, char **argv)
 
 		uint64_t t_run0 = bf_host_mono_ns();
 
+		/* Pipeline several batches so the host never blocks on the
+		 * driver between them. The stream is in-order, so entries
+		 * retire oldest-first; the host waits only on the *page's*
+		 * own completion flag, which the GPU publishes with a
+		 * system-scope fence — never on cudaStreamSynchronize in the
+		 * steady state. Depth must exceed the launch+visibility lag
+		 * (enqueue ~1.5 us, but the system-scope write of
+		 * done[].state is visible to the host only after tens of
+		 * microseconds), or the GPU starves waiting for the next
+		 * launch. */
+#define BF_PIPE 8
+		__u32 if_base[BF_PIPE] = { 0 };
+		__u32 if_n[BF_PIPE] = { 0 };
+		int if_used[BF_PIPE] = { 0 };
+		uint64_t t_charge = bf_host_mono_ns();
+
 		while (bf_host_mono_ns() < d.deadline) {
-			uint64_t t_wait0 = bf_host_mono_ns();
-			__u32 head = __atomic_load_n(&d.page->head,
-						     __ATOMIC_ACQUIRE);
-			__u32 pending = head - consumed;
-			uint64_t t_pass;
-			int n, i;
+			int free_slot, i, live;
+			__u32 head, pending;
+			uint64_t now;
 
+			/* Retire completed launches from the oldest end. */
+			for (live = 0; live < BF_PIPE && if_used[live]; live++)
+				;
+			for (i = 0; i < live; i++) {
+				__u32 last = (if_base[i] + if_n[i] - 1) %
+					     BF_SLOTS;
+
+				/* `done[last].state == BF_DONE` alone is not
+				 * enough: when a batch wraps the whole ring the
+				 * slot still holds the *previous* request's
+				 * BF_DONE. The stored id disambiguates. */
+				if (__atomic_load_n(&d.page->done[last].state,
+						    __ATOMIC_ACQUIRE) != BF_DONE ||
+				    d.page->done[last].id !=
+					    (if_base[i] + if_n[i] - 1))
+					break;   /* in-order: stop at first live */
+				{
+					int k2;
+					uint64_t t0 = bf_host_mono_ns();
+
+					for (k2 = 0; k2 < (int)if_n[i]; k2++) {
+						__u32 idx = (if_base[i] + k2) %
+							    BF_SLOTS;
+						struct bf_done_slot *ds =
+							&d.page->done[idx];
+
+						if (ds->gpu_done_ns >
+							    ds->gpu_start_ns &&
+						    nb < 4000000)
+							lat_dev[nb++] =
+								ds->gpu_done_ns -
+								ds->gpu_start_ns;
+						if (nk < 4000000 &&
+						    ds->ingress_ns &&
+						    ds->gpu_done_ns >
+							    ds->ingress_ns)
+							lat_kernel[nk++] =
+								ds->gpu_done_ns -
+								ds->ingress_ns;
+						if (ds->gpu_done_ns >
+						    ds->gpu_start_ns)
+							d.gpu_ns +=
+								ds->gpu_done_ns -
+								ds->gpu_start_ns;
+					}
+					(void)t0;
+					__atomic_store_n(&d.page->published,
+							 if_base[i] + if_n[i],
+							 __ATOMIC_RELEASE);
+					if (idle_mode != 1)
+						futex_wake(&d.page->done_seq);
+				}
+			}
+			if (i > 0) {   /* compact the retired prefix */
+				int j;
+
+				for (j = 0; j + i < BF_PIPE; j++) {
+					if_base[j] = if_base[j + i];
+					if_n[j] = if_n[j + i];
+					if_used[j] = if_used[j + i];
+				}
+				for (; j < BF_PIPE; j++)
+					if_used[j] = 0;
+			}
+			/* Charge elapsed wall to the regime it was spent in:
+			 * busy while any launch is outstanding, idle otherwise. */
+			now = bf_host_mono_ns();
+			if (if_used[0] || if_used[1] || if_used[2] || if_used[3] ||
+			    if_used[4] || if_used[5] || if_used[6] || if_used[7])
+				d.busy_ns += now - t_charge;
+			else
+				d.wait_ns += now - t_charge;
+			t_charge = now;
+
+			for (free_slot = 0; free_slot < BF_PIPE; free_slot++)
+				if (!if_used[free_slot])
+					break;
+			if (free_slot == BF_PIPE) {
+				/* Pipeline full: the host's system-memory view
+				 * of done[].state lags the GPU, so ask the
+				 * driver directly whether the queue drained.
+				 * cudaStreamQuery reflects completion durably,
+				 * so every in-flight batch can be retired and
+				 * the stream refilled without a launch gap. */
+				if (cudaStreamQuery(stream) == cudaSuccess) {
+					int j;
+
+					for (j = 0; j < BF_PIPE; j++) {
+						__atomic_store_n(
+							&d.page->published,
+							if_base[j] + if_n[j],
+							__ATOMIC_RELEASE);
+						if_used[j] = 0;
+					}
+					if (idle_mode != 1)
+						futex_wake(&d.page->done_seq);
+				}
+				continue;
+			}
+
+			head = __atomic_load_n(&d.page->head, __ATOMIC_ACQUIRE);
+			pending = head - consumed;
 			if (pending == 0) {
-				struct epoll_event ev;
-				int r = epoll_wait(ep, &ev, 1, 20);
-
-				d.n_idle++;
-				d.wait_ns += bf_host_mono_ns() - t_wait0;
-				if (r <= 0)
-					continue;
+				/* Non-blocking doorbell drain: the page's own
+				 * `head` is the source of truth, and a blocking
+				 * wait on the ring-buffer fd was observed to
+				 * miss wakes (a lost wake costs a full timeout
+				 * on a single request), so the loop busy-polls
+				 * here — the same "no control-plane sleep" shape
+				 * the resident executor needs. */
 				ring_buffer__consume(rb);
+				d.n_idle++;
 				continue;
 			}
 			d.n_busy++;
-			t_pass = bf_host_mono_ns();
 
-			n = pending > (__u32)d.batch ? d.batch : (int)pending;
-			if (n > BF_SLOTS - (int)(consumed % BF_SLOTS))
-				n = BF_SLOTS - (int)(consumed % BF_SLOTS);
+			{
+				int n = pending > (__u32)d.batch ? d.batch
+								 : (int)pending;
 
-			/* The producer's slots live in the mmap'ed page, which
-			 * is not a pinned DMA region, so a batch is staged
-			 * through pinned memory. */
-			for (i = 0; i < n; i++) {
-				__u32 idx = (consumed + i) % BF_SLOTS;
-
-				h_in[i] = d.page->slots[idx];
+				/* Never fill the whole ring: a full-wrap batch
+				 * leaves no untouched slot to tell a fresh
+				 * completion from a stale one. Wrapping inside
+				 * a batch is fine — the kernel indexes with
+				 * `(base + k) % BF_SLOTS`. */
+				if (n > BF_SLOTS - 1)
+					n = BF_SLOTS - 1;
+				/* The kernel reads `slots[]` and writes `done[]`
+				 * on the registered page directly. */
+				if_base[free_slot] = consumed;
+				if_n[free_slot] = (__u32)n;
+				if_used[free_slot] = 1;
+				bf_exec_kernel<<<1, 32, 0, stream>>>(
+					d_page, consumed, n, d.work,
+					tinfo.offset);
+				consumed += n;
 			}
-			cudaMemcpyAsync(d_in, h_in,
-					sizeof(struct bf_ctl_slot) * n,
-					cudaMemcpyHostToDevice, stream);
-			bf_exec_kernel<<<1, 32, 0, stream>>>(d_in, d_out, n,
-							     d.work);
-			cudaMemcpyAsync(h_out, d_out,
-					sizeof(struct bf_done_slot) * n,
-					cudaMemcpyDeviceToHost, stream);
-			cudaStreamSynchronize(stream);
-
-			for (i = 0; i < n; i++) {
-				struct bf_done_slot *ds = &h_out[i];
-				__u32 idx = (consumed + i) % BF_SLOTS;
-
-				/* Slot may already have been handled (and freed)
-				 * by a previous pass; skipping keeps `published`
-				 * monotonic and the responder in lockstep. */
-				if (ds->state != BF_DONE ||
-				    d.page->done[idx].state == BF_DONE)
-					continue;
-				/* Store on the host clock: `offset` converts
-				 * the GPU's %globaltimer into CLOCK_MONOTONIC,
-				 * so client RTT and parse→GPU-start share one
-				 * time base. */
-				ds->gpu_start_ns =
-					(uint64_t)((int64_t)ds->gpu_start_ns +
-						   (int64_t)tinfo.offset);
-				ds->gpu_done_ns =
-					(uint64_t)((int64_t)ds->gpu_done_ns +
-						   (int64_t)tinfo.offset);
-				d.page->done[idx] = *ds;
-				if (ds->gpu_done_ns > ds->gpu_start_ns &&
-				    nb < 4000000)
-					lat_dev[nb++] = ds->gpu_done_ns -
-							ds->gpu_start_ns;
-				if (nk < 4000000)
-					lat_kernel[nk++] =
-						ds->gpu_done_ns - ds->ingress_ns;
-				if (ds->gpu_done_ns > ds->gpu_start_ns)
-					d.gpu_ns += ds->gpu_done_ns -
-						   ds->gpu_start_ns;
-			}
-			/* Charge the whole pass to busy_ns; the kernel time
-			 * added above is then the part of busy_ns the GPU was
-			 * actually executing, so busy_ns - gpu_ns is the
-			 * staging/memcpy/launch bubble. */
-			d.busy_ns += bf_host_mono_ns() - t_pass;
-			consumed += n;
-			__atomic_store_n(&d.page->published, consumed,
-					 __ATOMIC_RELEASE);
-			if (idle_mode != 1)
-				futex_wake(&d.page->done_seq);
 		}
+		cudaStreamSynchronize(stream);
+		__atomic_store_n(&d.page->published, consumed, __ATOMIC_RELEASE);
 		d.deadline = 0; /* let the responder exit immediately */
 		__atomic_store_n(&d.page->published, consumed, __ATOMIC_RELEASE);
 		futex_wake(&d.page->done_seq);
@@ -519,17 +624,19 @@ int main(int argc, char **argv)
 			       "futex_timeouts=%d\n",
 			       drained, served, d.r_errors,
 			       d.r_futex_timeouts);
-			printf("daemon: gpu passes busy=%lu idle=%lu "
-			       "(idle %.1f%% of %.2f s; wall %.0f req/s)\n",
+			printf("daemon: gpu batches busy=%lu idle_polls=%lu "
+			       "(busy_wall %.1f%% of %.2f s; wall %.0f req/s)\n",
 			       d.n_busy, d.n_idle,
-			       run_ns > 0 ? 100.0 * (double)d.n_idle /
-						    (double)(d.n_busy + d.n_idle)
-					  : 0.0,
+			       (d.busy_ns + d.wait_ns) > 0
+				       ? 100.0 * (double)d.busy_ns /
+						 (double)(d.busy_ns + d.wait_ns)
+				       : 0.0,
 			       run_ns / 1e9,
 			       run_ns > 0 ? (double)served * 1e9 / run_ns : 0.0);
-			/* Occupancy: kernel_exec / wall while requests were
-			 * queued. Anything below 100% is the staging bubble
-			 * that this design cannot hide yet. */
+			/* Occupancy: GPU kernel time over wall time while a
+			 * request was in flight. Below 100% is the launch +
+			 * driver-visibility bubble this host-side design
+			 * cannot fully hide. */
 			printf("daemon: gpu kernel %.2f s busy_wall %.2f s "
 			       "wait %.2f s -> occupancy %.1f%% "
 			       "(bubble %.2f s)\n",

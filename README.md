@@ -1,10 +1,17 @@
 # BPFusion
 
 Linux-native accelerator serving: an eBPF ingress hook feeds an mmap'able
-kernel control page, a resident GPU executor drains it, and a replying socket
-path puts the completions back on the wire. There is no per-request
-control-plane work in userspace and no per-connection server socket — the
-pinned page *is* the queue.
+kernel control page, a GPU executor (currently driven from a userspace daemon)
+drains it, and a replying socket path puts the completions back on the wire.
+There is no per-request control-plane work in userspace and no per-connection
+server socket — the pinned page *is* the queue.
+
+**Current scope:** the daemon reads and writes the mmap'ed BPF page *directly*
+from the GPU (`cudaHostRegister(..., cudaHostRegisterMapped)` +
+`cudaHostGetDevicePointer`), so there is no per-batch `cudaMemcpy` staging. It
+still *launches* per batch from the host (`BF_PIPE=8` in flight) rather than
+launching once and staying resident — that residency is the remaining step.
+Findings state exactly what is proven.
 
 ## What is built and measured today
 
@@ -19,9 +26,10 @@ resident CUDA executor  ->  responder sendto  ->  client
   when both the request slot and its completion slot are FREE, copies the
   payload, stamps the kernel timestamp, publishes, and rings the doorbell.
   Excess under overload is counted (`drops`, split into `ctl busy`/`done busy`).
-- `executor/executor.cu` — the resident daemon: a GPU loop that stages batches
-  through pinned memory and runs the kernel, plus a responder thread. It opens
-  the pinned maps with `bpf_obj_get` and does **not** load the object.
+- `executor/executor.cu` — the daemon: a GPU loop that launches the kernel
+  directly on the registered BPF page (no staging copies) plus a responder
+  thread. It opens the pinned maps with `bpf_obj_get` and does **not** load the
+  object.
 - `tools/bpfusion_load.c` — `attach`/`detach`/`stats`. Owns the object lifetime
   and pins `/sys/fs/bpf/bpfusion_{ctl,stats,db}`. Run `attach` before the daemon.
 - `tools/client.c` — `verify` (GPU vs CPU reference), `own` (latency), `burst`
@@ -30,8 +38,9 @@ resident CUDA executor  ->  responder sendto  ->  client
 Measured results, with the honest costs, are in:
 
 - `docs/findings/0001-ingress-wake.md` — the kernel→userspace wakeup cost
-- `docs/findings/0002-end-to-end-mlp.md` — packet→GPU→packet latency,
-  throughput vs batch depth, GPU occupancy and the exposed staging bubble
+- `docs/findings/0002-end-to-end-mlp.md` — packet→GPU→packet (superseded by 0003)
+- `docs/findings/0003-direct-page-and-wakeup.md` — direct-page execution, the
+  lost-wakeup bugs, 41 µs idle RTT, throughput vs batch depth, GPU occupancy
 
 ## Build
 
