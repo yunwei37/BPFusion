@@ -1,0 +1,96 @@
+== BPFusion batch-size sweep 20261008T030937Z ==
+host: Linux 7.3.0-070300rc3-generic  gpu: NVIDIA GeForce RTX 5090
+work=4  client: 2000 rounds at each batch depth, one daemon per size
+
+=== batch=1 ===
+burst: depth=1 rounds=2000 sent=2000 received=2000 lost=0
+pipelined completion (client)      n=   2000  p50=   45979  p90=   46694  p99=   70616  max=   1274665  mean=    48231 ns
+throughput: 20721 req/s (depth 1)
+daemon: slots=64 batch=1 work=4 gpu_cpu=6 resp_cpu=7 idle=0
+daemon: globaltimer offset=-1791210731578205779 ns (spread 339 ns)
+daemon: consumed=2000 published=2000 head=2000 drops=0 acked=2000
+daemon: drained=2000 served=2000 errors=0 futex_timeouts=0
+daemon: gpu passes busy=2000 idle=2592 (idle 56.4% of 12.01 s; wall 167 req/s)
+GPU start -> GPU done              n=   2000  p50=   27008  p90=   27360  p99=   27584  max=     27648  mean=    26988 ns
+kernel parse -> GPU done           n=   2000  p50=   34288  p90=   34826  p99=   36213  max=   1180899  mean=    35479 ns
+responder sendto()                 n=   2000  p50=    2069  p90=    2200  p99=    2370  max=     12964  mean=     2060 ns
+
+=== batch=4 ===
+burst: depth=4 rounds=2000 sent=8000 received=8000 lost=0
+pipelined completion (client)      n=   8000  p50=  132517  p90=  136104  p99=  151141  max=   1386979  mean=   114238 ns
+throughput: 28034 req/s (depth 4)
+daemon: slots=64 batch=4 work=4 gpu_cpu=6 resp_cpu=7 idle=0
+daemon: globaltimer offset=-1791210731578192863 ns (spread 484 ns)
+daemon: consumed=8000 published=8000 head=8000 drops=0 acked=8000
+daemon: drained=8000 served=8000 errors=0 futex_timeouts=0
+daemon: gpu passes busy=3986 idle=4568 (idle 53.4% of 12.02 s; wall 666 req/s)
+GPU start -> GPU done              n=   8000  p50=   26912  p90=   27360  p99=   27712  max=     27776  mean=    26722 ns
+kernel parse -> GPU done           n=   8000  p50=   88645  p90=  117485  p99=  125655  max=   1231835  mean=    79042 ns
+responder sendto()                 n=   8000  p50=    1705  p90=    2222  p99=    2475  max=     10190  mean=     1623 ns
+
+=== batch=8 ===
+burst: depth=8 rounds=2000 sent=16000 received=16000 lost=0
+pipelined completion (client)      n=  16000  p50=  241789  p90=  247068  p99=  336167  max=   1510000  mean=   220157 ns
+throughput: 30955 req/s (depth 8)
+daemon: slots=64 batch=8 work=4 gpu_cpu=6 resp_cpu=7 idle=0
+daemon: globaltimer offset=-1791210731578179087 ns (spread 377 ns)
+daemon: consumed=16000 published=16000 head=16000 drops=0 acked=16000
+daemon: drained=16000 served=16000 errors=0 futex_timeouts=0
+daemon: gpu passes busy=3986 idle=4557 (idle 53.3% of 12.01 s; wall 1332 req/s)
+GPU start -> GPU done              n=  16000  p50=   26656  p90=   27360  p99=   27744  max=     27776  mean=    26505 ns
+kernel parse -> GPU done           n=  16000  p50=  138353  p90=  214939  p99=  225193  max=   1319081  mean=   131042 ns
+responder sendto()                 n=  16000  p50=    1418  p90=    2117  p99=    2488  max=     12712  mean=     1500 ns
+
+=== batch=16 ===
+burst: depth=16 rounds=2000 sent=32000 received=32000 lost=0
+pipelined completion (client)      n=  32000  p50=  452676  p90=  534048  p99=  682521  max=   1808932  mean=   443579 ns
+throughput: 32091 req/s (depth 16)
+daemon: slots=64 batch=16 work=4 gpu_cpu=6 resp_cpu=7 idle=0
+daemon: globaltimer offset=-1791210731578164519 ns (spread 2698 ns)
+daemon: consumed=32000 published=32000 head=32000 drops=0 acked=32000
+daemon: drained=32000 served=32000 errors=0 futex_timeouts=0
+daemon: gpu passes busy=3905 idle=4424 (idle 53.1% of 12.00 s; wall 2666 req/s)
+GPU start -> GPU done              n=  32000  p50=   26304  p90=   27296  p99=   27744  max=     27808  mean=    26235 ns
+kernel parse -> GPU done           n=  32000  p50=  241028  p90=  397877  p99=  522820  max=   1576991  mean=   239395 ns
+responder sendto()                 n=  32000  p50=    1355  p90=    2000  p99=    3076  max=     26353  mean=     1435 ns
+
+=== batch=32 ===
+burst: depth=32 rounds=2000 sent=64000 received=64000 lost=0
+pipelined completion (client)      n=  64000  p50=  601314  p90=  887741  p99= 1024611  max=   2183304  mean=   692407 ns
+throughput: 34062 req/s (depth 32)
+daemon: slots=64 batch=32 work=4 gpu_cpu=6 resp_cpu=7 idle=0
+daemon: globaltimer offset=-1791210731578149450 ns (spread 342 ns)
+daemon: consumed=64000 published=64000 head=64000 drops=0 acked=64000
+daemon: drained=64000 served=64000 errors=0 futex_timeouts=0
+daemon: gpu passes busy=5766 idle=4473 (idle 43.7% of 12.02 s; wall 5326 req/s)
+GPU start -> GPU done              n=  64000  p50=   26752  p90=   27360  p99=   27744  max=     27808  mean=    26583 ns
+kernel parse -> GPU done           n=  64000  p50=  434932  p90=  773226  p99=  851360  max=   1978051  mean=   441251 ns
+responder sendto()                 n=  64000  p50=    1349  p90=    1812  p99=    2788  max=     47498  mean=     1411 ns
+
+=== batch=64 ===
+burst: depth=64 rounds=2000 sent=128000 received=128000 lost=0
+pipelined completion (client)      n= 128000  p50= 1750091  p90= 1866544  p99= 1975635  max=   3623325  mean=  1480357 ns
+throughput: 33927 req/s (depth 64)
+daemon: slots=64 batch=64 work=4 gpu_cpu=6 resp_cpu=7 idle=0
+daemon: globaltimer offset=-1791210731578133768 ns (spread 377 ns)
+daemon: consumed=128000 published=128000 head=128000 drops=0 acked=128000
+daemon: drained=128000 served=128000 errors=0 futex_timeouts=0
+daemon: gpu passes busy=5171 idle=4026 (idle 43.8% of 12.01 s; wall 10661 req/s)
+GPU start -> GPU done              n= 128000  p50=   26784  p90=   27616  p99=   27776  max=     27840  mean=    26554 ns
+kernel parse -> GPU done           n= 128000  p50=  870442  p90= 1524923  p99= 1700904  max=   3477896  mean=   868583 ns
+responder sendto()                 n= 128000  p50=    1402  p90=    1840  p99=    3208  max=     21374  mean=     1470 ns
+
+seen pkts      256000
+ip+udp pkts    128000
+magic pkts     128000
+drops          0
+published      128000
+drop: ctl busy 0
+drop: done busy 0
+timeouts       0
+head=128000 done_seq=0 published=128000 acked=128000 drops=0 ready=1
+slot[0]: state=0 id=127936 client_ns=218315197756309 x[0]=0.180000 | done state=0 id=127936 y[0]=-0.000000
+slot[1]: state=0 id=127937 client_ns=218315197759994 x[0]=0.310000 | done state=0 id=127937 y[0]=-0.000000
+slot[2]: state=0 id=127938 client_ns=218315197762791 x[0]=0.070000 | done state=0 id=127938 y[0]=-0.000000
+slot[3]: state=0 id=127939 client_ns=218315197764866 x[0]=0.200000 | done state=0 id=127939 y[0]=-0.000000
+detached from lo
