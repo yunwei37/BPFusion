@@ -34,7 +34,7 @@ tools: $(TOOLS)
 
 executor: $(BUILD)/executor
 
-$(BUILD)/%.bpf.o: bpf/%.bpf.c | $(BUILD)
+$(BUILD)/%.bpf.o: bpf/%.bpf.c bpf/include/bpfusion_queue.h | $(BUILD)
 	clang $(BPF_CFLAGS) -c $< -o $@
 
 $(BUILD)/wake_probe: tools/wake_probe/main.c | $(BUILD)

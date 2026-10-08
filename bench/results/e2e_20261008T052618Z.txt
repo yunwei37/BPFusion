@@ -1,0 +1,67 @@
+== BPFusion end-to-end run 20261008T052618Z ==
+host: Linux 7.3.0-070300rc3-generic  24 cpus
+cmdline: BOOT_IMAGE=/boot/vmlinuz-7.3.0-070300rc3-generic root=UUID=85355174-a2ad-4e84-bf78-53fac30b89fb ro panic=10 lsm=landlock,lockdown,yama,integrity,apparmor,bpf splash quiet iommu=pt vt.handoff=7
+gpu: NVIDIA GeForce RTX 5090, 610.57.04
+params: seconds=30 work=4 batch=8 gpu_cpu=6 resp_cpu=7 idle=0
+
+--- daemon ---
+daemon: resident kernel, slots=64 work=4 gpu_cpu=6 resp_cpu=7 idle=0 (batch=8 ignored)
+daemon: globaltimer offset=-1791210731561792383 ns (spread 888 ns)
+
+--- client: verify (numeric agreement with the CPU reference) ---
+verify: GPU  y[0..3] = 0.000000 0.000000 -0.000000 -0.000000
+verify: CPU  y[0..3] = 0.000000 0.000000 -0.000000 -0.000000
+verify: max |GPU - CPU| = 2.602e-17 (OK)
+verify: resp magic=46504251 id=0 client_ns_echo=yes
+
+--- client: own (one request in flight) ---
+client: mode=own sent=2000 got=2000 lost=0
+round trip (client)                n=   2000  p50=   41259  p90=   43407  p99=  175499  max=    817991  mean=    44871 ns
+  parse -> GPU start               n=   2000  p50=    2547  p90=    3415  p99=    3802  max=      5075  mean=     2612 ns
+  GPU start -> GPU done            n=   2000  p50=   25504  p90=   26336  p99=   26560  max=     26848  mean=    25585 ns
+goodput: 22286 req/s (one at a time, 1/mean RTT)
+wall: 22472 req/s over 89 ms
+
+burst: depth=8 rounds=500 sent=4000 received=4000 lost=0
+pipelined completion (client)      n=   4000  p50=  169835  p90=  268115  p99=  599506  max=    945074  mean=   164405 ns
+throughput: 26765 req/s (depth 8)
+
+--- client: paced (2000 req/s for 3000 ms) ---
+paced: sent=6001 received=6000 in 3000 ms -> 2000 req/s
+daemon: consumed=12002 published=12002 head=12002 drops=0 acked=12002
+daemon: drained=12002 served=12002 errors=0 futex_timeouts=0
+daemon: gpu batches busy=10053750 idle_polls=517886236 (busy_wall 1.4% of 30.00 s; wall 400 req/s)
+daemon: gpu kernel 0.31 s busy_wall 0.41 s wait 29.59 s -> occupancy 74.9% (bubble 0.10 s)
+GPU start -> GPU done              n=  11996  p50=   25696  p90=   26272  p99=   26560  max=     28000  mean=    25629 ns
+kernel parse -> GPU done           n=  11996  p50=   27671  p90=  191305  p99=  258355  max=    281922  mean=    65039 ns
+responder sendto()                 n=  12002  p50=    1791  p90=    2204  p99=    3631  max=     21763  mean=     1833 ns
+
+--- page/BPF counters ---
+seen pkts      24004
+ip+udp pkts    12002
+magic pkts     12002
+drops          0
+published      12002
+drop: ctl busy 0
+drop: done busy 0
+timeouts       0
+head=12002 done_seq=12003 published=12002 acked=12002 drops=0 ready=1
+slot[0]: state=0 id=11968 client_ns=226451636681747 x[0]=0.190000 | done state=0 id=11968 y[0]=-0.000000
+slot[1]: state=0 id=11969 client_ns=226451637181753 x[0]=0.320000 | done state=0 id=11969 y[0]=0.000000
+slot[2]: state=0 id=11970 client_ns=226451637681742 x[0]=0.080000 | done state=0 id=11970 y[0]=-0.000000
+slot[3]: state=0 id=11971 client_ns=226451638181750 x[0]=0.210000 | done state=0 id=11971 y[0]=-0.000000
+detached from lo
+
+=== baseline: userspace UDP echo (port 39401, tc hook still attached) ===
+echo_udp: port=39401 cpu=7
+--- baseline client: own (one request in flight) ---
+client: mode=own sent=2000 got=2000 lost=0
+round trip (client)                n=   2000  p50=    6993  p90=    7643  p99=   11624  max=    819984  mean=     7971 ns
+  parse -> GPU start               n=   2000  p50=       0  p90=       0  p99=       0  max=         0  mean=        0 ns
+  GPU start -> GPU done            n=   2000  p50=       0  p90=       0  p99=       0  max=         0  mean=        0 ns
+goodput: 125455 req/s (one at a time, 1/mean RTT)
+wall: 125000 req/s over 16 ms
+--- baseline client: burst (pipeline depth 8) ---
+burst: depth=8 rounds=500 sent=4000 received=4000 lost=0
+pipelined completion (client)      n=   4000  p50=   10483  p90=   14342  p99=   21214  max=     91146  mean=    10574 ns
+throughput: 416983 req/s (depth 8)

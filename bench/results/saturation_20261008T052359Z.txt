@@ -1,0 +1,110 @@
+== BPFusion saturation / bubble sweep 20261008T052359Z ==
+host: Linux 7.3.0-070300rc3-generic  gpu: NVIDIA GeForce RTX 5090
+offered=100000 req/s for 5000 ms at batch=32, one daemon per work value
+
+=== work=4 ===
+--- daemon ---
+--- client: paced 100000 req/s ---
+paced: sent=500001 received=143236 in 5000 ms -> 28647 req/s
+--- client: own (latency out of the saturated queue is meaningless, but shows service time) ---
+client: mode=own sent=200 got=200 lost=0
+round trip (client)                n=    200  p50=   41271  p90=   43030  p99=  237830  max=    917379  mean=    46648 ns
+  parse -> GPU start               n=    200  p50=       0  p90=       0  p99=       0  max=    849177  mean=     4246 ns
+  GPU start -> GPU done            n=    200  p50=   25248  p90=   25536  p99=   25888  max=     25920  mean=    25236 ns
+goodput: 21437 req/s (one at a time, 1/mean RTT)
+wall: 22222 req/s over 9 ms
+daemon: slots=64 batch=32 work=4 gpu_cpu=6 resp_cpu=7 idle=0
+daemon: globaltimer offset=-1791210731561965744 ns (spread 1001 ns)
+daemon: consumed=143500 published=143500 head=143500 drops=356701 acked=143500
+daemon: drained=500201 served=143500 errors=0 futex_timeouts=0
+daemon: gpu batches busy=123687812 idle_polls=79873961 (busy_wall 50.1% of 10.00 s; wall 14350 req/s)
+daemon: gpu kernel 3.66 s busy_wall 5.01 s wait 4.99 s -> occupancy 73.0% (bubble 1.35 s)
+GPU start -> GPU done              n= 143485  p50=   25504  p90=   26016  p99=   26496  max=     28480  mean=    25501 ns
+kernel parse -> GPU done           n= 143485  p50= 2217449  p90= 2237586  p99= 2252105  max=   2375099  mean=  2212957 ns
+responder sendto()                 n= 143500  p50=    1365  p90=    1516  p99=    1842  max=     16453  mean=     1401 ns
+--- page/BPF counters ---
+seen pkts      643757
+ip+udp pkts    500201
+magic pkts     500201
+drops          356701
+published      143500
+drop: ctl busy 306551
+drop: done busy 50150
+timeouts       0
+head=143500 done_seq=143501 published=143500 acked=143500 drops=356701 ready=1
+slot[0]: state=0 id=143488 client_ns=226314808145197 x[0]=0.020000 | done state=0 id=143488 y[0]=-0.000000
+slot[1]: state=0 id=143489 client_ns=226314808186122 x[0]=0.150000 | done state=0 id=143489 y[0]=0.000000
+slot[2]: state=0 id=143490 client_ns=226314808229629 x[0]=0.280000 | done state=0 id=143490 y[0]=-0.000000
+slot[3]: state=0 id=143491 client_ns=226314808275018 x[0]=0.040000 | done state=0 id=143491 y[0]=-0.000000
+
+=== work=16 ===
+--- daemon ---
+--- client: paced 100000 req/s ---
+paced: sent=500001 received=46818 in 5000 ms -> 9364 req/s
+--- client: own (latency out of the saturated queue is meaningless, but shows service time) ---
+client: mode=own sent=200 got=200 lost=0
+round trip (client)                n=    200  p50=  114069  p90=  125124  p99=  380186  max=    679069  mean=   125636 ns
+  parse -> GPU start               n=    200  p50=       0  p90=       0  p99=       0  max=         0  mean=        0 ns
+  GPU start -> GPU done            n=    200  p50=   97024  p90=   99456  p99=   99904  max=     99904  mean=    97090 ns
+goodput: 7959 req/s (one at a time, 1/mean RTT)
+wall: 8000 req/s over 25 ms
+daemon: slots=64 batch=32 work=16 gpu_cpu=6 resp_cpu=7 idle=0
+daemon: globaltimer offset=-1791210731561949421 ns (spread 2665 ns)
+daemon: consumed=47082 published=47082 head=47082 drops=453119 acked=47082
+daemon: drained=500201 served=47082 errors=0 futex_timeouts=0
+daemon: gpu batches busy=126313727 idle_polls=78873944 (busy_wall 50.3% of 10.00 s; wall 4708 req/s)
+daemon: gpu kernel 4.59 s busy_wall 5.03 s wait 4.97 s -> occupancy 91.2% (bubble 0.44 s)
+GPU start -> GPU done              n=  47074  p50=   97344  p90=   99456  p99=  101696  max=    103520  mean=    97406 ns
+kernel parse -> GPU done           n=  47074  p50= 6810802  p90= 6920503  p99= 6972466  max=   7026447  mean=  6783684 ns
+responder sendto()                 n=  47082  p50=    1331  p90=    1545  p99=    1923  max=     23239  mean=     1382 ns
+--- page/BPF counters ---
+seen pkts      547344
+ip+udp pkts    500201
+magic pkts     500201
+drops          453119
+published      47082
+drop: ctl busy 436663
+drop: done busy 16456
+timeouts       0
+head=47082 done_seq=47083 published=47082 acked=47082 drops=453119 ready=1
+slot[0]: state=0 id=47040 client_ns=226325732833544 x[0]=0.190000 | done state=0 id=47040 y[0]=0.000000
+slot[1]: state=0 id=47041 client_ns=226325732946658 x[0]=0.320000 | done state=0 id=47041 y[0]=0.000000
+slot[2]: state=0 id=47042 client_ns=226325733061288 x[0]=0.080000 | done state=0 id=47042 y[0]=0.000000
+slot[3]: state=0 id=47043 client_ns=226325733173940 x[0]=0.210000 | done state=0 id=47043 y[0]=0.000000
+
+=== work=64 ===
+--- daemon ---
+--- client: paced 100000 req/s ---
+paced: sent=500001 received=12397 in 5000 ms -> 2479 req/s
+--- client: own (latency out of the saturated queue is meaningless, but shows service time) ---
+client: mode=own sent=200 got=200 lost=0
+round trip (client)                n=    200  p50=  413867  p90=  432085  p99= 1067872  max=  24127151  mean=   553400 ns
+  parse -> GPU start               n=    200  p50=       0  p90=       0  p99=       0  max=  23684246  mean=   118421 ns
+  GPU start -> GPU done            n=    200  p50=  395360  p90=  408800  p99=  413056  max=    413856  mean=   395661 ns
+goodput: 1807 req/s (one at a time, 1/mean RTT)
+wall: 1818 req/s over 110 ms
+daemon: slots=64 batch=32 work=64 gpu_cpu=6 resp_cpu=7 idle=0
+daemon: globaltimer offset=-1791210731561933054 ns (spread 800 ns)
+daemon: consumed=12661 published=12661 head=12661 drops=487540 acked=12661
+daemon: drained=500201 served=12661 errors=0 futex_timeouts=0
+daemon: gpu batches busy=142618575 idle_polls=87704099 (busy_wall 51.1% of 10.00 s; wall 1266 req/s)
+daemon: gpu kernel 4.99 s busy_wall 5.11 s wait 4.89 s -> occupancy 97.7% (bubble 0.12 s)
+GPU start -> GPU done              n=  12661  p50=  393120  p90=  405888  p99=  412064  max=    555680  mean=   393970 ns
+kernel parse -> GPU done           n=  12661  p50=25704429  p90=26432454  p99=26717123  max=  26857125  mean= 25326860 ns
+responder sendto()                 n=  12661  p50=    1456  p90=    1819  p99=    2453  max=     18715  mean=     1538 ns
+--- page/BPF counters ---
+seen pkts      512925
+ip+udp pkts    500201
+magic pkts     500201
+drops          487540
+published      12661
+drop: ctl busy 483113
+drop: done busy 4427
+timeouts       0
+head=12661 done_seq=12662 published=12661 acked=12661 drops=487540 ready=1
+slot[0]: state=0 id=12608 client_ns=226336485410785 x[0]=0.240000 | done state=0 id=12608 y[0]=0.000000
+slot[1]: state=0 id=12609 client_ns=226336485823928 x[0]=0.000000 | done state=0 id=12609 y[0]=0.000000
+slot[2]: state=0 id=12610 client_ns=226336486225843 x[0]=0.130000 | done state=0 id=12610 y[0]=0.000000
+slot[3]: state=0 id=12611 client_ns=226336486638594 x[0]=0.260000 | done state=0 id=12611 y[0]=0.000000
+
+detached from lo

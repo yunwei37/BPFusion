@@ -7,6 +7,11 @@ Status: measured on 2026-10-08 on the host described in
 - `bench/results/batch_sweep_20261008T045001Z.txt` — throughput vs batch depth
 - `bench/results/saturation_20261008T044714Z.txt` — GPU occupancy under overload
 
+> **Superseded for the executor design and its throughput/occupancy by
+> [`0004-resident-kernel.md`](0004-resident-kernel.md).** 0003 still launched
+> per batch from the host; 0004 launches once and stays resident. The two
+> lost-wakeup fixes and the 41 µs idle RTT below still hold.
+
 This finding supersedes the latency/throughput/occupancy numbers in
 `0002-end-to-end-mlp.md` and records two real bugs that made every idle
 measurement 20 ms too slow, plus the move from copy-staging to direct-page

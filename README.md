@@ -6,12 +6,13 @@ drains it, and a replying socket path puts the completions back on the wire.
 There is no per-request control-plane work in userspace and no per-connection
 server socket — the pinned page *is* the queue.
 
-**Current scope:** the daemon reads and writes the mmap'ed BPF page *directly*
-from the GPU (`cudaHostRegister(..., cudaHostRegisterMapped)` +
-`cudaHostGetDevicePointer`), so there is no per-batch `cudaMemcpy` staging. It
-still *launches* per batch from the host (`BF_PIPE=8` in flight) rather than
-launching once and staying resident — that residency is the remaining step.
-Findings state exactly what is proven.
+**Current scope:** the executor launches **one resident kernel** that spins on
+the mmap'ed BPF page for the whole run — it reads `slots[]` and writes `done[]`
+in place through a `cudaHostRegister(..., cudaHostRegisterMapped)` device alias.
+There is **no per-request and no per-batch host control call**; the host only
+drains the ingress doorbell and samples completions for histograms. The
+remaining control plane is the ingress doorbell itself (a future
+`bpf_send_signal`/kernel-side notify). Findings state exactly what is proven.
 
 ## What is built and measured today
 
@@ -26,8 +27,8 @@ resident CUDA executor  ->  responder sendto  ->  client
   when both the request slot and its completion slot are FREE, copies the
   payload, stamps the kernel timestamp, publishes, and rings the doorbell.
   Excess under overload is counted (`drops`, split into `ctl busy`/`done busy`).
-- `executor/executor.cu` — the daemon: a GPU loop that launches the kernel
-  directly on the registered BPF page (no staging copies) plus a responder
+- `executor/executor.cu` — the daemon: launches one resident kernel on the
+  registered BPF page (no staging copies, no per-batch launch) plus a responder
   thread. It opens the pinned maps with `bpf_obj_get` and does **not** load the
   object.
 - `tools/bpfusion_load.c` — `attach`/`detach`/`stats`. Owns the object lifetime
@@ -40,7 +41,9 @@ Measured results, with the honest costs, are in:
 - `docs/findings/0001-ingress-wake.md` — the kernel→userspace wakeup cost
 - `docs/findings/0002-end-to-end-mlp.md` — packet→GPU→packet (superseded by 0003)
 - `docs/findings/0003-direct-page-and-wakeup.md` — direct-page execution, the
-  lost-wakeup bugs, 41 µs idle RTT, throughput vs batch depth, GPU occupancy
+  lost-wakeup bugs, 41 µs idle RTT, throughput vs batch depth (superseded by 0004)
+- `docs/findings/0004-resident-kernel.md` — **current**: launch-once resident
+  GPU kernel, ~28 k req/s, occupancy vs work, the `__ldcg`/L1-coherence pitfall
 
 ## Build
 

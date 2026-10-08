@@ -103,7 +103,10 @@ struct bf_page {
 	__u32 drops;
 	__u32 ready;
 	__u32 n_slots;
+	__u32 served;      /* completions published to done[] (GPU-owned) */
 	__u32 pad0;
+	__u64 stop_ns;     /* host CLOCK_MONOTONIC deadline for the resident
+			    * kernel; 0 means "not set". */
 
 	struct bf_ctl_slot slots[BF_SLOTS];
 	struct bf_peer peers[BF_SLOTS];

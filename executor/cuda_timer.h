@@ -37,6 +37,14 @@ __global__ void bf_ping_globaltimer_kernel(unsigned long long *out)
 	}
 }
 
+__device__ __forceinline__ unsigned long long bf_globaltimer(void)
+{
+	unsigned long long t;
+
+	asm volatile("mov.u64 %0, %%globaltimer;" : "=l"(t));
+	return t;
+}
+
 static inline uint64_t bf_host_mono_ns(void)
 {
 	struct timespec ts;
