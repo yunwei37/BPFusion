@@ -85,15 +85,40 @@ worker in the steady state. The userspace stage exists to get a real
 packet→GPU→packet number today and is not evidence that a CPU request worker
 is the target.
 
+## Pinning control (2026-10-08, `bench/results/ingress_20261008T075650Z.txt`)
+
+The p99 attribution above was an inference because no pinned run existed.
+`tools/wake_probe` now takes a fifth argument: `1` pins the consumer and sender
+to CPUs 2/3 with `SCHED_FIFO` priority 90 (`pin_fifo()`). Re-running the same
+three variants pinned:
+
+| chain | p50 | p90 | p99 | max |
+|---|---|---|---|---|
+| sendto → BPF record | 1.0–1.1 µs | 1.4 µs | 1.9–2.0 µs | 24–31 µs |
+| BPF record → userspace, **busy-wait** | 94–101 ns | 128–139 ns | 181–186 ns | 24 µs–204 µs |
+| BPF record → userspace, **epoll_wait** | 2.0–2.2 µs | 2.7–2.9 µs | **3.7–4.1 µs** | 62–282 µs |
+| sendto → blocking `recvfrom()` | 2.9–3.0 µs | 3.8–4.0 µs | 4.7–599 µs | 147 µs–1.2 ms |
+
+This confirms the inference directly: the unpinned epoll p99 (135–149 µs) is a
+**scheduling/placement outlier, not queueing** — under pinning it collapses to
+3.7–4.1 µs, a 35–40× reduction, matching the ~2 µs p50 plus a bounded wake
+latency. The spin variant's p99 is essentially unchanged (204–229 ns unpinned vs
+181–186 ns pinned) because it never sleeps, which is exactly why it is the floor.
+The `recvfrom` p99 is noisier (one rep still hit 599 µs even pinned); that path
+uses the same task-wake machinery as epoll and inherits its sensitivity to
+`nanosleep`-driven sender jitter.
+
+**Consequence:** with the consumer pinned, a per-batch `epoll_wait()` wake costs
+~2 µs p50 / ~4 µs p99 on this host, and the pollable-map handoff is a
+shared-memory read at ~0.1 µs. Neither is a blocker for the design; the
+unpinned p99 (which the earlier table reported) should not be quoted as the
+cost of the mechanism.
+
 ## Open items
 
-- No CPU pinning/`SCHED_FIFO` used; the p99 outliers are therefore an upper
-  bound on the "unmanaged host" case and will be re-measured with pinning
-  before any headline claim.
-- The p99 attribution (placement/scheduling rather than queueing) is an
-  *inference*: no control experiment with pinning was run for this table.
+- The kernel-module `wake_up()` figure is still unmeasured; the module-free
+  comparison (spin vs epoll vs recvfrom) is now pinned-controlled.
 - Loopback only: this measures the whole stack above the NIC, so the NIC RX
   contribution is *not* included. A real-NIC measurement is still owed.
-- The kernel-module `wake_up()` figure is unmeasured.
 
 

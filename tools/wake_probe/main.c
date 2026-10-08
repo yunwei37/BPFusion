@@ -13,6 +13,8 @@
 // deltas are directly comparable on the same machine. The sender timestamp
 // travels inside the packet payload and inside the ring-buffer record, so
 // pairing is exact under loss/reordering.
+#define _GNU_SOURCE
+#include <sched.h>
 #include <arpa/inet.h>
 #include <errno.h>
 #include <netinet/in.h>
@@ -117,12 +119,33 @@ struct send_arg {
 	struct sockaddr_in dst;
 	int n;
 	int pace_us;
+	int cpu; /* pin the sender here; -1 = no pin */
 };
+
+/* Optional isolation: pin the calling thread to a CPU and put it under
+ * SCHED_FIFO. Finding 0001's p99 outliers were an *unpinned* upper bound;
+ * this is the control experiment. */
+static void pin_fifo(int cpu)
+{
+	cpu_set_t set;
+	struct sched_param sp = {.sched_priority = 90};
+
+	if (cpu < 0)
+		return;
+	CPU_ZERO(&set);
+	CPU_SET(cpu, &set);
+	pthread_setaffinity_np(pthread_self(), sizeof(set), &set);
+	if (sched_setscheduler(0, SCHED_FIFO, &sp) != 0)
+		fprintf(stderr, "pin_fifo: sched_setscheduler: %s\n",
+			strerror(errno));
+}
 
 static void *sender(void *arg)
 {
 	struct send_arg *a = arg;
 	char buf[64];
+
+	pin_fifo(a->cpu);
 
 	for (int i = 0; i < a->n; i++) {
 		uint64_t t = now_ns();
@@ -138,6 +161,7 @@ static void *sender(void *arg)
 }
 
 static volatile int g_stop;
+static int g_pin_cpu = -1;
 
 /* Busy-wait mode: the consumer thread spins on the ring buffer instead of
  * blocking in epoll_wait(). Measures the same chain with the scheduler's
@@ -146,6 +170,7 @@ static void *rb_spinner(void *arg)
 {
 	struct ring_buffer *rb = arg;
 
+	pin_fifo(g_pin_cpu);
 	while (!g_stop)
 		ring_buffer__consume(rb);
 	return NULL;
@@ -158,6 +183,7 @@ int main(int argc, char **argv)
 	int n_pkts = argc > 2 ? atoi(argv[2]) : 20000;
 	int pace_us = argc > 3 ? atoi(argv[3]) : 50;
 	int mode = argc > 4 ? atoi(argv[4]) : 1; /* 1=ringbuf, 0=recvfrom */
+	int pin = argc > 5 ? atoi(argv[5]) : 0;  /* 1 = pin consumer+sender */
 	int rx, tx;
 	struct sockaddr_in addr;
 	struct send_arg sa;
@@ -177,6 +203,12 @@ int main(int argc, char **argv)
 	sa.dst = addr;
 	sa.n = n_pkts;
 	sa.pace_us = pace_us;
+	sa.cpu = pin ? 3 : -1;
+	/* In spin mode the consumer is the spinner thread; otherwise the main
+	 * thread reads the ring. Pin whichever one actually consumes. */
+	g_pin_cpu = (pin && mode == 2) ? 2 : -1;
+	if (pin && mode != 2)
+		pin_fifo(2);
 
 	if (mode) {
 		struct bpf_object *bo;

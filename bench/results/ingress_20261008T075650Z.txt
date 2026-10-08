@@ -1,0 +1,51 @@
+### ringbuf_epoll rep1 pin=1
+== A: BPF ringbuf + userspace epoll_wait (pace=50 us) ==
+sent=20000  recorded=20000
+sendto -> BPF record             n= 20000  p50=  1061  p90=  1478  p99=  2000  max=   27697  mean=   1172 ns
+BPF record -> userspace wake     n= 20000  p50=  2003  p90=  2904  p99=  4083  max=  248005  mean=   2315 ns
+
+### ringbuf_epoll rep2 pin=1
+== A: BPF ringbuf + userspace epoll_wait (pace=50 us) ==
+sent=20000  recorded=20000
+sendto -> BPF record             n= 20000  p50=  1150  p90=  1516  p99=  2083  max=   40445  mean=   1223 ns
+BPF record -> userspace wake     n= 20000  p50=  2163  p90=  2802  p99=  3692  max=  282411  mean=   2451 ns
+
+### ringbuf_epoll rep3 pin=1
+== A: BPF ringbuf + userspace epoll_wait (pace=50 us) ==
+sent=20000  recorded=20000
+sendto -> BPF record             n= 20000  p50=  1103  p90=  1476  p99=  2018  max=   18125  mean=   1173 ns
+BPF record -> userspace wake     n= 20000  p50=  2130  p90=  2793  p99=  3927  max=   63827  mean=   2318 ns
+
+### ringbuf_spin rep1 pin=1
+== A2: BPF ringbuf + busy-wait consume (pace=50 us) ==
+sent=20000  recorded=20000
+sendto -> BPF record             n= 20000  p50=  1119  p90=  1407  p99=  1924  max=   12255  mean=   1160 ns
+BPF record -> userspace wake     n= 20000  p50=    94  p90=   132  p99=   181  max=  203977  mean=    138 ns
+
+### ringbuf_spin rep2 pin=1
+== A2: BPF ringbuf + busy-wait consume (pace=50 us) ==
+sent=20000  recorded=20000
+sendto -> BPF record             n= 20000  p50=  1128  p90=  1447  p99=  1947  max=   10242  mean=   1174 ns
+BPF record -> userspace wake     n= 20000  p50=    97  p90=   135  p99=   185  max=   92467  mean=    121 ns
+
+### ringbuf_spin rep3 pin=1
+== A2: BPF ringbuf + busy-wait consume (pace=50 us) ==
+sent=20000  recorded=20000
+sendto -> BPF record             n= 20000  p50=  1150  p90=  1456  p99=  2012  max=   11594  mean=   1193 ns
+BPF record -> userspace wake     n= 20000  p50=   101  p90=   128  p99=   185  max=   24090  mean=    116 ns
+
+### recvfrom_block rep1 pin=1
+== B: baseline blocking recvfrom (pace=50 us) ==
+sent=20000  received=20000
+sendto -> recvfrom return        n= 20000  p50=  2999  p90=  3985  p99=598939  max= 1161424  mean=  18523 ns
+
+### recvfrom_block rep2 pin=1
+== B: baseline blocking recvfrom (pace=50 us) ==
+sent=20000  received=20000
+sendto -> recvfrom return        n= 20000  p50=  2948  p90=  3834  p99=  4730  max=  146810  mean=   3195 ns
+
+### recvfrom_block rep3 pin=1
+== B: baseline blocking recvfrom (pace=50 us) ==
+sent=20000  received=20000
+sendto -> recvfrom return        n= 20000  p50=  2972  p90=  3904  p99=  4867  max=  155888  mean=   3208 ns
+
