@@ -125,10 +125,16 @@ def main():
         head = page.u32(LLM_HEAD_OFF)
         if head == seen:
             continue
+        if head - seen > BF_LLM_SLOTS:
+            # More requests published than the ring holds: resync to the
+            # oldest still-live slot instead of chasing lost indices.
+            seen = head - BF_LLM_SLOTS
         idx = seen % BF_LLM_SLOTS
         (state, n_gen, n_prompt, produced, addr_be, port_be, pad,
          client_ns, ingress_ns, gpu_done_ns, tok_in, tok_out) = page.slot(idx)
         if state != BF_PENDING:
+            # Dropped/skipped request: advance so we do not livelock here.
+            seen += 1
             continue
         prompt = list(tok_in[:n_prompt])
         t0 = time.perf_counter()

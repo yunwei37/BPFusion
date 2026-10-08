@@ -85,6 +85,7 @@ completion the responder is still reading.
 | `tools/client.c` | `verify`/`own`/`burst`/`paced` client (MLP path) |
 | `executor/llm_executor.py` | resident Qwen2.5 executor on the token ring |
 | `tools/llm_bench.py` | LLM TTFT/TPOT vs a direct in-process baseline |
+| `tools/llm_load.py` | LLM concurrency sweep (goodput / TTFT / TPOT) |
 
 ## What is not here yet
 

@@ -48,6 +48,8 @@ Measured results, with the honest costs, are in:
   the packet→page→GPU→page path, TTFT/TPOT vs a direct in-process baseline
 - `docs/findings/0006-veth-netdevice.md` — the same path over a **real
   netdevice** (veth across two netns), not loopback: no measurable penalty
+- `docs/findings/0007-concurrency-slo.md` — concurrency sweep: token goodput
+  flat at ~119 tok/s, TTFT scales with queue depth (batch-1 executor)
 
 ## Build
 

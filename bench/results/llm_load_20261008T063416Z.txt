@@ -1,0 +1,10 @@
+=== BPFusion LLM concurrency sweep, 2026-10-08T06:34:16Z ===
+model=Qwen/Qwen2.5-0.5B-Instruct gen=8 rounds/thread=2
+executor: resident host Python, one slot at a time (batch 1)
+
+prompt_tok=5 gen=8 rounds/thread=2
+conc  req    tok/s  TTFT p50  TTFT p99  TPOT p50
+   1    2    117.8      9307      9307    8367.8
+   2    4    119.0     72338     75890    8795.1
+   4    8    118.7    138196    206530    9351.0
+   8   16    118.8    274945    402183    8351.4
