@@ -1,6 +1,10 @@
 # BPFusion architecture
 
-One picture of what runs today, and where each piece is measured.
+One picture of what runs today, and where each piece is measured. Two paths
+share the page: a **synthetic-MLP path with a resident, launch-once CUDA
+kernel** (the mechanism this project is about) and a **real-LLM path driven by
+a host Python executor** (the honest baseline that produces TTFT/TPOT numbers).
+They have different maturity; `README.md` has the scope table.
 
 ## Data path
 
@@ -13,7 +17,7 @@ One picture of what runs today, and where each piece is measured.
         |  take slot only if slots[i].state == FREE && done[i].state == FREE
         |  copy payload, stamp ingress_ns (bpf_ktime_get_ns), publish
         v
-  pinned BPF page  (BF_PAGE_MMAP_BYTES, /sys/fs/bpf/bpfusion_page)
+  pinned BPF page  (BF_PAGE_MMAP_BYTES, pinned at /sys/fs/bpf/bpfusion_ctl)
         |  resident reads slots[] / writes done[] in place
         |  producer owns slots[].state; responder owns done[].state
         v
@@ -42,6 +46,8 @@ The same page carries a second, independent token ring for the LLM path:
         |  prefill + decode; writes tok_out[k], bumps produced after each token
         v
   client polls the slot; TTFT/TPOT from successive `produced` bumps
+```
+
 
 The LLM ring serves two transports. UDP (:39402) replies by having the client
 poll `produced` in the page (above). TCP (:39403) parses the same request from a
@@ -61,12 +67,15 @@ executor streams each token id as a LE `u32` back on the accepted socket
         v
   client recv (len = gen*4 bytes)
 ```
+See `docs/findings/0009-tcp-path.md`.
 
-See `docs/findings/0005-resident-llm.md`.
-
-There is **no host/GPU control call on the steady-state path**: the kernel is
-launched once and stays resident; the host only drains the ingress doorbell and
-samples the completion ring for the histograms.
+The MLP path has **no per-request/per-batch GPU launch or control call**: the
+kernel is launched once and stays resident; the host only drains the ingress
+doorbell and samples the completion ring for the histograms. It is **not** a
+fully no-userspace-worker path: a userspace responder thread still `sendto()`s
+every reply, and the TCP/HTTP reply is not yet a kernel TX. The **LLM path is
+even further** from the target — `executor/llm_executor.py` is a host-side worker
+that accepts connections, runs HF prefill/decode per request and sends tokens.
 
 ## Ownership rules (the correctness core)
 

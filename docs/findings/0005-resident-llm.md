@@ -1,4 +1,4 @@
-# Finding 0005 — resident LLM executor on the pinned page
+# Finding 0005 — real Qwen LLM on the pinned page (host-Python executor)
 
 Status: measured on 2026-10-08, same host as `bench/results/HOST.md`.
 Raw log: `bench/results/llm_20261008T055510Z.txt`.

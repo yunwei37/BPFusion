@@ -1,4 +1,4 @@
-# Finding 0004 — launch-once resident GPU kernel (no control plane)
+# Finding 0004 — launch-once resident GPU kernel (no per-request host control call)
 
 Status: measured on 2026-10-08 on the host described in
 `bench/results/HOST.md`. Raw logs:

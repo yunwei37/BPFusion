@@ -49,7 +49,8 @@ here is the eBPF-ingress → page → GPU → reply path and its measured costs.
       free slots[i].state then done[i].state  (slot recyclable only now)
 ```
 
-No `SO_ATTACH_BPF`, no per-connection socket: the pinned page *is* the queue.
+No `SO_ATTACH_BPF`, no per-connection socket: the pinned page *is* the queue (a
+userspace responder thread still `sendto()`s each reply — no kernel TX yet).
 The kernel program is attached to `lo` ingress by `bpfusion_load attach lo`,
 which owns the object lifetime; the daemon only `bpf_obj_get`s the pinned maps.
 
