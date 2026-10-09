@@ -1,0 +1,7 @@
+== BPFusion HTTP baseline (vLLM) 20261009T135404Z ==
+host: Linux 7.3.0-070300rc3-generic  24 cpus
+gpu: NVIDIA GeForce RTX 5090, 610.57.04
+model: Qwen/Qwen2.5-0.5B-Instruct (fp16, max_model_len 512, vLLM default scheduler)
+params: gen=32 rounds=8 port=8000
+
+vllm-http TTFT us: p50=6203 min=5805 max=8489 | TPOT us: p50=852.7 min=753.2 max=1719.5

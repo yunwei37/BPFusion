@@ -121,6 +121,7 @@ Each driver runs an end-to-end scenario and writes a timestamped raw log to
 ./bench/run_llm.sh 90 32 8                                       # LLM TTFT/TPOT (UDP page path)
 ./bench/run_llm_tcp.sh 70 32 6                                   # LLM over TCP reply socket
 ./bench/run_llm_model.sh Qwen/Qwen2.5-1.5B-Instruct 100 32 6     # matched model-size comparison
+./bench/run_http.sh Qwen/Qwen2.5-0.5B-Instruct 32 8              # external vLLM HTTP baseline
 ```
 
 The `run_*` scripts each `detach`/`attach` and clear stale pinned maps
@@ -155,6 +156,9 @@ pre-attach. The MLP run also prints the `client verify` numeric check.
 - [0010-model-size.md](docs/findings/0010-model-size.md) — matched 0.5B / 1.5B /
   Qwen3-1.7B comparison; path overhead is size-independent, decode scales
   sub-linearly.
+- [0011-http-baseline.md](docs/findings/0011-http-baseline.md) — external vLLM
+  HTTP server baseline on the same model: path overhead is within noise of
+  in-process, the gap to vLLM is decode, not transport.
 
 ## Contributing
 
