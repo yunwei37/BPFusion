@@ -93,14 +93,18 @@ baseline comparison, and detach. `llm_executor.py` needs the Python environment
 that has `torch` + `transformers`; it attaches to the already-pinned page and
 does not load the BPF object.
 
-To drive it by hand instead, start the executor, wait for `model loaded`, then
-run the client:
+To drive it by hand instead: `tools/llm_bench.py` does `from llm_executor
+import ...`, so the executor directory must be importable (`PYTHONPATH=executor`
+from the repo root; the bench drivers already set this). Start the executor,
+wait for `model loaded`, run the client, then stop the executor and detach:
 
 ```
 ./build/bpfusion_load attach lo
-python3 executor/llm_executor.py --seconds 90 &   # model load takes ~tens of seconds
+PYTHONPATH=executor python3 executor/llm_executor.py --seconds 90 & exec=$!   # model load ~tens of seconds
 # wait for "executor: model loaded" on stdout, then:
-python3 tools/llm_bench.py --gen 32 --rounds 8    # add --tcp / tools/llm_tcp_client.py for TCP
+PYTHONPATH=executor python3 tools/llm_bench.py --gen 32 --rounds 8    # --tcp + tools/llm_tcp_client.py for TCP
+kill "$exec"; wait "$exec" 2>/dev/null    # stop only this executor
+./build/bpfusion_load detach lo
 ```
 
 ## Reproducible benchmarks
