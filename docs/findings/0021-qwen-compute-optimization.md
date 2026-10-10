@@ -448,7 +448,7 @@ IID/isolation, physical kernel overlap, total memory/energy or total-host cost.
 No physical-NIC, open-load capacity, optimized-serving or fixed isolated-speedup
 claim follows. A fresh read-only plan reviewer and one fresh terminal result
 reviewer assess this local retention decision; no separate saved report is
-claimed. Production remains581999d pending the complete comparison and review.
+claimed. At plan freeze, production remained581999d pending the complete comparison and review.
 
 
 Fresh read-only plan review admitted the frozen RMSNorm-tail comparison,
@@ -473,7 +473,7 @@ and passing all-thread network trace/cleanup. Resident records one host
 launch/20,432 device graphs/error0/banks8/max_active8; host records 594
 launches/the same model-graph count/error0/banks1/max_active1. No oracle,
 timeout or lifecycle assertion was weakened. Real preflight completion is recorded below;
-production remains the retained RoPE-only source 581999d.
+At qualification, production remained the retained RoPE-only source581999d.
 
 
 Real preflight now finishes EXIT0:
@@ -485,3 +485,114 @@ zero queue/registration errors and eight FREE slots; module/pins are absent
 after cleanup. Compiler cache is already populated. This is executability
 evidence, not a serving result. Both strict qualifiers and real preflight
 close every plan-review condition; the frozen full matrix can now run.
+
+## Complete RMSNorm-tail TCP comparison
+
+The full command in the plan ran from2026-10-10T20:34:03UTC to its normal
+EXIT0 on the unchanged frozen path. Collection metadata identifies
+b5b6774d4008d815d22a05b2d13377ba34b18759; baseline Python is the retained
+RoPE source581999d and candidate adds only the nine lines above. Both engines
+use the same eight-bank native library with the documented common temporary
+TCP_NODELAY transport. The production native library and module are unchanged.
+
+[Full raw](../../bench/results/qwen_norm_tail_20261010.jsonl),
+[command/stdout](../../bench/results/qwen_norm_tail_20261010.stdout.txt),
+[recomputation and cleanup](../../bench/results/qwen_norm_tail_analysis_20261010.txt)
+and [host observations](../../bench/results/qwen_norm_tail_environment_20261010.txt)
+retain all five pairs:40 cells,2,560 measured requests,83,200 exact output
+tokens and10 normal executor exits. Every cell has64 requests with16 of each
+of the four frozen prompts. All request tokens match the independent HF eager
+oracle. Every process records264 publications,8,580 model-graph launches,
+one host launch,graph_error=0,banks=8,max_active=8,zero queue/parser/sockhash
+errors and eight final FREE slots. Warmups remain excluded.
+
+Positive gain means candidate-minus-baseline TPS or baseline-minus-candidate
+TPOT. The four predeclared gen64 primary effects are each positive in all
+five pairs. These are nominal two-sided paired t95 intervals with df4;
+no familywise,omnibus,isolated-GPU or optimized-external-serving claim follows.
+
+| gen64 clients | primary metric | RoPE baseline | RMSNorm tail | mean gain | nominal t95 gain |
+|---:|---|---:|---:|---:|---|
+| 1 | Output tokens/s | 254.819208 | 285.217876 | +30.398668 | [+27.412444,+33.384891] |
+| 1 | TPOT ms | 3.909868 | 3.494420 | +0.415448 | [+0.379685,+0.451211] |
+| 8 | Output tokens/s | 647.939413 | 674.521571 | +26.582158 | [+18.812551,+34.351764] |
+| 8 | TPOT ms | 12.153415 | 11.677643 | +0.475773 | [+0.329880,+0.621665] |
+
+Within this comparison,mean TPS increases about11.9% and4.1%, while TPOT falls
+about10.6% and3.9% at clients1 and8 respectively. Concurrent request TPOT
+remains substantially slower than single-client TPOT. Earlier findings have
+their own environments; historical gains must not be multiplied into a
+combined isolated speedup.
+
+The remaining metrics are diagnostics, not additional co-primary effects.
+
+| gen / clients | metric | baseline mean | tail mean | nominal t95 gain |
+|---|---|---:|---:|---|
+| 64 / 1 | TTFT ms | 4.799451 | 4.218178 | [+0.443641,+0.718904] |
+| 64 / 1 | Completion ms | 251.121117 | 224.366636 | [+24.395838,+29.113124] |
+| 64 / 8 | TTFT ms | 21.743985 | 20.737825 | [+0.597552,+1.414768] |
+| 64 / 8 | Completion ms | 787.409155 | 756.429307 | [+22.071489,+39.888207] |
+| 1 / 1 | Output tokens/s | 211.625159 | 242.681430 | [+25.239645,+36.872898] |
+| 1 / 1 | TTFT/completion ms | 4.713365 | 4.106300 | [+0.485208,+0.728921] |
+| 1 / 8 | Output tokens/s | 249.098719 | 274.517304 | [+16.803149,+34.034021] |
+| 1 / 8 | TTFT/completion ms | 31.943516 | 28.973013 | [+2.014279,+3.926728] |
+
+Gen1 has no TPOT. Pooled descriptive gen64/eight-client TTFT p99 is
+25.967602ms baseline and24.954841ms tail; this is not a block-level tail
+estimate or general SLO guarantee. Client tokens completed in the same recv
+share an arrival timestamp.
+
+Five bootstrap durations average53.328557s baseline
+(range52.253011..56.523941) and53.090387s tail
+(range52.150493..53.875994). The compiler cache was already populated by
+qualification/profiling; this is warm-cache startup, not a cold compilation
+cost comparison. Executor PID CPU totals over20 cells per mode are0.08s
+baseline and0.06s tail. Five separate one-second idle samples per mode record
+0.00s CPU at100Hz/0.01s accounting resolution. These coarse samples do not
+establish zero CPU work,precise savings,total host/kernel cost or energy.
+
+The same SGLang scheduler hostPID732929 is observed before,during andafter
+collection with18,404MiB GPU memory. Endpoint clocks,temperature,power and
+utilization cannot establish stationarity or within-window co-tenant activity.
+The during snapshot follows the first baseline's exit and catches the next
+candidate at startup; its2,246MiB is not steady bank residency,peak memory or
+an allocation delta. The one-bank profile above reports unchanged PyTorch
+allocated/reserved/held-logits bytes, not an eight-bank serving-memory comparison.
+
+Post-run Workspace checks at20:47:53UTC find the module and bpfusion pins absent
+and this experiment's parent/executor processes gone. Host observations at
+20:48:06UTC find only the existing SGLang GPU process and the unchanged boot
+ID. Every driver cleanup call completed, with FREE slots recorded before
+detaching. No co-tenant was stopped or changed.
+
+
+## Independent RMSNorm result review and retained capture
+
+A fresh read-only result reviewer independently recomputed all four primary
+effects and diagnostics from the full raw, checked the frozen sources against
+their commits, inspected the installed HF reduction and the pre-patch oracle,
+and audited qualification,profile engagement,source/native identity,ordering,
+lifetimes and cleanup. The review finds this run valid and supporting for the
+tested component/workload comparison, with no publication blocker. It does not
+complete the overall service goal or explain the older whole-RMSNorm failures.
+
+The exact nine-line candidate is now integrated into executor/qwen_graph.py.
+No test,CUDA/native,module,queue ABI,transport,dependency,mode flag or persistent
+helper changes accompany it. make qwen-graph qwen-graph-control validates the
+existing canonical entrypoints. The
+[canonical regression](../../bench/results/qwen_norm_tail_canonical_correctness_20261010.txt)
+uses default compiler-cache selection and unchanged default native networking,
+with HF_HOME selecting the existing model cache. The default compiler-cache
+directory already existed; no cold-cache cost is claimed. It terminates EXIT0
+with335 valid requests,20,432 exact tokens,259 rejects and5,000 empty
+connections,including prompt edges,mixed lengths,wrap/reuse,rejection recovery,
+pipeline and half-close. It records one host launch,error0,banks8,max_active8,
+no accept/receive/send syscalls on all traced executor threads after ready,
+eight final FREE slots and module/hook/pin cleanup. Both default-native modes
+were already qualified on the byte-identical candidate above; this final run
+qualifies the retained canonical path and cache selection.
+
+The completed comparison supports retaining this reduction-preserving boundary
+for this shared-GPU workload. The next useful uncertainty is actual concurrent
+model-kernel execution and the costs limiting batching/individual decode;
+profile event reduction and max_active8 alone do not answer it.

@@ -1,0 +1,85 @@
+COMMAND python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/analyze_norm_tail.py
+ANALYSIS SOURCE
+import json,math,re,statistics
+from pathlib import Path
+from collections import Counter,defaultdict
+p=Path('bench/results/qwen_norm_tail_20261010.jsonl')
+rows=[json.loads(line) for line in p.read_text().splitlines()]
+counts=Counter(r['event'] for r in rows)
+assert counts=={'metadata':1,'idle':10,'request':2560,'cell':40,'executor':10},counts
+meta=rows[0]; assert meta['commit']=='b5b6774d4008d815d22a05b2d13377ba34b18759'
+req=defaultdict(list); cells={}
+for r in rows:
+ if r['event']=='request': req[(r['pair'],r['mode'],r['gen'],r['concurrency'])].append(r)
+ if r['event']=='cell':
+  key=(r['pair'],r['mode'],r['gen'],r['concurrency']); assert key not in cells;cells[key]=r
+assert len(req)==len(cells)==40
+for key,requests in req.items():
+ assert len(requests)==64 and Counter(r['case'] for r in requests)=={0:16,1:16,2:16,3:16}
+ assert sorted(r['index'] for r in requests)==list(range(64))
+ gen=key[2]
+ for r in requests:
+  assert r['case']==r['index']%4
+  assert r['tokens']==meta['cases'][r['case']][1][:gen]
+  ns=r['arrival_ns'];assert len(ns)==gen and r['start_ns']<=ns[0] and ns==sorted(ns)
+  assert math.isclose(r['ttft_ms'],(ns[0]-r['start_ns'])/1e6,abs_tol=1e-9)
+  assert math.isclose(r['latency_ms'],(ns[-1]-r['start_ns'])/1e6,abs_tol=1e-9)
+  assert (r['tpot_ms'] is None) if gen==1 else math.isclose(r['tpot_ms'],(ns[-1]-ns[0])/(gen-1)/1e6,abs_tol=1e-9)
+ cell=cells[key]; window=max(r['arrival_ns'][-1] for r in requests)-min(r['start_ns'] for r in requests)
+ assert cell['requests']==64 and cell['window_ns']>=window
+ # window_ns is the broader barrier/future CPU window; TPS uses first-send/last-arrival.
+ assert math.isclose(cell['output_tokens_per_s'],64*gen/(window/1e9),abs_tol=1e-9)
+expected=[]
+for pair in range(5):
+ for mode in (['baseline','norm_tail'] if pair%2==0 else ['norm_tail','baseline']):expected.append((pair,mode))
+execs=[r for r in rows if r['event']=='executor'];assert [(r['pair'],r['mode']) for r in execs]==expected
+for r in execs:
+ assert 'dispatch=resident launches=1 device_graph_launches=8580 graph_error=0' in r['log']
+ assert 'banks=8 max_active=8' in r['log']
+ s=r['stats']; assert re.search(r'stream publish\s+264\b',s) and 'llm_head=264' in s
+ assert len(re.findall(r'llm\[\d\]: state=0\b',s))==8
+ for label in ['drops','drop: ctl busy','drop: done busy','llm busy','sockhash failed','parser invalid']:
+  assert re.search(r'^'+re.escape(label)+r'\s+0$',s,re.M),label
+assert sum(len(r['tokens']) for rs in req.values() for r in rs)==83200
+print(json.dumps({'verification':'PASS','records':len(rows),'counts':dict(counts),'exact_tokens':83200,'pairs':5,'requests_per_cell':64,'cases_per_cell':4,'all_five_pairs_retained':True,'all_device_graphs_per_process':8580,'all_publications_per_process':264,'all_host_launches_per_process':1,'all_graph_errors':0,'all_final_slots_FREE':True,'primary_scope':'matched original-reduction-preserving RMSNorm pointwise-tail component comparison, identical eight-bank native binary, shared RTX5090, temporary common TCP_NODELAY transport'}))
+crit=2.776445105
+for gen,c in [(1,1),(64,1),(1,8),(64,8)]:
+ for metric in ['output_tokens_per_s','ttft_ms','tpot_ms','latency_ms']:
+  if gen==1 and metric=='tpot_ms':continue
+  block={mode:[] for mode in ['baseline','norm_tail']}
+  for pair in range(5):
+   for mode in block:
+    key=(pair,mode,gen,c)
+    block[mode].append(cells[key][metric] if metric=='output_tokens_per_s' else statistics.mean(r[metric] for r in req[key]))
+  gain=[b-a if metric=='output_tokens_per_s' else a-b for a,b in zip(block['baseline'],block['norm_tail'])]
+  mean=statistics.mean(gain);half=crit*statistics.stdev(gain)/math.sqrt(5)
+  print(json.dumps({'metric':metric,'gen':gen,'clients':c,'baseline_mean':statistics.mean(block['baseline']),'norm_tail_mean':statistics.mean(block['norm_tail']),'baseline_blocks':block['baseline'],'norm_tail_blocks':block['norm_tail'],'positive_means_improvement':True,'paired_gains':gain,'mean_gain':mean,'nominal_t95_gain':[mean-half,mean+half]}))
+for mode in ['baseline','norm_tail']:
+ starts=[r['bootstrap_s'] for r in execs if r['mode']==mode]
+ idle=[r['executor_cpu_s'] for r in rows if r['event']=='idle' and r['mode']==mode]
+ cpu=[r['executor_cpu_s'] for r in cells.values() if r['mode']==mode]
+ print(json.dumps({'mode':mode,'bootstrap_seconds':starts,'bootstrap_mean_s':statistics.mean(starts),'bootstrap_range_s':[min(starts),max(starts)],'idle_cpu_seconds':idle,'active_cell_cpu_seconds':cpu,'active_cpu_total_s':sum(cpu),'cpu_tick_hz':meta['cpu_tick_hz'],'CPU_scope':'executor PID only; 0.01s accounting resolution; not total host/kernel/GPU/energy'}))
+
+ANALYSIS OUTPUT
+{"verification": "PASS", "records": 2621, "counts": {"metadata": 1, "idle": 10, "request": 2560, "cell": 40, "executor": 10}, "exact_tokens": 83200, "pairs": 5, "requests_per_cell": 64, "cases_per_cell": 4, "all_five_pairs_retained": true, "all_device_graphs_per_process": 8580, "all_publications_per_process": 264, "all_host_launches_per_process": 1, "all_graph_errors": 0, "all_final_slots_FREE": true, "primary_scope": "matched original-reduction-preserving RMSNorm pointwise-tail component comparison, identical eight-bank native binary, shared RTX5090, temporary common TCP_NODELAY transport"}
+{"metric": "output_tokens_per_s", "gen": 1, "clients": 1, "baseline_mean": 211.625158601053, "norm_tail_mean": 242.68143011747793, "baseline_blocks": [207.7391412332664, 219.12500666319772, 212.47463762458852, 209.47419101059248, 209.31281647361985], "norm_tail_blocks": [244.672102490697, 244.71789613026903, 242.02568296376603, 237.87221784700466, 244.1192511556529], "positive_means_improvement": true, "paired_gains": [36.932961257430605, 25.592889467071302, 29.551045339177506, 28.398026836412186, 34.80643468203306], "mean_gain": 31.056271516424932, "nominal_t95_gain": [25.2396448602912, 36.87289817255866]}
+{"metric": "ttft_ms", "gen": 1, "clients": 1, "baseline_mean": 4.713364690625, "norm_tail_mean": 4.10629985625, "baseline_blocks": [4.79381946875, 4.554038046875, 4.6914158125, 4.760241640625, 4.767308484375], "norm_tail_blocks": [4.065932171875, 4.07374696875, 4.11553128125, 4.19026284375, 4.086026015625], "positive_means_improvement": true, "paired_gains": [0.7278872968750001, 0.48029107812500005, 0.5758845312499998, 0.5699787968749996, 0.6812824687500001], "mean_gain": 0.6070648343749999, "nominal_t95_gain": [0.4852084719736788, 0.7289211967763211]}
+{"metric": "latency_ms", "gen": 1, "clients": 1, "baseline_mean": 4.713364690625, "norm_tail_mean": 4.10629985625, "baseline_blocks": [4.79381946875, 4.554038046875, 4.6914158125, 4.760241640625, 4.767308484375], "norm_tail_blocks": [4.065932171875, 4.07374696875, 4.11553128125, 4.19026284375, 4.086026015625], "positive_means_improvement": true, "paired_gains": [0.7278872968750001, 0.48029107812500005, 0.5758845312499998, 0.5699787968749996, 0.6812824687500001], "mean_gain": 0.6070648343749999, "nominal_t95_gain": [0.4852084719736788, 0.7289211967763211]}
+{"metric": "output_tokens_per_s", "gen": 64, "clients": 1, "baseline_mean": 254.81920783952862, "norm_tail_mean": 285.2178755555669, "baseline_blocks": [253.7843764715306, 254.65273454501624, 255.8695284493192, 253.29915045714083, 256.49024927463626], "norm_tail_blocks": [285.03281246172287, 280.7884237585157, 287.0221789936424, 284.7656025372751, 288.4803600266784], "positive_means_improvement": true, "paired_gains": [31.248435990192263, 26.13568921349946, 31.152650544323194, 31.466452080134246, 31.990110752042142], "mean_gain": 30.39866771603826, "nominal_t95_gain": [27.412444095842446, 33.38489133623408]}
+{"metric": "ttft_ms", "gen": 64, "clients": 1, "baseline_mean": 4.799450803125, "norm_tail_mean": 4.218177921875, "baseline_blocks": [4.9464957343750005, 4.697273828125, 4.718010671875, 4.885964328125, 4.7495094531249995], "norm_tail_blocks": [4.212661546875, 4.261701921875, 4.185101578125, 4.25708965625, 4.17433490625], "positive_means_improvement": true, "paired_gains": [0.7338341875000003, 0.43557190624999986, 0.5329090937499998, 0.6288746718749998, 0.5751745468749991], "mean_gain": 0.5812728812499998, "nominal_t95_gain": [0.44364141072117746, 0.7189043517788221]}
+{"metric": "tpot_ms", "gen": 64, "clients": 1, "baseline_mean": 3.909867715922619, "norm_tail_mean": 3.4944199663690476, "baseline_blocks": [3.923683597470238, 3.9140205498511906, 3.8947259546130955, 3.9323229702380953, 3.8845855074404763], "norm_tail_blocks": [3.4965426044146826, 3.549611887152778, 3.4722555791170633, 3.4991494856150793, 3.454540275545635], "positive_means_improvement": true, "paired_gains": [0.42714099305555564, 0.36440866269841266, 0.42247037549603217, 0.43317348462301597, 0.43004523189484134], "mean_gain": 0.41544774955357155, "nominal_t95_gain": [0.37968477745410134, 0.45121072165304177]}
+{"metric": "latency_ms", "gen": 64, "clients": 1, "baseline_mean": 251.12111690625, "norm_tail_mean": 224.366635803125, "baseline_blocks": [252.138562375, 251.28056846875, 250.0857458125, 252.622311453125, 249.478396421875], "norm_tail_blocks": [224.494845625, 227.8872508125, 222.9372030625, 224.70350725, 221.810372265625], "positive_means_improvement": true, "paired_gains": [27.64371674999998, 23.39331765624999, 27.14854274999999, 27.918804203125006, 27.66802415625], "mean_gain": 26.754481103124995, "nominal_t95_gain": [24.395837997209405, 29.113124209040585]}
+{"metric": "output_tokens_per_s", "gen": 1, "clients": 8, "baseline_mean": 249.09871914498223, "norm_tail_mean": 274.51730403841884, "baseline_blocks": [252.4837487158489, 246.9419623765477, 248.9775910286776, 253.64327955544925, 243.44701404838762], "norm_tail_blocks": [271.15503839680326, 267.5508374600402, 271.54691921322166, 283.81243451720974, 278.5212906048193], "positive_means_improvement": true, "paired_gains": [18.671289680954374, 20.608875083492507, 22.569328184544048, 30.169154961760484, 35.07427655643167], "mean_gain": 25.418584893436616, "nominal_t95_gain": [16.803148623770497, 34.034021163102736]}
+{"metric": "ttft_ms", "gen": 1, "clients": 8, "baseline_mean": 31.943516396875, "norm_tail_mean": 28.973013065625, "baseline_blocks": [31.517212328125, 32.229845609375, 31.9607293125, 31.38321771875, 32.626577015625], "norm_tail_blocks": [29.354277234375, 29.740370031250002, 29.20644275, 28.053866890625, 28.510108421875], "positive_means_improvement": true, "paired_gains": [2.1629350937500007, 2.4894755781249955, 2.754286562499999, 3.3293508281250013, 4.116468593750003], "mean_gain": 2.9705033312499998, "nominal_t95_gain": [2.0142785953460027, 3.926728067153997]}
+{"metric": "latency_ms", "gen": 1, "clients": 8, "baseline_mean": 31.943516396875, "norm_tail_mean": 28.973013065625, "baseline_blocks": [31.517212328125, 32.229845609375, 31.9607293125, 31.38321771875, 32.626577015625], "norm_tail_blocks": [29.354277234375, 29.740370031250002, 29.20644275, 28.053866890625, 28.510108421875], "positive_means_improvement": true, "paired_gains": [2.1629350937500007, 2.4894755781249955, 2.754286562499999, 3.3293508281250013, 4.116468593750003], "mean_gain": 2.9705033312499998, "nominal_t95_gain": [2.0142785953460027, 3.926728067153997]}
+{"metric": "output_tokens_per_s", "gen": 64, "clients": 8, "baseline_mean": 647.9394130927459, "norm_tail_mean": 674.5215706042869, "baseline_blocks": [647.1603878018249, 641.6372864161925, 646.658376884124, 650.218417113143, 654.022597248445], "norm_tail_blocks": [676.2304961772817, 675.5345870909806, 668.8765684401492, 668.464806859627, 683.5013944533964], "positive_means_improvement": true, "paired_gains": [29.07010837545681, 33.897300674788085, 22.218191556025204, 18.246389746483942, 29.478797204951434], "mean_gain": 26.582157511541094, "nominal_t95_gain": [18.81255074157279, 34.351764281509396]}
+{"metric": "ttft_ms", "gen": 64, "clients": 8, "baseline_mean": 21.7439849875, "norm_tail_mean": 20.737824684375, "baseline_blocks": [21.712209796875, 21.512945265625, 21.9476483125, 22.04720603125, 21.49991553125], "norm_tail_blocks": [20.682730984375, 20.633708, 21.088341593750002, 20.48944028125, 20.7949025625], "positive_means_improvement": true, "paired_gains": [1.0294788125000025, 0.8792372656250009, 0.8593067187499983, 1.557765749999998, 0.7050129687500011], "mean_gain": 1.0061603031250002, "nominal_t95_gain": [0.5975521534706719, 1.4147684527793283]}
+{"metric": "tpot_ms", "gen": 64, "clients": 8, "baseline_mean": 12.153415399156746, "norm_tail_mean": 11.677642575, "baseline_blocks": [12.169475008928572, 12.279697476438493, 12.174035040674603, 12.104464369295634, 12.039405100446428], "norm_tail_blocks": [11.647585699900793, 11.66292754563492, 11.770333192708334, 11.789663784970239, 11.517702651785715], "positive_means_improvement": true, "paired_gains": [0.5218893090277792, 0.6167699308035726, 0.4037018479662695, 0.31480058432539515, 0.5217024486607134], "mean_gain": 0.47577282415674593, "nominal_t95_gain": [0.32988029989417544, 0.6216653484193164]}
+{"metric": "latency_ms", "gen": 64, "clients": 8, "baseline_mean": 787.409155134375, "norm_tail_mean": 756.429306909375, "baseline_blocks": [788.389135359375, 795.13388628125, 788.911855875, 784.628461296875, 779.982436859375], "norm_tail_blocks": [754.480630078125, 755.398143375, 762.619332734375, 763.238258734375, 746.410169625], "positive_means_improvement": true, "paired_gains": [33.90850528124997, 39.73574290625004, 26.292523140625008, 21.390202562500008, 33.572267234374976], "mean_gain": 30.979848225, "nominal_t95_gain": [22.07148921039439, 39.88820723960561]}
+{"mode": "baseline", "bootstrap_seconds": [56.52394102800463, 52.64848568799789, 52.604941554003744, 52.61240531998919, 52.253010511994944], "bootstrap_mean_s": 53.32855682039808, "bootstrap_range_s": [52.253010511994944, 56.52394102800463], "idle_cpu_seconds": [0.0, 0.0, 0.0, 0.0, 0.0], "active_cell_cpu_seconds": [0.0, 0.020000000000003126, 0.0, 0.0, 0.00999999999999801, 0.0, 0.00999999999999801, 0.0, 0.0, 0.0, 0.0, 0.00999999999999801, 0.0, 0.0, 0.00999999999999801, 0.0, 0.0, 0.00999999999999801, 0.0, 0.00999999999999801], "active_cpu_total_s": 0.07999999999999119, "cpu_tick_hz": 100, "CPU_scope": "executor PID only; 0.01s accounting resolution; not total host/kernel/GPU/energy"}
+{"mode": "norm_tail", "bootstrap_seconds": [53.87599394499557, 53.51372904299933, 52.15049325299333, 53.15454172001046, 52.75717913499102], "bootstrap_mean_s": 53.09038741919794, "bootstrap_range_s": [52.15049325299333, 53.87599394499557], "idle_cpu_seconds": [0.0, 0.0, 0.0, 0.0, 0.0], "active_cell_cpu_seconds": [0.0, 0.0, 0.0, 0.00999999999999801, 0.010000000000005116, 0.0, 0.0, 0.0, 0.0, 0.010000000000005116, 0.0, 0.0, 0.0, 0.0, 0.00999999999999801, 0.0, 0.0, 0.0, 0.0, 0.020000000000003126], "active_cpu_total_s": 0.06000000000000938, "cpu_tick_hz": 100, "CPU_scope": "executor PID only; 0.01s accounting resolution; not total host/kernel/GPU/energy"}
+
+STDERR
+
+EXIT 0
+POSTRUN_CLEANUP {"utc": "2026-10-10T20:47:53.703561+00:00", "module_loaded": false, "bpfusion_pins": [], "own_bench_or_executor_processes": []}

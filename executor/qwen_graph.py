@@ -72,6 +72,15 @@ def main():
         model=load_model(sys.argv[1]);config=model.config
         from transformers.models.qwen2 import modeling_qwen2 as qwen2
         qwen2.apply_rotary_pos_emb=torch.compile(qwen2.apply_rotary_pos_emb,options={"emulate_precision_casts":True})
+        @torch.compile(options={"emulate_precision_casts":True})
+        def norm_finish(hidden_states,variance,weight,eps,input_dtype):
+            return weight*(hidden_states*torch.rsqrt(variance+eps)).to(input_dtype)
+        def norm_forward(self,hidden_states):
+            input_dtype=hidden_states.dtype
+            hidden_states=hidden_states.to(torch.float32)
+            variance=hidden_states.pow(2).mean(-1,keepdim=True)
+            return norm_finish(hidden_states,variance,self.weight,self.variance_epsilon,input_dtype)
+        qwen2.Qwen2RMSNorm.forward=norm_forward
         dim=config.hidden_size//config.num_attention_heads
         for bank in range(lib.max_requests()):
             keys=[torch.zeros((1,config.num_key_value_heads,context,dim),dtype=torch.float16,device='cuda') for _ in model.model.layers]
