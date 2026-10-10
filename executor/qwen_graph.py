@@ -46,7 +46,9 @@ def load_model(path):
 def main():
     if len(sys.argv)<2:raise SystemExit('usage: qwen_graph.py WEIGHTS.bin [seconds]')
     seconds=int(sys.argv[2]) if len(sys.argv)>2 else 60
-    lib=ctypes.CDLL(str(Path(__file__).resolve().parents[1]/'build/qwen_graph.so'))
+    entry=Path(sys.argv[0])
+    library=entry.with_suffix('.so') if entry.name in ('qwen_graph','qwen_graph_host_launch') else Path(__file__).resolve().parents[1]/'build/qwen_graph.so'
+    lib=ctypes.CDLL(str(library))
     lib.max_tokens.restype=ctypes.c_uint
     limit=lib.max_tokens();context=2*limit
     with torch.no_grad():

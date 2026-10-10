@@ -139,6 +139,41 @@ launch, respectively 303/19392 device model graph launches and graph_error=0.
 Module/pin cleanup passes. These final receipts establish the current source;
 the preceding successes and failed alternatives remain historical evidence.
 
+## Matched host-dispatch control
+
+`make qwen-graph qwen-graph-control` now builds both native libraries and
+executable aliases `build/qwen_graph` / `build/qwen_graph_host_launch`.
+Both aliases invoke the same capture script and load the adjacent library;
+`make BUILD=/path/to/output` needs no copied script or library override.
+The direct `executor/qwen_graph.py` command retains its normal build library.
+
+Both native builds contain the same dispatcher kernel with a uniform `once`
+argument. Default false retains GPU idle waiting/self-tail replay. True returns
+after whole-request DONE or rejection; the control host polls the same map
+and launches/synchronizes one service graph per request. Model graphs, KV,
+argmax, queue and kernel TX are unchanged. Decode is still GPU-tail scheduled
+in both modes, so this isolates whole-request host dispatch, not host-versus-
+device dispatch of every model step or an optimized external serving baseline.
+The host control has a request worker; only resident meets the target property.
+
+[Device inspection](../../bench/results/qwen_graph_dispatch_resources_20261010.txt)
+finds identical dispatcher SASS/resources: 35 registers, zero stack/shared/local.
+Both [resident](../../bench/results/qwen_graph_dispatch_resident_edges64_20261010.txt)
+and [host control](../../bench/results/qwen_graph_dispatch_host_launch_edges64_20261010.txt)
+pass all 303 valid requests / 19392 exact tokens plus 259 rejections, churn,
+concurrency, persistent reuse, pipeline/half-close and all-thread network tracing.
+Host service-graph launches are 1/562; device model launches are 19392 in each,
+with graph_error=0 and clean teardown. The aliases are also exercised by the
+[resident one-token](../../bench/results/qwen_graph_dispatch_resident_edges1_20261010.txt)
+and [host one-token](../../bench/results/qwen_graph_dispatch_host_launch_edges1_20261010.txt)
+regressions, each with the same lifecycle surface and 303 exact tokens.
+
+```sh
+make qwen-graph qwen-graph-control
+HF_HOME=/workspaces/.cache/huggingface python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor ./build/qwen_graph
+HF_HOME=/workspaces/.cache/huggingface python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor ./build/qwen_graph_host_launch
+```
+
 ## Remaining scope
 
 These are correctness and lifecycle receipts for the recorded prompt cases,

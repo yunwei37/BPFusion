@@ -85,8 +85,19 @@ $(BUILD)/qwen_host_launch: executor/qwen.cu bpf/include/bpfusion_queue.h | $(BUI
 
 # Device-launched HF graphs; Python captures only during bootstrap.
 .PHONY: qwen-graph
-qwen-graph: $(BUILD)/qwen_graph.so
+qwen-graph: $(BUILD)/qwen_graph.so $(BUILD)/qwen_graph
 
 $(BUILD)/qwen_graph.so: executor/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
 	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -rdc=true -shared -Xcompiler=-fPIC \
 		-Ibpf/include $< -o $@ $(LDLIBS)
+
+# Same GPU dispatcher/model graphs, one host service-graph launch per request.
+.PHONY: qwen-graph-control
+qwen-graph-control: $(BUILD)/qwen_graph_host_launch.so $(BUILD)/qwen_graph_host_launch
+
+$(BUILD)/qwen_graph_host_launch.so: executor/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
+	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
+		-Ibpf/include $< -o $@ $(LDLIBS)
+
+$(BUILD)/qwen_graph $(BUILD)/qwen_graph_host_launch: executor/qwen_graph.py | $(BUILD)
+	ln -sf $(abspath executor/qwen_graph.py) $@

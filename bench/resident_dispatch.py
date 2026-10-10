@@ -135,13 +135,14 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output",required=True)
     parser.add_argument("--preflight",action="store_true")
+    parser.add_argument("--gen",type=int,default=8,choices=range(2,65),help="long output length; paired with one-token requests")
     parser.add_argument("--analyze",action="store_true")
     parser.add_argument("--resident-executor",default="./build/qwen")
     parser.add_argument("--host-executor",default="./build/qwen_host_launch")
     args=parser.parse_args()
     if args.analyze: analyze(args.output); return
-    cases,_=oracle_cases(8)
-    matrix=[(1,1)] if args.preflight else [(1,1),(8,1),(1,8),(8,8)]
+    cases,_=oracle_cases(args.gen)
+    matrix=[(1,1)] if args.preflight else [(1,1),(args.gen,1),(1,8),(args.gen,8)]
     repetitions=1 if args.preflight else 5
     count=4 if args.preflight else 64
     output=Path(args.output); output.parent.mkdir(parents=True,exist_ok=True)
@@ -172,7 +173,7 @@ def main():
                             assert executor.poll() is None and time.monotonic()-started<60,logpath.read_text()
                             time.sleep(.05)
                         with connect() as client:
-                            for gen in (1,8):
+                            for gen in (1,args.gen):
                                 for ids,expected in cases: request(client,ids,expected[:gen])
                         before=cpu_seconds(executor.pid); idle_start=time.monotonic_ns(); time.sleep(1)
                         emit("idle",pair=pair,mode=mode,window_ns=time.monotonic_ns()-idle_start,executor_cpu_s=cpu_seconds(executor.pid)-before)

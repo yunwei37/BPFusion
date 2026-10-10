@@ -73,7 +73,11 @@ queue validation, input movement, model dispatch and token publication.
 [Finding 0019](docs/findings/0019-device-scheduled-qwen.md) records the mechanism,
 commands, failed startup probes and successful lifecycle/trace evidence.
 This variant has no measured serving speedup yet; text, continuous batching
-and physical-NIC evaluation remain open.
+and physical-NIC evaluation remain open. `make qwen-graph-control` provides
+an identical-dispatcher host control: it launches a service graph once per
+whole request while both modes keep decode on GPU graph tail launches. Both
+pass the 64-token lifecycle regression; this is an ablation with a host worker,
+and its performance remains unmeasured.
 
 ## Repository layout
 
@@ -208,6 +212,7 @@ pre-attach. The MLP run also prints the `client verify` numeric check.
 - [0015-http-token-transport.md](docs/findings/0015-http-token-transport.md) — Content-Length POST token API, persistent connection framing and ordered HTTP replies.
 - [0016-cooperative-resident-qwen.md](docs/findings/0016-cooperative-resident-qwen.md) — one cooperative resident grid, strict short-output passes and an explicit longer-decode accuracy failure.
 - [0019-device-scheduled-qwen.md](docs/findings/0019-device-scheduled-qwen.md) — GPU-driven HF graph execution with passing 64-token TCP/HTTP correctness and no userspace request worker.
+- [0020-graph-dispatch.md](docs/findings/0020-graph-dispatch.md) — planned matched graph/64-token dispatch measurement; no performance result yet.
 - [0017-invalid-token-rejection.md](docs/findings/0017-invalid-token-rejection.md) — invalid model token IDs fail their request and leave subsequent inference live.
 - [0012-kernel-tcp-tx.md](docs/findings/0012-kernel-tcp-tx.md) — exact Qwen
   tokens returned by kernel TCP TX; lifecycle/reset tests; HF still drives inference.

@@ -24,7 +24,7 @@ __device__ unsigned long long queue_load(const unsigned long long *p) {
     unsigned long long value;asm volatile("ld.acquire.sys.global.u64 %0, [%1];" : "=l"(value) : "l"(p) : "memory");return value;
 }
 
-__global__ void dispatch(bf_page *p,Step *steps,long long *input,unsigned vocab,Control *c) {
+__global__ void dispatch(bf_page *p,Step *steps,long long *input,unsigned vocab,Control *c,bool once) {
     if(threadIdx.x || blockIdx.x) return;
     bf_llm_slot *slot=&p->llm[c->seen%BF_LLM_SLOTS];
     if(!c->phase) {
@@ -47,6 +47,7 @@ __global__ void dispatch(bf_page *p,Step *steps,long long *input,unsigned vocab,
         if(bad) {
             __stcg(&slot->produced,0u);__threadfence_system();__stcg(&slot->state,(unsigned)BF_DONE);
             c->seen++;
+            if(once) return;
             cudaError_t e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
             if(e!=cudaSuccess) c->error=e;
             return;
@@ -58,6 +59,7 @@ __global__ void dispatch(bf_page *p,Step *steps,long long *input,unsigned vocab,
         if(++c->k==c->gen) {
             __threadfence_system();__stcg(&slot->state,(unsigned)BF_DONE);
             c->seen++;c->phase=0;
+            if(once) return;
             cudaError_t e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
             if(e!=cudaSuccess) c->error=e;
             return;
@@ -71,7 +73,8 @@ __global__ void dispatch(bf_page *p,Step *steps,long long *input,unsigned vocab,
     if(e!=cudaSuccess) c->error=e;
 }
 extern "C" unsigned max_tokens() { return BF_LLM_MAX_TOK; }
-static void stop_signal(int) {}
+static volatile sig_atomic_t stopped=0;
+static void stop_signal(int) { stopped=1; }
 extern "C" int serve(const unsigned long long *graphs,const unsigned long long *outputs,unsigned count,unsigned long long input_ptr,unsigned vocab,unsigned layers,unsigned h,unsigned seconds) {
     std::vector<Step> host(count);
     for(unsigned i=1;i<count;i++) {
@@ -90,7 +93,12 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
     if(bind(listener,(sockaddr *)&addr,sizeof(addr)) || listen(listener,SOMAXCONN)) { perror("listen");return 1; }
     __atomic_store_n(&page->stop_ns,0,__ATOMIC_RELEASE);
     long long *input=(long long *)input_ptr;
-    void *args[]={&device,&steps,&input,&vocab,&control};
+#ifdef BF_HOST_LAUNCH
+    bool once=true;const char *mode="host-launch";
+#else
+    bool once=false;const char *mode="resident";
+#endif
+    void *args[]={&device,&steps,&input,&vocab,&control,&once};
     cudaKernelNodeParams params={};params.func=(void *)dispatch;params.gridDim=dim3(1);params.blockDim=dim3(32);params.kernelParams=args;
     cudaGraph_t graph;CUDA(cudaGraphCreate(&graph,0));cudaGraphNode_t node;CUDA(cudaGraphAddKernelNode(&node,graph,nullptr,0,&params));
     cudaGraphExec_t parent;CUDA(cudaGraphInstantiate(&parent,graph,cudaGraphInstantiateFlagDeviceLaunch));CUDA(cudaGraphUpload(parent,0));CUDA(cudaDeviceSynchronize());
@@ -99,10 +107,22 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
     if(syscall(SYS_finit_module,module,params_module,0)) { perror("finit_module");return 1; }
     close(module);close(fd);
     signal(SIGTERM,stop_signal);signal(SIGINT,stop_signal);
-    cudaError_t launched=cudaGraphLaunch(parent,0);
+    cudaError_t launched=cudaSuccess;unsigned launches=0;
+    if(!once) { launched=cudaGraphLaunch(parent,0);launches++; }
     if(launched==cudaSuccess) {
-        printf("resident Qwen ready: %u layers h=%u vocab=%u; device-tail graphs, dispatch=resident\n",layers,h,vocab);fflush(stdout);
-        sleep(seconds);
+        printf("resident Qwen ready: %u layers h=%u vocab=%u; device-tail graphs, dispatch=%s\n",layers,h,vocab,mode);fflush(stdout);
+        if(once) {
+            signal(SIGALRM,stop_signal);alarm(seconds);unsigned seen=0;
+            while(!stopped) {
+                if(__atomic_load_n(&page->llm_head,__ATOMIC_ACQUIRE)==seen ||
+                   __atomic_load_n(&page->llm[seen%BF_LLM_SLOTS].state,__ATOMIC_ACQUIRE)!=BF_PENDING) continue;
+                launched=cudaGraphLaunch(parent,0);launches++;
+                if(launched!=cudaSuccess) break;
+                launched=cudaDeviceSynchronize();if(launched!=cudaSuccess) break;
+                seen++;
+            }
+            alarm(0);
+        } else sleep(seconds);
     }
     __atomic_store_n(&page->stop_ns,1,__ATOMIC_RELEASE);
     cudaError_t finished=cudaDeviceSynchronize();
@@ -112,6 +132,6 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
     CUDA(cudaHostUnregister(page));munmap(page,BF_PAGE_MMAP_BYTES);
     CUDA(cudaGraphExecDestroy(parent));CUDA(cudaGraphDestroy(graph));CUDA(cudaFree(steps));CUDA(cudaFree(control));
     for(unsigned i=1;i<count;i++) CUDA(cudaGraphExecDestroy(host[i].graph));
-    printf("resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=%u graph_error=%u\n",result.launches,result.error);fflush(stdout);
+    printf("resident Qwen stopped: dispatch=%s launches=%u device_graph_launches=%u graph_error=%u\n",mode,launches,result.launches,result.error);fflush(stdout);
     return result.error;
 }

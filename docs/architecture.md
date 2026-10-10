@@ -149,6 +149,10 @@ Graph/kernel owners and buffers remain alive until the GPU finishes shutdown.
 It reuses the existing kernel connection/TX path and still handles one request
 at a time. Its recorded 64-token oracle and prompt-edge controls pass; the
 custom WMMA reference retains its separately recorded accuracy boundary.
+Its `qwen-graph-control` variant uses the same uniform dispatcher kernel,
+returning after a whole request so the host can launch/synchronize again.
+Both modes retain GPU-tail decode, captured model computation and kernel TX;
+the control measures request dispatch and has a steady host request worker.
 
 ## Ownership rules (the correctness core)
 

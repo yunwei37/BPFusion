@@ -1,0 +1,29 @@
+build/qwen_graph.so
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z8dispatchP7bf_pageP4StepPxjP7Controlb:
+  REG:35 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:937 TEXTURE:0 SURFACE:0 SAMPLER:0
+build/qwen_graph_host_launch.so
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z8dispatchP7bf_pageP4StepPxjP7Controlb:
+  REG:35 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:937 TEXTURE:0 SURFACE:0 SAMPLER:0
+PASS identical dispatcher device SASS, including uniform once argument
