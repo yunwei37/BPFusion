@@ -376,7 +376,16 @@ int stream_publish(struct __sk_buff *skb)
         head=p->llm_head;
         idx=head%BF_LLM_SLOTS;
         slot=&p->llm[idx];
-        if (__sync_val_compare_and_swap(&slot->state,BF_FREE,BF_WRITING)!=BF_FREE) break;
+        __u32 observed=__sync_val_compare_and_swap(&slot->state,BF_FREE,BF_WRITING);
+        if (observed!=BF_FREE) {
+            /* One atomic-width diagnostic word; no trace call on admission. */
+            __u32 changed=*(volatile __u32 *)&p->llm_head!=head;
+            p->llm_pad=(head&0x1fffffffu) | (observed<<29) | (changed<<31);
+            /* Another producer can reserve this old head before advancing it.
+             * Retry publication contention rather than treating it as full. */
+            if (changed || observed==BF_WRITING) continue;
+            break;
+        }
         if (__sync_val_compare_and_swap(&p->llm_head,head,head+1)==head) {
             reserved=1; break;
         }

@@ -123,8 +123,75 @@ Temporary binaries remain for result inspection, then owner removes them after
 all experiment processes exit. The target output is one per-cell mean/effect
 TTFT table with intervals plus scoped secondary CPU/TPOT observations.
 
+## Plan-review boundary correction
+
+Review found that the old runner started its process-CPU/window timer before
+workers finished creating connections. TTFT starts at each send and throughput
+uses first-send/last-arrival, so those metrics were unaffected; CPU/window
+could include residual setup. A three-line ready-barrier handshake now waits
+for every connected worker before starting those windows and releases workers
+through the original timed barrier. Oracle, timeouts, cell order, counts and
+metric formulas are unchanged. This is corrected before preflight/full run;
+older findings retain their historical measurement code and scope.
+
+## Candidate admission failure and repair
+
+The first TCP_NODELAY candidate regression timed out while eight persistent
+clients alternated invalid and valid requests. The retained
+[failed log](../../bench/results/graph_dispatch_candidate_resident_correctness_20261010.txt)
+reports one busy admission/drop and zero graph errors. Its free-slot sample
+was collected after the timeout; it does not identify the state at refusal or
+prove the historical cause.
+
+Temporary refusal tracing did not reproduce that drop. The
+[gen64 instrumented regression](../../bench/results/graph_dispatch_candidate_resident_diagnostic_20261010.txt),
+[fast resident stress](../../bench/results/graph_dispatch_fast_resident_diagnostic_20261010.txt),
+and [fast host stress](../../bench/results/graph_dispatch_fast_host_launch_diagnostic_20261010.txt)
+passed; the associated
+[initial trace](../../bench/results/graph_dispatch_reservation_trace_20261010.txt)
+and [stress trace](../../bench/results/graph_dispatch_fast_reservation_trace_20261010.txt)
+are empty. This is absence of a captured refusal, not causal proof. Temporary
+trace calls and copied stress scripts were removed. The
+[gen8 diagnostic stress](../../bench/results/graph_dispatch_reservation_word_diagnostic_20261010.txt)
+also passed 2,095 valid requests / 16,760 exact tokens and 2,051 rejections.
+
+Source inspection found that a producer could see a stale head or another
+producer's WRITING reservation and immediately classify it as a full ring.
+The existing bounded reservation loop now retries those publication-contention
+cases. Successful publication still requires both slot and head CAS; a failed
+head CAS releases that producer's reservation. This fixes the source-level
+premature-full behavior, but does not promise lossless admission under true
+overload or prolonged contention, and does not establish the old drop's cause.
+
+One aligned word in the previously unused LLM padding records the last busy
+reservation's low 29 head bits, observed state and whether head changed.
+The loader prints it when nonzero. It is best-effort, truncated, concurrently
+overwriteable observation; it may describe recovered contention rather than
+a dropped request. There is no new map, queue size, timeout or trace call.
+
+After the retry repair, both complete candidate gen64 regressions passed the
+unchanged oracle: **303 valid requests / 19,392 exact tokens and 259 rejections
+per mode**, no admission drops, graph_error=0 and clean module/pin teardown.
+[Resident log](../../bench/results/graph_dispatch_reservation_retry_resident_correctness_20261010.txt)
+records one host service launch; [host-control log](../../bench/results/graph_dispatch_reservation_retry_host_launch_correctness_20261010.txt)
+records 562. Both record 19,392 device model graph launches and all-thread
+network-syscall checks. These are correctness results, not speed measurements.
+
+Fresh plan review and its focused follow-up admitted the supporting comparison
+and found no new source blocker after the retry and timer-boundary correction.
+The review discussions remain in the retained task: automatic approval rejected
+two reviewer report-save operations with only "blocked by policy", so no saved
+review report is claimed.
+
 ## Status
 
-Plan drafted; review, candidate validation, preflight and full run pending.
+Plan reviewed and both candidate correctness regressions passed. Preflight and
+full performance run remain pending. On 2026-10-10 at 17:55 UTC, live inspection
+found the earlier container gone and the same Workspace's existing replacement
+Pod running, with the original PVC/source/logs retained and the same host boot
+ID. Both completed correctness logs survived. Disposable candidate binaries
+and container-installed dependencies did not; restore dependencies and rebuild
+through the existing Workspace before measurement. Container termination cause
+has not been established by this inspection.
 Full service scope remains text processing, continuous batching, completion
 interfaces/timing, complete host cost, optimized serving and physical NIC.

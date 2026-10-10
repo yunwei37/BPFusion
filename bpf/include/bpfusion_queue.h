@@ -144,7 +144,7 @@ struct bf_page {
 	/* LLM request ring (see bf_llm_slot above). Kept at the tail so the
 	 * MLP offsets are unchanged. */
 	__u32 llm_head;
-	__u32 llm_pad;
+	__u32 llm_pad; /* last busy reservation: head low29, state bits29..30, head changed bit31 */
 	struct bf_llm_slot llm[BF_LLM_SLOTS];
 };
 

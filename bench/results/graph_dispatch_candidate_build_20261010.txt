@@ -1,0 +1,68 @@
+Source base 8d1d9923223936f3edb7f5fe99bc72bb6f2c1deb
+Candidate /tmp/bpfusion-graph-dispatch-nodelay-qs8c584k
+Only test-local source delta: add <netinet/tcp.h> and checked listener TCP_NODELAY=1 after SO_REUSEADDR.
+make BUILD=/tmp/bpfusion-graph-dispatch-nodelay-qs8c584k qwen-graph qwen-graph-control
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o /tmp/bpfusion-graph-dispatch-nodelay-qs8c584k/qwen_graph.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/qwen_graph.py /tmp/bpfusion-graph-dispatch-nodelay-qs8c584k/qwen_graph
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o /tmp/bpfusion-graph-dispatch-nodelay-qs8c584k/qwen_graph_host_launch.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/qwen_graph.py /tmp/bpfusion-graph-dispatch-nodelay-qs8c584k/qwen_graph_host_launch
+PASS tracked native source restored; default build libraries preserved
+/tmp/bpfusion-graph-dispatch-nodelay-qs8c584k/qwen_graph.so
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z8dispatchP7bf_pageP4StepPxjP7Controlb:
+  REG:35 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:937 TEXTURE:0 SURFACE:0 SAMPLER:0
+/tmp/bpfusion-graph-dispatch-nodelay-qs8c584k/qwen_graph_host_launch.so
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z8dispatchP7bf_pageP4StepPxjP7Controlb:
+  REG:35 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:937 TEXTURE:0 SURFACE:0 SAMPLER:0
+build/qwen_graph.so
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z8dispatchP7bf_pageP4StepPxjP7Controlb:
+  REG:35 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:937 TEXTURE:0 SURFACE:0 SAMPLER:0
+build/qwen_graph_host_launch.so
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z8dispatchP7bf_pageP4StepPxjP7Controlb:
+  REG:35 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:937 TEXTURE:0 SURFACE:0 SAMPLER:0
+PASS all four device dispatcher SASS match

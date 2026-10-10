@@ -139,6 +139,9 @@ int main(int argc, char **argv)
 			       page->slots[i].x[0], page->done[i].state,
 			       page->done[i].id, page->done[i].y[0]);
 		printf("llm_head=%u\n", page->llm_head);
+        if (page->llm_pad)
+            printf("llm last busy reservation: head_low29=%u state=%u head_changed=%u\n",
+                   page->llm_pad&0x1fffffffu, (page->llm_pad>>29)&3u, page->llm_pad>>31);
 		for (i = 0; i < BF_LLM_SLOTS; i++)
 			printf("llm[%d]: state=%u prompt=%u gen=%u produced=%u client_ns=%llu\n",
 			       i, page->llm[i].state, page->llm[i].n_prompt,

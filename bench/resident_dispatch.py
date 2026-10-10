@@ -71,8 +71,10 @@ def connect():
 def cell(pid,cases,gen,concurrency,count,rows):
     # Connections and thread creation precede both the timer and CPU window.
     barrier=threading.Barrier(concurrency+1)
+    ready=threading.Barrier(concurrency+1)
     def worker(worker_id):
         with connect() as client:
+            ready.wait(timeout=60)
             barrier.wait(timeout=60)
             for index in range(worker_id,count,concurrency):
                 case=index%len(cases); ids,expected=cases[case]
@@ -80,6 +82,7 @@ def cell(pid,cases,gen,concurrency,count,rows):
                 rows.append(row)
     with ThreadPoolExecutor(max_workers=concurrency) as pool:
         futures=[pool.submit(worker,i) for i in range(concurrency)]
+        ready.wait(timeout=60)
         before=cpu_seconds(pid); start=time.monotonic_ns()
         barrier.wait(timeout=60)
         for future in futures: future.result()
