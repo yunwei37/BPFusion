@@ -138,6 +138,12 @@ profiling. This resolves the mechanism uncertainty for that workload; it is
 not a new serving-speed result,SM instruction-parallelism or utilization claim.
 The two largest GEMV name groups dominate summed model-kernel durations,
 motivating the next computation/weight-reuse investigation.
+A subsequent shape-aware eager diagnostic associates every physical CUDA
+record with its actual CPU operation across five shapes and all169 Linear
+modules. Decode MLP projections account for about34% of summed kernel
+durations,the vocabulary head about9%,and copy operations about13%.
+These local associations guide computation/reuse work; they do not transfer
+duration shares to the device-launched trace or establish a serving speedup.
 
 
 ## Repository layout

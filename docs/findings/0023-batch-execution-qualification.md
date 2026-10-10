@@ -449,3 +449,164 @@ blocker. Complete serialization is contradicted within this scope. No
 separate saved reviewer report or independent serving-speed result is claimed.
 The documented CPU archive replay also terminates EXIT0 with the same
 counts and interval results.
+
+## Next computation diagnostic: projection and kernel-shape attribution
+
+The completed device trace proves model-kernel overlap but identifies its
+dominant GEMV groups only by kernel name. The merged gate/up candidate is
+closed: its eight-client primary effects do not support retention. This
+leaves a decision-relevant uncertainty: do the large duration groups come
+mostly from the vocabulary head, MLP projections, attention projections or
+attention matrix operations? The answer changes which computation to optimize.
+Existing raw traces cannot identify model operations or shapes from names
+alone, so a standard shape-aware profiler adds distinct evidence. This is
+supporting engineering diagnosis within the unchanged performance goal;
+there is no paper RQ or competitive-serving hypothesis to invent.
+
+Use installed torch.profiler CPU/CUDA activities, record_shapes=True and
+record_function labels around the existing nn.Linear forwards. The
+[official profiler API](https://docs.pytorch.org/docs/2.14/profiler.html)
+documents shape recording and trace export; CPU annotation adds labels without
+changing tensor expressions. Installed FunctionEvent.kernels and cpu_parent
+provide the operation-to-kernel association. Record actual tensor shapes,
+projection names, associated kernel names/counts/durations and unmatched
+CUDA records. Attribute only associations observed in this eager forward.
+Do not infer captured/device-launched ownership from a host association or
+declare bandwidth saturation from names/durations.
+
+All work uses main8a83c63 in the existing BPFusion Workspace. Production,
+native/module/queue/oracle/transport and other GPU owners remain unchanged.
+The temporary script reuses current qwen_graph.py load/capture logic, cuts
+off before native serve, and captures one private bank. It then adds Linear
+labels after capture, prepares the same token pattern and causal/KV prefix
+as the prior graph diagnostic, and profiles eager forwards for graph
+indices5,64,80,128,190: prefill5/64 and decode positions16/64/126.
+For each shape compare its argmax token with replay of the unchanged
+captured graph at identical input/KV prefix. This is a computation identity
+control, not a replacement for the existing full independent strict oracle.
+Require an associated CUDA record for every actual Linear module. Preserve
+all raw operation rows and standard Chrome exports; report coverage and
+unmatched activity before duration attribution.
+
+Runnable source: /tmp/bpfusion-qwen-pointwise-5mxeys8g/projection_shape_probe.py.
+The real computation preflight runs python3 SOURCE --preflight (decode16);
+the full command omits that flag and completes all five declared shapes.
+The script does no module/BPF attach or native serve. Normal process exit
+releases its context and graphs; inspect owned processes and host co-tenant/
+boot identity around collection. No GPU-global counter session is used.
+Results go to bench/results/qwen_projection_shape_{preflight,full}_20261010.txt
+and corresponding standard trace archives, with source/command/analysis.
+No arbitrary serving deadline, concurrency, precision or persistent flag is
+introduced. Profiler wall timings are not compared with earlier TCP runs.
+
+The primary outcome is observed projection/operation-to-kernel association,
+its coverage and per-shape duration grouping. If the large GEMV groups map
+to a specific projection family, investigate that family; if spread broadly,
+favor cross-request weight reuse/batching over one local projection fusion.
+Missing correlations remain inconclusive. Durations in this host-driven,
+profiled, shared-GPU diagnostic cannot establish uninstrumented speedup,
+device-tail scheduling behavior, isolated cost or physical bandwidth.
+Fresh plan and terminal result reviews apply; no extra control schema/helper
+or independent dependency contribution is introduced.
+
+Fresh read-only plan review admits the current83-line source without a
+scientific or executability blocker. It verifies installed direct correlation,
+CPU parent labels,absence of hierarchical duration double-counting,
+same input/position/KV prefix for eager/captured replay,all Linear labels,
+one-bank/no-native resource scope and non-projection attention preservation.
+Name/duration counters check coverage rather than unique event identity;
+use retained standard trace correlation/time for unresolved records.
+The result must not transfer eager duration shares to the earlier device
+trace or infer bandwidth/serving-speed benefits from these observations.
+
+The real decode16 preflight exits0 with169 Linear labels and matching
+eager/captured argmax315. Its direct CPU associations match all761 physical
+kernel/copy/memset records in the standard trace. The initial observer also
+counted CUDA user-annotation ranges as CUDA activity,creating unmatched
+projection/compiler labels in its all-CUDA counter. These are annotations,
+not missing physical kernels. Before full collection,the temporary script
+excludes is_user_annotation from that counter and records the property.
+This repairs activity classification only; computation,input,KV,shape matrix,
+identity control and profiling remain unchanged. The initial source and
+annotation records remain in preflight raw; no preflight rerun is needed.
+
+## Projection/operation attribution result
+
+The preflight and full processes both exit0. Full collection completes all
+five shapes,with169 actual Linear modules associated in each and eager/
+captured argmax controls12095,374,315,785,315 respectively. The controls
+compare only the selected token at these inputs; they do not prove complete
+logit equality or replace the independent strict oracle. No shape is omitted.
+
+[Full source/output](../../bench/results/qwen_projection_shape_full_20261010.txt)
+and [preflight source/output](../../bench/results/qwen_projection_shape_preflight_20261010.txt)
+preserve the computation and installed model configuration. The standard
+exports are [prefill5](../../bench/results/qwen_projection_shape_5_20261010.json.gz),
+[prefill64](../../bench/results/qwen_projection_shape_64_20261010.json.gz),
+[decode16](../../bench/results/qwen_projection_shape_80_20261010.json.gz),
+[decode64](../../bench/results/qwen_projection_shape_128_20261010.json.gz),
+[decode126](../../bench/results/qwen_projection_shape_190_20261010.json.gz)
+and [original preflight](../../bench/results/qwen_projection_shape_preflight_80_20261010.json.gz).
+All archives are byte-identical to the original exports.
+The [CPU analysis source/output](../../bench/results/qwen_projection_shape_analysis_20261010.txt)
+reads retained archives directly,not temporary traces. Extract its SOURCE
+block through OUTPUT and run from repository root to reproduce the arithmetic.
+
+All physical kernel/copy/memset records match direct CPU operation associations
+by name/duration multiplicity,with no unmatched or extra association records.
+The totals are809,881,761,761,761. CUDA user annotations are preserved in the
+standard exports and excluded from physical coverage. Direct kernel lists
+avoid counting parent-inclusive durations repeatedly; the multiplicity match
+is a coverage check rather than a unique correlation identity proof.
+
+| graph / count / position | physical CUDA records | MLP gate+up+down us | vocabulary head us | all copy operations us | summed CUDA duration us |
+|---|---:|---:|---:|---:|---:|
+| 5 /5 /0 | 809 | 575.874 | 172.865 | 314.209 | 2116.776 |
+| 64 /64 /0 | 881 | 645.309 | 188.321 | 324.354 | 2176.608 |
+| 80 /1 /16 | 761 | 641.725 | 170.273 | 244.283 | 1846.069 |
+| 128 /1 /64 | 761 | 634.848 | 175.009 | 245.375 | 1863.395 |
+| 190 /1 /126 | 761 | 635.012 | 168.992 | 246.880 | 1874.116 |
+
+These are sums of individual durations in profiled eager forwards on a shared
+GPU,not wall-time shares of the earlier device-launched TCP trace. MLP
+projections account for34.76%,34.07%,33.88% in the three decode snapshots;
+the vocabulary head is approximately9%,while all copy operations are about13%.
+The actual operation rows preserve Linear and attention bmm shapes and associations.
+For tensor-list operations such as cat,the standard trace retains nested
+Input Dims that profile.events().input_shapes represents as empty lists;
+use the archived Chrome data for those details.
+Decode GEMV variant6 has97 records:72 MLP projections,one vocabulary head
+and24 attention bmm operations. Variant7 has96:24 each of query,key,value
+and output projections. The same kernel name spans multiple computation
+families,so selecting just the vocabulary head from that name would be wrong.
+
+This points toward broad computation/weight-reuse efficiency and specific
+avoidable tensor movement. In particular,the installed eager attention
+repeats the two KV heads across seven query-head groups before each matmul.
+Rows with [1,2,7,context,64] copy shapes make that movement visible; total
+copy time includes other copies,so the entire13% is not attributed to KV
+repetition. Grouping query heads into rows against their original KV head is
+a different next mechanism from the closed merged MLP projection. It may
+reduce repeated KV materialization, but reshaping/matmul algorithms may change
+rounding and must pass the unchanged exact oracle before any speed comparison.
+
+[Host snapshots](../../bench/results/qwen_projection_shape_environment_20261010.txt)
+record the same boot and other owner's SGLang process732929 with18,404MiB
+residency before/after; that owner is untouched. Owned profiler processes,
+module and pins are absent after exit. Production0/test0,temporary83-line
+instrumentation only. Fresh terminal result review is complete; no serving
+speed,isolated bandwidth or new independent paper contribution is claimed.
+
+
+Fresh independent read-only result review finds this diagnostic valid,
+complete and publishable within its scope. It joins every physical GPU record
+to the exact CPU operation by standard-trace External id,checks unique GPU
+correlations and per-operation kernel multisets,and verifies Linear label
+containment in CPU annotation ranges. There is no hierarchical duplicate
+association or kernel misattribution. All169 Linear shapes match trace Input
+Dims,all48 attention bmm rows remain,and all five coverage/duration totals
+recompute. The preflight annotation repair changes observation only.
+Verdict: attribution supported,supporting engineering value,computation/
+mechanism boundary. Broad projection efficiency and reuse remain appropriate
+next targets; the vocabulary head alone does not explain cost. No new
+serving result or bandwidth diagnosis follows from this collection.
