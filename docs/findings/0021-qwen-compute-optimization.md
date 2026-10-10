@@ -9,7 +9,11 @@ This diagnostic is not a new paper experiment or competitive serving result.
 ## Reproduction and scope
 
 The raw profile files include the exact temporary diagnostic Python script
-and command. It reads the original graph-capture source, captures all 190
+and command. The capture source in these pairs is the pre-optimization
+`779e2f3` version (also unchanged from `e3f272e`). To reproduce against a later
+checkout without changing main, load it with
+`git show 779e2f3:executor/qwen_graph.py` in the diagnostic instead of reading
+the current file; retain the documented native graph library and dependencies. It reads the original graph-capture source, captures all 190
 model graphs, and replaces the native serve call with ordinary host graph
 replays. The original exported real weights, HF operations, cache construction,
 copy-back and device argmax are retained. Actual prompt token IDs populate the
@@ -86,6 +90,31 @@ pipeline/ring wrap/half-close, zero admission drops, graph_error=0, expected
 host/model launch counts, all-thread network-syscall checks and clean module/pin
 teardown. The temporary candidate differed from the retained script by exactly
 this forward argument and used the matched native libraries from0020.
+
+## Default RMSNorm fusion probe
+
+The next bounded candidate compiled only the existing `Qwen2RMSNorm.forward`
+with default `torch.compile`, leaving eager attention and the original model
+operations around it. Its
+[real gen64 regression](../../bench/results/qwen_compiled_norm_default_correctness_20261010.txt)
+reached the server and returned all64 tokens with graph_error=0, but failed
+at output14 of the first prompt, also3283 instead of oracle304. Network trace
+and clean module/pin teardown passed. This is a failed default candidate, not
+an accepted performance result. No compiler change is retained.
+
+The installed PyTorch2.14.1 Inductor source documents that fusion may remove
+fp16 downcast/upcast boundaries and provides `emulate_precision_casts` to
+preserve them. That is a concrete reason to test this existing compiler option
+in the temporary candidate after the default failure. It is not proof that
+cast removal caused this output mismatch, nor permission to change the oracle.
+The [precision-preserving regression](../../bench/results/qwen_compiled_norm_precision_correctness_20261010.txt)
+also completed all64 tokens but failed at the same output14 (3283 instead of
+304), with graph_error=0, passing network trace and clean module/pin teardown.
+The default candidate used the pre-last-position-logits source; this second
+candidate used the retained last-position argument and
+`torch.compile(Qwen2RMSNorm.forward, options={"emulate_precision_casts": True})`.
+Neither compiler candidate is retained. These failures do not identify which
+change in arithmetic caused the divergence, and no speedup is claimed.
 
 The full serving goal remains active. Reduce the remaining pointwise/cache
 work and serial queueing, measure an accepted compute improvement on real TCP,
