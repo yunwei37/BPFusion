@@ -1,0 +1,166 @@
+FROZEN 2026-10-10T23:00:26.873071+00:00
+COMMIT c281f0d888de93f893e83517546598bb41eecfaa
+VERSIONS {"torch": "2.14.1+cu130", "transformers": "5.19.0"}
+
+SOURCE /tmp/bpfusion-qwen-pointwise-5mxeys8g/qualify_batch_mean_slice.py
+from pathlib import Path
+import sys,json,os,argparse
+from collections import Counter
+sys.path.insert(0,'/workspaces/repository/tests')
+sys.path.insert(0,'/workspaces/repository/executor')
+os.chdir('/workspaces/repository')
+import torch,transformers
+from resident_qwen import oracle_cases
+from qwen_graph import load_model
+from transformers.models.qwen2 import modeling_qwen2 as qwen2
+print('Batch mean-slice qualification: original pointwise operations, per-lane mean, and Linear/attention interaction controls; no serving-speed claim.',flush=True)
+args=argparse.ArgumentParser();args.add_argument('--preflight',action='store_true');args=args.parse_args()
+print('torch',torch.__version__,'transformers',transformers.__version__,flush=True)
+cases,vocab=oracle_cases(64,True)
+print('independent_batch1_oracle',json.dumps(cases),flush=True)
+original_linear=torch.nn.Linear.forward
+original_attention=qwen2.eager_attention_forward
+original_norm=qwen2.Qwen2RMSNorm.forward
+calls=Counter()
+def sliced_linear(self,x):
+    if x.ndim==3 and x.shape[0]>1:
+        calls['linear_slice']+=1
+        return torch.cat([original_linear(self,x[i:i+1]) for i in range(x.shape[0])],dim=0)
+    return original_linear(self,x)
+def sliced_attention(module,query,key,value,attention_mask,scaling,dropout=0.0,**kwargs):
+    if query.shape[0]==1:
+        return original_attention(module,query,key,value,attention_mask,scaling,dropout,**kwargs)
+    calls['attention_slice']+=1
+    batch=query.shape[0];outputs=[];scores=[]
+    assert key.shape[0]==value.shape[0]==batch
+    assert attention_mask is None or attention_mask.shape[0] in (1,batch)
+    for i in range(batch):
+        mask=attention_mask if attention_mask is None or attention_mask.shape[0]==1 else attention_mask[i:i+1]
+        output,score=original_attention(module,query[i:i+1],key[i:i+1],value[i:i+1],mask,scaling,dropout,**kwargs)
+        outputs.append(output);scores.append(score)
+    return torch.cat(outputs,dim=0),torch.cat(scores,dim=0)
+def per_lane_mean(self,hidden_states):
+    if hidden_states.shape[0]==1:return original_norm(self,hidden_states)
+    calls['mean_slice']+=1
+    input_dtype=hidden_states.dtype
+    hidden_states=hidden_states.to(torch.float32)
+    squared=hidden_states.pow(2)
+    variance=torch.cat([squared[i:i+1].mean(-1,keepdim=True) for i in range(squared.shape[0])],dim=0)
+    hidden_states=hidden_states*torch.rsqrt(variance+self.variance_epsilon)
+    return self.weight*hidden_states.to(input_dtype)
+with torch.no_grad():
+    model=load_model('/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin')
+    qwen2.Qwen2RMSNorm.forward=per_lane_mean
+    for variant in ('mean_slice','mean_linear_slice','mean_attention_slice','mean_both'):
+        torch.nn.Linear.forward=sliced_linear if variant in ('mean_linear_slice','mean_both') else original_linear
+        qwen2.eager_attention_forward=sliced_attention if variant in ('mean_attention_slice','mean_both') else original_attention
+        for batch in ((2,) if args.preflight else (2,4,8)):
+            groups=[(str(i),[i]*batch) for i in range(len(cases))]
+            # Same prefix length, different real prompts, independent KV lanes.
+            assert len(cases[0][0])==len(cases[2][0])
+            groups.append(('mixed5',[0,2]*(batch//2)))
+            if args.preflight:groups=[('2',[2]*batch)]
+            for name,indices in groups:
+                before=calls.copy()
+                inputs=torch.tensor([cases[i][0] for i in indices],device='cuda')
+                output=model(inputs,use_cache=True,logits_to_keep=1)
+                past=output.past_key_values
+                token=output.logits[:,-1,:].argmax(-1)
+                selected=[token]
+                for step in range(63):
+                    output=model(token[:,None],past_key_values=past,use_cache=True,logits_to_keep=1)
+                    past=output.past_key_values
+                    token=output.logits[:,-1,:].argmax(-1);selected.append(token)
+                actual=torch.stack(selected,dim=1).cpu().tolist()
+                mismatches=[]
+                for lane,case in enumerate(indices):
+                    expected=cases[case][1]
+                    if actual[lane]!=expected:
+                        k=next(j for j,(a,b) in enumerate(zip(actual[lane],expected)) if a!=b)
+                        mismatches.append({'lane':lane,'case':case,'first_index':k,'actual':actual[lane][k],'expected':expected[k]})
+                print(json.dumps({'variant':variant,'hook_calls':dict(calls-before),'batch':batch,'group':name,'cases':indices,'actual':actual,'pass':not mismatches,'mismatches':mismatches}),flush=True)
+torch.nn.Linear.forward=original_linear
+qwen2.eager_attention_forward=original_attention
+qwen2.Qwen2RMSNorm.forward=original_norm
+print('BATCH_MEAN_SLICE_MATRIX_COMPLETE',flush=True)
+
+
+SOURCE /tmp/bpfusion-qwen-pointwise-5mxeys8g/analyze_batch_mean_slice.py
+import json,os,datetime
+from pathlib import Path
+from collections import Counter
+os.chdir('/workspaces/repository')
+raw=Path('bench/results/qwen_batch_mean_slice_20261010.txt').read_text()
+control=Path('bench/results/qwen_batch_shape_qualification_20261010.txt').read_text()
+def oracle(s):return json.loads(next(line.split(' ',1)[1] for line in s.splitlines() if line.startswith('independent_batch1_oracle ')))
+cases=oracle(raw);assert cases==oracle(control) and len(cases)==10
+assert 'BATCH_MEAN_SLICE_MATRIX_COMPLETE' in raw and raw.rstrip().endswith('EXIT 0')
+rows=[json.loads(line) for line in raw.splitlines() if line.startswith('{')]
+assert len(rows)==132
+expected={(b,str(i)) for b in (2,4,8) for i in range(10)}|{(b,'mixed5') for b in (2,4,8)}
+for variant in ('mean_slice','mean_linear_slice','mean_attention_slice','mean_both'):
+ rs=[r for r in rows if r['variant']==variant]
+ assert len(rs)==33 and {(r['batch'],r['group']) for r in rs}==expected
+ for r in rs:
+  assert len(r['actual'])==len(r['cases'])==r['batch']
+  assert r['cases']==([int(r['group'])]*r['batch'] if r['group']!='mixed5' else [0,2]*(r['batch']//2))
+  hooks={'mean_slice':3136}
+  if variant in ('mean_linear_slice','mean_both'):hooks['linear_slice']=10816
+  if variant in ('mean_attention_slice','mean_both'):hooks['attention_slice']=1536
+  assert r['hook_calls']==hooks,r
+  mismatches=[]
+  for lane,case in enumerate(r['cases']):
+   actual=r['actual'][lane];ref=cases[case][1]
+   assert len(actual)==len(ref)==64
+   if actual!=ref:
+    k=next(j for j,(a,b) in enumerate(zip(actual,ref)) if a!=b)
+    mismatches.append({'lane':lane,'case':case,'first_index':k,'actual':actual[k],'expected':ref[k]})
+  assert r['mismatches']==mismatches and r['pass']==(not mismatches)
+ print(json.dumps({'variant':variant,'groups':33,'passing_groups':sum(r['pass'] for r in rs),'failed_groups':sum(not r['pass'] for r in rs),'failed_lanes':sum(len(r['mismatches']) for r in rs),'generated_tokens':sum(len(t) for r in rs for t in r['actual']),'failures':[{'batch':r['batch'],'group':r['group'],'mismatches':r['mismatches']} for r in rs if not r['pass']]}))
+controls=[json.loads(line) for line in control.splitlines() if line.startswith('{')]
+assert len(controls)==33 and {(r['batch'],r['group']) for r in controls}==expected
+lookup={(r['batch'],r['group']):r for r in controls}
+for variant in ('mean_slice','mean_linear_slice','mean_attention_slice','mean_both'):
+ changes=[{'batch':r['batch'],'group':r['group'],'ordinary_pass':lookup[(r['batch'],r['group'])]['pass'],'slice_pass':r['pass'],'ordinary_mismatches':lookup[(r['batch'],r['group'])]['mismatches'],'slice_mismatches':r['mismatches']} for r in rows if r['variant']==variant and (r['pass']!=lookup[(r['batch'],r['group'])]['pass'] or r['mismatches']!=lookup[(r['batch'],r['group'])]['mismatches'])]
+ print(json.dumps({'variant':variant,'control_changes':changes}))
+preflight=Path('bench/results/qwen_batch_mean_slice_preflight_20261010.txt').read_text()
+prs=[json.loads(line) for line in preflight.splitlines() if line.startswith('{')]
+assert len(prs)==4 and oracle(preflight)==cases
+for r in prs:
+ assert r==next(x for x in rows if (x['variant'],x['batch'],x['group'])==(r['variant'],r['batch'],r['group']))
+assert sum(len(t) for r in rows for t in r['actual'])==39424
+print(json.dumps({'verification':'PASS','groups':132,'generated_tokens':39424,'ordinary_control_groups':33,'ordinary_control_pass':sum(r['pass'] for r in controls),'preflight_groups':4,'preflight_generated_tokens':512,'preflight_full_identity':True,'no_rows_excluded':True,'scope':'causal numerical qualification; no TCP/speed/native result'}))
+owned=[]
+for proc in Path('/proc').iterdir():
+ if not proc.name.isdigit():continue
+ try:
+  cmd=proc.joinpath('cmdline').read_bytes().replace(b'\0',b' ').decode(errors='replace')
+  if 'qualify_batch_mean_slice.py' in cmd:owned.append((proc.name,cmd))
+ except (FileNotFoundError,PermissionError):pass
+cleanup={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'owned_processes':owned,'module_loaded':'bfusion_tx ' in Path('/proc/modules').read_text(),'pins':[str(q) for q in Path('/sys/fs/bpf').glob('bpfusion*')]}
+print('CLEANUP '+json.dumps(cleanup))
+assert not owned and not cleanup['module_loaded'] and not cleanup['pins']
+
+
+INSTALLED_ORIGINAL_NORM     def forward(self, hidden_states: torch.Tensor) -> torch.Tensor:
+        input_dtype = hidden_states.dtype
+        hidden_states = hidden_states.to(torch.float32)
+        variance = hidden_states.pow(2).mean(-1, keepdim=True)
+        hidden_states = hidden_states * torch.rsqrt(variance + self.variance_epsilon)
+        return self.weight * hidden_states.to(input_dtype)
+
+INSTALLED_REDUCE_HEADER /usr/local/lib/python3.12/dist-packages/torch/include/ATen/native/cuda/Reduce.cuh
+  template <typename T>
+  void set_block_dimension(int64_t dim0, int64_t dim1) {
+    const int max_num_threads = mnt_wrapper<T>::MAX_NUM_THREADS / output_vec_size;
+    int dim0_pow2 = dim0 < max_num_threads ? static_cast<int>(last_pow2(dim0)) : max_num_threads;
+    int dim1_pow2 = dim1 < max_num_threads ? static_cast<int>(last_pow2(dim1)) : max_num_threads;
+    block_width = std::min(dim0_pow2, int(at::cuda::warp_size()));
+    block_height = std::min(dim1_pow2, int(max_num_threads / block_width));
+    block_width = std::min(dim0_pow2, int(max_num_threads / block_height));
+    num_threads = block_width * block_height;
+  }
+
+Header excerpt is implementation provenance for shape-dependent block configuration,not measured kernel selection or proof of unique cause.
+
+COLLECTION_BASE 4fa4a95c78768816f498810b25d375f83352d5ce

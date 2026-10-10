@@ -941,3 +941,170 @@ causation remains inconclusive. Research value is dependency-only,with a
 mechanism/workload boundary and no speed or serving qualification claim.
 The next decision is a distinct arithmetic/layout implementation based on
 these boundaries,not another unchanged diagnostic or oracle relaxation.
+
+## Batch mean-reduction qualification with component interaction controls
+
+The completed first-difference diagnostic identifies a new numerical boundary
+under fixed token history:equal norm inputs can produce unequal outputs.
+Other selected variants first differ at a projection or attention boundary.
+The installed Qwen RMSNorm forward performs float32 conversion,pow2,last-axis
+mean,rsqrt,multiply,fp16 cast and weight multiply. Installed CUDA Reduce.cuh
+computes block dimensions from both reduced elements and output count.
+This motivates testing original per-lane mean,not declaring a unique cause
+or repeating the already completed unchanged33/99-group matrices.
+
+Question under the unchanged user throughput/latency objective:does preserving
+batch1 mean reduction while retaining the original other operations recover
+complete fixed-reference tensor batching,alone or with the previously tested
+Linear/attention component controls? Planned role:dependency for actual
+shared-weight device-scheduled batching,not a standalone paper RQ,speed result,
+competitive baseline or mathematical root-cause proof. Existing raw outputs
+cannot answer the new mean intervention. Direct TCP integration currently lacks
+a numerically qualified batched candidate,so this is the strongest runnable
+step toward weight reuse;another small pointwise fusion would not resolve it.
+
+Use the unchanged real eager-fp16 exported weights,load_model and independent
+HF batch1 oracle_cases(64,True),computed before patches. No precision,oracle,
+model,device-owner or service change. Reference ordinary33 groups and completed
+three slicing ablations are historical numerical/source controls only,not
+contemporaneous hardware performance baselines.
+
+The new norm forward preserves original float32 conversion,pow2,rsqrt,epsilon,
+multiply,fp16 cast and weight multiply. It changes only mean's batch call:
+take each squared tensor[i:i+1],call the same mean(-1,keepdim=True),and
+concatenate its float32 variance. Batch1 calls the saved original norm.
+This is a numerical implementation candidate,not an optional runtime setting.
+Potential additional launch/concatenation costs are not interpreted as a
+performance gain. Slice tensor layout and CUDA algorithm selection may still
+differ from independent batch1;successful token qualification is empirical
+for the complete tested matrix,not proof of bitwise intermediate identity.
+
+One integrated matrix,four new variants:
+mean_slice (original batched Linear and attention);
+mean_linear_slice (same mean plus original per-lane Linear);
+mean_attention_slice (same mean plus original per-lane eager attention);
+mean_both (same mean plus both component controls).
+Keep the previously completed Linear/attention slice definitions unchanged.
+Each variant resets original-or-sliced functions explicitly,no cross-variant
+patch carryover. Every group starts fresh KV,prefill then63 incremental
+autoregressive decode steps. Candidate actual selected tokens feed its own
+next step;this qualifies generated sequences,not teacher forcing.
+
+For each variant,run batch2,4,8 across all ten existing prompt cases including
+prompt-length edges,plus the existing same-length mixed France/greeting group:
+33 groups per variant,132 groups,total39424 generated tokens and8448 forwards.
+Compare each lane's complete64-token output with the independent fixed oracle.
+Preserve actual sequences,pass/failure,first mismatch and engagement counts
+for every group. No exclusion,alternate oracle,reduced generation or precision
+change. mean_slice engagement should be3136 outer norm calls per group;
+the existing Linear/attention controls should record10816/1536 outer calls
+when enabled,with original per-lane calls additionally proportional to batch.
+These counts are mechanism checks,not performance measurements.
+
+Real preflight uses greeting/B2 for all four new variants:four full64-token
+groups,512 generated tokens. It verifies the actual model,oracle,path and
+logging. Numerical mismatch is a preserved qualification result,not an
+executability fault or permission to change the reference;the full matrix
+is necessary to test sufficient recovery and component interactions.
+
+Terminal collection requires BATCH_MEAN_SLICE_MATRIX_COMPLETE and EXIT0,
+all132 unique groups and all64-token lane outputs. Independently CPU-recompute
+every mismatch/count from raw. Process success alone is not qualification.
+For each variant,complete33-group exact agreement supports the tested numerical
+candidate;any failed group contradicts sufficiency. Select only a fully qualified
+variant for later captured/shared-KV and strict TCP testing,prioritizing variants
+that retain batched projections/attention. A variant requiring all components
+per-lane is a correctness control rather than evidence of useful weight reuse.
+No qualified variant means no promotion;use observed failures to decide the
+next distinct implementation or close this path,never rerun unchanged matrices.
+Partial recovery,new failure and mixed outcomes remain visible.
+
+Exact runnable source and commands frozen in
+bench/results/qwen_batch_mean_slice_adapter_20261010.txt.
+From repository root:
+HF_HOME=/workspaces/.cache/huggingface python3
+/tmp/bpfusion-qwen-pointwise-5mxeys8g/qualify_batch_mean_slice.py --preflight
+then the same command without --preflight.
+Use separate ordinary preflight/full raw filenames and analysis output;
+record installed versions,source identity,host boot/residency and cleanup.
+Run after the preceding diagnostic process ends;preserve the original Workspace,
+PVC,other SGLang owner and all unrelated WIP. Production/native/test source
+remains unchanged for qualification. Fresh plan and terminal result review apply.
+Shared GPU,synthetic short prompts,one installed math stack,finite test coverage,
+component layouts and no TCP/captured runtime limit the inference.
+
+Fresh independent read-only plan review admits this new mean-slice qualification.
+It confirms original math boundaries,independent oracle,unchanged prior component
+slice ASTs,fresh autoregressive KV,132/39424/8448 matrix counts and engagement,
+source/analysis executability and the finite numerical qualification scope.
+No invalidating defect was found. Preflight/full identity is checked as an
+observational stability control;any disagreement must remain visible rather
+than selecting one output. No additional baseline or precision setting.
+
+Real preflight completed with BATCH_MEAN_SLICE_MATRIX_COMPLETE and EXIT0,
+four generated64-token groups/512 generated tokens. Numerical outcomes are
+preserved per variant;collection success is not full qualification. All132
+planned groups now run to test sufficient recovery and component interactions.
+
+### Completed mean-slice qualification result
+
+Full collection completed BATCH_MEAN_SLICE_MATRIX_COMPLETE and EXIT0,all132
+groups and39424 generated tokens,with no exclusion. CPU analysis reconstructs
+every actual lane's first mismatch and pass status,all engagement counts,
+full group/case/lane identity and preflight/full row identity. Preflight is
+four64-token groups/512 generated tokens:mean_slice and mean_attention_slice
+fail greeting/B2 at output62 (11 versus323),while mean_linear_slice and
+mean_both pass. These preflight rows match their full counterparts exactly.
+
+| Variant | Groups passing / total | Failed lanes | Generated tokens |
+|---|---|---|---|
+| mean_slice | 23 / 33 | 48 | 9856 |
+| mean_linear_slice | 25 / 33 | 42 | 9856 |
+| mean_attention_slice | 23 / 33 | 38 | 9856 |
+| mean_both | 33 / 33 | 0 | 9856 |
+
+Only mean_both passes the complete33-group fixed autoregressive reference,
+9856 exact generated tokens,including all prompt edges and mixed lanes.
+The preceding both-sliced control passed23/33 with50 failed lanes;adding the
+per-lane mean intervention removes all ten prior failing groups without a
+new failure in this matrix. This supports finite sufficiency of the combined
+implementation,not mean alone or a unique internal CUDA reduction cause.
+All variants contain the same mean intervention,so the other three failing
+variants contradict sufficient recovery while retaining one or both original
+batched components. Do not count all39424 tokens as exact.
+
+Full actual outputs,mismatch identities and all changes versus ordinary remain
+in [full](../../bench/results/qwen_batch_mean_slice_20261010.txt) and
+[CPU analysis](../../bench/results/qwen_batch_mean_slice_analysis_20261010.txt).
+The original computations may show partial recovery and new failure rather
+than monotonic improvement:mean_slice restores arithmetic/B4 but introduces
+France/B2,France/B8,greeting/B4 and mixed/B4 failures relative to ordinary.
+Preserve these outcomes;pass totals alone do not identify a mathematical cause.
+
+The qualified mean_both is a correctness control:Linear and attention still
+call the original function separately for every lane. It establishes no
+useful projection weight reuse,batched Tensor Core/GEMV execution,CUDA Graph
+capture,shared-KV or TCP speed improvement. Production/native/test source is
+unchanged and no default implementation or service setting is promoted.
+The next development question is whether a real batch-matrix projection
+can preserve lane-local matrix geometry and exact output with these known
+mean/attention boundaries,rather than merely concatenating per-lane Linears.
+Such a new computation needs its own fixed-reference qualification.
+
+[Preflight](../../bench/results/qwen_batch_mean_slice_preflight_20261010.txt),
+[frozen sources](../../bench/results/qwen_batch_mean_slice_adapter_20261010.txt)
+and [environment](../../bench/results/qwen_batch_mean_slice_environment_20261010.txt)
+retain reproducibility. Terminal CPU cleanup confirms no owned qualification
+process,module or map pins. The same lab boot and SGLang732929/18404MiB owner
+remain. No hardware,precision,oracle,workspace or persistent entity change.
+This numerical dependency result does not establish worker-free serving,
+competitive superiority,error probabilities,total CPU,energy or real NIC results.
+
+Fresh independent terminal result review confirms valid complete collection,
+all132 groups and39424 generated outputs,all first mismatches and engagement,
+preflight/full identity and unchanged source/oracle. mean_both alone passes
+33/33 and9856 exact tokens;finite combined sufficiency is supported,while
+mean-only or single-component sufficient recovery is contradicted.
+No invalidating defect. Research value remains dependency-only;the next
+decision is retain this correctness control and test a distinct actual
+batch-matrix projection,with no default or serving-speed promotion.

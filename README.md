@@ -151,6 +151,11 @@ attention boundaries depending on the condition. Some early byte differences
 do not change greedy tokens. Saved CPU arrays permit independent checks of
 earliest/previous pairs;the result guides batching implementation without
 establishing a unique numerical cause or qualifying a serving candidate.
+A subsequent per-lane mean intervention qualifies all33 fixed-reference groups
+only when Linear and attention are also per-lane;9856 generated tokens match.
+The three variants retaining batched Linear and/or attention still fail.
+This supplies a numerical correctness control for further implementation,
+not shared-weight batched execution or a default serving/performance change.
 A subsequent device-graph activity diagnostic in finding0023 captures complete
 model-kernel record counts: one client has no overlapping model kernels,
 while eight clients show up to eight distinct execution graphs overlapping.
