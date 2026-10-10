@@ -68,7 +68,7 @@ def main():
                 if pos==0:return None
                 return DynamicCache(ddp_cache_data=[(k[:,:,:pos],v[:,:,:pos]) for k,v in zip(keys,values)],config=config)
             def forward():
-                return model(inp,position_ids=positions,attention_mask={'full_attention':mask},past_key_values=cache(),use_cache=True)
+                return model(inp,position_ids=positions,attention_mask={'full_attention':mask},past_key_values=cache(),use_cache=True,logits_to_keep=1)
             mask=create_causal_mask(config=config,inputs_embeds=model.model.embed_tokens(inp),attention_mask=None,past_key_values=cache(),position_ids=positions)
             stream.wait_stream(torch.cuda.current_stream())
             with torch.cuda.stream(stream):warm=forward()

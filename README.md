@@ -83,6 +83,11 @@ single-client TPOT and 431 output tokens/s. Only the one-token/eight-client
 cell detects a small TTFT benefit; the other three paired intervals cross zero.
 Eight clients still queue behind serial GPU requests. Executor-process CPU
 is lower than this busy control, while total host cost remains unmeasured.
+[Finding 0021](docs/findings/0021-qwen-compute-optimization.md) removes unused
+prefill logits with one forward argument, saving about 0.62 GB of PyTorch
+capture allocations while preserving both strict regressions. Its SDPA
+candidate failed the fixed oracle and was rejected; no compute latency
+speedup is claimed.
 
 ## Repository layout
 
