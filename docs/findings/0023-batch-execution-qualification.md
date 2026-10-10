@@ -610,3 +610,154 @@ Verdict: attribution supported,supporting engineering value,computation/
 mechanism boundary. Broad projection efficiency and reuse remain appropriate
 next targets; the vocabulary head alone does not explain cost. No new
 serving result or bandwidth diagnosis follows from this collection.
+
+## Causal qualification for preserving exact tensor batching
+
+The existing ordinary HF batch2/4/8 result fails7 of33 groups; independent
+batch1 graph banks pass but perform separate projections,while operation
+diagnosis identifies substantial projection cost. A next serving design needs
+cross-request computation/weight reuse. The load-bearing uncertainty is
+which batched arithmetic boundary breaks the fixed greedy reference.
+Without that evidence, another wholesale batching candidate repeats an
+unlocalized failure. This qualification is a dependency within that serving
+development,not a standalone paper contribution or a speed experiment.
+
+Use the same actual eager-fp16 model,exported weights,ten prompt-edge cases,
+gen64 independent HF batch1 oracle and33-group batch2/4/8 plus mixed5 matrix.
+The oracle is computed before any patch. The published ordinary-batch result
+is the unchanged negative control; load_model AST and installed versions
+match,so do not rerun it merely to add another run. No retained pointwise
+fusion is installed by load_model; this intentionally targets that published
+ordinary computation before qualifying a future production graph candidate.
+
+Three native HF component ablations locate the batch-shape effect:
+linear_slice calls the original torch.nn.Linear.forward separately for each
+batch lane,then concatenates; attention_slice similarly calls the original
+HF eager_attention_forward for each lane with its own query/key/value and
+correct shared-or-per-lane mask; both combines the two. All other HF
+operations,cache,precision,weight/bias,scale,softmax/cast/dropout and64-token
+generation stay unchanged. Exact sources and commands are frozen in
+[adapter](../../bench/results/qwen_batch_causal_adapter_20261010.txt).
+Original functions are saved before patching; hook engagement counts are
+recorded per group. The host invokes inference for this diagnostic only;
+no steady worker,mode,production source or infrastructure is introduced.
+
+Small real preflight runs greeting/case2 at batch2 for each of the three
+ablations:three groups384 generated tokens. Full comparison runs all99
+groups29568 generated tokens,including failures; no early stop or oracle
+change. Native output includes all actual sequences,first mismatches,hook
+counts,installed versions and terminal status. The existing actual token
+comparison remains the metric; EXIT0 proves matrix completion only.
+Sources and outputs remain ordinary bench/results artifacts.
+Command from repository: HF_HOME=/workspaces/.cache/huggingface python3
+/tmp/bpfusion-qwen-pointwise-5mxeys8g/qualify_batch_causal.py
+(add --preflight for the separate preflight artifact).
+
+This is a numerical component comparison,not a performance baseline.
+Primary evidence is exact sequence agreement versus the independent
+oracle,with per-variant/group/lane first mismatch and total counts.
+attention_slice qualification would admit batched projections with
+per-lane attention as a concrete candidate for captured/native integration;
+linear_slice qualification alone directs work toward preserving per-lane
+projection arithmetic while investigating standard batched-GEMV reuse.
+Only both passing indicates an interaction or multiple sensitive boundaries;
+both failing leaves norm/RoPE/cache/other computation as unresolved.
+These outcomes localize an implementation boundary but do not identify
+specific CUDA algorithms or guarantee a speed benefit.
+Any chosen graph/TCP implementation still needs its own qualification and
+complete matched serving experiment; this diagnostic is not that acceptance.
+
+PyTorch's [numerical-accuracy documentation](https://docs.pytorch.org/docs/2.14/notes/numerical_accuracy.html#batched-computations-or-slice-computations)
+explicitly distinguishes batched versus sliced numerical results.
+It supplies rationale,not a prediction of this model's outputs.
+Shared GPU/greedy fp16/prompt scope remain limits; no latency,TPS,energy,
+NIC,SOTA or whole-RQ result is claimed. Preserve the other GPU owner,
+record before/after host residency/boot,normal process exit and absence
+of this task's module/pins. Fresh plan and terminal result review apply.
+Run only after the ongoing norm_prepare full collection exits and releases
+its resources; preserve its experiment unchanged.
+
+Fresh read-only plan review admits this dependency qualification. It
+independently verifies prior33-group control,current load_model/oracle_cases
+AST identity,installed versions,actual hook engagement and lane/mask/KV
+shape/order. All99 groups and all failure rows are required; no serving
+performance claim follows. A both failure also leaves sliced tensor strides
+and algorithm selection unresolved,not only other model operations.
+No production/test/native source changes or new persistent setting are made.
+
+Real preflight terminates0 with all three groups/384 generated tokens and
+actual hook engagement:each Linear-sliced group10816 calls,each attention-
+sliced group1536 calls. linear_slice matches greeting/batch2 exactly;
+attention_slice and both differ at output62 (actual11,expected323) in both
+lanes. This is expected diagnostic contrast,not an execution defect or a
+complete qualification result. The full99-group matrix now begins with
+the frozen source/oracle/metrics unchanged.
+
+### Complete slicing qualification: no complete batching candidate
+
+The [full raw](../../bench/results/qwen_batch_causal_20261010.txt) exits0
+and contains all99 groups/29568 generated tokens. Each variant completes its
+33-group matrix. Generated tokens are not all exact; matrix completion
+does not qualify any variant. [Analysis](../../bench/results/qwen_batch_causal_analysis_20261010.txt)
+preserves its exact CPU script and recomputes every token comparison,first
+mismatch,case/batch/group balance and actual hook counts.
+All33 groups per variant engage exactly10816 outer Linear-slice wrapper calls
+and/or1536 outer attention-slice wrapper calls according to their branch.
+Original per-lane function calls multiply those counts by batch size. The three
+[preflight](../../bench/results/qwen_batch_causal_preflight_20261010.txt)
+rows are byte-value-identical to the corresponding full rows.
+
+| computation | passing groups /33 | failed groups | failed lanes | generated tokens |
+|---|---:|---:|---:|---:|
+| published ordinary HF control | 26 | 7 | 31 | 9856 |
+| original Linear per lane | 25 | 8 | 44 | 9856 |
+| original attention per lane | 25 | 8 | 32 | 9856 |
+| both per lane | 23 | 10 | 50 | 9856 |
+
+| variant | failed batch2 groups | failed batch4 groups | failed batch8 groups |
+|---|---|---|---|
+| linear_slice | 4 | 2,4,mixed5 | 0,2,4,mixed5 |
+| attention_slice | 0,2,4,mixed5 | 4 | 2,4,mixed5 |
+| both | 0,2,mixed5 | 0,2,mixed5 | 0,2,4,mixed5 |
+
+Full failure token sequences and per-lane first mismatches remain in raw.
+Important contrasts show why one successful preflight cannot qualify the
+route:linear_slice recovers greeting/batch2 and arithmetic/batch4,but newly
+fails one-token edge/batch2,greeting/batch4 and France/batch8.
+attention_slice recovers arithmetic/batch4 but newly fails France/batch2
+and the one-token edge/batch2. Both slicing recovers the one-token edge at
+batch2/4 but still fails France/greeting/mixed groups.
+For example linear_slice greeting/batch4 first differs at output5
+(actual13,expected0),where the ordinary control passed;both slicing
+greeting/batch4 differs at output62 (actual11,expected323).
+
+No variant satisfies the complete fixed numerical reference.
+Do not install a slicing production path,collect serving speed for it,or
+add a fallback/precision/oracle change. These contrasts expose sensitivity
+to batch decomposition but do not uniquely identify a CUDA algorithm,
+stride,normalization,RoPE,cache or other mathematical cause.
+Even sliced operations can keep different tensor layouts/strides and
+receive already-divergent activations. The appropriate next implementation
+investigation is a fixed-history activation/operation comparison that
+locates the first numerical divergence before another batching candidate,
+not repeating this completed matrix or assuming both slicing is sufficient.
+This remains dependency-only engineering evidence,not an independent
+serving/paper result.
+
+[Before/after host observations](../../bench/results/qwen_batch_causal_environment_20261010.txt)
+retain the same boot and SGLang owner732929/18404MiB.
+Post-run cleanup at2026-10-10T22:36:17UTC records no owned qualification
+process,module or BPF pins. This host-driven numerical diagnostic never
+loads the TCP module; it does not verify worker-free service or transport.
+Production/native/test growth remains0. Full starts at a98a316; the later
+5b7a036 only publishes norm records and preserves the same computation.
+Fresh independent read-only terminal result review recomputes every actual
+token,first mismatch,group/lane count,all preflight/full rows and hook
+engagement. It confirms complete valid execution,contradicted sufficiency
+of these slicing candidates and inconclusive unique root-cause localization.
+Research value is dependency-only,paper impact is the mechanism/workload
+boundary. Source/loader/oracle/versions/control identity,lane/mask/KV order,
+original function restoration and cleanup are independently verified.
+The historical control is a source/numerical control,not randomized
+performance evidence. No invalidating defect is found. Close this matrix,
+retain all failures,and do not promote any variant or relax the reference.

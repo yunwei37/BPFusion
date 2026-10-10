@@ -1,0 +1,75 @@
+Preparation commit: a98a316c7b992e5426fcea6584f57c2510795220
+Role: causal dependency qualification for exact tensor-batched serving; no speed result.
+Original ordinary-batch control: qwen_batch_shape_qualification_20261010.txt (33 complete groups; same load_model AST/torch/transformers/weights/oracle).
+Exact temporary source:
+from pathlib import Path
+import sys,json,os,argparse
+from collections import Counter
+sys.path.insert(0,'/workspaces/repository/tests')
+sys.path.insert(0,'/workspaces/repository/executor')
+os.chdir('/workspaces/repository')
+import torch,transformers
+from resident_qwen import oracle_cases
+from qwen_graph import load_model
+from transformers.models.qwen2 import modeling_qwen2 as qwen2
+print('Causal batch-shape qualification: per-lane original Linear/attention ablations; host diagnostic, no TCP/serving-speed claim.',flush=True)
+args=argparse.ArgumentParser();args.add_argument('--preflight',action='store_true');args=args.parse_args()
+print('torch',torch.__version__,'transformers',transformers.__version__,flush=True)
+cases,vocab=oracle_cases(64,True)
+print('independent_batch1_oracle',json.dumps(cases),flush=True)
+original_linear=torch.nn.Linear.forward
+original_attention=qwen2.eager_attention_forward
+calls=Counter()
+def sliced_linear(self,x):
+    if x.ndim==3 and x.shape[0]>1:
+        calls['linear_slice']+=1
+        return torch.cat([original_linear(self,x[i:i+1]) for i in range(x.shape[0])],dim=0)
+    return original_linear(self,x)
+def sliced_attention(module,query,key,value,attention_mask,scaling,dropout=0.0,**kwargs):
+    if query.shape[0]==1:
+        return original_attention(module,query,key,value,attention_mask,scaling,dropout,**kwargs)
+    calls['attention_slice']+=1
+    batch=query.shape[0];outputs=[];scores=[]
+    assert key.shape[0]==value.shape[0]==batch
+    assert attention_mask is None or attention_mask.shape[0] in (1,batch)
+    for i in range(batch):
+        mask=attention_mask if attention_mask is None or attention_mask.shape[0]==1 else attention_mask[i:i+1]
+        output,score=original_attention(module,query[i:i+1],key[i:i+1],value[i:i+1],mask,scaling,dropout,**kwargs)
+        outputs.append(output);scores.append(score)
+    return torch.cat(outputs,dim=0),torch.cat(scores,dim=0)
+with torch.no_grad():
+    model=load_model('/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin')
+    for variant in ('linear_slice','attention_slice','both'):
+        torch.nn.Linear.forward=sliced_linear if variant in ('linear_slice','both') else original_linear
+        qwen2.eager_attention_forward=sliced_attention if variant in ('attention_slice','both') else original_attention
+        for batch in ((2,) if args.preflight else (2,4,8)):
+            groups=[(str(i),[i]*batch) for i in range(len(cases))]
+            # Same prefix length, different real prompts, independent KV lanes.
+            assert len(cases[0][0])==len(cases[2][0])
+            groups.append(('mixed5',[0,2]*(batch//2)))
+            if args.preflight:groups=[('2',[2]*batch)]
+            for name,indices in groups:
+                before=calls.copy()
+                inputs=torch.tensor([cases[i][0] for i in indices],device='cuda')
+                output=model(inputs,use_cache=True,logits_to_keep=1)
+                past=output.past_key_values
+                token=output.logits[:,-1,:].argmax(-1)
+                selected=[token]
+                for step in range(63):
+                    output=model(token[:,None],past_key_values=past,use_cache=True,logits_to_keep=1)
+                    past=output.past_key_values
+                    token=output.logits[:,-1,:].argmax(-1);selected.append(token)
+                actual=torch.stack(selected,dim=1).cpu().tolist()
+                mismatches=[]
+                for lane,case in enumerate(indices):
+                    expected=cases[case][1]
+                    if actual[lane]!=expected:
+                        k=next(j for j,(a,b) in enumerate(zip(actual[lane],expected)) if a!=b)
+                        mismatches.append({'lane':lane,'case':case,'first_index':k,'actual':actual[lane][k],'expected':expected[k]})
+                print(json.dumps({'variant':variant,'hook_calls':dict(calls-before),'batch':batch,'group':name,'cases':indices,'actual':actual,'pass':not mismatches,'mismatches':mismatches}),flush=True)
+torch.nn.Linear.forward=original_linear
+qwen2.eager_attention_forward=original_attention
+print('BATCH_CAUSAL_MATRIX_COMPLETE',flush=True)
+
+Preflight command: HF_HOME=/workspaces/.cache/huggingface python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/qualify_batch_causal.py --preflight
+Full command: HF_HOME=/workspaces/.cache/huggingface python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/qualify_batch_causal.py

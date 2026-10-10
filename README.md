@@ -140,6 +140,11 @@ The comparison uses common temporary TCP_NODELAY settings and does not prove
 kernel overlap, isolated speedup or an optimized-serving win. The host control uses one bank and is a serial
 correctness control; it no longer isolates dispatch alone against this concurrent
 default. Ordinary tensor batching failed exact qualification and is not retained.
+A subsequent numerical diagnosis completes99 groups across original Linear
+per-lane,attention per-lane and combined slicing. None qualifies the complete
+fixed token reference; partial recoveries and new divergences rule out
+promoting these slices directly to tensor-batched serving. Full actual outputs
+remain in finding0023; no serving-speed result or production change follows.
 A subsequent device-graph activity diagnostic in finding0023 captures complete
 model-kernel record counts: one client has no overlapping model kernels,
 while eight clients show up to eight distinct execution graphs overlapping.
