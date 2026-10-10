@@ -1,0 +1,52 @@
+Pinned native source: 2062f44:executor/qwen_graph.cu; temporary appended qualification entrypoint:
+
+// Bounded GPU-only qualification; no TCP/module/service execution.
+struct ProbeControl { unsigned k,error,launches; };
+__global__ void probe_dispatch(Step *steps,long long **inputs,unsigned *prompts,long long *results,unsigned count,unsigned banks,unsigned gen,ProbeControl *c) {
+    if(threadIdx.x || blockIdx.x) return;
+    if(c->k) {
+        for(unsigned b=0;b<banks;b++) {
+            unsigned previous=c->k==1 ? prompts[b] : BF_LLM_MAX_TOK+prompts[b]+c->k-2;
+            long long token=*steps[b*count+previous].output;
+            results[b*gen+c->k-1]=token;inputs[b][0]=token;
+        }
+    }
+    if(c->k==gen) return;
+    for(unsigned b=0;b<banks;b++) {
+        unsigned index=c->k ? BF_LLM_MAX_TOK+prompts[b]+c->k-1 : prompts[b];
+        cudaError_t e=cudaGraphLaunch(steps[b*count+index].graph,cudaStreamGraphFireAndForget);
+        if(e!=cudaSuccess) { c->error=e;return; }
+        c->launches++;
+    }
+    c->k++;
+    cudaError_t e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
+    if(e!=cudaSuccess) c->error=e;
+}
+extern "C" int probe_banks(const unsigned long long *graphs,const unsigned long long *outputs,const unsigned long long *input_ptrs,const unsigned *prompts,unsigned count,unsigned banks,unsigned gen,unsigned long long result_ptr) {
+    std::vector<Step> host(count*banks);
+    for(unsigned b=0;b<banks;b++) for(unsigned i=1;i<count;i++) {
+        unsigned index=b*count+i;
+        CUDA(cudaGraphInstantiate(&host[index].graph,(cudaGraph_t)graphs[index],cudaGraphInstantiateFlagDeviceLaunch));
+        CUDA(cudaGraphUpload(host[index].graph,0));host[index].output=(long long *)outputs[index];
+    }
+    Step *steps;CUDA(cudaMalloc(&steps,host.size()*sizeof(Step)));CUDA(cudaMemcpy(steps,host.data(),host.size()*sizeof(Step),cudaMemcpyHostToDevice));
+    long long **inputs;CUDA(cudaMalloc(&inputs,banks*sizeof(long long *)));CUDA(cudaMemcpy(inputs,input_ptrs,banks*sizeof(long long *),cudaMemcpyHostToDevice));
+    unsigned *prefix;CUDA(cudaMalloc(&prefix,banks*sizeof(unsigned)));CUDA(cudaMemcpy(prefix,prompts,banks*sizeof(unsigned),cudaMemcpyHostToDevice));
+    ProbeControl *control;CUDA(cudaMalloc(&control,sizeof(ProbeControl)));CUDA(cudaMemset(control,0,sizeof(ProbeControl)));
+    long long *result=(long long *)result_ptr;
+    void *args[]={&steps,&inputs,&prefix,&result,&count,&banks,&gen,&control};
+    cudaKernelNodeParams params={};params.func=(void *)probe_dispatch;params.gridDim=dim3(1);params.blockDim=dim3(32);params.kernelParams=args;
+    cudaGraph_t graph;CUDA(cudaGraphCreate(&graph,0));cudaGraphNode_t node;CUDA(cudaGraphAddKernelNode(&node,graph,nullptr,0,&params));
+    cudaGraphExec_t parent;CUDA(cudaGraphInstantiate(&parent,graph,cudaGraphInstantiateFlagDeviceLaunch));CUDA(cudaGraphUpload(parent,0));CUDA(cudaDeviceSynchronize());
+    CUDA(cudaGraphLaunch(parent,0));CUDA(cudaDeviceSynchronize());
+    ProbeControl final;CUDA(cudaMemcpy(&final,control,sizeof(final),cudaMemcpyDeviceToHost));
+    CUDA(cudaGraphExecDestroy(parent));CUDA(cudaGraphDestroy(graph));CUDA(cudaFree(steps));CUDA(cudaFree(inputs));CUDA(cudaFree(prefix));CUDA(cudaFree(control));
+    for(unsigned b=0;b<banks;b++) for(unsigned i=1;i<count;i++) CUDA(cudaGraphExecDestroy(host[b*count+i].graph));
+    printf("GPU_BANK_PROBE host_launches=1 model_graphs=%u error=%u\n",final.launches,final.error);fflush(stdout);
+    return final.error;
+}
+
+Command: make BUILD=/tmp/bpfusion-qwen-optimization-kj41itjy/graph_bank_probe qwen-graph
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o /tmp/bpfusion-qwen-optimization-kj41itjy/graph_bank_probe/qwen_graph.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/qwen_graph.py /tmp/bpfusion-qwen-optimization-kj41itjy/graph_bank_probe/qwen_graph

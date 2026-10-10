@@ -20,6 +20,20 @@ The full matrix uses batch2/4/8, each of the ten gen64 correctness/prompt-edge c
 
 The tested batch-shape change diverges under the fixed strict oracle. This does not establish that ordinary HF batching is generally wrong or isolate which arithmetic/dispatch difference causes divergence. The oracle and precision standard are unchanged; no tensor-batched production change is retained, and no latency/throughput figure is reported from this probe.
 
+## Independent batch1 graph-bank qualification
+
+The alternative keeps each request's qualified batch1 calculation shapes and private input/KV/output tensors while sharing read-only model weights. A GPU dispatcher launches each bank's selected model graph with CUDA FireAndForget, then tail-launches itself to sample outputs and feed the next decode step. CUDA's [device graph execution environments](https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html) include child work: the parent tail waits for the whole environment, including the fire-and-forget children. This is a GPU-controlled fork/join route, not evidence that model kernels actually overlap.
+
+The [temporary native build raw](../../bench/results/qwen_graph_bank_build_20261010.txt) preserves the exact addon, Makefile command and output at source2062f44. The addon was appended only for its temporary build; production native source was restored unchanged. Each raw below contains the exact wrapper and independent batch1 oracle outputs. Captured graphs and all tensor keepers remain alive through native graph-exec destruction. The first [bank2 attempt](../../bench/results/qwen_graph_bank2_qualification_20261010.txt) completed its first128 model graphs with zero GPU error, then failed while printing because json was absent from exec globals. That failed attempt is retained and is not a completed qualification. The repair adds only json to those globals; capture, scheduler, oracle and evaluation are unchanged.
+
+| private banks | groups passing / completed | exact output tokens | model graphs per job | host launches per job |
+|---:|---:|---:|---:|---:|
+| [2](../../bench/results/qwen_graph_bank2_qualified_20261010.txt) | 12 /12 | 1,536 | 128 | 1 |
+| [4](../../bench/results/qwen_graph_bank4_qualified_20261010.txt) | 12 /12 | 3,072 | 256 | 1 |
+| [8](../../bench/results/qwen_graph_bank8_qualified_20261010.txt) | 12 /12 | 6,144 | 512 | 1 |
+
+Each bank-count matrix includes all ten gen64 correctness/prompt-edge cases replicated across banks, a mixed France/greeting group, and a mixed-prompt-length group. All36 groups complete with exact agreement on10,752 tokens; all36 native markers report error=0 and one host launch per whole job, with no per-decode host model calls. These are engineering qualifications, not serving benchmarks: there is no TCP/shared BPF queue/module execution, latency measurement or demonstrated kernel overlap. The production service remains serial.
+
 ## Next execution route
 
-Investigate concurrently executing independent **batch1** captured model graphs, with separate input/KV/output owners per request and GPU-controlled scheduling. This retains the already-qualified calculation shapes while allowing request work to overlap. It is an execution-architecture proposal; correctness, memory/lifetime, actual overlap, FIFO TCP response/admission behavior and real serving benefit remain unproven. Do not label it completed continuous batching.
+Integrate private graph banks into the real GPU-owned request queue. Admission and reclamation follow the existing head-indexed ring; out-of-order computation must preserve slot ownership and per-connection response order. Real TCP lifecycle correctness, actual overlap and serving benefit remain unproven. Do not label this completed continuous batching.
