@@ -1108,3 +1108,134 @@ mean-only or single-component sufficient recovery is contradicted.
 No invalidating defect. Research value remains dependency-only;the next
 decision is retain this correctness control and test a distinct actual
 batch-matrix projection,with no default or serving-speed promotion.
+
+## Shared-weight batched-matrix projection qualification
+
+The completed mean matrix supplies a fully qualified numerical control:
+mean_both passes33 groups/9856 exact tokens,but each original Linear/attention
+function is still called per lane. Mean alone or retaining one batched component
+does not qualify. This cannot achieve the intended efficient weight reuse.
+The next question under the unchanged worker-free throughput/latency objective
+is whether a standard batched-matrix projection can replace per-lane Linear
+while preserving each request's NxH matrix geometry. Planned role is dependency
+for real device-scheduled batching,not a new paper RQ or speed contribution.
+
+Use official torch.bmm for unbiased projections and torch.baddbmm with the
+original bias and default alpha/beta for biased projections. Instead of flattening
+B*N rows as ordinary Linear does,inputs remain BxNxH;the transposed original
+weight is expanded as a zero-batch-stride view to BxHxO. Assert shared original
+data pointer and zero view stride;no weight clone is authored. This establishes
+logical storage sharing only,not physical kernel reuse,cache traffic,Tensor Core
+selection or performance. The implementation may internally copy/change math.
+Batch1 or non3D input calls saved original Linear. No out_dtype,backend,precision,
+model,epsilon,oracle or persistent setting override. References:
+[official bmm](https://docs.pytorch.org/docs/2.14/generated/torch.bmm.html),
+[official baddbmm](https://docs.pytorch.org/docs/2.14/generated/torch.baddbmm.html).
+Installed function docs are frozen with the candidate;none guarantees bitwise
+identity with Linear/addmm,particularly bias/reduction and algorithm selection.
+
+Keep the already examined per-lane original mean implementation unchanged.
+Two variants:bmm_original_attention,bmm_sliced_attention. The latter retains
+the original per-lane attention control;the former keeps original batched
+attention. Reuse mean_linear_slice and fully qualified mean_both raws respectively
+as historical numerical/component controls;ordinary and earlier slicing evidence
+are already complete. Do not rerun them as pretend randomized speed baselines.
+The new matmul implementation is genuinely untested by those prior raws;
+running it directly in TCP would lack qualification,while another unchanged
+mean/Linear/attention matrix adds nothing. This candidate can either unlock
+a lower-launch batched projection or reject a standard API route before service
+integration;both decisions change the next engineering action.
+
+Independent HF batch1 oracle_cases(64,True) precedes all patches;unchanged real
+eager-fp16 exported weights/load_model. Fresh per-group prefill and KV,then63
+incremental decode steps using the candidate's own selected tokens. No teacher
+forcing,no sharing KV lanes,no changed expected output after failure.
+Full matrix:two variants x batch2,4,8 x all ten existing cases plus mixed5,
+66 groups/19712 generated tokens/4224 forwards. Preserve full actual64-token
+lane sequences,first mismatches,passing flags and mechanism counters.
+Every group expects10816 batched Linear/shared-weight-view outer calls,
+6208 bmm,4608 baddbmm and3136 per-lane mean outer calls;attention_slice1536
+only when enabled. matrix_rows must equal168*(prompt_length+63)+64,demonstrating
+logical per-request N geometry,not device performance. The168 layer Linears
+use all prefill rows,but logits_to_keep=1 makes the vocabulary head use one
+row for prefill as well as each decode;the greeting's total is11488.
+
+Real preflight uses both variants on greeting/B2,64 autoregressive tokens each:
+two groups/256 generated tokens. It tests real model,inputs,oracle,mechanism
+and logging. If both variants already fail that unchanged qualification,
+they are both ineligible:close at that explicit numerical rejection branch,
+preserve all raw,mark the66-group expansion unexecuted and claim no completed
+full matrix. Do not spend an unchanged full matrix on variants already rejected
+without a decision-changing diagnostic question. If at least one variant passes,
+run the planned full66 groups to terminal status,including failing rows.
+Do not change any arithmetic,oracle,timeout or evaluation during either run.
+
+Full collection must reach BATCH_BMM_MATRIX_COMPLETE and EXIT0,with all66
+unique groups and actual64-token outputs. CPU analysis independently reconstructs
+all mismatches,pass/group/case identity,counters and preflight/full stability.
+Process exit0 is not numerical qualification. A variant's complete33-group
+exact agreement permits later graph/shared-KV/strict TCP testing;any failed group
+rejects that variant. Finite passed prompts do not establish arbitrary correctness,
+rounding equality,performance or actual device-side weight reuse. Preserve all
+partial recovery,new failure and mixed output rather than choosing a passing
+prefix. No qualified variant means no default promotion or relaxed reference.
+
+Source/commands frozen in bench/results/qwen_batch_bmm_adapter_20261010.txt.
+From repository root:
+HF_HOME=/workspaces/.cache/huggingface python3
+/tmp/bpfusion-qwen-pointwise-5mxeys8g/qualify_batch_bmm.py --preflight
+and,only for the admitted expansion branch,the same without --preflight.
+Separate preflight/full raw files,ordinary CPU analysis,installed versions,
+host boot/residency and terminal cleanup. Original Workspace/PVC/other owner
+and tools/setup_env.sh are preserved. Source remains temporary;production/native
+and tests unchanged. Fresh plan and terminal result review apply.
+Shared GPU,one stack,finite synthetic prompts,API/internal arithmetic changes
+and no graph capture/TCP/performance measurement limit interpretation.
+
+Fresh independent plan review admits this batched-matrix candidate and its
+explicit rejection/expansion branch. Before any model execution,it identified
+and corrected the logical-row expectation:168*(prompt_length+63)+64,not
+169*(prompt_length+63),because logits_to_keep=1 restricts the vocabulary head.
+The actual counter and candidate math were unchanged;the frozen analyzer uses
+the corrected formula. Review confirms real Linear engagement,independent
+oracle/fresh autoregressive KV,API/bias semantics,control reuse and scope.
+No remaining invalidating defect. Zero stride/pointer equality establishes
+logical sharing only;qualification remains an empirical question.
+
+### Shared-weight BMM terminal numerical rejection
+
+Both real greeting/B2 preflight groups terminate normally with full64-token
+autoregressive outputs,256 generated tokens total. Both variants fail both
+lanes at output index62:actual11 versus fixed reference323;the preceding62
+tokens agree and index63 also differs. The corresponding historical
+mean_linear_slice and mean_both controls pass this row. Each candidate group
+records10816 actual batched Linear/shared-weight-view calls,6208 bmm,4608
+baddbmm,3136 mean and11488 logical matrix rows;the sliced-attention variant
+also records1536 attention calls.
+
+This follows the predeclared rejection branch:both unchanged candidates are
+ineligible and the full66-group/19712-token expansion was not executed.
+Do not claim a full matrix or256 exact tokens. The default implementation
+is preserved;no TCP/capture/performance collection or physical weight-reuse
+claim follows. This rejects only these concrete API replacements,not every
+possible batch-matrix implementation or the worker-free performance objective.
+
+[Preflight raw](../../bench/results/qwen_batch_bmm_preflight_20261010.txt),
+[frozen sources](../../bench/results/qwen_batch_bmm_adapter_20261010.txt),
+[CPU analysis](../../bench/results/qwen_batch_bmm_analysis_20261010.txt) and
+[before/after environment](../../bench/results/qwen_batch_bmm_environment_20261010.txt)
+preserve all actual sequences,mismatches,engagement and numerical controls.
+CPU analysis independently reconstructs each mismatch and verifies the
+explicit full-matrix absence. Terminal cleanup confirms no owned qualifier,
+module or pins. Before/after boot remains04dc0087-5ccc-4c46-9997-b9a92f0e5167,
+and the other SGLang owner732929/18404MiB remains. No production/native/test,
+precision,oracle,hardware or persistent configuration change.
+
+Fresh independent result review judges valid terminal numerical rejection,
+contradicted qualification for these two variants,dependency-only research
+value and no invalidating defect. It independently checks frozen/actual source,
+oracle-before-patch,fresh KV/self-selected decode,all64-token sequences,
+historical controls,counters,full66 absence and cleanup. Logical sharing is
+not physical reuse;the rejection does not identify a unique matmul/bias/backend
+cause. Move to a distinct computation mechanism that can improve real TCP
+throughput/latency rather than repeat rejected unchanged qualification.

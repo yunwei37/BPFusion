@@ -1,0 +1,10 @@
+COMMAND ['python3', '/tmp/bpfusion-qwen-pointwise-5mxeys8g/analyze_batch_bmm.py']
+UTC 2026-10-10T23:17:22.487199+00:00
+{"stage": "preflight", "variant": "bmm_original_attention", "groups": 1, "passing_groups": 0, "failed_groups": 1, "failed_lanes": 2, "generated_tokens": 128, "failures": [{"batch": 2, "group": "2", "mismatches": [{"lane": 0, "case": 2, "first_index": 62, "actual": 11, "expected": 323}, {"lane": 1, "case": 2, "first_index": 62, "actual": 11, "expected": 323}]}], "parent_changes": [{"batch": 2, "group": "2", "parent_variant": "mean_linear_slice", "parent_pass": true, "candidate_pass": false, "parent_mismatches": [], "candidate_mismatches": [{"lane": 0, "case": 2, "first_index": 62, "actual": 11, "expected": 323}, {"lane": 1, "case": 2, "first_index": 62, "actual": 11, "expected": 323}]}]}
+{"stage": "preflight", "variant": "bmm_sliced_attention", "groups": 1, "passing_groups": 0, "failed_groups": 1, "failed_lanes": 2, "generated_tokens": 128, "failures": [{"batch": 2, "group": "2", "mismatches": [{"lane": 0, "case": 2, "first_index": 62, "actual": 11, "expected": 323}, {"lane": 1, "case": 2, "first_index": 62, "actual": 11, "expected": 323}]}], "parent_changes": [{"batch": 2, "group": "2", "parent_variant": "mean_both", "parent_pass": true, "candidate_pass": false, "parent_mismatches": [], "candidate_mismatches": [{"lane": 0, "case": 2, "first_index": 62, "actual": 11, "expected": 323}, {"lane": 1, "case": 2, "first_index": 62, "actual": 11, "expected": 323}]}]}
+FULL_MATRIX_NOT_EXECUTED:both candidate variants already fail the fixed reference in preflight;closed at the predeclared numerical rejection branch.
+CLEANUP {"utc": "2026-10-10T23:17:22.513074+00:00", "owned_processes": [], "module_loaded": false, "pins": []}
+Logical weight-view sharing and matrix geometry are source/engagement checks,not physical device reuse or speed measurements.
+BMM_ANALYSIS_COMPLETE
+
+EXIT 0

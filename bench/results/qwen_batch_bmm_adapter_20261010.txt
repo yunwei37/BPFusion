@@ -1,0 +1,284 @@
+FROZEN 2026-10-10T23:10:01.936534+00:00
+COMMIT 4fa4a95c78768816f498810b25d375f83352d5ce
+
+SOURCE /tmp/bpfusion-qwen-pointwise-5mxeys8g/qualify_batch_bmm.py
+from pathlib import Path
+import sys,json,os,argparse
+from collections import Counter
+sys.path.insert(0,'/workspaces/repository/tests')
+sys.path.insert(0,'/workspaces/repository/executor')
+os.chdir('/workspaces/repository')
+import torch,transformers
+from resident_qwen import oracle_cases
+from qwen_graph import load_model
+from transformers.models.qwen2 import modeling_qwen2 as qwen2
+print('Per-request matrix geometry bmm qualification: shared weight view, per-lane mean, original/sliced attention; no serving-speed claim.',flush=True)
+args=argparse.ArgumentParser();args.add_argument('--preflight',action='store_true');args=args.parse_args()
+print('torch',torch.__version__,'transformers',transformers.__version__,flush=True)
+cases,vocab=oracle_cases(64,True)
+print('independent_batch1_oracle',json.dumps(cases),flush=True)
+original_linear=torch.nn.Linear.forward
+original_attention=qwen2.eager_attention_forward
+original_norm=qwen2.Qwen2RMSNorm.forward
+calls=Counter()
+def batched_linear(self,x):
+    if x.ndim!=3 or x.shape[0]==1:return original_linear(self,x)
+    calls['batched_linear']+=1
+    calls['matrix_rows']+=x.shape[1]
+    weight=self.weight.transpose(0,1).expand(x.shape[0],-1,-1)
+    assert weight.stride(0)==0 and weight.data_ptr()==self.weight.data_ptr()
+    calls['shared_weight_view']+=1
+    if self.bias is None:
+        calls['bmm']+=1
+        return torch.bmm(x,weight)
+    calls['baddbmm']+=1
+    return torch.baddbmm(self.bias,x,weight)
+def sliced_attention(module,query,key,value,attention_mask,scaling,dropout=0.0,**kwargs):
+    if query.shape[0]==1:
+        return original_attention(module,query,key,value,attention_mask,scaling,dropout,**kwargs)
+    calls['attention_slice']+=1
+    batch=query.shape[0];outputs=[];scores=[]
+    assert key.shape[0]==value.shape[0]==batch
+    assert attention_mask is None or attention_mask.shape[0] in (1,batch)
+    for i in range(batch):
+        mask=attention_mask if attention_mask is None or attention_mask.shape[0]==1 else attention_mask[i:i+1]
+        output,score=original_attention(module,query[i:i+1],key[i:i+1],value[i:i+1],mask,scaling,dropout,**kwargs)
+        outputs.append(output);scores.append(score)
+    return torch.cat(outputs,dim=0),torch.cat(scores,dim=0)
+def per_lane_mean(self,hidden_states):
+    if hidden_states.shape[0]==1:return original_norm(self,hidden_states)
+    calls['mean_slice']+=1
+    input_dtype=hidden_states.dtype
+    hidden_states=hidden_states.to(torch.float32)
+    squared=hidden_states.pow(2)
+    variance=torch.cat([squared[i:i+1].mean(-1,keepdim=True) for i in range(squared.shape[0])],dim=0)
+    hidden_states=hidden_states*torch.rsqrt(variance+self.variance_epsilon)
+    return self.weight*hidden_states.to(input_dtype)
+with torch.no_grad():
+    model=load_model('/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin')
+    qwen2.Qwen2RMSNorm.forward=per_lane_mean
+    torch.nn.Linear.forward=batched_linear
+    for variant in ('bmm_original_attention','bmm_sliced_attention'):
+        qwen2.eager_attention_forward=sliced_attention if variant=='bmm_sliced_attention' else original_attention
+        for batch in ((2,) if args.preflight else (2,4,8)):
+            groups=[(str(i),[i]*batch) for i in range(len(cases))]
+            # Same prefix length, different real prompts, independent KV lanes.
+            assert len(cases[0][0])==len(cases[2][0])
+            groups.append(('mixed5',[0,2]*(batch//2)))
+            if args.preflight:groups=[('2',[2]*batch)]
+            for name,indices in groups:
+                before=calls.copy()
+                inputs=torch.tensor([cases[i][0] for i in indices],device='cuda')
+                output=model(inputs,use_cache=True,logits_to_keep=1)
+                past=output.past_key_values
+                token=output.logits[:,-1,:].argmax(-1)
+                selected=[token]
+                for step in range(63):
+                    output=model(token[:,None],past_key_values=past,use_cache=True,logits_to_keep=1)
+                    past=output.past_key_values
+                    token=output.logits[:,-1,:].argmax(-1);selected.append(token)
+                actual=torch.stack(selected,dim=1).cpu().tolist()
+                mismatches=[]
+                for lane,case in enumerate(indices):
+                    expected=cases[case][1]
+                    if actual[lane]!=expected:
+                        k=next(j for j,(a,b) in enumerate(zip(actual[lane],expected)) if a!=b)
+                        mismatches.append({'lane':lane,'case':case,'first_index':k,'actual':actual[lane][k],'expected':expected[k]})
+                print(json.dumps({'variant':variant,'hook_calls':dict(calls-before),'batch':batch,'group':name,'cases':indices,'actual':actual,'pass':not mismatches,'mismatches':mismatches}),flush=True)
+torch.nn.Linear.forward=original_linear
+qwen2.eager_attention_forward=original_attention
+qwen2.Qwen2RMSNorm.forward=original_norm
+print('BATCH_BMM_MATRIX_COMPLETE',flush=True)
+
+INSTALLED_BMM_DOCUMENTATION
+
+bmm(input, mat2, *, out=None) -> Tensor
+
+Performs a batch matrix-matrix product of matrices stored in :attr:`input`
+and :attr:`mat2`.
+
+:attr:`input` and :attr:`mat2` must be 3-D tensors each containing
+the same number of matrices.
+
+If :attr:`input` is a :math:`(b \times n \times m)` tensor, :attr:`mat2` is a
+:math:`(b \times m \times p)` tensor, :attr:`out` will be a
+:math:`(b \times n \times p)` tensor.
+
+.. math::
+    \text{out}_i = \text{input}_i \mathbin{@} \text{mat2}_i
+
+This operator supports :ref:`TensorFloat32<tf32_on_ampere>`.
+
+On certain ROCm devices, when using float16 inputs this module will use :ref:`different precision<fp16_on_mi200>` for backward.
+
+.. note:: This function does not :ref:`broadcast <broadcasting-semantics>`.
+          For broadcasting matrix products, see :func:`torch.matmul`.
+
+Args:
+    input (Tensor): the first batch of matrices to be multiplied
+    mat2 (Tensor): the second batch of matrices to be multiplied
+
+Keyword Args:
+    out (Tensor, optional): the output tensor.
+
+Example::
+
+    >>> input = torch.randn(10, 3, 4)
+    >>> mat2 = torch.randn(10, 4, 5)
+    >>> res = torch.bmm(input, mat2)
+    >>> res.size()
+    torch.Size([10, 3, 5])
+
+.. function:: bmm(input, mat2, out_dtype, *, out=None) -> Tensor
+   :noindex:
+
+Args:
+    input (Tensor): the first batch of matrices to be multiplied
+    mat2 (Tensor): the second batch of matrices to be multiplied
+    out_dtype (dtype): the dtype of the output tensor.
+        On CUDA and XPU, only ``torch.float32`` is supported given
+        ``torch.float16``/``torch.bfloat16`` input dtypes. Other backends
+        (including out-of-tree accelerators) may support additional
+        input/output dtype combinations.
+
+Keyword Args:
+    out (Tensor, optional): the output tensor.
+
+INSTALLED_BADDBMM_DOCUMENTATION
+
+baddbmm(input, batch1, batch2, *, beta=1, alpha=1, out=None) -> Tensor
+
+Performs a batch matrix-matrix product of matrices in :attr:`batch1`
+and :attr:`batch2`.
+:attr:`input` is added to the final result.
+
+:attr:`batch1` and :attr:`batch2` must be 3-D tensors each containing the same
+number of matrices.
+
+If :attr:`batch1` is a :math:`(b \times n \times m)` tensor, :attr:`batch2` is a
+:math:`(b \times m \times p)` tensor, then :attr:`input` must be
+:ref:`broadcastable <broadcasting-semantics>` with a
+:math:`(b \times n \times p)` tensor and :attr:`out` will be a
+:math:`(b \times n \times p)` tensor. Both :attr:`alpha` and :attr:`beta` mean the
+same as the scaling factors used in :meth:`torch.addbmm`.
+
+.. math::
+    \text{out}_i = \beta\ \text{input}_i + \alpha\ (\text{batch1}_i \mathbin{@} \text{batch2}_i)
+
+If :attr:`beta` is 0, then the content of :attr:`input` will be ignored, and `nan` and `inf` in
+it will not be propagated.
+
+For inputs of type `FloatTensor` or `DoubleTensor`, arguments :attr:`beta` and
+:attr:`alpha` must be real numbers, otherwise they should be integers.
+
+This operator supports :ref:`TensorFloat32<tf32_on_ampere>`.
+
+On certain ROCm devices, when using float16 inputs this module will use :ref:`different precision<fp16_on_mi200>` for backward.
+
+Args:
+    input (Tensor): the tensor to be added
+    batch1 (Tensor): the first batch of matrices to be multiplied
+    batch2 (Tensor): the second batch of matrices to be multiplied
+
+Keyword args:
+    beta (Number, optional): multiplier for :attr:`input` (:math:`\beta`)
+    alpha (Number, optional): multiplier for :math:`\text{batch1} \mathbin{@} \text{batch2}` (:math:`\alpha`)
+    out (Tensor, optional): the output tensor.
+
+Example::
+
+    >>> M = torch.randn(10, 3, 5)
+    >>> batch1 = torch.randn(10, 3, 4)
+    >>> batch2 = torch.randn(10, 4, 5)
+    >>> torch.baddbmm(M, batch1, batch2).size()
+    torch.Size([10, 3, 5])
+
+.. function:: baddbmm(input, batch1, batch2, out_dtype, *, beta=1, alpha=1, out=None) -> Tensor
+   :noindex:
+
+Args:
+    input (Tensor): the tensor to be added
+    batch1 (Tensor): the first batch of matrices to be multiplied
+    batch2 (Tensor): the second batch of matrices to be multiplied
+    out_dtype (dtype): the dtype of the output tensor.
+        On CUDA and XPU, only ``torch.float32`` is supported given
+        ``torch.float16``/``torch.bfloat16`` input dtypes. Other backends
+        (including out-of-tree accelerators) may support additional
+        input/output dtype combinations.
+
+Keyword args:
+    beta (Number, optional): multiplier for :attr:`input` (:math:`\beta`)
+    alpha (Number, optional): multiplier for :math:`\text{batch1} \mathbin{@} \text{batch2}` (:math:`\alpha`)
+    out (Tensor, optional): the output tensor.
+
+CPU_ANALYZER_SOURCE /tmp/bpfusion-qwen-pointwise-5mxeys8g/analyze_batch_bmm.py
+from pathlib import Path
+import os,json,datetime
+os.chdir('/workspaces/repository')
+def read(path):
+    s=Path(path).read_text()
+    oracle=json.loads(next(line.split(' ',1)[1] for line in s.splitlines() if line.startswith('independent_batch1_oracle ')))
+    return s,oracle,[json.loads(line) for line in s.splitlines() if line.startswith('{')]
+parent_s,cases,parents=read('bench/results/qwen_batch_mean_slice_20261010.txt')
+assert 'BATCH_MEAN_SLICE_MATRIX_COMPLETE' in parent_s and parent_s.rstrip().endswith('EXIT 0')
+variants=('bmm_original_attention','bmm_sliced_attention')
+full_path=Path('bench/results/qwen_batch_bmm_20261010.txt')
+pre_s,pre_cases,pre=read('bench/results/qwen_batch_bmm_preflight_20261010.txt')
+assert pre_cases==cases and len(cases)==10
+assert 'BATCH_BMM_MATRIX_COMPLETE' in pre_s and pre_s.rstrip().endswith('EXIT 0')
+stages=[('preflight',pre)]
+if full_path.exists():
+    full_s,full_cases,full=read(full_path)
+    assert full_cases==cases and 'BATCH_BMM_MATRIX_COMPLETE' in full_s and full_s.rstrip().endswith('EXIT 0')
+    stages.append(('full',full))
+else:
+    assert len(pre)==2 and not any(r['pass'] for r in pre)
+for stage,rows in stages:
+    expected={(2,'2')} if stage=='preflight' else {(b,str(i)) for b in (2,4,8) for i in range(10)}|{(b,'mixed5') for b in (2,4,8)}
+    assert len(rows)==len(expected)*2
+    for variant in variants:
+        rs=[r for r in rows if r['variant']==variant]
+        assert len(rs)==len(expected) and {(r['batch'],r['group']) for r in rs}==expected
+        changes=[]
+        for r in rs:
+            indices=[int(r['group'])]*r['batch'] if r['group']!='mixed5' else [0,2]*(r['batch']//2)
+            assert r['cases']==indices and len(r['actual'])==r['batch']
+            lengths={len(cases[i][0]) for i in indices};assert len(lengths)==1
+            prompt=next(iter(lengths))
+            hooks={'mean_slice':3136,'batched_linear':10816,'shared_weight_view':10816,'matrix_rows':168*(prompt+63)+64,'bmm':6208,'baddbmm':4608}
+            if variant=='bmm_sliced_attention':hooks['attention_slice']=1536
+            assert r['hook_calls']==hooks,(stage,r['batch'],r['group'],r['hook_calls'],hooks)
+            mismatches=[]
+            for lane,case in enumerate(indices):
+                actual=r['actual'][lane];expected_tokens=cases[case][1]
+                assert len(actual)==len(expected_tokens)==64
+                if actual!=expected_tokens:
+                    j=next(k for k,(a,b) in enumerate(zip(actual,expected_tokens)) if a!=b)
+                    mismatches.append({'lane':lane,'case':case,'first_index':j,'actual':actual[j],'expected':expected_tokens[j]})
+            assert r['mismatches']==mismatches and r['pass']==(not mismatches)
+            pv='mean_linear_slice' if variant=='bmm_original_attention' else 'mean_both'
+            old=next(q for q in parents if (q['variant'],q['batch'],q['group'])==(pv,r['batch'],r['group']))
+            if r['pass']!=old['pass'] or r['mismatches']!=old['mismatches']:
+                changes.append({'batch':r['batch'],'group':r['group'],'parent_variant':pv,'parent_pass':old['pass'],'candidate_pass':r['pass'],'parent_mismatches':old['mismatches'],'candidate_mismatches':r['mismatches']})
+        print(json.dumps({'stage':stage,'variant':variant,'groups':len(rs),'passing_groups':sum(r['pass'] for r in rs),'failed_groups':sum(not r['pass'] for r in rs),'failed_lanes':sum(len(r['mismatches']) for r in rs),'generated_tokens':sum(len(t) for r in rs for t in r['actual']),'failures':[{'batch':r['batch'],'group':r['group'],'mismatches':r['mismatches']} for r in rs if not r['pass']],'parent_changes':changes}))
+if full_path.exists():
+    for r in pre:
+        assert r==next(q for q in full if (q['variant'],q['batch'],q['group'])==(r['variant'],r['batch'],r['group']))
+    assert sum(len(t) for r in full for t in r['actual'])==19712
+    print('FULL_MATRIX_COMPLETE 66 groups/19712 generated tokens;preflight/full rows identical.')
+else:print('FULL_MATRIX_NOT_EXECUTED:both candidate variants already fail the fixed reference in preflight;closed at the predeclared numerical rejection branch.')
+owned=[]
+for proc in Path('/proc').iterdir():
+    if not proc.name.isdigit():continue
+    try:
+        cmd=(proc/'cmdline').read_bytes().replace(b'\0',b' ').decode(errors='replace')
+        if 'qualify_batch_bmm.py' in cmd:owned.append((proc.name,cmd))
+    except (OSError,PermissionError):pass
+cleanup={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'owned_processes':owned,'module_loaded':'bfusion_tx ' in Path('/proc/modules').read_text(),'pins':[str(p) for p in Path('/sys/fs/bpf').glob('bpfusion*')]}
+assert not owned and not cleanup['module_loaded'] and not cleanup['pins']
+print('CLEANUP '+json.dumps(cleanup))
+print('Logical weight-view sharing and matrix geometry are source/engagement checks,not physical device reuse or speed measurements.')
+print('BMM_ANALYSIS_COMPLETE')
+
+
+COLLECTION_BASE 6562b0bdfa02a74fdf9cc94a997dfa2c4b534044
