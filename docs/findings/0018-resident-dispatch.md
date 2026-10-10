@@ -474,3 +474,74 @@ is closed, lock/reference/partial-byte ordering is sound, and all four real
 regressions were independently inspected. It explicitly leaves overload,
 unrelated-connection capacity, exhaustive races and latency benefit unproven.
 The full repaired matrix is run from the following source checkpoint.
+
+### Complete repaired TCP_NODELAY matrix
+
+[Raw measurements](../../bench/results/resident_dispatch_nodelay_20261010.jsonl)
+and [native output/analysis](../../bench/results/resident_dispatch_nodelay_20261010.txt)
+record source `5d23a3068d680a9a52c2ed2f0598de6967e0293c`, the restored default
+BPF object and repaired module. The only uncommitted experiment source delta
+is the documented listener option inside both OS-temporary executors; tracked
+source was clean. All five pairs, ten processes, forty cells and 2,560 measured
+requests / 11,520 tokens complete, with 1/264 launches, 264 publications per
+process, zero busy/drop/registration failures and all eight LLM slots FREE at
+shutdown. No failed request is excluded from this complete run. Earlier failed
+and instrumented partial runs remain preserved separately.
+
+| Output / clients | Resident mean TTFT, ms | Host-dispatch mean TTFT, ms | Host minus resident, ms | Paired 95% t interval, ms |
+|---|---:|---:|---:|---:|
+| 1 / 1 | 10.3153 | 10.3023 | -0.0130 | [-0.0433, 0.0174] |
+| 8 / 1 | 10.3125 | 10.3160 | 0.0035 | [-0.0381, 0.0451] |
+| 1 / 8 | 76.6855 | 76.6847 | -0.0009 | [-0.6026, 0.6008] |
+| 8 / 8 | 196.9411 | 196.7825 | -0.1586 | [-0.6016, 0.2843] |
+
+All four intervals cross zero again. Even under the tested streaming transport
+and repaired ownership ordering, this workload detects no mean-TTFT advantage
+from the resident dispatch policy. It does not establish equivalence or isolate
+CUDA launch cost. The old default and new candidate were separate runs with
+different transport **and** module behavior; comparing their TTFT numbers
+cannot identify a causal transport-only improvement. Five-block assumptions,
+shared-GPU scope, descriptive pooled p99 and serial client queueing remain as
+stated in the plan.
+
+Streaming is now observable in the raw client arrivals: 319/320 gen8 replies
+in each resident concurrency cell and all 320/320 in each host cell have eight
+distinct token-arrival timestamps. The two remaining resident replies each
+have seven timestamps. No gen8 reply coalesces all eight tokens to one time.
+Mean client TPOT is 2.6125/2.6142 ms for resident C1/C8 and
+2.6121/2.6139 ms for host dispatch. These are client arrival metrics including
+TCP and kernel polling; they do not measure GPU instructions or GPU-ready time.
+
+Resident executor-process CPU totals 0.03 s over 24.821 s of measured windows;
+host dispatch totals 24.84 s over 24.820 s. At 100 Hz the near-zero resident
+value is quantized. Resident idle windows report zero ticks in four processes
+and one tick in the fifth; host idle windows consume approximately one
+CPU-second/second. This confirms removal of this particular busy process cost,
+not total host work, instructions/token, an optimized-control comparison or
+energy savings. Both modes' GPU endpoint SM clocks range 2,887..2,910 MHz;
+matching ranges do not establish clock locking, exclusivity or equal energy.
+
+The [repaired passive packet diagnostic](../../bench/results/resident_tcp_nodelay_reclaim_trace_20261010.txt)
+checks four further requests / 32 exact tokens. Their TTFT values are
+10.230, 16.182, 10.242 and 4.340 ms; client TPOT values are
+2.609, 2.695, 2.607 and 2.532 ms. Each reply has eight distinct token
+arrival timestamps. This packet observer is a transport diagnostic, not
+another paired performance sample or a GPU completion timestamp.
+
+A fresh independent read-only result review reconstructs every measured
+request, fixed-oracle output, latency and throughput calculation. It confirms
+the forty-cell counts, launch/publication counts, clean final slots, all four
+strengthened regressions, and identical SASS/resources across the two temporary
+candidates and both default executors. It finds no invalidating defect for
+this local matched dispatch-policy ablation. The tested latency hypothesis is
+inconclusive; the result is supporting mechanism evidence, not an optimized
+serving comparison or a change to the complete project goal. Overload and
+exhaustive races, real NIC, batching, text/JSON, completion-event measurements
+and the 64-token numerical failure remain open. No unchanged repeat of this
+ablation is needed.
+
+After the reviewer finished inspecting them, the owner removed both candidate
+executors and their build directory from `/tmp`. All experiment processes had
+exited; no `bfusion_tx` module or experiment map pins remained. The tracked
+listener source and default executors retain their original transport setting.
+TCP_NODELAY is not retained as a persistent configuration change.
