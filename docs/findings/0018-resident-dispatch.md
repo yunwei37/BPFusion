@@ -253,3 +253,107 @@ The earlier timeout remains unexplained, not repaired by later successes.
 The 64-token numerical failure, GPU text processing, batching, completion
 interfaces/measurements, complete CPU accounting, optimized serving baselines
 and real-NIC controls remain open. This experiment does not complete BPFusion.
+
+## Matched transport follow-up: plan
+
+The initial four-request TCP_NODELAY discriminator cannot answer whether
+transport buffering hid a resident-versus-host-dispatch latency difference.
+Reanalysis of the default run cannot recover token arrivals that TCP buffered.
+This follow-up therefore repeats the same integrated matrix with TCP_NODELAY
+on the bootstrap listener in **both** executors. It is supporting mechanism
+evidence for the same retained engineering goal, not a new paper RQ, a serving
+baseline or an independent research contribution. A stronger optimized-server
+comparison remains necessary; first separating the observed 40 ms plateau
+from dispatch makes that future comparison interpretable without installing
+another large compute stack on the shared filesystem.
+
+The hypothesis remains that removing host request dispatch reduces mean
+client-observed TTFT in at least some tested conditions. A positive interval
+for host-minus-resident supports only this transport/dispatch boundary; a
+negative interval contradicts that prediction for the cell; crossing zero
+remains inconclusive. These outcomes determine whether the earlier transport
+masking explanation plausibly changes the local dispatch result, not whether
+BPFusion is a competitive service. Comparing this run against the older default
+run is descriptive: transport settings are not randomized factorial blocks
+and their numerical difference is not a causal transport effect estimate.
+
+- Reuse the fixed independent HF oracle, four prompts, output lengths 1/8,
+  client concurrency 1/8, 64 requests/cell, five paired process repetitions,
+  alternating mode order and rotating matched cell order, exactly as above.
+- Native make builds both candidate binaries from the same temporarily edited
+  Qwen source into one OS temporary directory. The only candidate source delta
+  adds `netinet/tcp.h` and a checked listener `TCP_NODELAY=1` call. Restore the
+  tracked source immediately after building; preserve default binaries. No
+  runtime setting or infrastructure configuration is retained after testing.
+- Confirm candidate device SASS and resources agree with each other and the
+  defaults. Run both full strict regressions with the original oracle and
+  rejection/churn/trace checks. Then run the real two-mode preflight.
+- The benchmark's executor-path arguments are only a native binary adapter;
+  defaults, model, parser, queue, kernel TX, warmups, timeouts, measurement and
+  analysis are unchanged. Raw metadata records both executable paths.
+- Use the same client TTFT, TPOT, throughput and executor-process CPU definitions
+  and paired 95% t intervals. Quantized CPU, power-policy differences, serial
+  client queueing, limited repetitions and local-loopback scope still apply.
+- Inspect per-token arrivals and a passive trace to check whether the plateau
+  and coalescing persist. Their disappearance does not measure GPU-ready time.
+- Preserve all failures and the earlier unexplained timeout. Stop only at the
+  normal terminal status; partial output is not a complete matrix. Remove the
+  owned candidate build after the completed run and diagnostic shutdown.
+
+After setting `candidate` to the native make output directory, run:
+
+```sh
+HF_HOME=/workspaces/.cache/huggingface python3 tests/resident_qwen.py --executor "$candidate/qwen"
+HF_HOME=/workspaces/.cache/huggingface python3 tests/resident_qwen.py --executor "$candidate/qwen_host_launch"
+HF_HOME=/workspaces/.cache/huggingface python3 bench/resident_dispatch.py --preflight --resident-executor "$candidate/qwen" --host-executor "$candidate/qwen_host_launch" --output bench/results/resident_dispatch_nodelay_preflight_20261010.jsonl
+HF_HOME=/workspaces/.cache/huggingface python3 bench/resident_dispatch.py --resident-executor "$candidate/qwen" --host-executor "$candidate/qwen_host_launch" --output bench/results/resident_dispatch_nodelay_20261010.jsonl
+python3 bench/resident_dispatch.py --analyze --output bench/results/resident_dispatch_nodelay_20261010.jsonl
+```
+
+The full run must contain all forty cells, 2,560 exact requests, ten normal
+executor shutdowns, and the same per-process launch counts 1/264. Five-pair
+intervals are local estimates under the same assumptions; no practical
+equivalence, robust-tail or complete-host-cost claim is planned.
+
+### Follow-up plan review and candidate provenance
+
+The read-only plan reviewer passed the follow-up without an invalidating
+scientific or executable defect. It independently confirmed that the adapter
+leaves the fixed oracle, workload, timeouts, warmups, repetitions, cell order
+and analysis unchanged. Required interpretation limits are cell-specific
+intervals, no causal transport effect from comparing sequential runs, client
+arrival rather than GPU timing, and the previously recorded CPU/power/serial
+execution limitations.
+
+The candidate native build was:
+
+```sh
+make BUILD=/tmp/bpfusion-dispatch-nodelay-l_mibt7t qwen qwen-control
+```
+
+Relative to `1e30e76`, the temporary `executor/qwen.cu` edit added only
+`#include <netinet/tcp.h>` and, after listener `SO_REUSEADDR`:
+
+```cpp
+if (setsockopt(listener,IPPROTO_TCP,TCP_NODELAY,&yes,sizeof(yes))) { perror("TCP_NODELAY"); return 1; }
+```
+
+Source was restored immediately after both native builds, before regressions.
+[Four-binary resource inspection](../../bench/results/qwen_nodelay_device_resources_20261010.txt)
+confirms device SASS equality for both candidates and both preserved defaults:
+96 registers, 32 stack bytes and 3,108 shared bytes. The path is disposable;
+the source delta and native build command above reproduce the candidates.
+
+Both candidate strict regressions passed: 29 valid requests / 232 exact tokens
+and three rejections in each mode, 5,000 empty connections, eight concurrent
+clients, six pipelined replies/ring wrap/half-close, continued correct service
+after invalid inputs, and all-thread network tracing with no accept/read/send
+after ready. Launch counts are 1 for resident and 32 for host dispatch.
+[Resident regression](../../bench/results/qwen_nodelay_resident_correctness_20261010.txt)
+and [host regression](../../bench/results/qwen_nodelay_host_launch_correctness_20261010.txt)
+retain the complete native output. The [real preflight](../../bench/results/resident_dispatch_nodelay_preflight_20261010.jsonl)
+passed both paths with four exact one-token replies per mode; mean TTFT was
+10.339 ms resident and 10.294 ms host. These eight requests are setup evidence,
+not a performance result. Preflight metadata records base `1e30e76` plus the
+uncommitted path adapter and temporary candidate source delta documented above;
+the full matrix starts after the adapter/plan checkpoint commit.

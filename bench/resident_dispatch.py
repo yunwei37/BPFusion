@@ -136,6 +136,8 @@ def main():
     parser.add_argument("--output",required=True)
     parser.add_argument("--preflight",action="store_true")
     parser.add_argument("--analyze",action="store_true")
+    parser.add_argument("--resident-executor",default="./build/qwen")
+    parser.add_argument("--host-executor",default="./build/qwen_host_launch")
     args=parser.parse_args()
     if args.analyze: analyze(args.output); return
     cases,_=oracle_cases(8)
@@ -148,6 +150,7 @@ def main():
             raw.write(json.dumps({"event":event,**values})+"\n"); raw.flush()
         import torch, transformers
         emit("metadata",utc=time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),commit=command("git","rev-parse","HEAD"),
+             executors={"resident":args.resident_executor,"host-launch":args.host_executor},
              kernel=platform.release(),torch=torch.__version__,transformers=transformers.__version__,
              nvcc=command("/usr/local/cuda/bin/nvcc","--version"),gpu=gpu_state(),cpu_tick_hz=os.sysconf("SC_CLK_TCK"),
              cases=cases,matrix=matrix,repetitions=repetitions,requests_per_cell=count,
@@ -161,7 +164,7 @@ def main():
                     logpath=Path(tmp)/"executor.log"
                     try:
                         command("./build/bpfusion_load","stream-attach")
-                        binary="./build/qwen" if mode=="resident" else "./build/qwen_host_launch"
+                        binary=args.resident_executor if mode=="resident" else args.host_executor
                         with logpath.open("w") as log:
                             executor=subprocess.Popen([binary,"/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","300"],stdout=log,stderr=subprocess.STDOUT)
                         started=time.monotonic()

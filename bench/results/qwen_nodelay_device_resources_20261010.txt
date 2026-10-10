@@ -1,0 +1,143 @@
+Bounded candidate: checked bootstrap listener TCP_NODELAY=1; tracked source restored before tests.
+
+Executable: /tmp/bpfusion-dispatch-nodelay-l_mibt7t/qwen
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:24 CONSTANT[4]:8
+ Function _Z8residentP7bf_page5Model7Scratchjb:
+  REG:96 STACK:32 SHARED:3108 LOCAL:0 CONSTANT[0]:1077 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+Fatbin ptx code:
+================
+arch = sm_120
+code version = [9,0]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions =
+
+Executable: /tmp/bpfusion-dispatch-nodelay-l_mibt7t/qwen_host_launch
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:24 CONSTANT[4]:8
+ Function _Z8residentP7bf_page5Model7Scratchjb:
+  REG:96 STACK:32 SHARED:3108 LOCAL:0 CONSTANT[0]:1077 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+Fatbin ptx code:
+================
+arch = sm_120
+code version = [9,0]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions =
+
+Executable: ./build/qwen
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:24 CONSTANT[4]:8
+ Function _Z8residentP7bf_page5Model7Scratchjb:
+  REG:96 STACK:32 SHARED:3108 LOCAL:0 CONSTANT[0]:1077 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+Fatbin ptx code:
+================
+arch = sm_120
+code version = [9,0]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions =
+
+Executable: ./build/qwen_host_launch
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:24 CONSTANT[4]:8
+ Function _Z8residentP7bf_page5Model7Scratchjb:
+  REG:96 STACK:32 SHARED:3108 LOCAL:0 CONSTANT[0]:1077 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+Fatbin ptx code:
+================
+arch = sm_120
+code version = [9,0]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions =
+
+PASS identical device SASS across both candidate and both default executors.
