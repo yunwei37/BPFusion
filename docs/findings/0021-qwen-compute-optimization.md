@@ -371,3 +371,117 @@ errors, eight FREE slots, passing all-thread network trace and clean teardown.
 The cache directory already existed; this is entrypoint qualification, not a
 cold-cache measurement. Production growth is exactly two lines; tests are
 unchanged. No full comparison or result review was repeated.
+
+
+## Reduction-preserving RMSNorm pointwise-tail candidate
+
+The retained RoPE comparison answers its own component question. Its remaining
+decode graphs still contain49 RMSNorm instances, each with multiple small
+pointwise kernels after its reduction. The previous whole-RMSNorm compiler
+failures remain closed; they do not settle this new compilation boundary.
+The temporary candidate retains original eager Torch float32 conversion,
+pow(2) and mean(-1, keepdim=True), and compiles only epsilon addition, rsqrt,
+normalization multiply, cast-back and learned-weight multiply with
+emulate_precision_casts=True. The existing eager projection/attention,
+precision policy, RoPE, KV/private banks, oracle, scheduler and protocol remain
+unchanged. Candidate arithmetic agreement is empirical; passing this probe
+does not identify the old whole-RMSNorm failure's cause.
+
+[Exact source and GPU-only qualifier](../../bench/results/qwen_norm_tail_qualification_20261010.txt)
+finish EXIT0: all 12 two-bank groups,1,536 exact tokens, ten gen64 prompt-edge
+cases and two mixed groups; each group has one host launch/128 model graphs/
+error0. No TCP, queue lifecycle or serving benefit follows from this probe.
+The [candidate diagnostic profile](../../bench/results/qwen_norm_tail_profile_20261010.txt)
+reuses the previous exact RoPE-source profile as its event-count reference.
+Five shapes remove196 CUDA events each: prefill5 1005 ->809, prefill64
+1077 ->881, decode positions16/64/126 957 ->761. PyTorch allocated/reserved/
+held-logits counters remain 1,089,993,728 /1,518,338,048 /57,735,680 bytes.
+Sequential CUDA-event times are retained but provide no causal speed claim;
+native graph memory and total host/energy remain unmeasured.
+
+## RMSNorm-tail serving comparison plan
+
+This is supporting engineering for the user's throughput/latency goal, no paper
+RQ/thesis is invented. The new uncertainty is whether this precision-qualified,
+reduction-preserving boundary reduces actual client TPOT and raises throughput
+beyond the current RoPE-optimized concurrent path. Positive matched effects
+support retaining the nine-line candidate; negative/inconclusive effects leave
+production unchanged and direct effort toward request/kernel overlap and
+batched computation. Existing RoPE or failed full-norm results cannot answer
+this boundary. This is the strongest immediately runnable local computation
+comparison; it is not a second architecture contribution or external-serving
+win. Actual concurrent tracing/batching remain higher-potential subsequent
+work rather than redundant repeats of closed component comparisons.
+
+Baseline is exact production 581999d; candidate differs only by the nine-line
+pointwise-tail function and original-reduction wrapper. Both performance
+executors use the identical existing eight-bank resident native binary with
+the common temporary checked TCP_NODELAY setting. [Frozen adapter/source/commands](../../bench/results/qwen_norm_tail_adapter_20261010.txt)
+retain both paths, delta and the reused driver; label/docstring changes are the
+only changes from the completed RoPE protocol. Default resident and serial-host
+native regressions are separate correctness controls, not performance baselines.
+Both strict gen64/prompt-edge regressions and a real preflight must terminate
+successfully before full collection; they retain every oracle/lifecycle/trace
+assertion and request/shutdown timeout.
+
+Reuse the fixed RoPE matrix and metric definitions above: four prompts,
+gen1/64, clients1/8, five alternating paired process blocks, matching rotating
+cell order,64 requests/cell, same warmups and idle sampling. Complete means all
+40 cells/2,560 requests/83,200 exact tokens/ten normal exits, with each process
+264 publications/8,580 model graphs/one host launch/error0/banks8/max_active8,
+zero queue/registration errors, eight FREE slots and cleanup. The compiler
+cache is the existing owning ephemeral cache, populated by qualification/profile;
+record startup separately and make no cold-cache claim.
+
+Assess all four gen64 TPOT/TPS primary effects separately with all five paired
+blocks and nominal two-sided t95, df4. Positive gain means baseline-minus-tail
+TPOT or tail-minus-baseline TPS. Mixed effects remain mixed; intervals crossing
+zero are inconclusive, not equivalence. Report TTFT, completion, gen1, pooled
+descriptive tails, startup and executor-PID CPU as diagnostics. TPS uses
+first-send/last-arrival, not the broader barrier/future CPU window; metric
+definitions remain the linked NVIDIA convention above. No weighted score,
+omnibus significance, post-hoc cell selection or exclusion is added.
+
+Preserve the SGLang co-tenant and record coarse host residency/boot and
+per-cell GPU endpoints before/after. These do not prove constant activity,
+IID/isolation, physical kernel overlap, total memory/energy or total-host cost.
+No physical-NIC, open-load capacity, optimized-serving or fixed isolated-speedup
+claim follows. A fresh read-only plan reviewer and one fresh terminal result
+reviewer assess this local retention decision; no separate saved report is
+claimed. Production remains581999d pending the complete comparison and review.
+
+
+Fresh read-only plan review admitted the frozen RMSNorm-tail comparison,
+conditional on both default strict qualifications and real preflight passing.
+It independently verified the nine-line boundary, original installed HF
+reduction, exact source/common native binary, independent oracle, unchanged
+Graph/tensor ownership, metrics/counts/protocol and minimal code growth.
+It found no scientific/executability blocker. All four primary effects,
+shared-GPU/non-IID and nominal intervals, warm-cache startup and complete
+counter/FREE/cleanup verification remain required. The inherited driver
+comment about independent blocks is not evidence of IID. No separate saved
+reviewer report is claimed.
+
+
+Both default-native candidate strict regressions now finish EXIT0:
+[resident](../../bench/results/qwen_norm_tail_resident_correctness_20261010.txt)
+and [serial host control](../../bench/results/qwen_norm_tail_host_correctness_20261010.txt),
+each 335 valid requests /20,432 exact tokens /259 rejects,5,000 empty
+connections, eight-client invalid-to-valid reuse, mixed decode lengths,
+pipeline/half-close/ring wrap, zero queue/registration errors, eight FREE slots
+and passing all-thread network trace/cleanup. Resident records one host
+launch/20,432 device graphs/error0/banks8/max_active8; host records 594
+launches/the same model-graph count/error0/banks1/max_active1. No oracle,
+timeout or lifecycle assertion was weakened. Real preflight completion is recorded below;
+production remains the retained RoPE-only source 581999d.
+
+
+Real preflight now finishes EXIT0:
+[raw](../../bench/results/qwen_norm_tail_preflight_20261010.jsonl) /
+[stdout](../../bench/results/qwen_norm_tail_preflight_20261010.stdout.txt),
+15 records/eight exact gen1 requests/two normal exits. Each process has12
+publications/264 model graphs/one host launch/error0/banks8/max_active1,
+zero queue/registration errors and eight FREE slots; module/pins are absent
+after cleanup. Compiler cache is already populated. This is executability
+evidence, not a serving result. Both strict qualifiers and real preflight
+close every plan-review condition; the frozen full matrix can now run.

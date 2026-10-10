@@ -96,6 +96,9 @@ TPOT 13.282 → 12.110 ms and throughput 592.84 → 650.34 tokens/s. All four no
 paired t95 gain intervals exclude zero in this shared-GPU collection. The
 exact candidate is retained; warm compiler-cache startup, temporary common
 TCP_NODELAY and non-isolation limits remain explicit in finding 0021.
+A subsequent RMSNorm candidate preserves the original eager reduction and
+fuses only its pointwise tail. Both strict default-native regressions pass;
+its complete serving comparison is pending and it remains temporary.
 [Finding 0022](docs/findings/0022-shared-kv.md) qualifies shared KV append and
 records a complete cache-only TCP comparison, with narrowly supporting
 TPOT/throughput results and a changing shared-GPU environment. That comparison
