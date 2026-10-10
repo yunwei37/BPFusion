@@ -69,3 +69,9 @@ run-probe: all
 
 clean:
 	rm -rf $(BUILD)
+
+.PHONY: qwen
+qwen: $(BUILD)/qwen
+
+$(BUILD)/qwen: executor/qwen.cu bpf/include/bpfusion_queue.h | $(BUILD)
+	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -Ibpf/include $< -o $@ $(LDLIBS)

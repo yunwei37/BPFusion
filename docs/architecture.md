@@ -88,6 +88,13 @@ every reply, and the TCP/HTTP reply is not yet a kernel TX. The **LLM path is
 even further** from the target — `executor/llm_executor.py` is a host-side worker
 that accepts connections, runs HF prefill/decode per request and sends tokens.
 
+The optional `executor/qwen.cu` reference now puts real Qwen prefill/decode,
+KV cache and argmax inside one resident CUDA kernel (finding 0013). It reads
+the same token ring and publishes output directly for kernel TX. The host
+only initializes and shuts down. This is sequential token-ID TCP, with the
+listener-backlog lifecycle limitation described in the finding; HTTP and
+GPU text processing remain open.
+
 ## Ownership rules (the correctness core)
 
 | object | writer | reader | recycle |
@@ -135,8 +142,9 @@ completion the responder is still reading.
   and host HF inference. Split/retransmitted TCP requests and concurrent
   producers are not validated by its sequential loopback correctness run.
 - **GPU-side tokenization and sampling** — the LLM executor is host Python
-  driving HF `transformers`; prefill/decode run on the GPU but tokenize/detokenize
-  and the token stream into the page are host work.
+  driving HF `transformers` in the Python baseline; the optional CUDA Qwen
+  reference performs prefill/decode/KV/argmax and token publication on-device
+  but still consumes pretokenized input.
 - A batched/served LLM (continuous batching, KV-cache sharing) — today batch 1.
 - Real-NIC measurement (the `tc` hook is on `lo`).
 - An asynchronous kernel→waiting-userspace wake to replace the doorbell poll
