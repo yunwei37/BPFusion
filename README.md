@@ -19,7 +19,7 @@ separate when reading any result:
 |---|---|---|---|---|
 | **Synthetic MLP** — [`executor/executor.cu`](executor/executor.cu) | UDP `:39400` -> tc/clsact ingress -> page | **one resident CUDA kernel**, launched once, spins on the page; no per-request/per-batch host launch or control call | userspace responder `sendto()` per reply | reference/intermediate: proves the resident-kernel + page mechanism (not yet a no-userspace-worker path) |
 | **Real LLM** — [`executor/llm_executor.py`](executor/llm_executor.py) | UDP `:39402` or TCP `:39403` -> tc ingress -> token ring | **host Python + HF `transformers`** on Qwen (prefill + batch-1 decode); prefill/decode run on the GPU, but host code drives every step | UDP: client polls `produced`; TCP: `send()` on the accepted socket | host-driven baseline, labelled as such; this is where TTFT/TPOT evidence comes from |
-| **Resident Qwen reference** — [`executor/qwen.cu`](executor/qwen.cu) | TCP token IDs -> sockmap stream -> page | **one resident CUDA kernel** executes real prefill/decode/KV/argmax | kernel TCP TX | correctness reference: 12 requests/96 tokens agree with eager HF; one CTA, binary token protocol, kernel accept/drain |
+| **Resident Qwen reference** — [`executor/qwen.cu`](executor/qwen.cu) | TCP token IDs -> sockmap stream -> page | **one resident CUDA kernel** executes real prefill/decode/KV/argmax | kernel TCP TX | correctness reference: real-model oracle agreement; one CTA, binary token bodies over TCP/HTTP, kernel accept/drain |
 
 In the synthetic MLP path the no-userspace-worker property covers only GPU
 compute; even there a userspace responder thread still `sendto()`s every
@@ -32,12 +32,15 @@ An experimental kernel TCP TX path now passes exact-token correctness controls:
 TCP socket. HF still drives inference and accepts connections; this is another
 intermediate, not the no-userspace-worker goal. See [finding 0012](docs/findings/0012-kernel-tcp-tx.md).
 
-The resident Qwen reference now proves token-ID TCP -> resident real model
--> kernel TCP replies on sequential loopback requests ([0013](docs/findings/0013-resident-qwen.md)).
-TCP stream framing and an eight-client cohort now pass ([0014](docs/findings/0014-sockmap-stream.md)).
-The full goal still needs HTTP/text input, GPU-side
-tokenize/detokenize, continuous batching and real-NIC measurement. See
-[docs/architecture.md](docs/architecture.md) and the finding index below.
+The resident Qwen reference now closes TCP/HTTP token requests -> sockmap/eBPF
+-> shared page -> real resident-model inference -> kernel TCP replies, with
+kernel accept/drain and no steady userspace request worker. The HTTP endpoint
+uses Content-Length and binary token-ID bodies; it is not a text/JSON or
+OpenAI-compatible API. [Finding 0015](docs/findings/0015-http-token-transport.md)
+records split writes, concurrency, persistent connections and response ordering.
+The complete service target still needs GPU text processing, continuous
+batching, completion-event measurement and real-NIC evaluation. No serving
+speedup is claimed for this slow, one-CTA correctness reference.
 
 ## Repository layout
 
@@ -45,7 +48,9 @@ tokenize/detokenize, continuous batching and real-NIC measurement. See
 bpf/fusion.bpf.c               ingress program (L2/L3/L4 parse, slot publish, doorbell)
 bpf/include/bpfusion_queue.h   canonical kernel<->GPU page layout (single source of truth)
 executor/executor.cu           resident synthetic-MLP CUDA kernel + responder + latency sampling
-executor/llm_executor.py       resident Qwen executor on the token ring (host HF driver; --tcp)
+executor/llm_executor.py       host HF Qwen baseline on the token ring (--tcp)
+executor/qwen.cu               real Qwen reference in one resident CUDA kernel
+module/bfusion_tx.c            kernel accept/drain and asynchronous TCP/HTTP TX
 executor/cuda_timer.h          %globaltimer <-> CLOCK_MONOTONIC calibration
 tools/bpfusion_load.c          attach/detach/stats; owns and pins the BPF maps
 tools/client.c                 verify/own/burst/paced MLP client
@@ -164,6 +169,9 @@ pre-attach. The MLP run also prints the `client verify` numeric check.
 - [0010-model-size.md](docs/findings/0010-model-size.md) — matched 0.5B / 1.5B /
   Qwen3-1.7B comparison; path overhead is size-independent, decode scales
   sub-linearly.
+- [0013-resident-qwen.md](docs/findings/0013-resident-qwen.md) — real Qwen inference inside one resident kernel and kernel-owned connection lifecycle.
+- [0014-sockmap-stream.md](docs/findings/0014-sockmap-stream.md) — TCP stream framing and concurrent queue reservation.
+- [0015-http-token-transport.md](docs/findings/0015-http-token-transport.md) — Content-Length POST token API, persistent connection framing and ordered HTTP replies.
 - [0012-kernel-tcp-tx.md](docs/findings/0012-kernel-tcp-tx.md) — exact Qwen
   tokens returned by kernel TCP TX; lifecycle/reset tests; HF still drives inference.
 - [0011-http-baseline.md](docs/findings/0011-http-baseline.md) — external vLLM
@@ -193,4 +201,4 @@ GPL-exported Linux TCP internals and does not link into the userspace objects.
 
 The optional resident Qwen reference is built with `make qwen`; its weight
 export is in [finding 0013](docs/findings/0013-resident-qwen.md), and its current
-stream correctness command is in [finding 0014](docs/findings/0014-sockmap-stream.md).
+TCP/HTTP correctness command is in [finding 0015](docs/findings/0015-http-token-transport.md).

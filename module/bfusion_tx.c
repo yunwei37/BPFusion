@@ -38,10 +38,12 @@ static struct {
 	struct sock *sk; /* lookup owns a reference, held until slot completion */
 	u32 bytes;
 	bool failed;
+	u16 header_length, header_sent;
+	char header[128];
 } tx[BF_LLM_SLOTS];
 static unsigned long sent_bytes, completions, abandoned, retries;
 
-static int reply_tcp(u32 idx, struct bf_llm_slot *s, u32 produced)
+static int reply_tcp(u32 idx, struct bf_llm_slot *s, void *data, u32 bytes)
 {
 	struct sock *sk = tx[idx].sk;
 	struct msghdr msg = { .msg_flags = MSG_DONTWAIT | MSG_NOSIGNAL };
@@ -61,8 +63,8 @@ static int reply_tcp(u32 idx, struct bf_llm_slot *s, u32 produced)
 		}
 		tx[idx].sk = sk;
 	}
-	vec.iov_base = (u8 *)s->tok_out + tx[idx].bytes;
-	vec.iov_len = produced * sizeof(u32) - tx[idx].bytes;
+	vec.iov_base = data;
+	vec.iov_len = bytes;
 	iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, &vec, 1, vec.iov_len);
 	/* No RCU read section across lock_sock/send. No sk_socket dereference:
 	 * close can detach that object even while a sock reference is held. */
@@ -76,22 +78,58 @@ static int reply_tcp(u32 idx, struct bf_llm_slot *s, u32 produced)
 	return ret;
 }
 
+/* Stream responses must retain request order on a persistent connection,
+ * including ring wrap and a partially sent preceding response. */
+static bool earlier_peer(u32 idx, struct bf_llm_slot *s)
+{
+    for (u32 i = 0; i < BF_LLM_SLOTS; i++) {
+        struct bf_llm_slot *other = &page->llm[i];
+        u32 state;
+
+        if (i == idx)
+            continue;
+        state = smp_load_acquire(&other->state);
+        if ((state == BF_PENDING || state == BF_DONE) &&
+            other->addr_be == s->addr_be && other->port_be == s->port_be &&
+            other->ingress_ns < s->ingress_ns)
+            return true;
+    }
+    return false;
+}
+
 static void poll_slot(u32 idx)
 {
 	struct bf_llm_slot *s = &page->llm[idx];
 	u32 state = smp_load_acquire(&s->state);
 	u32 produced;
+	bool header;
 	int ret;
 
-	if ((state != BF_PENDING && state != BF_DONE) || READ_ONCE(s->pad) != 1)
+	if ((state != BF_PENDING && state != BF_DONE) ||
+	    (READ_ONCE(s->pad) != 1 && READ_ONCE(s->pad) != 2))
+		return;
+	if (earlier_peer(idx, s))
 		return;
 	produced = smp_load_acquire(&s->produced);
 	if (produced > BF_LLM_MAX_TOK || READ_ONCE(s->n_gen) > BF_LLM_MAX_TOK)
 		tx[idx].failed = true;
-	if (!tx[idx].failed && produced * sizeof(u32) > tx[idx].bytes) {
-		ret = reply_tcp(idx, s, produced);
+	if (s->pad == 2 && !tx[idx].header_length)
+		tx[idx].header_length = scnprintf(tx[idx].header, sizeof(tx[idx].header),
+			"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: %u\r\n\r\n",
+			s->n_gen * (u32)sizeof(u32));
+	header = tx[idx].header_sent < tx[idx].header_length;
+	if (!tx[idx].failed && (header || produced * sizeof(u32) > tx[idx].bytes)) {
+		if (header)
+			ret = reply_tcp(idx, s, tx[idx].header + tx[idx].header_sent,
+				tx[idx].header_length - tx[idx].header_sent);
+		else
+			ret = reply_tcp(idx, s, (u8 *)s->tok_out + tx[idx].bytes,
+				produced * sizeof(u32) - tx[idx].bytes);
 		if (ret > 0) {
-			tx[idx].bytes += ret; /* exact byte offset, including partial u32 */
+			if (header)
+				tx[idx].header_sent += ret;
+			else
+				tx[idx].bytes += ret; /* exact byte offset, including partial u32 */
 			sent_bytes += ret;
 		} else {
 			retries++;
@@ -103,7 +141,8 @@ static void poll_slot(u32 idx)
 	/* A disconnected peer cannot release memory still owned by an executor.
 	 * DONE is its release; produced == n_gen is not a release. */
 	if (state == BF_DONE && (tx[idx].failed ||
-	    tx[idx].bytes == produced * sizeof(u32))) {
+	    (tx[idx].header_sent == tx[idx].header_length &&
+	    tx[idx].bytes == produced * sizeof(u32)))) {
 		if (tx[idx].sk)
 			sock_put(tx[idx].sk);
 		if (tx[idx].failed)
@@ -125,7 +164,7 @@ static bool peer_pending(struct sock *sk)
 		struct bf_llm_slot *s = &page->llm[i];
 		u32 state = smp_load_acquire(&s->state);
 
-		if (state != BF_FREE && s->pad == 1 &&
+		if (state != BF_FREE && (s->pad == 1 || s->pad == 2) &&
 		    s->addr_be == (__force u32)inet->inet_daddr &&
 		    s->port_be == (__force u16)inet->inet_dport)
 			return true;

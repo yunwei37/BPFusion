@@ -21,6 +21,7 @@
 // uses it as the ordinary fallback path for non-magic datagrams.
 #include "vmlinux.h"
 #include <bpf/bpf_helpers.h>
+#include <bpf/bpf_core_read.h>
 #include <bpf/bpf_endian.h>
 #include "bpfusion_queue.h"
 
@@ -254,15 +255,100 @@ int stream_sockops(struct bpf_sock_ops *ctx)
     return 0;
 }
 
+extern void *bpf_cast_to_kern_ctx(void *ctx) __ksym;
+
+/* strparser can clone one skb for several messages. load_bytes offsets are
+ * skb-relative; the message does not necessarily start at its data[0]. */
+static __always_inline __u32 stream_offset(struct __sk_buff *ctx)
+{
+    struct sk_buff *skb=bpf_cast_to_kern_ctx(ctx);
+    struct sk_skb_cb *cb=(void *)skb->cb;
+    return BPF_CORE_READ(cb,strp.strp.offset);
+}
+
+/* Minimal Content-Length POST transport for the existing binary token API.
+ * bpf_loop follows available stream bytes; no separate header-size tuning. */
+struct http_scan {
+    __u32 rolling, line_pos, end, length, value;
+    int match, reading, digits, have_length, error;
+};
+__noinline int http_step(struct http_scan *s, __u8 c)
+{
+    if (!s) return 1;
+    const char name[]="content-length";
+    __u8 lower=c>='A' && c<='Z' ? c+32 : c;
+    if (c=='\n') {
+        if (s->reading) {
+            if (!s->digits || s->have_length) { s->error=1; return 1; }
+            s->length=s->value; s->have_length=1;
+        }
+        s->line_pos=0; s->match=0; s->reading=0; s->digits=0; s->value=0;
+    } else {
+        if (s->line_pos<14) {
+            if (s->match>=0 && lower==name[s->line_pos]) s->match++;
+            else s->match=-1;
+        } else if (s->line_pos==14 && c==':' && s->match==14) {
+            s->reading=1;
+        } else if (s->reading) {
+            if (c>='0' && c<='9') {
+                if (s->value>sizeof(union bf_llm_hdr)+BF_LLM_MAX_TOK*4) { s->error=1; return 1; }
+                s->value=s->value*10+c-'0'; s->digits=1;
+            } else if (c!=' ' && c!='\t' && c!='\r') { s->error=1; return 1; }
+        }
+        if (s->line_pos<15) s->line_pos++; /* only header-name positions matter */
+    }
+    s->rolling=(s->rolling<<8)|c;
+    if (s->rolling==0x0d0a0d0a) { return 1; }
+    return 0;
+}
+struct http_scan_ctx {
+    struct __sk_buff *skb;
+    __u32 base;
+    struct http_scan state;
+};
+static long http_byte(__u32 off, void *opaque)
+{
+    struct http_scan_ctx *s=opaque;
+    __u8 c;
+    if (bpf_skb_load_bytes(s->skb,s->base+off,&c,1)) return 1;
+    int done=http_step(&s->state,c);
+    if (done && !s->state.error) s->state.end=off+1;
+    /* Global-function verification does not propagate return bounds. */
+    asm volatile("%0 &= 1" : "+r"(done));
+    return done;
+}
+static __always_inline int frame_info(struct __sk_buff *skb, __u32 *body, __u16 *http)
+{
+    __u32 magic, offset=stream_offset(skb);
+    union bf_llm_hdr h;
+    *body=0; *http=0;
+    if (offset>skb->len) return -1;
+    __u32 available=skb->len-offset;
+    if (available<4 || bpf_skb_load_bytes(skb,offset,&magic,4)) return 0;
+    if (magic==0x54534f50) { /* POST */
+        struct http_scan_ctx ctx={.skb=skb,.base=offset};
+        struct http_scan *scan=&ctx.state;
+        if (bpf_loop(available,http_byte,&ctx,0)<0 || scan->error) return -1;
+        if (!scan->end) return 0;
+        if (!scan->have_length || scan->length<sizeof(h) ||
+            scan->length>sizeof(h)+BF_LLM_MAX_TOK*4) return -1;
+        *body=scan->end; *http=1;
+        return scan->end+scan->length;
+    }
+    if (available<sizeof(h) || bpf_skb_load_bytes(skb,offset,&h,sizeof(h))) return 0;
+    if (h.magic!=BF_LLM_MAGIC || !h.n_prompt || h.n_prompt>BF_LLM_MAX_TOK ||
+        !h.n_gen || h.n_gen>BF_LLM_MAX_TOK) return -1;
+    return sizeof(h)+h.n_prompt*4;
+}
 SEC("sk_skb/stream_parser")
 int stream_parse(struct __sk_buff *skb)
 {
+    __u32 body; __u16 http;
+    int length;
     bump(14);
-    union bf_llm_hdr h;
-    if (skb->len < sizeof(h) || bpf_skb_load_bytes(skb,0,&h,sizeof(h))) return 0;
-    if (h.magic != BF_LLM_MAGIC || !h.n_prompt || h.n_prompt > BF_LLM_MAX_TOK ||
-        !h.n_gen || h.n_gen > BF_LLM_MAX_TOK) { bump(15); return -1; }
-    return sizeof(h) + h.n_prompt * sizeof(__u32);
+    length=frame_info(skb,&body,&http);
+    if (length<0) bump(15);
+    return length;
 }
 
 SEC("sk_skb/stream_verdict")
@@ -270,15 +356,19 @@ int stream_publish(struct __sk_buff *skb)
 {
     union bf_llm_hdr h;
     __u32 tokens[BF_LLM_MAX_TOK] = {};
-    __u32 zero=0, head, idx;
+    __u32 zero=0, head, idx, body;
+    __u16 http;
+    __u32 offset=stream_offset(skb);
+    int length=frame_info(skb,&body,&http);
     struct bf_page *p;
     struct bf_llm_slot *slot;
-    if (bpf_skb_load_bytes(skb,0,&h,sizeof(h)) ||
+    if (length<=0 || offset>skb->len || length>skb->len-offset || bpf_skb_load_bytes(skb,offset+body,&h,sizeof(h)) ||
+        h.magic!=BF_LLM_MAGIC || length!=body+sizeof(h)+h.n_prompt*4 ||
         !h.n_prompt || h.n_prompt > BF_LLM_MAX_TOK ||
         !h.n_gen || h.n_gen > BF_LLM_MAX_TOK) return SK_DROP;
 #pragma unroll
     for (__u32 i=0;i<BF_LLM_MAX_TOK;i++)
-        if (i<h.n_prompt && bpf_skb_load_bytes(skb,sizeof(h)+i*4,&tokens[i],4)) return SK_DROP;
+        if (i<h.n_prompt && bpf_skb_load_bytes(skb,offset+body+sizeof(h)+i*4,&tokens[i],4)) return SK_DROP;
     p=bpf_map_lookup_elem(&ctl,&zero);
     if (!p) return SK_DROP;
     int reserved=0;
@@ -294,7 +384,7 @@ int stream_publish(struct __sk_buff *skb)
     }
     if (!reserved) { bump(8); __sync_fetch_and_add(&p->drops,1); return SK_DROP; }
     for (__u32 i=0;i<BF_LLM_MAX_TOK;i++) slot->tok_in[i]=tokens[i];
-    slot->n_prompt=h.n_prompt; slot->n_gen=h.n_gen; slot->produced=0; slot->pad=1;
+    slot->n_prompt=h.n_prompt; slot->n_gen=h.n_gen; slot->produced=0; slot->pad=http ? 2 : 1;
     slot->addr_be=skb->remote_ip4; slot->port_be=(__u16)(skb->remote_port>>16);
     slot->client_ns=h.client_ns; slot->ingress_ns=bpf_ktime_get_ns(); slot->gpu_done_ns=0;
     slot->state=BF_PENDING;

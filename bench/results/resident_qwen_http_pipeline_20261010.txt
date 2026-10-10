@@ -1,0 +1,65 @@
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4812.19it/s]
+HF eager fp16 oracle ready, model released
+detached from lo
+stream sockops detached
+sockhash capacity follows somaxconn=4096
+stream parser/verdict and sockops attached to current Workspace cgroup
+PASS 5000 empty connections accepted/drained by kernel; exceeds undrained listener backlog
+http=False case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304] seconds=1.445
+http=False case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17] seconds=1.749
+http=False case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] seconds=1.447
+http=False case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] seconds=1.141
+http=True case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304] seconds=1.563
+http=True case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17] seconds=1.865
+http=True case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] seconds=1.564
+http=True case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] seconds=1.257
+http=False case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304] seconds=1.445
+http=False case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17] seconds=1.751
+http=False case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] seconds=1.445
+http=False case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] seconds=1.141
+http=False case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] seconds=1.141
+http=False case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304] seconds=2.541
+http=False case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] seconds=3.938
+http=False case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17] seconds=5.629
+http=True case=7 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] seconds=6.735
+http=True case=4 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304] seconds=8.133
+http=True case=6 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] seconds=9.532
+http=True case=5 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17] seconds=11.222
+PASS eight concurrent clients, exact Qwen replies, no admission drops
+resident Qwen ready: 24 layers h=896 vocab=151936; one launch, no host request worker
+resident Qwen stopped
+
+PASS traced all executor threads: no accept/receive/send syscalls after ready
+seen pkts      0
+ip+udp/ip+tcp pkts 0
+magic pkts     0
+drops          0
+published      0
+drop: ctl busy 0
+drop: done busy 0
+llm magic      0
+llm busy       0
+tcp dest       0
+tcp magic      0
+stream publish 26
+sockhash linked 5021
+sockhash failed 0
+parser calls   1127
+parser invalid 0
+head=0 done_seq=0 published=0 acked=0 drops=0 ready=0
+slot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+stream sockops detached
+detached from lo
+Traceback (most recent call last):
+  File "/workspaces/repository/tests/resident_qwen.py", line 120, in <module>
+    if __name__=="__main__": main()
+                             ^^^^^^
+  File "/workspaces/repository/tests/resident_qwen.py", line 104, in main
+    assert actual==expected,("pipeline",i,actual,expected)
+           ^^^^^^^^^^^^^^^^
+AssertionError: ('pipeline', 1, [12095, 13, 1084, 374, 279, 7772, 3283, 304], [2014, 11625, 279, 3491, 315, 7842, 220, 17])
+[31058.926550] bfusion_tx: map id=907 size=17336 ring=12856 slot=560 net=4026533518
+[31092.302342] bfusion_tx: exit bytes=1573 completed=22 abandoned=1 retries=3 accepted=5021 closed=5020

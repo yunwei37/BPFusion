@@ -1,10 +1,9 @@
 # BPFusion architecture
 
-One picture of what runs today, and where each piece is measured. Two paths
-share the page: a **synthetic-MLP path with a resident, launch-once CUDA
-kernel** (the mechanism this project is about) and a **real-LLM path driven by
-a host Python executor** (the honest baseline that produces TTFT/TPOT numbers).
-They have different maturity; `README.md` has the scope table.
+Three paths share the page: a synthetic resident-MLP reference, a host-driven
+HF LLM baseline, and a real Qwen CUDA reference with kernel-owned TCP/HTTP
+requests and replies. Their compute and control paths differ; compare the
+scope table in README before interpreting performance.
 
 ## Data path
 
@@ -78,7 +77,7 @@ socket lock without dereferencing `sk_socket`, and counts stream bytes exactly.
 The executor publishes `DONE` after its final page access. TX releases the slot
 only after `DONE` and complete send or terminal disconnect; `PENDING` is never
 reclaimed on a timer. Kernel TX currently polls with `usleep_range(60, 120)`.
-This is not a GPU completion interrupt or a sockmap/HTTP frontend.
+This control is not a GPU completion interrupt. The resident path below uses the sockmap/HTTP frontend.
 
 The MLP path has **no per-request/per-batch GPU launch or control call**: the
 kernel is launched once and stays resident; the host only drains the ingress
@@ -94,7 +93,28 @@ the same token ring and publishes output directly for kernel TX. The host
 only initializes and shuts down. Kernel accept and receive draining manage
 connection lifetime. The default resident test now uses sockops/sockhash
 stream framing and supports queued concurrent token-ID requests (finding 0014);
-HTTP, GPU text processing and continuous batching remain open.
+Content-Length HTTP POST framing now wraps the same token-ID body (finding 0015).
+The kernel emits HTTP headers and streamed token bytes, retaining response order
+on a connection even across ring wrap. Message offsets are read from the current
+kernel strparser layout with CO-RE: helper byte offsets are skb-relative, whereas
+several frames can share one skb. GPU text processing and continuous batching
+remain open.
+
+```
+  client TCP / HTTP POST (:39403, binary token body)
+    -> Linux TCP sequencing/reassembly
+    -> sockops + sockhash stream parser/verdict (eBPF framing and admission)
+    -> shared mmap BPF page, FREE -> WRITING -> PENDING
+    -> one resident Qwen CUDA kernel (prefill/KV/decode/argmax)
+    -> token publication + DONE (system-visible page stores)
+    -> kernel module completion poll + ordered tcp_sendmsg_locked
+    -> client HTTP header + token stream
+```
+The launcher loads weights, maps/registers the page, creates the listener,
+launches CUDA and loads the module once. It then sleeps until shutdown.
+There is no host accept/read/send, sampling or per-request launch loop in this
+resident path. Kernel polling still has CPU cost; removing a userspace worker
+is not proof of lower total host CPU work.
 
 ## Ownership rules (the correctness core)
 
@@ -129,7 +149,9 @@ completion the responder is still reading.
 | `executor/executor.cu` | resident kernel + responder thread + latency sampling |
 | `executor/cuda_timer.h` | `%globaltimer` ↔ `CLOCK_MONOTONIC` calibration |
 | `tools/client.c` | `verify`/`own`/`burst`/`paced` client (MLP path) |
-| `executor/llm_executor.py` | resident Qwen2.5 executor on the token ring |
+| `executor/llm_executor.py` | host-driven HF Qwen baseline on the token ring |
+| `executor/qwen.cu` | real resident Qwen inference, bootstrap and shutdown only on the host |
+| `module/bfusion_tx.c` | kernel connection ownership, completion polling and ordered TCP/HTTP TX |
 | `tools/llm_bench.py` | LLM TTFT/TPOT vs a direct in-process baseline |
 | `tools/llm_load.py` | LLM concurrency sweep (goodput / TTFT / TPOT) |
 | `tools/perfcount.c` | per-PID instruction/cycle counting (perf_event_open) |
@@ -138,8 +160,9 @@ completion the responder is still reading.
 
 ## What is not here yet
 
-- HTTP and text input/output — the resident reference has sockops/sockhash
-  stream framing (`0014`) with split-write and concurrent correctness controls.
+- General HTTP and text input/output — the resident reference implements
+  Content-Length POST with binary token bodies (`0015`), including split writes,
+  pipelining, half-close and concurrent correctness controls.
   The separate Python baseline still uses tc packet ingress (`0012`). Physical
   packet loss/retransmission and overload response behavior remain unmeasured.
 - **GPU-side tokenization and sampling** — the LLM executor is host Python
