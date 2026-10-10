@@ -156,8 +156,7 @@ __device__ unsigned sample(Model m, Scratch s) {
     sync_grid();
     return s.control[4];
 }
-__global__ void resident(bf_page *p, Model m, Scratch s) {
-    unsigned seen=0;
+__global__ void resident(bf_page *p, Model m, Scratch s, unsigned seen, bool once) {
     unsigned head, state, prompt, gen, token;
     for(;;) {
         sync_grid();
@@ -192,6 +191,7 @@ __global__ void resident(bf_page *p, Model m, Scratch s) {
             }
             sync_grid();
             seen++;
+            if (once) return;
             continue;
         }
         for(unsigned pos=0;pos<prompt;pos++) {
@@ -217,10 +217,12 @@ __global__ void resident(bf_page *p, Model m, Scratch s) {
         }
         sync_grid();
         seen++;
+        if (once) return;
     }
 }
 
-static void stop_signal(int) {}
+static volatile sig_atomic_t stopped;
+static void stop_signal(int) { stopped=1; }
 
 int main(int argc,char **argv) {
     signal(SIGTERM,stop_signal); signal(SIGINT,stop_signal);
@@ -274,22 +276,51 @@ int main(int argc,char **argv) {
     if(bind(listener,(sockaddr *)&addr,sizeof(addr)) || listen(listener,SOMAXCONN)) { perror("listen"); return 1; }
     // Listener creation is bootstrap only. The module owns accept and RX drain.
     __atomic_store_n(&page->stop_ns,0,__ATOMIC_RELEASE);
-    void *args[]={&device,&m,&s};
-    CUDA(cudaLaunchCooperativeKernel((void *)resident,blocks,256,args));
+    unsigned seen=0, launches=0;
+#ifdef BF_HOST_LAUNCH
+    bool once=true;
+    const char *dispatch="host-launch";
+#else
+    bool once=false;
+    const char *dispatch="resident";
+#endif
+    // Both binaries launch this same kernel and use the same model math/page.
+    void *args[]={&device,&m,&s,&seen,&once};
+    if (!once) {
+        CUDA(cudaLaunchCooperativeKernel((void *)resident,blocks,256,args));
+        launches++;
+    }
     int module=open("module/bfusion_tx.ko",O_RDONLY|O_CLOEXEC);
     if(module<0) { perror("module open"); return 1; }
     char params[80]; snprintf(params,sizeof(params),"map_fd=%d listen_fd=%d",fd,listener);
     if(syscall(SYS_finit_module,module,params,0)) { perror("finit_module"); return 1; }
     close(module); close(fd);
-    printf("resident Qwen ready: %u layers h=%u vocab=%u; one cooperative launch (%u CTAs), no host request worker\n",c.layers,c.h,c.vocab,blocks);
+    printf("resident Qwen ready: %u layers h=%u vocab=%u; %u CTAs, dispatch=%s\n",c.layers,c.h,c.vocab,blocks,dispatch);
     fflush(stdout);
-    sleep(argc>2 ? atoi(argv[2]) : 60);
+    unsigned seconds=argc>2 ? atoi(argv[2]) : 60;
+    if (once) {
+        signal(SIGALRM,stop_signal); alarm(seconds);
+        // Busy polling is the latency-oriented host-dispatch control. There
+        // is no added sleep, copy, network worker or per-token host launch.
+        while (!stopped) {
+            if (__atomic_load_n(&page->llm_head,__ATOMIC_ACQUIRE)==seen ||
+                __atomic_load_n(&page->llm[seen%BF_LLM_SLOTS].state,__ATOMIC_ACQUIRE)!=BF_PENDING)
+                continue;
+            CUDA(cudaLaunchCooperativeKernel((void *)resident,blocks,256,args));
+            launches++;
+            CUDA(cudaDeviceSynchronize());
+            seen++;
+        }
+        alarm(0);
+    } else {
+        sleep(seconds);
+    }
     __atomic_store_n(&page->stop_ns,1,__ATOMIC_RELEASE);
     cudaError_t finished=cudaDeviceSynchronize();
     if(syscall(SYS_delete_module,"bfusion_tx",0)) { perror("delete_module"); return 1; }
     close(listener);
     CUDA(finished);
     CUDA(cudaHostUnregister(page)); munmap(page,BF_PAGE_MMAP_BYTES);
-    printf("resident Qwen stopped\n");
+    printf("resident Qwen stopped: dispatch=%s launches=%u\n",dispatch,launches);
     return 0;
 }

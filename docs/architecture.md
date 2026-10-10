@@ -123,6 +123,14 @@ There is no host accept/read/send, sampling or per-request launch loop in this
 resident path. Kernel polling still has CPU cost; removing a userspace worker
 is not proof of lower total host CPU work.
 
+The compile-time `qwen-control` target provides a host-dispatch ablation of this
+same path (finding 0018). The device kernel takes a uniform `once` argument:
+false for the default launch-once loop, true to return after one whole request.
+The control host polls the same queue and launches/synchronizes per request;
+model math, grid resources, eBPF framing and kernel TX stay the same. It has a
+host request-dispatch worker, so only the default binary meets the no-steady-
+userspace-worker property. This control does not change the default path.
+
 ## Ownership rules (the correctness core)
 
 | object | writer | reader | recycle |

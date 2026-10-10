@@ -45,6 +45,11 @@ batching, completion-event measurement and real-NIC evaluation. No serving
 speedup is claimed for this correctness reference. The GPU now uses one
 cooperative resident grid; [finding 0016](docs/findings/0016-cooperative-resident-qwen.md)
 records the eight-token passes and the failed 64-token oracle control.
+A matched host-dispatch control now builds with `make qwen-control`: it launches
+that same device kernel once per request while retaining eBPF ingress and
+kernel TX. It is a mechanism ablation, not an optimized serving baseline.
+[Finding 0018](docs/findings/0018-resident-dispatch.md) records its fixed-oracle
+regressions and the client-latency/executor-process CPU experiment.
 
 ## Repository layout
 

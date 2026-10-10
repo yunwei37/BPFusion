@@ -14,11 +14,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
-def main():
-    parser=argparse.ArgumentParser()
-    parser.add_argument("--gen",type=int,default=8,choices=range(1,65))
-    parser.add_argument("--executor",default="./build/qwen")
-    args=parser.parse_args()
+def oracle_cases(gen):
     name="Qwen/Qwen2.5-0.5B-Instruct"
     tok=AutoTokenizer.from_pretrained(name)
     model=AutoModelForCausalLM.from_pretrained(name,dtype=torch.float16,attn_implementation="eager").to("cuda").eval()
@@ -31,7 +27,7 @@ def main():
             past=out.past_key_values
             nxt=int(out.logits[:,-1].argmax(-1))
             expected=[nxt]
-            for _ in range(args.gen-1):
+            for _ in range(gen-1):
                 out=model(torch.tensor([[nxt]],device="cuda"),past_key_values=past,use_cache=True)
                 past=out.past_key_values
                 nxt=int(out.logits[:,-1].argmax(-1))
@@ -39,11 +35,21 @@ def main():
         cases.append((ids,expected))
     del model,out,past
     gc.collect(); torch.cuda.empty_cache()
+    return cases,vocab
+
+
+def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--gen",type=int,default=8,choices=range(1,65))
+    parser.add_argument("--executor",default="./build/qwen")
+    args=parser.parse_args()
+    cases,vocab=oracle_cases(args.gen)
     print("HF eager fp16 oracle ready, model released",flush=True)
     subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
     subprocess.run(["./build/bpfusion_load","stream-detach"],check=True)
     subprocess.run(["./build/bpfusion_load","stream-attach"],check=True)
     executor=None
+    complete=False
     logpath="/tmp/bpfusion-resident-qwen.log"
     try:
         with open(logpath,"w") as log:
@@ -138,12 +144,19 @@ def main():
             assert client.recv(1)==b"","binary rejection must close the connection"
         request(0,ids,expected)
         print("PASS invalid first/last token IDs: HTTP 400, binary EOF, same-stream and later requests still exact",flush=True)
-        print(f"PASS 29 valid TCP/HTTP requests, {29*args.gen} real Qwen greedy tokens, three rejections, one CUDA launch, no host accept/read/send worker",flush=True)
+        print(f"PASS 29 valid TCP/HTTP requests, {29*args.gen} real Qwen greedy tokens, three rejections, no host accept/read/send worker",flush=True)
+        complete=True
     finally:
         try:
             if executor is not None:
                 executor.terminate(); executor.wait()
-                print(open(logpath).read(),flush=True)
+                log=open(logpath).read()
+                print(log,flush=True)
+                if complete and "dispatch=host-launch" in log:
+                    assert "dispatch=host-launch launches=32" in log,log
+                elif complete:
+                    assert "dispatch=resident launches=1" in log,log
+                if complete: print("PASS expected CUDA launch count for the selected dispatch",flush=True)
                 trace=open("/tmp/bpfusion-qwen-network.trace").read()
                 active=trace.split("resident Qwen ready",1)[1]
                 assert not re.search(r"\b(?:accept4?|recvfrom|recvmsg|recvmmsg|sendto|sendmsg|sendmmsg)\(",active),active
