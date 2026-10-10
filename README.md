@@ -26,7 +26,12 @@ reply and the TCP/HTTP reply is not yet a kernel TX. The **real Qwen TCP path is
 a host worker**: the Python executor accepts connections, runs HF decode, and
 sends tokens — it is the current baseline, not the final closed loop.
 
-Not yet built (the rest of the goal): kernel TX / `sockmap` reply, a kernel
+An experimental kernel TCP TX path now passes exact-token correctness controls:
+`module/bfusion_tx.c` watches the same map as ingress and sends on a referenced
+TCP socket. HF still drives inference and accepts connections; this is another
+intermediate, not the no-userspace-worker goal. See [finding 0012](docs/findings/0012-kernel-tcp-tx.md).
+
+Not yet built (the rest of the goal): `sockmap` framing, a kernel
 HTTP/TCP -> resident GPU inference -> kernel TCP closed loop, GPU-side
 tokenize/sampling/detokenize, continuous batching, and real-NIC measurement. See
 [docs/architecture.md](docs/architecture.md) and the finding index below.
@@ -156,6 +161,8 @@ pre-attach. The MLP run also prints the `client verify` numeric check.
 - [0010-model-size.md](docs/findings/0010-model-size.md) — matched 0.5B / 1.5B /
   Qwen3-1.7B comparison; path overhead is size-independent, decode scales
   sub-linearly.
+- [0012-kernel-tcp-tx.md](docs/findings/0012-kernel-tcp-tx.md) — exact Qwen
+  tokens returned by kernel TCP TX; lifecycle/reset tests; HF still drives inference.
 - [0011-http-baseline.md](docs/findings/0011-http-baseline.md) — external vLLM
   HTTP server baseline on the same model: path overhead is within noise of
   in-process, the gap to vLLM is decode, not transport.
@@ -177,4 +184,6 @@ create no other branches.
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE).
+Apache-2.0 — see [LICENSE](LICENSE). The separately loaded kernel module
+`module/bfusion_tx.c` is GPL-2.0-only, as marked in its SPDX header; it uses
+GPL-exported Linux TCP internals and does not link into the userspace objects.

@@ -1,3 +1,13 @@
 __pycache__/
 *.pyc
 build/
+
+# Kernel module build output
+module/*.o
+module/*.ko
+module/*.mod
+module/*.mod.c
+module/.*.cmd
+module/.module-common.o
+module/Module.symvers
+module/modules.order

@@ -42,6 +42,7 @@ MAP_BYTES = (PAGE_BYTES + 4095) // 4096 * 4096
 
 BF_PENDING = 1
 BF_FREE = 0
+BF_DONE = 2
 
 
 def open_page():
@@ -80,6 +81,11 @@ class Page:
         off = LLM_RING_OFF + idx * LLM_SLOT_SIZE + 4 * 12 + 256 + k * 4
         struct.pack_into("<I", self.mm, off, val)
 
+    def finish(self, idx):
+        off = LLM_RING_OFF + idx * LLM_SLOT_SIZE
+        struct.pack_into("<Q", self.mm, off + 40, time.monotonic_ns())
+        struct.pack_into("<I", self.mm, off, BF_DONE)
+
     def recycle(self, idx):
         off = LLM_RING_OFF + idx * LLM_SLOT_SIZE        # state
         struct.pack_into("<I", self.mm, off, BF_FREE)
@@ -111,7 +117,13 @@ def main():
     ap.add_argument("--tcp", action="store_true",
                     help="stream tokens back over the request's TCP socket")
     ap.add_argument("--tcp-bind", default="0.0.0.0")
+    ap.add_argument("--no-send", action="store_true",
+                    help="do not send() from userspace; the bfusion_tx kernel "
+                         "module transmits the reply (module/kmod)")
     a = ap.parse_args()
+
+    if a.no_send and not a.tcp:
+        ap.error("--no-send requires --tcp")
 
     torch.backends.cuda.matmul.allow_tf32 = True
     dev = "cuda"
@@ -172,7 +184,7 @@ def main():
         # For a TCP request, find the accepted connection this segment came
         # from so tokens can be streamed back on the same socket.
         conn = None
-        if pad == 1:
+        if pad == 1 and not a.no_send:
             key = (socket.inet_ntoa(struct.pack("<I", addr_be)),
                    socket.ntohs(port_be))
             # The accept thread may not have caught up with the segment yet;
@@ -188,16 +200,19 @@ def main():
         for tid in generate(prompt, n_gen):
             page.set_tok_out(idx, k, tid)
             k += 1
-            page.set_produced(idx, k)   # release: client sees the token
-            if conn is not None:
+            page.set_produced(idx, k)   # release: client/module sees the token
+            if conn is not None and not a.no_send:
                 try:
                     conn.sendall(struct.pack("<I", tid))
                 except OSError:
                     conn = None
             if k >= n_gen:
                 break
+        if a.no_send and pad == 1:
+            page.finish(idx)    # release ownership to kernel TX
+        else:
+            page.recycle(idx)
         t1 = time.perf_counter()
-        page.recycle(idx)
         seen += 1
         served += 1
         if served % 20 == 0:

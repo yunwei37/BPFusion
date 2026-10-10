@@ -3,6 +3,7 @@
  *
  *   bpfusion_load attach [ifname]   create clsact, load, attach tc ingress
  *   bpfusion_load detach [ifname]   remove the filter and the clsact qdisc
+ *   bpfusion_load tx-load [module.ko] load kernel TX with the pinned map FD
  *   bpfusion_load stats             print BPF counters and page header
  *
  * The tc ingress hook is used because a `BPF_PROG_TYPE_SOCKET_FILTER` socket
@@ -19,6 +20,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <sys/syscall.h>
+#include <fcntl.h>
 
 #include <bpf/bpf.h>
 #include <bpf/libbpf.h>
@@ -44,6 +47,42 @@ int main(int argc, char **argv)
 	uint64_t v;
 	int i;
 
+	if (!strcmp(cmd, "tx-load")) {
+		const char *path = argc > 2 ? argv[2] : "module/bfusion_tx.ko";
+		char params[64];
+		int mod_fd = open(path, O_RDONLY | O_CLOEXEC);
+
+		ctl_fd = bpf_obj_get("/sys/fs/bpf/bpfusion_ctl");
+		if (mod_fd < 0 || ctl_fd < 0) {
+			perror("open module/map");
+			if (mod_fd >= 0) close(mod_fd);
+			if (ctl_fd >= 0) close(ctl_fd);
+			return 1;
+		}
+		snprintf(params, sizeof(params), "map_fd=%d", ctl_fd);
+		err = syscall(SYS_finit_module, mod_fd, params, 0);
+		if (err) perror("finit_module");
+		close(mod_fd);
+		close(ctl_fd);
+		return err ? 1 : 0;
+	}
+	if (!strcmp(cmd, "detach")) {
+		memset(&hook, 0, sizeof(hook));
+		hook.sz = sizeof(hook);
+		hook.ifindex = if_nametoindex(ifname);
+		hook.attach_point = BPF_TC_INGRESS;
+		if (!hook.ifindex) {
+			fprintf(stderr, "no such interface: %s\n", ifname);
+			return 1;
+		}
+		err = bpf_tc_hook_destroy(&hook);
+		if (err && err != -ENOENT && err != -EINVAL) {
+			fprintf(stderr, "detach: %s\n", strerror(-err));
+			return 1;
+		}
+		printf("detached from %s\n", ifname);
+		return 0;
+	}
 	if (!strcmp(cmd, "attach")) {
 		/* Drop stale pins from a previous run: a fresh object otherwise
 		 * cannot take the same pin path, and the daemon would map the
@@ -127,14 +166,6 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	if (!strcmp(cmd, "detach")) {
-		memset(&opts, 0, sizeof(opts));
-		opts.sz = sizeof(opts);
-		bpf_tc_detach(&hook, &opts);
-		bpf_tc_hook_destroy(&hook);
-		printf("detached from %s\n", ifname);
-		return 0;
-	}
 
 	/* clsact survives process exits, and every attach adds another
 	 * filter, so old ones keep running (and keep bumping the counters)
@@ -152,7 +183,16 @@ int main(int argc, char **argv)
 		fprintf(stderr, "tc attach: %s\n", strerror(-err));
 		return 1;
 	}
-	printf("attached to %s (prog_id %u), ctl map=%d page=%p\n", ifname,
-	       opts.prog_id, ctl_fd, (void *)page);
+	{
+		struct bpf_map_info info = {};
+		__u32 len = sizeof(info);
+
+		if (bpf_obj_get_info_by_fd(ctl_fd, &info, &len)) {
+			perror("map info");
+			return 1;
+		}
+		printf("attached to %s (prog_id %u), ctl map id=%u size=%u page=%p\n",
+		       ifname, opts.prog_id, info.id, info.value_size, (void *)page);
+	}
 	return 0;
 }

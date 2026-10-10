@@ -54,7 +54,7 @@ typedef unsigned short __u16;
 #define BF_VEC 16
 
 struct bf_llm_slot {
-	__u32 state;      /* BF_FREE / BF_PENDING (producer) */
+	__u32 state;      /* producer FREE->PENDING; executor ->DONE; TX ->FREE */
 	__u32 n_gen;      /* tokens requested */
 	__u32 n_prompt;   /* prompt tokens written to tok_in */
 	__u32 produced;   /* tokens written to tok_out so far (executor) */

@@ -1,0 +1,77 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 5163.40it/s]
+oracle: 12 prompt/length cases, exact greedy IDs; torch=2.14.1+cu130
+detached from lo
+libbpf: Kernel error message: Exclusivity flag on, cannot modify
+attached to lo (prog_id 3865), ctl map id=767 size=17336 page=0x7c8c1f883000
+userspace rep=0 case=0 gen=1 exact=True TTFT_ms=450.118 TPOT_ms=0.000
+userspace rep=0 case=1 gen=16 exact=True TTFT_ms=11.894 TPOT_ms=10.181
+userspace rep=0 case=2 gen=64 exact=True TTFT_ms=11.067 TPOT_ms=8.124
+userspace rep=0 case=3 gen=1 exact=True TTFT_ms=11.262 TPOT_ms=0.000
+userspace rep=0 case=4 gen=16 exact=True TTFT_ms=11.164 TPOT_ms=8.157
+userspace rep=0 case=5 gen=64 exact=True TTFT_ms=11.068 TPOT_ms=8.164
+userspace rep=0 case=6 gen=1 exact=True TTFT_ms=11.325 TPOT_ms=0.000
+userspace rep=0 case=7 gen=16 exact=True TTFT_ms=11.111 TPOT_ms=8.176
+userspace rep=0 case=8 gen=64 exact=True TTFT_ms=11.233 TPOT_ms=8.168
+userspace rep=0 case=9 gen=1 exact=True TTFT_ms=11.432 TPOT_ms=0.000
+userspace rep=0 case=10 gen=16 exact=True TTFT_ms=11.107 TPOT_ms=8.132
+userspace rep=0 case=11 gen=64 exact=True TTFT_ms=11.078 TPOT_ms=8.147
+userspace rep=1 case=0 gen=1 exact=True TTFT_ms=11.152 TPOT_ms=0.000
+userspace rep=1 case=1 gen=16 exact=True TTFT_ms=11.324 TPOT_ms=8.181
+userspace rep=1 case=2 gen=64 exact=True TTFT_ms=11.241 TPOT_ms=8.131
+userspace rep=1 case=3 gen=1 exact=True TTFT_ms=11.135 TPOT_ms=0.000
+userspace rep=1 case=4 gen=16 exact=True TTFT_ms=10.973 TPOT_ms=8.162
+userspace rep=1 case=5 gen=64 exact=True TTFT_ms=11.601 TPOT_ms=8.176
+userspace rep=1 case=6 gen=1 exact=True TTFT_ms=11.339 TPOT_ms=0.000
+userspace rep=1 case=7 gen=16 exact=True TTFT_ms=11.267 TPOT_ms=8.157
+userspace rep=1 case=8 gen=64 exact=True TTFT_ms=11.285 TPOT_ms=8.155
+userspace rep=1 case=9 gen=1 exact=True TTFT_ms=11.822 TPOT_ms=0.000
+userspace rep=1 case=10 gen=16 exact=True TTFT_ms=11.342 TPOT_ms=8.166
+userspace rep=1 case=11 gen=64 exact=True TTFT_ms=17.393 TPOT_ms=8.138
+PASS userspace: 24 exact replies; no requests failed
+
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 290/290 [00:00<00:00, 5003.92it/s]
+executor: model loaded, page 0x7c5a705d4000, llm ring off 12856, slot 560B
+executor: TCP listener on 0.0.0.0:39403
+executor: served=20 last gen=16 tok 131.5 ms
+
+detached from lo
+detached from lo
+libbpf: Kernel error message: Exclusivity flag on, cannot modify
+attached to lo (prog_id 3869), ctl map id=770 size=17336 page=0x75dece693000
+kernel rep=0 case=0 gen=1 exact=True TTFT_ms=445.033 TPOT_ms=0.000
+kernel rep=0 case=1 gen=16 exact=True TTFT_ms=9.730 TPOT_ms=10.043
+kernel rep=0 case=2 gen=64 exact=True TTFT_ms=8.823 TPOT_ms=8.136
+kernel rep=0 case=3 gen=1 exact=True TTFT_ms=9.134 TPOT_ms=0.000
+kernel rep=0 case=4 gen=16 exact=True TTFT_ms=8.845 TPOT_ms=8.073
+kernel rep=0 case=5 gen=64 exact=True TTFT_ms=9.011 TPOT_ms=8.093
+kernel rep=0 case=6 gen=1 exact=True TTFT_ms=8.884 TPOT_ms=0.000
+kernel rep=0 case=7 gen=16 exact=True TTFT_ms=8.936 TPOT_ms=8.074
+kernel rep=0 case=8 gen=64 exact=True TTFT_ms=9.154 TPOT_ms=8.086
+kernel rep=0 case=9 gen=1 exact=True TTFT_ms=8.991 TPOT_ms=0.000
+kernel rep=0 case=10 gen=16 exact=True TTFT_ms=8.851 TPOT_ms=8.098
+kernel rep=0 case=11 gen=64 exact=True TTFT_ms=9.065 TPOT_ms=8.089
+kernel rep=1 case=0 gen=1 exact=True TTFT_ms=8.968 TPOT_ms=0.000
+kernel rep=1 case=1 gen=16 exact=True TTFT_ms=8.858 TPOT_ms=8.061
+kernel rep=1 case=2 gen=64 exact=True TTFT_ms=8.960 TPOT_ms=8.104
+kernel rep=1 case=3 gen=1 exact=True TTFT_ms=9.005 TPOT_ms=0.000
+kernel rep=1 case=4 gen=16 exact=True TTFT_ms=8.769 TPOT_ms=8.081
+kernel rep=1 case=5 gen=64 exact=True TTFT_ms=8.979 TPOT_ms=8.109
+kernel rep=1 case=6 gen=1 exact=True TTFT_ms=9.068 TPOT_ms=0.000
+kernel rep=1 case=7 gen=16 exact=True TTFT_ms=8.802 TPOT_ms=8.154
+kernel rep=1 case=8 gen=64 exact=True TTFT_ms=9.231 TPOT_ms=8.146
+kernel rep=1 case=9 gen=1 exact=True TTFT_ms=8.857 TPOT_ms=0.000
+kernel rep=1 case=10 gen=16 exact=True TTFT_ms=8.638 TPOT_ms=8.089
+kernel rep=1 case=11 gen=64 exact=True TTFT_ms=8.827 TPOT_ms=8.110
+PASS kernel: 24 exact replies; no requests failed
+
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4355.95it/s]
+executor: model loaded, page 0x7a88d81d8000, llm ring off 12856, slot 560B
+executor: TCP listener on 0.0.0.0:39403
+executor: served=20 last gen=16 tok 130.9 ms
+
+detached from lo
+[28685.644194] bfusion_tx: map id=770 size=17336 ring=12856 slot=560 net=4026533518
+[28695.149190] bfusion_tx: exit bytes=2592 completed=24 abandoned=0 retries=0

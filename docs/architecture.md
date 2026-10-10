@@ -69,6 +69,17 @@ executor streams each token id as a LE `u32` back on the accepted socket
 ```
 See `docs/findings/0009-tcp-path.md`.
 
+An optional `--tcp --no-send` control replaces Python token sends with the
+`bfusion_tx` module (finding 0012). The loader passes a real BPF map FD to
+module initialization; `bpf_map_get` validates and holds the map. The module
+uses the canonical page struct and the loading process network namespace.
+It holds a TCP lookup reference across sends, sends outside RCU under the
+socket lock without dereferencing `sk_socket`, and counts stream bytes exactly.
+The executor publishes `DONE` after its final page access. TX releases the slot
+only after `DONE` and complete send or terminal disconnect; `PENDING` is never
+reclaimed on a timer. Kernel TX currently polls with `usleep_range(60, 120)`.
+This is not a GPU completion interrupt or a sockmap/HTTP frontend.
+
 The MLP path has **no per-request/per-batch GPU launch or control call**: the
 kernel is launched once and stays resident; the host only drains the ingress
 doorbell and samples the completion ring for the histograms. It is **not** a
@@ -119,9 +130,10 @@ completion the responder is still reading.
 
 ## What is not here yet
 
-- `sockops`/`sockmap` + kernel TX — today the TCP reply is a userspace `send` on
-  the accepted socket (`0009`), not an asynchronous kernel TX completion; the
-  ingress side already parses TCP at the tc hook.
+- `sockops`/`sockmap` and stream/HTTP framing — the experimental kernel TX
+  control (`0012`) still uses tc packet ingress, pretokenized binary requests,
+  and host HF inference. Split/retransmitted TCP requests and concurrent
+  producers are not validated by its sequential loopback correctness run.
 - **GPU-side tokenization and sampling** — the LLM executor is host Python
   driving HF `transformers`; prefill/decode run on the GPU but tokenize/detokenize
   and the token stream into the page are host work.
