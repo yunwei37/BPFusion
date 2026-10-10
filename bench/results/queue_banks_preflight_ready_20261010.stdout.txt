@@ -1,0 +1,9 @@
+COMMAND ["python3", "/tmp/bpfusion-queue-banks-ubd0k2i9/queue_banks_bench.py", "--gen", "64", "--preflight", "--output", "bench/results/queue_banks_preflight_ready_20261010.jsonl", "--resident-executor", "/tmp/bpfusion-queue-banks-ubd0k2i9/serial/qwen_graph", "--host-executor", "/tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph"]
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4715.97it/s]
+pair=0 mode=serial gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+pair=0 mode=banks gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+{"mode": "serial", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 5.4790525, "ttft_p50_ms": 5.0559639999999995, "ttft_p99_ms": 7.257135249999999, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0], "tokens_per_s": [182.00344477919933]}
+{"mode": "banks", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 5.30779875, "ttft_p50_ms": 5.014577, "ttft_p99_ms": 7.385684649999999, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0], "tokens_per_s": [187.79896421359277]}
+{"gen": 1, "concurrency": 1, "paired_serial_minus_banks_ttft_ms": [0.17125374999999998], "difference_mean_ms": 0.17125374999999998, "difference_t95_ms": null}
+
+EXIT 0

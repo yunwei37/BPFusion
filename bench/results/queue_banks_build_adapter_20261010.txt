@@ -1377,3 +1377,5 @@ def main():
 
 
 if __name__=="__main__": main()
+
+SETUP_REPAIR: frozen Python copies initially lacked executable mode, so first preflight Popen failed before any model service/request; own temporary serial/banks qwen_graph.py restored executable 0755. Source bytes/measurement/oracle unchanged; failed preflight retained.

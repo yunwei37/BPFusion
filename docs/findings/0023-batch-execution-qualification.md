@@ -44,7 +44,7 @@ The initial [startup-only run](../../bench/results/qwen_queue_banks_resident_cor
 
 The serial host-launch correctness control captures one bank and returns after one whole request. Its first [mixed strict run](../../bench/results/qwen_queue_banks_host_mixed_correctness_20261010.txt) failed: each parent-tail iteration admitted another queued request while the current one was unfinished, so two physical slots shared bank0 (max_active=2,graph_error=1) and clients timed out. The sole correction requires seen==retired before admission when once=true. This does not change the resident once=false path. The [corrected host raw](../../bench/results/qwen_queue_banks_host_mixed_corrected_20261010.txt) passes the same335 requests /20,432 exact tokens /259 rejects and all lifecycle/trace checks, with594 host launches,20,432 model graphs,error=0,banks=1,max_active=1,zero admission/registration drops and eight FREE slots. The failed raw remains a failure. Resident qualification predates this once-only guard; the reviewed false branch has unchanged behavior.
 
-This implementation permits concurrent request progression with separate batch1 calculations. Tensor batching, measured simultaneous kernel overlap, serving benefit, text processing and physical-NIC coverage are separate open requirements.
+This implementation permits concurrent request progression with separate batch1 calculations. At this correctness milestone, tensor batching, measured simultaneous kernel overlap, serving benefit, text processing and physical-NIC coverage remained separate open requirements. The completed component comparison below now measures serving benefit in its specified shared-GPU setting.
 
 
 
@@ -67,3 +67,149 @@ Shared GPU: another project's SGLang workload was observed in finding0022. Prese
 Command after qualification/build/plan review: HF_HOME=/workspaces/.cache/huggingface python3 /tmp/<owned-queue-bank-directory>/queue_banks_bench.py --gen 64 --output bench/results/queue_banks_20261010.jsonl --resident-executor /tmp/<owned-queue-bank-directory>/serial/qwen_graph --host-executor /tmp/<owned-queue-bank-directory>/banks/qwen_graph. Add --preflight with its own output path for setup. The exact instantiated command, paths and script are retained in raw artifacts. Final table reports both primary effects with all paired blocks plus the TPOT/single-client tradeoffs. Plan and result reviews are read-only chat verdicts recorded here; no separate saved report is claimed.
 
 Fresh read-only plan review admitted this comparison on the corrected source and exact temporary build/adapter. It verified the new decision value, matched serial comparator, metric signs/counts, private-bank lifetimes, FIFO reclamation and small production growth. The failed host run and applied once-mode guard were explicitly reviewed; finish its qualification and real preflight before full collection. The inherited primary_metric output label was renamed metric before collection; interpretation follows the declared TPS/TTFT co-primary plan, with TPOT diagnostic. Completion latency must be aggregated from stored request timestamps in the final results. No separate saved review report is claimed.
+
+Real preflight completed on source41e5fc4: [raw](../../bench/results/queue_banks_preflight_ready_20261010.jsonl) /[stdout](../../bench/results/queue_banks_preflight_ready_20261010.stdout.txt),15 records/eight exact measured gen1 requests, two normal process shutdowns, each12 publications/264 model graphs/one host launch/error0/zero drops/eight FREE slots and cleanup. The [first preflight](../../bench/results/queue_banks_preflight_20261010.jsonl) /[stdout](../../bench/results/queue_banks_preflight_20261010.stdout.txt) failed at Popen because frozen Python source copies lacked executable mode, before any request/service launch. Restore executable mode on those owned temporary copies only; source bytes, oracle and timing unchanged. Both attempts remain retained. Preflight is executability evidence, not a serving result.
+
+
+## Complete TCP concurrency result
+
+The [full raw](../../bench/results/queue_banks_20261010.jsonl) and
+[stdout](../../bench/results/queue_banks_20261010.stdout.txt) finish normally
+with EXIT0 at source41e5fc4: 2,621 records, 40 cells, 2,560 requests,
+83,200 exact measured output tokens, and ten independent executor starts and
+normal exits. Every executor records one host service launch, 8,580 device
+model graphs, graph_error=0, 264 publications, zero admission/registration
+failures, and eight final FREE slots. All five candidate processes report
+banks=8,max_active=8. All five pairs are retained; no failed full-run cell or
+post-hoc exclusion occurred.
+
+The [supplementary analysis](../../bench/results/queue_banks_analysis_20261010.txt)
+includes its exact script and recomputes oracle agreement, every timestamp
+metric, the first-send/last-arrival TPS denominator, prompt balance, process
+order, counters and the intervals below. Its first checker mistakenly equated
+the stored barrier/future CPU window with the TPS window and failed. Reading
+the inherited cell() shows these are intentionally different; the corrected
+checker verifies containment and independently recomputes TPS from request
+timestamps. Both checker attempts remain visible. Measurement, original
+metrics, oracle, timeout, source and all samples are unchanged.
+
+Means are arithmetic means of five paired block values; TPS is the mean of
+five cell rates, not a pooled rate. A positive gain means banks-minus-serial
+TPS, or serial-minus-banks latency. Intervals are nominal two-sided t95, df4,
+conditional on this shared-GPU collection; they have no familywise adjustment
+and do not establish an isolated causal magnitude.
+
+| gen64 / eight clients | serial mean | private-bank mean | paired gain | nominal t95 gain |
+|---|---:|---:|---:|---|
+| **Primary: total output tokens/s** | 230.344378 | 595.069687 | +364.725310 | [+361.080986, +368.369634] |
+| **Primary: TTFT ms** | 1829.276558 | 23.656817 | +1805.619741 | [+1789.658322, +1821.581160] |
+| Completion ms | 2102.076239 | 857.127669 | +1244.948570 | [+1226.924977, +1262.972163] |
+| TPOT ms | 4.330154 | 13.229696 | -8.899542 | [-8.977403, -8.821682] |
+
+Both primary effects are positive in every pair, with nominal intervals above
+zero. Mean throughput is 2.58339 times the serial comparator; mean completion
+latency falls by about59.2%. However, per-request TPOT increases by about3.06
+times. Independent request progression removes waiting behind whole serial
+requests and improves aggregate throughput/completion at this concurrency,
+while each active request emits subsequent tokens more slowly. This is a
+measured tradeoff, not an across-the-board latency improvement. max_active=8
+still does not demonstrate simultaneous model-kernel overlap.
+
+| paired block | TPS gain tokens/s | TTFT reduction ms | completion reduction ms | TPOT reduction ms |
+|---:|---:|---:|---:|---:|
+| 0 | +367.147928 | +1808.813123 | +1251.860902 | -8.840511 |
+| 1 | +367.368739 | +1822.292134 | +1264.922017 | -8.847145 |
+| 2 | +360.840590 | +1811.665708 | +1245.955405 | -8.979529 |
+| 3 | +365.839352 | +1792.134424 | +1232.746949 | -8.879166 |
+| 4 | +362.429940 | +1793.193316 | +1229.257578 | -8.951361 |
+
+## Diagnostics and implementation costs
+
+Single-client gen64 effects are inconclusive; none of these intervals excludes
+zero. The new scheduling mechanism does not establish faster individual model
+computation.
+
+| gen64 / one client | serial mean | private-bank mean | nominal t95 gain |
+|---|---:|---:|---|
+| Output tokens/s | 229.598173 | 229.462857 | [-2.295026, +2.024394] |
+| TTFT ms | 5.441970 | 5.438350 | [-0.248967, +0.256208] |
+| TPOT ms | 4.337837 | 4.340241 | [-0.042568, +0.037761] |
+| Completion ms | 278.725727 | 278.873535 | [-2.782383, +2.486768] |
+
+| gen1 / clients | metric | serial mean | private-bank mean | nominal t95 gain |
+|---|---|---:|---:|---|
+| 1 | Output tokens/s | 187.022402 | 184.215714 | [-8.629934, +3.016558] |
+| 1 | TTFT/completion ms | 5.330338 | 5.410282 | [-0.244871, +0.084983] |
+| 8 | Output tokens/s | 198.996008 | 214.925069 | [+13.245113, +18.613007] |
+| 8 | TTFT/completion ms | 37.989774 | 36.986667 | [+0.591449, +1.414763] |
+
+One-token/eight-client means improve modestly, while single-client effects
+remain inconclusive. Gen1 has no TPOT. Per-request p99 figures in stdout are
+pooled descriptive statistics, not independent block-level tail estimates;
+for example gen1/eight-client TTFT p99 rises from41.036071 to45.770807ms despite
+the mean reduction. No general tail-latency guarantee follows.
+
+Five bootstrap durations average10.312394s serial versus54.058607s private
+banks, with ranges[10.250398,10.401339] and[54.015439,54.108346]s. Loading,
+capture, native graph instantiation and readiness are included in this startup
+measurement and excluded from steady-state cells. Capturing and instantiating
+private graphs is a substantial startup cost.
+
+Across the20 active cells per engine, executor-process CPU totals are0.13s
+serial and0.08s private banks, at100Hz/0.01s accounting resolution. Each
+engine's five one-second idle samples total0.01s CPU. These coarse values
+support sleeping-host behavior; they do not establish zero CPU work, a precise
+CPU saving, total host/kernel cost or energy efficiency.
+
+## Shared environment, cleanup and interpretation
+
+[Host residency snapshots](../../bench/results/queue_banks_environment_20261010.txt)
+record a separate SGLang scheduler with18,402MiB GPU memory before, during and
+after this run. The active-run snapshot also attributes python processes with
+13,038MiB and652MiB to this BPFusion container; total GPU memory is32,127MiB.
+This is a coarse residency observation, not a measured peak, an isolated
+allocation delta, or a before/after serial-versus-bank memory comparison. The
+larger graph footprint is a practical concern on this32GiB device. No other
+owner was stopped or modified. Per-cell clocks/temperature/power/utilization
+are retained in raw; their endpoints do not establish within-window co-tenant
+activity, energy use, or causal isolation.
+
+Post-run diagnosis at2026-10-10T19:46:16UTC finds only the same SGLang GPU
+process; this task's executor/benchmark GPU processes have exited. The boot ID
+is unchanged. The kernel module and bpfusion pins are absent, and every driver
+cleanup call returned successfully; final eight FREE slots were observed before
+detaching. Cleanup is recorded in the supplementary analysis and environment
+raw. The retained original Workspace, PVC and unrelated setup_env.sh are
+preserved.
+
+The five paired blocks support retaining concurrent request progression for
+this closed-loop workload and this shared RTX5090 collection. The result is a
+supporting engineering comparison against the previous serial resident path,
+not an optimized external-serving win. Default-transport correctness is
+separately qualified above; the performance table uses the documented common
+temporary TCP_NODELAY setting. Fixed isolated speedup, physical-NIC behavior,
+open-load capacity, total-host cost, energy, text serving and competitive
+serving remain unproven. Historical findings have their own environments and
+must not be compared as a longitudinal speed curve.
+
+
+## Independent result review
+
+A fresh read-only result reviewer independently recomputed oracle agreement,
+all request metrics, cell TPS, balanced prompts, rotating cell/process order,
+all five-pair t95 intervals, preflight/failures, runtime counters and cleanup.
+It checked frozen sources against their reported commits, the common temporary
+transport delta, private-bank ownership and parent-tail lifetime semantics,
+and the shared-GPU interpretation. Its verdict is valid and supporting for
+this recorded component/workload comparison, with no publication blocker.
+Both primary improvements and the TPOT/startup/memory costs remain explicit;
+no separately saved reviewer report is claimed.
+
+The implementation commit has net30 production lines and net13 test lines
+(17 test additions /4 deletions). This result milestone adds only necessary
+raw evidence and paragraph-level documentation; no production helper, mode
+flag, dependency, framework, queue ABI or kernel module change. The next
+engineering decision is to target model/Graph execution costs that still
+limit single-request TPOT and make concurrent requests emit more slowly,
+while retaining the unchanged strict oracle. Repeating the closed KV or
+dispatch comparisons would not resolve that uncertainty.

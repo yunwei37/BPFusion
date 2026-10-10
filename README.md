@@ -97,8 +97,14 @@ independent batch1 graph/KV banks through GPU-controlled fork/join execution
 and preserves head-indexed FIFO reclamation. Both default-resident and serial
 host-control regressions pass 335 requests / 20,432 exact tokens / 259 rejects,
 including mixed decode lengths and immediate reuse. Resident execution records
-one host launch and eight model graphs in flight; kernel overlap and serving
-benefit remain unmeasured. The host control uses one bank and is a serial
+one host launch and eight model graphs in flight. Its complete five-pair
+TCP comparison on the shared RTX5090 measures gen64/eight-client throughput
+230.34 -> 595.07 output tokens/s, TTFT1829.28 -> 23.66ms, and completion
+2102.08 -> 857.13ms against the previous serial resident path. Per-request
+TPOT worsens4.33 -> 13.23ms; single-client effects remain inconclusive,
+bootstrap increases10.31 -> 54.06s, and graph memory is a substantial cost.
+The comparison uses common temporary TCP_NODELAY settings and does not prove
+kernel overlap, isolated speedup or an optimized-serving win. The host control uses one bank and is a serial
 correctness control; it no longer isolates dispatch alone against this concurrent
 default. Ordinary tensor batching failed exact qualification and is not retained.
 

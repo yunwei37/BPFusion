@@ -148,7 +148,11 @@ the parent tail joins all child work before sampling outputs and scheduling the
 next step. Admission can continue while earlier requests are active. Model
 weights remain shared, and graph/tensor owners survive through GPU shutdown
 and native graph-exec destruction. Multiple graphs in flight do not establish
-simultaneous kernel overlap or a serving performance win.
+simultaneous kernel overlap. Finding0023 records a complete matched TCP
+comparison: improved eight-client throughput, TTFT and completion against the
+serial resident path, with slower per-request TPOT and larger startup/memory
+costs. Its shared-GPU and temporary common TCP_NODELAY scope does not establish
+an isolated or optimized-serving win.
 
 Queue head/state/stop polling uses system-scope acquire loads; the native
 backedge reloads shared publication words instead of reusing a cached condition.
@@ -225,8 +229,9 @@ completion the responder is still reading.
   reference performs prefill/decode/KV/argmax and token publication on-device
   but still consumes pretokenized input.
 - Tensor-batched/general serving and shared-prefix KV caching. The graph path
-  now advances concurrent requests with private batch1 graph/KV banks; its
-  performance and comparison with optimized serving remain unmeasured.
+  now advances concurrent requests with private batch1 graph/KV banks; finding0023
+  measures its local shared-GPU benefit/tradeoffs against the serial resident
+  path. Comparison with optimized serving remains unmeasured.
 - Real-NIC measurement (the `tc` hook is on `lo`).
 - An asynchronous kernel→waiting-userspace wake to replace the doorbell poll
   (`bpf_send_signal` or a module); see `docs/findings/0001-ingress-wake.md`.

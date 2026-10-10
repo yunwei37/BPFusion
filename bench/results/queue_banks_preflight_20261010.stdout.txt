@@ -1,0 +1,16 @@
+COMMAND ["python3", "/tmp/bpfusion-queue-banks-ubd0k2i9/queue_banks_bench.py", "--gen", "64", "--preflight", "--output", "bench/results/queue_banks_preflight_20261010.jsonl", "--resident-executor", "/tmp/bpfusion-queue-banks-ubd0k2i9/serial/qwen_graph", "--host-executor", "/tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph"]
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4821.46it/s]
+Traceback (most recent call last):
+  File "/tmp/bpfusion-queue-banks-ubd0k2i9/queue_banks_bench.py", line 230, in <module>
+    if __name__=="__main__": main()
+                             ^^^^^^
+  File "/tmp/bpfusion-queue-banks-ubd0k2i9/queue_banks_bench.py", line 188, in main
+    executor=subprocess.Popen([binary,"/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","300"],stdout=log,stderr=subprocess.STDOUT)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+PermissionError: [Errno 13] Permission denied: '/tmp/bpfusion-queue-banks-ubd0k2i9/serial/qwen_graph'
+
+EXIT 1
