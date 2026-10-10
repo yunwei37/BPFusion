@@ -68,27 +68,25 @@ def connect():
     return client
 
 
-def cell(pid,cases,gen,concurrency,count):
+def cell(pid,cases,gen,concurrency,count,rows):
     # Connections and thread creation precede both the timer and CPU window.
     barrier=threading.Barrier(concurrency+1)
     def worker(worker_id):
         with connect() as client:
             barrier.wait(timeout=60)
-            rows=[]
             for index in range(worker_id,count,concurrency):
                 case=index%len(cases); ids,expected=cases[case]
                 row=request(client,ids,expected[:gen]); row.update(index=index,case=case)
                 rows.append(row)
-            return rows
     with ThreadPoolExecutor(max_workers=concurrency) as pool:
         futures=[pool.submit(worker,i) for i in range(concurrency)]
         before=cpu_seconds(pid); start=time.monotonic_ns()
         barrier.wait(timeout=60)
-        rows=[row for future in futures for row in future.result()]
+        for future in futures: future.result()
         finish=time.monotonic_ns(); after=cpu_seconds(pid)
     first=min(row["start_ns"] for row in rows)
     last=max(row["arrival_ns"][-1] for row in rows)
-    return sorted(rows,key=lambda row:row["index"]),{
+    return {
         "window_ns":finish-start,"executor_cpu_s":after-before,
         "output_tokens_per_s":count*gen/((last-first)/1e9)}
 
@@ -102,6 +100,12 @@ def analyze(path):
     assert len(cells)==expected_cells,(len(cells),expected_cells)
     assert len(samples)==expected_cells*meta["requests_per_cell"]
     assert len([row for row in records if row["event"]=="executor"])==2*meta["repetitions"]
+    for row in samples:
+        assert row["tokens"]==meta["cases"][row["case"]][1][:row["gen"]],row
+        assert row["ttft_ms"]==(row["arrival_ns"][0]-row["start_ns"])/1e6,row
+    for block in cells:
+        selected=[row for row in samples if all(row[key]==block[key] for key in ("pair","mode","gen","concurrency"))]
+        assert sorted(row["index"] for row in selected)==list(range(meta["requests_per_cell"])),block
     def percentile(values,q):
         ordered=sorted(values); pos=(len(ordered)-1)*q
         low=math.floor(pos); high=math.ceil(pos)
@@ -171,16 +175,25 @@ def main():
                         emit("idle",pair=pair,mode=mode,window_ns=time.monotonic_ns()-idle_start,executor_cpu_s=cpu_seconds(executor.pid)-before)
                         for gen,concurrency in cells:
                             gpu_before=gpu_state()
-                            rows,summary=cell(executor.pid,cases,gen,concurrency,count)
+                            rows=[]
+                            try:
+                                summary=cell(executor.pid,cases,gen,concurrency,count,rows)
+                            finally:
+                                for row in sorted(rows,key=lambda row:row["index"]):
+                                    emit("request",pair=pair,mode=mode,gen=gen,concurrency=concurrency,**row)
                             gpu_after=gpu_state()
                             emit("cell",pair=pair,mode=mode,gen=gen,concurrency=concurrency,requests=count,
                                  gpu_before=gpu_before,gpu_after=gpu_after,**summary)
-                            for row in rows: emit("request",pair=pair,mode=mode,gen=gen,concurrency=concurrency,**row)
                             print(f"pair={pair} mode={mode} gen={gen} c={concurrency} requests={count} exact_tokens={count*gen} cpu_s={summary['executor_cpu_s']:.3f}",flush=True)
                         executor.terminate(); assert executor.wait(timeout=60)==0,logpath.read_text()
                         log=logpath.read_text(); launches=1 if mode=="resident" else 8+count*len(matrix)
                         assert f"dispatch={mode} launches={launches}" in log,log
                         emit("executor",pair=pair,mode=mode,log=log,stats=command("./build/bpfusion_load","stats"))
+                    except Exception as error:
+                        emit("failure",pair=pair,mode=mode,error=repr(error),
+                             log=logpath.read_text() if logpath.exists() else "",
+                             stats=command("./build/bpfusion_load","stats"))
+                        raise
                     finally:
                         if executor is not None and executor.poll() is None:
                             executor.terminate(); executor.wait(timeout=60)

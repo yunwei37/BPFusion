@@ -126,5 +126,21 @@ Several persistent-stream requests have approximately 40 ms client latency
 in both modes. This is an observation requiring interpretation, not an
 isolated GPU-dispatch latency or a reason to change the fixed oracle.
 
-Full measurement and fresh result review are pending. No performance conclusion
-is established by this plan, preflight or correctness regressions.
+The [first full attempt](../../bench/results/resident_dispatch_failed_20261010.jsonl)
+failed with a client timeout during pair 1 / host-launch / gen1 / concurrency8;
+[stdout and traceback](../../bench/results/resident_dispatch_failed_20261010.txt)
+are retained. It is incomplete, not a performance result. The original runner
+only wrote whole completed cells and did not capture the failing queue state,
+so the cause is unknown. The runner now preserves completed requests from a
+failed cell and records failure-time statistics before cleanup.
+
+A [diagnostic repeat](../../bench/results/resident_dispatch_diagnostic_20261010.jsonl)
+with temporary BPF print instrumentation on rejected reservations completed
+all five pairs, 40 cells and 2,560 exact requests. No rejection trace was found;
+the timeout was not reproduced. Its [stdout](../../bench/results/resident_dispatch_diagnostic_20261010.txt)
+is retained as diagnostic evidence. The temporary BPF instrumentation was
+removed before the final repeat; the ingress source is unchanged from the
+published control commit. This does not establish that the timeout is repaired.
+
+The final uninstrumented repeat and fresh result review are pending.
+No performance conclusion is established by the incomplete attempt.
