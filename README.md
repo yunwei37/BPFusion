@@ -123,6 +123,15 @@ The comparison uses common temporary TCP_NODELAY settings and does not prove
 kernel overlap, isolated speedup or an optimized-serving win. The host control uses one bank and is a serial
 correctness control; it no longer isolates dispatch alone against this concurrent
 default. Ordinary tensor batching failed exact qualification and is not retained.
+A subsequent device-graph activity diagnostic in finding0023 captures complete
+model-kernel record counts: one client has no overlapping model kernels,
+while eight clients show up to eight distinct execution graphs overlapping.
+Cross-graph overlap occupies72.88% of the model-kernel interval union under
+profiling. This resolves the mechanism uncertainty for that workload; it is
+not a new serving-speed result,SM instruction-parallelism or utilization claim.
+The two largest GEMV name groups dominate summed model-kernel durations,
+motivating the next computation/weight-reuse investigation.
+
 
 ## Repository layout
 

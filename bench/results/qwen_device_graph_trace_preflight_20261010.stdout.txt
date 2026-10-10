@@ -1,0 +1,9 @@
+COMMAND ["python3", "/tmp/bpfusion-qwen-pointwise-5mxeys8g/device_trace_probe.py", "--preflight"]
+START 2026-10-10T21:00:41.156347+00:00
+BOOT_ID 04dc0087-5ccc-4c46-9997-b9a92f0e5167
+ENVIRONMENT {"command": ["nvidia-smi", "--query-gpu=timestamp,name,memory.used,clocks.sm,temperature.gpu,power.draw,utilization.gpu", "--format=csv,noheader"], "exit": 0, "stdout": "2026/10/10 21:00:41.175, NVIDIA GeForce RTX 5090, 18428 MiB, 2557 MHz, 65, 399.99 W, 100 %\n", "stderr": ""}
+ENVIRONMENT {"command": ["nvidia-smi", "--query-compute-apps=pid,process_name,used_memory", "--format=csv,noheader"], "exit": 0, "stdout": "", "stderr": ""}
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4898.57it/s]
+DEVICE_GRAPH_TRACE_DONE preflight
+
+EXIT 0

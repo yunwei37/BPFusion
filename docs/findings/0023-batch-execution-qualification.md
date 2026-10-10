@@ -213,3 +213,239 @@ engineering decision is to target model/Graph execution costs that still
 limit single-request TPOT and make concurrent requests emit more slowly,
 while retaining the unchanged strict oracle. Repeating the closed KV or
 dispatch comparisons would not resolve that uncertainty.
+
+## Next mechanism diagnostic: device-launched model-kernel activity
+
+The full concurrent comparison and retained RoPE/RMSNorm improvements leave a
+specific uncertainty: max_active8 and8 model graphs in flight do not show
+whether model kernels actually overlap on the GPU. The current parent tail
+joins each round of child graphs before advancing requests. Observing their
+execution intervals can guide the next throughput/latency implementation:
+overlap would direct attention toward computation/memory and batching costs;
+complete but non-overlapping activity would support investigating launch and
+scheduling serialization. Missing activity remains inconclusive. Neither
+outcome completes the service goal or changes a paper RQ; no paper RQ exists.
+This is supporting mechanism diagnosis for the user's performance goal,
+not a new serving-speed result. Existing host-replay event counts and
+coarse GPU utilization cannot answer it, so this adds distinct evidence.
+Repeating closed KV/dispatch/fusion comparisons would not resolve it.
+
+Scope: only temporary instrumentation and its necessary record; production
+source/native/module/queue/protocol/oracle and other workloads remain unchanged.
+All execution occurs in the original BPFusion Workspace on current main
+fc58faa285c7d169733fe626c0c4ddef288d3cb8. The temporary adapter
+/tmp/bpfusion-qwen-pointwise-5mxeys8g/device_trace_preflight/qwen_graph
+is the exact retained source plus32 instrumentation lines, using the existing
+default native library. It discovers Torch's loaded CUPTI/CUDA-runtime paths;
+there is no second library installation,driver change or persistent helper.
+
+The installed Torch2.14.1+cu130/CUPTI130001 provides the required process-local
+APIs. A capability process returns CUPTI_SUCCESS for device-graph collection
+before CUDA initialization,cuInit(0),and HW trace after driver initialization,
+without creating a Torch CUDA context or launching model work. The
+[CUDA13.0 CUPTI activity API](https://docs.nvidia.com/cupti/13.0.0/api/group__CUPTI__ACTIVITY__API.html)
+documents this ordering and Blackwell HES support. Standard concurrent-kernel
+activity does not serialize kernels. Actual trace coverage still needs the
+real preflight; API success alone is not evidence of device-launched activity.
+No newer Torch annotation API or GPU-wide counter profiler is used.
+
+The adapter enables those APIs before model bootstrap,captures the existing
+eight banks unchanged,records source graph IDs/node counts,and wraps native
+serve with installed torch.profiler.profile CPU/CUDA activities. It exports
+the standard Chrome trace as trace.json.gz via export_chrome_trace. The
+profile covers native graph instantiation/upload,live requests and normal
+shutdown; analysis must exclude setup and the persistent dispatcher when
+assessing model-kernel activity. Source graph IDs are checked against exported
+activity before any per-bank attribution. Unmapped IDs or dropped/missing
+activity are explicit coverage limits.
+
+Reuse oracle_cases,request,connect,cell and command from the completed
+comparison driver. The parent builds independent eager-fp16 expected tokens
+before starting the child. A one-request/gen1 real TCP/HTTP preflight checks
+correct bytes,normal exit,one publication/model launch,zero graph errors,
+FREE slots,cleanup and exported model activity. If the installed exporter
+cannot expose device model events,record that failure rather than interpreting
+an empty trace as serialized compute.
+
+After usable preflight,collect one integrated diagnostic with two separately
+started profile processes:clients1 and8,each8 requests generating64 tokens,
+four fixed prompts twice each. Both use identical source/native/default
+server transport; the existing client TCP_NODELAY setting is common. No
+warmups or requests are silently omitted. Each process should report8
+publications,512 model graphs,one host launch,zero errors,eight FREE slots
+and cleanup; record actual max_active. Existing request/shutdown60s handling
+and readiness-or-process-exit remain unchanged. Stop only this experiment's
+executor through its native signal/cleanup path after clients finish.
+
+The primary observation is overlap of timestamped model-kernel execution
+intervals,using CUPTI's start/end semantics. Report event/category/name counts,
+available graph/stream IDs,invalid timestamps and observable coverage first.
+Exclude dispatch,API,upload,copy/memset and unrelated setup events from
+model-kernel overlap calculations; retain them in raw. Report peak concurrent
+model-kernel intervals and union time with at least two model kernels active,
+separately for each client condition. These diagnostic summaries have no
+paired significance or serving-capacity interpretation. Request timing under
+profiling is recorded only to validate the path; it is not a new latency/TPS win.
+
+A positive overlap observation supports that narrower activity claim under
+profiling. Absence supports non-overlap only with complete executed-model
+coverage; otherwise the result is inconclusive. Intervals do not establish
+simultaneous SM instruction issue,isolated GPU behavior,energy or a competitive
+serving advantage. Co-tenant residency,boot identity and cleanup remain recorded.
+Preserve the adapter,command,oracle/client raw,profiler raw and analysis path
+in cited ordinary artifacts. Fresh plan and terminal result reviews apply;
+there is no control schema,extra production flag or separate report framework.
+
+The concrete driver is
+/tmp/bpfusion-qwen-pointwise-5mxeys8g/device_trace_probe.py.
+Run HF_HOME=/workspaces/.cache/huggingface python3
+/tmp/bpfusion-qwen-pointwise-5mxeys8g/device_trace_probe.py --preflight,
+then the same command without --preflight for both full cells. It saves
+bench/results/qwen_device_graph_trace_preflight_20261010.txt or
+qwen_device_graph_trace_full_20261010.txt with the exact adapter/driver,
+independent oracle,client rows,executor output,counters and cleanup.
+Compressed profiler traces remain in the corresponding OS-temp directories
+until coverage analysis,then the cited retained full traces enter bench/results/.
+No duplicate production source or benchmark control framework is retained.
+
+Fresh read-only plan review admits this diagnostic with no scientific or
+executability blocker. It checked the exact adapter/driver,oracle independence,
+native signal/cleanup,installed API ordering and gzip exporter. Catalogue
+cudaGraphGetNodes totals include all node types, so they cannot alone prove
+kernel coverage; inspect category/graph/stream attribution before interpreting
+non-overlap. The client1 control distinguishes intrinsic graph activity from
+cross-request overlap, and incomplete device activity remains inconclusive.
+
+The real preflight terminates EXIT0 with one exact token,one publication,
+one model graph,one host launch,error0 and eight FREE slots. Its standard
+export contains808 model-kernel records with nonzero timestamps and two
+dispatcher records. Source graph5 has809 total nodes,while exported execution
+graph ID is1529; do not assume these IDs are the same. Before the full run,
+the temporary adapter adds seven CPU-only catalogue lines to record each
+source graph's node-type counts. This repairs coverage accounting before
+profiling begins; model/native/request/oracle/profiler/timeout paths remain
+unchanged. Full instrumentation growth is39 lines,production0/test0.
+Original preflight source is preserved in its raw; full raw records the
+updated source. No timing comparison uses the catalogue or bootstrap work.
+The container nvidia-smi compute-process query returns empty output despite
+allocated GPU memory; co-tenant/process observations therefore require the
+host namespace and are unknown from that empty container query.
+
+## Device-launched model-kernel activity result
+
+The full diagnostic terminates EXIT0 in both client conditions, without
+warmup omissions or request exclusions. Each condition completes eight real
+TCP/HTTP requests, two occurrences of each fixed prompt, with512 independently
+expected greedy tokens. Final counters show eight publications,512 model
+graph executions,one host service-graph launch,error0 and eight FREE slots.
+Observed max_active is1 and8, respectively. The exact updated adapter,
+driver,oracle,client rows,executor output and cleanup are preserved in
+[full raw](../../bench/results/qwen_device_graph_trace_full_20261010.txt)
+and its [stdout](../../bench/results/qwen_device_graph_trace_full_20261010.stdout.txt).
+The [preflight raw](../../bench/results/qwen_device_graph_trace_preflight_20261010.txt)
+and [stdout](../../bench/results/qwen_device_graph_trace_preflight_20261010.stdout.txt)
+retain the initial adapter and its one-token path.
+
+Unchanged standard profiler exports are retained as
+[one-client trace](../../bench/results/qwen_device_graph_trace_c1_20261010.json.gz),
+[eight-client trace](../../bench/results/qwen_device_graph_trace_c8_20261010.json.gz)
+and [preflight trace](../../bench/results/qwen_device_graph_trace_preflight_20261010.json.gz).
+The [analysis raw](../../bench/results/qwen_device_graph_trace_analysis_20261010.txt)
+contains the exact CPU analyzer and terminal output. Imported oracle/client
+helpers are retained in the
+[previous adapter raw](../../bench/results/qwen_norm_tail_adapter_20261010.txt);
+command,cpu_seconds,request,connect and cell are also byte-for-byte identical
+to bench/resident_dispatch.py at recorded commitfc58faa. The independent
+oracle import is tests/resident_qwen.py at that commit. Recreate the recorded
+temporary source layout from those files to repeat collection. CPU-only
+reanalysis below reads the archived exports and the EXECUTOR_LOG blocks
+already retained in full raw,with no dependency on remaining OS-temp logs:
+
+```python
+from pathlib import Path
+import re
+base=Path('bench/results')
+raw=(base/'qwen_device_graph_trace_full_20261010.txt').read_text()
+logs=re.findall(r'^EXECUTOR_LOG (.*?)(?=^STATS )',raw,re.M|re.S)
+assert len(logs)==2
+analysis=(base/'qwen_device_graph_trace_analysis_20261010.txt').read_text()
+source=analysis.split('ANALYSIS SOURCE\n',1)[1].split('\nANALYSIS OUTPUT\n',1)[0]
+source=source.replace("d=root/('device_trace_c'+str(clients));log=(d/'executor.log').read_text()",
+                      "log=logs[[1,8].index(clients)]")
+source=source.replace("gzip.open(d/'trace.json.gz','rt')",
+                      "gzip.open(base/('qwen_device_graph_trace_c'+str(clients)+'_20261010.json.gz'),'rt')")
+exec(compile(source,'archived-trace-analysis','exec'))
+```
+
+This substitutes input paths/log extraction only; numerical analysis is
+unchanged. No production source or benchmark-control interface is added.
+
+Coverage uses kernel-node counts, not all-node totals. The source catalogue
+records808 kernel nodes for each executed prefill shape and760 for each
+executed decode shape, plus one memset per model graph. Final bank prompt
+lengths and counters imply eight prefill and504 decode executions. Both
+exports contain exactly389,504 model-kernel records across512 execution
+graph IDs, with the exact per-ID count multiset808x8 and760x504. There are
+no invalid model timestamps; the events identify GPU0/context1. This checks
+the observable executed-model kernel coverage; it is not an invented mapping
+from source graph IDs to execution IDs or request-bank ownership. The513
+gpu_memset activities per condition,gpu_memcpy activities,setup and dispatcher
+records are retained in raw and excluded from the model-kernel interval
+calculation. Tensor-copy CUDA kernels captured inside the model graphs remain
+model-kernel records and are counted; the copy exclusion refers to the separate
+activity category,not those kernels.
+
+| diagnostic condition | one client | eight clients |
+|---|---:|---:|
+| Correct requests / exact tokens | 8 /512 | 8 /512 |
+| Expected / observed model-kernel records | 389,504 /389,504 | 389,504 /389,504 |
+| Executed model graphs | 512 | 512 |
+| Peak overlapping model-kernel intervals | 1 | 8 |
+| Peak distinct execution graphs in those intervals | 1 | 8 |
+| Union of model-kernel intervals ms | 1532.792109 | 775.127768 |
+| Union time with at least two distinct execution graphs ms | 0 | 564.881573 |
+| Fraction of model-kernel union with cross-graph overlap | 0 | 72.875930% |
+| Sum of individual model-kernel durations ms | 1532.792109 | 2773.266717 |
+
+The arithmetic sorts start/end intervals, processes ends before starts at
+identical timestamps, tracks distinct execution IDs and checks balanced
+completion. The eight-client trace has real cross-execution-graph model-kernel
+interval overlap under profiling; the one-client control does not. This
+resolves the earlier uncertainty beyond max_active counters. It does not
+demonstrate simultaneous SM instruction issue,per-bank attribution,whole-GPU
+utilization,isolated behavior or a new uninstrumented serving-speed result.
+The overlapping durations must not be added as elapsed wall time or compared
+with earlier performance collections as a speedup.
+
+The two largest named cuBLAS GEMV groups account for1064.376770ms of summed
+individual model-kernel durations with one client and1677.159697ms with eight,
+about69.44% and60.48% of their respective summed model durations. These are
+duration shares, not wall-time or whole-GPU percentages. The names alone
+do not identify particular projection layers or tensor shapes. Actual
+cross-graph overlap directs the next engineering investigation toward
+model computation,weight/memory reuse and batching efficiency; it does not
+support assuming the current child graphs are completely serialized.
+
+[Host-namespace observations](../../bench/results/qwen_device_graph_trace_environment_20261010.txt)
+before and after the diagnostic record the same boot and the same other
+owner's SGLang process with18,404MiB residency. That owner remains untouched.
+Post-run inspection finds no owned profiler/executor processes,loaded module
+or bpfusion pins; final FREE slots and successful cleanup are recorded.
+The shared GPU prevents isolation and energy claims. Analysis preparation
+initially exposed a syntax error before execution; the raw discloses its
+correction before the final CPU-only analysis,without changing traces,
+requests,oracle or collection. Production0/test0; the temporary full adapter
+adds39 instrumentation lines. This is supporting mechanism diagnosis for
+the performance goal,not a separate paper RQ or a competitive-serving result.
+
+A fresh independent read-only result reviewer recomputes both full traces,
+oracle agreement,coverage and interval arithmetic. Every execution-graph/
+graph-node pair is unique; no duplicate model-node records or invalid
+timestamps are found. It also checks final counters/cleanup,the before-run
+catalogue deviation,source/helper reconstruction and byte-identical archives.
+Verdict: valid and complete; cross-graph activity overlap supported in this
+profiled workload; supporting engineering value,no scientific or publication
+blocker. Complete serialization is contradicted within this scope. No
+separate saved reviewer report or independent serving-speed result is claimed.
+The documented CPU archive replay also terminates EXIT0 with the same
+counts and interval results.

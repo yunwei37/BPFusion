@@ -147,8 +147,12 @@ Active requests launch independent batch1 model graphs with FireAndForget;
 the parent tail joins all child work before sampling outputs and scheduling the
 next step. Admission can continue while earlier requests are active. Model
 weights remain shared, and graph/tensor owners survive through GPU shutdown
-and native graph-exec destruction. Multiple graphs in flight do not establish
-simultaneous kernel overlap. Finding0023 records a complete matched TCP
+and native graph-exec destruction. Multiple graphs in flight alone do not
+establish kernel overlap. A later process-local activity diagnostic in
+finding0023 matches complete model-kernel counts and observes distinct-graph
+interval overlap with eight clients,none with one. That instrumentation
+does not measure SM instruction simultaneity or uninstrumented serving speed.
+Finding0023 records a complete matched TCP
 comparison: improved eight-client throughput, TTFT and completion against the
 serial resident path, with slower per-request TPOT and larger startup/memory
 costs. Its shared-GPU and temporary common TCP_NODELAY scope does not establish
