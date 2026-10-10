@@ -91,9 +91,9 @@ that accepts connections, runs HF prefill/decode per request and sends tokens.
 The optional `executor/qwen.cu` reference now puts real Qwen prefill/decode,
 KV cache and argmax inside one resident CUDA kernel (finding 0013). It reads
 the same token ring and publishes output directly for kernel TX. The host
-only initializes and shuts down. This is sequential token-ID TCP, with the
-listener-backlog lifecycle limitation described in the finding; HTTP and
-GPU text processing remain open.
+only initializes and shuts down. Kernel accept and receive draining manage
+connection lifetime. This is sequential token-ID TCP; HTTP and GPU text
+processing remain open.
 
 ## Ownership rules (the correctness core)
 

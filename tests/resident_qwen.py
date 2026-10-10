@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Resident CUDA Qwen vs eager HF fp16 greedy oracle on real TCP replies."""
 import gc
+import re
 import socket
 import struct
 import subprocess
@@ -33,19 +34,19 @@ def main():
     print("HF eager fp16 oracle ready, model released",flush=True)
     subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
     subprocess.run(["./build/bpfusion_load","attach","lo"],check=True)
-    loaded=False
     executor=None
     logpath="/tmp/bpfusion-resident-qwen.log"
     try:
-        subprocess.run(["./build/bpfusion_load","tx-load"],check=True)
-        loaded=True
         with open(logpath,"w") as log:
-            executor=subprocess.Popen(["./build/qwen","/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","300"],stdout=log,stderr=subprocess.STDOUT)
+            executor=subprocess.Popen(["strace","-D","-f","-e","trace=network,write","-o","/tmp/bpfusion-qwen-network.trace","./build/qwen","/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","300"],stdout=log,stderr=subprocess.STDOUT)
         start=time.monotonic()
         while "resident Qwen ready" not in open(logpath).read():
             if executor.poll() is not None or time.monotonic()-start>60:
                 raise AssertionError(open(logpath).read())
             time.sleep(.1)
+        for _ in range(5000):
+            socket.create_connection(("127.0.0.1",39403),timeout=5).close()
+        print("PASS 5000 empty connections accepted/drained by kernel; exceeds undrained listener backlog",flush=True)
         for repetition in range(3):
             for idx,(ids,expected) in enumerate(cases):
                 with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
@@ -65,8 +66,10 @@ def main():
         if executor is not None:
             executor.terminate(); executor.wait()
             print(open(logpath).read(),flush=True)
-        if loaded:
-            subprocess.run(["rmmod","bfusion_tx"],check=True)
+            trace=open("/tmp/bpfusion-qwen-network.trace").read()
+            active=trace.split("resident Qwen ready",1)[1]
+            assert not re.search(r"\b(?:accept4?|recvfrom|recvmsg|recvmmsg|sendto|sendmsg|sendmmsg)\(",active),active
+            print("PASS traced all executor threads: no accept/receive/send syscalls after ready",flush=True)
         subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
 
 

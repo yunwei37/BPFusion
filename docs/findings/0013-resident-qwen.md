@@ -61,3 +61,26 @@ kernel acceptance and receive-buffer cleanup are the next lifecycle repair.
 The TX module still polls the completion page rather than using a GPU
 completion interrupt. This is real resident-model inference with kernel TCP
 replies on a pretokenized sequential loopback path, not the full service goal.
+
+## Follow-up: kernel-owned connection lifecycle
+
+The launcher now passes its map and listener FDs to module initialization.
+The module pins the listener file with sockfd_lookup, accepts connections
+with kernel_accept, and drains already-ingested request bytes with
+nonblocking kernel_recvmsg. Accepted sockets stay kernel-owned until EOF
+after their slot finishes or a terminal receive error. Shutdown releases
+all accepted sockets and the listener reference. The launcher unloads its
+module after the resident kernel has stopped. No userspace accept loop was
+added. This replaces the undrained-backlog limitation of the initial run.
+
+Reproduction uses the same test command and additionally requires `strace`.
+The updated test first opens/closes 5,000 empty connections (beyond Linux's
+SOMAXCONN listen backlog), then repeats the 12 exact Qwen requests. Raw logs:
+[accept/trace control](../../bench/results/resident_qwen_accept_trace_20261010.txt),
+[executor syscalls after ready](../../bench/results/resident_qwen_network_20261010.txt).
+All 96 tokens still match HF eager. Module counters show accepted=5012,
+closed=5012, completed=12 and 384 output bytes. Strace follows all executor
+threads and finds no accept/receive/send syscalls after ready. The earlier
+[accept-only run](../../bench/results/resident_qwen_accept_20261010.txt) also
+matched 96 tokens and closed all 12 connections. Split/retransmitted stream
+input, HTTP/text processing and the other limitations above remain open.

@@ -7,6 +7,8 @@
 #include <bpf/bpf.h>
 #include <sys/mman.h>
 #include <sys/socket.h>
+#include <sys/syscall.h>
+#include <fcntl.h>
 #include <netinet/in.h>
 #include <unistd.h>
 #include <cstdio>
@@ -225,7 +227,7 @@ int main(int argc,char **argv) {
     alloc(&s.keys,(size_t)c.layers*CTX*kv); alloc(&s.values,(size_t)c.layers*CTX*kv);
     int fd=bpf_obj_get("/sys/fs/bpf/bpfusion_ctl"); if(fd<0) { perror("bpf_obj_get"); return 1; }
     auto *page=(bf_page *)mmap(nullptr,BF_PAGE_MMAP_BYTES,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
-    close(fd); if(page==MAP_FAILED) { perror("mmap"); return 1; }
+    if(page==MAP_FAILED) { perror("mmap"); return 1; }
     CUDA(cudaHostRegister(page,BF_PAGE_MMAP_BYTES,cudaHostRegisterMapped));
     bf_page *device; CUDA(cudaHostGetDevicePointer((void **)&device,page,0));
     int listener=socket(AF_INET,SOCK_STREAM,0), yes=1;
@@ -233,15 +235,22 @@ int main(int argc,char **argv) {
     sockaddr_in addr={}; addr.sin_family=AF_INET; addr.sin_port=htons(BF_LLM_TCP_PORT);
     addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
     if(bind(listener,(sockaddr *)&addr,sizeof(addr)) || listen(listener,SOMAXCONN)) { perror("listen"); return 1; }
-    // Listener creation is bootstrap only. No host accept/read/send loop.
+    // Listener creation is bootstrap only. The module owns accept and RX drain.
     __atomic_store_n(&page->stop_ns,0,__ATOMIC_RELEASE);
     resident<<<1,256>>>(device,m,s); CUDA(cudaGetLastError());
+    int module=open("module/bfusion_tx.ko",O_RDONLY|O_CLOEXEC);
+    if(module<0) { perror("module open"); return 1; }
+    char params[80]; snprintf(params,sizeof(params),"map_fd=%d listen_fd=%d",fd,listener);
+    if(syscall(SYS_finit_module,module,params,0)) { perror("finit_module"); return 1; }
+    close(module); close(fd);
     printf("resident Qwen ready: %u layers h=%u vocab=%u; one launch, no host request worker\n",c.layers,c.h,c.vocab);
     fflush(stdout);
     sleep(argc>2 ? atoi(argv[2]) : 60);
     __atomic_store_n(&page->stop_ns,1,__ATOMIC_RELEASE);
-    CUDA(cudaDeviceSynchronize());
+    cudaError_t finished=cudaDeviceSynchronize();
+    if(syscall(SYS_delete_module,"bfusion_tx",0)) { perror("delete_module"); return 1; }
     close(listener);
+    CUDA(finished);
     CUDA(cudaHostUnregister(page)); munmap(page,BF_PAGE_MMAP_BYTES);
     printf("resident Qwen stopped\n");
     return 0;

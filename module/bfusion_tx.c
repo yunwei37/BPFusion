@@ -5,6 +5,9 @@
 #include <linux/kthread.h>
 #include <linux/delay.h>
 #include <linux/bpf.h>
+#include <linux/file.h>
+#include <linux/net.h>
+#include <net/inet_sock.h>
 #include <linux/nsproxy.h>
 #include <linux/uio.h>
 #include <net/inet_hashtables.h>
@@ -20,6 +23,13 @@ MODULE_PARM_DESC(map_fd, "BPF map FD in the loading process (use bpfusion_load t
 static u32 reply_addr = 0x0100007fu;
 module_param(reply_addr, uint, 0444);
 MODULE_PARM_DESC(reply_addr, "local server IPv4 address, network order");
+static int listen_fd = -1;
+module_param(listen_fd, int, 0400);
+MODULE_PARM_DESC(listen_fd, "optional bootstrap listener FD for kernel accept/drain");
+static struct socket *listener;
+struct peer { struct list_head node; struct socket *socket; };
+static LIST_HEAD(peers);
+static unsigned long accepted, closed;
 static struct net *bf_net;
 static struct task_struct *tx_task;
 static struct bpf_map *page_map;
@@ -105,9 +115,66 @@ static void poll_slot(u32 idx)
 	}
 }
 
+/* The bootstrap process owns the listener file; sockfd_lookup pins it.
+ * Accepted sockets and receive-buffer draining are entirely kernel-owned. */
+static bool peer_pending(struct sock *sk)
+{
+	struct inet_sock *inet = inet_sk(sk);
+
+	for (u32 i = 0; i < BF_LLM_SLOTS; i++) {
+		struct bf_llm_slot *s = &page->llm[i];
+		u32 state = smp_load_acquire(&s->state);
+
+		if (state != BF_FREE && s->pad == 1 &&
+		    s->addr_be == (__force u32)inet->inet_daddr &&
+		    s->port_be == (__force u16)inet->inet_dport)
+			return true;
+	}
+	return false;
+}
+
+static void accept_and_drain(void)
+{
+	struct socket *socket;
+	struct peer *peer, *next;
+
+	if (!listener)
+		return;
+	while (kernel_accept(listener, &socket, O_NONBLOCK) == 0) {
+		peer = kmalloc(sizeof(*peer), GFP_KERNEL);
+		if (!peer) {
+			sock_release(socket);
+			continue;
+		}
+		peer->socket = socket;
+		list_add_tail(&peer->node, &peers);
+		accepted++;
+	}
+	list_for_each_entry_safe(peer, next, &peers, node) {
+		char discard[256];
+		struct kvec vec = { .iov_base = discard, .iov_len = sizeof(discard) };
+		int ret;
+
+		do {
+			struct msghdr msg = {};
+
+			ret = kernel_recvmsg(peer->socket, &msg, &vec, 1,
+					     sizeof(discard), MSG_DONTWAIT);
+		} while (ret > 0);
+		if ((ret == 0 && !peer_pending(peer->socket->sk)) ||
+		    (ret < 0 && ret != -EAGAIN && ret != -EWOULDBLOCK)) {
+			list_del(&peer->node);
+			sock_release(peer->socket);
+			kfree(peer);
+			closed++;
+		}
+	}
+}
+
 static int tx_thread(void *unused)
 {
 	while (!kthread_should_stop()) {
+		accept_and_drain();
 		for (u32 i = 0; i < BF_LLM_SLOTS; i++)
 			poll_slot(i);
 		usleep_range(60, 120);
@@ -134,16 +201,32 @@ static int __init bf_init(void)
 	array = container_of(page_map, struct bpf_array, map);
 	page = (struct bf_page *)array->value;
 	bf_net = get_net(current->nsproxy->net_ns);
+	if (listen_fd >= 0) {
+		listener = sockfd_lookup(listen_fd, &err);
+		if (!listener)
+			goto out_net;
+		if (listener->type != SOCK_STREAM || listener->sk->sk_protocol != IPPROTO_TCP ||
+		    listener->sk->sk_state != TCP_LISTEN ||
+		    inet_sk(listener->sk)->inet_num != BF_LLM_TCP_PORT ||
+		    !net_eq(sock_net(listener->sk), bf_net)) {
+			err = -EINVAL;
+			goto out_listener;
+		}
+	}
 	tx_task = kthread_run(tx_thread, NULL, "bfusion_tx");
 	if (IS_ERR(tx_task)) {
 		err = PTR_ERR(tx_task);
-		put_net(bf_net);
-		goto out_map;
+		goto out_listener;
 	}
 	pr_info("bfusion_tx: map id=%u size=%u ring=%zu slot=%zu net=%u\n",
 		page_map->id, page_map->value_size, offsetof(struct bf_page, llm),
 		sizeof(struct bf_llm_slot), bf_net->ns.inum);
 	return 0;
+out_listener:
+	if (listener)
+		sockfd_put(listener);
+out_net:
+	put_net(bf_net);
 out_map:
 	bpf_map_put(page_map);
 	return err;
@@ -151,14 +234,23 @@ out_map:
 
 static void __exit bf_exit(void)
 {
+	struct peer *peer, *next;
+
 	kthread_stop(tx_task);
+	list_for_each_entry_safe(peer, next, &peers, node) {
+		list_del(&peer->node);
+		sock_release(peer->socket);
+		kfree(peer);
+	}
+	if (listener)
+		sockfd_put(listener);
 	for (u32 i = 0; i < BF_LLM_SLOTS; i++)
 		if (tx[i].sk)
 			sock_put(tx[i].sk);
 	bpf_map_put(page_map);
 	put_net(bf_net);
-	pr_info("bfusion_tx: exit bytes=%lu completed=%lu abandoned=%lu retries=%lu\n",
-		sent_bytes, completions, abandoned, retries);
+	pr_info("bfusion_tx: exit bytes=%lu completed=%lu abandoned=%lu retries=%lu accepted=%lu closed=%lu\n",
+		sent_bytes, completions, abandoned, retries, accepted, closed);
 }
 module_init(bf_init);
 module_exit(bf_exit);

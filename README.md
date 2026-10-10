@@ -19,7 +19,7 @@ separate when reading any result:
 |---|---|---|---|---|
 | **Synthetic MLP** — [`executor/executor.cu`](executor/executor.cu) | UDP `:39400` -> tc/clsact ingress -> page | **one resident CUDA kernel**, launched once, spins on the page; no per-request/per-batch host launch or control call | userspace responder `sendto()` per reply | reference/intermediate: proves the resident-kernel + page mechanism (not yet a no-userspace-worker path) |
 | **Real LLM** — [`executor/llm_executor.py`](executor/llm_executor.py) | UDP `:39402` or TCP `:39403` -> tc ingress -> token ring | **host Python + HF `transformers`** on Qwen (prefill + batch-1 decode); prefill/decode run on the GPU, but host code drives every step | UDP: client polls `produced`; TCP: `send()` on the accepted socket | host-driven baseline, labelled as such; this is where TTFT/TPOT evidence comes from |
-| **Resident Qwen reference** — [`executor/qwen.cu`](executor/qwen.cu) | TCP token IDs -> tc ingress -> page | **one resident CUDA kernel** executes real prefill/decode/KV/argmax | kernel TCP TX | correctness reference: 12 requests/96 tokens agree with eager HF; one CTA, sequential token protocol, listener backlog not drained |
+| **Resident Qwen reference** — [`executor/qwen.cu`](executor/qwen.cu) | TCP token IDs -> tc ingress -> page | **one resident CUDA kernel** executes real prefill/decode/KV/argmax | kernel TCP TX | correctness reference: 12 requests/96 tokens agree with eager HF; one CTA, sequential token protocol, kernel accept/drain |
 
 In the synthetic MLP path the no-userspace-worker property covers only GPU
 compute; even there a userspace responder thread still `sendto()`s every
@@ -35,7 +35,7 @@ intermediate, not the no-userspace-worker goal. See [finding 0012](docs/findings
 The resident Qwen reference now proves token-ID TCP -> resident real model
 -> kernel TCP replies on sequential loopback requests ([0013](docs/findings/0013-resident-qwen.md)).
 The full goal still needs `sockmap` framing, HTTP/text input, GPU-side
-tokenize/detokenize, continuous batching, connection lifecycle and real-NIC measurement. See
+tokenize/detokenize, continuous batching and real-NIC measurement. See
 [docs/architecture.md](docs/architecture.md) and the finding index below.
 
 ## Repository layout

@@ -1,0 +1,24 @@
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 5321.93it/s]
+HF eager fp16 oracle ready, model released
+detached from lo
+libbpf: Kernel error message: Exclusivity flag on, cannot modify
+attached to lo (prog_id 3992), ctl map id=801 size=17336 page=0x7829e9be4000
+rep=0 case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304] seconds=1.399
+rep=0 case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17] seconds=1.690
+rep=0 case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] seconds=1.399
+rep=0 case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] seconds=1.108
+rep=1 case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304] seconds=1.399
+rep=1 case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17] seconds=1.690
+rep=1 case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] seconds=1.399
+rep=1 case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] seconds=1.107
+rep=2 case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304] seconds=1.399
+rep=2 case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17] seconds=1.691
+rep=2 case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40] seconds=1.399
+rep=2 case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429] seconds=1.107
+PASS 12 TCP requests, 96 real Qwen greedy tokens, one CUDA launch, no host accept/read/send worker
+resident Qwen ready: 24 layers h=896 vocab=151936; one launch, no host request worker
+resident Qwen stopped
+
+detached from lo
+[29350.154537] bfusion_tx: map id=801 size=17336 ring=12856 slot=560 net=4026533518
+[29366.982272] bfusion_tx: exit bytes=384 completed=12 abandoned=0 retries=0 accepted=12 closed=12
