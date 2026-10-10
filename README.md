@@ -145,6 +145,12 @@ per-lane,attention per-lane and combined slicing. None qualifies the complete
 fixed token reference; partial recoveries and new divergences rule out
 promoting these slices directly to tensor-batched serving. Full actual outputs
 remain in finding0023; no serving-speed result or production change follows.
+A fixed-history follow-up reproduces the selected prior prediction differences
+and localizes first observed unequal outputs to normalization,projection or
+attention boundaries depending on the condition. Some early byte differences
+do not change greedy tokens. Saved CPU arrays permit independent checks of
+earliest/previous pairs;the result guides batching implementation without
+establishing a unique numerical cause or qualifying a serving candidate.
 A subsequent device-graph activity diagnostic in finding0023 captures complete
 model-kernel record counts: one client has no overlapping model kernels,
 while eight clients show up to eight distinct execution graphs overlapping.

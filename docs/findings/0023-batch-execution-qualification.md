@@ -761,3 +761,183 @@ original function restoration and cleanup are independently verified.
 The historical control is a source/numerical control,not randomized
 performance evidence. No invalidating defect is found. Close this matrix,
 retain all failures,and do not promote any variant or relax the reference.
+
+## Fixed-history first-difference diagnostic for tensor batching
+
+The completed99-group slicing qualification supplies new contrasts but no
+complete candidate. Switching Linear/attention boundary changes failures
+non-monotonically; another whole-model patch would still lack a causal
+discriminator. The next uncertainty is the earliest observed model boundary
+where batched and independent batch1 arithmetic differ when token histories
+are held identical. This dependency supports actual shared-weight batching
+development under the unchanged user performance goal; it is not a new RQ,
+standalone serving experiment or speed result.
+
+Use unchanged real eager-fp16 weights/loader and independent oracle computed
+before hooks. Reuse the complete ordinary and slicing raws as numerical
+controls. Choose three existing contrasting conditions:case2/greeting at
+batch2 through output62,case4/one-token prompt at batch4 through output31,
+and case0/France at batch8 through output13. Their ordinary and sliced first
+greedy mismatch positions are already measured. Include all four original
+computations:ordinary,linear_slice,attention_slice,both. No new arithmetic
+candidate,precision or production fusion is introduced.
+
+For each case,first execute a batch1 reference one prefill then ordinary
+incremental decode with fresh DynamicCache. At every step,feed the previous
+independent oracle token. Require all reference predictions to match that
+oracle. The candidate jobs similarly begin with fresh independent lanes and
+feed the identical oracle history,even after a prediction diverges. This
+prevents different generated histories from masquerading as a computational
+cause. It is teacher-forced diagnosis,not actual generated serving sequences.
+
+Use standard torch.nn.Module forward pre/post hooks on Embedding,Linear and
+Qwen2RMSNorm,plus the RotaryEmbedding outputs. A transparent wrapper records
+HF eager attention's query/key/value/mask/output/scores while calling the
+selected original/sliced function without changing its math. Capture tensor
+shape,stride,dtype and an immediate CPU copy of lane0 (or shared first lane).
+Do not retain GPU tensor owners or clone tensors on-device; hooks return None
+and never replace module inputs/outputs. Original sliced functions remain
+the previously completed implementations. Verify matching tap order and
+compare CPU values byte-for-byte. This is the first differing *instrumented
+boundary*,not the first CUDA instruction or every internal operation.
+
+Full matrix:three cases109 reference steps plus four variants436 steps,
+545 actual model forwards. Preserve every step,all candidate lane predictions,
+different-boundary labels/counts,first differing label/shape/stride and
+first token-prediction difference. Record whether each condition reproduces
+its prior first greedy difference within the observed prefix.
+If instrumentation fails that identity control,the corresponding inference
+about the original execution is inconclusive;keep its raw,do not silently
+substitute a different tensor or expected position.
+Preflight uses greeting/batch2 prefill only:one reference and four candidate
+forwards. It establishes real hooks,data path and output executability;
+it does not qualify the full matrix or establish a root cause.
+
+Ordinary logs retain every comparison summary. Save the actual CPU arrays
+for the earliest differing boundary and immediately preceding boundary in
+a standard compressed NumPy npz archive,with names linked from raw. These
+are synthetic-public-input activations,not model parameters/weights.
+Independent CPU review can recompute those stored comparisons;all other
+tap equality summaries remain instrument-reported,not an independently
+archived full activation trace. This avoids claiming deeper fidelity than
+the retained evidence supports. No SHA/checksum gate or control framework.
+
+The result determines which specific component/input-layout must be examined
+before another batch implementation. Equal inputs but unequal outputs at an
+instrumented module support examining that module's arithmetic/layout;an
+earlier unequal input prevents blaming its later output. A matching prefix
+with differing token choice later prioritizes the first recorded divergent
+step/boundary. No observed difference leaves this diagnosis inconclusive.
+None of these outcomes qualifies a Tensor Core/batched-GEMV or TCP candidate
+or establishes bandwidth,speed,total CPU,energy,NIC or SOTA superiority.
+
+Exact source/commands are frozen in
+[adapter](../../bench/results/qwen_batch_first_difference_adapter_20261010.txt).
+Commands from repository root:
+HF_HOME=/workspaces/.cache/huggingface python3
+/tmp/bpfusion-qwen-pointwise-5mxeys8g/trace_batch_first_difference.py --preflight
+then the same command without --preflight.
+Preflight/full logs and their standard arrays archives use distinct
+qwen_batch_first_difference filenames in ordinary bench/results.
+Run after the preceding completed qualification has released resources.
+Record source/version,host residency/boot and normal cleanup;preserve the
+other owner and unchanged production/native/test source. Fresh plan and
+terminal result review apply. Shared hardware,hook synchronization,
+lane0 observation,limited chosen prefixes and module-level boundaries
+limit causal interpretation;this host diagnostic is not worker-free service.
+
+Fresh read-only plan review admits the fixed-history diagnostic. It
+independently confirms contrasted prior failures,109+436 forward counts,
+independent oracle,teacher-forced fresh KV,actual transparent hooks,
+matching tap order and immediate CPU-only snapshots.
+The earliest boundary can be harmless rounding rather than the unique cause
+of a later token difference. A prior passing condition's reproduction means
+agreement only in its observed prefix. NPZ permits independent checks only
+of the saved earliest/previous pair;other tap summaries and lane0 scope
+remain explicit. No additional gate or baseline is needed.
+
+Real preflight completed normally with EXIT0:one independent reference and
+four candidate forwards,all next-token predictions matching the oracle.
+For all four variants the first observed difference was prefill step0 at
+model.layers.9.input_layernorm.output,with2 differing bytes and maximum
+absolute difference0.0009765625;the immediately preceding norm input was
+byte-identical. Reference shape1x5x896 and candidate2x5x896 had lane stride
+4480,896,1. This establishes the executable diagnostic and a module-level
+numerical boundary only,not the full matrix or the cause of later greedy
+choices. The preflight preserves16 CPU arrays in its NPZ archive.
+
+Before full execution,the first SSH observation timed out without launching
+an experiment. Tailscale ping subsequently answered;real SSH returned the
+same lab boot04dc0087-5ccc-4c46-9997-b9a92f0e5167 and Kubernetes reported
+Ready. No reboot,service interruption or runtime configuration change was
+performed. This transient management-path failure did not restart a run.
+
+### Completed fixed-history result
+
+Full collection reached BATCH_FIRST_DIFFERENCE_COMPLETE and EXIT0:
+109 batch1 reference forwards plus436 candidate forwards,12 complete conditions,
+1464 recorded candidate lane predictions and584 taps per forward. All reference
+checks match the independent oracle. CPU analysis independently reconstructs
+all lane prediction differences,verifies12/12 prior first-greedy-prefix identities
+and recomputes all44 saved earliest/previous arrays (299246-byte NPZ).
+Preflight's16 arrays are also recomputed. No condition or step is excluded.
+
+| Case / batch | Variant | First observed boundary (step) | Different bytes / max abs | First token difference |
+|---|---|---|---|---|
+| 2 / 2 | ordinary | model.layers.9.input_layernorm.output (0) | 2 / 0.0009765625 | 62 |
+| 2 / 2 | linear_slice | model.layers.9.input_layernorm.output (0) | 2 / 0.0009765625 | None |
+| 2 / 2 | attention_slice | model.layers.9.input_layernorm.output (0) | 2 / 0.0009765625 | 62 |
+| 2 / 2 | both | model.layers.9.input_layernorm.output (0) | 2 / 0.0009765625 | 62 |
+| 4 / 4 | ordinary | model.layers.0.self_attn.q_proj.output (0) | 5 / 0.00048828125 | 31 |
+| 4 / 4 | linear_slice | model.layers.5.self_attn.core.output (4) | 43 / 1.52587890625e-05 | 31 |
+| 4 / 4 | attention_slice | model.layers.0.self_attn.q_proj.output (0) | 5 / 0.00048828125 | 31 |
+| 4 / 4 | both | none in observed prefix | none | None |
+| 0 / 8 | ordinary | model.layers.0.self_attn.q_proj.output (0) | 770 / 0.015625 | None |
+| 0 / 8 | linear_slice | model.layers.0.post_attention_layernorm.output (0) | 1 / 0.000244140625 | 13 |
+| 0 / 8 | attention_slice | model.layers.0.self_attn.q_proj.output (0) | 770 / 0.015625 | None |
+| 0 / 8 | both | model.layers.0.post_attention_layernorm.output (0) | 1 / 0.000244140625 | 13 |
+
+All candidate lanes share the recorded first prediction-difference index in
+these selected conditions. None means agreement only in the observed prefix.
+For every saved norm/projection pair,the saved input is byte-identical and
+output differs. For case4/linear_slice,the immediately preceding saved pair
+is the attention mask,not all attention inputs;Q/K/V equality there follows
+from the instrument-reported matching earlier tap summaries,not separately
+archived Q/K/V arrays. Case4/both has no observed tensor difference across
+its32-step prefix. The full trace therefore identifies multiple observed
+component boundaries:normalization,projection and attention.
+
+Early byte differences are not necessarily sufficient to change greedy output:
+case2/linear_slice differs at the same norm boundary but does not change token
+choice in its63-step prefix;case0/ordinary has770 differing bytes at Q output
+but no prediction difference in14 steps. Conversely,case0/linear_slice and
+both first differ by one byte at post-attention norm and later change output13.
+Do not infer a unique cause,causal necessity/sufficiency or error probability
+from these associations. This is finite teacher-forced,lane0 boundary diagnosis;
+it does not qualify autoregressive tensor batching,captured/shared-KV math,TCP,
+serving speed,bandwidth,energy,total CPU or optimized-serving superiority.
+Only the saved earliest/previous comparisons are independently recoverable;
+all other activation equality summaries and reference-oracle assertions remain
+instrument/source-reported. This is dependency-only evidence guiding the next
+implementation,not a standalone research contribution.
+
+Raw [full](../../bench/results/qwen_batch_first_difference_20261010.txt),
+[preflight](../../bench/results/qwen_batch_first_difference_preflight_20261010.txt),
+[analysis](../../bench/results/qwen_batch_first_difference_analysis_20261010.txt),
+[full arrays](../../bench/results/qwen_batch_first_difference_arrays_20261010.npz),
+[preflight arrays](../../bench/results/qwen_batch_first_difference_preflight_arrays_20261010.npz)
+and [environment](../../bench/results/qwen_batch_first_difference_environment_20261010.txt)
+retain commands and finite scope. Actual source is frozen in the adapter.
+After collection,the owned process is absent;lab boot is unchanged and the
+same SGLang owner732929/18404MiB remains. Production/native/test source is
+unchanged;no candidate is promoted by this diagnosis.
+
+Fresh independent terminal result review finds the run valid and complete,
+with no invalidating defect. It independently recomputes all candidate lane
+predictions,prior prefix identities and44 full plus16 preflight arrays,and
+confirms transparent hooks,fresh KV,fixed history and source preservation.
+Localization to multiple observed boundaries is supported;unique later-token
+causation remains inconclusive. Research value is dependency-only,with a
+mechanism/workload boundary and no speed or serving qualification claim.
+The next decision is a distinct arithmetic/layout implementation based on
+these boundaries,not another unchanged diagnostic or oracle relaxation.

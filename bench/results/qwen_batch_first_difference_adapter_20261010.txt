@@ -1,0 +1,205 @@
+Preparation commit: c281f0d888de93f893e83517546598bb41eecfaa
+Exact source:
+from pathlib import Path
+import os,sys,json,argparse
+import numpy as np
+import torch,transformers
+sys.path.insert(0,'/workspaces/repository/tests')
+sys.path.insert(0,'/workspaces/repository/executor')
+os.chdir('/workspaces/repository')
+from resident_qwen import oracle_cases
+from qwen_graph import load_model
+from transformers.models.qwen2 import modeling_qwen2 as qwen2
+args=argparse.ArgumentParser();args.add_argument('--preflight',action='store_true');args=args.parse_args()
+cases,vocab=oracle_cases(64,True)
+print('independent_batch1_oracle '+json.dumps(cases),flush=True)
+print('versions '+json.dumps({'torch':torch.__version__,'transformers':transformers.__version__}),flush=True)
+original_linear=torch.nn.Linear.forward
+original_attention=qwen2.eager_attention_forward
+calls={}
+def sliced_linear(self,x):
+    if x.ndim==3 and x.shape[0]>1:
+        return torch.cat([original_linear(self,x[i:i+1]) for i in range(x.shape[0])],dim=0)
+    return original_linear(self,x)
+def sliced_attention(module,query,key,value,attention_mask,scaling,dropout=0.0,**kwargs):
+    if query.shape[0]==1:return original_attention(module,query,key,value,attention_mask,scaling,dropout,**kwargs)
+    batch=query.shape[0];outputs=[];scores=[]
+    assert key.shape[0]==value.shape[0]==batch
+    assert attention_mask is None or attention_mask.shape[0] in (1,batch)
+    for i in range(batch):
+        mask=attention_mask if attention_mask is None or attention_mask.shape[0]==1 else attention_mask[i:i+1]
+        output,score=original_attention(module,query[i:i+1],key[i:i+1],value[i:i+1],mask,scaling,dropout,**kwargs)
+        outputs.append(output);scores.append(score)
+    return torch.cat(outputs,dim=0),torch.cat(scores,dim=0)
+tape=[];batch_size=1;arrays={}
+def tap(label,tensor):
+    if tensor is None:
+        tape.append((label,{'value':None,'shape':None,'stride':None,'dtype':None}));return
+    assert tensor.ndim and tensor.shape[0] in (1,batch_size),(label,tensor.shape,batch_size)
+    lane=tensor[:1]
+    tape.append((label,{'value':lane.detach().cpu().clone(),'shape':list(tensor.shape),'stride':list(tensor.stride()),'lane_stride':list(lane.stride()),'dtype':str(tensor.dtype)}))
+selected_attention=original_attention
+def traced_attention(module,query,key,value,attention_mask,scaling,dropout=0.0,**kwargs):
+    label='model.layers.'+str(module.layer_idx)+'.self_attn.core'
+    for suffix,value_in in [('query',query),('key',key),('value',value),('mask',attention_mask)]:tap(label+'.'+suffix,value_in)
+    output,score=selected_attention(module,query,key,value,attention_mask,scaling,dropout,**kwargs)
+    tap(label+'.output',output);tap(label+'.scores',score)
+    return output,score
+def metadata(row):return {k:v for k,v in row.items() if k!='value'}
+def same(a,b):
+    if a is None or b is None:return a is None and b is None
+    return a.shape==b.shape and a.dtype==b.dtype and torch.equal(a.contiguous().view(torch.uint8),b.contiguous().view(torch.uint8))
+def first_detail(label,a,b):
+    info={'label':label,'reference':metadata(a),'candidate':metadata(b)}
+    av,bv=a['value'],b['value']
+    if av is not None and bv is not None and av.shape==bv.shape and av.dtype==bv.dtype:
+        different=av.contiguous().view(torch.uint8)!=bv.contiguous().view(torch.uint8)
+        info['different_bytes']=int(different.sum())
+        info['max_abs_difference']=float((av.double()-bv.double()).abs().max())
+    return info
+def read_rows(path):return [json.loads(s) for s in Path(path).read_text().splitlines() if s.startswith('{')]
+prior={'ordinary':read_rows('bench/results/qwen_batch_shape_qualification_20261010.txt')}
+prior.update({v:[r for r in read_rows('bench/results/qwen_batch_causal_20261010.txt') if r['variant']==v] for v in ('linear_slice','attention_slice','both')})
+def expected_first(variant,batch,case):
+    row=next(r for r in prior[variant] if (r['batch'],r['group'])==(batch,str(case)))
+    return next((m['first_index'] for m in row['mismatches'] if m['lane']==0),None)
+with torch.no_grad():
+    model=load_model('/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin');handles=[]
+    for name,module in model.named_modules():
+        if isinstance(module,(torch.nn.Linear,torch.nn.Embedding,qwen2.Qwen2RMSNorm)):
+            handles.append(module.register_forward_pre_hook(lambda m,x,n=name:tap(n+'.input',x[0])))
+            handles.append(module.register_forward_hook(lambda m,x,y,n=name:tap(n+'.output',y)))
+        if isinstance(module,qwen2.Qwen2RotaryEmbedding):
+            handles.append(module.register_forward_hook(lambda m,x,y,n=name:(tap(n+'.cos',y[0]),tap(n+'.sin',y[1])) and None))
+    qwen2.eager_attention_forward=traced_attention
+    jobs=[(2,2,1)] if args.preflight else [(2,2,63),(4,4,32),(0,8,14)]
+    for case,batch,steps in jobs:
+        reference=[]
+        batch_size=1;torch.nn.Linear.forward=original_linear;selected_attention=original_attention
+        past=None
+        for step in range(steps):
+            tape=[]
+            tokens=[cases[case][0]] if step==0 else [[cases[case][1][step-1]]]
+            output=model(torch.tensor(tokens,device='cuda'),past_key_values=past,use_cache=True,logits_to_keep=1)
+            past=output.past_key_values
+            predicted=int(output.logits[:,-1,:].argmax(-1).cpu()[0])
+            assert predicted==cases[case][1][step],(case,step,predicted)
+            reference.append(tape)
+        print('reference '+json.dumps({'case':case,'steps':steps,'all_oracle_match':True,'tap_counts':[len(t) for t in reference],'tap_order':[label for label,_ in reference[0]]}),flush=True)
+        for variant in ('ordinary','linear_slice','attention_slice','both'):
+            batch_size=batch;torch.nn.Linear.forward=sliced_linear if variant in ('linear_slice','both') else original_linear
+            selected_attention=sliced_attention if variant in ('attention_slice','both') else original_attention
+            past=None;first_boundary=None;first_token=None
+            for step in range(steps):
+                tape=[]
+                tokens=[cases[case][0]]*batch if step==0 else [[cases[case][1][step-1]]]*batch
+                output=model(torch.tensor(tokens,device='cuda'),past_key_values=past,use_cache=True,logits_to_keep=1)
+                past=output.past_key_values
+                predictions=output.logits[:,-1,:].argmax(-1).cpu().tolist()
+                ref=reference[step]
+                assert [label for label,_ in tape]==[label for label,_ in ref]
+                differences=[j for j,((_,a),(_,b)) in enumerate(zip(ref,tape)) if not same(a['value'],b['value'])]
+                detail=first_detail(ref[differences[0]][0],ref[differences[0]][1],tape[differences[0]][1]) if differences else None
+                if differences and first_boundary is None:
+                    j=differences[0];first_boundary={'step':step,**detail}
+                    key='case'+str(case)+'_'+variant
+                    for suffix,index in [('first',j),('previous',j-1)]:
+                        if index<0:continue
+                        label,a=ref[index];b=tape[index][1]
+                        if a['value'] is not None and b['value'] is not None:
+                            rk,ck=key+'_'+suffix+'_reference',key+'_'+suffix+'_candidate'
+                            arrays[rk]=a['value'].numpy();arrays[ck]=b['value'].numpy()
+                            first_boundary[suffix+'_arrays']={'label':label,'reference':rk,'candidate':ck,'equal':same(a['value'],b['value'])}
+                if predictions[0]!=cases[case][1][step] and first_token is None:first_token=step
+                print(json.dumps({'event':'step','case':case,'batch':batch,'variant':variant,'step':step,'expected':cases[case][1][step],'predictions':predictions,'taps':len(tape),'different_taps':len(differences),'first_difference':detail,'different_labels':[ref[j][0] for j in differences]}),flush=True)
+            prior_first=expected_first(variant,batch,case)
+            observed_prior=prior_first if prior_first is not None and prior_first<steps else None
+            print(json.dumps({'event':'condition','case':case,'batch':batch,'variant':variant,'steps':steps,'first_boundary':first_boundary,'first_token_difference':first_token,'prior_greedy_first':prior_first,'prior_first_reproduced':first_token==observed_prior}),flush=True)
+        del reference,tape,past,output
+    for handle in handles:handle.remove()
+torch.nn.Linear.forward=original_linear;qwen2.eager_attention_forward=original_attention
+array_path='bench/results/qwen_batch_first_difference_'+('preflight_' if args.preflight else '')+'arrays_20261010.npz'
+np.savez_compressed(array_path,**arrays)
+print('arrays '+json.dumps({'path':array_path,'keys':list(arrays),'bytes':Path(array_path).stat().st_size}),flush=True)
+print('BATCH_FIRST_DIFFERENCE_COMPLETE',flush=True)
+
+Preflight command: HF_HOME=/workspaces/.cache/huggingface python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/trace_batch_first_difference.py --preflight
+Full command: HF_HOME=/workspaces/.cache/huggingface python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/trace_batch_first_difference.py
+
+CPU analyzer frozen before execution 2026-10-10T22:56:11.768718+00:00
+COMMAND python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/analyze_batch_first_difference.py
+from pathlib import Path
+import os,json
+from collections import Counter
+import numpy as np
+os.chdir('/workspaces/repository')
+def rows(path):
+    return [json.loads(s) for s in Path(path).read_text().splitlines() if s.startswith('{')]
+def oracle(lines):
+    return json.loads(next(s.split(' ',1)[1] for s in lines if s.startswith('independent_batch1_oracle ')))
+prior={'ordinary':rows('bench/results/qwen_batch_shape_qualification_20261010.txt')}
+slices=rows('bench/results/qwen_batch_causal_20261010.txt')
+prior.update({v:[r for r in slices if r['variant']==v] for v in ('linear_slice','attention_slice','both')})
+variants=('ordinary','linear_slice','attention_slice','both')
+for stage,jobs in [('preflight',[(2,2,1)]),('full',[(2,2,63),(4,4,32),(0,8,14)])]:
+    stem='qwen_batch_first_difference_'+('preflight_' if stage=='preflight' else '')
+    p=Path('bench/results')/(stem+'20261010.txt');lines=p.read_text().splitlines()
+    assert 'BATCH_FIRST_DIFFERENCE_COMPLETE' in lines and lines[-1]=='EXIT 0'
+    cases=oracle(lines)
+    assert cases==oracle(Path('bench/results/qwen_batch_shape_qualification_20261010.txt').read_text().splitlines())
+    assert cases==oracle(Path('bench/results/qwen_batch_causal_20261010.txt').read_text().splitlines())
+    refs=[json.loads(s.split(' ',1)[1]) for s in lines if s.startswith('reference ')]
+    rr=[json.loads(s) for s in lines if s.startswith('{')]
+    steps=[r for r in rr if r['event']=='step'];conditions=[r for r in rr if r['event']=='condition']
+    assert len(refs)==len(jobs) and len(conditions)==len(jobs)*4
+    assert [(r['case'],r['steps']) for r in refs]==[(c,n) for c,b,n in jobs]
+    assert all(r['all_oracle_match'] and r['tap_counts']==[584]*r['steps'] and len(r['tap_order'])==584 for r in refs)
+    assert len(steps)==4*sum(n for c,b,n in jobs)
+    refmap={r['case']:r for r in refs}
+    ap=Path('bench/results')/(stem+'arrays_20261010.npz')
+    used=set();predictions=0;reproduced=0
+    with np.load(ap,allow_pickle=False) as arrays:
+        for case,batch,n in jobs:
+            for variant in variants:
+                group=[r for r in steps if (r['case'],r['batch'],r['variant'])==(case,batch,variant)]
+                assert [r['step'] for r in group]==list(range(n))
+                cond=next(r for r in conditions if (r['case'],r['batch'],r['variant'])==(case,batch,variant))
+                assert cond['steps']==n
+                for r in group:
+                    assert r['expected']==cases[case][1][r['step']] and len(r['predictions'])==batch and r['taps']==584
+                    assert r['different_taps']==len(r['different_labels'])
+                    assert (r['first_difference'] is None)==(r['different_taps']==0)
+                    if r['different_taps']:assert r['first_difference']['label']==r['different_labels'][0]
+                lane_first=[next((r['step'] for r in group if r['predictions'][lane]!=r['expected']),None) for lane in range(batch)]
+                assert lane_first[0]==cond['first_token_difference']
+                old=next(r for r in prior[variant] if (r['batch'],r['group'])==(batch,str(case)))
+                old_first=next((m['first_index'] for m in old['mismatches'] if m['lane']==0),None)
+                assert old_first==cond['prior_greedy_first']
+                old_observed=old_first if old_first is not None and old_first<n else None
+                assert cond['prior_first_reproduced']==(lane_first[0]==old_observed)
+                first=next((r for r in group if r['different_taps']),None)
+                boundary=cond['first_boundary'];saved={}
+                if first is None:assert boundary is None
+                else:
+                    assert boundary['step']==first['step']
+                    assert all(boundary[k]==v for k,v in first['first_difference'].items())
+                    idx=refmap[case]['tap_order'].index(boundary['label'])
+                    for suffix in ('first','previous'):
+                        info=boundary[suffix+'_arrays'];rk,ck=info['reference'],info['candidate']
+                        a,b=arrays[rk],arrays[ck];used.update((rk,ck))
+                        assert a.shape==b.shape and a.dtype==b.dtype
+                        ab,bb=np.ascontiguousarray(a).view(np.uint8),np.ascontiguousarray(b).view(np.uint8)
+                        different=int(np.count_nonzero(ab!=bb));equal=different==0
+                        max_abs=float(np.max(np.abs(a.astype(np.float64)-b.astype(np.float64))))
+                        assert equal==info['equal']
+                        assert info['label']==refmap[case]['tap_order'][idx-(suffix=='previous')]
+                        if suffix=='first':
+                            assert different==boundary['different_bytes'] and max_abs==boundary['max_abs_difference'] and not equal
+                        saved[suffix]={'label':info['label'],'shape':list(a.shape),'dtype':str(a.dtype),'different_bytes':different,'max_abs':max_abs,'equal':equal}
+                predictions+=n*batch;reproduced+=cond['prior_first_reproduced']
+                print(json.dumps({'stage':stage,'case':case,'batch':batch,'variant':variant,'steps':n,'first_boundary_step':None if boundary is None else boundary['step'],'first_boundary':None if boundary is None else boundary['label'],'saved_pairs':saved,'lane_first_prediction_difference':lane_first,'prior_greedy_first':old_first,'prior_first_reproduced':cond['prior_first_reproduced'],'steps_with_different_taps':sum(r['different_taps']>0 for r in group)}))
+        assert used==set(arrays.files)
+        print(json.dumps({'stage':stage,'reference_steps':sum(r['steps'] for r in refs),'candidate_steps':len(steps),'model_forwards':sum(r['steps'] for r in refs)+len(steps),'conditions':len(conditions),'candidate_lane_predictions':predictions,'prior_prefix_reproduced_conditions':reproduced,'array_count':len(arrays.files),'array_bytes':ap.stat().st_size,'tap_count_each_forward':584}))
+print('Independent reanalysis covers all saved earliest/previous arrays and all candidate predictions. Other activation equality summaries and baseline oracle checks remain instrument/source-reported; lane0 taps, chosen prefixes, teacher forcing and CPU synchronization limit causal scope.')
+print('FIRST_DIFFERENCE_ANALYSIS_COMPLETE')
+
