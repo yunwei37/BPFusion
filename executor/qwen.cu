@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
-// Correctness-first resident Qwen2 reference: one CTA executes full prefill,
+// Correctness-first resident Qwen2 reference: a cooperative grid executes prefill,
 // decode, KV attention and greedy sampling, directly on the pinned BPF page.
 // No tensor-core optimization; no per-request host launch/copy/sampling.
 #include <cuda_runtime.h>
 #include <cuda_fp16.h>
+#include <cooperative_groups.h>
 #include <bpf/bpf.h>
 #include <sys/mman.h>
 #include <sys/socket.h>
@@ -23,8 +24,11 @@ constexpr int CTX = 2 * BF_LLM_MAX_TOK;
 struct Config { unsigned h, inter, layers, heads, kvheads, vocab; float eps, theta; };
 struct Layer { half *norm, *q, *qb, *k, *kb, *v, *vb, *o, *post, *gate, *up, *down; };
 struct Model { Config c; half *embed, *norm; Layer *layer; };
-struct Scratch { float *x, *norm, *q, *k, *v, *att, *out, *gate, *up, *prob, *logits, *keys, *values; };
+struct Scratch { float *x, *norm, *q, *k, *v, *att, *out, *gate, *up, *prob, *logits, *keys, *values; unsigned *control; };
 
+__device__ unsigned rank() { return blockIdx.x*blockDim.x+threadIdx.x; }
+__device__ unsigned threads() { return gridDim.x*blockDim.x; }
+__device__ void sync_grid() { cooperative_groups::this_grid().sync(); }
 __device__ float fp16(float x) { return __half2float(__float2half_rn(x)); }
 __device__ float warp_sum(float v) {
     for (int d=16; d; d/=2) v += __shfl_down_sync(0xffffffff, v, d);
@@ -32,17 +36,18 @@ __device__ float warp_sum(float v) {
 }
 __device__ void matvec(float *out, const half *w, const half *bias,
                       const float *x, int rows, int cols) {
-    int lane = threadIdx.x % 32, warp = threadIdx.x / 32;
-    for (int row=warp; row<rows; row+=blockDim.x/32) {
+    int lane = threadIdx.x % 32, warp = rank() / 32;
+    for (int row=warp; row<rows; row+=threads()/32) {
         float sum=0;
         for (int col=lane; col<cols; col+=32)
             sum = fmaf(__half2float(w[(size_t)row*cols+col]), x[col], sum);
         sum = warp_sum(sum);
         if (!lane) out[row]=fp16(sum + (bias ? __half2float(bias[row]) : 0));
     }
-    __syncthreads();
+    sync_grid();
 }
 __device__ void rms(float *out, const float *x, const half *w, int n, float eps) {
+    if (blockIdx.x==0) {
     __shared__ float sums[8], inv;
     float sum=0;
     for (int i=threadIdx.x; i<n; i+=blockDim.x) sum += x[i]*x[i];
@@ -53,24 +58,26 @@ __device__ void rms(float *out, const float *x, const half *w, int n, float eps)
     __syncthreads();
     for(int i=threadIdx.x;i<n;i+=blockDim.x) out[i]=fp16(fp16(x[i]*inv)*__half2float(w[i]));
     __syncthreads();
+    }
+    sync_grid();
 }
 __device__ void rope(float *a, float *tmp, int n, int dim, int pos, float theta) {
-    for(int i=threadIdx.x;i<n;i+=blockDim.x) {
+    for(int i=rank();i<n;i+=threads()) {
         int d=i%dim, base=i-d, j=d%(dim/2);
         float angle=pos*powf(theta, -2.0f*j/dim);
         float cs=fp16(cosf(angle)), sn=fp16(sinf(angle));
         float rot=d<dim/2 ? -a[base+d+dim/2] : a[base+d-dim/2];
         tmp[i]=fp16(fp16(a[i]*cs)+fp16(rot*sn));
     }
-    __syncthreads();
-    for(int i=threadIdx.x;i<n;i+=blockDim.x) a[i]=tmp[i];
-    __syncthreads();
+    sync_grid();
+    for(int i=rank();i<n;i+=threads()) a[i]=tmp[i];
+    sync_grid();
 }
 __device__ void forward(Model m, Scratch s, unsigned token, int pos) {
     Config c=m.c;
     int h=c.h, dim=h/c.heads, kv=c.kvheads*dim;
-    for(int i=threadIdx.x;i<h;i+=blockDim.x) s.x[i]=__half2float(m.embed[(size_t)token*h+i]);
-    __syncthreads();
+    for(int i=rank();i<h;i+=threads()) s.x[i]=__half2float(m.embed[(size_t)token*h+i]);
+    sync_grid();
     for(unsigned l=0;l<c.layers;l++) {
         Layer w=m.layer[l];
         rms(s.norm,s.x,w.norm,h,c.eps);
@@ -81,13 +88,13 @@ __device__ void forward(Model m, Scratch s, unsigned token, int pos) {
         rope(s.k,s.norm,kv,dim,pos,c.theta);
         float *keys=s.keys+(size_t)l*CTX*kv;
         float *vals=s.values+(size_t)l*CTX*kv;
-        for(int i=threadIdx.x;i<kv;i+=blockDim.x) {
+        for(int i=rank();i<kv;i+=threads()) {
             keys[pos*kv+i]=s.k[i]; vals[pos*kv+i]=s.v[i];
         }
-        __syncthreads();
+        sync_grid();
         // Each warp computes one head's causal scores and softmax.
-        int lane=threadIdx.x%32, warp=threadIdx.x/32;
-        for(unsigned head=warp;head<c.heads;head+=8) {
+        int lane=threadIdx.x%32, warp=rank()/32;
+        for(unsigned head=warp;head<c.heads;head+=threads()/32) {
             int kh=head/(c.heads/c.kvheads);
             for(int t=0;t<=pos;t++) {
                 float dot=0;
@@ -109,19 +116,19 @@ __device__ void forward(Model m, Scratch s, unsigned token, int pos) {
                 s.att[head*dim+d]=fp16(sum);
             }
         }
-        __syncthreads();
+        sync_grid();
         matvec(s.out,w.o,nullptr,s.att,h,h);
-        for(int i=threadIdx.x;i<h;i+=blockDim.x) s.x[i]=fp16(s.x[i]+s.out[i]);
-        __syncthreads();
+        for(int i=rank();i<h;i+=threads()) s.x[i]=fp16(s.x[i]+s.out[i]);
+        sync_grid();
         rms(s.norm,s.x,w.post,h,c.eps);
         matvec(s.gate,w.gate,nullptr,s.norm,c.inter,h);
         matvec(s.up,w.up,nullptr,s.norm,c.inter,h);
-        for(unsigned i=threadIdx.x;i<c.inter;i+=blockDim.x)
+        for(unsigned i=rank();i<c.inter;i+=threads())
             s.gate[i]=fp16(fp16(s.gate[i]/(1+expf(-s.gate[i])))*s.up[i]);
-        __syncthreads();
+        sync_grid();
         matvec(s.out,w.down,nullptr,s.gate,h,c.inter);
-        for(int i=threadIdx.x;i<h;i+=blockDim.x) s.x[i]=fp16(s.x[i]+s.out[i]);
-        __syncthreads();
+        for(int i=rank();i<h;i+=threads()) s.x[i]=fp16(s.x[i]+s.out[i]);
+        sync_grid();
     }
 }
 __device__ unsigned sample(Model m, Scratch s) {
@@ -129,6 +136,7 @@ __device__ unsigned sample(Model m, Scratch s) {
     __shared__ unsigned ids[256];
     rms(s.norm,s.x,m.norm,m.c.h,m.c.eps);
     matvec(s.logits,m.embed,nullptr,s.norm,m.c.vocab,m.c.h);
+    if (blockIdx.x==0) {
     float mx=-INFINITY; unsigned id=0;
     for(unsigned i=threadIdx.x;i<m.c.vocab;i+=blockDim.x)
         if(s.logits[i]>mx || (s.logits[i]==mx && i<id)) { mx=s.logits[i]; id=i; }
@@ -143,48 +151,53 @@ __device__ unsigned sample(Model m, Scratch s) {
         }
         __syncthreads();
     }
-    return ids[0];
+    if (!threadIdx.x) s.control[4]=ids[0];
+    }
+    sync_grid();
+    return s.control[4];
 }
 __global__ void resident(bf_page *p, Model m, Scratch s) {
     unsigned seen=0;
-    __shared__ unsigned head, state, prompt, gen, token;
+    unsigned head, state, prompt, gen, token;
     for(;;) {
-        __syncthreads();
-        if(!threadIdx.x) {
-            head=__ldcg(&p->llm_head);
-            state=__ldcg(&p->llm[seen%BF_LLM_SLOTS].state);
-            if(__ldcg((unsigned long long *)&p->stop_ns)) head=0xffffffff;
+        sync_grid();
+        if(!rank()) {
+            s.control[0]=__ldcg(&p->llm_head);
+            s.control[1]=__ldcg(&p->llm[seen%BF_LLM_SLOTS].state);
+            if(__ldcg((unsigned long long *)&p->stop_ns)) s.control[0]=0xffffffff;
         }
-        __syncthreads();
+        sync_grid();
+        head=s.control[0]; state=s.control[1];
         if(head==0xffffffff) return;
         if(head==seen || state!=BF_PENDING) continue;
         bf_llm_slot *slot=&p->llm[seen%BF_LLM_SLOTS];
-        if(!threadIdx.x) { prompt=__ldcg(&slot->n_prompt); gen=__ldcg(&slot->n_gen); }
-        __syncthreads();
+        if(!rank()) { s.control[2]=__ldcg(&slot->n_prompt); s.control[3]=__ldcg(&slot->n_gen); }
+        sync_grid();
+        prompt=s.control[2]; gen=s.control[3];
         if(prompt==0 || prompt>BF_LLM_MAX_TOK || gen==0 || gen>BF_LLM_MAX_TOK) return;
         for(unsigned pos=0;pos<prompt;pos++) {
-            if(!threadIdx.x) token=__ldcg(&slot->tok_in[pos]);
-            __syncthreads();
+            if(!rank()) s.control[4]=__ldcg(&slot->tok_in[pos]);
+            sync_grid();
+            token=s.control[4];
             if(token>=m.c.vocab) return;
             forward(m,s,token,pos);
         }
         for(unsigned k=0;k<gen;k++) {
             unsigned next=sample(m,s);
-            if(!threadIdx.x) token=next;
-            __syncthreads();
-            if(!threadIdx.x) {
+            token=next;
+            if(!rank()) {
                 __stcg(&slot->tok_out[k],token);
                 __threadfence_system();
                 __stcg(&slot->produced,k+1);
             }
-            __syncthreads();
+            sync_grid();
             if(k+1<gen) forward(m,s,token,prompt+k);
         }
-        if(!threadIdx.x) {
+        if(!rank()) {
             __threadfence_system();
             __stcg(&slot->state,(unsigned)BF_DONE);
         }
-        __syncthreads();
+        sync_grid();
         seen++;
     }
 }
@@ -225,6 +238,12 @@ int main(int argc,char **argv) {
     alloc(&s.att,c.h); alloc(&s.out,c.h); alloc(&s.gate,c.inter); alloc(&s.up,c.inter);
     alloc(&s.prob,c.heads*CTX); alloc(&s.logits,c.vocab);
     alloc(&s.keys,(size_t)c.layers*CTX*kv); alloc(&s.values,(size_t)c.layers*CTX*kv);
+    CUDA(cudaMalloc(&s.control,5*sizeof(unsigned)));
+    cudaDeviceProp prop; CUDA(cudaGetDeviceProperties(&prop,0));
+    if (!prop.cooperativeLaunch) { fprintf(stderr,"cooperative grid unavailable\n"); return 1; }
+    int blocks_per_sm; CUDA(cudaOccupancyMaxActiveBlocksPerMultiprocessor(&blocks_per_sm,resident,256,0));
+    if (!blocks_per_sm) return 1;
+    unsigned blocks=prop.multiProcessorCount;
     int fd=bpf_obj_get("/sys/fs/bpf/bpfusion_ctl"); if(fd<0) { perror("bpf_obj_get"); return 1; }
     auto *page=(bf_page *)mmap(nullptr,BF_PAGE_MMAP_BYTES,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
     if(page==MAP_FAILED) { perror("mmap"); return 1; }
@@ -237,13 +256,14 @@ int main(int argc,char **argv) {
     if(bind(listener,(sockaddr *)&addr,sizeof(addr)) || listen(listener,SOMAXCONN)) { perror("listen"); return 1; }
     // Listener creation is bootstrap only. The module owns accept and RX drain.
     __atomic_store_n(&page->stop_ns,0,__ATOMIC_RELEASE);
-    resident<<<1,256>>>(device,m,s); CUDA(cudaGetLastError());
+    void *args[]={&device,&m,&s};
+    CUDA(cudaLaunchCooperativeKernel((void *)resident,blocks,256,args));
     int module=open("module/bfusion_tx.ko",O_RDONLY|O_CLOEXEC);
     if(module<0) { perror("module open"); return 1; }
     char params[80]; snprintf(params,sizeof(params),"map_fd=%d listen_fd=%d",fd,listener);
     if(syscall(SYS_finit_module,module,params,0)) { perror("finit_module"); return 1; }
     close(module); close(fd);
-    printf("resident Qwen ready: %u layers h=%u vocab=%u; one launch, no host request worker\n",c.layers,c.h,c.vocab);
+    printf("resident Qwen ready: %u layers h=%u vocab=%u; one cooperative launch (%u CTAs), no host request worker\n",c.layers,c.h,c.vocab,blocks);
     fflush(stdout);
     sleep(argc>2 ? atoi(argv[2]) : 60);
     __atomic_store_n(&page->stop_ns,1,__ATOMIC_RELEASE);

@@ -88,7 +88,8 @@ even further** from the target — `executor/llm_executor.py` is a host-side wor
 that accepts connections, runs HF prefill/decode per request and sends tokens.
 
 The optional `executor/qwen.cu` reference now puts real Qwen prefill/decode,
-KV cache and argmax inside one resident CUDA kernel (finding 0013). It reads
+KV cache and argmax inside one resident CUDA kernel (finding 0013), now
+a cooperative grid with one CTA per discovered SM (finding 0016). It reads
 the same token ring and publishes output directly for kernel TX. The host
 only initializes and shuts down. Kernel accept and receive draining manage
 connection lifetime. The default resident test now uses sockops/sockhash
@@ -98,7 +99,9 @@ The kernel emits HTTP headers and streamed token bytes, retaining response order
 on a connection even across ring wrap. Message offsets are read from the current
 kernel strparser layout with CO-RE: helper byte offsets are skb-relative, whereas
 several frames can share one skb. GPU text processing and continuous batching
-remain open.
+remain open. Exact-token agreement is verified for the recorded eight-token
+cases; a 64-token control diverges from HF at a near tie in both the old
+single-CTA and new grid implementations (finding 0016).
 
 ```
   client TCP / HTTP POST (:39403, binary token body)

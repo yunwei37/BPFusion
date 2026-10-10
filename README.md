@@ -19,7 +19,7 @@ separate when reading any result:
 |---|---|---|---|---|
 | **Synthetic MLP** — [`executor/executor.cu`](executor/executor.cu) | UDP `:39400` -> tc/clsact ingress -> page | **one resident CUDA kernel**, launched once, spins on the page; no per-request/per-batch host launch or control call | userspace responder `sendto()` per reply | reference/intermediate: proves the resident-kernel + page mechanism (not yet a no-userspace-worker path) |
 | **Real LLM** — [`executor/llm_executor.py`](executor/llm_executor.py) | UDP `:39402` or TCP `:39403` -> tc ingress -> token ring | **host Python + HF `transformers`** on Qwen (prefill + batch-1 decode); prefill/decode run on the GPU, but host code drives every step | UDP: client polls `produced`; TCP: `send()` on the accepted socket | host-driven baseline, labelled as such; this is where TTFT/TPOT evidence comes from |
-| **Resident Qwen reference** — [`executor/qwen.cu`](executor/qwen.cu) | TCP token IDs -> sockmap stream -> page | **one resident CUDA kernel** executes real prefill/decode/KV/argmax | kernel TCP TX | correctness reference: real-model oracle agreement; one CTA, binary token bodies over TCP/HTTP, kernel accept/drain |
+| **Resident Qwen reference** — [`executor/qwen.cu`](executor/qwen.cu) | TCP token IDs -> sockmap stream -> page | **one resident CUDA kernel** executes real prefill/decode/KV/argmax | kernel TCP TX | correctness reference: eight-token oracle agreement; one cooperative grid, binary token bodies over TCP/HTTP, kernel accept/drain; longer-decode divergence recorded |
 
 In the synthetic MLP path the no-userspace-worker property covers only GPU
 compute; even there a userspace responder thread still `sendto()`s every
@@ -40,7 +40,9 @@ OpenAI-compatible API. [Finding 0015](docs/findings/0015-http-token-transport.md
 records split writes, concurrency, persistent connections and response ordering.
 The complete service target still needs GPU text processing, continuous
 batching, completion-event measurement and real-NIC evaluation. No serving
-speedup is claimed for this slow, one-CTA correctness reference.
+speedup is claimed for this correctness reference. The GPU now uses one
+cooperative resident grid; [finding 0016](docs/findings/0016-cooperative-resident-qwen.md)
+records the eight-token passes and the failed 64-token oracle control.
 
 ## Repository layout
 
@@ -172,6 +174,7 @@ pre-attach. The MLP run also prints the `client verify` numeric check.
 - [0013-resident-qwen.md](docs/findings/0013-resident-qwen.md) — real Qwen inference inside one resident kernel and kernel-owned connection lifecycle.
 - [0014-sockmap-stream.md](docs/findings/0014-sockmap-stream.md) — TCP stream framing and concurrent queue reservation.
 - [0015-http-token-transport.md](docs/findings/0015-http-token-transport.md) — Content-Length POST token API, persistent connection framing and ordered HTTP replies.
+- [0016-cooperative-resident-qwen.md](docs/findings/0016-cooperative-resident-qwen.md) — one cooperative resident grid, strict short-output passes and an explicit longer-decode accuracy failure.
 - [0012-kernel-tcp-tx.md](docs/findings/0012-kernel-tcp-tx.md) — exact Qwen
   tokens returned by kernel TCP TX; lifecycle/reset tests; HF still drives inference.
 - [0011-http-baseline.md](docs/findings/0011-http-baseline.md) — external vLLM

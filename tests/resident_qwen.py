@@ -2,17 +2,23 @@
 # SPDX-License-Identifier: Apache-2.0
 """Resident CUDA Qwen vs eager HF fp16 greedy oracle on real TCP replies."""
 from concurrent.futures import ThreadPoolExecutor
+import argparse
 import gc
 import re
 import socket
 import struct
 import subprocess
 import time
+from pathlib import Path
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
 def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--gen",type=int,default=8,choices=range(1,65))
+    parser.add_argument("--executor",default="./build/qwen")
+    args=parser.parse_args()
     name="Qwen/Qwen2.5-0.5B-Instruct"
     tok=AutoTokenizer.from_pretrained(name)
     model=AutoModelForCausalLM.from_pretrained(name,dtype=torch.float16,attn_implementation="eager").to("cuda").eval()
@@ -24,7 +30,7 @@ def main():
             past=out.past_key_values
             nxt=int(out.logits[:,-1].argmax(-1))
             expected=[nxt]
-            for _ in range(7):
+            for _ in range(args.gen-1):
                 out=model(torch.tensor([[nxt]],device="cuda"),past_key_values=past,use_cache=True)
                 past=out.past_key_values
                 nxt=int(out.logits[:,-1].argmax(-1))
@@ -40,7 +46,7 @@ def main():
     logpath="/tmp/bpfusion-resident-qwen.log"
     try:
         with open(logpath,"w") as log:
-            executor=subprocess.Popen(["strace","-D","-f","-e","trace=network,write","-o","/tmp/bpfusion-qwen-network.trace","./build/qwen","/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","300"],stdout=log,stderr=subprocess.STDOUT)
+            executor=subprocess.Popen(["strace","-D","-f","-e","trace=network,write","-o","/tmp/bpfusion-qwen-network.trace",args.executor,"/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","300"],stdout=log,stderr=subprocess.STDOUT)
         start=time.monotonic()
         while "resident Qwen ready" not in open(logpath).read():
             if executor.poll() is not None or time.monotonic()-start>60:
@@ -103,18 +109,24 @@ def main():
                 actual=list(struct.unpack(f"<{len(expected)}I",data))
                 assert actual==expected,("pipeline",i,actual,expected)
         print("PASS six pipelined HTTP responses in order, ring wrap, half-close",flush=True)
-        print("PASS 26 TCP/HTTP requests, 208 real Qwen greedy tokens, one CUDA launch, no host accept/read/send worker",flush=True)
+        print(f"PASS 26 TCP/HTTP requests, {26*args.gen} real Qwen greedy tokens, one CUDA launch, no host accept/read/send worker",flush=True)
     finally:
-        if executor is not None:
-            executor.terminate(); executor.wait()
-            print(open(logpath).read(),flush=True)
-            trace=open("/tmp/bpfusion-qwen-network.trace").read()
-            active=trace.split("resident Qwen ready",1)[1]
-            assert not re.search(r"\b(?:accept4?|recvfrom|recvmsg|recvmmsg|sendto|sendmsg|sendmmsg)\(",active),active
-            print("PASS traced all executor threads: no accept/receive/send syscalls after ready",flush=True)
-        subprocess.run(["./build/bpfusion_load","stats"],check=True)
-        subprocess.run(["./build/bpfusion_load","stream-detach"],check=True)
-        subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
+        try:
+            if executor is not None:
+                executor.terminate(); executor.wait()
+                print(open(logpath).read(),flush=True)
+                trace=open("/tmp/bpfusion-qwen-network.trace").read()
+                active=trace.split("resident Qwen ready",1)[1]
+                assert not re.search(r"\b(?:accept4?|recvfrom|recvmsg|recvmmsg|sendto|sendmsg|sendmmsg)\(",active),active
+                print("PASS traced all executor threads: no accept/receive/send syscalls after ready",flush=True)
+            subprocess.run(["./build/bpfusion_load","stats"],check=True)
+        finally:
+            subprocess.run(["./build/bpfusion_load","stream-detach"],check=True)
+            subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
+            for name in ("bpfusion_ctl","bpfusion_stats","bpfusion_db"):
+                Path("/sys/fs/bpf",name).unlink(missing_ok=True)
+            print("PASS test map pins removed after module shutdown and hook detach",flush=True)
+
 
 
 if __name__=="__main__": main()

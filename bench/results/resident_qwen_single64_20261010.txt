@@ -1,0 +1,46 @@
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4826.40it/s]
+HF eager fp16 oracle ready, model released
+detached from lo
+stream sockops detached
+sockhash capacity follows somaxconn=4096
+stream parser/verdict and sockops attached to current Workspace cgroup
+PASS 5000 empty connections accepted/drained by kernel; exceeds undrained listener backlog
+http=False case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] seconds=8.606
+http=False case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 64547, 279, 5109, 311, 387, 3694, 25, 220, 17, 323, 220, 17, 624, 17, 13, 2691, 279, 5109, 3786, 25, 17767, 17, 488, 220, 17, 284, 220, 19, 59, 3593, 4416, 11, 279, 4226, 374, 1124, 11520, 79075, 90, 19, 11035, 568, 151643, 33975] seconds=8.925
+resident Qwen ready: 24 layers h=896 vocab=151936; one launch, no host request worker
+resident Qwen stopped
+
+PASS traced all executor threads: no accept/receive/send syscalls after ready
+seen pkts      0
+ip+udp/ip+tcp pkts 0
+magic pkts     0
+drops          0
+published      0
+drop: ctl busy 0
+drop: done busy 0
+llm magic      0
+llm busy       0
+tcp dest       0
+tcp magic      0
+stream publish 2
+sockhash linked 5002
+sockhash failed 0
+parser calls   48
+parser invalid 0
+head=0 done_seq=0 published=0 acked=0 drops=0 ready=0
+slot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+stream sockops detached
+detached from lo
+Traceback (most recent call last):
+  File "/workspaces/repository/tests/resident_qwen.py", line 125, in <module>
+    if __name__=="__main__": main()
+                             ^^^^^^
+  File "/workspaces/repository/tests/resident_qwen.py", line 86, in main
+    request(idx,ids,expected,http=repetition==1)
+  File "/workspaces/repository/tests/resident_qwen.py", line 83, in request
+    assert actual==expected,(idx,actual,expected)
+           ^^^^^^^^^^^^^^^^
+AssertionError: (1, [2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 64547, 279, 5109, 311, 387, 3694, 25, 220, 17, 323, 220, 17, 624, 17, 13, 2691, 279, 5109, 3786, 25, 17767, 17, 488, 220, 17, 284, 220, 19, 59, 3593, 4416, 11, 279, 4226, 374, 1124, 11520, 79075, 90, 19, 11035, 568, 151643, 33975], [2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374])
