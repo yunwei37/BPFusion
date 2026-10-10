@@ -1,0 +1,41 @@
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 5293.19it/s]
+HF eager fp16 oracle ready, model released
+detached from lo
+stream sockops detached
+stream parser/verdict and sockops attached to current Workspace cgroup
+PASS 5000 empty connections accepted/drained by kernel; exceeds undrained listener backlog
+resident Qwen ready: 24 layers h=896 vocab=151936; one launch, no host request worker
+resident Qwen stopped
+
+PASS traced all executor threads: no accept/receive/send syscalls after ready
+seen pkts      0
+ip+udp/ip+tcp pkts 0
+magic pkts     0
+drops          0
+published      0
+drop: ctl busy 0
+drop: done busy 0
+llm magic      0
+llm busy       0
+tcp dest       0
+tcp magic      0
+stream publish 0
+sockhash linked 5001
+sockhash failed 0
+head=0 done_seq=0 published=0 acked=0 drops=0 ready=0
+slot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+stream sockops detached
+detached from lo
+Traceback (most recent call last):
+  File "/workspaces/repository/tests/resident_qwen.py", line 85, in <module>
+    if __name__=="__main__": main()
+                             ^^^^^^
+  File "/workspaces/repository/tests/resident_qwen.py", line 64, in main
+    chunk=client.recv(len(expected)*4-len(data))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+[29842.610389] bfusion_tx: map id=824 size=17336 ring=12856 slot=560 net=4026533518
+[29902.835993] bfusion_tx: exit bytes=0 completed=0 abandoned=0 retries=0 accepted=5001 closed=5001

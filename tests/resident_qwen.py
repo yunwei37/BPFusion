@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 """Resident CUDA Qwen vs eager HF fp16 greedy oracle on real TCP replies."""
+from concurrent.futures import ThreadPoolExecutor
 import gc
 import re
 import socket
@@ -33,7 +34,8 @@ def main():
     gc.collect(); torch.cuda.empty_cache()
     print("HF eager fp16 oracle ready, model released",flush=True)
     subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
-    subprocess.run(["./build/bpfusion_load","attach","lo"],check=True)
+    subprocess.run(["./build/bpfusion_load","stream-detach"],check=True)
+    subprocess.run(["./build/bpfusion_load","stream-attach"],check=True)
     executor=None
     logpath="/tmp/bpfusion-resident-qwen.log"
     try:
@@ -47,21 +49,33 @@ def main():
         for _ in range(5000):
             socket.create_connection(("127.0.0.1",39403),timeout=5).close()
         print("PASS 5000 empty connections accepted/drained by kernel; exceeds undrained listener backlog",flush=True)
+        def request(idx, ids, expected):
+            with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+                start=time.perf_counter()
+                client.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
+                wire=struct.pack("<IIIIQ",0x514c4d51,len(ids),len(expected),0,time.monotonic_ns())+struct.pack(f"<{len(ids)}I",*ids)
+                # Separate writes across header and payload; the parser
+                # must frame one request after TCP stream reassembly.
+                for byte in wire:
+                    client.sendall(bytes([byte]))
+                    time.sleep(.001)
+                data=b""
+                while len(data)<len(expected)*4:
+                    chunk=client.recv(len(expected)*4-len(data))
+                    assert chunk,"short reply"
+                    data+=chunk
+                actual=list(struct.unpack(f"<{len(expected)}I",data))
+                elapsed=time.perf_counter()-start
+                print(f"case={idx} expected={expected} actual={actual} seconds={elapsed:.3f}",flush=True)
+                assert actual==expected,(idx,actual,expected)
         for repetition in range(3):
             for idx,(ids,expected) in enumerate(cases):
-                with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
-                    start=time.perf_counter()
-                    client.sendall(struct.pack("<IIIIQ",0x514c4d51,len(ids),len(expected),0,time.monotonic_ns())+struct.pack(f"<{len(ids)}I",*ids))
-                    data=b""
-                    while len(data)<len(expected)*4:
-                        chunk=client.recv(len(expected)*4-len(data))
-                        assert chunk,"short reply"
-                        data+=chunk
-                    actual=list(struct.unpack(f"<{len(expected)}I",data))
-                    elapsed=time.perf_counter()-start
-                    print(f"rep={repetition} case={idx} expected={expected} actual={actual} seconds={elapsed:.3f}",flush=True)
-                    assert actual==expected,(idx,actual,expected)
-        print("PASS 12 TCP requests, 96 real Qwen greedy tokens, one CUDA launch, no host accept/read/send worker",flush=True)
+                request(idx,ids,expected)
+        with ThreadPoolExecutor(max_workers=8) as clients:
+            futures=[clients.submit(request,i,*cases[i%len(cases)]) for i in range(8)]
+            for future in futures: future.result()
+        print("PASS eight concurrent clients, exact Qwen replies, no admission drops",flush=True)
+        print("PASS 20 TCP requests, 160 real Qwen greedy tokens, one CUDA launch, no host accept/read/send worker",flush=True)
     finally:
         if executor is not None:
             executor.terminate(); executor.wait()
@@ -70,6 +84,8 @@ def main():
             active=trace.split("resident Qwen ready",1)[1]
             assert not re.search(r"\b(?:accept4?|recvfrom|recvmsg|recvmmsg|sendto|sendmsg|sendmmsg)\(",active),active
             print("PASS traced all executor threads: no accept/receive/send syscalls after ready",flush=True)
+        subprocess.run(["./build/bpfusion_load","stats"],check=True)
+        subprocess.run(["./build/bpfusion_load","stream-detach"],check=True)
         subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
 
 

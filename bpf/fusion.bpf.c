@@ -231,4 +231,75 @@ out:
 	return TC_ACT_OK;
 }
 
+
+/* TCP sequencing/reassembly precedes this stream parser. */
+struct bf_flow { __u32 local, remote, local_port, remote_port; };
+struct {
+    __uint(type, BPF_MAP_TYPE_SOCKHASH);
+    __uint(max_entries, BF_SLOTS);
+    __type(key, struct bf_flow);
+    __type(value, __u32);
+} streams SEC(".maps");
+
+SEC("sockops")
+int stream_sockops(struct bpf_sock_ops *ctx)
+{
+    if (ctx->op == BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB &&
+        ctx->family == 2 && ctx->local_port == BF_LLM_TCP_PORT) {
+        struct bf_flow key = { ctx->local_ip4, ctx->remote_ip4,
+                              ctx->local_port, ctx->remote_port };
+        if (bpf_sock_hash_update(ctx, &streams, &key, BPF_NOEXIST)) bump(13);
+        else bump(12);
+    }
+    return 0;
+}
+
+SEC("sk_skb/stream_parser")
+int stream_parse(struct __sk_buff *skb)
+{
+    bump(14);
+    union bf_llm_hdr h;
+    if (skb->len < sizeof(h) || bpf_skb_load_bytes(skb,0,&h,sizeof(h))) return 0;
+    if (h.magic != BF_LLM_MAGIC || !h.n_prompt || h.n_prompt > BF_LLM_MAX_TOK ||
+        !h.n_gen || h.n_gen > BF_LLM_MAX_TOK) { bump(15); return -1; }
+    return sizeof(h) + h.n_prompt * sizeof(__u32);
+}
+
+SEC("sk_skb/stream_verdict")
+int stream_publish(struct __sk_buff *skb)
+{
+    union bf_llm_hdr h;
+    __u32 tokens[BF_LLM_MAX_TOK] = {};
+    __u32 zero=0, head, idx;
+    struct bf_page *p;
+    struct bf_llm_slot *slot;
+    if (bpf_skb_load_bytes(skb,0,&h,sizeof(h)) ||
+        !h.n_prompt || h.n_prompt > BF_LLM_MAX_TOK ||
+        !h.n_gen || h.n_gen > BF_LLM_MAX_TOK) return SK_DROP;
+#pragma unroll
+    for (__u32 i=0;i<BF_LLM_MAX_TOK;i++)
+        if (i<h.n_prompt && bpf_skb_load_bytes(skb,sizeof(h)+i*4,&tokens[i],4)) return SK_DROP;
+    p=bpf_map_lookup_elem(&ctl,&zero);
+    if (!p) return SK_DROP;
+    int reserved=0;
+    for (__u32 attempt=0;attempt<BF_LLM_SLOTS;attempt++) {
+        head=p->llm_head;
+        idx=head%BF_LLM_SLOTS;
+        slot=&p->llm[idx];
+        if (__sync_val_compare_and_swap(&slot->state,BF_FREE,BF_WRITING)!=BF_FREE) break;
+        if (__sync_val_compare_and_swap(&p->llm_head,head,head+1)==head) {
+            reserved=1; break;
+        }
+        slot->state=BF_FREE;
+    }
+    if (!reserved) { bump(8); __sync_fetch_and_add(&p->drops,1); return SK_DROP; }
+    for (__u32 i=0;i<BF_LLM_MAX_TOK;i++) slot->tok_in[i]=tokens[i];
+    slot->n_prompt=h.n_prompt; slot->n_gen=h.n_gen; slot->produced=0; slot->pad=1;
+    slot->addr_be=skb->remote_ip4; slot->port_be=(__u16)(skb->remote_port>>16);
+    slot->client_ns=h.client_ns; slot->ingress_ns=bpf_ktime_get_ns(); slot->gpu_done_ns=0;
+    slot->state=BF_PENDING;
+    bump(11);
+    return SK_PASS;
+}
+
 char _license[] SEC("license") = "GPL";

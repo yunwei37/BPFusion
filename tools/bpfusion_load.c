@@ -32,7 +32,7 @@ static const char *stats_name[] = {"seen pkts", "ip+udp/ip+tcp pkts",
 				   "magic pkts", "drops", "published",
 				   "drop: ctl busy", "drop: done busy",
 				   "llm magic", "llm busy",
-				   "tcp dest", "tcp magic"};
+				   "tcp dest", "tcp magic", "stream publish", "sockhash linked", "sockhash failed", "parser calls", "parser invalid"};
 
 int main(int argc, char **argv)
 {
@@ -46,7 +46,19 @@ int main(int argc, char **argv)
 	struct bpf_tc_opts opts;
 	uint64_t v;
 	int i;
+	int stream_mode = !strcmp(cmd, "stream-attach");
 
+	if (!strcmp(cmd, "stream-detach")) {
+		if (unlink("/sys/fs/bpf/bpfusion_stream_link") && errno != ENOENT) {
+			perror("unlink stream link");
+			return 1;
+		}
+		if (unlink("/sys/fs/bpf/bpfusion_streams") && errno != ENOENT) {
+			perror("unlink stream map"); return 1;
+		}
+		puts("stream sockops detached");
+		return 0;
+	}
 	if (!strcmp(cmd, "tx-load")) {
 		const char *path = argc > 2 ? argv[2] : "module/bfusion_tx.ko";
 		char params[64];
@@ -83,7 +95,7 @@ int main(int argc, char **argv)
 		printf("detached from %s\n", ifname);
 		return 0;
 	}
-	if (!strcmp(cmd, "attach")) {
+	if (!strcmp(cmd, "attach") || stream_mode) {
 		/* Drop stale pins from a previous run: a fresh object otherwise
 		 * cannot take the same pin path, and the daemon would map the
 		 * *old* page while the new program writes to the new one. */
@@ -108,7 +120,7 @@ int main(int argc, char **argv)
 			perror("mmap ctl");
 			return 1;
 		}
-		for (i = 0; i < 11; i++) {
+		for (i = 0; i < 16; i++) {
 			__u32 k = (__u32)i;
 
 			if (bpf_map_lookup_elem(stats_fd, &k, &v) == 0)
@@ -134,9 +146,30 @@ int main(int argc, char **argv)
 		perror("open bpf object");
 		return 1;
 	}
+	bpf_object__for_each_program(prog, bo) {
+		int stream_program = !strncmp(bpf_program__name(prog), "stream_", 7);
+		bpf_program__set_autoload(prog, stream_program == stream_mode);
+	}
+	bpf_map__set_autocreate(bpf_object__find_map_by_name(bo, "streams"), stream_mode);
+	if (stream_mode) {
+		unsigned backlog;
+		FILE *setting = fopen("/proc/sys/net/core/somaxconn", "r");
+		if (!setting || fscanf(setting, "%u", &backlog) != 1 || !backlog) {
+			fprintf(stderr, "cannot discover listener backlog capacity\n");
+			return 1;
+		}
+		fclose(setting);
+		bpf_map__set_max_entries(bpf_object__find_map_by_name(bo, "streams"), backlog);
+		printf("sockhash capacity follows somaxconn=%u\n", backlog);
+	}
+
 	{
 		struct bpf_map *m;
 
+		if (stream_mode) {
+			m = bpf_object__find_map_by_name(bo, "streams");
+			bpf_map__set_pin_path(m, "/sys/fs/bpf/bpfusion_streams");
+		}
 		m = bpf_object__find_map_by_name(bo, "ctl");
 		bpf_map__set_pin_path(m, "/sys/fs/bpf/bpfusion_ctl");
 		m = bpf_object__find_map_by_name(bo, "stats");
@@ -155,6 +188,41 @@ int main(int argc, char **argv)
 	if (page == MAP_FAILED) {
 		perror("mmap ctl");
 		return 1;
+	}
+
+	if (stream_mode) {
+		char line[4096], path[8192];
+		FILE *cg = fopen("/proc/self/cgroup", "r");
+		struct bpf_link *link;
+		int sockmap = bpf_map__fd(bpf_object__find_map_by_name(bo, "streams"));
+		int cgroup;
+
+		if (!cg || !fgets(line, sizeof(line), cg) || strncmp(line, "0::", 3)) {
+			fprintf(stderr, "cannot discover current cgroup v2\n");
+			return 1;
+		}
+		fclose(cg);
+		line[strcspn(line, "\n")] = 0;
+		snprintf(path, sizeof(path), "/sys/fs/cgroup%s", line + 3);
+		cgroup = open(path, O_RDONLY | O_DIRECTORY | O_CLOEXEC);
+		if (cgroup < 0) { perror("current cgroup"); return 1; }
+		prog = bpf_object__find_program_by_name(bo, "stream_parse");
+		if (bpf_prog_attach(bpf_program__fd(prog), sockmap, BPF_SK_SKB_STREAM_PARSER, 0)) {
+			perror("stream parser attach"); return 1;
+		}
+		prog = bpf_object__find_program_by_name(bo, "stream_publish");
+		if (bpf_prog_attach(bpf_program__fd(prog), sockmap, BPF_SK_SKB_STREAM_VERDICT, 0)) {
+			perror("stream verdict attach"); return 1;
+		}
+		prog = bpf_object__find_program_by_name(bo, "stream_sockops");
+		link = bpf_program__attach_cgroup(prog, cgroup);
+		if (!link || libbpf_get_error(link)) { fprintf(stderr, "sockops attach failed\n"); return 1; }
+		if (bpf_link__pin(link, "/sys/fs/bpf/bpfusion_stream_link")) {
+			bpf_link__destroy(link); perror("stream link pin"); return 1;
+		}
+		close(cgroup);
+		puts("stream parser/verdict and sockops attached to current Workspace cgroup");
+		return 0;
 	}
 
 	memset(&hook, 0, sizeof(hook));

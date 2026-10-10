@@ -92,8 +92,9 @@ The optional `executor/qwen.cu` reference now puts real Qwen prefill/decode,
 KV cache and argmax inside one resident CUDA kernel (finding 0013). It reads
 the same token ring and publishes output directly for kernel TX. The host
 only initializes and shuts down. Kernel accept and receive draining manage
-connection lifetime. This is sequential token-ID TCP; HTTP and GPU text
-processing remain open.
+connection lifetime. The default resident test now uses sockops/sockhash
+stream framing and supports queued concurrent token-ID requests (finding 0014);
+HTTP, GPU text processing and continuous batching remain open.
 
 ## Ownership rules (the correctness core)
 
@@ -137,10 +138,10 @@ completion the responder is still reading.
 
 ## What is not here yet
 
-- `sockops`/`sockmap` and stream/HTTP framing — the experimental kernel TX
-  control (`0012`) still uses tc packet ingress, pretokenized binary requests,
-  and host HF inference. Split/retransmitted TCP requests and concurrent
-  producers are not validated by its sequential loopback correctness run.
+- HTTP and text input/output — the resident reference has sockops/sockhash
+  stream framing (`0014`) with split-write and concurrent correctness controls.
+  The separate Python baseline still uses tc packet ingress (`0012`). Physical
+  packet loss/retransmission and overload response behavior remain unmeasured.
 - **GPU-side tokenization and sampling** — the LLM executor is host Python
   driving HF `transformers` in the Python baseline; the optional CUDA Qwen
   reference performs prefill/decode/KV/argmax and token publication on-device

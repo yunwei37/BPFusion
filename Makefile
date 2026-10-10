@@ -8,7 +8,7 @@
 
 BUILD    := build
 ARCH     := $(shell uname -m | sed 's/x86_64/x86/;s/aarch64/arm64/')
-BPF_CFLAGS := -O2 -g -target bpf -D__TARGET_ARCH_$(ARCH) \
+BPF_CFLAGS := -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_$(ARCH) \
               -I/usr/include/$(shell uname -m)-linux-gnu -Ibpf/include \
               -Wall -Werror -Wno-missing-declarations -Wno-unused-value
 CC       ?= cc

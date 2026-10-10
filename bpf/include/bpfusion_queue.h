@@ -94,6 +94,7 @@ enum bf_state {
 	BF_FREE = 0,
 	BF_PENDING = 1,
 	BF_DONE = 2,
+	BF_WRITING = 3, /* producer reservation, before publishing PENDING */
 };
 
 struct bf_ctl_slot {
