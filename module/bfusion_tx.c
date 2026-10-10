@@ -97,26 +97,50 @@ static bool earlier_peer(u32 idx, struct bf_llm_slot *s)
     return false;
 }
 
+/* Binary replies have no status header. Reject by ending the owned peer,
+ * so the client observes EOF and the rest of the GPU queue remains live. */
+static void reject_binary(struct bf_llm_slot *s)
+{
+    struct peer *peer;
+
+    list_for_each_entry(peer, &peers, node) {
+        struct inet_sock *inet = inet_sk(peer->socket->sk);
+        if ((__force u32)inet->inet_daddr == s->addr_be &&
+            (__force u16)inet->inet_dport == s->port_be) {
+            kernel_sock_shutdown(peer->socket, SHUT_RDWR);
+            return;
+        }
+    }
+}
+
 static void poll_slot(u32 idx)
 {
 	struct bf_llm_slot *s = &page->llm[idx];
 	u32 state = smp_load_acquire(&s->state);
 	u32 produced;
-	bool header;
+	u16 flags = READ_ONCE(s->pad), transport = flags & BF_LLM_TRANSPORT_MASK;
+	bool header, rejected = flags & BF_LLM_REJECTED;
 	int ret;
 
 	if ((state != BF_PENDING && state != BF_DONE) ||
-	    (READ_ONCE(s->pad) != 1 && READ_ONCE(s->pad) != 2))
+	    (transport != 1 && transport != 2))
+		return;
+	if (flags & BF_LLM_VALIDATING)
 		return;
 	if (earlier_peer(idx, s))
 		return;
 	produced = smp_load_acquire(&s->produced);
-	if (produced > BF_LLM_MAX_TOK || READ_ONCE(s->n_gen) > BF_LLM_MAX_TOK)
+	if (produced > BF_LLM_MAX_TOK || (!rejected && READ_ONCE(s->n_gen) > BF_LLM_MAX_TOK))
 		tx[idx].failed = true;
-	if (s->pad == 2 && !tx[idx].header_length)
+	if (rejected && transport == 1 && !tx[idx].failed) {
+		reject_binary(s);
+		tx[idx].failed = true;
+	}
+	if (transport == 2 && !tx[idx].header_length)
 		tx[idx].header_length = scnprintf(tx[idx].header, sizeof(tx[idx].header),
-			"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: %u\r\n\r\n",
-			s->n_gen * (u32)sizeof(u32));
+			"HTTP/1.1 %s\r\nContent-Type: application/octet-stream\r\nContent-Length: %u\r\n\r\n",
+			rejected ? "400 Bad Request" : "200 OK",
+			rejected ? 0 : s->n_gen * (u32)sizeof(u32));
 	header = tx[idx].header_sent < tx[idx].header_length;
 	if (!tx[idx].failed && (header || produced * sizeof(u32) > tx[idx].bytes)) {
 		if (header)
@@ -164,7 +188,8 @@ static bool peer_pending(struct sock *sk)
 		struct bf_llm_slot *s = &page->llm[i];
 		u32 state = smp_load_acquire(&s->state);
 
-		if (state != BF_FREE && (s->pad == 1 || s->pad == 2) &&
+		if (state != BF_FREE && ((s->pad & BF_LLM_TRANSPORT_MASK) == 1 ||
+                                  (s->pad & BF_LLM_TRANSPORT_MASK) == 2) &&
 		    s->addr_be == (__force u32)inet->inet_daddr &&
 		    s->port_be == (__force u16)inet->inet_dport)
 			return true;

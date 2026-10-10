@@ -38,6 +38,8 @@ kernel accept/drain and no steady userspace request worker. The HTTP endpoint
 uses Content-Length and binary token-ID bodies; it is not a text/JSON or
 OpenAI-compatible API. [Finding 0015](docs/findings/0015-http-token-transport.md)
 records split writes, concurrency, persistent connections and response ordering.
+[Finding 0017](docs/findings/0017-invalid-token-rejection.md) adds GPU vocabulary
+validation, HTTP 400/binary EOF rejection and continued service after bad input.
 The complete service target still needs GPU text processing, continuous
 batching, completion-event measurement and real-NIC evaluation. No serving
 speedup is claimed for this correctness reference. The GPU now uses one
@@ -175,6 +177,7 @@ pre-attach. The MLP run also prints the `client verify` numeric check.
 - [0014-sockmap-stream.md](docs/findings/0014-sockmap-stream.md) — TCP stream framing and concurrent queue reservation.
 - [0015-http-token-transport.md](docs/findings/0015-http-token-transport.md) — Content-Length POST token API, persistent connection framing and ordered HTTP replies.
 - [0016-cooperative-resident-qwen.md](docs/findings/0016-cooperative-resident-qwen.md) — one cooperative resident grid, strict short-output passes and an explicit longer-decode accuracy failure.
+- [0017-invalid-token-rejection.md](docs/findings/0017-invalid-token-rejection.md) — invalid model token IDs fail their request and leave subsequent inference live.
 - [0012-kernel-tcp-tx.md](docs/findings/0012-kernel-tcp-tx.md) — exact Qwen
   tokens returned by kernel TCP TX; lifecycle/reset tests; HF still drives inference.
 - [0011-http-baseline.md](docs/findings/0011-http-baseline.md) — external vLLM

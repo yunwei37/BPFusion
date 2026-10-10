@@ -22,6 +22,7 @@ def main():
     name="Qwen/Qwen2.5-0.5B-Instruct"
     tok=AutoTokenizer.from_pretrained(name)
     model=AutoModelForCausalLM.from_pretrained(name,dtype=torch.float16,attn_implementation="eager").to("cuda").eval()
+    vocab=model.config.vocab_size
     cases=[]
     for prompt in ("The capital of France is", "What is 2 plus 2?", "Write a short greeting.", "Linux is"):
         ids=tok(prompt).input_ids
@@ -109,7 +110,35 @@ def main():
                 actual=list(struct.unpack(f"<{len(expected)}I",data))
                 assert actual==expected,("pipeline",i,actual,expected)
         print("PASS six pipelined HTTP responses in order, ring wrap, half-close",flush=True)
-        print(f"PASS 26 TCP/HTTP requests, {26*args.gen} real Qwen greedy tokens, one CUDA launch, no host accept/read/send worker",flush=True)
+        ids,expected=cases[0]
+        bad_last=ids.copy(); bad_last[-1]=vocab
+        bad_first=ids.copy(); bad_first[0]=0xffffffff
+        def body(tokens):
+            return struct.pack("<IIIIQ",0x514c4d51,len(tokens),len(expected),0,time.monotonic_ns())+struct.pack(f"<{len(tokens)}I",*tokens)
+        # An invalid request must not terminate the grid or poison a later
+        # request on this same stream, including coalesced skb framing.
+        with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+            for tokens in (bad_last,ids,bad_first,ids):
+                payload=body(tokens)
+                client.sendall(f"POST /generate HTTP/1.1\r\nHost: localhost\r\nContent-Length: {len(payload)}\r\n\r\n".encode()+payload)
+            for invalid in (True,False,True,False):
+                header=b""
+                while not header.endswith(b"\r\n\r\n"):
+                    chunk=client.recv(1); assert chunk,"short rejection/pipeline header"; header+=chunk
+                status=b"400 Bad Request" if invalid else b"200 OK"
+                assert header.startswith(b"HTTP/1.1 "+status+b"\r\n"),header
+                count=0 if invalid else len(expected)*4
+                assert f"Content-Length: {count}\r\n".encode() in header,header
+                data=b""
+                while len(data)<count:
+                    chunk=client.recv(count-len(data)); assert chunk; data+=chunk
+                if not invalid: assert list(struct.unpack(f"<{len(expected)}I",data))==expected
+        with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+            client.sendall(body(bad_first))
+            assert client.recv(1)==b"","binary rejection must close the connection"
+        request(0,ids,expected)
+        print("PASS invalid first/last token IDs: HTTP 400, binary EOF, same-stream and later requests still exact",flush=True)
+        print(f"PASS 29 valid TCP/HTTP requests, {29*args.gen} real Qwen greedy tokens, three rejections, one CUDA launch, no host accept/read/send worker",flush=True)
     finally:
         try:
             if executor is not None:

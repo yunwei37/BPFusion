@@ -384,7 +384,7 @@ int stream_publish(struct __sk_buff *skb)
     }
     if (!reserved) { bump(8); __sync_fetch_and_add(&p->drops,1); return SK_DROP; }
     for (__u32 i=0;i<BF_LLM_MAX_TOK;i++) slot->tok_in[i]=tokens[i];
-    slot->n_prompt=h.n_prompt; slot->n_gen=h.n_gen; slot->produced=0; slot->pad=http ? 2 : 1;
+    slot->n_prompt=h.n_prompt; slot->n_gen=h.n_gen; slot->produced=0; slot->pad=(http ? 2 : 1) | BF_LLM_VALIDATING;
     slot->addr_be=skb->remote_ip4; slot->port_be=(__u16)(skb->remote_port>>16);
     slot->client_ns=h.client_ns; slot->ingress_ns=bpf_ktime_get_ns(); slot->gpu_done_ns=0;
     slot->state=BF_PENDING;

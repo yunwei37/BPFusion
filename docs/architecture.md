@@ -95,6 +95,10 @@ only initializes and shuts down. Kernel accept and receive draining manage
 connection lifetime. The default resident test now uses sockops/sockhash
 stream framing and supports queued concurrent token-ID requests (finding 0014);
 Content-Length HTTP POST framing now wraps the same token-ID body (finding 0015).
+Stream requests carry a validation-pending flag until the GPU checks their
+IDs against the loaded vocabulary. Rejections release their slot without
+ending the resident grid: HTTP 400/empty body or binary connection EOF
+(finding 0017). TX waits for validation before emitting a success header.
 The kernel emits HTTP headers and streamed token bytes, retaining response order
 on a connection even across ring wrap. Message offsets are read from the current
 kernel strparser layout with CO-RE: helper byte offsets are skb-relative, whereas

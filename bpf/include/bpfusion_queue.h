@@ -47,6 +47,9 @@ typedef unsigned short __u16;
 #define BF_LLM_MAGIC 0x514c4d51u /* 'Q','M','L','Q' little-endian */
 #define BF_LLM_SLOTS 8
 #define BF_LLM_MAX_TOK 64
+#define BF_LLM_TRANSPORT_MASK 3u
+#define BF_LLM_VALIDATING 4u /* stream request awaits model-vocabulary check */
+#define BF_LLM_REJECTED 8u /* executor rejected request before producing tokens */
 
 
 #define BF_SLOTS 64
@@ -60,7 +63,7 @@ struct bf_llm_slot {
 	__u32 produced;   /* tokens written to tok_out so far (executor) */
 	__u32 addr_be;    /* client peer, network order */
 	__u16 port_be;
-	__u16 pad;
+	__u16 pad;       /* transport 1=TCP, 2=HTTP; producer VALIDATING, GPU status */
 	__u64 client_ns;
 	__u64 ingress_ns;
 	__u64 gpu_done_ns;

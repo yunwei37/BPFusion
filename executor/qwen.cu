@@ -171,15 +171,33 @@ __global__ void resident(bf_page *p, Model m, Scratch s) {
         if(head==0xffffffff) return;
         if(head==seen || state!=BF_PENDING) continue;
         bf_llm_slot *slot=&p->llm[seen%BF_LLM_SLOTS];
-        if(!rank()) { s.control[2]=__ldcg(&slot->n_prompt); s.control[3]=__ldcg(&slot->n_gen); }
+        if(!rank()) {
+            unsigned np=__ldcg(&slot->n_prompt), ng=__ldcg(&slot->n_gen);
+            bool bad=!np || np>BF_LLM_MAX_TOK || !ng || ng>BF_LLM_MAX_TOK;
+            for(unsigned i=0;i<np && i<BF_LLM_MAX_TOK;i++)
+                if(__ldcg(&slot->tok_in[i])>=m.c.vocab) bad=true;
+            s.control[2]=bad ? 0 : np; s.control[3]=ng;
+            unsigned short flags=__ldcg(&slot->pad);
+            __threadfence_system();
+            __stcg(&slot->pad,(unsigned short)((flags & ~BF_LLM_VALIDATING) |
+                                             (bad ? BF_LLM_REJECTED : 0)));
+        }
         sync_grid();
         prompt=s.control[2]; gen=s.control[3];
-        if(prompt==0 || prompt>BF_LLM_MAX_TOK || gen==0 || gen>BF_LLM_MAX_TOK) return;
+        if(!prompt) {
+            if(!rank()) {
+                __stcg(&slot->produced,0u);
+                __threadfence_system();
+                __stcg(&slot->state,(unsigned)BF_DONE);
+            }
+            sync_grid();
+            seen++;
+            continue;
+        }
         for(unsigned pos=0;pos<prompt;pos++) {
             if(!rank()) s.control[4]=__ldcg(&slot->tok_in[pos]);
             sync_grid();
             token=s.control[4];
-            if(token>=m.c.vocab) return;
             forward(m,s,token,pos);
         }
         for(unsigned k=0;k<gen;k++) {
