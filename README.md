@@ -111,6 +111,12 @@ throughput688.74 ->683.96 and TPOT11.435 ->11.514ms have intervals crossing
 zero with all five point estimates worse. The candidate is not retained in
 the default path; its mixed result, costs and independent review are recorded
 in finding0021.
+A conversion/square pointwise norm fusion also passes all qualification and
+strict regressions and removes49 diagnostic device events per model graph.
+Its complete2,560-request comparison improves single-client gen64
+throughput285.79->300.98 and TPOT3.488->3.310ms,but eight-client primary
+throughput/TPOT intervals cross zero. The candidate is not retained under
+the predeclared concurrent retention rule; full evidence remains in finding0021.
 A grouped-query attention candidate avoids explicit repeated KV heads but
 fails the unchanged greedy oracle in five of twelve qualification groups.
 It is rejected before TCP performance collection; the existing attention

@@ -988,3 +988,216 @@ The speed hypothesis is untested. Skipping strict TCP and performance is the
 predeclared branch,not an incomplete admitted speed run. It confirms the
 HF patch is actually invoked,independent oracle precedes patching,and no
 owned work/module/pins remain. Publish the failure and keep the default.
+
+## Next norm candidate: fuse conversion and square,retain eager mean
+
+Whole-norm compilation failed the fixed oracle; retained norm-tail fusion
+succeeded by leaving its reduction eager. The completed shape diagnosis
+records49 hidden-state conversion kernels and49 pow kernels per model graph.
+A distinct pointwise boundary can combine those first two operations while
+keeping exactly the original mean reduction and the retained norm tail.
+This tests whether fewer conversion/square device kernels improve concurrent
+TCP throughput/TPOT without changing greedy outputs. It adds evidence beyond
+the closed tail fusion,whole-norm failures and grouped-attention rejection.
+Positive results support retention; failure or inconclusive concurrent
+effects preserve current computation. This is supporting engineering work
+within the unchanged user performance goal,not a new paper RQ or a complete
+serving claim. It is a runnable computation improvement with numerical risks
+bounded by the independent oracle; another unqualified batching/matmul change
+does not offer stronger currently validated evidence.
+
+Scope: original BPFusion Workspace/main,no production/native/module/queue/
+oracle/transport change at admission. Current basea98a316c7b992e5426fcea6584f57c2510795220
+has production byte-exactfc58faa. Temporary norm_prepare/qwen_graph adds four
+lines net: a default-backend compile function returns both original float32
+hidden_states and hidden_states.pow(2),using the same emulate_precision_casts
+option already required by retained pointwise fusions. norm_forward consumes
+those tensors and executes squared.mean(-1,keepdim=True) eagerly with the
+original dtype/shape. norm_finish,epsilon,weight/cast and all model operations
+otherwise remain unchanged. The additional output is needed by the unchanged
+norm tail,not a new retained buffer/interface. Compiled arithmetic and strides
+still require real qualification; no equivalence is assumed.
+
+Exact source/qualifier/driver/analyzer/mechanism profiler are frozen in
+bench/results/qwen_norm_prepare_adapter_20261010.txt. Preparation adds
+production0/test0. Temporary root is
+/tmp/bpfusion-qwen-pointwise-5mxeys8g. Candidate host entry
+norm_prepare_host/qwen_graph_host_launch uses the canonical native control.
+Performance entries norm_prepare_perf_baseline/qwen_graph and
+norm_prepare_perf_candidate/qwen_graph use the same existing checked test-local
+TCP_NODELAY native library. Client/oracle/CPU/window helpers are unchanged
+from the already-reviewed comparisons. No new mode,precision,compiler tuning,
+persistent helper or infrastructure setting is introduced.
+
+Reuse the preceding candidate's full fixed protocol and metric definitions:
+12GPU qualification groups/two banks/1536tokens first; then both canonical
+strict modes335valid/20432exact/259reject with empty/reuse/mixed/wrap/pipeline/
+half-close/network-trace/cleanup; actualTCPgen1 preflight; and the complete
+five-pair40cell2560request83200token gen1/64 x clients1/8 comparison.
+If any qualification row fails,close the candidate without speed collection.
+Never relax oracle or treat EXIT0/matrix completion as qualification pass.
+Five alternating process pairs and matching rotated cells,all warmup/idle/
+bootstrap exclusions,request/shutdown60s handling and ready-or-exit behavior
+remain unchanged. Preserve negative/inconclusive/failure rows and all costs.
+
+Commands from repository root,HF_HOME=/workspaces/.cache/huggingface:
+
+    python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/qualify_norm_prepare.py 2
+    python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/norm_prepare/qwen_graph
+    python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/norm_prepare_host/qwen_graph_host_launch
+    python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/norm_prepare_bench.py --gen 64 --preflight --output bench/results/qwen_norm_prepare_preflight_20261010.jsonl --resident-executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/norm_prepare_perf_baseline/qwen_graph --host-executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/norm_prepare_perf_candidate/qwen_graph
+
+For full comparison omit --preflight and use qwen_norm_prepare_20261010.jsonl.
+After qualification,the inherited GPU-only profile_norm_prepare.py optionally
+verifies event-count mechanism at the same five graph indices as the retained
+norm diagnostic. It captures one bank and replays graphs on the host; compare
+event counts with already-retained qwen_norm_tail_profile_20261010.txt,not
+sequential latency/allocations as a serving benefit. Profile is supporting
+mechanism evidence folded into this experiment,not a separate run contribution.
+
+Primary gen64 TPS/TPOT effects remain separate nominal paired df4 t95 results
+using five block means,positive gain=candidate-minus-baseline TPS and baseline-
+minus-candidate TPOT. Retain only if both concurrent primary outcomes support
+improvement and no primary effect supports regression; report single-client
+inconclusive effects separately. Secondarygen1,TTFT,completion,CPU,memory and
+bootstrap cannot replace that decision. Independent oracle and all actual
+timestamps/counters are checked. Warm compiler cache,common temporary transport,
+shared GPU/other owner,short prompts,closed loop and coarse executor CPU are
+limits; no total-host CPU,energy,isolated bandwidth,NIC,optimized-serving or
+whole-RQ claim. Fresh plan and result reviews apply. Preserve other owners,
+inspect boot/residency and owned process/module/pin cleanup,and publish only
+the completed branch and unchanged numerical standard.
+
+Fresh read-only plan review admits the conversion/square experiment. It
+confirms the compile boundary excludes mean,norm input dtype/epsilon/tail
+are unchanged,all frozen sources and common natives match,and the
+independent oracle runs before patching. The multi-output compiled function
+still requires actual qualification;kernel reduction and speed remain
+unproven. No additional baseline,framework or configuration is needed.
+
+The real two-bank GPU qualification completes all12 groups/1536 exact tokens,
+with no mismatch. Each group records one host launch,128 actual model graphs
+and error0. The independent oracle precedes candidate installation; full
+actual token rows and prompt edges/mixed groups are preserved in
+bench/results/qwen_norm_prepare_gpu_qualification_20261010.txt.
+This establishes this numerical prerequisite,not TCP correctness or speed.
+The admitted default-native resident strict regression completes EXIT0.
+
+
+The canonical resident strict test passes335 valid TCP/HTTP requests,
+20432 exact generated tokens and259 rejects. It includes5000 empty connections,
+mixed gen1/64,immediate reuse,ring wrap,pipeline and half-close. Native counters
+record one host launch,20432 model graphs,error0,banks8/max_active8,
+594publications,zero queue/registration errors and eight FREE slots.
+The all-thread trace has no executor accept/receive/send syscall after ready;
+normal module/hook/pin cleanup passes. The host qualification also completes EXIT0
+on the same candidate with the existing canonical serial native control.
+
+
+The host strict test also passes335 valid requests/20432 exact tokens/259
+rejects,including the same empty connections,mixed/reuse/wrap,pipeline,
+half-close and all-thread network trace. It records594 host launches,
+20432 model graphs,error0,banks1/max_active1,594 publications,eight FREE
+slots and complete normal cleanup. Both strict modes use canonical natives,
+without the performance listener's test-local TCP_NODELAY setting.
+Sources and output are preserved in
+[resident strict](../../bench/results/qwen_norm_prepare_resident_correctness_20261010.txt)
+and [host strict](../../bench/results/qwen_norm_prepare_host_correctness_20261010.txt).
+
+The [host-replay mechanism profile](../../bench/results/qwen_norm_prepare_profile_20261010.txt)
+terminates0. At graph indices5,64,80,128,190 it records760,832,712,712,712
+device events versus809,881,761,761,761 in the retained
+[norm-tail baseline profile](../../bench/results/qwen_norm_tail_profile_20261010.txt).
+Each graph removes49 events;both profiles retain49 MeanOps reduction events.
+This supports the intended pointwise preparation mechanism,not a TCP speed
+comparison. Sequential replay timing/allocation samples are diagnostic only;
+no matched peak-memory or isolated serving benefit is inferred.
+The real TCP preflight completes through the admitted unchanged driver.
+
+
+The real TCP preflight exits0 with15 records,two normal executor exits and
+eight exact measured gen1 tokens. Both engines record12 publications,
+264 model graphs,one host service launch,error0,banks8/max_active1 and
+eight final FREE slots. Full comparison is then started; no preflight
+timing is interpreted as a speed result.
+
+### Conversion/square complete TCP result: single-client support only
+
+The [full raw](../../bench/results/qwen_norm_prepare_20261010.jsonl) and
+[stdout](../../bench/results/qwen_norm_prepare_20261010.stdout.txt) terminate0:
+2621records,40cells,2560requests,83200 exact measured tokens and ten normal
+executor starts/exits. Every process records one host service launch,
+8580model graphs,error0,banks8/max_active8,264publications,zero queue/
+registration failures and eight final FREE slots. All five pairs remain;
+there is no failed full cell or post-hoc sample exclusion.
+The [analysis](../../bench/results/qwen_norm_prepare_analysis_20261010.txt)
+preserves its exact script and independently recomputes every token,
+timestamp-derived metric,TPS denominator,prompt/index balance,process order
+and counters. Its complete verification passes.
+
+Means below are arithmetic means of five paired blocks. Positive gain means
+candidate-minus-baseline TPS or baseline-minus-candidate latency. Nominal
+two-sided t95 intervals use df4 and do not adjust for four primary comparisons.
+
+| Primary gen64 | baseline | conversion/square | paired gain | nominal t95 gain |
+|---|---:|---:|---:|---|
+| clients1 output tokens/s | 285.792567 | 300.975065 | +15.182498 | [+13.444318,+16.920679] |
+| clients1 TPOT ms | 3.487801 | 3.309664 | +0.178137 | [+0.158108,+0.198166] |
+| clients8 output tokens/s | 682.503354 | 686.412756 | +3.909402 | [-0.701464,+8.520268] |
+| clients8 TPOT ms | 11.544272 | 11.485969 | +0.058303 | [-0.019659,+0.136265] |
+
+Single-client throughput improves about5.31% and TPOT falls about5.11%;
+both nominal intervals exclude zero. All five concurrent point estimates
+favor the candidate,but both concurrent primary intervals cross zero.
+This does not establish concurrent benefit,practical equivalence or regression.
+The predeclared concurrent retention requirement is unmet: close the candidate
+and keep the existing default. Production/test source growth remains0/0;
+the four temporary lines are not installed and no fallback/mode is added.
+
+| paired block | clients1 TPS gain | clients1 TPOT reduction ms | clients8 TPS gain | clients8 TPOT reduction ms |
+|---:|---:|---:|---:|---:|
+| 0 | 15.886689 | 0.184809 | 10.456264 | 0.168944 |
+| 1 | 12.759508 | 0.151338 | 1.666569 | 0.029646 |
+| 2 | 16.324557 | 0.194232 | 1.632497 | 0.021805 |
+| 3 | 15.496145 | 0.182488 | 2.776572 | 0.022519 |
+| 4 | 15.445592 | 0.177817 | 3.015108 | 0.048601 |
+
+Secondary gen64 clients1 TTFT4.174313->4.103150ms and
+completion223.905766->212.611980ms have nominal positive gain intervals
+[0.035905,0.106422] and[10.050011,12.537560]ms.
+At clients8,TTFT20.300767->19.945955ms and
+completion747.589911->743.562002ms intervals cross zero
+[-0.072556,0.782181] and[-0.951369,9.007187]ms.
+Gen1/clients1 TPS245.760549->246.672231 and TTFT4.055141->4.038350ms
+are inconclusive. Gen1/clients8 TPS274.179040->292.739304 and
+TTFT29.011658->27.157760ms have positive intervals
+[6.541129,30.579400]tokens/s and[0.896403,2.811393]ms.
+These secondary outcomes do not replace the concurrent gen64 primary result;
+gen1 has no TPOT.
+
+Warm-cache bootstrap means52.638757s baseline versus54.981165s candidate,
+ranges[51.393179,53.690480] and[53.953166,56.217467]s.
+Across20 active cells per engine,executor CPU totals0.06/0.08s; five idle
+seconds per engine each record0.00s at100Hz. These are coarse process-only
+samples,not exact-zero CPU or total host/kernel/energy evidence.
+No matched peak-memory benefit is established by the sequential profile.
+
+[Host observations](../../bench/results/qwen_norm_prepare_environment_20261010.txt)
+at the collection boundaries retain the same boot and separate SGLang
+owner732929/18404MiB. Endpoint400W/100% readings cannot identify per-service
+work or within-window co-tenant activity. Post-run cleanup at
+2026-10-10T22:30:54UTC finds no owned benchmark/executor,module or BPF pins;
+all normal cleanup and final slots also passed. Warm compiler cache,
+common temporary TCP_NODELAY,shared RTX5090,short prompts,closed-loop load,
+greedy fp16 and client arrival timestamps bound the claim.
+This is supporting computation evidence,not isolated bandwidth,total-host
+cost,energy,physical-NIC or optimized-serving superiority.
+Fresh independent read-only terminal review independently recomputes all
+40cells,primary and secondary effects,five paired intervals,oracle and native
+counts. It confirms valid/complete execution,supported single-client and
+mechanism effects,inconclusive concurrent benefit,supporting engineering
+value and computation/workload boundary. The exact candidate/native/frozen
+sources,all qualification/strict results,profile and cleanup match.
+It finds no invalidating defect and confirms the predeclared close/default
+decision. The later batch causal diagnostic is separate from this completed
+experiment. No unchanged performance rerun is required.
