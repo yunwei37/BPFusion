@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Correctness-first resident Qwen2 reference: a cooperative grid executes prefill,
 // decode, KV attention and greedy sampling, directly on the pinned BPF page.
-// Tensor-core linear layers; no per-request host launch/copy/sampling.
+// Matrix prefill and Tensor Core linear layers; no per-request host launch/copy/sampling.
 #include <cuda_runtime.h>
 #include <cuda_fp16.h>
 #include <mma.h>
@@ -26,7 +26,7 @@ constexpr int CTX = 2 * BF_LLM_MAX_TOK;
 struct Config { unsigned h, inter, layers, heads, kvheads, vocab; float eps, theta; };
 struct Layer { half *norm, *q, *qb, *k, *kb, *v, *vb, *o, *post, *gate, *up, *down; };
 struct Model { Config c; half *embed, *norm; Layer *layer; float *inverse; };
-struct Scratch { float *x, *norm, *q, *k, *v, *att, *out, *gate, *up, *prob, *logits, *keys, *values; unsigned *control; };
+struct Scratch { float *x, *norm, *q, *k, *v, *att, *out, *gate, *up, *prob, *logits, *keys, *values; unsigned *control, *input; };
 
 __device__ unsigned rank() { return blockIdx.x*blockDim.x+threadIdx.x; }
 __device__ unsigned threads() { return gridDim.x*blockDim.x; }
@@ -37,24 +37,25 @@ __device__ float warp_sum(float v) {
     return v;
 }
 __device__ void matvec(float *out, const half *w, const half *bias,
-                      const float *x, int rows, int cols) {
-    int lane = threadIdx.x % 32, warp = rank() / 32;
-    // One CTA computes sixteen rows, splitting K across its eight warps.
-    // Repeated columns of the fp16 vector form B; column zero is the matvec.
-    // Warp-private tiles satisfy WMMA's 32-byte alignment; CTA barriers make
-    // the partial sums visible before their fp32 reduction.
-    if (rows%16==0 && cols%16==0 && reinterpret_cast<uintptr_t>(w)%32==0) {
+                      const float *x, int rows, int cols, int count=1) {
+    int lane=threadIdx.x%32, warp=rank()/32;
+    // A tile contains sixteen model rows and sixteen prompt-token columns.
+    // Eight warps partition K; count=1 preserves replicated-vector decode.
+    if(rows%16==0 && cols%16==0 && reinterpret_cast<uintptr_t>(w)%32==0) {
         __shared__ __align__(32) half input[8][256];
         __shared__ __align__(32) float output[8][256];
-        int local=threadIdx.x/32;
-        for (int row=blockIdx.x*16; row<rows; row+=gridDim.x*16) {
+        int local=threadIdx.x/32, row_tiles=rows/16;
+        for(int tile=blockIdx.x;tile<row_tiles*((count+15)/16);tile+=gridDim.x) {
+            int row=tile%row_tiles*16, token=tile/row_tiles*16;
             nvcuda::wmma::fragment<nvcuda::wmma::matrix_a,16,16,16,half,nvcuda::wmma::row_major> a;
             nvcuda::wmma::fragment<nvcuda::wmma::matrix_b,16,16,16,half,nvcuda::wmma::col_major> b;
             nvcuda::wmma::fragment<nvcuda::wmma::accumulator,16,16,16,float> acc;
             nvcuda::wmma::fill_fragment(acc,0.0f);
-            for (int col=local*16; col<cols; col+=8*16) {
-                for (int i=lane; i<256; i+=32)
-                    input[local][i]=__float2half_rn(x[col+i%16]);
+            for(int col=local*16;col<cols;col+=8*16) {
+                for(int i=lane;i<256;i+=32) {
+                    int t=count==1 ? 0 : token+i/16;
+                    input[local][i]=__float2half_rn(t<count ? x[t*cols+col+i%16] : 0.0f);
+                }
                 __syncwarp();
                 nvcuda::wmma::load_matrix_sync(a,w+(size_t)row*cols+col,cols);
                 nvcuda::wmma::load_matrix_sync(b,input[local],16);
@@ -63,115 +64,115 @@ __device__ void matvec(float *out, const half *w, const half *bias,
             }
             nvcuda::wmma::store_matrix_sync(output[local],acc,16,nvcuda::wmma::mem_row_major);
             __syncthreads();
-            if (threadIdx.x<16) {
+            int r=threadIdx.x/16,t=token+threadIdx.x%16;
+            if(t<count) {
                 float sum=0;
-                for (int part=0; part<8; part++) sum+=output[part][threadIdx.x*16];
-                out[row+threadIdx.x]=fp16(sum+(bias ? __half2float(bias[row+threadIdx.x]) : 0));
+                for(int part=0;part<8;part++) sum+=output[part][threadIdx.x];
+                out[t*rows+row+r]=fp16(sum+(bias ? __half2float(bias[row+r]) : 0));
             }
             __syncthreads();
         }
-        sync_grid();
-        return;
+    } else {
+        for(int item=warp;item<count*rows;item+=threads()/32) {
+            int row=item%rows,t=item/rows;
+            float sum=0;
+            for(int col=lane;col<cols;col+=32)
+                sum=fmaf(__half2float(w[(size_t)row*cols+col]),x[t*cols+col],sum);
+            sum=warp_sum(sum);
+            if(!lane) out[item]=fp16(sum+(bias ? __half2float(bias[row]) : 0));
+        }
     }
-    // Preserve the existing calculation for dimensions or weights without aligned tiles.
-    for (int row=warp; row<rows; row+=threads()/32) {
+    sync_grid();
+}
+__device__ void rms(float *out,const float *x,const half *w,int n,float eps,int count=1) {
+    // One CTA reduces each token; stride also covers devices with fewer SMs.
+    for(unsigned t=blockIdx.x;t<(unsigned)count;t+=gridDim.x) {
+        __shared__ float sums[8],inv;
+        int base=t*n;
         float sum=0;
-        for (int col=lane; col<cols; col+=32)
-            sum = fmaf(__half2float(w[(size_t)row*cols+col]), x[col], sum);
-        sum = warp_sum(sum);
-        if (!lane) out[row]=fp16(sum + (bias ? __half2float(bias[row]) : 0));
+        for(int i=threadIdx.x;i<n;i+=blockDim.x) sum+=x[base+i]*x[base+i];
+        sum=warp_sum(sum);
+        if(!(threadIdx.x%32)) sums[threadIdx.x/32]=sum;
+        __syncthreads();
+        if(!threadIdx.x) { sum=0;for(int i=0;i<8;i++) sum+=sums[i];inv=rsqrtf(sum/n+eps); }
+        __syncthreads();
+        for(int i=threadIdx.x;i<n;i+=blockDim.x) out[base+i]=fp16(fp16(x[base+i]*inv)*__half2float(w[i]));
+        __syncthreads();
     }
     sync_grid();
 }
-__device__ void rms(float *out, const float *x, const half *w, int n, float eps) {
-    if (blockIdx.x==0) {
-    __shared__ float sums[8], inv;
-    float sum=0;
-    for (int i=threadIdx.x; i<n; i+=blockDim.x) sum += x[i]*x[i];
-    sum=warp_sum(sum);
-    if (!(threadIdx.x%32)) sums[threadIdx.x/32]=sum;
-    __syncthreads();
-    if (!threadIdx.x) { sum=0; for(int i=0;i<8;i++) sum+=sums[i]; inv=rsqrtf(sum/n+eps); }
-    __syncthreads();
-    for(int i=threadIdx.x;i<n;i+=blockDim.x) out[i]=fp16(fp16(x[i]*inv)*__half2float(w[i]));
-    __syncthreads();
-    }
-    sync_grid();
-}
-__device__ void rope(float *a, float *tmp, int n, int dim, int pos, const float *inverse) {
-    for(int i=rank();i<n;i+=threads()) {
-        int d=i%dim, base=i-d, j=d%(dim/2);
-        float angle=pos*inverse[j];
-        float cs=fp16(cosf(angle)), sn=fp16(sinf(angle));
+__device__ void rope(float *a,float *tmp,int n,int dim,int pos,const float *inverse,int count) {
+    for(int i=rank();i<count*n;i+=threads()) {
+        int d=i%dim,base=i-d,j=d%(dim/2);
+        float angle=(pos+i/n)*inverse[j];
+        float cs=fp16(cosf(angle)),sn=fp16(sinf(angle));
         float rot=d<dim/2 ? -a[base+d+dim/2] : a[base+d-dim/2];
         tmp[i]=fp16(fp16(a[i]*cs)+fp16(rot*sn));
     }
     sync_grid();
-    for(int i=rank();i<n;i+=threads()) a[i]=tmp[i];
+    for(int i=rank();i<count*n;i+=threads()) a[i]=tmp[i];
     sync_grid();
 }
-__device__ void forward(Model m, Scratch s, unsigned token, int pos) {
+__device__ void forward(Model m,Scratch s,int count,int pos) {
     Config c=m.c;
-    int h=c.h, dim=h/c.heads, kv=c.kvheads*dim;
-    for(int i=rank();i<h;i+=threads()) s.x[i]=__half2float(m.embed[(size_t)token*h+i]);
+    int h=c.h,dim=h/c.heads,kv=c.kvheads*dim;
+    for(int i=rank();i<count*h;i+=threads()) s.x[i]=__half2float(m.embed[(size_t)s.input[i/h]*h+i%h]);
     sync_grid();
     for(unsigned l=0;l<c.layers;l++) {
         Layer w=m.layer[l];
-        rms(s.norm,s.x,w.norm,h,c.eps);
-        matvec(s.q,w.q,w.qb,s.norm,h,h);
-        matvec(s.k,w.k,w.kb,s.norm,kv,h);
-        matvec(s.v,w.v,w.vb,s.norm,kv,h);
-        rope(s.q,s.out,h,dim,pos,m.inverse);
-        rope(s.k,s.norm,kv,dim,pos,m.inverse);
+        rms(s.norm,s.x,w.norm,h,c.eps,count);
+        matvec(s.q,w.q,w.qb,s.norm,h,h,count);
+        matvec(s.k,w.k,w.kb,s.norm,kv,h,count);
+        matvec(s.v,w.v,w.vb,s.norm,kv,h,count);
+        rope(s.q,s.out,h,dim,pos,m.inverse,count);
+        rope(s.k,s.norm,kv,dim,pos,m.inverse,count);
         float *keys=s.keys+(size_t)l*CTX*kv;
         float *vals=s.values+(size_t)l*CTX*kv;
-        for(int i=rank();i<kv;i+=threads()) {
-            keys[pos*kv+i]=s.k[i]; vals[pos*kv+i]=s.v[i];
-        }
+        for(int i=rank();i<count*kv;i+=threads()) { keys[pos*kv+i]=s.k[i];vals[pos*kv+i]=s.v[i]; }
         sync_grid();
-        // Each warp computes one head's causal scores and softmax.
-        int lane=threadIdx.x%32, warp=rank()/32;
-        for(unsigned head=warp;head<c.heads;head+=threads()/32) {
-            int kh=head/(c.heads/c.kvheads);
-            for(int t=0;t<=pos;t++) {
+        int lane=threadIdx.x%32,warp=rank()/32;
+        // Each warp owns one token/head and attends only through its position.
+        for(unsigned item=warp;item<count*c.heads;item+=threads()/32) {
+            int head=item%c.heads,tok=item/c.heads,kh=head/(c.heads/c.kvheads),end=pos+tok;
+            float *prob=s.prob+item*CTX;
+            for(int t=0;t<=end;t++) {
                 float dot=0;
-                for(int d=lane;d<dim;d+=32) dot+=s.q[head*dim+d]*keys[t*kv+kh*dim+d];
+                for(int d=lane;d<dim;d+=32) dot+=s.q[tok*h+head*dim+d]*keys[t*kv+kh*dim+d];
                 dot=warp_sum(dot);
-                if(!lane) s.prob[head*CTX+t]=fp16(fp16(dot)/sqrtf((float)dim));
+                if(!lane) prob[t]=fp16(fp16(dot)/sqrtf((float)dim));
             }
             __syncwarp();
             if(!lane) {
-                float mx=-INFINITY, den=0;
-                for(int t=0;t<=pos;t++) mx=fmaxf(mx,s.prob[head*CTX+t]);
-                for(int t=0;t<=pos;t++) den+=expf(s.prob[head*CTX+t]-mx);
-                for(int t=0;t<=pos;t++) s.prob[head*CTX+t]=fp16(expf(s.prob[head*CTX+t]-mx)/den);
+                float mx=-INFINITY,den=0;
+                for(int t=0;t<=end;t++) mx=fmaxf(mx,prob[t]);
+                for(int t=0;t<=end;t++) den+=expf(prob[t]-mx);
+                for(int t=0;t<=end;t++) prob[t]=fp16(expf(prob[t]-mx)/den);
             }
             __syncwarp();
             for(int d=lane;d<dim;d+=32) {
                 float sum=0;
-                for(int t=0;t<=pos;t++) sum=fmaf(s.prob[head*CTX+t],vals[t*kv+kh*dim+d],sum);
-                s.att[head*dim+d]=fp16(sum);
+                for(int t=0;t<=end;t++) sum=fmaf(prob[t],vals[t*kv+kh*dim+d],sum);
+                s.att[tok*h+head*dim+d]=fp16(sum);
             }
         }
         sync_grid();
-        matvec(s.out,w.o,nullptr,s.att,h,h);
-        for(int i=rank();i<h;i+=threads()) s.x[i]=fp16(s.x[i]+s.out[i]);
+        matvec(s.out,w.o,nullptr,s.att,h,h,count);
+        for(int i=rank();i<count*h;i+=threads()) s.x[i]=fp16(s.x[i]+s.out[i]);
         sync_grid();
-        rms(s.norm,s.x,w.post,h,c.eps);
-        matvec(s.gate,w.gate,nullptr,s.norm,c.inter,h);
-        matvec(s.up,w.up,nullptr,s.norm,c.inter,h);
-        for(unsigned i=rank();i<c.inter;i+=threads())
-            s.gate[i]=fp16(fp16(s.gate[i]/(1+expf(-s.gate[i])))*s.up[i]);
+        rms(s.norm,s.x,w.post,h,c.eps,count);
+        matvec(s.gate,w.gate,nullptr,s.norm,c.inter,h,count);
+        matvec(s.up,w.up,nullptr,s.norm,c.inter,h,count);
+        for(unsigned i=rank();i<count*c.inter;i+=threads()) s.gate[i]=fp16(fp16(s.gate[i]/(1+expf(-s.gate[i])))*s.up[i]);
         sync_grid();
-        matvec(s.out,w.down,nullptr,s.gate,h,c.inter);
-        for(int i=rank();i<h;i+=threads()) s.x[i]=fp16(s.x[i]+s.out[i]);
+        matvec(s.out,w.down,nullptr,s.gate,h,c.inter,count);
+        for(int i=rank();i<count*h;i+=threads()) s.x[i]=fp16(s.x[i]+s.out[i]);
         sync_grid();
     }
 }
-__device__ unsigned sample(Model m, Scratch s) {
+__device__ unsigned sample(Model m, Scratch s, unsigned count) {
     __shared__ float maxima[256];
     __shared__ unsigned ids[256];
-    rms(s.norm,s.x,m.norm,m.c.h,m.c.eps);
+    rms(s.norm,s.x+(count-1)*m.c.h,m.norm,m.c.h,m.c.eps);
     matvec(s.logits,m.embed,nullptr,s.norm,m.c.vocab,m.c.h);
     if (blockIdx.x==0) {
     float mx=-INFINITY; unsigned id=0;
@@ -231,14 +232,11 @@ __global__ void resident(bf_page *p, Model m, Scratch s, unsigned seen, bool onc
             if (once) return;
             continue;
         }
-        for(unsigned pos=0;pos<prompt;pos++) {
-            if(!rank()) s.control[4]=__ldcg(&slot->tok_in[pos]);
-            sync_grid();
-            token=s.control[4];
-            forward(m,s,token,pos);
-        }
+        for(unsigned i=rank();i<prompt;i+=threads()) s.input[i]=__ldcg(&slot->tok_in[i]);
+        sync_grid();
+        forward(m,s,prompt,0);
         for(unsigned k=0;k<gen;k++) {
-            unsigned next=sample(m,s);
+            unsigned next=sample(m,s,k ? 1 : prompt);
             token=next;
             if(!rank()) {
                 __stcg(&slot->tok_out[k],token);
@@ -246,7 +244,11 @@ __global__ void resident(bf_page *p, Model m, Scratch s, unsigned seen, bool onc
                 __stcg(&slot->produced,k+1);
             }
             sync_grid();
-            if(k+1<gen) forward(m,s,token,prompt+k);
+            if(k+1<gen) {
+                if(!rank()) s.input[0]=token;
+                sync_grid();
+                forward(m,s,1,prompt+k);
+            }
         }
         if(!rank()) {
             __threadfence_system();
@@ -298,9 +300,12 @@ int main(int argc,char **argv) {
     CUDA(cudaMemcpy(m.inverse,inverse.data(),inverse.size()*sizeof(float),cudaMemcpyHostToDevice));
     Scratch s={};
     auto alloc=[&](float **p,size_t n) { CUDA(cudaMalloc(p,n*sizeof(float))); };
-    alloc(&s.x,c.h); alloc(&s.norm,c.h); alloc(&s.q,c.h); alloc(&s.k,kv); alloc(&s.v,kv);
-    alloc(&s.att,c.h); alloc(&s.out,c.h); alloc(&s.gate,c.inter); alloc(&s.up,c.inter);
-    alloc(&s.prob,c.heads*CTX); alloc(&s.logits,c.vocab);
+    alloc(&s.x,c.h*BF_LLM_MAX_TOK); alloc(&s.norm,c.h*BF_LLM_MAX_TOK); alloc(&s.q,c.h*BF_LLM_MAX_TOK);
+    alloc(&s.k,kv*BF_LLM_MAX_TOK); alloc(&s.v,kv*BF_LLM_MAX_TOK);
+    alloc(&s.att,c.h*BF_LLM_MAX_TOK); alloc(&s.out,c.h*BF_LLM_MAX_TOK);
+    alloc(&s.gate,c.inter*BF_LLM_MAX_TOK); alloc(&s.up,c.inter*BF_LLM_MAX_TOK);
+    alloc(&s.prob,c.heads*CTX*BF_LLM_MAX_TOK); alloc(&s.logits,c.vocab);
+    CUDA(cudaMalloc(&s.input,BF_LLM_MAX_TOK*sizeof(unsigned)));
     alloc(&s.keys,(size_t)c.layers*CTX*kv); alloc(&s.values,(size_t)c.layers*CTX*kv);
     CUDA(cudaMalloc(&s.control,5*sizeof(unsigned)));
     cudaDeviceProp prop; CUDA(cudaGetDeviceProperties(&prop,0));

@@ -182,3 +182,71 @@ math. Finding 0018's measurements and identical-SASS claims refer to their
 recorded earlier commits, not this new device kernel. Correct long decode,
 GPU text processing, continuous batching, completion-event measurement,
 real-NIC controls and optimized serving comparisons remain open.
+
+## Layer diagnosis and matrix prefill, 2026-10-10 UTC
+
+[Layer snapshots](../../bench/results/resident_qwen_layers_20261010.txt)
+compare source `75567807b3ccc2bd00f63f5643a9a05f13ade9bb` with the same HF
+eager fp16 oracle at first input position 0 and final forward position 66
+for `Write a short greeting.`. A temporary native binary saves 18 stages
+per layer on-device and copies them after stopping. HF forward hooks save
+the corresponding stages; its attention wrapper returns the original
+attention result. The instrumented native run retains the identical first
+62 outputs and the known output-63 divergence. This is a numerical probe,
+not a serving timing or no-worker regression.
+
+At position 0, layer-zero embedding and input RMSNorm agree exactly;
+Q projection differs at one element by 0.00000095367431640625. The
+post-attention residual and normalization agree, but gate/up projections
+differ at 21/25 elements, and the layer output differs at 295/896 elements.
+At position 66 the same layer's embedding, input norm and Q/K/V projections
+agree; its output differs at 69/896 elements. At layer 23, the final output
+max absolute difference is 0.0625. These locate early observed projection
+rounding differences and their downstream accumulation at two positions;
+they do not establish one operation as the cause of all later differences.
+
+Same-input controls use layer-zero weights with the saved CUDA input.
+At position 0, the gate projection differs from CPU fp64-dot-to-fp16
+rounding at 3 rows; single-token PyTorch differs at 5 rows; the two differ
+at 8 rows. HF's actual multi-token prefill differs from CUDA at 21 rows.
+Thus neither higher precision nor matching the abstract linear operation
+alone guarantees the recorded HF result. An [fp64 linear-accumulation
+candidate](../../bench/results/resident_qwen_fp64_control64_20261010.txt)
+fails the first prompt at output 14. It is not retained as a fix. No oracle,
+tie rule or precision assertion was relaxed.
+
+The current executor processes a whole prompt through each layer: WMMA
+B columns carry its token vectors, per-token CTA reductions normalize
+vectors, token/head warps perform causal attention, and all prompt K/V
+entries are published before attention. Decode still uses one token.
+Scratch space follows the existing 64-token input bound. Each normalization
+CTA strides across tokens, so correctness does not require at least 64 SMs.
+Model weights, fp16 boundaries, greedy sampling, queue ownership and kernel
+TX are unchanged. Requests remain serial; this is prompt prefill batching,
+not continuous multi-request batching.
+
+```sh
+make qwen qwen-control
+HF_HOME=/workspaces/.cache/huggingface python3 tests/resident_qwen.py --prefill-edges
+HF_HOME=/workspaces/.cache/huggingface python3 tests/resident_qwen.py --prefill-edges --executor ./build/qwen_host_launch
+```
+
+The new optional test covers 16/17/32/64-token prompts by repeating the
+first existing prompt's token IDs, including tile boundaries and maximum
+input length. Its [resident](../../bench/results/resident_qwen_prefill_edges_resident8_20261010.txt)
+and [host-dispatch](../../bench/results/resident_qwen_prefill_edges_host8_20261010.txt)
+runs each pass 297 valid TCP/HTTP requests, 2376 exact oracle tokens and
+259 rejections with the existing churn, concurrency, ring-wrap, pipeline,
+half-close and trace checks. Launch counts are 1/556.
+[Default build evidence](../../bench/results/resident_qwen_prefill_build_20261010.txt)
+confirms identical resident/control and default/candidate device SASS,
+with 96 registers/thread, 32-byte stack and 15396-byte shared storage.
+
+The [first matrix-prefill 64-token candidate](../../bench/results/resident_qwen_prefill64_20261010.txt)
+and [final default 64-token binary](../../bench/results/resident_qwen_prefill_default64_20261010.txt)
+still fail at the third prompt's output 63, retaining the recorded first-three-
+prompt outputs. Batching prefill within the custom WMMA implementation alone
+did not resolve the HF reduction difference. No matched performance benefit
+is claimed for this increment. Full long-output correctness, text processing,
+continuous batching, completion-event/NIC measurement and optimized baselines
+remain open.

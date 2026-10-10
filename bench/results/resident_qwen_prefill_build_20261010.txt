@@ -1,0 +1,147 @@
+2026-10-10: default Makefile targets after matrix prefill; base 75567807b3ccc2bd00f63f5643a9a05f13ade9bb plus source change recorded with this log.
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -Ibpf/include executor/qwen.cu -o build/qwen -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_HOST_LAUNCH -Ibpf/include executor/qwen.cu -o build/qwen_host_launch -lbpf -lelf -lz -lpthread
+
+build/qwen resources
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:24 CONSTANT[4]:8
+ Function _Z8residentP7bf_page5Model7Scratchjb:
+  REG:96 STACK:32 SHARED:15396 LOCAL:0 CONSTANT[0]:1093 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+Fatbin ptx code:
+================
+arch = sm_120
+code version = [9,0]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions =
+
+build/qwen_host_launch resources
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:24 CONSTANT[4]:8
+ Function _Z8residentP7bf_page5Model7Scratchjb:
+  REG:96 STACK:32 SHARED:15396 LOCAL:0 CONSTANT[0]:1093 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+Fatbin ptx code:
+================
+arch = sm_120
+code version = [9,0]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions =
+
+/tmp/bpfusion-prefill-eafiwm_n/qwen resources
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:24 CONSTANT[4]:8
+ Function _Z8residentP7bf_page5Model7Scratchjb:
+  REG:96 STACK:32 SHARED:15396 LOCAL:0 CONSTANT[0]:1093 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+Fatbin ptx code:
+================
+arch = sm_120
+code version = [9,0]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions =
+
+/tmp/bpfusion-prefill-eafiwm_n/qwen_host_launch resources
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:24 CONSTANT[4]:8
+ Function _Z8residentP7bf_page5Model7Scratchjb:
+  REG:96 STACK:32 SHARED:15396 LOCAL:0 CONSTANT[0]:1093 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+Fatbin ptx code:
+================
+arch = sm_120
+code version = [9,0]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions =
+PASS identical device SASS: resident/control
+PASS identical device SASS: default/candidate resident
+PASS identical device SASS: default/candidate control
+PASS identical first-three-prompt 64-token CUDA outputs in split-K, initial matrix-prefill and final default controls; oracle still fails at third prompt output 63.

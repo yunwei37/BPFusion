@@ -47,8 +47,9 @@ cooperative resident grid; [finding 0016](docs/findings/0016-cooperative-residen
 records the eight-token passes and the failed 64-token oracle control.
 Its Tensor Core follow-up passes the strengthened short-output regressions;
 the first two 64-token prompts now match, but the third still diverges at
-output 63. Linear layers use WMMA with fp16 boundaries; request execution
-remains serial. The earlier dispatch measurements below precede this math change.
+output 63. Linear layers use WMMA with fp16 boundaries; whole prompts now
+use matrix prefill, while requests remain serial. The 16/17/32/64-token
+prompt-edge regressions pass in both execution modes. The earlier dispatch measurements below precede this math change.
 A matched host-dispatch control now builds with `make qwen-control`: it launches
 that same device kernel once per request while retaining eBPF ingress and
 kernel TX. It is a mechanism ablation, not an optimized serving baseline.

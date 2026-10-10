@@ -16,14 +16,17 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
-def oracle_cases(gen):
+def oracle_cases(gen, prefill_edges=False):
     name="Qwen/Qwen2.5-0.5B-Instruct"
     tok=AutoTokenizer.from_pretrained(name)
     model=AutoModelForCausalLM.from_pretrained(name,dtype=torch.float16,attn_implementation="eager").to("cuda").eval()
     vocab=model.config.vocab_size
     cases=[]
-    for prompt in ("The capital of France is", "What is 2 plus 2?", "Write a short greeting.", "Linux is"):
-        ids=tok(prompt).input_ids
+    inputs=[tok(prompt).input_ids for prompt in ("The capital of France is", "What is 2 plus 2?", "Write a short greeting.", "Linux is")]
+    if prefill_edges:
+        pattern=inputs[0]
+        inputs.extend((pattern*((n+len(pattern)-1)//len(pattern)))[:n] for n in (16,17,32,64))
+    for ids in inputs:
         with torch.no_grad():
             out=model(torch.tensor([ids],device="cuda"),use_cache=True)
             past=out.past_key_values
@@ -44,8 +47,10 @@ def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--gen",type=int,default=8,choices=range(1,65))
     parser.add_argument("--executor",default="./build/qwen")
+    parser.add_argument("--prefill-edges",action="store_true",help="also test 16/17/32/64-token prompt lengths")
     args=parser.parse_args()
-    cases,vocab=oracle_cases(args.gen)
+    cases,vocab=oracle_cases(args.gen,args.prefill_edges)
+    valid=273+3*len(cases)
     print("HF eager fp16 oracle ready, model released",flush=True)
     subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
     subprocess.run(["./build/bpfusion_load","stream-detach"],check=True)
@@ -167,7 +172,7 @@ def main():
             assert client.recv(1)==b"","binary rejection must close the connection"
         request(0,ids,expected)
         print("PASS invalid first/last token IDs: HTTP 400, binary EOF, same-stream and later requests still exact",flush=True)
-        print(f"PASS 285 valid TCP/HTTP requests, {285*args.gen} real Qwen greedy tokens, 259 rejections, no host accept/read/send worker",flush=True)
+        print(f"PASS {valid} valid TCP/HTTP requests, {valid*args.gen} real Qwen greedy tokens, 259 rejections, no host accept/read/send worker",flush=True)
         complete=True
     finally:
         try:
@@ -176,7 +181,7 @@ def main():
                 log=open(logpath).read()
                 print(log,flush=True)
                 if complete and "dispatch=host-launch" in log:
-                    assert "dispatch=host-launch launches=544" in log,log
+                    assert f"dispatch=host-launch launches={valid+259}" in log,log
                 elif complete:
                     assert "dispatch=resident launches=1" in log,log
                 if complete: print("PASS expected CUDA launch count for the selected dispatch",flush=True)

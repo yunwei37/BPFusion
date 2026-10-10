@@ -106,7 +106,9 @@ several frames can share one skb. GPU text processing and continuous batching
 remain open. Exact-token agreement is verified for the recorded eight-token
 cases. Linear layers now use 16-row WMMA tiles with K partitioned across
 eight warps per CTA; RoPE frequencies are initialized once at bootstrap.
-Execution remains batch 1. Earlier scalar single-CTA/grid controls diverged
+Prompt vectors are evaluated together within each layer, with per-token
+normalization and causal token/head attention. Decode and request execution
+remain batch 1. Earlier scalar single-CTA/grid controls diverged
 at the second prompt's output 21; the current Tensor Core reference matches
 the first two 64-token prompts and diverges at the third prompt's output 63
 (finding 0016). General long-output correctness remains unproven.
