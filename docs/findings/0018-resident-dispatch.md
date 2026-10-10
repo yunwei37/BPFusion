@@ -357,3 +357,120 @@ passed both paths with four exact one-token replies per mode; mean TTFT was
 not a performance result. Preflight metadata records base `1e30e76` plus the
 uncommitted path adapter and temporary candidate source delta documented above;
 the full matrix starts after the adapter/plan checkpoint commit.
+
+### Follow-up failed run: reservation rejection reproduced
+
+The first full TCP_NODELAY matrix **failed**, preserving
+[raw partial measurements](../../bench/results/resident_dispatch_nodelay_failed_20261010.jsonl)
+and [terminal traceback](../../bench/results/resident_dispatch_nodelay_failed_20261010.txt).
+At source checkpoint `c11d96e`, 21 complete cells and 1,407 measured requests
+(6,328 tokens) matched the same oracle. Pair 2 host-launch gen8/concurrency8
+completed 63/64 requests; index 59 (case 3) did not receive a reply before
+the unchanged 60-second timeout. This partial run is not a performance result.
+
+The failure snapshot records 136 parser calls, 135 stream publications and
+one LLM busy/drop event. Eight warmups plus two 64-request cells require
+136 publications. These counters locate a reservation refusal, but do not
+identify its state or timing. The existing `head=0` and four FREE slots printed
+by `stats` are the unrelated MLP ring, **not** the LLM queue. They cannot
+establish that LLM inference was idle or unstuck. All child processes, module,
+hooks and map pins were cleaned up normally after the failure.
+
+Two source-level hypotheses remain: a producer reads an old head and rejects
+a slot another producer has just reserved, or the ring truly has no FREE slot
+because the final reply reaches a client before GPU DONE / kernel recycling.
+At-refusal actual head/state evidence is needed before attributing the fault.
+The read-only result reviewer independently confirmed the counters, missing
+index and this evidence boundary. `bpfusion_load stats` now reports the actual
+LLM head and all eight request states/dimensions/production counts as well as
+the legacy MLP ring; this is diagnosis, not a request-path behavior change.
+
+A bounded diagnostic reruns the same matrix with only a temporary BPF refusal
+print containing observed head, current head and CAS-observed slot state.
+It is labelled diagnostic, and neither a success nor disappearance of the
+fault would be counted as repair. The fixed oracle/timeouts remain unchanged.
+
+### Captured DONE/reclamation boundary and repair
+
+The [instrumented diagnostic](../../bench/results/resident_dispatch_nodelay_diagnostic_20261010.jsonl)
+also failed: 17 completed cells, 1,150 exact requests / 5,168 tokens, then
+pair 2 resident gen8/concurrency8 timed out. Indexes 51 and 59 are absent;
+worker 3 fails at 51 before attempting its subsequent index 59. They are not
+two independent rejected requests. One busy/drop event was recorded.
+
+[Own refusal trace](../../bench/results/resident_dispatch_nodelay_reservation_trace_20261010.txt)
+captures observed/current head 123/123 and target slot 3 in BF_DONE with eight
+produced tokens. All seven other slots are PENDING with zero produced tokens.
+This event excludes transient BF_WRITING contention and demonstrates completed
+output occupying the next ring slot at admission. The incoming request header
+clock is 38,639,652,261,928 ns; the previous slot's request clock is
+38,639,424,520,238 ns. Raw completed index 43 starts 3,793 ns after that previous
+header timestamp and receives its last token at 38,639,652,229,098 ns. The new
+header is constructed 32,830 ns after that arrival, consistent with index 51
+on the same closed-loop worker. These correlations use client monotonic
+timestamps. The separate kernel trace uses its recorded local trace clock;
+no absolute cross-clock latency or calibration bound is inferred.
+
+At the later timeout snapshot, actual LLM head is 134 and all eight slots are
+FREE. This explains why post-timeout emptiness cannot rule out an earlier
+reclamation gap. The temporary BPF instrumentation added only the CAS-state
+print, incoming/prior request timestamps and an eight-slot state/production
+print; it changed no admission algorithm. Source was restored and the default
+BPF object rebuilt after the diagnostic.
+
+The source sends bytes, releases the socket, then updates TX accounting and
+possibly publishes FREE. Linux [release_sock](https://raw.githubusercontent.com/torvalds/linux/v7.3-rc3/net/core/sock.c)
+can process receive backlog before dropping ownership, and
+[sk_psock_strp_data_ready](https://raw.githubusercontent.com/torvalds/linux/v7.3-rc3/net/core/skmsg.c)
+runs with the socket lock held. The captured boundary does not reveal whether
+that callback ran inside backlog processing or immediately after unlock, but
+both were permitted before reclamation.
+
+The repair retains socket ownership through exact-byte accounting, TX reset
+and DONE-to-FREE publication, then unlocks and finally drops the old socket
+reference. After FREE, only saved local socket pointers are accessed; a new
+producer cannot have its slot data overwritten by old TX cleanup. The final
+token is withheld while the GPU state snapshot is still PENDING, so a complete
+valid response cannot precede GPU release. A rejected HTTP response has no
+body: its entire 400 header is withheld until DONE as well. Binary rejection
+also waits for DONE. Earlier tokens still stream; no user-space request worker,
+new queue, network setting or additional runtime controller is introduced.
+
+The read-only source reviewer identified the bodyless-response edge after the
+first repair draft; it was fixed before runtime testing. Native module and
+loader builds pass. The loader's actual LLM fields are now exercised by real
+map snapshots, rather than a fabricated fixture. This repairs the observed
+completion/reclamation ordering, not general admission control. True overload,
+unrelated-connection capacity, producer reservation contention and internal
+TCP backlog/wait paths remain broader reliability questions.
+
+The failure warrants a regression extension: eight persistent clients each
+perform 32 invalid-then-valid immediate request pairs, reusing the same strict
+oracle and existing protocol helper. This adds 256 bodyless rejections and
+256 exact valid responses across repeated ring wrap. The original split-byte,
+pipeline/half-close, binary EOF, 5,000-connection and all-thread tracing checks
+remain intact. Each full regression now has 285 valid requests / 2,280 tokens
+and 259 rejections; expected launches are 1/544. This strengthened correctness
+check is a recorded plan change after a real fault; the benchmark's workload,
+oracle computation, timeouts, repetition matrix and metric definitions are
+unchanged. All comparisons are rerun using the repaired module. The sequential
+comparison with the original default run now also includes a TX repair; it
+cannot identify a causal effect of TCP_NODELAY alone.
+
+All four strengthened regressions passed with the repaired module:
+[default resident](../../bench/results/qwen_reclaim_resident_default_correctness_20261010.txt),
+[default host dispatch](../../bench/results/qwen_reclaim_host_default_correctness_20261010.txt),
+[temporary TCP_NODELAY resident](../../bench/results/qwen_reclaim_resident_nodelay_correctness_20261010.txt),
+and [temporary TCP_NODELAY host dispatch](../../bench/results/qwen_reclaim_host_nodelay_correctness_20261010.txt).
+Each records 544 publications, zero LLM busy/drop events, the expected 1/544
+launches, strict token/status checks and cleanup. Across these four runs the
+validated output is 1,140 requests / 9,120 exact tokens plus 1,036 rejections.
+The [repaired real two-mode preflight](../../bench/results/resident_dispatch_nodelay_reclaim_preflight_20261010.jsonl)
+also passes eight exact one-token replies. These are reliability/setup receipts,
+not substitutes for the full performance matrix.
+
+The follow-up read-only source review passes: its bodyless-response blocker
+is closed, lock/reference/partial-byte ordering is sound, and all four real
+regressions were independently inspected. It explicitly leaves overload,
+unrelated-connection capacity, exhaustive races and latency benefit unproven.
+The full repaired matrix is run from the following source checkpoint.

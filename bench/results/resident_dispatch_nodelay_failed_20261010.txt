@@ -1,0 +1,49 @@
+
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 290/290 [00:00<00:00, 5347.36it/s]
+pair=0 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=resident gen=8 c=1 requests=64 exact_tokens=512 cpu_s=0.000
+pair=0 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=resident gen=8 c=8 requests=64 exact_tokens=512 cpu_s=0.000
+pair=0 mode=host-launch gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.660
+pair=0 mode=host-launch gen=8 c=1 requests=64 exact_tokens=512 cpu_s=1.840
+pair=0 mode=host-launch gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.650
+pair=0 mode=host-launch gen=8 c=8 requests=64 exact_tokens=512 cpu_s=1.830
+pair=1 mode=host-launch gen=8 c=1 requests=64 exact_tokens=512 cpu_s=1.840
+pair=1 mode=host-launch gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.650
+pair=1 mode=host-launch gen=8 c=8 requests=64 exact_tokens=512 cpu_s=1.820
+pair=1 mode=host-launch gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.670
+pair=1 mode=resident gen=8 c=1 requests=64 exact_tokens=512 cpu_s=0.000
+pair=1 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=1 mode=resident gen=8 c=8 requests=64 exact_tokens=512 cpu_s=0.000
+pair=1 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=8 c=8 requests=64 exact_tokens=512 cpu_s=0.000
+pair=2 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=8 c=1 requests=64 exact_tokens=512 cpu_s=0.000
+pair=2 mode=host-launch gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.660
+Traceback (most recent call last):
+  File "/workspaces/repository/bench/resident_dispatch.py", line 210, in <module>
+    if __name__=="__main__": main()
+                             ^^^^^^
+  File "/workspaces/repository/bench/resident_dispatch.py", line 183, in main
+    summary=cell(executor.pid,cases,gen,concurrency,count,rows)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/repository/bench/resident_dispatch.py", line 85, in cell
+    for future in futures: future.result()
+                           ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/usr/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/repository/bench/resident_dispatch.py", line 79, in worker
+    row=request(client,ids,expected[:gen]); row.update(index=index,case=case)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/repository/bench/resident_dispatch.py", line 44, in request
+    chunk=client.recv(4096)
+          ^^^^^^^^^^^^^^^^^
+TimeoutError: timed out

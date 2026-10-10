@@ -138,6 +138,12 @@ int main(int argc, char **argv)
 			       (unsigned long long)page->slots[i].client_ns,
 			       page->slots[i].x[0], page->done[i].state,
 			       page->done[i].id, page->done[i].y[0]);
+		printf("llm_head=%u\n", page->llm_head);
+		for (i = 0; i < BF_LLM_SLOTS; i++)
+			printf("llm[%d]: state=%u prompt=%u gen=%u produced=%u client_ns=%llu\n",
+			       i, page->llm[i].state, page->llm[i].n_prompt,
+			       page->llm[i].n_gen, page->llm[i].produced,
+			       (unsigned long long)page->llm[i].client_ns);
 		return 0;
 	}
 

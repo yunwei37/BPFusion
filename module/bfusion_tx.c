@@ -43,7 +43,8 @@ static struct {
 } tx[BF_LLM_SLOTS];
 static unsigned long sent_bytes, completions, abandoned, retries;
 
-static int reply_tcp(u32 idx, struct bf_llm_slot *s, void *data, u32 bytes)
+static int reply_tcp(u32 idx, struct bf_llm_slot *s, void *data, u32 bytes,
+                     struct sock **locked)
 {
 	struct sock *sk = tx[idx].sk;
 	struct msghdr msg = { .msg_flags = MSG_DONTWAIT | MSG_NOSIGNAL };
@@ -69,12 +70,13 @@ static int reply_tcp(u32 idx, struct bf_llm_slot *s, void *data, u32 bytes)
 	/* No RCU read section across lock_sock/send. No sk_socket dereference:
 	 * close can detach that object even while a sock reference is held. */
 	lock_sock(sk);
+	*locked = sk;
 	if (sock_flag(sk, SOCK_DEAD) || (sk->sk_shutdown & SEND_SHUTDOWN) ||
 	    (sk->sk_state != TCP_ESTABLISHED && sk->sk_state != TCP_CLOSE_WAIT))
 		ret = -ENOTCONN;
 	else
 		ret = tcp_sendmsg_locked(sk, &msg, vec.iov_len);
-	release_sock(sk);
+	/* Caller recycles a completed slot before releasing incoming backlog. */
 	return ret;
 }
 
@@ -116,6 +118,7 @@ static void reject_binary(struct bf_llm_slot *s)
 static void poll_slot(u32 idx)
 {
 	struct bf_llm_slot *s = &page->llm[idx];
+	struct sock *locked = NULL, *put = NULL;
 	u32 state = smp_load_acquire(&s->state);
 	u32 produced;
 	u16 flags = READ_ONCE(s->pad), transport = flags & BF_LLM_TRANSPORT_MASK;
@@ -125,11 +128,16 @@ static void poll_slot(u32 idx)
 	if ((state != BF_PENDING && state != BF_DONE) ||
 	    (transport != 1 && transport != 2))
 		return;
-	if (flags & BF_LLM_VALIDATING)
+	/* A bodyless rejection header also completes a response. */
+	if ((flags & BF_LLM_VALIDATING) || (rejected && state != BF_DONE))
 		return;
 	if (earlier_peer(idx, s))
 		return;
 	produced = smp_load_acquire(&s->produced);
+	/* Keep the last token until GPU release. Receiving a whole response must
+	 * not permit a new request while this slot is still executor-owned. */
+	if (state != BF_DONE && produced && produced == READ_ONCE(s->n_gen))
+		produced--;
 	if (produced > BF_LLM_MAX_TOK || (!rejected && READ_ONCE(s->n_gen) > BF_LLM_MAX_TOK))
 		tx[idx].failed = true;
 	if (rejected && transport == 1 && !tx[idx].failed) {
@@ -145,10 +153,10 @@ static void poll_slot(u32 idx)
 	if (!tx[idx].failed && (header || produced * sizeof(u32) > tx[idx].bytes)) {
 		if (header)
 			ret = reply_tcp(idx, s, tx[idx].header + tx[idx].header_sent,
-				tx[idx].header_length - tx[idx].header_sent);
+				tx[idx].header_length - tx[idx].header_sent, &locked);
 		else
 			ret = reply_tcp(idx, s, (u8 *)s->tok_out + tx[idx].bytes,
-				produced * sizeof(u32) - tx[idx].bytes);
+				produced * sizeof(u32) - tx[idx].bytes, &locked);
 		if (ret > 0) {
 			if (header)
 				tx[idx].header_sent += ret;
@@ -167,8 +175,7 @@ static void poll_slot(u32 idx)
 	if (state == BF_DONE && (tx[idx].failed ||
 	    (tx[idx].header_sent == tx[idx].header_length &&
 	    tx[idx].bytes == produced * sizeof(u32)))) {
-		if (tx[idx].sk)
-			sock_put(tx[idx].sk);
+		put = tx[idx].sk;
 		if (tx[idx].failed)
 			abandoned++;
 		else
@@ -176,6 +183,13 @@ static void poll_slot(u32 idx)
 		memset(&tx[idx], 0, sizeof(tx[idx]));
 		smp_store_release(&s->state, BF_FREE);
 	}
+	/* release_sock can run the next request's parser from TCP backlog. All
+	 * old slot/TX accesses must finish first; keep the sock reference until
+	 * after unlocking, even when completion cleared tx[idx].sk. */
+	if (locked)
+		release_sock(locked);
+	if (put)
+		sock_put(put);
 }
 
 /* The bootstrap process owns the listener file; sockfd_lookup pins it.

@@ -1,0 +1,6 @@
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4476.11it/s]
+pair=0 mode=resident gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+pair=0 mode=host-launch gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.040
+{"mode": "resident", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 10.2781205, "ttft_p50_ms": 10.227356499999999, "ttft_p99_ms": 16.06129279, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0], "tokens_per_s": [97.16335000381123]}
+{"mode": "host-launch", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 10.29657025, "ttft_p50_ms": 10.277483, "ttft_p99_ms": 16.068705039999998, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.040000000000000036], "tokens_per_s": [96.90571805271641]}
+{"gen": 1, "concurrency": 1, "paired_host_minus_resident_ttft_ms": [0.018449750000000265], "difference_mean_ms": 0.018449750000000265, "difference_t95_ms": null}
