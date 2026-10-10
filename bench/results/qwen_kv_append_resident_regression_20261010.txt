@@ -1,0 +1,56 @@
+COMMAND ['python3', 'tests/resident_qwen.py', '--gen', '64', '--prefill-edges', '--executor', '/tmp/bpfusion-qwen-pointwise-5mxeys8g/kv_append/qwen_graph']
+UTC 2026-10-10T23:23:44.398162+00:00
+COMMIT 0897b0388d28fb4eb985d9127e5a2100d42b90db
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4817.14it/s]
+HF eager fp16 oracle ready, model released
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+stream sockops detached
+sockhash capacity follows somaxconn=4096
+stream parser/verdict and sockops attached to current Workspace cgroup
+strace: exec: Permission denied
+
+seen pkts      0
+ip+udp/ip+tcp pkts 0
+magic pkts     0
+drops          0
+published      0
+drop: ctl busy 0
+drop: done busy 0
+llm magic      0
+llm busy       0
+tcp dest       0
+tcp magic      0
+stream publish 0
+sockhash linked 0
+sockhash failed 0
+parser calls   0
+parser invalid 0
+head=0 done_seq=0 published=0 acked=0 drops=0 ready=0
+slot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+llm_head=0
+llm[0]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[1]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[2]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[3]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[4]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[5]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[6]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[7]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+stream sockops detached
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+PASS test map pins removed after module shutdown and hook detach
+Traceback (most recent call last):
+  File "/workspaces/repository/tests/resident_qwen.py", line 217, in <module>
+    if __name__=="__main__": main()
+                             ^^^^^^
+  File "/workspaces/repository/tests/resident_qwen.py", line 66, in main
+    raise AssertionError(open(logpath).read())
+AssertionError: strace: exec: Permission denied
+
+
+EXIT 1

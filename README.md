@@ -117,6 +117,11 @@ Its complete2,560-request comparison improves single-client gen64
 throughput285.79->300.98 and TPOT3.488->3.310ms,but eight-client primary
 throughput/TPOT intervals cross zero. The candidate is not retained under
 the predeclared concurrent retention rule; full evidence remains in finding0021.
+A paired KV-copy compilation candidate also completes strict regressions
+and the full83200-token TCP comparison. It still launches48 copy kernels
+per model graph. Single-client throughput improves285.99->288.79tokens/s,
+while eight-client throughput/TPOT intervals cross zero. It is not retained;
+no paired-kernel fusion or concurrent performance benefit is established.
 A grouped-query attention candidate avoids explicit repeated KV heads but
 fails the unchanged greedy oracle in five of twelve qualification groups.
 It is rejected before TCP performance collection; the existing attention

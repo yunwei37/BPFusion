@@ -1201,3 +1201,234 @@ sources,all qualification/strict results,profile and cleanup match.
 It finds no invalidating defect and confirms the predeclared close/default
 decision. The later batch causal diagnostic is separate from this completed
 experiment. No unchanged performance rerun is required.
+
+## Paired KV append copy fusion: real TCP performance experiment
+
+The unchanged goal is worker-free real-model TCP/HTTP serving with improved
+throughput/latency. Current default captures HF Qwen computation and advances
+eight private graph/KV banks. Its retained RoPE/norm-tail optimizations improve
+measured TCP metrics; ordinary and zero-stride BMM batching candidates fail
+the fixed greedy oracle. Those closed results cannot answer a different
+copy-scheduling mechanism. Prior eager shape attribution associates about13%
+of summed diagnostic kernel durations with copies,without identifying that
+entire share as KV append or transferring it to device-launched TCP execution.
+
+Hypothesis: compiling the paired key/value cache append together with the
+default torch.compile backend reduces copy launch overhead and improves the
+current eight-client TCP gen64 throughput/TPOT without changing token outputs,
+cache positions or lifecycle. Planned role:supporting engineering evidence,
+not a paper RQ or headline superiority. A positive result can retain this
+small implementation;contradictory/mixed/inconclusive results preserve the
+current default. Existing batching failures do not settle this exact copy
+mechanism. A fresh arbitrary matmul retry lacks a qualified implementation;
+this copy-only improvement is runnable in the actual service. Correctness
+and compiler-mechanism probes are dependencies of the TCP comparison,not
+independent paper progress.
+
+Candidate is net4 lines versus byte-exact fc58faa production:
+a module-level @torch.compile append_kv executes key.copy_(key_states) and
+value.copy_(value_states). SharedLayer.update calls it with the same two
+pos:end views and original source tensors. No arithmetic,cast,shape,stride,
+KV layout/capacity,position calculation,model,epsilon,queue/module/native
+dispatcher,oracle,transport or persistent compiler configuration changes.
+The compiler may emit two kernels instead of one,choose a different copy
+implementation or specialize on strides. Do not assume fusion or speed.
+Use the existing default compiler/cache;no backend/options/precision tuning.
+Only the compiled function changes;the returned cache views remain unchanged.
+
+Original Workspace/repository/main only. Base0897b0388d28fb4eb985d9127e5a2100d42b90db,
+production/test changes0 at admission. Temporary sources under
+/tmp/bpfusion-qwen-pointwise-5mxeys8g:
+kv_append/qwen_graph canonical native resident;kv_append_host/qwen_graph_host_launch
+canonical serial correctness control;kv_append_perf_baseline/qwen_graph and
+kv_append_perf_candidate/qwen_graph identical previously used test-local
+TCP_NODELAY native library. Both performance modes are resident eight-bank
+engines;the serial host variant is not a performance baseline.
+Comparator is the current best BPFusion implementation,component comparison.
+This cannot establish superiority over optimized serving. No service,
+installation,new model,mode,scheduler,owner or configuration entity.
+
+Protocol reuses completed norm_prepare fixed evaluation unchanged:
+1. qualify_kv_append.py 2 computes independent eager batch1
+oracle_cases(64,True) before loading candidate;captures actual device-launched
+private graphs;all12 groups/two banks/1536 generated tokens and mismatches.
+Full fresh prefill overwrites relevant KV on each group;candidate-selected
+tokens drive63 decode steps,no teacher forcing. Any mismatch closes candidate
+without performance collection,reference change or unchanged rerun.
+2. If all qualify,tests/resident_qwen.py --gen64 --prefill-edges
+for BOTH canonical candidate resident and host entries. Each strict protocol
+covers335 valid/20432 exact/259 rejects,mixed lengths,reuse,wrap,pipeline,
+half-close,5000 empty connections,network trace and cleanup.
+3. Actual TCP gen1 preflight through the reused paired driver;completion and
+correct tokens only,not speed evidence.
+4. Complete five alternating process pairs,rotated gen1/64 x clients1/8
+cells,64 measured requests/cell,four prompts16 times/cell:
+40cells2560 requests83200 exact tokens. Preserve every paired block,
+negative/inconclusive/failure row,bootstrap and process CPU cost.
+Inherited ready-or-exit,shutdown/request60s handling,common transport,
+warmup/exclusions and metric definitions remain unchanged.
+
+Commands from /workspaces/repository with existing
+HF_HOME=/workspaces/.cache/huggingface:
+python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/qualify_kv_append.py 2
+python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/kv_append/qwen_graph
+python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/kv_append_host/qwen_graph_host_launch
+python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/kv_append_bench.py --gen 64 --preflight --output bench/results/qwen_kv_append_preflight_20261010.jsonl --resident-executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/kv_append_perf_baseline/qwen_graph --host-executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/kv_append_perf_candidate/qwen_graph
+Full removes --preflight and writes qwen_kv_append_20261010.jsonl.
+Ordinary stdout/qualifier/strict raws under bench/results/qwen_kv_append*.
+Freeze exact sources and ordinary CPU analyzer before GPU execution.
+CPU analyze_kv_append.py reconstructs all tokens/timestamps/TPS,
+cell/prompt balance,engine order,process counters and nominal intervals.
+
+After qualification,profile_kv_append.py captures one bank and replays five
+model graphs (5,64,80,128,190),with installed PyTorch profiler. Compare
+device event count/copy kernel identities against retained norm-tail profile
+using the same default model math,not standalone replay latency as TCP speed.
+Generated installed-compiler source can show whether both writes occur in
+one kernel. This is mechanism evidence folded into the same experiment;
+no guaranteed reduction/fusion or physical bandwidth claim.
+
+Primary gen64 TPS and TPOT measured at clients1/8 as separate nominal paired
+df4 t95 effects over five process-block means;positive gain=candidate-minus-
+baseline TPS or baseline-minus-candidate latency. Retain only when both
+concurrent primary outcomes support improvement and no primary outcome
+supports regression. Single-client inconclusive effects remain separate.
+TTFT,completion,gen1,bootstrap,coarse process CPU and capture allocations
+cannot substitute for the primary result. The formulas/definitions and
+transport conditions are the already published component protocol in0021.
+
+Before/after host boot and GPU compute residency preserve other SGLang owner,
+with no induced isolation. Terminal own-process/module/map cleanup.
+Warm cache,shared GPU,one small model/stack,finite short prompts/closed loop,
+temporary common TCP_NODELAY and no total-hostCPU/energy/realNIC/external
+optimized baseline limit interpretation. Exact numerical and TCP lifecycle
+checks are necessary,not sufficient for general service correctness.
+Fresh plan review before execution;fresh independent terminal result review.
+If validated effects support retention,promote only the net4 lines and rerun
+canonical default-cache/default-network strict regression before push.
+If rejected/unretained,production/test growth0 and preserve raw honest result.
+
+
+Fresh independent plan review:ADMIT,no invalidating scientific/execution
+defect. Actual candidate/frozen source/native identity,independent oracle,
+full fixed TCP comparison/analysis and retention scope checked. Copies may
+not fuse:top15 profiler names alone cannot prove this;use generated source
+or full physical records,otherwise report mechanism unknown. The analyzer's
+ordinary collection-commit reference file contains
+0897b0388d28fb4eb985d9127e5a2100d42b90db and is frozen below for public replay.
+API references:[torch.compile](https://docs.pytorch.org/docs/2.14/generated/torch.compile.html)
+and [copy_](https://docs.pytorch.org/docs/2.14/generated/torch.Tensor.copy_.html).
+No GPU execution preceded this admission.
+
+Real device-bank qualification completes12 groups/1536 exact tokens,
+each with one host probe launch/128 model graphs/error0. Independent CPU
+checks all64-token sequences and group identities against the frozen oracle.
+Installed generated static/dynamic wrappers each invoke the copy kernel
+twice,once per original key/value target. Thus the expected horizontal
+single-kernel fusion is not realized. This does not change the candidate
+or evaluation:the admitted full TCP comparison can still test whether its
+different copy implementation has useful effects. Do not claim fewer KV
+launches or a fusion mechanism from this candidate. Generated source is
+frozen with the adapter. Before profiler execution,add only a full grouped
+device-record print to the existing profile output to preserve non-top15
+names;capture and replay are unchanged.
+
+The first canonical resident strict invocation fails before executor startup:
+strace reports exec Permission denied because these newly written temporary
+entry files lacked executable bits. This is an adapter preparation error,
+not a model/kernel/host failure;llm_head remains0 and test cleanup removes
+its maps/module. Preserve the failed raw qwen_kv_append_resident_regression_20261010.txt.
+Restore ordinary0755 on the four temporary Python entries and rerun the same
+strict command into resident_regression_repaired_20261010.txt. No source,
+oracle,model,transport,owner or persistent permission boundary change.
+
+Both canonical strict modes complete335 valid requests/20432 exact tokens/
+259 rejects,594 publications,zero graph errors and cleanup. Resident has
+one host launch/eight banks/max_active8;host control594 launches/one bank/
+max_active1. Network trace confirms no executor accept/read/send after ready.
+The profile completes all five shapes with total event counts
+809,881,761,761,761,identical to retained norm-tail baseline;each contains48
+triton_poi_fused_copy_copy__0 physical kernels. Generated wrappers show
+two launches per layer. Paired kernel fusion/launch reduction is contradicted;
+different copy implementation remains the actual intervention. Diagnostic
+replay timings are not a TCP benefit and do not replace the planned comparison.
+
+Real TCP preflight completes15 records/eight exact measured gen1 tokens,
+two normal resident executor exits. Each has one host launch/264 model
+graphs/error0/eight banks/max_active1,12 publications and eight FREE slots.
+No failure row. This establishes actual collection,not a speed result.
+Start the unchanged full five-pair40-cell comparison.
+
+### Compiled KV copies complete TCP result: no concurrent retention
+
+[Full raw](../../bench/results/qwen_kv_append_20261010.jsonl) and
+[stdout](../../bench/results/qwen_kv_append_20261010.stdout.txt) terminate0:
+2621 records,40 unique cells,2560 measured requests,83200 exact tokens,
+ten normal executor starts/exits and no failure row. All five alternating
+pairs and all samples remain. Every executor records one host launch,
+8580 model graphs,error0,eight banks/max_active8,264 publications,zero
+queue/registration failures and eight final FREE slots.
+The frozen [CPU analysis](../../bench/results/qwen_kv_append_analysis_20261010.txt)
+independently recomputes all oracle tokens,timestamps,TPS denominators,
+prompt/cell balance,process order/counters and uncertainty.
+
+Means below are arithmetic means of five process-block pairs. Gains are
+candidate-minus-baseline TPS or baseline-minus-candidate latency;nominal
+two-sided paired t95 usesdf4 and has no four-comparison multiplicity adjustment.
+
+| Primary gen64 | baseline | compiled copies | gain | nominal t95 gain |
+|---|---:|---:|---:|---|
+| clients1 output_tokens_per_s | 285.989446 | 288.794539 | +2.805093 | [+1.020099,+4.590087] |
+| clients1 tpot_ms | 3.484949 | 3.450561 | +0.034388 | [+0.013626,+0.055150] |
+| clients8 output_tokens_per_s | 680.116843 | 686.034127 | +5.917284 | [-7.932435,+19.767004] |
+| clients8 tpot_ms | 11.586925 | 11.481702 | +0.105222 | [-0.136919,+0.347364] |
+
+Single-client TPS improves about0.98% and TPOT about0.99%;both nominal
+intervals exclude zero. Concurrent mean estimates favor the candidate,but
+both intervals cross zero;the first pair is worse. This establishes neither
+concurrent benefit,equivalence nor regression. The predeclared concurrent
+retention requirement is unmet:close this candidate,keep default source
+byte-exactfc58faa and preserve all raw. Production/native/test growth0.
+Do not rerun an unchanged five-pair matrix to seek significance.
+
+The actual intervention is replacement of48 ATen KV copies by48 compiled
+copy kernels per model graph,not paired single-kernel fusion. Five profile
+totals and generated wrappers independently contradict fewer KV launches.
+The original reduction hypothesis is contradicted;single-client copy-
+implementation improvement has narrow support,concurrent effects are
+inconclusive. No bandwidth or unique causal attribution follows.
+
+Warm-cache bootstrap means53.178692s baseline versus57.032212s candidate,
+ranges[51.843666,54.711229] and[55.869288,57.584775]s. Executor-only CPU totals
+across active cells are0.06s each;idle totals0.01s each,at100Hz. These do not
+prove exact-zero CPU,total-host cost or energy. Sequential one-bank capture
+allocated1089993728/reserved1518338048bytes,matching the old norm-tail
+diagnostic;it is not a matched peak service memory result.
+
+Both strict [resident](../../bench/results/qwen_kv_append_resident_regression_repaired_20261010.txt)
+and [host](../../bench/results/qwen_kv_append_host_regression_20261010.txt)
+regressions remain complete. The [initial entry-mode failure](../../bench/results/qwen_kv_append_resident_regression_20261010.txt)
+is preserved as a before-startup adapter fault,not a performance cell. No
+successful performance cell is excluded;ordinary0755 restoration changes no oracle or model.
+[Qualification](../../bench/results/qwen_kv_append_qualification_20261010.txt),
+[profile](../../bench/results/qwen_kv_append_profile_20261010.txt),
+[preflight](../../bench/results/qwen_kv_append_preflight_20261010.jsonl),
+[frozen source](../../bench/results/qwen_kv_append_adapter_20261010.txt)
+and [before/after host observations](../../bench/results/qwen_kv_append_environment_20261010.txt)
+preserve reproduction. Terminal cleanup finds no owned executor/driver/module/
+pins;boot and other SGLang732929/18404MiB remain unchanged.
+
+This is a supporting component comparison on one shared RTX5090,with warm
+compiler cache and common temporary TCP_NODELAY. It is not optimized-serving
+superiority,isolated throughput,totalCPU/energy,physicalNIC,text processing
+or a whole-goal result. The next engineering discriminator is an actual
+single kernel performing both original strided copies,without changing
+floating-point model arithmetic,rather than recompiling the same two launches.
+
+Fresh independent terminal result review:valid/complete,no invalidating
+defect. It recomputes all2621 records/40cells/2560requests/83200 exact tokens,
+all paired effects/secondary costs,and independently checks actual/frozen
+source,native library identity,oracle,device probe,strict raws and cleanup.
+Launch-reduction mechanism is contradicted;single-client gains have narrow
+nominal support,concurrent primary effects remain inconclusive. Retention
+is unmet:close candidate,keep default. Supporting component evidence only.
