@@ -183,15 +183,88 @@ The review discussions remain in the retained task: automatic approval rejected
 two reviewer report-save operations with only "blocked by policy", so no saved
 review report is claimed.
 
+## Complete matched result
+
+The restored-runtime full run completed once, at source commit `e3f272e`,
+with **40 cells, 10 normal executor shutdowns, 2,560 measured requests and
+83,200 exact output tokens**, without failure events. All ten processes had
+8,580 model graph launches, graph_error=0, 264 publications, zero admission
+or registration failures and eight final FREE slots. The
+[full raw](../../bench/results/graph_dispatch_20261010.jsonl),
+[stdout and analysis](../../bench/results/graph_dispatch_20261010.stdout.txt),
+[real preflight](../../bench/results/graph_dispatch_preflight_20261010.jsonl),
+[preflight stdout](../../bench/results/graph_dispatch_preflight_20261010.stdout.txt),
+[rebuilt native candidates](../../bench/results/graph_dispatch_rebuilt_candidate_20261010.txt),
+and rebuilt strict
+[resident](../../bench/results/graph_dispatch_rebuilt_resident_correctness_20261010.txt) /
+[host](../../bench/results/graph_dispatch_rebuilt_host_launch_correctness_20261010.txt)
+regressions preserve the evidence. Both rebuilt strict regressions again
+passed 303 requests / 19,392 exact tokens / 259 rejections. The source, oracle,
+workload and deadlines were unchanged during measurement.
+
+The table reports pooled request means; uncertainty is computed from the
+five paired process-block mean differences, host minus resident. Each cell
+has 320 measured requests per mode.
+
+| output / clients | resident TTFT ms | host TTFT ms | host minus resident ms | paired t95 ms |
+|---|---:|---:|---:|---|
+| 1 / 1 | 2.739621 | 2.913690 | +0.174069 | [-0.100007, +0.448145] |
+| 64 / 1 | 2.797782 | 2.806058 | +0.008276 | [-0.083723, +0.100274] |
+| 1 / 8 | 20.276981 | 20.334831 | +0.057851 | [+0.037308, +0.078393] |
+| 64 / 8 | 991.274073 | 972.232360 | -19.041714 | [-56.727901, +18.644474] |
+
+Only the one-token/eight-client cell supports a small resident TTFT benefit.
+The other three cells are inconclusive. Retain the negative long-output point
+estimate: two resident blocks were slower; neither their cause nor a general
+resident disadvantage is established. Crossing zero does not prove equivalence.
+There is no broad or family-wide latency-superiority conclusion.
+
+| output / clients | resident / host TPOT ms | resident / host output tokens/s |
+|---|---|---|
+| 1 / 1 | not applicable | 363.118 / 343.060 |
+| 64 / 1 | 2.311563 / 2.324503 | 431.143 / 428.793 |
+| 1 / 8 | not applicable | 373.397 / 372.477 |
+| 64 / 8 | 2.345387 / 2.302970 | 425.800 / 433.239 |
+
+TPOT is the pooled request mean; throughput is the arithmetic mean of the
+five measured cell rates, not a single merged-window rate. These secondary
+observations are descriptive. Eight clients do not increase throughput through
+continuous batching: GPU requests remain serial, and long-output TTFT grows
+to about one second. This identifies queueing as a consequential next target.
+
+Resident executor CPU samples were 0 or 0.01 seconds per cell; host-control
+samples were 0.17-0.21 seconds for gen1 and 9.42-9.78 seconds for gen64.
+Each host idle sample consumed about one CPU second in one wall second.
+Resident values are quantized at 100 Hz, not exact zero. The control's concrete
+poll/synchronize implementation accounts for this cost; optimized host serving
+need not share it. Kernel TX/softirq/client/other-process cost and integrated
+energy remain unmeasured. GPU endpoint readings cannot explain within-window
+variation or attribute the two slower resident blocks.
+
+A fresh independent result reviewer read source/build/oracle/complete raw and
+recomputed every request's TTFT, TPOT and completion latency, every cell's
+throughput, descriptive quantiles and paired intervals. Completion, exact
+outputs, matching dispatcher instructions/transport, exclusions and cleanup
+passed. The review returned at 2026-10-10 18:15 UTC: run **valid**, hypothesis
+**supported narrowly** in 1/8 and otherwise inconclusive, value **supporting**,
+impact **mechanism/workload boundary**. There is no selected paper RQ here.
+The decision is to end this ablation and move to computation/queueing and
+stronger serving evidence, rather than rerun it unchanged. The reviewer made
+no file writes or GPU runs; this paragraph records its returned review.
+
 ## Status
 
-Plan reviewed and both candidate correctness regressions passed. Preflight and
-full performance run remain pending. On 2026-10-10 at 17:55 UTC, live inspection
+Plan, real preflight, complete matched run and fresh result review finished.
+The local dispatch ablation is closed; the full service goal remains active. On 2026-10-10 at 17:55 UTC, live inspection
 found the earlier container gone and the same Workspace's existing replacement
 Pod running, with the original PVC/source/logs retained and the same host boot
 ID. Both completed correctness logs survived. Disposable candidate binaries
-and container-installed dependencies did not; restore dependencies and rebuild
-through the existing Workspace before measurement. Container termination cause
+and container-installed dependencies did not. Build dependencies were restored
+with the default package path in this original Workspace; PyTorch 2.14.1 and
+Transformers 5.19.0 were restored to preserve the retained comparison. Candidates
+were rebuilt and both strict regressions repeated before measurement. The
+original valid kernel-module binary survived; no fresh module rebuild is claimed.
+Container termination cause
 has not been established by this inspection.
 Full service scope remains text processing, continuous batching, completion
 interfaces/timing, complete host cost, optimized serving and physical NIC.

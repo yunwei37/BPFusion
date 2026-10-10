@@ -1,0 +1,55 @@
+
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 290/290 [00:00<00:00, 5299.92it/s]
+pair=0 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=0 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=0 mode=host-launch gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.200
+pair=0 mode=host-launch gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=9.690
+pair=0 mode=host-launch gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.170
+pair=0 mode=host-launch gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=9.420
+pair=1 mode=host-launch gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=9.430
+pair=1 mode=host-launch gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.170
+pair=1 mode=host-launch gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=9.440
+pair=1 mode=host-launch gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.180
+pair=1 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=1 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=1 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=1 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=2 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=2 mode=host-launch gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.200
+pair=2 mode=host-launch gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=9.570
+pair=2 mode=host-launch gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.170
+pair=2 mode=host-launch gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=9.460
+pair=3 mode=host-launch gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=9.440
+pair=3 mode=host-launch gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.170
+pair=3 mode=host-launch gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=9.440
+pair=3 mode=host-launch gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.170
+pair=3 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=3 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=4 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=4 mode=host-launch gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.210
+pair=4 mode=host-launch gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=9.780
+pair=4 mode=host-launch gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.170
+pair=4 mode=host-launch gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=9.440
+{"mode": "resident", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 2.7396211875, "ttft_p50_ms": 2.7419140000000004, "ttft_p99_ms": 2.94262934, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [361.2135810075525, 363.6231120531778, 365.2101287833629, 359.0932545207428, 366.452257740989]}
+{"mode": "host-launch", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 2.9136899875, "ttft_p50_ms": 2.8481875, "ttft_p99_ms": 3.28050523, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.20000000000000107, 0.18000000000000327, 0.1700000000000017, 0.1700000000000017, 0.20999999999999908], "tokens_per_s": [318.1679365237865, 363.0342692381375, 362.7296384664625, 357.5151517155767, 313.8541226928639]}
+{"gen": 1, "concurrency": 1, "paired_host_minus_resident_ttft_ms": [0.3778807031249998, 0.007179921874999717, 0.022211890624999953, 0.012635031249999873, 0.450436453125], "difference_mean_ms": 0.17406879999999986, "difference_t95_ms": [-0.10000701333509437, 0.4481446133350941]}
+{"mode": "resident", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 2.797782259375, "ttft_p50_ms": 2.772397, "ttft_p99_ms": 3.2329815, "tpot_mean_ms": 2.311563399751984, "executor_cpu_s_per_cell": [0.009999999999999787, 0.0, 0.0, 0.009999999999999787, 0.009999999999999787], "tokens_per_s": [434.548809415613, 420.11189295644965, 433.63818258136325, 433.66791344705985, 433.74717736774056]}
+{"mode": "host-launch", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 2.806057803125, "ttft_p50_ms": 2.7789495, "ttft_p99_ms": 3.2688405900000004, "tpot_mean_ms": 2.32450267609127, "executor_cpu_s_per_cell": [9.69, 9.430000000000001, 9.459999999999997, 9.440000000000001, 9.780000000000001], "tokens_per_s": [423.2212057693932, 434.2862442918458, 433.6980046016459, 433.89433876650685, 418.8646664605138]}
+{"gen": 64, "concurrency": 1, "paired_host_minus_resident_ttft_ms": [0.07810598437500005, -0.09728460937499994, -0.01724749999999986, -0.002405328124999606, 0.08020917187499998], "difference_mean_ms": 0.008275543750000124, "difference_t95_ms": [-0.08372327510590442, 0.10027436260590468]}
+{"mode": "resident", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 20.276980603125, "ttft_p50_ms": 20.828726000000003, "ttft_p99_ms": 24.39058527, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [384.28953064960297, 384.55397153101285, 331.6687964726609, 383.2601982050476, 383.21077205001217]}
+{"mode": "host-launch", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 20.334831175, "ttft_p50_ms": 20.8677745, "ttft_p99_ms": 24.2157282, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.1700000000000017, 0.1700000000000017, 0.20000000000000107, 0.1700000000000017, 0.1700000000000017], "tokens_per_s": [383.6227584225411, 381.1494533697471, 331.87979318039504, 382.99266265649015, 382.73812312472523]}
+{"gen": 1, "concurrency": 8, "paired_host_minus_resident_ttft_ms": [0.050362390625000586, 0.08740534374999953, 0.049077406249999456, 0.05116056250000156, 0.05124715624999965], "difference_mean_ms": 0.05785057187500016, "difference_t95_ms": [0.03730781273378613, 0.07839333101621418]}
+{"mode": "resident", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 991.274073078125, "ttft_p50_ms": 1034.1028019999999, "ttft_p99_ms": 1213.72923304, "tpot_mean_ms": 2.345387450297619, "executor_cpu_s_per_cell": [0.0, 0.009999999999999787, 0.009999999999999787, 0.009999999999999787, 0.0], "tokens_per_s": [435.0917296665142, 434.4174663082, 401.83474089291866, 423.4318984195386, 434.2230971076491]}
+{"mode": "host-launch", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 972.23235953125, "ttft_p50_ms": 1033.8861255000002, "ttft_p99_ms": 1087.31462346, "tpot_mean_ms": 2.3029700296626983, "executor_cpu_s_per_cell": [9.419999999999998, 9.439999999999998, 9.570000000000002, 9.439999999999998, 9.440000000000001], "tokens_per_s": [434.9345265963964, 434.21707764071334, 428.28442488944603, 434.5793249535476, 434.1785073817485]}
+{"gen": 64, "concurrency": 8, "paired_host_minus_resident_ttft_ms": [0.4101693437499989, 0.4490039062500273, -68.9869090468751, -27.16951281249999, 0.08868087499990907], "difference_mean_ms": -19.04171354687503, "difference_t95_ms": [-56.72790079209989, 18.644473698349827]}

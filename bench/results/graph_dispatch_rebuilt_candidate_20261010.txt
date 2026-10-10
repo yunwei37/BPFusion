@@ -1,0 +1,63 @@
+Same-source TCP_NODELAY candidates rebuilt after container replacement; baseline source restored before execution.
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o /tmp/bpfusion-graph-dispatch-nodelay-2dh4j6vi/qwen_graph.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/qwen_graph.py /tmp/bpfusion-graph-dispatch-nodelay-2dh4j6vi/qwen_graph
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o /tmp/bpfusion-graph-dispatch-nodelay-2dh4j6vi/qwen_graph_host_launch.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/qwen_graph.py /tmp/bpfusion-graph-dispatch-nodelay-2dh4j6vi/qwen_graph_host_launch
+build/qwen_graph.so dispatcher SASS matches original default: 74904 chars
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z8dispatchP7bf_pageP4StepPxjP7Controlb:
+  REG:35 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:937 TEXTURE:0 SURFACE:0 SAMPLER:0
+build/qwen_graph_host_launch.so dispatcher SASS matches original default: 74904 chars
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z8dispatchP7bf_pageP4StepPxjP7Controlb:
+  REG:35 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:937 TEXTURE:0 SURFACE:0 SAMPLER:0
+/tmp/bpfusion-graph-dispatch-nodelay-2dh4j6vi/qwen_graph.so dispatcher SASS matches original default: 74904 chars
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z8dispatchP7bf_pageP4StepPxjP7Controlb:
+  REG:35 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:937 TEXTURE:0 SURFACE:0 SAMPLER:0
+/tmp/bpfusion-graph-dispatch-nodelay-2dh4j6vi/qwen_graph_host_launch.so dispatcher SASS matches original default: 74904 chars
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z8dispatchP7bf_pageP4StepPxjP7Controlb:
+  REG:35 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:937 TEXTURE:0 SURFACE:0 SAMPLER:0

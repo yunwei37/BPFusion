@@ -77,7 +77,12 @@ and physical-NIC evaluation remain open. `make qwen-graph-control` provides
 an identical-dispatcher host control: it launches a service graph once per
 whole request while both modes keep decode on GPU graph tail launches. Both
 pass the 64-token lifecycle regression; this is an ablation with a host worker,
-and its performance remains unmeasured.
+and [finding 0020](docs/findings/0020-graph-dispatch.md) records its complete
+matched measurement: 2,560 requests / 83,200 exact tokens, about 2.31 ms
+single-client TPOT and 431 output tokens/s. Only the one-token/eight-client
+cell detects a small TTFT benefit; the other three paired intervals cross zero.
+Eight clients still queue behind serial GPU requests. Executor-process CPU
+is lower than this busy control, while total host cost remains unmeasured.
 
 ## Repository layout
 
