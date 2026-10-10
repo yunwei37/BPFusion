@@ -836,3 +836,155 @@ experiment are both zero; the nine-line temporary candidate and complete raw
 comparison remain reproducible evidence. Do not repeat this unchanged matrix.
 The next computation investigation should distinguish a different mechanism
 that can improve the concurrent path.
+
+## Next attention candidate: grouped-query matmuls without repeated KV
+
+The completed device trace shows actual graph overlap. The operation diagnostic
+associates decode GEMV names with several families and records explicit
+[1,2,7,context,64] KV-head replication copies. Closed merged MLP results do
+not support an eight-bank default improvement. A different attention mechanism
+can eliminate those copies while retaining the original explicit score,
+mask,fp32 softmax,fp16 output and dropout expressions. This tests whether
+avoiding replicated KV materialization improves the actual concurrent TCP
+path. Positive and negative outcomes change implementation retention; the
+earlier traces and rejected SDPA cannot answer this different computation
+shape. This is supporting engineering evidence within the user's performance
+goal,not a paper RQ,headline serving comparison or repeated dispatch experiment.
+
+The fourteen-line temporary candidate groups the seven query heads associated
+with each KV head into rows. Instead of replicating each key/value head seven
+times,it computes score bmm with batch*KVheads and rows=groups*query_length,
+restores the original [batch,query_heads,length,context] score shape,and keeps
+the installed HF scaling,mask addition,float32 softmax,cast and dropout.
+The weighted-value bmm uses the corresponding original KV value head and
+restores the original returned output/attention shapes. No precision,
+attention-mask semantics,RoPE,RMSNorm,KV ownership,queue/module/native
+dispatcher or transport change is proposed. Input reshape may itself copy,
+particularly for prefill; larger bmm row shapes may select different numerical
+algorithms. Algebraic equivalence is not an exact-token qualification.
+
+Scope: source preparation,tests and measurement only in the existing
+BPFusion Workspace,current main. Production0/test0 at admission. Baseline is
+the byte-exact current qwen_graph.py (also fc58faa). The temporary candidate
+is /tmp/bpfusion-qwen-pointwise-5mxeys8g/grouped_gqa/qwen_graph; its host
+qualification entry uses canonical build/qwen_graph_host_launch.so.
+Both resident performance entries grouped_gqa_perf_baseline/qwen_graph and
+grouped_gqa_perf_candidate/qwen_graph use the same previously checked
+test-local TCP_NODELAY native .so. Original canonical default transport is
+used for both strict qualifiers. Nothing is installed as a new service,
+mode,helper,configuration or model.
+
+First run the reused independent eager-fp16 oracle qualification:
+HF_HOME=/workspaces/.cache/huggingface python3
+/tmp/bpfusion-qwen-pointwise-5mxeys8g/qualify_grouped_gqa.py 2.
+It constructs oracle_cases(64,True) before candidate patching and uses the
+existing real device-launched bank probe. Preserve all12 groups,1536tokens
+and mismatches. A failed row closes this candidate without speed collection,
+oracle relaxation or repeating an unchanged qualification. If all pass,
+run tests/resident_qwen.py for the candidate resident and host entries:
+335 valid requests,20432 exact tokens,259 rejects each,with mixed lengths,
+reuse,wrap,pipeline,half-close,5000 empty connections,network trace and cleanup.
+The old host variant is a serial correctness control,not the performance
+baseline. Use existing make qwen-graph qwen-graph-control if builds are needed.
+
+The actual performance driver is
+/tmp/bpfusion-qwen-pointwise-5mxeys8g/grouped_gqa_bench.py,adapted only by
+mode/banner names from the completed merged comparison. Run --gen64 --preflight with
+--resident-executor pointing to the frozen baseline and --host-executor to
+the frozen candidate,output bench/results/qwen_grouped_gqa_preflight_20261010.jsonl.
+Full command omits --preflight and uses
+bench/results/qwen_grouped_gqa_20261010.jsonl. Both engines are resident.
+The full matrix remains five paired process blocks with alternating engine
+order,matching rotated gen1/64 x clients1/8 cells,64 measured requests/cell,
+four prompts16 times/cell:40cells2560requests83200tokens. Each process has
+eight excluded warmups,264publications,8580modelgraphs,one service launch,
+zero errors and final FREE slots. Bootstrap and separate idle samples are
+outside measurement; existing request/shutdown60s and readiness-or-exit
+behavior remain unchanged. Preserve failures and all cells.
+
+Primary outcomes remain gen64 TPS and TPOT at clients1/8,using the existing
+[NVIDIA metric definitions](https://docs.nvidia.com/nim/benchmarking/llm/metrics)
+and five paired block means/nominal df4 t95 intervals. Positive gain is
+candidate-minus-baseline TPS and baseline-minus-candidate TPOT. Recompute
+timestamps/cell windows/oracle/counters with the saved analyzer; do not treat
+requests as independent process repetitions. Four effects remain separate
+nominal comparisons without omnibus superiority or equivalence claims.
+Retain a qualified candidate only if the concurrent gen64 throughput and TPOT
+both support improvement and no primary effect supports a regression; report
+any inconclusive single-client effect separately. Mixed/inconclusive
+concurrent results retain the existing default. Secondary TTFT,completion,
+gen1,bootstrap,memory and executor-only CPU describe tradeoffs and cannot
+replace the primary outcomes. A profiler event reduction is a mechanism
+control,not a serving win.
+
+Record exact source/helper provenance,command,environment and all raw outputs
+in existing finding0021 and cited ordinary bench/results artifacts. Matching
+temporary transport,shared RTX5090/co-tenant,same short prompts,closed-loop
+load,greedy oracle and coarse executor CPU bound the claim; no isolated
+bandwidth,physical NIC,open-load capacity,total-host cost,energy or optimized
+serving advantage is established. Preserve other owners and verify process/
+module/pin cleanup. Fresh plan and terminal result reviews apply.
+
+
+Concrete performance command (run preflight first by appending --preflight
+and using the preflight output filename; no change to the64-token oracle):
+
+    HF_HOME=/workspaces/.cache/huggingface python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/grouped_gqa_bench.py --gen 64 --output bench/results/qwen_grouped_gqa_20261010.jsonl --resident-executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/grouped_gqa_perf_baseline/qwen_graph --host-executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/grouped_gqa_perf_candidate/qwen_graph
+
+Strict command for each candidate entry:
+
+    HF_HOME=/workspaces/.cache/huggingface python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/grouped_gqa/qwen_graph
+
+For host qualification,substitute grouped_gqa_host/qwen_graph_host_launch
+only. Exact candidate,qualifier,driver and analyzer are frozen in
+bench/results/qwen_grouped_gqa_adapter_20261010.txt. The recorded collection
+base is4da46fa9f76ebfd160b22aff099d25574a5ad20f,whose production is still
+byte-exactfc58faa. Helper functions and independent oracle are inherited
+unchanged from the already-published merged comparison.
+
+Fresh read-only plan review admits the grouped-query candidate with no
+scientific or executability blocker. It verifies the installed HF eager
+global lookup actually invokes the patch,14/2/7 head ordering,all return
+shapes,valid KV prefix,unchanged score/softmax/cast semantics,independent
+oracle ordering and exact64-token commands. The larger bmm shape still
+requires empirical qualification. Both performance natives and all inherited
+client/CPU/window helpers match;14temporary lines,production0/test0.
+
+### Grouped-query qualification result: rejected numerical path
+
+The real GPU-only device-launched qualification exits0 and completes all12
+groups/1536 generated tokens,but **five groups fail the unchanged exact-token
+oracle**. Exit0 and matrix completion are not a pass. Groups0,2,4,mixed5
+and mixed_lengths fail; seven groups pass. The independent eager batch1
+oracle was computed before candidate patching.
+
+- Case0 first differs at zero-based output13: actual3283,expected304.
+- Case2 first differs at output62: actual11,expected323.
+- Case4 first differs at output31: actual7010,expected36277.
+- Mixed groups preserve those failures,including lane0/case0 in mixed_lengths.
+
+[All actual tokens,mismatch rows,oracle and native counters](../../bench/results/qwen_grouped_gqa_gpu_qualification_20261010.txt)
+and [frozen sources](../../bench/results/qwen_grouped_gqa_adapter_20261010.txt)
+remain intact. Each group records one host launch,128 model graph executions
+and error0; transport was not involved. Mathematical head grouping does not
+preserve this greedy numerical reference under the actual larger bmm shapes.
+The result does not identify which operation/rounding path caused divergence
+or prove every mathematically equivalent grouped implementation must fail.
+
+The decision is to close this candidate without default-native strict TCP
+tests,preflight or speed collection,as declared at admission. Production and
+tests remain unchanged; no precision/oracle adjustment,fallback or new mode
+is added. No serving speed is claimed. [Host observations](../../bench/results/qwen_grouped_gqa_environment_20261010.txt)
+show the same boot and preserved SGLang owner. Owned qualification processes,
+module and pins are absent after exit. Fresh terminal result review is complete.
+
+
+The fresh independent read-only terminal review recomputes all tokens and
+first mismatches:five failed groups,nine failed lanes,seven passing groups,
+1536 generated tokens. Every native marker and source identity agrees.
+Verdict: valid completed qualification;exact-reference premise contradicted
+for this candidate;dependency-only evidence,mechanism/workload boundary.
+The speed hypothesis is untested. Skipping strict TCP and performance is the
+predeclared branch,not an incomplete admitted speed run. It confirms the
+HF patch is actually invoked,independent oracle precedes patching,and no
+owned work/module/pins remain. Publish the failure and keep the default.

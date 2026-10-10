@@ -111,6 +111,10 @@ throughput688.74 ->683.96 and TPOT11.435 ->11.514ms have intervals crossing
 zero with all five point estimates worse. The candidate is not retained in
 the default path; its mixed result, costs and independent review are recorded
 in finding0021.
+A grouped-query attention candidate avoids explicit repeated KV heads but
+fails the unchanged greedy oracle in five of twelve qualification groups.
+It is rejected before TCP performance collection; the existing attention
+implementation remains in use and no speed benefit is claimed.
 [Finding 0022](docs/findings/0022-shared-kv.md) qualifies shared KV append and
 records a complete cache-only TCP comparison, with narrowly supporting
 TPOT/throughput results and a changing shared-GPU environment. That comparison
