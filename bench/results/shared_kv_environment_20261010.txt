@@ -1,0 +1,16 @@
+Post-run read-only environmental diagnosis, observed 2026-10-10T18:43:47.627645+00:00.
+Host nvidia-smi --query-compute-apps=pid,process_name,used_gpu_memory --format=csv,noheader:
+732929, sglang::scheduler, 18400 MiB
+Host /proc/732929/stat start_ticks + /proc/stat btime, using os.sysconf("SC_CLK_TCK"):
+PROCESS_START_UTC 2026-10-10T18:38:31.160000+00:00
+Host process cgroup:
+0::/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod1983c903_1912_4c79_bd1c_dadaa4b8bced.slice/cri-containerd-bed93eecfc88be93514a9675e71faa1d51077cc724b1f7cd8090a713545542b7.scope
+Host boot ID:
+04dc0087-5ccc-4c46-9997-b9a92f0e5167
+Same compute-apps query inside original bpfusion-dev returned exit0 with empty stdout/stderr after the run. It is not evidence of an unoccupied host GPU.
+No other process or service was stopped, modified or interrupted. Process start and post-run residency do not prove its within-window activity or causal impact. No process activity trace or integrated GPU power/clock measurement exists for the experiment.
+All five blocks remain in analysis. Endpoint raw shows pairs0-2 around2880-2910MHz/50-56C/114-246W; pairs3-4 around2812-2835MHz/58-64C/286-348W. Memory clock remains13801MHz. Both engines' gen64 throughput nearly halves in pairs3-4; the cause is not isolated. Treat shared-GPU temporal change as a limitation, not a reason to exclude slower blocks or claim isolated causal speedup.
+
+Post-run owning-Pod lookup through scripts/kubectl-home.ps1 get pods -A -o json matched the host cgroup Pod UID:
+namespace coder; Pod gpu-smt-candidate-5090-20261007-xkzc9; owner gpu-smt-candidate-5090-20261007; phase Running; node lab.
+This identifies a separate GPU-SMT workload, not a BPFusion executor. No lifecycle action was taken on it.

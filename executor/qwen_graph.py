@@ -9,8 +9,24 @@ import numpy as np
 import torch
 from transformers import AutoConfig,AutoModelForCausalLM
 from transformers.models.qwen2.modeling_qwen2 import Qwen2RotaryEmbedding
-from transformers.cache_utils import DynamicCache
+from transformers.cache_utils import Cache,DynamicLayer
 from transformers.masking_utils import create_causal_mask
+
+
+class SharedLayer(DynamicLayer):
+    """A graph owns fixed offsets; GPU copies append into the shared KV buffers."""
+    def __init__(self,key,value,pos):
+        super().__init__()
+        self.storage_key,self.storage_value=key,value
+        self.keys,self.values=key[:,:,:pos],value[:,:,:pos]
+        self.is_initialized=True
+
+    def update(self,key_states,value_states,*args,**kwargs):
+        pos=self.keys.shape[-2];end=pos+key_states.shape[-2]
+        self.storage_key[:,:,pos:end].copy_(key_states)
+        self.storage_value[:,:,pos:end].copy_(value_states)
+        self.keys,self.values=self.storage_key[:,:,:end],self.storage_value[:,:,:end]
+        return self.keys,self.values
 
 
 def load_model(path):
@@ -65,8 +81,7 @@ def main():
             inp=tokens[:count].reshape(1,count)
             positions=torch.arange(pos,pos+count,device='cuda').reshape(1,count)
             def cache():
-                if pos==0:return None
-                return DynamicCache(ddp_cache_data=[(k[:,:,:pos],v[:,:,:pos]) for k,v in zip(keys,values)],config=config)
+                return Cache(layers=[SharedLayer(k,v,pos) for k,v in zip(keys,values)])
             def forward():
                 return model(inp,position_ids=positions,attention_mask={'full_attention':mask},past_key_values=cache(),use_cache=True,logits_to_keep=1)
             mask=create_causal_mask(config=config,inputs_embeds=model.model.embed_tokens(inp),attention_mask=None,past_key_values=cache(),position_ids=positions)
@@ -77,8 +92,6 @@ def main():
             with torch.cuda.graph(graph,stream=stream):
                 output=forward()
                 token=output.logits[:,-1,:].argmax(-1)
-                for l,layer in enumerate(output.past_key_values.layers):
-                    keys[l][:,:,:pos+count].copy_(layer.keys);values[l][:,:,:pos+count].copy_(layer.values)
             graphs.append(graph);selected.append(token);keepers.append((output,positions,mask,inp))
             if index%32==0:print(f'captured model graph {index}/{limit+context-2}',flush=True)
         torch.cuda.synchronize()

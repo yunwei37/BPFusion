@@ -72,8 +72,8 @@ Python captures at bootstrap, then the native host sleeps; the GPU handles
 queue validation, input movement, model dispatch and token publication.
 [Finding 0019](docs/findings/0019-device-scheduled-qwen.md) records the mechanism,
 commands, failed startup probes and successful lifecycle/trace evidence.
-This variant has no measured serving speedup yet; text, continuous batching
-and physical-NIC evaluation remain open. `make qwen-graph-control` provides
+This initial milestone did not establish a serving speedup; text, continuous
+batching and physical-NIC evaluation remain open. `make qwen-graph-control` provides
 an identical-dispatcher host control: it launches a service graph once per
 whole request while both modes keep decode on GPU graph tail launches. Both
 pass the 64-token lifecycle regression; this is an ablation with a host worker,
@@ -88,6 +88,10 @@ prefill logits with one forward argument, saving about 0.62 GB of PyTorch
 capture allocations while preserving both strict regressions. Its SDPA
 candidate failed the fixed oracle and was rejected; no compute latency
 speedup is claimed.
+[Finding 0022](docs/findings/0022-shared-kv.md) qualifies shared KV append and
+records a complete cache-only TCP comparison, with narrowly supporting
+TPOT/throughput results and a changing shared-GPU environment. Requests remain
+serial; this does not establish batching or competitive serving.
 
 ## Repository layout
 

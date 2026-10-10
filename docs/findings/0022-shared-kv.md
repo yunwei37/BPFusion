@@ -55,4 +55,35 @@ Fresh read-only plan reviewer completed at 2026-10-10T18:35:00.590464+00:00. It 
 
 ## Real preflight
 
-The [preflight raw](../../bench/results/shared_kv_preflight_20261010.jsonl) and [stdout](../../bench/results/shared_kv_preflight_20261010.stdout.txt) record four measured exact gen1 requests per engine after eight gen1/gen64 warmups, normal one-launch shutdown, graph_error=0 and clean hook/pin teardown. This establishes executability only. The complete paired matrix is now running on the same frozen temporary driver and sources; no full serving result is claimed yet.
+The [preflight raw](../../bench/results/shared_kv_preflight_20261010.jsonl) and [stdout](../../bench/results/shared_kv_preflight_20261010.stdout.txt) record four measured exact gen1 requests per engine after eight gen1/gen64 warmups, normal one-launch shutdown, graph_error=0 and clean hook/pin teardown. This establishes executability only. The complete paired matrix then finished on the same frozen temporary driver and sources, as recorded below.
+
+## Complete TCP result
+
+The [full raw](../../bench/results/shared_kv_20261010.jsonl) and [stdout/analysis](../../bench/results/shared_kv_20261010.stdout.txt) completed at pinned capture base4b9e71a with 2,621 records: 40 cells, 2,560 exact requests, 83,200 exact measured tokens, ten independent process starts/normal shutdowns, and no failure. Each process records one resident service launch, 8,580 device model graphs, graph_error=0, 264 publications, zero registration/admission failures and eight final FREE slots. The doc-only qualification commit84c14c0 was published during this run; frozen capture/candidate/driver sources and native libraries did not change.
+
+The table includes **all five paired blocks**, including the two much slower pairs. TPS means are the means of five cell rates, not pooled-window aggregate rates. A positive paired gain means baseline-minus-shared TPOT or shared-minus-baseline TPS. Intervals are nominal two-sided t95 (df4), conditional on this changing shared-GPU run; no familywise correction or stable isolated causal effect is claimed.
+
+| gen64 / clients | primary metric | baseline mean | shared KV mean | paired gain | nominal t95 gain |
+|---|---|---:|---:|---:|---|
+| 64 / 1 | TPOT ms | 3.241723 | 3.079612 | +0.162111 | [-0.007227, +0.331449] |
+| 64 / 1 | output tokens/s | 345.636143 | 359.578495 | +13.942352 | [+2.752351, +25.132354] |
+| 64 / 8 | TPOT ms | 3.266693 | 3.039565 | +0.227128 | [+0.115352, +0.338903] |
+| 64 / 8 | output tokens/s | 342.111621 | 368.069383 | +25.957763 | [+10.359470, +41.556056] |
+
+Eight-client TPOT/TPS and single-client TPS support a benefit in this recorded paired comparison. Single-client TPOT is inconclusive: its interval crosses zero despite positive point estimates in every block. These are mixed, narrowly supporting results, not an overall architecture/optimized-serving win. Eight clients still queue behind serial requests. Their gen64 mean TTFT is 1378.944184 /1283.763196 ms, so the large queueing problem remains. Completion means are 208.180912 /197.782190 ms (clients1) and1584.745830 /1475.255804 ms (clients8).
+
+## Shared environment and limits
+
+Endpoint raw shows pairs0-2 at approximately2880-2910MHz SM,50-56C; pairs3-4 at2812-2835MHz,58-64C. Memory clock stays13801MHz. Gen64 throughput in **both** engines falls from around430-460 to214-229 tokens/s in the latter two pairs. Nothing was excluded or replaced by earlier findings' faster figures. The small SM-clock change alone does not establish the cause of a near2x slowdown.
+
+[Post-run read-only diagnosis](../../bench/results/shared_kv_environment_20261010.txt) finds another Pod's SGLang scheduler with18,400MiB resident GPU memory. Host process start was18:38:31UTC, during collection; its cgroup matches the separate GPU-SMT candidate workload. The container-local compute-app query returned empty output, which does not prove an unoccupied host GPU. No other owner's process or service was interrupted. This establishes observed sharing and temporal change, not within-window activity or a causal explanation: no activity trace or integrated power/clock measurement was collected.
+
+Alternating pairing and common slowdown allow a valid local observational comparison, but block stationarity/independence and co-tenant overlap are uncertain. Therefore nominal intervals must not become fixed isolated4%/8% causal speedup claims. No strong inference about default TCP buffering, open-load capacity, total-host cost, energy or an optimized external server follows. GPU-only profiles remain separate diagnostics.
+
+## Independent result review and implementation
+
+A fresh read-only result reviewer independently recomputed every request's oracle agreement, timestamps/TTFT/TPOT/completion, cell TPS, pairing/order, all primary t95 intervals, preflight, runtime counters and cleanup. It verified the exact pinned/candidate source, identical resident native library and its checked temporary TCP_NODELAY call, inherited cache mask/sequence semantics and lifetime, plus profile means/allocation/event counts and the shared-environment limitation.
+
+Judgments: run **valid** within the recorded shared-GPU environment; hypothesis **narrowly supported with mixed results**; independent stable-GPU causal magnitude **inconclusive**; research value **supporting**; paper impact **mechanism/workload boundary**. It recommends retaining the small correct cache optimization and moving to batching rather than rerunning unchanged comparisons for prettier numbers. Net production growth is13 lines in the capture script, with no new framework, runtime helper, dependency, mode flag or test boilerplate. The existing serial ownership is essential; simultaneously live batched requests will require separate KV state.
+
+The retained implementation is byte-for-byte the qualified temporary candidate. Production native transport and dispatcher are unchanged. Complete gen64/prompt-edge regressions against default native libraries passed: [resident](../../bench/results/qwen_shared_kv_default_resident_correctness_20261010.txt) and [host-control](../../bench/results/qwen_shared_kv_default_host_correctness_20261010.txt), each303 valid requests /19,392 exact tokens /259 rejects, 5,000 empty connections, eight clients, invalid-to-valid reuse, pipeline/ring wrap/half-close, expected launch counts, graph_error=0, all-thread network trace and clean teardown. These confirm production correctness; the serving performance table uses the explicitly documented common temporary TCP_NODELAY condition.

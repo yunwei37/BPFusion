@@ -147,7 +147,11 @@ Queue head/state/stop polling uses system-scope acquire loads; the native
 backedge reloads shared publication words instead of reusing a cached condition.
 Graph/kernel owners and buffers remain alive until the GPU finishes shutdown.
 It reuses the existing kernel connection/TX path and still handles one request
-at a time. Its recorded 64-token oracle and prompt-edge controls pass; the
+at a time.
+Captured graphs append new keys/values directly into shared GPU KV buffers
+and expose only the exact attention prefix, avoiding repeated prefix
+concatenation/copy-back (finding0022). This ownership relies on serial model
+graph completion; future batching needs separate KV state for live requests. Its recorded 64-token oracle and prompt-edge controls pass; the
 custom WMMA reference retains its separately recorded accuracy boundary.
 Its `qwen-graph-control` variant uses the same uniform dispatcher kernel,
 returning after a whole request so the host can launch/synchronize again.

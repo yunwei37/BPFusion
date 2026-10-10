@@ -1,0 +1,58 @@
+Command: HF_HOME=/workspaces/.cache/huggingface python3 /tmp/bpfusion-qwen-optimization-kj41itjy/shared_kv_bench.py --gen 64 --resident-executor /tmp/bpfusion-qwen-optimization-kj41itjy/kv_baseline/qwen_graph --host-executor /tmp/bpfusion-qwen-optimization-kj41itjy/shared_kv/qwen_graph --output bench/results/shared_kv_20261010.jsonl
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4755.74it/s]
+pair=0 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.020
+pair=0 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=0 mode=shared-kv gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=shared-kv gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=0 mode=shared-kv gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.010
+pair=0 mode=shared-kv gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=1 mode=shared-kv gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=1 mode=shared-kv gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.010
+pair=1 mode=shared-kv gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=1 mode=shared-kv gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=1 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=1 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=1 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=1 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=2 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=2 mode=shared-kv gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.010
+pair=2 mode=shared-kv gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=2 mode=shared-kv gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=shared-kv gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=shared-kv gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=shared-kv gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=3 mode=shared-kv gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.020
+pair=3 mode=shared-kv gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=3 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=3 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.020
+pair=3 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.020
+pair=4 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=4 mode=shared-kv gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=shared-kv gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=4 mode=shared-kv gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=shared-kv gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+{"mode": "baseline", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 3.8731238875, "ttft_p50_ms": 2.80139, "ttft_p99_ms": 7.50297257, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [368.19326151332564, 359.69391194617725, 364.8664590755147, 178.7724902601465, 178.28267033833885]}
+{"mode": "shared-kv", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 3.823720359375, "ttft_p50_ms": 3.0562994999999997, "ttft_p99_ms": 7.3902081399999995, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [326.92192945461, 381.1214082969606, 361.2112793572421, 185.92122180269, 185.95204798752934]}
+{"gen": 1, "concurrency": 1, "paired_shared_kv_minus_baseline_ttft_ms": [0.3402842812500002, -0.14932120312499997, 0.007616953124999881, -0.21475612500000008, -0.23084154687500025], "difference_mean_ms": -0.04940352812500004, "difference_t95_ms": [-0.34412072505957314, 0.24531366880957306]}
+{"mode": "baseline", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 3.9523733625, "ttft_p50_ms": 2.8750285, "ttft_p99_ms": 7.58397603, "tpot_mean_ms": 3.2417228304563492, "executor_cpu_s_per_cell": [0.019999999999999574, 0.009999999999999787, 0.0, 0.019999999999999574, 0.019999999999999574], "tokens_per_s": [433.6405082831422, 433.3636945476081, 433.1452987763802, 213.99204899721235, 214.03916311345014]}
+{"mode": "shared-kv", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 3.766635646875, "ttft_p50_ms": 3.022292, "ttft_p99_ms": 7.42233692, "tpot_mean_ms": 3.079611979513889, "executor_cpu_s_per_cell": [0.010000000000001563, 0.0, 0.009999999999999787, 0.02000000000000135, 0.009999999999999787], "tokens_per_s": [434.2071952998435, 446.7019160733618, 459.0654744825059, 229.1866665057578, 228.7312237016478]}
+{"gen": 64, "concurrency": 1, "paired_shared_kv_minus_baseline_ttft_ms": [0.03763457812500004, -0.008925531250000063, -0.11043596875000006, -0.37597114062500037, -0.47099051562500005], "difference_mean_ms": -0.1857377156250001, "difference_t95_ms": [-0.4664100873633834, 0.09493465611338323]}
+{"mode": "baseline", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 28.32412074375, "ttft_p50_ms": 23.993921999999998, "ttft_p99_ms": 44.10435098, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [383.23747775583394, 382.88642002794626, 332.0739928723742, 189.58711099846346, 191.14648944583612]}
+{"mode": "shared-kv", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 26.639491075, "ttft_p50_ms": 20.1632355, "ttft_p99_ms": 40.951956169999995, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.009999999999999787, 0.009999999999999787, 0.009999999999999787, 0.0, 0.0], "tokens_per_s": [397.14955093896924, 397.73070767429357, 397.99557983621565, 197.93940318368894, 197.78910351149335]}
+{"gen": 1, "concurrency": 8, "paired_shared_kv_minus_baseline_ttft_ms": [-0.6941278749999995, -0.7304108125000006, -3.8053684218749986, -1.8773633750000016, -1.315877859375], "difference_mean_ms": -1.68462966875, "difference_t95_ms": [-3.275012283547734, -0.09424705395226574]}
+{"mode": "baseline", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 1378.94418389375, "ttft_p50_ms": 1035.0749835000001, "ttft_p99_ms": 2123.04738137, "tpot_mean_ms": 3.2666927996031747, "executor_cpu_s_per_cell": [0.0, 0.0, 0.009999999999999787, 0.009999999999999787, 0.009999999999999787], "tokens_per_s": [434.0528133565667, 433.9769867674437, 414.45977243188474, 213.27498567383338, 214.79354458690304]}
+{"mode": "shared-kv", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 1283.763195909375, "ttft_p50_ms": 974.7285005, "ttft_p99_ms": 1979.47410922, "tpot_mean_ms": 3.0395652154761903, "executor_cpu_s_per_cell": [0.0, 0.009999999999999787, 0.0, 0.009999999999999787, 0.009999999999999787], "tokens_per_s": [460.91436252678307, 460.8263114370034, 460.25903689406096, 229.384661518942, 228.96254462612129]}
+{"gen": 64, "concurrency": 8, "paired_shared_kv_minus_baseline_ttft_ms": [-56.46867214062502, -56.48092021875004, -104.24774762499999, -137.61677198437496, -121.09082795312497], "difference_mean_ms": -95.180987984375, "difference_t95_ms": [-141.43468164694485, -48.92729432180512]}
+{"primary_metric": "tpot_ms", "gen": 64, "concurrency": 1, "baseline_blocks": [2.297668591517857, 2.299057115079365, 2.2999193174603176, 4.658217132936508, 4.653751995287698], "shared_kv_blocks": [2.2940152576884922, 2.229203695188492, 2.1690123328373017, 4.349454530009921, 4.356374081845238], "positive_means_improvement": true, "paired_gain": [0.0036533338293649464, 0.0698534198908729, 0.13090698462301598, 0.30876260292658664, 0.29737791344246034], "mean_gain": 0.16211085094246017, "gain_t95": [-0.007227053576778331, 0.33144875546169866]}
+{"primary_metric": "output_tokens_per_s", "gen": 64, "concurrency": 1, "baseline_blocks": [433.6405082831422, 433.3636945476081, 433.1452987763802, 213.99204899721235, 214.03916311345014], "shared_kv_blocks": [434.2071952998435, 446.7019160733618, 459.0654744825059, 229.1866665057578, 228.7312237016478], "positive_means_improvement": true, "paired_gain": [0.5666870167012803, 13.338221525753738, 25.920175706125747, 15.194617508545463, 14.692060588197648], "mean_gain": 13.942352469064776, "gain_t95": [2.7523507268838348, 25.13235421124572]}
+{"primary_metric": "tpot_ms", "gen": 64, "concurrency": 8, "baseline_blocks": [2.2987072532242063, 2.2994930168650796, 2.4080381319444446, 4.681911708333334, 4.645313887648809], "shared_kv_blocks": [2.163491775545635, 2.164059296875, 2.16701769171627, 4.347961349206349, 4.3552959640376985], "positive_means_improvement": true, "paired_gain": [0.13521547767857145, 0.13543371999007947, 0.2410204402281746, 0.3339503591269848, 0.2900179236111109], "mean_gain": 0.22712758412698425, "gain_t95": [0.11535211180364693, 0.3389030564503216]}
+{"primary_metric": "output_tokens_per_s", "gen": 64, "concurrency": 8, "baseline_blocks": [434.0528133565667, 433.9769867674437, 414.45977243188474, 213.27498567383338, 214.79354458690304], "shared_kv_blocks": [460.91436252678307, 460.8263114370034, 460.25903689406096, 229.384661518942, 228.96254462612129], "positive_means_improvement": true, "paired_gain": [26.861549170216392, 26.849324669559735, 45.79926446217621, 16.109675845108626, 14.169000039218247], "mean_gain": 25.957762837255842, "gain_t95": [10.359469811955721, 41.556055862555965]}
