@@ -87,10 +87,15 @@ is lower than this busy control, while total host cost remains unmeasured.
 prefill logits with one forward argument, saving about 0.62 GB of PyTorch
 capture allocations while preserving both strict regressions. Its SDPA
 candidate failed the fixed oracle and was rejected; no compute latency
-speedup is claimed for that change. A later RoPE-only pointwise candidate
-passes both complete strict TCP regressions and removes192 profiled device
-events per model graph; its matched serving comparison is pending and the
-production capture remains unchanged.
+speedup is claimed for that change. A later two-line RoPE-only pointwise
+fusion preserves fp16 casts, passes both complete strict TCP regressions and
+removes 192 profiled device events per model graph. Its completed five-pair
+TCP comparison against the current concurrent path measures gen64/one-client
+TPOT 4.373 → 3.899 ms and throughput 227.78 → 255.49 tokens/s; at eight clients,
+TPOT 13.282 → 12.110 ms and throughput 592.84 → 650.34 tokens/s. All four nominal
+paired t95 gain intervals exclude zero in this shared-GPU collection. The
+exact candidate is retained; warm compiler-cache startup, temporary common
+TCP_NODELAY and non-isolation limits remain explicit in finding 0021.
 [Finding 0022](docs/findings/0022-shared-kv.md) qualifies shared KV append and
 records a complete cache-only TCP comparison, with narrowly supporting
 TPOT/throughput results and a changing shared-GPU environment. That comparison

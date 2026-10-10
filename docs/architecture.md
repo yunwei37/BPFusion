@@ -163,6 +163,14 @@ WRITING/PENDING proves that old ownership was released. This preserves the
 head-indexed producer ring, including immediate client reuse across wrap;
 the module withholds the last token while a request remains GPU-owned PENDING.
 
+At bootstrap, the existing HF RoPE pointwise helper is compiled with the default
+backend/mode and emulate_precision_casts=True to preserve fp16 boundaries.
+Only this helper is fused; model reductions, projections and eager attention
+remain unchanged. Finding 0021 qualifies both default-native modes and records
+a complete matched TCP comparison with improved TPOT/throughput at one and
+eight clients. The compiler is outside steady-state request handling; warm-cache
+startup and the shared-GPU/common temporary transport scope are reported.
+
 Captured graphs append into their request's private shared KV buffers and expose
 only the exact attention prefix, avoiding repeated prefix concatenation/copy-back
 (finding0022). Both64-token/prompt-edge/mixed-length controls pass; the custom

@@ -1,0 +1,62 @@
+COMMAND ['python3', '/tmp/bpfusion-qwen-pointwise-5mxeys8g/rope_bench.py', '--gen', '64', '--output', 'bench/results/qwen_compiled_rope_20261010.jsonl', '--resident-executor', '/tmp/bpfusion-qwen-pointwise-5mxeys8g/baseline/qwen_graph', '--host-executor', '/tmp/bpfusion-qwen-pointwise-5mxeys8g/rope/qwen_graph']
+HF_HOME=/workspaces/.cache/huggingface TORCHINDUCTOR_CACHE_DIR=/tmp/bpfusion-qwen-pointwise-5mxeys8g/inductor (already populated by qualification/profile)
+START 2026-10-10T20:03:07.251772+00:00
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4631.11it/s]
+pair=0 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=0 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=0 mode=rope gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=rope gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=0 mode=rope gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=rope gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=1 mode=rope gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=1 mode=rope gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=1 mode=rope gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=1 mode=rope gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=1 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=1 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=1 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=1 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=2 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.020
+pair=2 mode=rope gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=rope gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=2 mode=rope gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=rope gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=rope gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=3 mode=rope gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=3 mode=rope gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.020
+pair=3 mode=rope gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=3 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=3 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=3 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.020
+pair=3 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=4 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=4 mode=rope gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=rope gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.020
+pair=4 mode=rope gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=rope gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+{"mode": "baseline", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 5.37944249375, "ttft_p50_ms": 5.0556915, "ttft_p99_ms": 7.4376909, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [185.9071596202213, 184.44743919198788, 184.50665821249473, 185.4108644352502, 186.37788880522172]}
+{"mode": "rope", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 4.777715884375, "ttft_p50_ms": 4.7198355, "ttft_p99_ms": 7.12858211, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [206.29615544067187, 212.1875537856078, 208.8190095070303, 205.70832303814066, 209.94349538120537]}
+{"gen": 1, "concurrency": 1, "paired_baseline_minus_rope_ttft_ms": [0.5375834843750003, 0.7051095937499996, 0.6273617656250003, 0.5391196874999995, 0.5994585156249999], "difference_mean_ms": 0.6017266093749999, "difference_t95_ms": [0.5152896835685894, 0.6881635351814104]}
+{"mode": "baseline", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 5.4133435125, "ttft_p50_ms": 5.062659999999999, "ttft_p99_ms": 7.434721, "tpot_mean_ms": 4.373307430307539, "executor_cpu_s_per_cell": [0.00999999999999801, 0.0, 0.020000000000003126, 0.01999999999999602, 0.00999999999999801], "tokens_per_s": [228.76540187056068, 228.1470629140956, 228.12285423228164, 228.1030895101576, 225.7780639616652]}
+{"mode": "rope", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 4.842058596875, "ttft_p50_ms": 4.7346474999999995, "ttft_p99_ms": 7.100212900000001, "tpot_mean_ms": 3.898663850545635, "executor_cpu_s_per_cell": [0.00999999999999801, 0.00999999999999801, 0.00999999999999801, 0.01999999999999602, 0.01999999999999602], "tokens_per_s": [254.74269539165135, 255.57676325075488, 255.7026124440285, 254.45839881064288, 256.97912760967677]}
+{"gen": 64, "concurrency": 1, "paired_baseline_minus_rope_ttft_ms": [0.3525420781249995, 0.6196000468749991, 0.5970907656249995, 0.6259786250000001, 0.6612130624999999], "difference_mean_ms": 0.5712849156249996, "difference_t95_ms": [0.4167897828018816, 0.7257800484481176]}
+{"mode": "baseline", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 36.8606102875, "ttft_p50_ms": 40.4212225, "ttft_p99_ms": 45.66757766, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [218.88747758147616, 214.99129026613028, 215.0050426913173, 214.8097082858317, 214.8300225923308]}
+{"mode": "rope", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 32.389852915625, "ttft_p50_ms": 35.543905499999994, "ttft_p99_ms": 39.85823035000001, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [243.20492378096392, 248.20661606059534, 247.83248995807918, 246.7273876903196, 242.79307177071317]}
+{"gen": 1, "concurrency": 8, "paired_baseline_minus_rope_ttft_ms": [3.5137185937500064, 4.985914187500001, 4.792642468750003, 4.80290740625, 4.258604203125003], "difference_mean_ms": 4.470757371875003, "difference_t95_ms": [3.725693686209992, 5.215821057540013]}
+{"mode": "baseline", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 23.6550227125, "ttft_p50_ms": 25.7648675, "ttft_p99_ms": 28.9787101, "tpot_mean_ms": 13.282331842460318, "executor_cpu_s_per_cell": [0.010000000000005116, 0.00999999999999801, 0.0, 0.0, 0.0], "tokens_per_s": [595.6306754467507, 595.8875553298961, 594.9566852599389, 583.6117801512345, 594.1100201518159]}
+{"mode": "rope", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 21.515122865625, "ttft_p50_ms": 23.7276305, "ttft_p99_ms": 25.7569092, "tpot_mean_ms": 12.110282579712301, "executor_cpu_s_per_cell": [0.010000000000005116, 0.010000000000005116, 0.0, 0.0, 0.0], "tokens_per_s": [650.4310738055317, 650.2783705409369, 649.881627441073, 649.8030822049313, 651.3109272056652]}
+{"gen": 64, "concurrency": 8, "paired_baseline_minus_rope_ttft_ms": [2.2339391875000025, 2.1515011406249975, 1.381535812500001, 3.524073906249999, 1.4084491875000005], "difference_mean_ms": 2.139899846875, "difference_t95_ms": [1.0583235683687093, 3.221476125381291]}
+{"metric": "tpot_ms", "gen": 64, "concurrency": 1, "baseline_blocks": [4.357605433531746, 4.366019029761905, 4.365817000992063, 4.365770596726191, 4.411325090525794], "rope_blocks": [3.910378363839286, 3.8979819117063492, 3.895011490823413, 3.914428370535714, 3.875519115823413], "positive_means_improvement": true, "paired_gain": [0.44722706969246007, 0.46803711805555537, 0.47080551016865035, 0.4513422261904765, 0.5358059747023809], "mean_gain": 0.47464357976190463, "gain_t95": [0.4303341220462227, 0.5189530374775866]}
+{"metric": "output_tokens_per_s", "gen": 64, "concurrency": 1, "baseline_blocks": [228.76540187056068, 228.1470629140956, 228.12285423228164, 228.1030895101576, 225.7780639616652], "rope_blocks": [254.74269539165135, 255.57676325075488, 255.7026124440285, 254.45839881064288, 256.97912760967677], "positive_means_improvement": true, "paired_gain": [25.977293521090672, 27.429700336659266, 27.57975821174685, 26.35530930048529, 31.20106364801157], "mean_gain": 27.70862500359873, "gain_t95": [25.139812634086116, 30.277437373111344]}
+{"metric": "tpot_ms", "gen": 64, "concurrency": 8, "baseline_blocks": [13.22731828844246, 13.205501038938491, 13.235445395089286, 13.481203742063492, 13.262190747767857], "rope_blocks": [12.120307722222222, 12.104383140873017, 12.111052755456349, 12.127660440724206, 12.088008839285715], "positive_means_improvement": true, "paired_gain": [1.1070105662202376, 1.1011178980654748, 1.1243926396329371, 1.3535433013392861, 1.1741819084821419], "mean_gain": 1.1720492627480155, "gain_t95": [1.0411183427171045, 1.3029801827789265]}
+{"metric": "output_tokens_per_s", "gen": 64, "concurrency": 8, "baseline_blocks": [595.6306754467507, 595.8875553298961, 594.9566852599389, 583.6117801512345, 594.1100201518159], "rope_blocks": [650.4310738055317, 650.2783705409369, 649.881627441073, 649.8030822049313, 651.3109272056652], "positive_means_improvement": true, "paired_gain": [54.80039835878097, 54.39081521104072, 54.92494218113404, 66.19130205369686, 57.20090705384928], "mean_gain": 57.50167297170037, "gain_t95": [51.31780056476331, 63.685545378637435]}
+
+EXIT 0

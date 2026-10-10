@@ -135,8 +135,9 @@ No oracle, norm, attention, projection, KV, graph-bank ownership, native
 scheduler, page/module or transport changes are included.
 
 [Exact temporary candidate source/delta](../../bench/results/qwen_compiled_rope_candidate_20261010.txt)
-records the two added capture-script lines at64b1e7e. Production source remains
-unchanged pending default-native qualification and a matched serving result.
+records the two added capture-script lines at64b1e7e. At that qualification
+milestone production source remained unchanged pending default-native
+qualification and a matched serving result; the completed decision is below.
 The [first GPU-only attempt](../../bench/results/qwen_compiled_rope_qualification_20261010.txt)
 failed before candidate load/capture: the reused old probe library does not
 export the new service max_requests symbol. The wrapper already discovers its
@@ -248,3 +249,125 @@ four primary effects and the shared-GPU/nominal-interval boundary; report
 bootstrap separately with the already populated ephemeral compiler cache.
 Result review must independently verify counters/FREE/cleanup. No separate
 saved reviewer report is claimed.
+
+
+Real preflight completed normally on the frozen source64b1e7e: [raw](../../bench/results/qwen_compiled_rope_preflight_20261010.jsonl)
+and [stdout](../../bench/results/qwen_compiled_rope_preflight_20261010.stdout.txt),
+15 records/eight exact measured gen1 requests/two normal exits. Each engine
+records12 publications,264 model graphs,one host service launch,error0,
+banks8/max_active1,zero queue/registration errors and eight FREE slots.
+Module and pins are absent after cleanup. The compiler cache was already
+populated by qualification/profile. All plan-review conditions are closed;
+preflight timings are setup evidence and are not a serving result. Main58beb1d
+is the doc-only qualification milestone; its production source is unchanged
+from64b1e7e. Full collection keeps both frozen capture scripts,identical
+native library and exact driver unchanged.
+
+
+## Complete RoPE TCP result
+
+The [full raw](../../bench/results/qwen_compiled_rope_20261010.jsonl) and
+[stdout](../../bench/results/qwen_compiled_rope_20261010.stdout.txt) terminate
+normally with EXIT0 at 58beb1d: all 40 cells,2,560 requests,83,200 exact output
+tokens and ten normal executor exits. No full-run failure or exclusion occurred.
+Every process records one host service launch,8,580 device model graphs,
+graph_error=0, banks8/max_active8,264 publications, zero queue/registration errors
+and eight final FREE slots. Both frozen scripts use the same native binary;
+the candidate changes only the qualified RoPE helper.
+
+The [supplementary analysis](../../bench/results/qwen_compiled_rope_analysis_20261010.txt)
+contains its exact script and independently checks every oracle/timestamp
+metric, TPS first-send/last-arrival denominator, prompt balance, alternating process
+order, counters and all five paired blocks. The stored barrier/future CPU window
+contains the wire timing window; they are not equal. All four predeclared
+gen64 co-primary effects below improve in every pair. Intervals are nominal
+two-sided t95, df4, without familywise adjustment or an omnibus significance
+claim. Positive gain means RoPE-minus-baseline TPS or baseline-minus-RoPE TPOT.
+
+| Gen64 / clients | primary metric | baseline mean | RoPE mean | paired gain | nominal t95 gain |
+|---|---|---:|---:|---:|---|
+| 1 | Output tokens/s | 227.783294 | 255.491920 | +27.708625 | [+25.139813,+30.277437] |
+| 1 | TPOT ms | 4.373307 | 3.898664 | +0.474644 | [+0.430334,+0.518953] |
+| 8 | Output tokens/s | 592.839343 | 650.341016 | +57.501673 | [+51.317801,+63.685545] |
+| 8 | TPOT ms | 13.282332 | 12.110283 | +1.172049 | [+1.041118,+1.302980] |
+
+Local mean throughput increases about 12.2% at one client and 9.7% at eight;
+TPOT decreases about 10.9% and 8.8%, respectively. These percentages describe this
+matched shared-GPU collection, not a fixed isolated speedup or a competitive
+serving result. Concurrent requests still have much slower TPOT than a single
+request. The original scheduling benefit/cost in finding0023 is a separate
+experiment; historical measurements must not be multiplied into one combined
+speedup.
+
+| Diagnostic / gen / clients | metric | baseline mean | RoPE mean | nominal t95 gain |
+|---|---|---:|---:|---|
+| 64 / 1 | TTFT ms | 5.413344 | 4.842059 | [+0.416790,+0.725780] |
+| 64 / 1 | Completion ms | 280.931712 | 250.457881 | [+27.594164,+33.353497] |
+| 64 / 8 | TTFT ms | 23.655023 | 21.515123 | [+1.058324,+3.221476] |
+| 64 / 8 | Completion ms | 860.441929 | 784.462925 | [+66.882149,+85.075858] |
+| 1 / 1 | Output tokens/s | 185.330002 | 208.590907 | [+19.419185,+27.102626] |
+| 1 / 1 | TTFT/completion ms | 5.379442 | 4.777716 | [+0.515290,+0.688164] |
+| 1 / 8 | Output tokens/s | 215.704708 | 245.752898 | [+25.302204,+34.794175] |
+| 1 / 8 | TTFT/completion ms | 36.860610 | 32.389853 | [+3.725694,+5.215821] |
+
+Gen1 has no TPOT. Raw stdout also reports pooled descriptive p50/p99; they
+are not independent block-level tail estimates or an SLO guarantee. Gen64/
+eight-client TTFT p99 is28.978710 ->25.756909 ms in this collection.
+
+Five bootstrap durations average53.686528 s baseline and52.778737 s RoPE,
+ranges[52.754304,54.340583] and[52.457346,53.511897]s. The owning ephemeral
+compiler cache was already populated by qualification/profile; these are
+warm-cache startup observations, not cold compiler-cache costs or startup
+performance inference. The capture/bootstrap phase is excluded from active
+client timing. Executor-PID CPU totals over 20 cells are0.08 s baseline and0.09 s
+RoPE at100Hz accounting; five one-second idle samples total0.01 s and0.00 s.
+This coarse scope excludes kernel TX, softirq, client/compiler workers and
+total host cost; it does not imply zero total CPU or energy improvement.
+
+[Environment snapshots](../../bench/results/qwen_compiled_rope_environment_20261010.txt)
+retain the same other-owner SGLang scheduler with 18,402MiB before, during and
+after collection. The active snapshot catches this task's candidate during
+startup, not steady-state bank residency or peak memory; no total-memory
+reduction is inferred. CUDA profiles above show unchanged PyTorch counters.
+Per-cell GPU endpoint clocks/temperature/power/utilization remain in raw.
+Alternating pairs and stable residency do not prove co-tenant activity was
+constant or establish isolation, physical overlap or integrated energy.
+
+Post-run checks at2026-10-10T20:17:33UTC find no task executor/benchmark process,
+module or bpfusion pins. At20:17:45UTC the host has only the preserved SGLang
+GPU process and unchanged boot ID. Each driver cleanup completed normally and
+eight FREE slots were recorded before detaching. Original Workspace/PVC and
+unrelated setup_env.sh remain preserved. This result supports the tested
+RoPE-only component hypothesis. Text, continuous batching, optimized serving,
+total-host cost and physical-NIC acceptance remain open.
+
+
+## Independent result review and retained RoPE capture
+
+A fresh read-only result reviewer independently recomputed every request and
+cell metric, all five paired intervals, p99/counts/balance/order, oracle agreement,
+source identity, common native binary, counters/FREE/cleanup and documentation
+numbers. Its verdict is valid, supported separately for all four primary
+effects, and supporting engineering value, with no blocker to exact two-line
+retention. It checked the default-native strict qualifications and the
+unchanged graph/tensor lifetime. It also retained shared-GPU/non-IID,
+nominal-interval, warm-cache, CPU-scope and profiling interpretation boundaries.
+No separate saved reviewer report is claimed.
+
+The production capture now contains exactly the qualified two lines:
+import the existing Qwen2 modeling module and compile apply_rotary_pos_emb with
+emulate_precision_casts=True. This non-default compiler option preserves the
+fp16 cast boundaries needed by the tested exact oracle; backend and mode
+remain defaults. Reduction/projection/attention/KV, scheduler, page/module,
+transport and entrypoints are unchanged. No helper, flag, new dependency or
+persistent configuration was added. make qwen-graph qwen-graph-control
+confirms both canonical symlinks expose the same retained bytes and native
+binaries. The [canonical resident regression](../../bench/results/qwen_compiled_rope_canonical_correctness_20261010.txt)
+now terminates EXIT0 at the actual build/qwen_graph entrypoint with default
+compiler-cache selection: 335 valid requests /20,432 exact tokens /259 rejects,
+5,000 empty connections, mixed lengths, reuse, pipeline, half-close, one host
+launch /20,432 device graphs /error0 /banks8 /max_active8, zero queue/registration
+errors, eight FREE slots, passing all-thread network trace and clean teardown.
+The cache directory already existed; this is entrypoint qualification, not a
+cold-cache measurement. Production growth is exactly two lines; tests are
+unchanged. No full comparison or result review was repeated.

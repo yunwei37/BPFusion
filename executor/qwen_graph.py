@@ -70,6 +70,8 @@ def main():
     limit=lib.max_tokens();context=2*limit;banks=[]
     with torch.no_grad():
         model=load_model(sys.argv[1]);config=model.config
+        from transformers.models.qwen2 import modeling_qwen2 as qwen2
+        qwen2.apply_rotary_pos_emb=torch.compile(qwen2.apply_rotary_pos_emb,options={"emulate_precision_casts":True})
         dim=config.hidden_size//config.num_attention_heads
         for bank in range(lib.max_requests()):
             keys=[torch.zeros((1,config.num_key_value_heads,context,dim),dtype=torch.float16,device='cuda') for _ in model.model.layers]
