@@ -1,0 +1,7 @@
+Command: HF_HOME=/workspaces/.cache/huggingface python3 /tmp/bpfusion-qwen-optimization-kj41itjy/shared_kv_bench.py --gen 64 --resident-executor /tmp/bpfusion-qwen-optimization-kj41itjy/kv_baseline/qwen_graph --host-executor /tmp/bpfusion-qwen-optimization-kj41itjy/shared_kv/qwen_graph --output bench/results/shared_kv_preflight_20261010.jsonl --preflight
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4797.78it/s]
+pair=0 mode=baseline gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+pair=0 mode=shared-kv gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+{"mode": "baseline", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 3.165725, "ttft_p50_ms": 3.1981235000000003, "ttft_p99_ms": 3.24327461, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0], "tokens_per_s": [313.9955756453414]}
+{"mode": "shared-kv", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 3.004063, "ttft_p50_ms": 3.0015595, "ttft_p99_ms": 3.0895052599999997, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0], "tokens_per_s": [331.4335012651645]}
+{"gen": 1, "concurrency": 1, "paired_shared_kv_minus_baseline_ttft_ms": [-0.1616620000000002], "difference_mean_ms": -0.1616620000000002, "difference_t95_ms": null}
