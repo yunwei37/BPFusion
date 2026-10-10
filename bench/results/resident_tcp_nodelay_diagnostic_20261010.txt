@@ -1,0 +1,75 @@
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 5225.99it/s]
+{"event": "metadata", "commit": "28bcf9ead4c6e3f7de2ea29da1c749ae1cdc661e", "executor": "/tmp/bpfusion-tcp-nodelay-build/qwen", "clock": "client and passive capture monotonic_ns; receive timestamps include observer scheduling"}
+{"event": "reply", "case": 0, "start_ns": 37416062087981, "arrival_ns": [37416072329024, 37416074953898, 37416077453288, 37416079983953, 37416082581502, 37416085300503, 37416087822363, 37416090574314], "tokens": [12095, 13, 1084, 374, 279, 7772, 3283, 304], "ttft_ms": 10.241043, "latency_ms": 28.486333, "tpot_ms": 2.60647}
+{"event": "reply", "case": 1, "start_ns": 37416090646795, "arrival_ns": [37416106966875, 37416109532374, 37416112193891, 37416114866265, 37416117584678, 37416120259035, 37416122998458, 37416125723508], "tokens": [2014, 11625, 279, 3491, 315, 7842, 220, 17], "ttft_ms": 16.32008, "latency_ms": 35.076713, "tpot_ms": 2.679519}
+{"event": "reply", "case": 2, "start_ns": 37416125815759, "arrival_ns": [37416136204890, 37416138653581, 37416141272084, 37416143794403, 37416146487476, 37416149100066, 37416151757775, 37416154431783], "tokens": [4710, 15216, 6556, 11, 5019, 0, 4710, 40], "ttft_ms": 10.389131, "latency_ms": 28.616024, "tpot_ms": 2.603841857142857}
+{"event": "reply", "case": 3, "start_ns": 37416154513560, "arrival_ns": [37416159128762, 37416161508239, 37416164027877, 37416166473893, 37416169263788, 37416171712364, 37416174116571, 37416176739236], "tokens": [264, 1910, 323, 1787, 30774, 3162, 7982, 429], "ttft_ms": 4.615202, "latency_ms": 22.225676, "tpot_ms": 2.515782}
+{"event": "packet", "mono_ns": 37416062023881, "sport": 43536, "dport": 39403, "seq": 835466240, "ack": 0, "flags": 2, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416062046985, "sport": 39403, "dport": 43536, "seq": 3981655603, "ack": 835466241, "flags": 18, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416062058281, "sport": 43536, "dport": 39403, "seq": 835466241, "ack": 3981655604, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416062295320, "sport": 43536, "dport": 39403, "seq": 835466241, "ack": 3981655604, "flags": 24, "bytes": 108, "kind": "request"}
+{"event": "packet", "mono_ns": 37416062304895, "sport": 39403, "dport": 43536, "seq": 3981655604, "ack": 835466349, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416062310514, "sport": 39403, "dport": 43536, "seq": 3981655604, "ack": 835466349, "flags": 24, "bytes": 79, "kind": "header"}
+{"event": "packet", "mono_ns": 37416062315130, "sport": 43536, "dport": 39403, "seq": 835466349, "ack": 3981655683, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416072224367, "sport": 39403, "dport": 43536, "seq": 3981655683, "ack": 835466349, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416072249468, "sport": 43536, "dport": 39403, "seq": 835466349, "ack": 3981655687, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416074988686, "sport": 39403, "dport": 43536, "seq": 3981655687, "ack": 835466349, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416075014796, "sport": 43536, "dport": 39403, "seq": 835466349, "ack": 3981655691, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416077486232, "sport": 39403, "dport": 43536, "seq": 3981655691, "ack": 835466349, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416077505849, "sport": 43536, "dport": 39403, "seq": 835466349, "ack": 3981655695, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416079894598, "sport": 39403, "dport": 43536, "seq": 3981655695, "ack": 835466349, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416079910819, "sport": 43536, "dport": 39403, "seq": 835466349, "ack": 3981655699, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416082503432, "sport": 39403, "dport": 43536, "seq": 3981655699, "ack": 835466349, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416082506561, "sport": 43536, "dport": 39403, "seq": 835466349, "ack": 3981655703, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416085270489, "sport": 39403, "dport": 43536, "seq": 3981655703, "ack": 835466349, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416085284726, "sport": 43536, "dport": 39403, "seq": 835466349, "ack": 3981655707, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416087947782, "sport": 39403, "dport": 43536, "seq": 3981655707, "ack": 835466349, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416087967233, "sport": 43536, "dport": 39403, "seq": 835466349, "ack": 3981655711, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416090698754, "sport": 39403, "dport": 43536, "seq": 3981655711, "ack": 835466349, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416090722839, "sport": 43536, "dport": 39403, "seq": 835466349, "ack": 3981655715, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416090732115, "sport": 43536, "dport": 39403, "seq": 835466349, "ack": 3981655715, "flags": 24, "bytes": 120, "kind": "request"}
+{"event": "packet", "mono_ns": 37416090752406, "sport": 39403, "dport": 43536, "seq": 3981655715, "ack": 835466469, "flags": 24, "bytes": 79, "kind": "header"}
+{"event": "packet", "mono_ns": 37416106941863, "sport": 39403, "dport": 43536, "seq": 3981655794, "ack": 835466469, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416106982630, "sport": 43536, "dport": 39403, "seq": 835466469, "ack": 3981655798, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416109561618, "sport": 39403, "dport": 43536, "seq": 3981655798, "ack": 835466469, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416112221800, "sport": 39403, "dport": 43536, "seq": 3981655802, "ack": 835466469, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416112241435, "sport": 43536, "dport": 39403, "seq": 835466469, "ack": 3981655806, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416114891658, "sport": 39403, "dport": 43536, "seq": 3981655806, "ack": 835466469, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416117476302, "sport": 39403, "dport": 43536, "seq": 3981655810, "ack": 835466469, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416117597360, "sport": 43536, "dport": 39403, "seq": 835466469, "ack": 3981655814, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416120284465, "sport": 39403, "dport": 43536, "seq": 3981655814, "ack": 835466469, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416122973500, "sport": 39403, "dport": 43536, "seq": 3981655818, "ack": 835466469, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416123026623, "sport": 43536, "dport": 39403, "seq": 835466469, "ack": 3981655822, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416125791961, "sport": 39403, "dport": 43536, "seq": 3981655822, "ack": 835466469, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416125848345, "sport": 43536, "dport": 39403, "seq": 835466469, "ack": 3981655826, "flags": 24, "bytes": 108, "kind": "request"}
+{"event": "packet", "mono_ns": 37416125864160, "sport": 39403, "dport": 43536, "seq": 3981655826, "ack": 835466577, "flags": 24, "bytes": 79, "kind": "header"}
+{"event": "packet", "mono_ns": 37416136148716, "sport": 39403, "dport": 43536, "seq": 3981655905, "ack": 835466577, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416136172431, "sport": 43536, "dport": 39403, "seq": 835466577, "ack": 3981655909, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416138676964, "sport": 39403, "dport": 43536, "seq": 3981655909, "ack": 835466577, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416141250466, "sport": 39403, "dport": 43536, "seq": 3981655913, "ack": 835466577, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416141298158, "sport": 43536, "dport": 39403, "seq": 835466577, "ack": 3981655917, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416143820084, "sport": 39403, "dport": 43536, "seq": 3981655917, "ack": 835466577, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416146436313, "sport": 39403, "dport": 43536, "seq": 3981655921, "ack": 835466577, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416146643865, "sport": 43536, "dport": 39403, "seq": 835466577, "ack": 3981655925, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416149059578, "sport": 39403, "dport": 43536, "seq": 3981655925, "ack": 835466577, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416151712257, "sport": 39403, "dport": 43536, "seq": 3981655929, "ack": 835466577, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416151806195, "sport": 43536, "dport": 39403, "seq": 835466577, "ack": 3981655933, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416154370527, "sport": 39403, "dport": 43536, "seq": 3981655933, "ack": 835466577, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416154663268, "sport": 43536, "dport": 39403, "seq": 835466577, "ack": 3981655937, "flags": 24, "bytes": 96, "kind": "request"}
+{"event": "packet", "mono_ns": 37416154679627, "sport": 39403, "dport": 43536, "seq": 3981655937, "ack": 835466673, "flags": 24, "bytes": 79, "kind": "header"}
+{"event": "packet", "mono_ns": 37416159056072, "sport": 39403, "dport": 43536, "seq": 3981656016, "ack": 835466673, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416159292482, "sport": 43536, "dport": 39403, "seq": 835466673, "ack": 3981656020, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416161461284, "sport": 39403, "dport": 43536, "seq": 3981656020, "ack": 835466673, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416163977093, "sport": 39403, "dport": 43536, "seq": 3981656024, "ack": 835466673, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416164270701, "sport": 43536, "dport": 39403, "seq": 835466673, "ack": 3981656028, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416166506561, "sport": 39403, "dport": 43536, "seq": 3981656028, "ack": 835466673, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416169073779, "sport": 39403, "dport": 43536, "seq": 3981656032, "ack": 835466673, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416169093958, "sport": 43536, "dport": 39403, "seq": 835466673, "ack": 3981656036, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416171730458, "sport": 39403, "dport": 43536, "seq": 3981656036, "ack": 835466673, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416173997953, "sport": 39403, "dport": 43536, "seq": 3981656040, "ack": 835466673, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416174131171, "sport": 43536, "dport": 39403, "seq": 835466673, "ack": 3981656044, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416176628307, "sport": 39403, "dport": 43536, "seq": 3981656044, "ack": 835466673, "flags": 24, "bytes": 4, "kind": "tokens"}
+{"event": "packet", "mono_ns": 37416176844256, "sport": 43536, "dport": 39403, "seq": 835466673, "ack": 3981656048, "flags": 17, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416176892991, "sport": 39403, "dport": 43536, "seq": 3981656048, "ack": 835466674, "flags": 17, "bytes": 0, "kind": "empty"}
+{"event": "packet", "mono_ns": 37416176897984, "sport": 43536, "dport": 39403, "seq": 835466674, "ack": 3981656049, "flags": 16, "bytes": 0, "kind": "empty"}
+{"event": "executor", "log": "resident Qwen ready: 24 layers h=896 vocab=151936; 170 CTAs, dispatch=resident\nresident Qwen stopped: dispatch=resident launches=1\n", "stats": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\npublished      0\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 4\nsockhash linked 1\nsockhash failed 0\nparser calls   4\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000"}

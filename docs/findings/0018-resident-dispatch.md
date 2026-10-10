@@ -142,5 +142,114 @@ is retained as diagnostic evidence. The temporary BPF instrumentation was
 removed before the final repeat; the ingress source is unchanged from the
 published control commit. This does not establish that the timeout is repaired.
 
-The final uninstrumented repeat and fresh result review are pending.
-No performance conclusion is established by the incomplete attempt.
+## Final measured result
+
+The [uninstrumented raw run](../../bench/results/resident_dispatch_20261010.jsonl)
+on source `28bcf9ead4c6e3f7de2ea29da1c749ae1cdc661e` completed all five pairs,
+ten processes and 40 cells: 2,560 measured requests and 11,520 exact output
+token IDs, plus excluded warmups. Each cell contains 64 unique indexes and
+16 requests for each prompt. Each resident process launched once; each
+host-dispatch process launched 264 times (eight warmups plus 256 requests).
+All ten processes shut down normally, published 264 requests each, and had
+zero registration failures or admission drops. [Stdout](../../bench/results/resident_dispatch_20261010.txt)
+records the per-cell measurements and native analysis.
+
+| Output / clients | Resident mean TTFT, ms | Host-dispatch mean TTFT, ms | Host minus resident, ms | Paired 95% t interval, ms |
+|---|---:|---:|---:|---:|
+| 1 / 1 | 40.6103 | 40.6058 | -0.0045 | [-0.1222, 0.1132] |
+| 8 / 1 | 40.5369 | 40.5626 | 0.0258 | [-0.0979, 0.1494] |
+| 1 / 8 | 80.7184 | 80.5873 | -0.1311 | [-0.6564, 0.3942] |
+| 8 / 8 | 214.4801 | 214.4443 | -0.0358 | [-0.8908, 0.8193] |
+
+Every interval crosses zero. The result establishes neither a detected TTFT
+advantage nor equivalence. These are four separate local comparisons; no
+family-wide superiority is claimed. Five adjacent blocks on one shared GPU
+provide limited statistical power and depend on the stated t assumptions.
+Pooled p99 remains descriptive.
+
+Across the twenty measured cells per mode, executor-process CPU time was
+0.04 s over 38.660 s of windows for resident versus 38.73 s over 38.680 s
+for host dispatch. The idle windows show approximately one CPU-second/second
+for the busy host control versus no reported resident ticks. At the recorded
+100 Hz resolution, near-zero readings are quantized: they are not exact zero
+or a useful denominator for a savings ratio. The data show removal of this
+specific busy host-dispatch process cost, not total host CPU, instructions,
+energy or an optimized-server comparison. Kernel TX, softirq and client work
+are excluded. GPU endpoint samples also differ: resident remains busy even
+when polling; host dispatch can idle/downclock. This is part of the policy
+effect and is not an integrated energy measurement.
+
+For gen8, 315/320 single-client replies and 280/320 eight-client replies in
+**each mode** deliver all tokens at the same recorded receive time. The resulting
+near-zero client TPOT cannot describe model decode time. This coalescing and
+the persistent-connection 40 ms plateau are the main competing transport
+explanation, not a reason to relabel the TTFT null result as a launch benefit.
+
+## Transport discriminator (separate diagnosis)
+
+`HF_HOME=/workspaces/.cache/huggingface python3 bench/tcp_stream_trace.py`
+reuses the same requests/oracle and passively records packet metadata for the
+owned loopback port using AF_PACKET. It captures no arbitrary payloads.
+[The default trace](../../bench/results/resident_tcp_packet_trace_20261010.txt)
+shows a streaming first response (TTFT 10.209 ms; client TPOT 2.616 ms), then
+three replies with TTFT 41.629, 40.950 and 40.764 ms and coalesced token bodies.
+Their headers precede delayed ACKs; the full token body follows the ACK.
+The [Linux Nagle test](https://raw.githubusercontent.com/torvalds/linux/v7.3-rc3/net/ipv4/tcp_output.c)
+and [40 ms minimum delayed-ACK constant](https://raw.githubusercontent.com/torvalds/linux/v7.3-rc3/include/net/tcp.h)
+are consistent with this mechanism. Passive receive timestamps include
+observer scheduling; this is not a direct GPU-ready timestamp.
+
+A bounded test-local candidate set TCP_NODELAY on the bootstrap listener so
+accepted sockets inherited it. It was compiled with native `make` into an OS
+temporary directory, and the tracked Qwen source and default binaries were
+restored/preserved before tracing. [Candidate trace](../../bench/results/resident_tcp_nodelay_diagnostic_20261010.txt):
+all four replies match the same eight-token oracle, TTFT 10.241, 16.320,
+10.389 and 4.615 ms, with streamed client TPOT 2.516..2.680 ms. This strengthens
+the ACK/Nagle buffering diagnosis. Four requests are a discriminator, not a
+new serving benchmark, a confidence interval or evidence of resident-policy
+superiority. No TCP_NODELAY default or persistent infrastructure setting was
+retained; the candidate build was removed after shutdown.
+
+To reproduce that diagnostic candidate without retaining a source change:
+
+```sh
+HF_HOME=/workspaces/.cache/huggingface python3 - <<'PY'
+from pathlib import Path
+import subprocess, tempfile
+source=Path('executor/qwen.cu')
+original=source.read_text()
+with tempfile.TemporaryDirectory(prefix='bpfusion-tcp-nodelay-') as build:
+    try:
+        candidate=original.replace('#include <netinet/in.h>', '#include <netinet/in.h>\n#include <netinet/tcp.h>')
+        candidate=candidate.replace('    setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));',
+            '    setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));\n    if (setsockopt(listener,IPPROTO_TCP,TCP_NODELAY,&yes,sizeof(yes))) return 1;')
+        source.write_text(candidate)
+        subprocess.run(['make', 'BUILD='+build, 'qwen'],check=True)
+    finally:
+        source.write_text(original)
+    subprocess.run(['python3','bench/tcp_stream_trace.py','--executor',build+'/qwen'],check=True)
+PY
+```
+
+## Fresh result review and remaining work
+
+A different read-only reviewer inspected sources, both strict regressions,
+raw data, negatives and diagnostics, and independently recomputed the metrics.
+It confirmed matching device SASS/resources, all cell/request indexes, oracle
+tokens, ordering and launch counts. No invalidating defect was found for the
+local experiment. It required the CPU quantization/scope limits, coalesced
+TPOT warning, GPU-power-policy context, unresolved timeout and statistical
+assumptions reported above. The native protocol adapter and small shared-kernel
+control were judged justified; no experiment-control framework is needed.
+
+- Run status: final uninstrumented run valid/complete; first attempt incomplete.
+- Tested hypothesis: inconclusive in every cell.
+- Research value: supporting mechanism evidence.
+- Paper impact: mechanism/workload boundary; no paper RQ or thesis verdict.
+- Next decision: preserve the null latency result and test the transport
+  discriminator in the same matched matrix before drawing a better-path claim.
+
+The earlier timeout remains unexplained, not repaired by later successes.
+The 64-token numerical failure, GPU text processing, batching, completion
+interfaces/measurements, complete CPU accounting, optimized serving baselines
+and real-NIC controls remain open. This experiment does not complete BPFusion.

@@ -50,6 +50,10 @@ that same device kernel once per request while retaining eBPF ingress and
 kernel TX. It is a mechanism ablation, not an optimized serving baseline.
 [Finding 0018](docs/findings/0018-resident-dispatch.md) records its fixed-oracle
 regressions and the client-latency/executor-process CPU experiment.
+Its five-pair, 2,560-request measurement finds no detected TTFT advantage under
+the current transport behavior, while removing the control's busy executor
+process cost. Packet diagnostics identify ACK/Nagle buffering; total host CPU
+and optimized serving comparisons remain unmeasured.
 
 ## Repository layout
 
