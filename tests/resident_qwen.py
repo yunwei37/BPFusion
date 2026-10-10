@@ -25,7 +25,7 @@ def oracle_cases(gen, prefill_edges=False):
     inputs=[tok(prompt).input_ids for prompt in ("The capital of France is", "What is 2 plus 2?", "Write a short greeting.", "Linux is")]
     if prefill_edges:
         pattern=inputs[0]
-        inputs.extend((pattern*((n+len(pattern)-1)//len(pattern)))[:n] for n in (16,17,32,64))
+        inputs.extend((pattern*((n+len(pattern)-1)//len(pattern)))[:n] for n in (1,15,16,17,32,64))
     for ids in inputs:
         with torch.no_grad():
             out=model(torch.tensor([ids],device="cuda"),use_cache=True)
@@ -47,7 +47,7 @@ def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--gen",type=int,default=8,choices=range(1,65))
     parser.add_argument("--executor",default="./build/qwen")
-    parser.add_argument("--prefill-edges",action="store_true",help="also test 16/17/32/64-token prompt lengths")
+    parser.add_argument("--prefill-edges",action="store_true",help="also test 1/15/16/17/32/64-token prompt lengths")
     args=parser.parse_args()
     cases,vocab=oracle_cases(args.gen,args.prefill_edges)
     valid=273+3*len(cases)
@@ -186,9 +186,11 @@ def main():
                     assert "dispatch=resident launches=1" in log,log
                 if complete: print("PASS expected CUDA launch count for the selected dispatch",flush=True)
                 trace=open("/tmp/bpfusion-qwen-network.trace").read()
-                active=trace.split("resident Qwen ready",1)[1]
-                assert not re.search(r"\b(?:accept4?|recvfrom|recvmsg|recvmmsg|sendto|sendmsg|sendmmsg)\(",active),active
-                print("PASS traced all executor threads: no accept/receive/send syscalls after ready",flush=True)
+                if complete: assert "resident Qwen ready" in trace,"missing executor ready marker in trace"
+                if "resident Qwen ready" in trace:
+                    active=trace.split("resident Qwen ready",1)[1]
+                    assert not re.search(r"\b(?:accept4?|recvfrom|recvmsg|recvmmsg|sendto|sendmsg|sendmmsg)\(",active),active
+                    print("PASS traced all executor threads: no accept/receive/send syscalls after ready",flush=True)
             subprocess.run(["./build/bpfusion_load","stats"],check=True)
         finally:
             subprocess.run(["./build/bpfusion_load","stream-detach"],check=True)

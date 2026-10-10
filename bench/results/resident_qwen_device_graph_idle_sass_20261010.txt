@@ -1,0 +1,209 @@
+Before repair: no-delay __ldcg idle loop. llm_head offset 0x3230 is loaded at 0x0100 and compared at 0x0120; the back edge at 0x0190 targets 0x0130, skipping both. The failed live run has head=1/PENDING/produced=0 and zero model graph launches.
+Function : _Z8dispatchP7bf_pageP4StepPxjP7Control
+	.headerflags	@"EF_CUDA_SM120 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM120)"
+        /*0000*/                   LDC R1, c[0x0][0x37c] ;                              /* 0x0000df00ff017b82 */
+                                                                                        /* 0x000e220000000800 */
+        /*0010*/                   S2R R0, SR_TID.X ;                                   /* 0x0000000000007919 */
+                                                                                        /* 0x000e6e0000002100 */
+        /*0020*/                   S2UR UR4, SR_CTAID.X ;                               /* 0x00000000000479c3 */
+                                                                                        /* 0x000e640000002500 */
+        /*0030*/                   LOP3.LUT P0, RZ, R0, UR4, RZ, 0xfc, !PT ;            /* 0x0000000400ff7c12 */
+                                                                                        /* 0x002fda000f80fcff */
+        /*0040*/               @P0 EXIT ;                                               /* 0x000000000000094d */
+                                                                                        /* 0x000fea0003800000 */
+        /*0050*/                   LDCU.64 UR36, c[0x0][0x358] ;                        /* 0x00006b00ff2477ac */
+                                                                                        /* 0x000e620008000a00 */
+        /*0060*/                   LDC.64 R8, c[0x0][0x3a0] ;                           /* 0x0000e800ff087b82 */
+                                                                                        /* 0x000e700000000a00 */
+        /*0070*/                   LDC.64 R6, c[0x0][0x380] ;                           /* 0x0000e000ff067b82 */
+                                                                                        /* 0x000ea20000000a00 */
+        /*0080*/                   LDG.E R2, desc[UR36][R8.64+0x14] ;                   /* 0x0000142408027981 */
+                                                                                        /* 0x002ee8000c1e1900 */
+        /*0090*/                   LDG.E R0, desc[UR36][R8.64] ;                        /* 0x0000002408007981 */
+                                                                                        /* 0x000f22000c1e1900 */
+        /*00a0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;                    /* 0x000000ff0200720c */
+                                                                                        /* 0x008fe20003f05270 */
+        /*00b0*/                   LOP3.LUT R3, R0, 0x7, RZ, 0xc0, !PT ;                /* 0x0000000700037812 */
+                                                                                        /* 0x010fca00078ec0ff */
+        /*00c0*/                   IMAD.WIDE.U32 R2, R3, 0x230, R6 ;                    /* 0x0000023003027825 */
+                                                                                        /* 0x004fca00078e0006 */
+        /*00d0*/                   IADD.64 R4, R2, 0x3238 ;                             /* 0x0000323802047835 */
+                                                                                        /* 0x000fe400078e0200 */
+        /*00e0*/               @P0 BRA 0xd00 ;                                          /* 0x0000000c00040947 */
+                                                                                        /* 0x000fec0003800000 */
+        /*00f0*/                   LDC.64 R8, c[0x0][0x380] ;                           /* 0x0000e000ff087b82 */
+                                                                                        /* 0x000e640000000a00 */
+        /*0100*/                   LDG.E.STRONG.GPU R9, desc[UR36][R8.64+0x3230] ;      /* 0x0032302408097981 */
+                                                                                        /* 0x002ea2000c1ef900 */
+        /*0110*/                   IADD.64 R6, R6, 0x3230 ;                             /* 0x0000323006067835 */
+                                                                                        /* 0x000fe400078e0200 */
+        /*0120*/                   ISETP.NE.AND P0, PT, R9, R0, PT ;                    /* 0x000000000900720c */
+                                                                                        /* 0x004fda0003f05270 */
+        /*0130*/              @!P0 BRA 0x170 ;                                          /* 0x00000000000c8947 */
+                                                                                        /* 0x000fea0003800000 */
+        /*0140*/                   LDG.E.STRONG.GPU R0, desc[UR36][R2.64+0x3238] ;      /* 0x0032382402007981 */
+                                                                                        /* 0x000ea4000c1ef900 */
+        /*0150*/                   ISETP.NE.AND P1, PT, R0, 0x1, PT ;                   /* 0x000000010000780c */
+                                                                                        /* 0x004fda0003f25270 */
+        /*0160*/              @!P1 BRA 0x1b0 ;                                          /* 0x0000000000109947 */
+                                                                                        /* 0x000fea0003800000 */
+        /*0170*/                   LDG.E.64.STRONG.GPU R8, desc[UR36][R6.64+-0x3208] ;  /* 0xffcdf82406087981 */
+                                                                                        /* 0x000ea4000c1efb00 */
+        /*0180*/                   ISETP.NE.S64.AND P1, PT, R8, RZ, PT ;                /* 0x000000ff0800720c */
+                                                                                        /* 0x004fdc0003f35270 */
+        /*0190*/              @!P1 BRA 0x130 ;                                          /* 0xfffffffc00e49947 */
+                                                                                        /* 0x000fea000383ffff */
+        /*01a0*/                   EXIT ;                                               /* 0x000000000000794d */
+                                                                                        /* 0x000fea0003800000 */
+        /*01b0*/                   LDG.E.64.STRONG.GPU R6, desc[UR36][R6.64+-0x3208] ;  /* 0xffcdf82406067981 */
+                                                                                        /* 0x000ea4000c1efb00 */
+        /*01c0*/                   ISETP.NE.S64.AND P0, PT, R6, RZ, PT ;                /* 0x000000ff0600720c */
+                                                                                        /* 0x004fdc0003f15270 */
+        /*01d0*/               @P0 EXIT ;                                               /* 0x000000000000094d */
+                                                                                        /* 0x000fea0003800000 */
+
+After volatile cg loads with compiler memory clobber:
+Function : _Z8dispatchP7bf_pageP4StepPxjP7Control
+	.headerflags	@"EF_CUDA_SM120 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM120)"
+        /*0000*/                   LDC R1, c[0x0][0x37c] ;                              /* 0x0000df00ff017b82 */
+                                                                                        /* 0x000e220000000800 */
+        /*0010*/                   S2R R0, SR_TID.X ;                                   /* 0x0000000000007919 */
+                                                                                        /* 0x000e6e0000002100 */
+        /*0020*/                   S2UR UR4, SR_CTAID.X ;                               /* 0x00000000000479c3 */
+                                                                                        /* 0x000e640000002500 */
+        /*0030*/                   LOP3.LUT P0, RZ, R0, UR4, RZ, 0xfc, !PT ;            /* 0x0000000400ff7c12 */
+                                                                                        /* 0x002fda000f80fcff */
+        /*0040*/               @P0 EXIT ;                                               /* 0x000000000000094d */
+                                                                                        /* 0x000fea0003800000 */
+        /*0050*/                   LDCU.64 UR36, c[0x0][0x358] ;                        /* 0x00006b00ff2477ac */
+                                                                                        /* 0x000e620008000a00 */
+        /*0060*/                   LDC.64 R8, c[0x0][0x3a0] ;                           /* 0x0000e800ff087b82 */
+                                                                                        /* 0x000e700000000a00 */
+        /*0070*/                   LDC.64 R6, c[0x0][0x380] ;                           /* 0x0000e000ff067b82 */
+                                                                                        /* 0x000ea20000000a00 */
+        /*0080*/                   LDG.E R2, desc[UR36][R8.64+0x14] ;                   /* 0x0000142408027981 */
+                                                                                        /* 0x002ee8000c1e1900 */
+        /*0090*/                   LDG.E R0, desc[UR36][R8.64] ;                        /* 0x0000002408007981 */
+                                                                                        /* 0x000f22000c1e1900 */
+        /*00a0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;                    /* 0x000000ff0200720c */
+                                                                                        /* 0x008fe20003f05270 */
+        /*00b0*/                   LOP3.LUT R3, R0, 0x7, RZ, 0xc0, !PT ;                /* 0x0000000700037812 */
+                                                                                        /* 0x010fca00078ec0ff */
+        /*00c0*/                   IMAD.WIDE.U32 R2, R3, 0x230, R6 ;                    /* 0x0000023003027825 */
+                                                                                        /* 0x004fca00078e0006 */
+        /*00d0*/                   IADD.64 R4, R2, 0x3238 ;                             /* 0x0000323802047835 */
+                                                                                        /* 0x000fe400078e0200 */
+        /*00e0*/               @P0 BRA 0xd00 ;                                          /* 0x0000000c00040947 */
+                                                                                        /* 0x000fec0003800000 */
+        /*00f0*/                   LDC.64 R8, c[0x0][0x380] ;                           /* 0x0000e000ff087b82 */
+                                                                                        /* 0x000e640000000a00 */
+        /*0100*/                   LDG.E.STRONG.GPU R9, desc[UR36][R8.64+0x3230] ;      /* 0x0032302408097981 */
+                                                                                        /* 0x002ea2000c1ef900 */
+        /*0110*/                   IADD.64 R6, R6, 0x3230 ;                             /* 0x0000323006067835 */
+                                                                                        /* 0x000fe400078e0200 */
+        /*0120*/                   ISETP.NE.AND P0, PT, R9, R0, PT ;                    /* 0x000000000900720c */
+                                                                                        /* 0x004fda0003f05270 */
+        /*0130*/              @!P0 BRA 0x170 ;                                          /* 0x00000000000c8947 */
+                                                                                        /* 0x000fea0003800000 */
+        /*0140*/                   LDG.E.STRONG.GPU R0, desc[UR36][R2.64+0x3238] ;      /* 0x0032382402007981 */
+                                                                                        /* 0x000ea4000c1ef900 */
+        /*0150*/                   ISETP.NE.AND P1, PT, R0, 0x1, PT ;                   /* 0x000000010000780c */
+                                                                                        /* 0x004fda0003f25270 */
+        /*0160*/              @!P1 BRA 0x1b0 ;                                          /* 0x0000000000109947 */
+                                                                                        /* 0x000fea0003800000 */
+        /*0170*/                   LDG.E.64.STRONG.GPU R8, desc[UR36][R6.64+-0x3208] ;  /* 0xffcdf82406087981 */
+                                                                                        /* 0x000ea4000c1efb00 */
+        /*0180*/                   ISETP.NE.S64.AND P1, PT, R8, RZ, PT ;                /* 0x000000ff0800720c */
+                                                                                        /* 0x004fdc0003f35270 */
+        /*0190*/              @!P1 BRA 0x130 ;                                          /* 0xfffffffc00e49947 */
+                                                                                        /* 0x000fea000383ffff */
+        /*01a0*/                   EXIT ;                                               /* 0x000000000000794d */
+                                                                                        /* 0x000fea0003800000 */
+        /*01b0*/                   LDG.E.64.STRONG.GPU R6, desc[UR36][R6.64+-0x3208] ;  /* 0xffcdf82406067981 */
+                                                                                        /* 0x000ea4000c1efb00 */
+        /*01c0*/                   ISETP.NE.S64.AND P0, PT, R6, RZ, PT ;                /* 0x000000ff0600720c */
+                                                                                        /* 0x004fdc0003f15270 */
+        /*01d0*/               @P0 EXIT ;                                               /* 0x000000000000094d */
+                                                                                        /* 0x000fea0003800000 */
+        /*01e0*/                   LDG.E.STRONG.GPU R27, desc[UR36][R2.64+0x3240] ;     /* 0x00324024021b7981 */
+                                                                                        /* 0x000ea8000c1ef900 */
+        /*01f0*/                   LDG.E.STRONG.GPU R0, desc[UR36][R2.64+0x323c] ;      /* 0x00323c2402007981 */
+                                                                                        /* 0x000ee2000c1ef900 */
+
+Volatile CG alone still produced the same hoisted loop and failed at PENDING/zero model launches. System-scope acquire repair:
+Function : _Z8dispatchP7bf_pageP4StepPxjP7Control
+	.headerflags	@"EF_CUDA_SM120 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM120)"
+        /*0000*/                   LDC R1, c[0x0][0x37c] ;                               /* 0x0000df00ff017b82 */
+                                                                                         /* 0x000e220000000800 */
+        /*0010*/                   S2R R0, SR_TID.X ;                                    /* 0x0000000000007919 */
+                                                                                         /* 0x000e6e0000002100 */
+        /*0020*/                   S2UR UR4, SR_CTAID.X ;                                /* 0x00000000000479c3 */
+                                                                                         /* 0x000e640000002500 */
+        /*0030*/                   LOP3.LUT P0, RZ, R0, UR4, RZ, 0xfc, !PT ;             /* 0x0000000400ff7c12 */
+                                                                                         /* 0x002fda000f80fcff */
+        /*0040*/               @P0 EXIT ;                                                /* 0x000000000000094d */
+                                                                                         /* 0x000fea0003800000 */
+        /*0050*/                   LDCU.64 UR36, c[0x0][0x358] ;                         /* 0x00006b00ff2477ac */
+                                                                                         /* 0x000e620008000a00 */
+        /*0060*/                   LDC.64 R8, c[0x0][0x3a0] ;                            /* 0x0000e800ff087b82 */
+                                                                                         /* 0x000e700000000a00 */
+        /*0070*/                   LDC.64 R6, c[0x0][0x380] ;                            /* 0x0000e000ff067b82 */
+                                                                                         /* 0x000ea20000000a00 */
+        /*0080*/                   LDG.E R2, desc[UR36][R8.64+0x14] ;                    /* 0x0000142408027981 */
+                                                                                         /* 0x002ee8000c1e1900 */
+        /*0090*/                   LDG.E R0, desc[UR36][R8.64] ;                         /* 0x0000002408007981 */
+                                                                                         /* 0x000f22000c1e1900 */
+        /*00a0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;                     /* 0x000000ff0200720c */
+                                                                                         /* 0x008fe20003f05270 */
+        /*00b0*/                   LOP3.LUT R3, R0, 0x7, RZ, 0xc0, !PT ;                 /* 0x0000000700037812 */
+                                                                                         /* 0x010fca00078ec0ff */
+        /*00c0*/                   IMAD.WIDE.U32 R2, R3, 0x230, R6 ;                     /* 0x0000023003027825 */
+                                                                                         /* 0x004fca00078e0006 */
+        /*00d0*/                   IADD.64 R4, R2, 0x3238 ;                              /* 0x0000323802047835 */
+                                                                                         /* 0x000fe400078e0200 */
+        /*00e0*/               @P0 BRA 0xd40 ;                                           /* 0x0000000c00140947 */
+                                                                                         /* 0x000fec0003800000 */
+        /*00f0*/                   IADD.64 R6, R6, 0x3230 ;                              /* 0x0000323006067835 */
+                                                                                         /* 0x000fd000078e0200 */
+        /*0100*/                   LDG.E.STRONG.SYS R0, desc[UR36][R6.64] ;              /* 0x0000002406007981 */
+                                                                                         /* 0x000ea8000c1f5900 */
+        /*0110*/                   CCTL.IVALL ;                                          /* 0x00000000ff00798f */
+                                                                                         /* 0x004fe80002000000 */
+        /*0120*/                   LDG.E R11, desc[UR36][R8.64] ;                        /* 0x00000024080b7981 */
+                                                                                         /* 0x000ea4000c1e1900 */
+        /*0130*/                   ISETP.NE.AND P0, PT, R0, R11, PT ;                    /* 0x0000000b0000720c */
+                                                                                         /* 0x004fda0003f05270 */
+        /*0140*/              @!P0 BRA 0x190 ;                                           /* 0x0000000000108947 */
+                                                                                         /* 0x000fea0003800000 */
+        /*0150*/                   LDG.E.STRONG.SYS R0, desc[UR36][R2.64+0x3238] ;       /* 0x0032382402007981 */
+                                                                                         /* 0x000ea8000c1f5900 */
+        /*0160*/                   CCTL.IVALL ;                                          /* 0x00000000ff00798f */
+                                                                                         /* 0x004fe20002000000 */
+        /*0170*/                   ISETP.NE.AND P0, PT, R0, 0x1, PT ;                    /* 0x000000010000780c */
+                                                                                         /* 0x000fda0003f05270 */
+        /*0180*/              @!P0 BRA 0x1e0 ;                                           /* 0x0000000000148947 */
+                                                                                         /* 0x000fea0003800000 */
+        /*0190*/                   LDG.E.64.STRONG.SYS R10, desc[UR36][R6.64+-0x3208] ;  /* 0xffcdf824060a7981 */
+                                                                                         /* 0x000ea8000c1f5b00 */
+        /*01a0*/                   CCTL.IVALL ;                                          /* 0x00000000ff00798f */
+                                                                                         /* 0x004fe20002000000 */
+        /*01b0*/                   ISETP.NE.S64.AND P0, PT, R10, RZ, PT ;                /* 0x000000ff0a00720c */
+                                                                                         /* 0x000fdc0003f15270 */
+        /*01c0*/              @!P0 BRA 0x100 ;                                           /* 0xfffffffc00cc8947 */
+                                                                                         /* 0x000fea000383ffff */
+        /*01d0*/                   EXIT ;                                                /* 0x000000000000794d */
+                                                                                         /* 0x000fea0003800000 */
+        /*01e0*/                   LDG.E.64.STRONG.SYS R6, desc[UR36][R6.64+-0x3208] ;   /* 0xffcdf82406067981 */
+                                                                                         /* 0x000ea8000c1f5b00 */
+        /*01f0*/                   CCTL.IVALL ;                                          /* 0x00000000ff00798f */
+                                                                                         /* 0x004fe20002000000 */
+        /*0200*/                   ISETP.NE.S64.AND P0, PT, R6, RZ, PT ;                 /* 0x000000ff0600720c */
+                                                                                         /* 0x000fdc0003f15270 */
+        /*0210*/               @P0 EXIT ;                                                /* 0x000000000000094d */
+                                                                                         /* 0x000fea0003800000 */
+        /*0220*/                   LDG.E.STRONG.GPU R27, desc[UR36][R2.64+0x3240] ;      /* 0x00324024021b7981 */
+                                                                                         /* 0x000ea8000c1ef900 */
+        /*0230*/                   LDG.E.STRONG.GPU R0, desc[UR36][R2.64+0x323c] ;       /* 0x00323c2402007981 */
+                                                                                         /* 0x000ee2000c1ef900 */
+        /*0240*/                   IADD3 R6, PT, PT, R27.reuse, -0x41, RZ ;              /* 0xffffffbf1b067810 */
+                                                                                         /* 0x044fe20007ffe0ff */

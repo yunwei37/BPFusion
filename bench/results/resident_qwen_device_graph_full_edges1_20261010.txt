@@ -1,0 +1,64 @@
+Final device graph dispatcher: no speculative GPU idle-delay hint; existing queue limits discovered natively; fixed oracle; expanded input edges, gen=1; fast-completion/reclamation control.
+
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 290/290 [00:00<00:00, 5192.21it/s]
+HF eager fp16 oracle ready, model released
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+stream sockops detached
+sockhash capacity follows somaxconn=4096
+stream parser/verdict and sockops attached to current Workspace cgroup
+PASS 5000 empty connections accepted/drained by kernel; exceeds undrained listener backlog
+captured model graph 32/190
+captured model graph 64/190
+captured model graph 96/190
+captured model graph 128/190
+captured model graph 160/190
+resident Qwen ready: 24 layers h=896 vocab=151936; device-tail graphs, dispatch=resident
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=0 graph_error=0
+
+PASS traced all executor threads: no accept/receive/send syscalls after ready
+seen pkts      0
+ip+udp/ip+tcp pkts 0
+magic pkts     0
+drops          0
+published      0
+drop: ctl busy 0
+drop: done busy 0
+llm magic      0
+llm busy       0
+tcp dest       0
+tcp magic      0
+stream publish 1
+sockhash linked 5001
+sockhash failed 0
+parser calls   24
+parser invalid 0
+head=0 done_seq=0 published=0 acked=0 drops=0 ready=0
+slot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+llm_head=1
+llm[0]: state=1 prompt=5 gen=1 produced=0 client_ns=47305555775888
+llm[1]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[2]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[3]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[4]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[5]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[6]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[7]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+stream sockops detached
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+PASS test map pins removed after module shutdown and hook detach
+Traceback (most recent call last):
+  File "/workspaces/repository/tests/resident_qwen.py", line 204, in <module>
+    if __name__=="__main__": main()
+                             ^^^^^^
+  File "/workspaces/repository/tests/resident_qwen.py", line 107, in main
+    request(idx,ids,expected,http=repetition==1)
+  File "/workspaces/repository/tests/resident_qwen.py", line 97, in request
+    chunk=client.recv(len(reply)*4-len(data))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out

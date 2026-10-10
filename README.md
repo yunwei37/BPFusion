@@ -20,6 +20,7 @@ separate when reading any result:
 | **Synthetic MLP** — [`executor/executor.cu`](executor/executor.cu) | UDP `:39400` -> tc/clsact ingress -> page | **one resident CUDA kernel**, launched once, spins on the page; no per-request/per-batch host launch or control call | userspace responder `sendto()` per reply | reference/intermediate: proves the resident-kernel + page mechanism (not yet a no-userspace-worker path) |
 | **Real LLM** — [`executor/llm_executor.py`](executor/llm_executor.py) | UDP `:39402` or TCP `:39403` -> tc ingress -> token ring | **host Python + HF `transformers`** on Qwen (prefill + batch-1 decode); prefill/decode run on the GPU, but host code drives every step | UDP: client polls `produced`; TCP: `send()` on the accepted socket | host-driven baseline, labelled as such; this is where TTFT/TPOT evidence comes from |
 | **Resident Qwen reference** — [`executor/qwen.cu`](executor/qwen.cu) | TCP token IDs -> sockmap stream -> page | **one resident CUDA kernel** executes real prefill/decode/KV/argmax | kernel TCP TX | correctness reference: eight-token oracle agreement; one cooperative grid, binary token bodies over TCP/HTTP, kernel accept/drain; longer-decode divergence recorded |
+| **Device-scheduled Qwen graphs** — [`executor/qwen_graph.py`](executor/qwen_graph.py) + [`executor/qwen_graph.cu`](executor/qwen_graph.cu) | same binary TCP/HTTP sockmap queue | HF graphs captured at bootstrap, **scheduled and sampled on the GPU** | same kernel TCP TX | 64-token strict oracle/lifecycle regressions pass; serial requests, no steady userspace request worker |
 
 In the synthetic MLP path the no-userspace-worker property covers only GPU
 compute; even there a userspace responder thread still `sendto()`s every
@@ -64,6 +65,16 @@ with approximately 2.61 ms client TPOT. The temporary settings were removed.
 Packet diagnostics support ACK/Nagle buffering in the original transport;
 total host CPU and optimized serving comparisons remain unmeasured.
 
+A device-scheduled graph executor now preserves the actual HF GPU computation
+while moving request/decode control to GPU graph tail launches. Its 64-token
+TCP/HTTP regression and maximum-prompt edge cases pass the unchanged oracle.
+Python captures at bootstrap, then the native host sleeps; the GPU handles
+queue validation, input movement, model dispatch and token publication.
+[Finding 0019](docs/findings/0019-device-scheduled-qwen.md) records the mechanism,
+commands, failed startup probes and successful lifecycle/trace evidence.
+This variant has no measured serving speedup yet; text, continuous batching
+and physical-NIC evaluation remain open.
+
 ## Repository layout
 
 ```
@@ -72,6 +83,7 @@ bpf/include/bpfusion_queue.h   canonical kernel<->GPU page layout (single source
 executor/executor.cu           resident synthetic-MLP CUDA kernel + responder + latency sampling
 executor/llm_executor.py       host HF Qwen baseline on the token ring (--tcp)
 executor/qwen.cu               real Qwen reference in one resident CUDA kernel
+executor/qwen_graph.py/.cu     bootstrap capture + GPU-tail Qwen graph dispatch
 module/bfusion_tx.c            kernel accept/drain and asynchronous TCP/HTTP TX
 executor/cuda_timer.h          %globaltimer <-> CLOCK_MONOTONIC calibration
 tools/bpfusion_load.c          attach/detach/stats; owns and pins the BPF maps
@@ -195,6 +207,7 @@ pre-attach. The MLP run also prints the `client verify` numeric check.
 - [0014-sockmap-stream.md](docs/findings/0014-sockmap-stream.md) — TCP stream framing and concurrent queue reservation.
 - [0015-http-token-transport.md](docs/findings/0015-http-token-transport.md) — Content-Length POST token API, persistent connection framing and ordered HTTP replies.
 - [0016-cooperative-resident-qwen.md](docs/findings/0016-cooperative-resident-qwen.md) — one cooperative resident grid, strict short-output passes and an explicit longer-decode accuracy failure.
+- [0019-device-scheduled-qwen.md](docs/findings/0019-device-scheduled-qwen.md) — GPU-driven HF graph execution with passing 64-token TCP/HTTP correctness and no userspace request worker.
 - [0017-invalid-token-rejection.md](docs/findings/0017-invalid-token-rejection.md) — invalid model token IDs fail their request and leave subsequent inference live.
 - [0012-kernel-tcp-tx.md](docs/findings/0012-kernel-tcp-tx.md) — exact Qwen
   tokens returned by kernel TCP TX; lifecycle/reset tests; HF still drives inference.

@@ -137,6 +137,19 @@ model math, grid resources, eBPF framing and kernel TX stay the same. It has a
 host request-dispatch worker, so only the default binary meets the no-steady-
 userspace-worker property. This control does not change the default path.
 
+The `qwen-graph` variant (finding 0019) captures actual HF eager-fp16 GPU
+operations during bootstrap and runs them through device graph tail launches.
+A native dispatcher graph reads/validates the same queue, fills captured
+inputs on-device, schedules prefill/decode and publishes each completed
+argmax to the page. The host launches that service graph once and sleeps.
+Tail ordering ensures model graph completion before publication/reuse.
+Queue head/state/stop polling uses system-scope acquire loads; the native
+backedge reloads shared publication words instead of reusing a cached condition.
+Graph/kernel owners and buffers remain alive until the GPU finishes shutdown.
+It reuses the existing kernel connection/TX path and still handles one request
+at a time. Its recorded 64-token oracle and prompt-edge controls pass; the
+custom WMMA reference retains its separately recorded accuracy boundary.
+
 ## Ownership rules (the correctness core)
 
 | object | writer | reader | recycle |
@@ -172,6 +185,7 @@ completion the responder is still reading.
 | `tools/client.c` | `verify`/`own`/`burst`/`paced` client (MLP path) |
 | `executor/llm_executor.py` | host-driven HF Qwen baseline on the token ring |
 | `executor/qwen.cu` | real resident Qwen inference, bootstrap and shutdown only on the host |
+| `executor/qwen_graph.py` / `.cu` | bootstrap-only HF graph capture and native GPU request/model dispatch |
 | `module/bfusion_tx.c` | kernel connection ownership, completion polling and ordered TCP/HTTP TX |
 | `tools/llm_bench.py` | LLM TTFT/TPOT vs a direct in-process baseline |
 | `tools/llm_load.py` | LLM concurrency sweep (goodput / TTFT / TPOT) |

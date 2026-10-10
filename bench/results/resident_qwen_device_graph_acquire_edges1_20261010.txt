@@ -1,0 +1,99 @@
+Final repaired device graph dispatcher: system-scope acquire idle loads with compiler memory clobber, no GPU idle-delay hint; fixed HF oracle; input edges1/15/16/17/32/64, gen=1.
+
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4813.77it/s]
+HF eager fp16 oracle ready, model released
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+stream sockops detached
+sockhash capacity follows somaxconn=4096
+stream parser/verdict and sockops attached to current Workspace cgroup
+PASS 5000 empty connections accepted/drained by kernel; exceeds undrained listener backlog
+http=False case=0 expected=[12095] actual=[12095] seconds=0.052
+http=False case=1 expected=[2014] actual=[2014] seconds=0.063
+http=False case=2 expected=[4710] actual=[4710] seconds=0.052
+http=False case=3 expected=[264] actual=[264] seconds=0.037
+http=False case=4 expected=[2701] actual=[2701] seconds=0.032
+http=False case=5 expected=[59604] actual=[59604] seconds=0.096
+http=False case=6 expected=[6722] actual=[6722] seconds=0.101
+http=False case=7 expected=[315] actual=[315] seconds=0.103
+http=False case=8 expected=[315] actual=[315] seconds=0.171
+http=False case=9 expected=[374] actual=[374] seconds=0.316
+http=True case=0 expected=[12095] actual=[12095] seconds=0.167
+http=True case=1 expected=[2014] actual=[2014] seconds=0.183
+http=True case=2 expected=[4710] actual=[4710] seconds=0.165
+http=True case=3 expected=[264] actual=[264] seconds=0.154
+http=True case=4 expected=[2701] actual=[2701] seconds=0.151
+http=True case=5 expected=[59604] actual=[59604] seconds=0.214
+http=True case=6 expected=[6722] actual=[6722] seconds=0.217
+http=True case=7 expected=[315] actual=[315] seconds=0.220
+http=True case=8 expected=[315] actual=[315] seconds=0.286
+http=True case=9 expected=[374] actual=[374] seconds=0.432
+http=False case=0 expected=[12095] actual=[12095] seconds=0.051
+http=False case=1 expected=[2014] actual=[2014] seconds=0.064
+http=False case=2 expected=[4710] actual=[4710] seconds=0.050
+http=False case=3 expected=[264] actual=[264] seconds=0.039
+http=False case=4 expected=[2701] actual=[2701] seconds=0.032
+http=False case=5 expected=[59604] actual=[59604] seconds=0.096
+http=False case=6 expected=[6722] actual=[6722] seconds=0.100
+http=False case=7 expected=[315] actual=[315] seconds=0.103
+http=False case=8 expected=[315] actual=[315] seconds=0.168
+http=False case=9 expected=[374] actual=[374] seconds=0.312
+http=False case=3 expected=[264] actual=[264] seconds=0.037
+http=False case=2 expected=[4710] actual=[4710] seconds=0.051
+http=False case=0 expected=[12095] actual=[12095] seconds=0.054
+http=False case=1 expected=[2014] actual=[2014] seconds=0.065
+http=True case=4 expected=[2701] actual=[2701] seconds=0.148
+http=True case=5 expected=[59604] actual=[59604] seconds=0.212
+http=True case=6 expected=[6722] actual=[6722] seconds=0.216
+http=True case=7 expected=[315] actual=[315] seconds=0.222
+PASS eight concurrent clients, exact Qwen replies, no admission drops
+PASS 256 HTTP rejections immediately followed by 256 exact valid replies on eight persistent clients, repeated ring wrap
+PASS six pipelined HTTP responses in order, ring wrap, half-close
+http=False case=0 expected=[12095] actual=[12095] seconds=0.051
+PASS invalid first/last token IDs: HTTP 400, binary EOF, same-stream and later requests still exact
+PASS 303 valid TCP/HTTP requests, 303 real Qwen greedy tokens, 259 rejections, no host accept/read/send worker
+captured model graph 32/190
+captured model graph 64/190
+captured model graph 96/190
+captured model graph 128/190
+captured model graph 160/190
+resident Qwen ready: 24 layers h=896 vocab=151936; device-tail graphs, dispatch=resident
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=303 graph_error=0
+
+PASS expected CUDA launch count for the selected dispatch
+PASS traced all executor threads: no accept/receive/send syscalls after ready
+seen pkts      0
+ip+udp/ip+tcp pkts 0
+magic pkts     0
+drops          0
+published      0
+drop: ctl busy 0
+drop: done busy 0
+llm magic      0
+llm busy       0
+tcp dest       0
+tcp magic      0
+stream publish 562
+sockhash linked 5050
+sockhash failed 0
+parser calls   2581
+parser invalid 0
+head=0 done_seq=0 published=0 acked=0 drops=0 ready=0
+slot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+llm_head=562
+llm[0]: state=0 prompt=5 gen=1 produced=0 client_ns=48001332837588
+llm[1]: state=0 prompt=5 gen=1 produced=1 client_ns=48001333022288
+llm[2]: state=0 prompt=1 gen=1 produced=1 client_ns=48001308529797
+llm[3]: state=0 prompt=15 gen=1 produced=1 client_ns=48001308538575
+llm[4]: state=0 prompt=5 gen=1 produced=0 client_ns=48001326397754
+llm[5]: state=0 prompt=5 gen=1 produced=1 client_ns=48001326410727
+llm[6]: state=0 prompt=5 gen=1 produced=0 client_ns=48001326416725
+llm[7]: state=0 prompt=5 gen=1 produced=1 client_ns=48001326419906
+stream sockops detached
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+PASS test map pins removed after module shutdown and hook detach

@@ -1,0 +1,40 @@
+Source base 795e6044d530a6abb0dce0c74bac0d1da29834e6 plus the graph executor source in this commit.
+torch=2.14.1+cu130 transformers=5.19.0 torch_cuda=13.0
+device=NVIDIA GeForce RTX 5090 visible_devices=1
+make: Nothing to be done for 'qwen-graph'.
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2025 NVIDIA Corporation
+Built on Wed_Aug_20_01:58:59_PM_PDT_2025
+Cuda compilation tools, release 13.0, V13.0.88
+Build cuda_13.0.r13.0/compiler.36424714_0
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z8dispatchP7bf_pageP4StepPxjP7Control:
+  REG:35 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:936 TEXTURE:0 SURFACE:0 SAMPLER:0
+python3-dev	3.12.3-0ubuntu2.1
+python3.12-dev	3.12.3-1ubuntu0.17
+
+Final acquire-poll source, no idle delay; observed 2026-10-10 07:25:36 UTC
+make: Nothing to be done for 'qwen-graph'.
+
+Fatbin elf code:
+================
+arch = sm_120
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z8dispatchP7bf_pageP4StepPxjP7Control:
+  REG:35 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:936 TEXTURE:0 SURFACE:0 SAMPLER:0
