@@ -45,6 +45,10 @@ batching, completion-event measurement and real-NIC evaluation. No serving
 speedup is claimed for this correctness reference. The GPU now uses one
 cooperative resident grid; [finding 0016](docs/findings/0016-cooperative-resident-qwen.md)
 records the eight-token passes and the failed 64-token oracle control.
+Its Tensor Core follow-up passes the strengthened short-output regressions;
+the first two 64-token prompts now match, but the third still diverges at
+output 63. Linear layers use WMMA with fp16 boundaries; request execution
+remains serial. The earlier dispatch measurements below precede this math change.
 A matched host-dispatch control now builds with `make qwen-control`: it launches
 that same device kernel once per request while retaining eBPF ingress and
 kernel TX. It is a mechanism ablation, not an optimized serving baseline.

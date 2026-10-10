@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // Correctness-first resident Qwen2 reference: a cooperative grid executes prefill,
 // decode, KV attention and greedy sampling, directly on the pinned BPF page.
-// No tensor-core optimization; no per-request host launch/copy/sampling.
+// Tensor-core linear layers; no per-request host launch/copy/sampling.
 #include <cuda_runtime.h>
 #include <cuda_fp16.h>
+#include <mma.h>
+#include <cstdint>
 #include <cooperative_groups.h>
 #include <bpf/bpf.h>
 #include <sys/mman.h>
@@ -23,7 +25,7 @@
 constexpr int CTX = 2 * BF_LLM_MAX_TOK;
 struct Config { unsigned h, inter, layers, heads, kvheads, vocab; float eps, theta; };
 struct Layer { half *norm, *q, *qb, *k, *kb, *v, *vb, *o, *post, *gate, *up, *down; };
-struct Model { Config c; half *embed, *norm; Layer *layer; };
+struct Model { Config c; half *embed, *norm; Layer *layer; float *inverse; };
 struct Scratch { float *x, *norm, *q, *k, *v, *att, *out, *gate, *up, *prob, *logits, *keys, *values; unsigned *control; };
 
 __device__ unsigned rank() { return blockIdx.x*blockDim.x+threadIdx.x; }
@@ -37,6 +39,41 @@ __device__ float warp_sum(float v) {
 __device__ void matvec(float *out, const half *w, const half *bias,
                       const float *x, int rows, int cols) {
     int lane = threadIdx.x % 32, warp = rank() / 32;
+    // One CTA computes sixteen rows, splitting K across its eight warps.
+    // Repeated columns of the fp16 vector form B; column zero is the matvec.
+    // Warp-private tiles satisfy WMMA's 32-byte alignment; CTA barriers make
+    // the partial sums visible before their fp32 reduction.
+    if (rows%16==0 && cols%16==0 && reinterpret_cast<uintptr_t>(w)%32==0) {
+        __shared__ __align__(32) half input[8][256];
+        __shared__ __align__(32) float output[8][256];
+        int local=threadIdx.x/32;
+        for (int row=blockIdx.x*16; row<rows; row+=gridDim.x*16) {
+            nvcuda::wmma::fragment<nvcuda::wmma::matrix_a,16,16,16,half,nvcuda::wmma::row_major> a;
+            nvcuda::wmma::fragment<nvcuda::wmma::matrix_b,16,16,16,half,nvcuda::wmma::col_major> b;
+            nvcuda::wmma::fragment<nvcuda::wmma::accumulator,16,16,16,float> acc;
+            nvcuda::wmma::fill_fragment(acc,0.0f);
+            for (int col=local*16; col<cols; col+=8*16) {
+                for (int i=lane; i<256; i+=32)
+                    input[local][i]=__float2half_rn(x[col+i%16]);
+                __syncwarp();
+                nvcuda::wmma::load_matrix_sync(a,w+(size_t)row*cols+col,cols);
+                nvcuda::wmma::load_matrix_sync(b,input[local],16);
+                nvcuda::wmma::mma_sync(acc,a,b,acc);
+                __syncwarp();
+            }
+            nvcuda::wmma::store_matrix_sync(output[local],acc,16,nvcuda::wmma::mem_row_major);
+            __syncthreads();
+            if (threadIdx.x<16) {
+                float sum=0;
+                for (int part=0; part<8; part++) sum+=output[part][threadIdx.x*16];
+                out[row+threadIdx.x]=fp16(sum+(bias ? __half2float(bias[row+threadIdx.x]) : 0));
+            }
+            __syncthreads();
+        }
+        sync_grid();
+        return;
+    }
+    // Preserve the existing calculation for dimensions or weights without aligned tiles.
     for (int row=warp; row<rows; row+=threads()/32) {
         float sum=0;
         for (int col=lane; col<cols; col+=32)
@@ -61,10 +98,10 @@ __device__ void rms(float *out, const float *x, const half *w, int n, float eps)
     }
     sync_grid();
 }
-__device__ void rope(float *a, float *tmp, int n, int dim, int pos, float theta) {
+__device__ void rope(float *a, float *tmp, int n, int dim, int pos, const float *inverse) {
     for(int i=rank();i<n;i+=threads()) {
         int d=i%dim, base=i-d, j=d%(dim/2);
-        float angle=pos*powf(theta, -2.0f*j/dim);
+        float angle=pos*inverse[j];
         float cs=fp16(cosf(angle)), sn=fp16(sinf(angle));
         float rot=d<dim/2 ? -a[base+d+dim/2] : a[base+d-dim/2];
         tmp[i]=fp16(fp16(a[i]*cs)+fp16(rot*sn));
@@ -84,8 +121,8 @@ __device__ void forward(Model m, Scratch s, unsigned token, int pos) {
         matvec(s.q,w.q,w.qb,s.norm,h,h);
         matvec(s.k,w.k,w.kb,s.norm,kv,h);
         matvec(s.v,w.v,w.vb,s.norm,kv,h);
-        rope(s.q,s.out,h,dim,pos,c.theta);
-        rope(s.k,s.norm,kv,dim,pos,c.theta);
+        rope(s.q,s.out,h,dim,pos,m.inverse);
+        rope(s.k,s.norm,kv,dim,pos,m.inverse);
         float *keys=s.keys+(size_t)l*CTX*kv;
         float *vals=s.values+(size_t)l*CTX*kv;
         for(int i=rank();i<kv;i+=threads()) {
@@ -252,6 +289,13 @@ int main(int argc,char **argv) {
     if((size_t)(cursor-weights)*sizeof(half)!=bytes) { fprintf(stderr,"weight layout mismatch\n"); return 1; }
     CUDA(cudaMalloc(&m.layer,c.layers*sizeof(Layer)));
     CUDA(cudaMemcpy(m.layer,layers.data(),c.layers*sizeof(Layer),cudaMemcpyHostToDevice));
+    // Match Qwen2's CPU initialization: reciprocal of positive powers,
+    // once during model loading. The GPU consumes the same fp32 frequencies.
+    int dim=c.h/c.heads;
+    std::vector<float> inverse(dim/2);
+    for (int i=0;i<dim/2;i++) inverse[i]=1.0f/powf(c.theta,2.0f*i/dim);
+    CUDA(cudaMalloc(&m.inverse,inverse.size()*sizeof(float)));
+    CUDA(cudaMemcpy(m.inverse,inverse.data(),inverse.size()*sizeof(float),cudaMemcpyHostToDevice));
     Scratch s={};
     auto alloc=[&](float **p,size_t n) { CUDA(cudaMalloc(p,n*sizeof(float))); };
     alloc(&s.x,c.h); alloc(&s.norm,c.h); alloc(&s.q,c.h); alloc(&s.k,kv); alloc(&s.v,kv);

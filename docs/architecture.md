@@ -104,8 +104,12 @@ on a connection even across ring wrap. Message offsets are read from the current
 kernel strparser layout with CO-RE: helper byte offsets are skb-relative, whereas
 several frames can share one skb. GPU text processing and continuous batching
 remain open. Exact-token agreement is verified for the recorded eight-token
-cases; a 64-token control diverges from HF at a near tie in both the old
-single-CTA and new grid implementations (finding 0016).
+cases. Linear layers now use 16-row WMMA tiles with K partitioned across
+eight warps per CTA; RoPE frequencies are initialized once at bootstrap.
+Execution remains batch 1. Earlier scalar single-CTA/grid controls diverged
+at the second prompt's output 21; the current Tensor Core reference matches
+the first two 64-token prompts and diverges at the third prompt's output 63
+(finding 0016). General long-output correctness remains unproven.
 
 ```
   client TCP / HTTP POST (:39403, binary token body)
