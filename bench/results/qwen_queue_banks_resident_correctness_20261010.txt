@@ -1,0 +1,387 @@
+GPU private-bank real TCP candidate; source base 10ad405343b8b03aafe9a681acd578dec4950fd5
+2026-10-10T19:15:50.110108+00:00
+COMMAND ["python3", "tests/resident_qwen.py", "--gen", "64", "--prefill-edges", "--executor", "/tmp/bpfusion-queue-banks-ubd0k2i9/qwen_graph"]
+diff --git a/executor/qwen_graph.cu b/executor/qwen_graph.cu
+index 48eeb21..bd1fd1c 100644
+--- a/executor/qwen_graph.cu
++++ b/executor/qwen_graph.cu
+@@ -13,7 +13,8 @@
+ #include "bpfusion_queue.h"
+ #define CUDA(x) do { cudaError_t e=(x); if(e!=cudaSuccess) { fprintf(stderr,"%s: %s\n",#x,cudaGetErrorString(e)); return (int)e; } } while(0)
+ struct Step { cudaGraphExec_t graph; long long *output; };
+-struct Control { unsigned seen,k,prompt,gen,step,phase,error,launches; };
++struct Request { unsigned k,prompt,gen,step,phase; };
++struct Control { unsigned seen,retired,reclaim,error,launches,max_active; Request requests[BF_LLM_SLOTS]; };
+ 
+ // System-scope acquire protects host publication and forbids polling-load
+ // elimination; a cache modifier alone does not give synchronization semantics.
+@@ -24,64 +25,87 @@ __device__ unsigned long long queue_load(const unsigned long long *p) {
+     unsigned long long value;asm volatile("ld.acquire.sys.global.u64 %0, [%1];" : "=l"(value) : "l"(p) : "memory");return value;
+ }
+ 
+-__global__ void dispatch(bf_page *p,Step *steps,long long *input,unsigned vocab,Control *c,bool once) {
++__global__ void dispatch(bf_page *p,Step *steps,long long **inputs,unsigned count,unsigned vocab,Control *c,bool once) {
+     if(threadIdx.x || blockIdx.x) return;
+-    bf_llm_slot *slot=&p->llm[c->seen%BF_LLM_SLOTS];
+-    if(!c->phase) {
+-        // Idle waiting is on the GPU. A tail launch resumes after all model
+-        // graph work finishes, so no completion flag races graph reuse.
+-        while(queue_load(&p->llm_head)==c->seen || queue_load(&slot->state)!=BF_PENDING) {
+-            if(queue_load((unsigned long long *)&p->stop_ns)) return;
++    while(!queue_load((unsigned long long *)&p->stop_ns)) {
++        // A parent tail resumes only after all private child graphs finish.
++        for(unsigned i=0;i<BF_LLM_SLOTS;i++) {
++            Request *r=&c->requests[i];
++            if(r->phase!=1) continue;
++            unsigned bank=once ? 0 : i;
++            unsigned token=(unsigned)*steps[bank*count+r->step].output;
++            bf_llm_slot *slot=&p->llm[i];
++            __stcg(&slot->tok_out[r->k],token);__threadfence_system();__stcg(&slot->produced,r->k+1);
++            if(++r->k==r->gen) r->phase=2;
++            else { inputs[bank][0]=token;r->step=BF_LLM_MAX_TOK+r->prompt+r->k-1; }
+         }
+-        if(queue_load((unsigned long long *)&p->stop_ns)) return;
+-        unsigned np=__ldcg(&slot->n_prompt),ng=__ldcg(&slot->n_gen);
+-        bool bad=!np || np>BF_LLM_MAX_TOK || !ng || ng>BF_LLM_MAX_TOK;
+-        for(unsigned i=0;i<np && i<BF_LLM_MAX_TOK;i++) {
+-            unsigned token=__ldcg(&slot->tok_in[i]);
+-            if(token>=vocab) bad=true;
+-            input[i]=token;
+-        }
+-        unsigned short flags=__ldcg(&slot->pad);
+-        __threadfence_system();
+-        __stcg(&slot->pad,(unsigned short)((flags&~BF_LLM_VALIDATING)|(bad ? BF_LLM_REJECTED : 0)));
+-        if(bad) {
+-            __stcg(&slot->produced,0u);__threadfence_system();__stcg(&slot->state,(unsigned)BF_DONE);
+-            c->seen++;
++        // The head-indexed ring must reclaim in admission order. Hold final
++        // tokens until the previous DONE was reclaimed by kernel TX. A reused
++        // WRITING/PENDING slot also proves that its old ownership was released.
++        if(c->reclaim && queue_load(&p->llm[(c->retired-1)%BF_LLM_SLOTS].state)!=BF_DONE) c->reclaim=0;
++        unsigned idx=c->retired%BF_LLM_SLOTS;
++        if(!c->reclaim && c->retired!=c->seen && c->requests[idx].phase==2) {
++            __threadfence_system();__stcg(&p->llm[idx].state,(unsigned)BF_DONE);
++            c->requests[idx].phase=0;c->retired++;c->reclaim=1;
+             if(once) return;
+-            cudaError_t e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
+-            if(e!=cudaSuccess) c->error=e;
+-            return;
+         }
+-        c->prompt=np;c->gen=ng;c->k=0;c->step=np;c->phase=1;
+-    } else {
+-        unsigned token=(unsigned)*steps[c->step].output;
+-        __stcg(&slot->tok_out[c->k],token);__threadfence_system();__stcg(&slot->produced,c->k+1);
+-        if(++c->k==c->gen) {
+-            __threadfence_system();__stcg(&slot->state,(unsigned)BF_DONE);
+-            c->seen++;c->phase=0;
+-            if(once) return;
++        // Admission remains sequential; computation uses each physical slot's
++        // private KV/input/output bank. No producer or page ABI change.
++        while(queue_load(&p->llm_head)!=c->seen) {
++            idx=c->seen%BF_LLM_SLOTS;
++            bf_llm_slot *slot=&p->llm[idx];
++            if(c->requests[idx].phase || queue_load(&slot->state)!=BF_PENDING) break;
++            unsigned bank=once ? 0 : idx;
++            unsigned np=__ldcg(&slot->n_prompt),ng=__ldcg(&slot->n_gen);
++            bool bad=!np || np>BF_LLM_MAX_TOK || !ng || ng>BF_LLM_MAX_TOK;
++            for(unsigned j=0;j<np && j<BF_LLM_MAX_TOK;j++) {
++                unsigned token=__ldcg(&slot->tok_in[j]);
++                if(token>=vocab) bad=true;
++                inputs[bank][j]=token;
++            }
++            unsigned short flags=__ldcg(&slot->pad);
++            __threadfence_system();
++            __stcg(&slot->pad,(unsigned short)((flags&~BF_LLM_VALIDATING)|(bad ? BF_LLM_REJECTED : 0)));
++            c->requests[idx]={0,np,ng,np,bad ? 2u : 3u};c->seen++;
++            if(once) break;
++        }
++        unsigned active=0;
++        for(unsigned i=0;i<BF_LLM_SLOTS;i++) {
++            Request *r=&c->requests[i];
++            if(r->phase!=1 && r->phase!=3) continue;
++            unsigned bank=once ? 0 : i;
++            cudaError_t e=cudaGraphLaunch(steps[bank*count+r->step].graph,cudaStreamGraphFireAndForget);
++            if(e!=cudaSuccess) { c->error=e;return; }
++            r->phase=1;c->launches++;active++;
++        }
++        if(active) {
++            if(active>c->max_active) c->max_active=active;
+             cudaError_t e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
+             if(e!=cudaSuccess) c->error=e;
+             return;
+         }
+-        input[0]=token;c->step=BF_LLM_MAX_TOK+c->prompt+c->k-1;
++        // Idle, rejection and TX reclamation waits stay on the GPU.
+     }
+-    cudaError_t e=cudaGraphLaunch(steps[c->step].graph,cudaStreamGraphTailLaunch);
+-    if(e!=cudaSuccess) { c->error=e;return; }
+-    c->launches++;
+-    e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
+-    if(e!=cudaSuccess) c->error=e;
+ }
+ extern "C" unsigned max_tokens() { return BF_LLM_MAX_TOK; }
++extern "C" unsigned max_requests() {
++#ifdef BF_HOST_LAUNCH
++    return 1;
++#else
++    return BF_LLM_SLOTS;
++#endif
++}
+ static volatile sig_atomic_t stopped=0;
+ static void stop_signal(int) { stopped=1; }
+-extern "C" int serve(const unsigned long long *graphs,const unsigned long long *outputs,unsigned count,unsigned long long input_ptr,unsigned vocab,unsigned layers,unsigned h,unsigned seconds) {
+-    std::vector<Step> host(count);
+-    for(unsigned i=1;i<count;i++) {
++extern "C" int serve(const unsigned long long *graphs,const unsigned long long *outputs,unsigned count,const unsigned long long *input_ptrs,unsigned vocab,unsigned layers,unsigned h,unsigned seconds) {
++    unsigned banks=max_requests(),size=count*banks;
++    std::vector<Step> host(size);
++    for(unsigned i=0;i<size;i++) {
++        if(i%count==0) continue;
+         CUDA(cudaGraphInstantiate(&host[i].graph,(cudaGraph_t)graphs[i],cudaGraphInstantiateFlagDeviceLaunch));
+         CUDA(cudaGraphUpload(host[i].graph,0));host[i].output=(long long *)outputs[i];
+     }
+-    Step *steps;CUDA(cudaMalloc(&steps,count*sizeof(Step)));CUDA(cudaMemcpy(steps,host.data(),count*sizeof(Step),cudaMemcpyHostToDevice));
++    Step *steps;CUDA(cudaMalloc(&steps,size*sizeof(Step)));CUDA(cudaMemcpy(steps,host.data(),size*sizeof(Step),cudaMemcpyHostToDevice));
+     Control *control;CUDA(cudaMalloc(&control,sizeof(Control)));CUDA(cudaMemset(control,0,sizeof(Control)));
+     int fd=bpf_obj_get("/sys/fs/bpf/bpfusion_ctl");if(fd<0) { perror("bpf_obj_get");return 1; }
+     bf_page *page=(bf_page *)mmap(nullptr,BF_PAGE_MMAP_BYTES,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
+@@ -92,13 +116,14 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
+     sockaddr_in addr={};addr.sin_family=AF_INET;addr.sin_port=htons(BF_LLM_TCP_PORT);addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
+     if(bind(listener,(sockaddr *)&addr,sizeof(addr)) || listen(listener,SOMAXCONN)) { perror("listen");return 1; }
+     __atomic_store_n(&page->stop_ns,0,__ATOMIC_RELEASE);
+-    long long *input=(long long *)input_ptr;
++    long long **inputs;CUDA(cudaMalloc(&inputs,banks*sizeof(long long *)));
++    CUDA(cudaMemcpy(inputs,input_ptrs,banks*sizeof(long long *),cudaMemcpyHostToDevice));
+ #ifdef BF_HOST_LAUNCH
+     bool once=true;const char *mode="host-launch";
+ #else
+     bool once=false;const char *mode="resident";
+ #endif
+-    void *args[]={&device,&steps,&input,&vocab,&control,&once};
++    void *args[]={&device,&steps,&inputs,&count,&vocab,&control,&once};
+     cudaKernelNodeParams params={};params.func=(void *)dispatch;params.gridDim=dim3(1);params.blockDim=dim3(32);params.kernelParams=args;
+     cudaGraph_t graph;CUDA(cudaGraphCreate(&graph,0));cudaGraphNode_t node;CUDA(cudaGraphAddKernelNode(&node,graph,nullptr,0,&params));
+     cudaGraphExec_t parent;CUDA(cudaGraphInstantiate(&parent,graph,cudaGraphInstantiateFlagDeviceLaunch));CUDA(cudaGraphUpload(parent,0));CUDA(cudaDeviceSynchronize());
+@@ -130,8 +155,8 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
+     close(listener);CUDA(launched);CUDA(finished);
+     Control result;CUDA(cudaMemcpy(&result,control,sizeof(result),cudaMemcpyDeviceToHost));
+     CUDA(cudaHostUnregister(page));munmap(page,BF_PAGE_MMAP_BYTES);
+-    CUDA(cudaGraphExecDestroy(parent));CUDA(cudaGraphDestroy(graph));CUDA(cudaFree(steps));CUDA(cudaFree(control));
+-    for(unsigned i=1;i<count;i++) CUDA(cudaGraphExecDestroy(host[i].graph));
+-    printf("resident Qwen stopped: dispatch=%s launches=%u device_graph_launches=%u graph_error=%u\n",mode,launches,result.launches,result.error);fflush(stdout);
++    CUDA(cudaGraphExecDestroy(parent));CUDA(cudaGraphDestroy(graph));CUDA(cudaFree(steps));CUDA(cudaFree(inputs));CUDA(cudaFree(control));
++    for(unsigned i=0;i<size;i++) if(i%count) CUDA(cudaGraphExecDestroy(host[i].graph));
++    printf("resident Qwen stopped: dispatch=%s launches=%u device_graph_launches=%u graph_error=%u banks=%u max_active=%u\n",mode,launches,result.launches,result.error,banks,result.max_active);fflush(stdout);
+     return result.error;
+ }
+diff --git a/executor/qwen_graph.py b/executor/qwen_graph.py
+index bbd2a75..7411161 100755
+--- a/executor/qwen_graph.py
++++ b/executor/qwen_graph.py
+@@ -66,40 +66,45 @@ def main():
+     library=entry.with_suffix('.so') if entry.name in ('qwen_graph','qwen_graph_host_launch') else Path(__file__).resolve().parents[1]/'build/qwen_graph.so'
+     lib=ctypes.CDLL(str(library))
+     lib.max_tokens.restype=ctypes.c_uint
+-    limit=lib.max_tokens();context=2*limit
++    lib.max_requests.restype=ctypes.c_uint
++    limit=lib.max_tokens();context=2*limit;banks=[]
+     with torch.no_grad():
+         model=load_model(sys.argv[1]);config=model.config
+         dim=config.hidden_size//config.num_attention_heads
+-        keys=[torch.zeros((1,config.num_key_value_heads,context,dim),dtype=torch.float16,device='cuda') for _ in model.model.layers]
+-        values=[torch.zeros_like(k) for k in keys]
+-        tokens=torch.zeros(limit,dtype=torch.long,device='cuda')
+-        graphs=[None];selected=[None];keepers=[]
+-        stream=torch.cuda.Stream();stream.wait_stream(torch.cuda.current_stream())
+-        for index in range(1,limit+context-1):
+-            count=index if index<=limit else 1
+-            pos=0 if index<=limit else index-limit
+-            inp=tokens[:count].reshape(1,count)
+-            positions=torch.arange(pos,pos+count,device='cuda').reshape(1,count)
+-            def cache():
+-                return Cache(layers=[SharedLayer(k,v,pos) for k,v in zip(keys,values)])
+-            def forward():
+-                return model(inp,position_ids=positions,attention_mask={'full_attention':mask},past_key_values=cache(),use_cache=True,logits_to_keep=1)
+-            mask=create_causal_mask(config=config,inputs_embeds=model.model.embed_tokens(inp),attention_mask=None,past_key_values=cache(),position_ids=positions)
+-            stream.wait_stream(torch.cuda.current_stream())
+-            with torch.cuda.stream(stream):warm=forward()
+-            torch.cuda.current_stream().wait_stream(stream);torch.cuda.synchronize()
+-            graph=torch.cuda.CUDAGraph(keep_graph=True)
+-            with torch.cuda.graph(graph,stream=stream):
+-                output=forward()
+-                token=output.logits[:,-1,:].argmax(-1)
+-            graphs.append(graph);selected.append(token);keepers.append((output,positions,mask,inp))
+-            if index%32==0:print(f'captured model graph {index}/{limit+context-2}',flush=True)
+-        torch.cuda.synchronize()
+-        lib.serve.argtypes=[ctypes.POINTER(ctypes.c_ulonglong),ctypes.POINTER(ctypes.c_ulonglong),ctypes.c_uint,ctypes.c_ulonglong,ctypes.c_uint,ctypes.c_uint,ctypes.c_uint,ctypes.c_uint]
++        for bank in range(lib.max_requests()):
++            keys=[torch.zeros((1,config.num_key_value_heads,context,dim),dtype=torch.float16,device='cuda') for _ in model.model.layers]
++            values=[torch.zeros_like(k) for k in keys]
++            tokens=torch.zeros(limit,dtype=torch.long,device='cuda')
++            graphs=[None];selected=[None];keepers=[]
++            stream=torch.cuda.Stream();stream.wait_stream(torch.cuda.current_stream())
++            for index in range(1,limit+context-1):
++                count=index if index<=limit else 1
++                pos=0 if index<=limit else index-limit
++                inp=tokens[:count].reshape(1,count)
++                positions=torch.arange(pos,pos+count,device='cuda').reshape(1,count)
++                def cache():
++                    return Cache(layers=[SharedLayer(k,v,pos) for k,v in zip(keys,values)])
++                def forward():
++                    return model(inp,position_ids=positions,attention_mask={'full_attention':mask},past_key_values=cache(),use_cache=True,logits_to_keep=1)
++                mask=create_causal_mask(config=config,inputs_embeds=model.model.embed_tokens(inp),attention_mask=None,past_key_values=cache(),position_ids=positions)
++                stream.wait_stream(torch.cuda.current_stream())
++                with torch.cuda.stream(stream):warm=forward()
++                torch.cuda.current_stream().wait_stream(stream);torch.cuda.synchronize()
++                graph=torch.cuda.CUDAGraph(keep_graph=True)
++                with torch.cuda.graph(graph,stream=stream):
++                    output=forward()
++                    token=output.logits[:,-1,:].argmax(-1)
++                graphs.append(graph);selected.append(token);keepers.append((output,positions,mask,inp))
++                if index%32==0:print(f'captured bank {bank} model graph {index}/{limit+context-2}',flush=True)
++            torch.cuda.synchronize()
++            banks.append((tokens,graphs,selected,keepers))
++        lib.serve.argtypes=[ctypes.POINTER(ctypes.c_ulonglong),ctypes.POINTER(ctypes.c_ulonglong),ctypes.c_uint,ctypes.POINTER(ctypes.c_ulonglong),ctypes.c_uint,ctypes.c_uint,ctypes.c_uint,ctypes.c_uint]
+         lib.serve.restype=ctypes.c_int
+-        raw=(ctypes.c_ulonglong*len(graphs))(0,*(g.raw_cuda_graph() for g in graphs[1:]))
+-        out=(ctypes.c_ulonglong*len(selected))(0,*(t.data_ptr() for t in selected[1:]))
+-        status=lib.serve(raw,out,len(graphs),tokens.data_ptr(),config.vocab_size,config.num_hidden_layers,config.hidden_size,seconds)
++        count=len(graphs);size=count*len(banks)
++        raw=(ctypes.c_ulonglong*size)(*(g.raw_cuda_graph() if g else 0 for _,graphs,_,_ in banks for g in graphs))
++        out=(ctypes.c_ulonglong*size)(*(t.data_ptr() if t is not None else 0 for _,_,selected,_ in banks for t in selected))
++        inputs=(ctypes.c_ulonglong*len(banks))(*(tokens.data_ptr() for tokens,_,_,_ in banks))
++        status=lib.serve(raw,out,count,inputs,config.vocab_size,config.num_hidden_layers,config.hidden_size,seconds)
+         if status:raise SystemExit(status)
+ 
+ 
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 3902.18it/s]
+HF eager fp16 oracle ready, model released
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+stream sockops detached
+sockhash capacity follows somaxconn=4096
+stream parser/verdict and sockops attached to current Workspace cgroup
+captured bank 0 model graph 32/190
+captured bank 0 model graph 64/190
+captured bank 0 model graph 96/190
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+
+seen pkts      0
+ip+udp/ip+tcp pkts 0
+magic pkts     0
+drops          0
+published      0
+drop: ctl busy 0
+drop: done busy 0
+llm magic      0
+llm busy       0
+tcp dest       0
+tcp magic      0
+stream publish 0
+sockhash linked 0
+sockhash failed 0
+parser calls   0
+parser invalid 0
+head=0 done_seq=0 published=0 acked=0 drops=0 ready=0
+slot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+llm_head=0
+llm[0]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[1]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[2]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[3]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[4]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[5]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[6]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+llm[7]: state=0 prompt=0 gen=0 produced=0 client_ns=0
+stream sockops detached
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+PASS test map pins removed after module shutdown and hook detach
+Traceback (most recent call last):
+  File "/workspaces/repository/tests/resident_qwen.py", line 204, in <module>
+    if __name__=="__main__": main()
+                             ^^^^^^
+  File "/workspaces/repository/tests/resident_qwen.py", line 67, in main
+    raise AssertionError(open(logpath).read())
+AssertionError: captured bank 0 model graph 32/190
+captured bank 0 model graph 64/190
+captured bank 0 model graph 96/190
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+
+
+TEST_EXIT 1

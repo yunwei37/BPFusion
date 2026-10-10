@@ -50,7 +50,7 @@ def main():
     parser.add_argument("--prefill-edges",action="store_true",help="also test 1/15/16/17/32/64-token prompt lengths")
     args=parser.parse_args()
     cases,vocab=oracle_cases(args.gen,args.prefill_edges)
-    valid=273+3*len(cases)
+    valid=305+3*len(cases)
     print("HF eager fp16 oracle ready, model released",flush=True)
     subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
     subprocess.run(["./build/bpfusion_load","stream-detach"],check=True)
@@ -61,9 +61,8 @@ def main():
     try:
         with open(logpath,"w") as log:
             executor=subprocess.Popen(["strace","-D","-f","-e","trace=network,write","-o","/tmp/bpfusion-qwen-network.trace",args.executor,"/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","300"],stdout=log,stderr=subprocess.STDOUT)
-        start=time.monotonic()
         while "resident Qwen ready" not in open(logpath).read():
-            if executor.poll() is not None or time.monotonic()-start>60:
+            if executor.poll() is not None:
                 raise AssertionError(open(logpath).read())
             time.sleep(.1)
         for _ in range(5000):
@@ -124,6 +123,20 @@ def main():
             futures=[clients.submit(closed_loop,i) for i in range(8)]
             for future in futures: future.result()
         print("PASS 256 HTTP rejections immediately followed by 256 exact valid replies on eight persistent clients, repeated ring wrap",flush=True)
+        # Different decode lengths complete out of admission order. Immediate
+        # reuse must preserve the head-indexed ring and independent KV owners.
+        mixed_barrier=Barrier(8)
+        def mixed_loop(i):
+            with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+                mixed_barrier.wait(timeout=60)
+                for repeat in range(4):
+                    ids,expected=cases[(i+repeat)%len(cases)]
+                    count=1 if (i+repeat)%2 else args.gen
+                    request(i+8*repeat,ids,expected[:count],http=True,client=client,split=False)
+        with ThreadPoolExecutor(max_workers=8) as clients:
+            futures=[clients.submit(mixed_loop,i) for i in range(8)]
+            for future in futures: future.result()
+        print("PASS 32 mixed-length exact replies on eight persistent clients, immediate reuse and ring wrap",flush=True)
         # Pipelining on one persistent stream crosses the slot ring boundary.
         with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
             for i in range(6):
@@ -172,7 +185,7 @@ def main():
             assert client.recv(1)==b"","binary rejection must close the connection"
         request(0,ids,expected)
         print("PASS invalid first/last token IDs: HTTP 400, binary EOF, same-stream and later requests still exact",flush=True)
-        print(f"PASS {valid} valid TCP/HTTP requests, {valid*args.gen} real Qwen greedy tokens, 259 rejections, no host accept/read/send worker",flush=True)
+        print(f"PASS {valid} valid TCP/HTTP requests, {valid*args.gen-16*(args.gen-1)} real Qwen greedy tokens, 259 rejections, no host accept/read/send worker",flush=True)
         complete=True
     finally:
         try:

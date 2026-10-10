@@ -20,7 +20,7 @@ separate when reading any result:
 | **Synthetic MLP** — [`executor/executor.cu`](executor/executor.cu) | UDP `:39400` -> tc/clsact ingress -> page | **one resident CUDA kernel**, launched once, spins on the page; no per-request/per-batch host launch or control call | userspace responder `sendto()` per reply | reference/intermediate: proves the resident-kernel + page mechanism (not yet a no-userspace-worker path) |
 | **Real LLM** — [`executor/llm_executor.py`](executor/llm_executor.py) | UDP `:39402` or TCP `:39403` -> tc ingress -> token ring | **host Python + HF `transformers`** on Qwen (prefill + batch-1 decode); prefill/decode run on the GPU, but host code drives every step | UDP: client polls `produced`; TCP: `send()` on the accepted socket | host-driven baseline, labelled as such; this is where TTFT/TPOT evidence comes from |
 | **Resident Qwen reference** — [`executor/qwen.cu`](executor/qwen.cu) | TCP token IDs -> sockmap stream -> page | **one resident CUDA kernel** executes real prefill/decode/KV/argmax | kernel TCP TX | correctness reference: eight-token oracle agreement; one cooperative grid, binary token bodies over TCP/HTTP, kernel accept/drain; longer-decode divergence recorded |
-| **Device-scheduled Qwen graphs** — [`executor/qwen_graph.py`](executor/qwen_graph.py) + [`executor/qwen_graph.cu`](executor/qwen_graph.cu) | same binary TCP/HTTP sockmap queue | HF graphs captured at bootstrap, **scheduled and sampled on the GPU** | same kernel TCP TX | 64-token strict oracle/lifecycle regressions pass; serial requests, no steady userspace request worker |
+| **Device-scheduled Qwen graphs** — [`executor/qwen_graph.py`](executor/qwen_graph.py) + [`executor/qwen_graph.cu`](executor/qwen_graph.cu) | same binary TCP/HTTP sockmap queue | HF graphs captured at bootstrap, **scheduled and sampled on the GPU** | same kernel TCP TX | 64-token strict oracle/lifecycle regressions pass; private graph/KV banks advance concurrent requests, no steady userspace request worker |
 
 In the synthetic MLP path the no-userspace-worker property covers only GPU
 compute; even there a userspace responder thread still `sendto()`s every
@@ -73,7 +73,7 @@ queue validation, input movement, model dispatch and token publication.
 [Finding 0019](docs/findings/0019-device-scheduled-qwen.md) records the mechanism,
 commands, failed startup probes and successful lifecycle/trace evidence.
 This initial milestone did not establish a serving speedup; text, continuous
-batching and physical-NIC evaluation remain open. `make qwen-graph-control` provides
+batching and physical-NIC evaluation remain open. At that stage, `make qwen-graph-control` provided
 an identical-dispatcher host control: it launches a service graph once per
 whole request while both modes keep decode on GPU graph tail launches. Both
 pass the 64-token lifecycle regression; this is an ablation with a host worker,
@@ -81,7 +81,7 @@ and [finding 0020](docs/findings/0020-graph-dispatch.md) records its complete
 matched measurement: 2,560 requests / 83,200 exact tokens, about 2.31 ms
 single-client TPOT and 431 output tokens/s. Only the one-token/eight-client
 cell detects a small TTFT benefit; the other three paired intervals cross zero.
-Eight clients still queue behind serial GPU requests. Executor-process CPU
+In that measurement, eight clients queued behind serial GPU requests. Executor-process CPU
 is lower than this busy control, while total host cost remains unmeasured.
 [Finding 0021](docs/findings/0021-qwen-compute-optimization.md) removes unused
 prefill logits with one forward argument, saving about 0.62 GB of PyTorch
@@ -90,8 +90,17 @@ candidate failed the fixed oracle and was rejected; no compute latency
 speedup is claimed.
 [Finding 0022](docs/findings/0022-shared-kv.md) qualifies shared KV append and
 records a complete cache-only TCP comparison, with narrowly supporting
-TPOT/throughput results and a changing shared-GPU environment. Requests remain
-serial; this does not establish batching or competitive serving.
+TPOT/throughput results and a changing shared-GPU environment. That comparison
+used serial requests and did not establish batching or competitive serving.
+[Finding 0023](docs/findings/0023-batch-execution-qualification.md) now advances
+independent batch1 graph/KV banks through GPU-controlled fork/join execution
+and preserves head-indexed FIFO reclamation. Both default-resident and serial
+host-control regressions pass 335 requests / 20,432 exact tokens / 259 rejects,
+including mixed decode lengths and immediate reuse. Resident execution records
+one host launch and eight model graphs in flight; kernel overlap and serving
+benefit remain unmeasured. The host control uses one bank and is a serial
+correctness control; it no longer isolates dispatch alone against this concurrent
+default. Ordinary tensor batching failed exact qualification and is not retained.
 
 ## Repository layout
 

@@ -137,26 +137,38 @@ model math, grid resources, eBPF framing and kernel TX stay the same. It has a
 host request-dispatch worker, so only the default binary meets the no-steady-
 userspace-worker property. This control does not change the default path.
 
-The `qwen-graph` variant (finding 0019) captures actual HF eager-fp16 GPU
-operations during bootstrap and runs them through device graph tail launches.
-A native dispatcher graph reads/validates the same queue, fills captured
-inputs on-device, schedules prefill/decode and publishes each completed
+The `qwen-graph` variant captures actual HF eager-fp16 GPU operations during
+bootstrap. Its native dispatcher graph reads/validates the same queue, fills
+captured inputs on-device, schedules prefill/decode and publishes each completed
 argmax to the page. The host launches that service graph once and sleeps.
-Tail ordering ensures model graph completion before publication/reuse.
+The original serial path is recorded in findings0019/0020. Finding0023 now
+allocates private input/KV/output graph banks from the existing ring-slot count.
+Active requests launch independent batch1 model graphs with FireAndForget;
+the parent tail joins all child work before sampling outputs and scheduling the
+next step. Admission can continue while earlier requests are active. Model
+weights remain shared, and graph/tensor owners survive through GPU shutdown
+and native graph-exec destruction. Multiple graphs in flight do not establish
+simultaneous kernel overlap or a serving performance win.
+
 Queue head/state/stop polling uses system-scope acquire loads; the native
 backedge reloads shared publication words instead of reusing a cached condition.
-Graph/kernel owners and buffers remain alive until the GPU finishes shutdown.
-It reuses the existing kernel connection/TX path and still handles one request
-at a time.
-Captured graphs append new keys/values directly into shared GPU KV buffers
-and expose only the exact attention prefix, avoiding repeated prefix
-concatenation/copy-back (finding0022). This ownership relies on serial model
-graph completion; future batching needs separate KV state for live requests. Its recorded 64-token oracle and prompt-edge controls pass; the
-custom WMMA reference retains its separately recorded accuracy boundary.
-Its `qwen-graph-control` variant uses the same uniform dispatcher kernel,
-returning after a whole request so the host can launch/synchronize again.
-Both modes retain GPU-tail decode, captured model computation and kernel TX;
-the control measures request dispatch and has a steady host request worker.
+The existing kernel connection/TX path and producer/page ABI are unchanged.
+Computation may finish out of order, but DONE publication follows admission
+order and waits for the previous DONE to be reclaimed. FREE or already reused
+WRITING/PENDING proves that old ownership was released. This preserves the
+head-indexed producer ring, including immediate client reuse across wrap;
+the module withholds the last token while a request remains GPU-owned PENDING.
+
+Captured graphs append into their request's private shared KV buffers and expose
+only the exact attention prefix, avoiding repeated prefix concatenation/copy-back
+(finding0022). Both64-token/prompt-edge/mixed-length controls pass; the custom
+WMMA reference retains its separately recorded accuracy boundary.
+The `qwen-graph-control` variant captures one bank and uses the same dispatcher
+kernel with once=true, admitting only one unretired request before returning
+so the host can launch/synchronize again. Both modes retain GPU-controlled decode,
+HF computation and kernel TX. The host control has a steady request worker and
+serial computation; against the concurrent default it does not isolate dispatch
+alone. Finding0020 remains the historical matched serial-dispatch measurement.
 
 ## Ownership rules (the correctness core)
 
@@ -212,7 +224,9 @@ completion the responder is still reading.
   driving HF `transformers` in the Python baseline; the optional CUDA Qwen
   reference performs prefill/decode/KV/argmax and token publication on-device
   but still consumes pretokenized input.
-- A batched/served LLM (continuous batching, KV-cache sharing) — today batch 1.
+- Tensor-batched/general serving and shared-prefix KV caching. The graph path
+  now advances concurrent requests with private batch1 graph/KV banks; its
+  performance and comparison with optimized serving remain unmeasured.
 - Real-NIC measurement (the `tc` hook is on `lo`).
 - An asynchronous kernel→waiting-userspace wake to replace the doorbell poll
   (`bpf_send_signal` or a module); see `docs/findings/0001-ingress-wake.md`.

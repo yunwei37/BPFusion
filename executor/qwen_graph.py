@@ -66,40 +66,45 @@ def main():
     library=entry.with_suffix('.so') if entry.name in ('qwen_graph','qwen_graph_host_launch') else Path(__file__).resolve().parents[1]/'build/qwen_graph.so'
     lib=ctypes.CDLL(str(library))
     lib.max_tokens.restype=ctypes.c_uint
-    limit=lib.max_tokens();context=2*limit
+    lib.max_requests.restype=ctypes.c_uint
+    limit=lib.max_tokens();context=2*limit;banks=[]
     with torch.no_grad():
         model=load_model(sys.argv[1]);config=model.config
         dim=config.hidden_size//config.num_attention_heads
-        keys=[torch.zeros((1,config.num_key_value_heads,context,dim),dtype=torch.float16,device='cuda') for _ in model.model.layers]
-        values=[torch.zeros_like(k) for k in keys]
-        tokens=torch.zeros(limit,dtype=torch.long,device='cuda')
-        graphs=[None];selected=[None];keepers=[]
-        stream=torch.cuda.Stream();stream.wait_stream(torch.cuda.current_stream())
-        for index in range(1,limit+context-1):
-            count=index if index<=limit else 1
-            pos=0 if index<=limit else index-limit
-            inp=tokens[:count].reshape(1,count)
-            positions=torch.arange(pos,pos+count,device='cuda').reshape(1,count)
-            def cache():
-                return Cache(layers=[SharedLayer(k,v,pos) for k,v in zip(keys,values)])
-            def forward():
-                return model(inp,position_ids=positions,attention_mask={'full_attention':mask},past_key_values=cache(),use_cache=True,logits_to_keep=1)
-            mask=create_causal_mask(config=config,inputs_embeds=model.model.embed_tokens(inp),attention_mask=None,past_key_values=cache(),position_ids=positions)
-            stream.wait_stream(torch.cuda.current_stream())
-            with torch.cuda.stream(stream):warm=forward()
-            torch.cuda.current_stream().wait_stream(stream);torch.cuda.synchronize()
-            graph=torch.cuda.CUDAGraph(keep_graph=True)
-            with torch.cuda.graph(graph,stream=stream):
-                output=forward()
-                token=output.logits[:,-1,:].argmax(-1)
-            graphs.append(graph);selected.append(token);keepers.append((output,positions,mask,inp))
-            if index%32==0:print(f'captured model graph {index}/{limit+context-2}',flush=True)
-        torch.cuda.synchronize()
-        lib.serve.argtypes=[ctypes.POINTER(ctypes.c_ulonglong),ctypes.POINTER(ctypes.c_ulonglong),ctypes.c_uint,ctypes.c_ulonglong,ctypes.c_uint,ctypes.c_uint,ctypes.c_uint,ctypes.c_uint]
+        for bank in range(lib.max_requests()):
+            keys=[torch.zeros((1,config.num_key_value_heads,context,dim),dtype=torch.float16,device='cuda') for _ in model.model.layers]
+            values=[torch.zeros_like(k) for k in keys]
+            tokens=torch.zeros(limit,dtype=torch.long,device='cuda')
+            graphs=[None];selected=[None];keepers=[]
+            stream=torch.cuda.Stream();stream.wait_stream(torch.cuda.current_stream())
+            for index in range(1,limit+context-1):
+                count=index if index<=limit else 1
+                pos=0 if index<=limit else index-limit
+                inp=tokens[:count].reshape(1,count)
+                positions=torch.arange(pos,pos+count,device='cuda').reshape(1,count)
+                def cache():
+                    return Cache(layers=[SharedLayer(k,v,pos) for k,v in zip(keys,values)])
+                def forward():
+                    return model(inp,position_ids=positions,attention_mask={'full_attention':mask},past_key_values=cache(),use_cache=True,logits_to_keep=1)
+                mask=create_causal_mask(config=config,inputs_embeds=model.model.embed_tokens(inp),attention_mask=None,past_key_values=cache(),position_ids=positions)
+                stream.wait_stream(torch.cuda.current_stream())
+                with torch.cuda.stream(stream):warm=forward()
+                torch.cuda.current_stream().wait_stream(stream);torch.cuda.synchronize()
+                graph=torch.cuda.CUDAGraph(keep_graph=True)
+                with torch.cuda.graph(graph,stream=stream):
+                    output=forward()
+                    token=output.logits[:,-1,:].argmax(-1)
+                graphs.append(graph);selected.append(token);keepers.append((output,positions,mask,inp))
+                if index%32==0:print(f'captured bank {bank} model graph {index}/{limit+context-2}',flush=True)
+            torch.cuda.synchronize()
+            banks.append((tokens,graphs,selected,keepers))
+        lib.serve.argtypes=[ctypes.POINTER(ctypes.c_ulonglong),ctypes.POINTER(ctypes.c_ulonglong),ctypes.c_uint,ctypes.POINTER(ctypes.c_ulonglong),ctypes.c_uint,ctypes.c_uint,ctypes.c_uint,ctypes.c_uint]
         lib.serve.restype=ctypes.c_int
-        raw=(ctypes.c_ulonglong*len(graphs))(0,*(g.raw_cuda_graph() for g in graphs[1:]))
-        out=(ctypes.c_ulonglong*len(selected))(0,*(t.data_ptr() for t in selected[1:]))
-        status=lib.serve(raw,out,len(graphs),tokens.data_ptr(),config.vocab_size,config.num_hidden_layers,config.hidden_size,seconds)
+        count=len(graphs);size=count*len(banks)
+        raw=(ctypes.c_ulonglong*size)(*(g.raw_cuda_graph() if g else 0 for _,graphs,_,_ in banks for g in graphs))
+        out=(ctypes.c_ulonglong*size)(*(t.data_ptr() if t is not None else 0 for _,_,selected,_ in banks for t in selected))
+        inputs=(ctypes.c_ulonglong*len(banks))(*(tokens.data_ptr() for tokens,_,_,_ in banks))
+        status=lib.serve(raw,out,count,inputs,config.vocab_size,config.num_hidden_layers,config.hidden_size,seconds)
         if status:raise SystemExit(status)
 
 

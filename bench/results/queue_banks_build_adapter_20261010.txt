@@ -1,0 +1,1379 @@
+Real TCP serial/private-bank comparison sources and common temporary TCP_NODELAY builds
+BASE_SERIAL 2062f44c43185dc4a59a07ece47ecf02d0dde7d9
+PRODUCTION_BASE 10ad405343b8b03aafe9a681acd578dec4950fd5
+EXACT_SOURCE /tmp/bpfusion-queue-banks-ubd0k2i9/serial/qwen_graph.py
+#!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+"""Capture Qwen at bootstrap; the native GPU graph dispatcher owns requests."""
+import ctypes
+import struct
+import sys
+from pathlib import Path
+import numpy as np
+import torch
+from transformers import AutoConfig,AutoModelForCausalLM
+from transformers.models.qwen2.modeling_qwen2 import Qwen2RotaryEmbedding
+from transformers.cache_utils import Cache,DynamicLayer
+from transformers.masking_utils import create_causal_mask
+
+
+class SharedLayer(DynamicLayer):
+    """A graph owns fixed offsets; GPU copies append into the shared KV buffers."""
+    def __init__(self,key,value,pos):
+        super().__init__()
+        self.storage_key,self.storage_value=key,value
+        self.keys,self.values=key[:,:,:pos],value[:,:,:pos]
+        self.is_initialized=True
+
+    def update(self,key_states,value_states,*args,**kwargs):
+        pos=self.keys.shape[-2];end=pos+key_states.shape[-2]
+        self.storage_key[:,:,pos:end].copy_(key_states)
+        self.storage_value[:,:,pos:end].copy_(value_states)
+        self.keys,self.values=self.storage_key[:,:,:end],self.storage_value[:,:,:end]
+        return self.keys,self.values
+
+
+def load_model(path):
+    with open(path,'rb') as f:header=struct.unpack('<6I2f',f.read(32))
+    config=AutoConfig.from_pretrained('Qwen/Qwen2.5-0.5B-Instruct')
+    dimensions=(config.hidden_size,config.intermediate_size,config.num_hidden_layers,config.num_attention_heads,config.num_key_value_heads,config.vocab_size)
+    if tuple(header[:6])!=dimensions or np.float32(config.rms_norm_eps)!=header[6] or config.rope_parameters['rope_theta']!=header[7]:
+        raise ValueError('weight/config layout mismatch')
+    with torch.device('meta'):
+        model=AutoModelForCausalLM.from_config(config,dtype=torch.float16,attn_implementation='eager')
+    model.to_empty(device='cuda')
+    # to_empty leaves buffers uninitialized; rebuild the real CPU RoPE initializer.
+    model.model.rotary_emb=Qwen2RotaryEmbedding(config).to('cuda')
+    weights=np.memmap(path,dtype=np.float16,offset=32,mode='r');cursor=0
+    def copy(parameter):
+        nonlocal cursor
+        n=parameter.numel()
+        data=np.array(weights[cursor:cursor+n]).reshape(tuple(parameter.shape))
+        parameter.copy_(torch.from_numpy(data).to('cuda'));cursor+=n
+    copy(model.model.embed_tokens.weight)
+    for layer in model.model.layers:
+        copy(layer.input_layernorm.weight)
+        for projection in [layer.self_attn.q_proj,layer.self_attn.k_proj,layer.self_attn.v_proj]:
+            copy(projection.weight);copy(projection.bias)
+        copy(layer.self_attn.o_proj.weight);copy(layer.post_attention_layernorm.weight)
+        for projection in [layer.mlp.gate_proj,layer.mlp.up_proj,layer.mlp.down_proj]:copy(projection.weight)
+    copy(model.model.norm.weight)
+    if cursor!=weights.size:raise ValueError('weight layout mismatch')
+    model.tie_weights()
+    return model.eval()
+
+
+def main():
+    if len(sys.argv)<2:raise SystemExit('usage: qwen_graph.py WEIGHTS.bin [seconds]')
+    seconds=int(sys.argv[2]) if len(sys.argv)>2 else 60
+    entry=Path(sys.argv[0])
+    library=entry.with_suffix('.so') if entry.name in ('qwen_graph','qwen_graph_host_launch') else Path(__file__).resolve().parents[1]/'build/qwen_graph.so'
+    lib=ctypes.CDLL(str(library))
+    lib.max_tokens.restype=ctypes.c_uint
+    limit=lib.max_tokens();context=2*limit
+    with torch.no_grad():
+        model=load_model(sys.argv[1]);config=model.config
+        dim=config.hidden_size//config.num_attention_heads
+        keys=[torch.zeros((1,config.num_key_value_heads,context,dim),dtype=torch.float16,device='cuda') for _ in model.model.layers]
+        values=[torch.zeros_like(k) for k in keys]
+        tokens=torch.zeros(limit,dtype=torch.long,device='cuda')
+        graphs=[None];selected=[None];keepers=[]
+        stream=torch.cuda.Stream();stream.wait_stream(torch.cuda.current_stream())
+        for index in range(1,limit+context-1):
+            count=index if index<=limit else 1
+            pos=0 if index<=limit else index-limit
+            inp=tokens[:count].reshape(1,count)
+            positions=torch.arange(pos,pos+count,device='cuda').reshape(1,count)
+            def cache():
+                return Cache(layers=[SharedLayer(k,v,pos) for k,v in zip(keys,values)])
+            def forward():
+                return model(inp,position_ids=positions,attention_mask={'full_attention':mask},past_key_values=cache(),use_cache=True,logits_to_keep=1)
+            mask=create_causal_mask(config=config,inputs_embeds=model.model.embed_tokens(inp),attention_mask=None,past_key_values=cache(),position_ids=positions)
+            stream.wait_stream(torch.cuda.current_stream())
+            with torch.cuda.stream(stream):warm=forward()
+            torch.cuda.current_stream().wait_stream(stream);torch.cuda.synchronize()
+            graph=torch.cuda.CUDAGraph(keep_graph=True)
+            with torch.cuda.graph(graph,stream=stream):
+                output=forward()
+                token=output.logits[:,-1,:].argmax(-1)
+            graphs.append(graph);selected.append(token);keepers.append((output,positions,mask,inp))
+            if index%32==0:print(f'captured model graph {index}/{limit+context-2}',flush=True)
+        torch.cuda.synchronize()
+        lib.serve.argtypes=[ctypes.POINTER(ctypes.c_ulonglong),ctypes.POINTER(ctypes.c_ulonglong),ctypes.c_uint,ctypes.c_ulonglong,ctypes.c_uint,ctypes.c_uint,ctypes.c_uint,ctypes.c_uint]
+        lib.serve.restype=ctypes.c_int
+        raw=(ctypes.c_ulonglong*len(graphs))(0,*(g.raw_cuda_graph() for g in graphs[1:]))
+        out=(ctypes.c_ulonglong*len(selected))(0,*(t.data_ptr() for t in selected[1:]))
+        status=lib.serve(raw,out,len(graphs),tokens.data_ptr(),config.vocab_size,config.num_hidden_layers,config.hidden_size,seconds)
+        if status:raise SystemExit(status)
+
+
+if __name__=='__main__':main()
+
+COMMON_NATIVE_DELTA serial
+--- 
++++ 
+@@ -6,6 +6,7 @@
+ #include <sys/syscall.h>
+ #include <fcntl.h>
+ #include <netinet/in.h>
++#include <netinet/tcp.h>
+ #include <unistd.h>
+ #include <cstdio>
+ #include <csignal>
+@@ -89,6 +90,7 @@
+     CUDA(cudaHostRegister(page,BF_PAGE_MMAP_BYTES,cudaHostRegisterMapped));
+     bf_page *device;CUDA(cudaHostGetDevicePointer((void **)&device,page,0));
+     int listener=socket(AF_INET,SOCK_STREAM,0),yes=1;setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));
++    if(setsockopt(listener,IPPROTO_TCP,TCP_NODELAY,&yes,sizeof(yes))) { perror("TCP_NODELAY");return 1; }
+     sockaddr_in addr={};addr.sin_family=AF_INET;addr.sin_port=htons(BF_LLM_TCP_PORT);addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
+     if(bind(listener,(sockaddr *)&addr,sizeof(addr)) || listen(listener,SOMAXCONN)) { perror("listen");return 1; }
+     __atomic_store_n(&page->stop_ns,0,__ATOMIC_RELEASE);
+EXACT_SOURCE /tmp/bpfusion-queue-banks-ubd0k2i9/serial/qwen_graph.cu
+// SPDX-License-Identifier: Apache-2.0
+// GPU-tail graph dispatch: host work is model/graph bootstrap and shutdown only.
+#include <cuda_runtime.h>
+#include <bpf/bpf.h>
+#include <sys/mman.h>
+#include <sys/syscall.h>
+#include <fcntl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <unistd.h>
+#include <cstdio>
+#include <csignal>
+#include <vector>
+#include "bpfusion_queue.h"
+#define CUDA(x) do { cudaError_t e=(x); if(e!=cudaSuccess) { fprintf(stderr,"%s: %s\n",#x,cudaGetErrorString(e)); return (int)e; } } while(0)
+struct Step { cudaGraphExec_t graph; long long *output; };
+struct Control { unsigned seen,k,prompt,gen,step,phase,error,launches; };
+
+// System-scope acquire protects host publication and forbids polling-load
+// elimination; a cache modifier alone does not give synchronization semantics.
+__device__ unsigned queue_load(const unsigned *p) {
+    unsigned value;asm volatile("ld.acquire.sys.global.u32 %0, [%1];" : "=r"(value) : "l"(p) : "memory");return value;
+}
+__device__ unsigned long long queue_load(const unsigned long long *p) {
+    unsigned long long value;asm volatile("ld.acquire.sys.global.u64 %0, [%1];" : "=l"(value) : "l"(p) : "memory");return value;
+}
+
+__global__ void dispatch(bf_page *p,Step *steps,long long *input,unsigned vocab,Control *c,bool once) {
+    if(threadIdx.x || blockIdx.x) return;
+    bf_llm_slot *slot=&p->llm[c->seen%BF_LLM_SLOTS];
+    if(!c->phase) {
+        // Idle waiting is on the GPU. A tail launch resumes after all model
+        // graph work finishes, so no completion flag races graph reuse.
+        while(queue_load(&p->llm_head)==c->seen || queue_load(&slot->state)!=BF_PENDING) {
+            if(queue_load((unsigned long long *)&p->stop_ns)) return;
+        }
+        if(queue_load((unsigned long long *)&p->stop_ns)) return;
+        unsigned np=__ldcg(&slot->n_prompt),ng=__ldcg(&slot->n_gen);
+        bool bad=!np || np>BF_LLM_MAX_TOK || !ng || ng>BF_LLM_MAX_TOK;
+        for(unsigned i=0;i<np && i<BF_LLM_MAX_TOK;i++) {
+            unsigned token=__ldcg(&slot->tok_in[i]);
+            if(token>=vocab) bad=true;
+            input[i]=token;
+        }
+        unsigned short flags=__ldcg(&slot->pad);
+        __threadfence_system();
+        __stcg(&slot->pad,(unsigned short)((flags&~BF_LLM_VALIDATING)|(bad ? BF_LLM_REJECTED : 0)));
+        if(bad) {
+            __stcg(&slot->produced,0u);__threadfence_system();__stcg(&slot->state,(unsigned)BF_DONE);
+            c->seen++;
+            if(once) return;
+            cudaError_t e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
+            if(e!=cudaSuccess) c->error=e;
+            return;
+        }
+        c->prompt=np;c->gen=ng;c->k=0;c->step=np;c->phase=1;
+    } else {
+        unsigned token=(unsigned)*steps[c->step].output;
+        __stcg(&slot->tok_out[c->k],token);__threadfence_system();__stcg(&slot->produced,c->k+1);
+        if(++c->k==c->gen) {
+            __threadfence_system();__stcg(&slot->state,(unsigned)BF_DONE);
+            c->seen++;c->phase=0;
+            if(once) return;
+            cudaError_t e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
+            if(e!=cudaSuccess) c->error=e;
+            return;
+        }
+        input[0]=token;c->step=BF_LLM_MAX_TOK+c->prompt+c->k-1;
+    }
+    cudaError_t e=cudaGraphLaunch(steps[c->step].graph,cudaStreamGraphTailLaunch);
+    if(e!=cudaSuccess) { c->error=e;return; }
+    c->launches++;
+    e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
+    if(e!=cudaSuccess) c->error=e;
+}
+extern "C" unsigned max_tokens() { return BF_LLM_MAX_TOK; }
+static volatile sig_atomic_t stopped=0;
+static void stop_signal(int) { stopped=1; }
+extern "C" int serve(const unsigned long long *graphs,const unsigned long long *outputs,unsigned count,unsigned long long input_ptr,unsigned vocab,unsigned layers,unsigned h,unsigned seconds) {
+    std::vector<Step> host(count);
+    for(unsigned i=1;i<count;i++) {
+        CUDA(cudaGraphInstantiate(&host[i].graph,(cudaGraph_t)graphs[i],cudaGraphInstantiateFlagDeviceLaunch));
+        CUDA(cudaGraphUpload(host[i].graph,0));host[i].output=(long long *)outputs[i];
+    }
+    Step *steps;CUDA(cudaMalloc(&steps,count*sizeof(Step)));CUDA(cudaMemcpy(steps,host.data(),count*sizeof(Step),cudaMemcpyHostToDevice));
+    Control *control;CUDA(cudaMalloc(&control,sizeof(Control)));CUDA(cudaMemset(control,0,sizeof(Control)));
+    int fd=bpf_obj_get("/sys/fs/bpf/bpfusion_ctl");if(fd<0) { perror("bpf_obj_get");return 1; }
+    bf_page *page=(bf_page *)mmap(nullptr,BF_PAGE_MMAP_BYTES,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
+    if(page==MAP_FAILED) { perror("mmap");return 1; }
+    CUDA(cudaHostRegister(page,BF_PAGE_MMAP_BYTES,cudaHostRegisterMapped));
+    bf_page *device;CUDA(cudaHostGetDevicePointer((void **)&device,page,0));
+    int listener=socket(AF_INET,SOCK_STREAM,0),yes=1;setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));
+    if(setsockopt(listener,IPPROTO_TCP,TCP_NODELAY,&yes,sizeof(yes))) { perror("TCP_NODELAY");return 1; }
+    sockaddr_in addr={};addr.sin_family=AF_INET;addr.sin_port=htons(BF_LLM_TCP_PORT);addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
+    if(bind(listener,(sockaddr *)&addr,sizeof(addr)) || listen(listener,SOMAXCONN)) { perror("listen");return 1; }
+    __atomic_store_n(&page->stop_ns,0,__ATOMIC_RELEASE);
+    long long *input=(long long *)input_ptr;
+#ifdef BF_HOST_LAUNCH
+    bool once=true;const char *mode="host-launch";
+#else
+    bool once=false;const char *mode="resident";
+#endif
+    void *args[]={&device,&steps,&input,&vocab,&control,&once};
+    cudaKernelNodeParams params={};params.func=(void *)dispatch;params.gridDim=dim3(1);params.blockDim=dim3(32);params.kernelParams=args;
+    cudaGraph_t graph;CUDA(cudaGraphCreate(&graph,0));cudaGraphNode_t node;CUDA(cudaGraphAddKernelNode(&node,graph,nullptr,0,&params));
+    cudaGraphExec_t parent;CUDA(cudaGraphInstantiate(&parent,graph,cudaGraphInstantiateFlagDeviceLaunch));CUDA(cudaGraphUpload(parent,0));CUDA(cudaDeviceSynchronize());
+    int module=open("module/bfusion_tx.ko",O_RDONLY|O_CLOEXEC);if(module<0) { perror("module open");return 1; }
+    char params_module[80];snprintf(params_module,sizeof(params_module),"map_fd=%d listen_fd=%d",fd,listener);
+    if(syscall(SYS_finit_module,module,params_module,0)) { perror("finit_module");return 1; }
+    close(module);close(fd);
+    signal(SIGTERM,stop_signal);signal(SIGINT,stop_signal);
+    cudaError_t launched=cudaSuccess;unsigned launches=0;
+    if(!once) { launched=cudaGraphLaunch(parent,0);launches++; }
+    if(launched==cudaSuccess) {
+        printf("resident Qwen ready: %u layers h=%u vocab=%u; device-tail graphs, dispatch=%s\n",layers,h,vocab,mode);fflush(stdout);
+        if(once) {
+            signal(SIGALRM,stop_signal);alarm(seconds);unsigned seen=0;
+            while(!stopped) {
+                if(__atomic_load_n(&page->llm_head,__ATOMIC_ACQUIRE)==seen ||
+                   __atomic_load_n(&page->llm[seen%BF_LLM_SLOTS].state,__ATOMIC_ACQUIRE)!=BF_PENDING) continue;
+                launched=cudaGraphLaunch(parent,0);launches++;
+                if(launched!=cudaSuccess) break;
+                launched=cudaDeviceSynchronize();if(launched!=cudaSuccess) break;
+                seen++;
+            }
+            alarm(0);
+        } else sleep(seconds);
+    }
+    __atomic_store_n(&page->stop_ns,1,__ATOMIC_RELEASE);
+    cudaError_t finished=cudaDeviceSynchronize();
+    if(syscall(SYS_delete_module,"bfusion_tx",0)) { perror("delete_module");return 1; }
+    close(listener);CUDA(launched);CUDA(finished);
+    Control result;CUDA(cudaMemcpy(&result,control,sizeof(result),cudaMemcpyDeviceToHost));
+    CUDA(cudaHostUnregister(page));munmap(page,BF_PAGE_MMAP_BYTES);
+    CUDA(cudaGraphExecDestroy(parent));CUDA(cudaGraphDestroy(graph));CUDA(cudaFree(steps));CUDA(cudaFree(control));
+    for(unsigned i=1;i<count;i++) CUDA(cudaGraphExecDestroy(host[i].graph));
+    printf("resident Qwen stopped: dispatch=%s launches=%u device_graph_launches=%u graph_error=%u\n",mode,launches,result.launches,result.error);fflush(stdout);
+    return result.error;
+}
+
+TEMP_MAKEFILE_DELTA serial
+--- 
++++ 
+@@ -87,7 +87,7 @@
+ .PHONY: qwen-graph
+ qwen-graph: $(BUILD)/qwen_graph.so $(BUILD)/qwen_graph
+ 
+-$(BUILD)/qwen_graph.so: executor/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
++$(BUILD)/qwen_graph.so: /tmp/bpfusion-queue-banks-ubd0k2i9/serial/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
+ 	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -rdc=true -shared -Xcompiler=-fPIC \
+ 		-Ibpf/include $< -o $@ $(LDLIBS)
+ 
+@@ -95,9 +95,9 @@
+ .PHONY: qwen-graph-control
+ qwen-graph-control: $(BUILD)/qwen_graph_host_launch.so $(BUILD)/qwen_graph_host_launch
+ 
+-$(BUILD)/qwen_graph_host_launch.so: executor/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
++$(BUILD)/qwen_graph_host_launch.so: /tmp/bpfusion-queue-banks-ubd0k2i9/serial/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
+ 	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
+ 		-Ibpf/include $< -o $@ $(LDLIBS)
+ 
+-$(BUILD)/qwen_graph $(BUILD)/qwen_graph_host_launch: executor/qwen_graph.py | $(BUILD)
+-	ln -sf $(abspath executor/qwen_graph.py) $@
++$(BUILD)/qwen_graph $(BUILD)/qwen_graph_host_launch: /tmp/bpfusion-queue-banks-ubd0k2i9/serial/qwen_graph.py | $(BUILD)
++	ln -sf $(abspath /tmp/bpfusion-queue-banks-ubd0k2i9/serial/qwen_graph.py) $@
+COMMAND ["make", "-f", "/tmp/bpfusion-queue-banks-ubd0k2i9/serial/Makefile", "BUILD=/tmp/bpfusion-queue-banks-ubd0k2i9/serial", "qwen-graph"]
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include /tmp/bpfusion-queue-banks-ubd0k2i9/serial/qwen_graph.cu -o /tmp/bpfusion-queue-banks-ubd0k2i9/serial/qwen_graph.so -lbpf -lelf -lz -lpthread
+ln -sf /tmp/bpfusion-queue-banks-ubd0k2i9/serial/qwen_graph.py /tmp/bpfusion-queue-banks-ubd0k2i9/serial/qwen_graph
+EXACT_SOURCE /tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph.py
+#!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+"""Capture Qwen at bootstrap; the native GPU graph dispatcher owns requests."""
+import ctypes
+import struct
+import sys
+from pathlib import Path
+import numpy as np
+import torch
+from transformers import AutoConfig,AutoModelForCausalLM
+from transformers.models.qwen2.modeling_qwen2 import Qwen2RotaryEmbedding
+from transformers.cache_utils import Cache,DynamicLayer
+from transformers.masking_utils import create_causal_mask
+
+
+class SharedLayer(DynamicLayer):
+    """A graph owns fixed offsets; GPU copies append into the shared KV buffers."""
+    def __init__(self,key,value,pos):
+        super().__init__()
+        self.storage_key,self.storage_value=key,value
+        self.keys,self.values=key[:,:,:pos],value[:,:,:pos]
+        self.is_initialized=True
+
+    def update(self,key_states,value_states,*args,**kwargs):
+        pos=self.keys.shape[-2];end=pos+key_states.shape[-2]
+        self.storage_key[:,:,pos:end].copy_(key_states)
+        self.storage_value[:,:,pos:end].copy_(value_states)
+        self.keys,self.values=self.storage_key[:,:,:end],self.storage_value[:,:,:end]
+        return self.keys,self.values
+
+
+def load_model(path):
+    with open(path,'rb') as f:header=struct.unpack('<6I2f',f.read(32))
+    config=AutoConfig.from_pretrained('Qwen/Qwen2.5-0.5B-Instruct')
+    dimensions=(config.hidden_size,config.intermediate_size,config.num_hidden_layers,config.num_attention_heads,config.num_key_value_heads,config.vocab_size)
+    if tuple(header[:6])!=dimensions or np.float32(config.rms_norm_eps)!=header[6] or config.rope_parameters['rope_theta']!=header[7]:
+        raise ValueError('weight/config layout mismatch')
+    with torch.device('meta'):
+        model=AutoModelForCausalLM.from_config(config,dtype=torch.float16,attn_implementation='eager')
+    model.to_empty(device='cuda')
+    # to_empty leaves buffers uninitialized; rebuild the real CPU RoPE initializer.
+    model.model.rotary_emb=Qwen2RotaryEmbedding(config).to('cuda')
+    weights=np.memmap(path,dtype=np.float16,offset=32,mode='r');cursor=0
+    def copy(parameter):
+        nonlocal cursor
+        n=parameter.numel()
+        data=np.array(weights[cursor:cursor+n]).reshape(tuple(parameter.shape))
+        parameter.copy_(torch.from_numpy(data).to('cuda'));cursor+=n
+    copy(model.model.embed_tokens.weight)
+    for layer in model.model.layers:
+        copy(layer.input_layernorm.weight)
+        for projection in [layer.self_attn.q_proj,layer.self_attn.k_proj,layer.self_attn.v_proj]:
+            copy(projection.weight);copy(projection.bias)
+        copy(layer.self_attn.o_proj.weight);copy(layer.post_attention_layernorm.weight)
+        for projection in [layer.mlp.gate_proj,layer.mlp.up_proj,layer.mlp.down_proj]:copy(projection.weight)
+    copy(model.model.norm.weight)
+    if cursor!=weights.size:raise ValueError('weight layout mismatch')
+    model.tie_weights()
+    return model.eval()
+
+
+def main():
+    if len(sys.argv)<2:raise SystemExit('usage: qwen_graph.py WEIGHTS.bin [seconds]')
+    seconds=int(sys.argv[2]) if len(sys.argv)>2 else 60
+    entry=Path(sys.argv[0])
+    library=entry.with_suffix('.so') if entry.name in ('qwen_graph','qwen_graph_host_launch') else Path(__file__).resolve().parents[1]/'build/qwen_graph.so'
+    lib=ctypes.CDLL(str(library))
+    lib.max_tokens.restype=ctypes.c_uint
+    lib.max_requests.restype=ctypes.c_uint
+    limit=lib.max_tokens();context=2*limit;banks=[]
+    with torch.no_grad():
+        model=load_model(sys.argv[1]);config=model.config
+        dim=config.hidden_size//config.num_attention_heads
+        for bank in range(lib.max_requests()):
+            keys=[torch.zeros((1,config.num_key_value_heads,context,dim),dtype=torch.float16,device='cuda') for _ in model.model.layers]
+            values=[torch.zeros_like(k) for k in keys]
+            tokens=torch.zeros(limit,dtype=torch.long,device='cuda')
+            graphs=[None];selected=[None];keepers=[]
+            stream=torch.cuda.Stream();stream.wait_stream(torch.cuda.current_stream())
+            for index in range(1,limit+context-1):
+                count=index if index<=limit else 1
+                pos=0 if index<=limit else index-limit
+                inp=tokens[:count].reshape(1,count)
+                positions=torch.arange(pos,pos+count,device='cuda').reshape(1,count)
+                def cache():
+                    return Cache(layers=[SharedLayer(k,v,pos) for k,v in zip(keys,values)])
+                def forward():
+                    return model(inp,position_ids=positions,attention_mask={'full_attention':mask},past_key_values=cache(),use_cache=True,logits_to_keep=1)
+                mask=create_causal_mask(config=config,inputs_embeds=model.model.embed_tokens(inp),attention_mask=None,past_key_values=cache(),position_ids=positions)
+                stream.wait_stream(torch.cuda.current_stream())
+                with torch.cuda.stream(stream):warm=forward()
+                torch.cuda.current_stream().wait_stream(stream);torch.cuda.synchronize()
+                graph=torch.cuda.CUDAGraph(keep_graph=True)
+                with torch.cuda.graph(graph,stream=stream):
+                    output=forward()
+                    token=output.logits[:,-1,:].argmax(-1)
+                graphs.append(graph);selected.append(token);keepers.append((output,positions,mask,inp))
+                if index%32==0:print(f'captured bank {bank} model graph {index}/{limit+context-2}',flush=True)
+            torch.cuda.synchronize()
+            banks.append((tokens,graphs,selected,keepers))
+        lib.serve.argtypes=[ctypes.POINTER(ctypes.c_ulonglong),ctypes.POINTER(ctypes.c_ulonglong),ctypes.c_uint,ctypes.POINTER(ctypes.c_ulonglong),ctypes.c_uint,ctypes.c_uint,ctypes.c_uint,ctypes.c_uint]
+        lib.serve.restype=ctypes.c_int
+        count=len(graphs);size=count*len(banks)
+        raw=(ctypes.c_ulonglong*size)(*(g.raw_cuda_graph() if g else 0 for _,graphs,_,_ in banks for g in graphs))
+        out=(ctypes.c_ulonglong*size)(*(t.data_ptr() if t is not None else 0 for _,_,selected,_ in banks for t in selected))
+        inputs=(ctypes.c_ulonglong*len(banks))(*(tokens.data_ptr() for tokens,_,_,_ in banks))
+        status=lib.serve(raw,out,count,inputs,config.vocab_size,config.num_hidden_layers,config.hidden_size,seconds)
+        if status:raise SystemExit(status)
+
+
+if __name__=='__main__':main()
+
+COMMON_NATIVE_DELTA banks
+--- 
++++ 
+@@ -6,6 +6,7 @@
+ #include <sys/syscall.h>
+ #include <fcntl.h>
+ #include <netinet/in.h>
++#include <netinet/tcp.h>
+ #include <unistd.h>
+ #include <cstdio>
+ #include <csignal>
+@@ -113,6 +114,7 @@
+     CUDA(cudaHostRegister(page,BF_PAGE_MMAP_BYTES,cudaHostRegisterMapped));
+     bf_page *device;CUDA(cudaHostGetDevicePointer((void **)&device,page,0));
+     int listener=socket(AF_INET,SOCK_STREAM,0),yes=1;setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));
++    if(setsockopt(listener,IPPROTO_TCP,TCP_NODELAY,&yes,sizeof(yes))) { perror("TCP_NODELAY");return 1; }
+     sockaddr_in addr={};addr.sin_family=AF_INET;addr.sin_port=htons(BF_LLM_TCP_PORT);addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
+     if(bind(listener,(sockaddr *)&addr,sizeof(addr)) || listen(listener,SOMAXCONN)) { perror("listen");return 1; }
+     __atomic_store_n(&page->stop_ns,0,__ATOMIC_RELEASE);
+EXACT_SOURCE /tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph.cu
+// SPDX-License-Identifier: Apache-2.0
+// GPU-tail graph dispatch: host work is model/graph bootstrap and shutdown only.
+#include <cuda_runtime.h>
+#include <bpf/bpf.h>
+#include <sys/mman.h>
+#include <sys/syscall.h>
+#include <fcntl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <unistd.h>
+#include <cstdio>
+#include <csignal>
+#include <vector>
+#include "bpfusion_queue.h"
+#define CUDA(x) do { cudaError_t e=(x); if(e!=cudaSuccess) { fprintf(stderr,"%s: %s\n",#x,cudaGetErrorString(e)); return (int)e; } } while(0)
+struct Step { cudaGraphExec_t graph; long long *output; };
+struct Request { unsigned k,prompt,gen,step,phase; };
+struct Control { unsigned seen,retired,reclaim,error,launches,max_active; Request requests[BF_LLM_SLOTS]; };
+
+// System-scope acquire protects host publication and forbids polling-load
+// elimination; a cache modifier alone does not give synchronization semantics.
+__device__ unsigned queue_load(const unsigned *p) {
+    unsigned value;asm volatile("ld.acquire.sys.global.u32 %0, [%1];" : "=r"(value) : "l"(p) : "memory");return value;
+}
+__device__ unsigned long long queue_load(const unsigned long long *p) {
+    unsigned long long value;asm volatile("ld.acquire.sys.global.u64 %0, [%1];" : "=l"(value) : "l"(p) : "memory");return value;
+}
+
+__global__ void dispatch(bf_page *p,Step *steps,long long **inputs,unsigned count,unsigned vocab,Control *c,bool once) {
+    if(threadIdx.x || blockIdx.x) return;
+    while(!queue_load((unsigned long long *)&p->stop_ns)) {
+        // A parent tail resumes only after all private child graphs finish.
+        for(unsigned i=0;i<BF_LLM_SLOTS;i++) {
+            Request *r=&c->requests[i];
+            if(r->phase!=1) continue;
+            unsigned bank=once ? 0 : i;
+            unsigned token=(unsigned)*steps[bank*count+r->step].output;
+            bf_llm_slot *slot=&p->llm[i];
+            __stcg(&slot->tok_out[r->k],token);__threadfence_system();__stcg(&slot->produced,r->k+1);
+            if(++r->k==r->gen) r->phase=2;
+            else { inputs[bank][0]=token;r->step=BF_LLM_MAX_TOK+r->prompt+r->k-1; }
+        }
+        // The head-indexed ring must reclaim in admission order. Hold final
+        // tokens until the previous DONE was reclaimed by kernel TX. A reused
+        // WRITING/PENDING slot also proves that its old ownership was released.
+        if(c->reclaim && queue_load(&p->llm[(c->retired-1)%BF_LLM_SLOTS].state)!=BF_DONE) c->reclaim=0;
+        unsigned idx=c->retired%BF_LLM_SLOTS;
+        if(!c->reclaim && c->retired!=c->seen && c->requests[idx].phase==2) {
+            __threadfence_system();__stcg(&p->llm[idx].state,(unsigned)BF_DONE);
+            c->requests[idx].phase=0;c->retired++;c->reclaim=1;
+            if(once) return;
+        }
+        // Admission remains sequential; computation uses each physical slot's
+        // private KV/input/output bank. No producer or page ABI change.
+        while(queue_load(&p->llm_head)!=c->seen) {
+            idx=c->seen%BF_LLM_SLOTS;
+            bf_llm_slot *slot=&p->llm[idx];
+            if(c->requests[idx].phase || queue_load(&slot->state)!=BF_PENDING) break;
+            unsigned bank=once ? 0 : idx;
+            unsigned np=__ldcg(&slot->n_prompt),ng=__ldcg(&slot->n_gen);
+            bool bad=!np || np>BF_LLM_MAX_TOK || !ng || ng>BF_LLM_MAX_TOK;
+            for(unsigned j=0;j<np && j<BF_LLM_MAX_TOK;j++) {
+                unsigned token=__ldcg(&slot->tok_in[j]);
+                if(token>=vocab) bad=true;
+                inputs[bank][j]=token;
+            }
+            unsigned short flags=__ldcg(&slot->pad);
+            __threadfence_system();
+            __stcg(&slot->pad,(unsigned short)((flags&~BF_LLM_VALIDATING)|(bad ? BF_LLM_REJECTED : 0)));
+            c->requests[idx]={0,np,ng,np,bad ? 2u : 3u};c->seen++;
+            if(once) break;
+        }
+        unsigned active=0;
+        for(unsigned i=0;i<BF_LLM_SLOTS;i++) {
+            Request *r=&c->requests[i];
+            if(r->phase!=1 && r->phase!=3) continue;
+            unsigned bank=once ? 0 : i;
+            cudaError_t e=cudaGraphLaunch(steps[bank*count+r->step].graph,cudaStreamGraphFireAndForget);
+            if(e!=cudaSuccess) { c->error=e;return; }
+            r->phase=1;c->launches++;active++;
+        }
+        if(active) {
+            if(active>c->max_active) c->max_active=active;
+            cudaError_t e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
+            if(e!=cudaSuccess) c->error=e;
+            return;
+        }
+        // Idle, rejection and TX reclamation waits stay on the GPU.
+    }
+}
+extern "C" unsigned max_tokens() { return BF_LLM_MAX_TOK; }
+extern "C" unsigned max_requests() {
+#ifdef BF_HOST_LAUNCH
+    return 1;
+#else
+    return BF_LLM_SLOTS;
+#endif
+}
+static volatile sig_atomic_t stopped=0;
+static void stop_signal(int) { stopped=1; }
+extern "C" int serve(const unsigned long long *graphs,const unsigned long long *outputs,unsigned count,const unsigned long long *input_ptrs,unsigned vocab,unsigned layers,unsigned h,unsigned seconds) {
+    unsigned banks=max_requests(),size=count*banks;
+    std::vector<Step> host(size);
+    for(unsigned i=0;i<size;i++) {
+        if(i%count==0) continue;
+        CUDA(cudaGraphInstantiate(&host[i].graph,(cudaGraph_t)graphs[i],cudaGraphInstantiateFlagDeviceLaunch));
+        CUDA(cudaGraphUpload(host[i].graph,0));host[i].output=(long long *)outputs[i];
+    }
+    Step *steps;CUDA(cudaMalloc(&steps,size*sizeof(Step)));CUDA(cudaMemcpy(steps,host.data(),size*sizeof(Step),cudaMemcpyHostToDevice));
+    Control *control;CUDA(cudaMalloc(&control,sizeof(Control)));CUDA(cudaMemset(control,0,sizeof(Control)));
+    int fd=bpf_obj_get("/sys/fs/bpf/bpfusion_ctl");if(fd<0) { perror("bpf_obj_get");return 1; }
+    bf_page *page=(bf_page *)mmap(nullptr,BF_PAGE_MMAP_BYTES,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
+    if(page==MAP_FAILED) { perror("mmap");return 1; }
+    CUDA(cudaHostRegister(page,BF_PAGE_MMAP_BYTES,cudaHostRegisterMapped));
+    bf_page *device;CUDA(cudaHostGetDevicePointer((void **)&device,page,0));
+    int listener=socket(AF_INET,SOCK_STREAM,0),yes=1;setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));
+    if(setsockopt(listener,IPPROTO_TCP,TCP_NODELAY,&yes,sizeof(yes))) { perror("TCP_NODELAY");return 1; }
+    sockaddr_in addr={};addr.sin_family=AF_INET;addr.sin_port=htons(BF_LLM_TCP_PORT);addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
+    if(bind(listener,(sockaddr *)&addr,sizeof(addr)) || listen(listener,SOMAXCONN)) { perror("listen");return 1; }
+    __atomic_store_n(&page->stop_ns,0,__ATOMIC_RELEASE);
+    long long **inputs;CUDA(cudaMalloc(&inputs,banks*sizeof(long long *)));
+    CUDA(cudaMemcpy(inputs,input_ptrs,banks*sizeof(long long *),cudaMemcpyHostToDevice));
+#ifdef BF_HOST_LAUNCH
+    bool once=true;const char *mode="host-launch";
+#else
+    bool once=false;const char *mode="resident";
+#endif
+    void *args[]={&device,&steps,&inputs,&count,&vocab,&control,&once};
+    cudaKernelNodeParams params={};params.func=(void *)dispatch;params.gridDim=dim3(1);params.blockDim=dim3(32);params.kernelParams=args;
+    cudaGraph_t graph;CUDA(cudaGraphCreate(&graph,0));cudaGraphNode_t node;CUDA(cudaGraphAddKernelNode(&node,graph,nullptr,0,&params));
+    cudaGraphExec_t parent;CUDA(cudaGraphInstantiate(&parent,graph,cudaGraphInstantiateFlagDeviceLaunch));CUDA(cudaGraphUpload(parent,0));CUDA(cudaDeviceSynchronize());
+    int module=open("module/bfusion_tx.ko",O_RDONLY|O_CLOEXEC);if(module<0) { perror("module open");return 1; }
+    char params_module[80];snprintf(params_module,sizeof(params_module),"map_fd=%d listen_fd=%d",fd,listener);
+    if(syscall(SYS_finit_module,module,params_module,0)) { perror("finit_module");return 1; }
+    close(module);close(fd);
+    signal(SIGTERM,stop_signal);signal(SIGINT,stop_signal);
+    cudaError_t launched=cudaSuccess;unsigned launches=0;
+    if(!once) { launched=cudaGraphLaunch(parent,0);launches++; }
+    if(launched==cudaSuccess) {
+        printf("resident Qwen ready: %u layers h=%u vocab=%u; device-tail graphs, dispatch=%s\n",layers,h,vocab,mode);fflush(stdout);
+        if(once) {
+            signal(SIGALRM,stop_signal);alarm(seconds);unsigned seen=0;
+            while(!stopped) {
+                if(__atomic_load_n(&page->llm_head,__ATOMIC_ACQUIRE)==seen ||
+                   __atomic_load_n(&page->llm[seen%BF_LLM_SLOTS].state,__ATOMIC_ACQUIRE)!=BF_PENDING) continue;
+                launched=cudaGraphLaunch(parent,0);launches++;
+                if(launched!=cudaSuccess) break;
+                launched=cudaDeviceSynchronize();if(launched!=cudaSuccess) break;
+                seen++;
+            }
+            alarm(0);
+        } else sleep(seconds);
+    }
+    __atomic_store_n(&page->stop_ns,1,__ATOMIC_RELEASE);
+    cudaError_t finished=cudaDeviceSynchronize();
+    if(syscall(SYS_delete_module,"bfusion_tx",0)) { perror("delete_module");return 1; }
+    close(listener);CUDA(launched);CUDA(finished);
+    Control result;CUDA(cudaMemcpy(&result,control,sizeof(result),cudaMemcpyDeviceToHost));
+    CUDA(cudaHostUnregister(page));munmap(page,BF_PAGE_MMAP_BYTES);
+    CUDA(cudaGraphExecDestroy(parent));CUDA(cudaGraphDestroy(graph));CUDA(cudaFree(steps));CUDA(cudaFree(inputs));CUDA(cudaFree(control));
+    for(unsigned i=0;i<size;i++) if(i%count) CUDA(cudaGraphExecDestroy(host[i].graph));
+    printf("resident Qwen stopped: dispatch=%s launches=%u device_graph_launches=%u graph_error=%u banks=%u max_active=%u\n",mode,launches,result.launches,result.error,banks,result.max_active);fflush(stdout);
+    return result.error;
+}
+
+TEMP_MAKEFILE_DELTA banks
+--- 
++++ 
+@@ -87,7 +87,7 @@
+ .PHONY: qwen-graph
+ qwen-graph: $(BUILD)/qwen_graph.so $(BUILD)/qwen_graph
+ 
+-$(BUILD)/qwen_graph.so: executor/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
++$(BUILD)/qwen_graph.so: /tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
+ 	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -rdc=true -shared -Xcompiler=-fPIC \
+ 		-Ibpf/include $< -o $@ $(LDLIBS)
+ 
+@@ -95,9 +95,9 @@
+ .PHONY: qwen-graph-control
+ qwen-graph-control: $(BUILD)/qwen_graph_host_launch.so $(BUILD)/qwen_graph_host_launch
+ 
+-$(BUILD)/qwen_graph_host_launch.so: executor/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
++$(BUILD)/qwen_graph_host_launch.so: /tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
+ 	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
+ 		-Ibpf/include $< -o $@ $(LDLIBS)
+ 
+-$(BUILD)/qwen_graph $(BUILD)/qwen_graph_host_launch: executor/qwen_graph.py | $(BUILD)
+-	ln -sf $(abspath executor/qwen_graph.py) $@
++$(BUILD)/qwen_graph $(BUILD)/qwen_graph_host_launch: /tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph.py | $(BUILD)
++	ln -sf $(abspath /tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph.py) $@
+COMMAND ["make", "-f", "/tmp/bpfusion-queue-banks-ubd0k2i9/banks/Makefile", "BUILD=/tmp/bpfusion-queue-banks-ubd0k2i9/banks", "qwen-graph"]
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include /tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph.cu -o /tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph.so -lbpf -lelf -lz -lpthread
+ln -sf /tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph.py /tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph
+ADAPTER_DELTA_FROM_EXISTING_BENCH
+--- 
++++ 
+@@ -17,7 +17,7 @@
+ import threading
+ import time
+ 
+-sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"tests"))
++sys.path.insert(0,"/workspaces/repository/tests")
+ from resident_qwen import oracle_cases
+ 
+ 
+@@ -115,7 +115,7 @@
+         return ordered[low]+(ordered[high]-ordered[low])*(pos-low)
+     for gen,concurrency in meta["matrix"]:
+         pair_means={}
+-        for mode in ("resident","host-launch"):
++        for mode in ("serial","banks"):
+             selected=[row for row in samples if row["mode"]==mode and row["gen"]==gen and row["concurrency"]==concurrency]
+             selected_cells=[row for row in cells if row["mode"]==mode and row["gen"]==gen and row["concurrency"]==concurrency]
+             ttft=[row["ttft_ms"] for row in selected]
+@@ -126,12 +126,27 @@
+                 "tpot_mean_ms":statistics.mean(tpot) if tpot else None,
+                 "executor_cpu_s_per_cell":[row["executor_cpu_s"] for row in selected_cells],
+                 "tokens_per_s":[row["output_tokens_per_s"] for row in selected_cells]}))
+-        differences=[host-resident for host,resident in zip(pair_means["host-launch"],pair_means["resident"])]
++        differences=[serial-banks for serial,banks in zip(pair_means["serial"],pair_means["banks"])]
+         mean=statistics.mean(differences)
+         # Five independent paired process blocks; Student t, df=4, two-sided 95%.
+         margin=2.776445105*statistics.stdev(differences)/math.sqrt(5) if len(differences)==5 else None
+-        print(json.dumps({"gen":gen,"concurrency":concurrency,"paired_host_minus_resident_ttft_ms":differences,
++        print(json.dumps({"gen":gen,"concurrency":concurrency,"paired_serial_minus_banks_ttft_ms":differences,
+             "difference_mean_ms":mean,"difference_t95_ms":[mean-margin,mean+margin] if margin is not None else None}))
++
++    for gen,concurrency in meta["matrix"]:
++        if gen==1:continue
++        for metric in ("tpot_ms","output_tokens_per_s"):
++            blocks={}
++            for mode in ("serial","banks"):
++                blocks[mode]=[]
++                for pair in range(meta["repetitions"]):
++                    chosen=[row for row in (samples if metric=="tpot_ms" else cells) if row["pair"]==pair and row["mode"]==mode and row["gen"]==gen and row["concurrency"]==concurrency]
++                    blocks[mode].append(statistics.mean(row[metric] for row in chosen))
++            sign=1 if metric=="tpot_ms" else -1
++            gains=[sign*(a-b) for a,b in zip(blocks["serial"],blocks["banks"])]
++            mean=statistics.mean(gains)
++            margin=2.776445105*statistics.stdev(gains)/math.sqrt(5) if len(gains)==5 else None
++            print(json.dumps({"primary_metric":metric,"gen":gen,"concurrency":concurrency,"serial_blocks":blocks["serial"],"banks_blocks":blocks["banks"],"positive_means_improvement":True,"paired_gain":gains,"mean_gain":mean,"gain_t95":[mean-margin,mean+margin] if margin is not None else None}))
+ 
+ 
+ def main():
+@@ -154,13 +169,13 @@
+             raw.write(json.dumps({"event":event,**values})+"\n"); raw.flush()
+         import torch, transformers
+         emit("metadata",utc=time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),commit=command("git","rev-parse","HEAD"),
+-             executors={"resident":args.resident_executor,"host-launch":args.host_executor},
++             executors={"serial":args.resident_executor,"banks":args.host_executor},
+              kernel=platform.release(),torch=torch.__version__,transformers=transformers.__version__,
+              nvcc=command("/usr/local/cuda/bin/nvcc","--version"),gpu=gpu_state(),cpu_tick_hz=os.sysconf("SC_CLK_TCK"),
+              cases=cases,matrix=matrix,repetitions=repetitions,requests_per_cell=count,
+              timing="client monotonic; tokens completed in one recv share arrival timestamp; process CPU excludes kernel TX/softirq")
+         for pair in range(repetitions):
+-            modes=("resident","host-launch") if pair%2==0 else ("host-launch","resident")
++            modes=("serial","banks") if pair%2==0 else ("banks","serial")
+             cells=matrix[pair%len(matrix):]+matrix[:pair%len(matrix)]
+             for mode in modes:
+                 executor=None
+@@ -168,13 +183,14 @@
+                     logpath=Path(tmp)/"executor.log"
+                     try:
+                         command("./build/bpfusion_load","stream-attach")
+-                        binary=args.resident_executor if mode=="resident" else args.host_executor
++                        binary=args.resident_executor if mode=="serial" else args.host_executor
+                         with logpath.open("w") as log:
+                             executor=subprocess.Popen([binary,"/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","300"],stdout=log,stderr=subprocess.STDOUT)
+                         started=time.monotonic()
+                         while "resident Qwen ready" not in logpath.read_text():
+-                            assert executor.poll() is None and time.monotonic()-started<60,logpath.read_text()
++                            assert executor.poll() is None,logpath.read_text()
+                             time.sleep(.05)
++                        bootstrap_s=time.monotonic()-started
+                         with connect() as client:
+                             for gen in (1,args.gen):
+                                 for ids,expected in cases: request(client,ids,expected[:gen])
+@@ -193,9 +209,9 @@
+                                  gpu_before=gpu_before,gpu_after=gpu_after,**summary)
+                             print(f"pair={pair} mode={mode} gen={gen} c={concurrency} requests={count} exact_tokens={count*gen} cpu_s={summary['executor_cpu_s']:.3f}",flush=True)
+                         executor.terminate(); assert executor.wait(timeout=60)==0,logpath.read_text()
+-                        log=logpath.read_text(); launches=1 if mode=="resident" else 8+count*len(matrix)
+-                        assert f"dispatch={mode} launches={launches}" in log,log
+-                        emit("executor",pair=pair,mode=mode,log=log,stats=command("./build/bpfusion_load","stats"))
++                        log=logpath.read_text(); launches=1
++                        assert f"dispatch=resident launches={launches}" in log,log
++                        emit("executor",pair=pair,mode=mode,bootstrap_s=bootstrap_s,log=log,stats=command("./build/bpfusion_load","stats"))
+                     except Exception as error:
+                         emit("failure",pair=pair,mode=mode,error=repr(error),
+                              log=logpath.read_text() if logpath.exists() else "",
+
+EXACT_ADAPTER
+#!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+"""Matched real-Qwen dispatch ablation on the existing token HTTP path."""
+import argparse
+from concurrent.futures import ThreadPoolExecutor
+import json
+import math
+import os
+from pathlib import Path
+import platform
+import socket
+import statistics
+import struct
+import subprocess
+import sys
+import tempfile
+import threading
+import time
+
+sys.path.insert(0,"/workspaces/repository/tests")
+from resident_qwen import oracle_cases
+
+
+def command(*args):
+    return subprocess.check_output(args,text=True,stderr=subprocess.STDOUT).strip()
+
+
+def cpu_seconds(pid):
+    fields=Path(f"/proc/{pid}/stat").read_text().rsplit(") ",1)[1].split()
+    return (int(fields[11])+int(fields[12]))/os.sysconf("SC_CLK_TCK")
+
+
+def gpu_state():
+    return command("nvidia-smi","--query-gpu=timestamp,name,clocks.sm,clocks.mem,temperature.gpu,power.draw,utilization.gpu","--format=csv,noheader,nounits")
+
+
+def request(client,ids,expected):
+    body=struct.pack("<IIIIQ",0x514c4d51,len(ids),len(expected),0,time.monotonic_ns())+struct.pack(f"<{len(ids)}I",*ids)
+    wire=f"POST /generate HTTP/1.1\r\nHost: localhost\r\nContent-Length: {len(body)}\r\n\r\n".encode()+body
+    start=time.monotonic_ns()
+    client.sendall(wire)
+    header=b""; data=b""; arrivals=[]
+    while len(data)<4*len(expected):
+        chunk=client.recv(4096)
+        arrived=time.monotonic_ns()
+        assert chunk,"short reply"
+        if header is not None:
+            header+=chunk
+            if b"\r\n\r\n" not in header: continue
+            head,chunk=header.split(b"\r\n\r\n",1)
+            assert head.startswith(b"HTTP/1.1 200 OK\r\n"),head
+            assert f"Content-Length: {4*len(expected)}".encode() in head,head
+            header=None
+        data+=chunk
+        arrivals.extend([arrived]*((len(data)//4)-len(arrivals)))
+    assert len(data)==4*len(expected),data
+    actual=list(struct.unpack(f"<{len(expected)}I",data))
+    assert actual==expected,(ids,actual,expected)
+    return {"start_ns":start,"arrival_ns":arrivals,"tokens":actual,
+            "ttft_ms":(arrivals[0]-start)/1e6,
+            "latency_ms":(arrivals[-1]-start)/1e6,
+            "tpot_ms":(arrivals[-1]-arrivals[0])/(len(expected)-1)/1e6 if len(expected)>1 else None}
+
+
+def connect():
+    client=socket.create_connection(("127.0.0.1",39403),timeout=60)
+    client.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
+    return client
+
+
+def cell(pid,cases,gen,concurrency,count,rows):
+    # Connections and thread creation precede both the timer and CPU window.
+    barrier=threading.Barrier(concurrency+1)
+    ready=threading.Barrier(concurrency+1)
+    def worker(worker_id):
+        with connect() as client:
+            ready.wait(timeout=60)
+            barrier.wait(timeout=60)
+            for index in range(worker_id,count,concurrency):
+                case=index%len(cases); ids,expected=cases[case]
+                row=request(client,ids,expected[:gen]); row.update(index=index,case=case)
+                rows.append(row)
+    with ThreadPoolExecutor(max_workers=concurrency) as pool:
+        futures=[pool.submit(worker,i) for i in range(concurrency)]
+        ready.wait(timeout=60)
+        before=cpu_seconds(pid); start=time.monotonic_ns()
+        barrier.wait(timeout=60)
+        for future in futures: future.result()
+        finish=time.monotonic_ns(); after=cpu_seconds(pid)
+    first=min(row["start_ns"] for row in rows)
+    last=max(row["arrival_ns"][-1] for row in rows)
+    return {
+        "window_ns":finish-start,"executor_cpu_s":after-before,
+        "output_tokens_per_s":count*gen/((last-first)/1e9)}
+
+
+def analyze(path):
+    records=[json.loads(line) for line in Path(path).read_text().splitlines()]
+    meta=next(row for row in records if row["event"]=="metadata")
+    cells=[row for row in records if row["event"]=="cell"]
+    samples=[row for row in records if row["event"]=="request"]
+    expected_cells=meta["repetitions"]*2*len(meta["matrix"])
+    assert len(cells)==expected_cells,(len(cells),expected_cells)
+    assert len(samples)==expected_cells*meta["requests_per_cell"]
+    assert len([row for row in records if row["event"]=="executor"])==2*meta["repetitions"]
+    for row in samples:
+        assert row["tokens"]==meta["cases"][row["case"]][1][:row["gen"]],row
+        assert row["ttft_ms"]==(row["arrival_ns"][0]-row["start_ns"])/1e6,row
+    for block in cells:
+        selected=[row for row in samples if all(row[key]==block[key] for key in ("pair","mode","gen","concurrency"))]
+        assert sorted(row["index"] for row in selected)==list(range(meta["requests_per_cell"])),block
+    def percentile(values,q):
+        ordered=sorted(values); pos=(len(ordered)-1)*q
+        low=math.floor(pos); high=math.ceil(pos)
+        return ordered[low]+(ordered[high]-ordered[low])*(pos-low)
+    for gen,concurrency in meta["matrix"]:
+        pair_means={}
+        for mode in ("serial","banks"):
+            selected=[row for row in samples if row["mode"]==mode and row["gen"]==gen and row["concurrency"]==concurrency]
+            selected_cells=[row for row in cells if row["mode"]==mode and row["gen"]==gen and row["concurrency"]==concurrency]
+            ttft=[row["ttft_ms"] for row in selected]
+            tpot=[row["tpot_ms"] for row in selected if row["tpot_ms"] is not None]
+            pair_means[mode]=[statistics.mean(row["ttft_ms"] for row in selected if row["pair"]==pair) for pair in range(meta["repetitions"])]
+            print(json.dumps({"mode":mode,"gen":gen,"concurrency":concurrency,"requests":len(selected),
+                "ttft_mean_ms":statistics.mean(ttft),"ttft_p50_ms":percentile(ttft,.5),"ttft_p99_ms":percentile(ttft,.99),
+                "tpot_mean_ms":statistics.mean(tpot) if tpot else None,
+                "executor_cpu_s_per_cell":[row["executor_cpu_s"] for row in selected_cells],
+                "tokens_per_s":[row["output_tokens_per_s"] for row in selected_cells]}))
+        differences=[serial-banks for serial,banks in zip(pair_means["serial"],pair_means["banks"])]
+        mean=statistics.mean(differences)
+        # Five independent paired process blocks; Student t, df=4, two-sided 95%.
+        margin=2.776445105*statistics.stdev(differences)/math.sqrt(5) if len(differences)==5 else None
+        print(json.dumps({"gen":gen,"concurrency":concurrency,"paired_serial_minus_banks_ttft_ms":differences,
+            "difference_mean_ms":mean,"difference_t95_ms":[mean-margin,mean+margin] if margin is not None else None}))
+
+    for gen,concurrency in meta["matrix"]:
+        if gen==1:continue
+        for metric in ("tpot_ms","output_tokens_per_s"):
+            blocks={}
+            for mode in ("serial","banks"):
+                blocks[mode]=[]
+                for pair in range(meta["repetitions"]):
+                    chosen=[row for row in (samples if metric=="tpot_ms" else cells) if row["pair"]==pair and row["mode"]==mode and row["gen"]==gen and row["concurrency"]==concurrency]
+                    blocks[mode].append(statistics.mean(row[metric] for row in chosen))
+            sign=1 if metric=="tpot_ms" else -1
+            gains=[sign*(a-b) for a,b in zip(blocks["serial"],blocks["banks"])]
+            mean=statistics.mean(gains)
+            margin=2.776445105*statistics.stdev(gains)/math.sqrt(5) if len(gains)==5 else None
+            print(json.dumps({"primary_metric":metric,"gen":gen,"concurrency":concurrency,"serial_blocks":blocks["serial"],"banks_blocks":blocks["banks"],"positive_means_improvement":True,"paired_gain":gains,"mean_gain":mean,"gain_t95":[mean-margin,mean+margin] if margin is not None else None}))
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output",required=True)
+    parser.add_argument("--preflight",action="store_true")
+    parser.add_argument("--gen",type=int,default=8,choices=range(2,65),help="long output length; paired with one-token requests")
+    parser.add_argument("--analyze",action="store_true")
+    parser.add_argument("--resident-executor",default="./build/qwen")
+    parser.add_argument("--host-executor",default="./build/qwen_host_launch")
+    args=parser.parse_args()
+    if args.analyze: analyze(args.output); return
+    cases,_=oracle_cases(args.gen)
+    matrix=[(1,1)] if args.preflight else [(1,1),(args.gen,1),(1,8),(args.gen,8)]
+    repetitions=1 if args.preflight else 5
+    count=4 if args.preflight else 64
+    output=Path(args.output); output.parent.mkdir(parents=True,exist_ok=True)
+    with output.open("x") as raw:
+        def emit(event,**values):
+            raw.write(json.dumps({"event":event,**values})+"\n"); raw.flush()
+        import torch, transformers
+        emit("metadata",utc=time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),commit=command("git","rev-parse","HEAD"),
+             executors={"serial":args.resident_executor,"banks":args.host_executor},
+             kernel=platform.release(),torch=torch.__version__,transformers=transformers.__version__,
+             nvcc=command("/usr/local/cuda/bin/nvcc","--version"),gpu=gpu_state(),cpu_tick_hz=os.sysconf("SC_CLK_TCK"),
+             cases=cases,matrix=matrix,repetitions=repetitions,requests_per_cell=count,
+             timing="client monotonic; tokens completed in one recv share arrival timestamp; process CPU excludes kernel TX/softirq")
+        for pair in range(repetitions):
+            modes=("serial","banks") if pair%2==0 else ("banks","serial")
+            cells=matrix[pair%len(matrix):]+matrix[:pair%len(matrix)]
+            for mode in modes:
+                executor=None
+                with tempfile.TemporaryDirectory(prefix="bpfusion-dispatch-") as tmp:
+                    logpath=Path(tmp)/"executor.log"
+                    try:
+                        command("./build/bpfusion_load","stream-attach")
+                        binary=args.resident_executor if mode=="serial" else args.host_executor
+                        with logpath.open("w") as log:
+                            executor=subprocess.Popen([binary,"/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","300"],stdout=log,stderr=subprocess.STDOUT)
+                        started=time.monotonic()
+                        while "resident Qwen ready" not in logpath.read_text():
+                            assert executor.poll() is None,logpath.read_text()
+                            time.sleep(.05)
+                        bootstrap_s=time.monotonic()-started
+                        with connect() as client:
+                            for gen in (1,args.gen):
+                                for ids,expected in cases: request(client,ids,expected[:gen])
+                        before=cpu_seconds(executor.pid); idle_start=time.monotonic_ns(); time.sleep(1)
+                        emit("idle",pair=pair,mode=mode,window_ns=time.monotonic_ns()-idle_start,executor_cpu_s=cpu_seconds(executor.pid)-before)
+                        for gen,concurrency in cells:
+                            gpu_before=gpu_state()
+                            rows=[]
+                            try:
+                                summary=cell(executor.pid,cases,gen,concurrency,count,rows)
+                            finally:
+                                for row in sorted(rows,key=lambda row:row["index"]):
+                                    emit("request",pair=pair,mode=mode,gen=gen,concurrency=concurrency,**row)
+                            gpu_after=gpu_state()
+                            emit("cell",pair=pair,mode=mode,gen=gen,concurrency=concurrency,requests=count,
+                                 gpu_before=gpu_before,gpu_after=gpu_after,**summary)
+                            print(f"pair={pair} mode={mode} gen={gen} c={concurrency} requests={count} exact_tokens={count*gen} cpu_s={summary['executor_cpu_s']:.3f}",flush=True)
+                        executor.terminate(); assert executor.wait(timeout=60)==0,logpath.read_text()
+                        log=logpath.read_text(); launches=1
+                        assert f"dispatch=resident launches={launches}" in log,log
+                        emit("executor",pair=pair,mode=mode,bootstrap_s=bootstrap_s,log=log,stats=command("./build/bpfusion_load","stats"))
+                    except Exception as error:
+                        emit("failure",pair=pair,mode=mode,error=repr(error),
+                             log=logpath.read_text() if logpath.exists() else "",
+                             stats=command("./build/bpfusion_load","stats"))
+                        raise
+                    finally:
+                        if executor is not None and executor.poll() is None:
+                            executor.terminate(); executor.wait(timeout=60)
+                        command("./build/bpfusion_load","stream-detach")
+                        command("./build/bpfusion_load","detach","lo")
+                        for name in ("bpfusion_ctl","bpfusion_stats","bpfusion_db"):
+                            Path("/sys/fs/bpf",name).unlink(missing_ok=True)
+    analyze(output)
+
+
+if __name__=="__main__": main()
+
+HOST_CONTROL_GUARD_CORRECTION (resident once=false behavior unchanged)
+while((!once || c->seen==c->retired) && queue_load(&p->llm_head)!=c->seen) {
+EXACT_FINAL_CANDIDATE_NATIVE
+// SPDX-License-Identifier: Apache-2.0
+// GPU-tail graph dispatch: host work is model/graph bootstrap and shutdown only.
+#include <cuda_runtime.h>
+#include <bpf/bpf.h>
+#include <sys/mman.h>
+#include <sys/syscall.h>
+#include <fcntl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <unistd.h>
+#include <cstdio>
+#include <csignal>
+#include <vector>
+#include "bpfusion_queue.h"
+#define CUDA(x) do { cudaError_t e=(x); if(e!=cudaSuccess) { fprintf(stderr,"%s: %s\n",#x,cudaGetErrorString(e)); return (int)e; } } while(0)
+struct Step { cudaGraphExec_t graph; long long *output; };
+struct Request { unsigned k,prompt,gen,step,phase; };
+struct Control { unsigned seen,retired,reclaim,error,launches,max_active; Request requests[BF_LLM_SLOTS]; };
+
+// System-scope acquire protects host publication and forbids polling-load
+// elimination; a cache modifier alone does not give synchronization semantics.
+__device__ unsigned queue_load(const unsigned *p) {
+    unsigned value;asm volatile("ld.acquire.sys.global.u32 %0, [%1];" : "=r"(value) : "l"(p) : "memory");return value;
+}
+__device__ unsigned long long queue_load(const unsigned long long *p) {
+    unsigned long long value;asm volatile("ld.acquire.sys.global.u64 %0, [%1];" : "=l"(value) : "l"(p) : "memory");return value;
+}
+
+__global__ void dispatch(bf_page *p,Step *steps,long long **inputs,unsigned count,unsigned vocab,Control *c,bool once) {
+    if(threadIdx.x || blockIdx.x) return;
+    while(!queue_load((unsigned long long *)&p->stop_ns)) {
+        // A parent tail resumes only after all private child graphs finish.
+        for(unsigned i=0;i<BF_LLM_SLOTS;i++) {
+            Request *r=&c->requests[i];
+            if(r->phase!=1) continue;
+            unsigned bank=once ? 0 : i;
+            unsigned token=(unsigned)*steps[bank*count+r->step].output;
+            bf_llm_slot *slot=&p->llm[i];
+            __stcg(&slot->tok_out[r->k],token);__threadfence_system();__stcg(&slot->produced,r->k+1);
+            if(++r->k==r->gen) r->phase=2;
+            else { inputs[bank][0]=token;r->step=BF_LLM_MAX_TOK+r->prompt+r->k-1; }
+        }
+        // The head-indexed ring must reclaim in admission order. Hold final
+        // tokens until the previous DONE was reclaimed by kernel TX. A reused
+        // WRITING/PENDING slot also proves that its old ownership was released.
+        if(c->reclaim && queue_load(&p->llm[(c->retired-1)%BF_LLM_SLOTS].state)!=BF_DONE) c->reclaim=0;
+        unsigned idx=c->retired%BF_LLM_SLOTS;
+        if(!c->reclaim && c->retired!=c->seen && c->requests[idx].phase==2) {
+            __threadfence_system();__stcg(&p->llm[idx].state,(unsigned)BF_DONE);
+            c->requests[idx].phase=0;c->retired++;c->reclaim=1;
+            if(once) return;
+        }
+        // Admission remains sequential; computation uses each physical slot's
+        // private KV/input/output bank. No producer or page ABI change.
+        while((!once || c->seen==c->retired) && queue_load(&p->llm_head)!=c->seen) {
+            idx=c->seen%BF_LLM_SLOTS;
+            bf_llm_slot *slot=&p->llm[idx];
+            if(c->requests[idx].phase || queue_load(&slot->state)!=BF_PENDING) break;
+            unsigned bank=once ? 0 : idx;
+            unsigned np=__ldcg(&slot->n_prompt),ng=__ldcg(&slot->n_gen);
+            bool bad=!np || np>BF_LLM_MAX_TOK || !ng || ng>BF_LLM_MAX_TOK;
+            for(unsigned j=0;j<np && j<BF_LLM_MAX_TOK;j++) {
+                unsigned token=__ldcg(&slot->tok_in[j]);
+                if(token>=vocab) bad=true;
+                inputs[bank][j]=token;
+            }
+            unsigned short flags=__ldcg(&slot->pad);
+            __threadfence_system();
+            __stcg(&slot->pad,(unsigned short)((flags&~BF_LLM_VALIDATING)|(bad ? BF_LLM_REJECTED : 0)));
+            c->requests[idx]={0,np,ng,np,bad ? 2u : 3u};c->seen++;
+            if(once) break;
+        }
+        unsigned active=0;
+        for(unsigned i=0;i<BF_LLM_SLOTS;i++) {
+            Request *r=&c->requests[i];
+            if(r->phase!=1 && r->phase!=3) continue;
+            unsigned bank=once ? 0 : i;
+            cudaError_t e=cudaGraphLaunch(steps[bank*count+r->step].graph,cudaStreamGraphFireAndForget);
+            if(e!=cudaSuccess) { c->error=e;return; }
+            r->phase=1;c->launches++;active++;
+        }
+        if(active) {
+            if(active>c->max_active) c->max_active=active;
+            cudaError_t e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
+            if(e!=cudaSuccess) c->error=e;
+            return;
+        }
+        // Idle, rejection and TX reclamation waits stay on the GPU.
+    }
+}
+extern "C" unsigned max_tokens() { return BF_LLM_MAX_TOK; }
+extern "C" unsigned max_requests() {
+#ifdef BF_HOST_LAUNCH
+    return 1;
+#else
+    return BF_LLM_SLOTS;
+#endif
+}
+static volatile sig_atomic_t stopped=0;
+static void stop_signal(int) { stopped=1; }
+extern "C" int serve(const unsigned long long *graphs,const unsigned long long *outputs,unsigned count,const unsigned long long *input_ptrs,unsigned vocab,unsigned layers,unsigned h,unsigned seconds) {
+    unsigned banks=max_requests(),size=count*banks;
+    std::vector<Step> host(size);
+    for(unsigned i=0;i<size;i++) {
+        if(i%count==0) continue;
+        CUDA(cudaGraphInstantiate(&host[i].graph,(cudaGraph_t)graphs[i],cudaGraphInstantiateFlagDeviceLaunch));
+        CUDA(cudaGraphUpload(host[i].graph,0));host[i].output=(long long *)outputs[i];
+    }
+    Step *steps;CUDA(cudaMalloc(&steps,size*sizeof(Step)));CUDA(cudaMemcpy(steps,host.data(),size*sizeof(Step),cudaMemcpyHostToDevice));
+    Control *control;CUDA(cudaMalloc(&control,sizeof(Control)));CUDA(cudaMemset(control,0,sizeof(Control)));
+    int fd=bpf_obj_get("/sys/fs/bpf/bpfusion_ctl");if(fd<0) { perror("bpf_obj_get");return 1; }
+    bf_page *page=(bf_page *)mmap(nullptr,BF_PAGE_MMAP_BYTES,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
+    if(page==MAP_FAILED) { perror("mmap");return 1; }
+    CUDA(cudaHostRegister(page,BF_PAGE_MMAP_BYTES,cudaHostRegisterMapped));
+    bf_page *device;CUDA(cudaHostGetDevicePointer((void **)&device,page,0));
+    int listener=socket(AF_INET,SOCK_STREAM,0),yes=1;setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));
+    if(setsockopt(listener,IPPROTO_TCP,TCP_NODELAY,&yes,sizeof(yes))) { perror("TCP_NODELAY");return 1; }
+    sockaddr_in addr={};addr.sin_family=AF_INET;addr.sin_port=htons(BF_LLM_TCP_PORT);addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
+    if(bind(listener,(sockaddr *)&addr,sizeof(addr)) || listen(listener,SOMAXCONN)) { perror("listen");return 1; }
+    __atomic_store_n(&page->stop_ns,0,__ATOMIC_RELEASE);
+    long long **inputs;CUDA(cudaMalloc(&inputs,banks*sizeof(long long *)));
+    CUDA(cudaMemcpy(inputs,input_ptrs,banks*sizeof(long long *),cudaMemcpyHostToDevice));
+#ifdef BF_HOST_LAUNCH
+    bool once=true;const char *mode="host-launch";
+#else
+    bool once=false;const char *mode="resident";
+#endif
+    void *args[]={&device,&steps,&inputs,&count,&vocab,&control,&once};
+    cudaKernelNodeParams params={};params.func=(void *)dispatch;params.gridDim=dim3(1);params.blockDim=dim3(32);params.kernelParams=args;
+    cudaGraph_t graph;CUDA(cudaGraphCreate(&graph,0));cudaGraphNode_t node;CUDA(cudaGraphAddKernelNode(&node,graph,nullptr,0,&params));
+    cudaGraphExec_t parent;CUDA(cudaGraphInstantiate(&parent,graph,cudaGraphInstantiateFlagDeviceLaunch));CUDA(cudaGraphUpload(parent,0));CUDA(cudaDeviceSynchronize());
+    int module=open("module/bfusion_tx.ko",O_RDONLY|O_CLOEXEC);if(module<0) { perror("module open");return 1; }
+    char params_module[80];snprintf(params_module,sizeof(params_module),"map_fd=%d listen_fd=%d",fd,listener);
+    if(syscall(SYS_finit_module,module,params_module,0)) { perror("finit_module");return 1; }
+    close(module);close(fd);
+    signal(SIGTERM,stop_signal);signal(SIGINT,stop_signal);
+    cudaError_t launched=cudaSuccess;unsigned launches=0;
+    if(!once) { launched=cudaGraphLaunch(parent,0);launches++; }
+    if(launched==cudaSuccess) {
+        printf("resident Qwen ready: %u layers h=%u vocab=%u; device-tail graphs, dispatch=%s\n",layers,h,vocab,mode);fflush(stdout);
+        if(once) {
+            signal(SIGALRM,stop_signal);alarm(seconds);unsigned seen=0;
+            while(!stopped) {
+                if(__atomic_load_n(&page->llm_head,__ATOMIC_ACQUIRE)==seen ||
+                   __atomic_load_n(&page->llm[seen%BF_LLM_SLOTS].state,__ATOMIC_ACQUIRE)!=BF_PENDING) continue;
+                launched=cudaGraphLaunch(parent,0);launches++;
+                if(launched!=cudaSuccess) break;
+                launched=cudaDeviceSynchronize();if(launched!=cudaSuccess) break;
+                seen++;
+            }
+            alarm(0);
+        } else sleep(seconds);
+    }
+    __atomic_store_n(&page->stop_ns,1,__ATOMIC_RELEASE);
+    cudaError_t finished=cudaDeviceSynchronize();
+    if(syscall(SYS_delete_module,"bfusion_tx",0)) { perror("delete_module");return 1; }
+    close(listener);CUDA(launched);CUDA(finished);
+    Control result;CUDA(cudaMemcpy(&result,control,sizeof(result),cudaMemcpyDeviceToHost));
+    CUDA(cudaHostUnregister(page));munmap(page,BF_PAGE_MMAP_BYTES);
+    CUDA(cudaGraphExecDestroy(parent));CUDA(cudaGraphDestroy(graph));CUDA(cudaFree(steps));CUDA(cudaFree(inputs));CUDA(cudaFree(control));
+    for(unsigned i=0;i<size;i++) if(i%count) CUDA(cudaGraphExecDestroy(host[i].graph));
+    printf("resident Qwen stopped: dispatch=%s launches=%u device_graph_launches=%u graph_error=%u banks=%u max_active=%u\n",mode,launches,result.launches,result.error,banks,result.max_active);fflush(stdout);
+    return result.error;
+}
+
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include /tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph.cu -o /tmp/bpfusion-queue-banks-ubd0k2i9/banks/qwen_graph.so -lbpf -lelf -lz -lpthread
+
+QUALIFICATION_BUILD build.txt
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o /tmp/bpfusion-queue-banks-ubd0k2i9/qwen_graph.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/qwen_graph.py /tmp/bpfusion-queue-banks-ubd0k2i9/qwen_graph
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o /tmp/bpfusion-queue-banks-ubd0k2i9/qwen_graph_host_launch.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/qwen_graph.py /tmp/bpfusion-queue-banks-ubd0k2i9/qwen_graph_host_launch
+
+QUALIFICATION_BUILD default-build.txt
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o build/qwen_graph.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o build/qwen_graph_host_launch.so -lbpf -lelf -lz -lpthread
+
+QUALIFICATION_BUILD corrected-build.txt
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o build/qwen_graph.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o build/qwen_graph_host_launch.so -lbpf -lelf -lz -lpthread
+
+FINAL_ADAPTER_BEFORE_COLLECTION (ordinary metric label; no calculation change)
+#!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+"""Matched real-Qwen dispatch ablation on the existing token HTTP path."""
+import argparse
+from concurrent.futures import ThreadPoolExecutor
+import json
+import math
+import os
+from pathlib import Path
+import platform
+import socket
+import statistics
+import struct
+import subprocess
+import sys
+import tempfile
+import threading
+import time
+
+sys.path.insert(0,"/workspaces/repository/tests")
+from resident_qwen import oracle_cases
+
+
+def command(*args):
+    return subprocess.check_output(args,text=True,stderr=subprocess.STDOUT).strip()
+
+
+def cpu_seconds(pid):
+    fields=Path(f"/proc/{pid}/stat").read_text().rsplit(") ",1)[1].split()
+    return (int(fields[11])+int(fields[12]))/os.sysconf("SC_CLK_TCK")
+
+
+def gpu_state():
+    return command("nvidia-smi","--query-gpu=timestamp,name,clocks.sm,clocks.mem,temperature.gpu,power.draw,utilization.gpu","--format=csv,noheader,nounits")
+
+
+def request(client,ids,expected):
+    body=struct.pack("<IIIIQ",0x514c4d51,len(ids),len(expected),0,time.monotonic_ns())+struct.pack(f"<{len(ids)}I",*ids)
+    wire=f"POST /generate HTTP/1.1\r\nHost: localhost\r\nContent-Length: {len(body)}\r\n\r\n".encode()+body
+    start=time.monotonic_ns()
+    client.sendall(wire)
+    header=b""; data=b""; arrivals=[]
+    while len(data)<4*len(expected):
+        chunk=client.recv(4096)
+        arrived=time.monotonic_ns()
+        assert chunk,"short reply"
+        if header is not None:
+            header+=chunk
+            if b"\r\n\r\n" not in header: continue
+            head,chunk=header.split(b"\r\n\r\n",1)
+            assert head.startswith(b"HTTP/1.1 200 OK\r\n"),head
+            assert f"Content-Length: {4*len(expected)}".encode() in head,head
+            header=None
+        data+=chunk
+        arrivals.extend([arrived]*((len(data)//4)-len(arrivals)))
+    assert len(data)==4*len(expected),data
+    actual=list(struct.unpack(f"<{len(expected)}I",data))
+    assert actual==expected,(ids,actual,expected)
+    return {"start_ns":start,"arrival_ns":arrivals,"tokens":actual,
+            "ttft_ms":(arrivals[0]-start)/1e6,
+            "latency_ms":(arrivals[-1]-start)/1e6,
+            "tpot_ms":(arrivals[-1]-arrivals[0])/(len(expected)-1)/1e6 if len(expected)>1 else None}
+
+
+def connect():
+    client=socket.create_connection(("127.0.0.1",39403),timeout=60)
+    client.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
+    return client
+
+
+def cell(pid,cases,gen,concurrency,count,rows):
+    # Connections and thread creation precede both the timer and CPU window.
+    barrier=threading.Barrier(concurrency+1)
+    ready=threading.Barrier(concurrency+1)
+    def worker(worker_id):
+        with connect() as client:
+            ready.wait(timeout=60)
+            barrier.wait(timeout=60)
+            for index in range(worker_id,count,concurrency):
+                case=index%len(cases); ids,expected=cases[case]
+                row=request(client,ids,expected[:gen]); row.update(index=index,case=case)
+                rows.append(row)
+    with ThreadPoolExecutor(max_workers=concurrency) as pool:
+        futures=[pool.submit(worker,i) for i in range(concurrency)]
+        ready.wait(timeout=60)
+        before=cpu_seconds(pid); start=time.monotonic_ns()
+        barrier.wait(timeout=60)
+        for future in futures: future.result()
+        finish=time.monotonic_ns(); after=cpu_seconds(pid)
+    first=min(row["start_ns"] for row in rows)
+    last=max(row["arrival_ns"][-1] for row in rows)
+    return {
+        "window_ns":finish-start,"executor_cpu_s":after-before,
+        "output_tokens_per_s":count*gen/((last-first)/1e9)}
+
+
+def analyze(path):
+    records=[json.loads(line) for line in Path(path).read_text().splitlines()]
+    meta=next(row for row in records if row["event"]=="metadata")
+    cells=[row for row in records if row["event"]=="cell"]
+    samples=[row for row in records if row["event"]=="request"]
+    expected_cells=meta["repetitions"]*2*len(meta["matrix"])
+    assert len(cells)==expected_cells,(len(cells),expected_cells)
+    assert len(samples)==expected_cells*meta["requests_per_cell"]
+    assert len([row for row in records if row["event"]=="executor"])==2*meta["repetitions"]
+    for row in samples:
+        assert row["tokens"]==meta["cases"][row["case"]][1][:row["gen"]],row
+        assert row["ttft_ms"]==(row["arrival_ns"][0]-row["start_ns"])/1e6,row
+    for block in cells:
+        selected=[row for row in samples if all(row[key]==block[key] for key in ("pair","mode","gen","concurrency"))]
+        assert sorted(row["index"] for row in selected)==list(range(meta["requests_per_cell"])),block
+    def percentile(values,q):
+        ordered=sorted(values); pos=(len(ordered)-1)*q
+        low=math.floor(pos); high=math.ceil(pos)
+        return ordered[low]+(ordered[high]-ordered[low])*(pos-low)
+    for gen,concurrency in meta["matrix"]:
+        pair_means={}
+        for mode in ("serial","banks"):
+            selected=[row for row in samples if row["mode"]==mode and row["gen"]==gen and row["concurrency"]==concurrency]
+            selected_cells=[row for row in cells if row["mode"]==mode and row["gen"]==gen and row["concurrency"]==concurrency]
+            ttft=[row["ttft_ms"] for row in selected]
+            tpot=[row["tpot_ms"] for row in selected if row["tpot_ms"] is not None]
+            pair_means[mode]=[statistics.mean(row["ttft_ms"] for row in selected if row["pair"]==pair) for pair in range(meta["repetitions"])]
+            print(json.dumps({"mode":mode,"gen":gen,"concurrency":concurrency,"requests":len(selected),
+                "ttft_mean_ms":statistics.mean(ttft),"ttft_p50_ms":percentile(ttft,.5),"ttft_p99_ms":percentile(ttft,.99),
+                "tpot_mean_ms":statistics.mean(tpot) if tpot else None,
+                "executor_cpu_s_per_cell":[row["executor_cpu_s"] for row in selected_cells],
+                "tokens_per_s":[row["output_tokens_per_s"] for row in selected_cells]}))
+        differences=[serial-banks for serial,banks in zip(pair_means["serial"],pair_means["banks"])]
+        mean=statistics.mean(differences)
+        # Five independent paired process blocks; Student t, df=4, two-sided 95%.
+        margin=2.776445105*statistics.stdev(differences)/math.sqrt(5) if len(differences)==5 else None
+        print(json.dumps({"gen":gen,"concurrency":concurrency,"paired_serial_minus_banks_ttft_ms":differences,
+            "difference_mean_ms":mean,"difference_t95_ms":[mean-margin,mean+margin] if margin is not None else None}))
+
+    for gen,concurrency in meta["matrix"]:
+        if gen==1:continue
+        for metric in ("tpot_ms","output_tokens_per_s"):
+            blocks={}
+            for mode in ("serial","banks"):
+                blocks[mode]=[]
+                for pair in range(meta["repetitions"]):
+                    chosen=[row for row in (samples if metric=="tpot_ms" else cells) if row["pair"]==pair and row["mode"]==mode and row["gen"]==gen and row["concurrency"]==concurrency]
+                    blocks[mode].append(statistics.mean(row[metric] for row in chosen))
+            sign=1 if metric=="tpot_ms" else -1
+            gains=[sign*(a-b) for a,b in zip(blocks["serial"],blocks["banks"])]
+            mean=statistics.mean(gains)
+            margin=2.776445105*statistics.stdev(gains)/math.sqrt(5) if len(gains)==5 else None
+            print(json.dumps({"metric":metric,"gen":gen,"concurrency":concurrency,"serial_blocks":blocks["serial"],"banks_blocks":blocks["banks"],"positive_means_improvement":True,"paired_gain":gains,"mean_gain":mean,"gain_t95":[mean-margin,mean+margin] if margin is not None else None}))
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output",required=True)
+    parser.add_argument("--preflight",action="store_true")
+    parser.add_argument("--gen",type=int,default=8,choices=range(2,65),help="long output length; paired with one-token requests")
+    parser.add_argument("--analyze",action="store_true")
+    parser.add_argument("--resident-executor",default="./build/qwen")
+    parser.add_argument("--host-executor",default="./build/qwen_host_launch")
+    args=parser.parse_args()
+    if args.analyze: analyze(args.output); return
+    cases,_=oracle_cases(args.gen)
+    matrix=[(1,1)] if args.preflight else [(1,1),(args.gen,1),(1,8),(args.gen,8)]
+    repetitions=1 if args.preflight else 5
+    count=4 if args.preflight else 64
+    output=Path(args.output); output.parent.mkdir(parents=True,exist_ok=True)
+    with output.open("x") as raw:
+        def emit(event,**values):
+            raw.write(json.dumps({"event":event,**values})+"\n"); raw.flush()
+        import torch, transformers
+        emit("metadata",utc=time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),commit=command("git","rev-parse","HEAD"),
+             executors={"serial":args.resident_executor,"banks":args.host_executor},
+             kernel=platform.release(),torch=torch.__version__,transformers=transformers.__version__,
+             nvcc=command("/usr/local/cuda/bin/nvcc","--version"),gpu=gpu_state(),cpu_tick_hz=os.sysconf("SC_CLK_TCK"),
+             cases=cases,matrix=matrix,repetitions=repetitions,requests_per_cell=count,
+             timing="client monotonic; tokens completed in one recv share arrival timestamp; process CPU excludes kernel TX/softirq")
+        for pair in range(repetitions):
+            modes=("serial","banks") if pair%2==0 else ("banks","serial")
+            cells=matrix[pair%len(matrix):]+matrix[:pair%len(matrix)]
+            for mode in modes:
+                executor=None
+                with tempfile.TemporaryDirectory(prefix="bpfusion-dispatch-") as tmp:
+                    logpath=Path(tmp)/"executor.log"
+                    try:
+                        command("./build/bpfusion_load","stream-attach")
+                        binary=args.resident_executor if mode=="serial" else args.host_executor
+                        with logpath.open("w") as log:
+                            executor=subprocess.Popen([binary,"/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","300"],stdout=log,stderr=subprocess.STDOUT)
+                        started=time.monotonic()
+                        while "resident Qwen ready" not in logpath.read_text():
+                            assert executor.poll() is None,logpath.read_text()
+                            time.sleep(.05)
+                        bootstrap_s=time.monotonic()-started
+                        with connect() as client:
+                            for gen in (1,args.gen):
+                                for ids,expected in cases: request(client,ids,expected[:gen])
+                        before=cpu_seconds(executor.pid); idle_start=time.monotonic_ns(); time.sleep(1)
+                        emit("idle",pair=pair,mode=mode,window_ns=time.monotonic_ns()-idle_start,executor_cpu_s=cpu_seconds(executor.pid)-before)
+                        for gen,concurrency in cells:
+                            gpu_before=gpu_state()
+                            rows=[]
+                            try:
+                                summary=cell(executor.pid,cases,gen,concurrency,count,rows)
+                            finally:
+                                for row in sorted(rows,key=lambda row:row["index"]):
+                                    emit("request",pair=pair,mode=mode,gen=gen,concurrency=concurrency,**row)
+                            gpu_after=gpu_state()
+                            emit("cell",pair=pair,mode=mode,gen=gen,concurrency=concurrency,requests=count,
+                                 gpu_before=gpu_before,gpu_after=gpu_after,**summary)
+                            print(f"pair={pair} mode={mode} gen={gen} c={concurrency} requests={count} exact_tokens={count*gen} cpu_s={summary['executor_cpu_s']:.3f}",flush=True)
+                        executor.terminate(); assert executor.wait(timeout=60)==0,logpath.read_text()
+                        log=logpath.read_text(); launches=1
+                        assert f"dispatch=resident launches={launches}" in log,log
+                        emit("executor",pair=pair,mode=mode,bootstrap_s=bootstrap_s,log=log,stats=command("./build/bpfusion_load","stats"))
+                    except Exception as error:
+                        emit("failure",pair=pair,mode=mode,error=repr(error),
+                             log=logpath.read_text() if logpath.exists() else "",
+                             stats=command("./build/bpfusion_load","stats"))
+                        raise
+                    finally:
+                        if executor is not None and executor.poll() is None:
+                            executor.terminate(); executor.wait(timeout=60)
+                        command("./build/bpfusion_load","stream-detach")
+                        command("./build/bpfusion_load","detach","lo")
+                        for name in ("bpfusion_ctl","bpfusion_stats","bpfusion_db"):
+                            Path("/sys/fs/bpf",name).unlink(missing_ok=True)
+    analyze(output)
+
+
+if __name__=="__main__": main()
