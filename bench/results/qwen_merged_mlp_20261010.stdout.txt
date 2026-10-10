@@ -1,0 +1,62 @@
+COMMAND ["python3", "/tmp/bpfusion-qwen-pointwise-5mxeys8g/merged_mlp_bench.py", "--gen", "64", "--output", "bench/results/qwen_merged_mlp_20261010.jsonl", "--resident-executor", "/tmp/bpfusion-qwen-pointwise-5mxeys8g/merged_perf_baseline/qwen_graph", "--host-executor", "/tmp/bpfusion-qwen-pointwise-5mxeys8g/merged_perf_candidate/qwen_graph"]
+UTC 2026-10-10T21:30:12.228913+00:00
+SOURCE_REFERENCE bench/results/qwen_merged_mlp_adapter_20261010.txt
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 5078.34it/s]
+pair=0 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=0 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=0 mode=merged_mlp gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=merged_mlp gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=0 mode=merged_mlp gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=merged_mlp gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=1 mode=merged_mlp gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.020
+pair=1 mode=merged_mlp gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=1 mode=merged_mlp gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=1 mode=merged_mlp gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=1 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.020
+pair=1 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=1 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=1 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=2 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=2 mode=merged_mlp gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=merged_mlp gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=2 mode=merged_mlp gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=merged_mlp gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=merged_mlp gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=merged_mlp gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=3 mode=merged_mlp gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=merged_mlp gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=3 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=3 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=3 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=baseline gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=baseline gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=4 mode=baseline gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=baseline gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=4 mode=merged_mlp gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=merged_mlp gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=4 mode=merged_mlp gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=merged_mlp gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+{"mode": "baseline", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 4.04069518125, "ttft_p50_ms": 4.3511265, "ttft_p99_ms": 4.56766895, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [244.357493393967, 245.53298860578462, 242.54558136371924, 244.77333209233254, 256.82245645286326]}
+{"mode": "merged_mlp", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 4.068045734375, "ttft_p50_ms": 4.3459605, "ttft_p99_ms": 4.54359098, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [245.28542066921054, 243.54984122681412, 244.90372191819128, 245.53443925702211, 245.5634624773581]}
+{"gen": 1, "concurrency": 1, "paired_baseline_minus_merged_mlp_ttft_ms": [0.01448782812500049, -0.035406499999999674, 0.04233273437499996, 0.00872754687499988, -0.16689437500000004], "difference_mean_ms": -0.027350553124999878, "difference_t95_ms": [-0.13020129387017443, 0.07550018762017466]}
+{"mode": "baseline", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 4.18608463125, "ttft_p50_ms": 4.453511, "ttft_p99_ms": 4.65408464, "tpot_mean_ms": 3.4761614529761906, "executor_cpu_s_per_cell": [0.010000000000005116, 0.01999999999999602, 0.00999999999999801, 0.0, 0.00999999999999801], "tokens_per_s": [287.66688366125555, 285.0669556872189, 285.37403063067103, 287.0841290834102, 288.3590404708045]}
+{"mode": "merged_mlp", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 4.21585064375, "ttft_p50_ms": 4.443046000000001, "ttft_p99_ms": 4.64245733, "tpot_mean_ms": 3.336240932043651, "executor_cpu_s_per_cell": [0.00999999999999801, 0.020000000000003126, 0.010000000000005116, 0.00999999999999801, 0.00999999999999801], "tokens_per_s": [298.51539097914826, 297.6262356640835, 297.30638171672337, 297.88910351464256, 300.93904276106844]}
+{"gen": 64, "concurrency": 1, "paired_baseline_minus_merged_mlp_ttft_ms": [-0.15989849999999972, 0.12579671874999931, -0.023654468750000213, 0.04686593749999979, -0.13793975000000014], "difference_mean_ms": -0.029766012500000195, "difference_t95_ms": [-0.18024010582904862, 0.12070808082904824]}
+{"mode": "baseline", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 29.11810465625, "ttft_p50_ms": 31.665587000000002, "ttft_p99_ms": 36.075430579999995, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [270.1856375858618, 266.43216639541373, 273.052099227952, 276.7764979526799, 275.68734498079056]}
+{"mode": "merged_mlp", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 28.526519359375, "ttft_p50_ms": 31.151563000000003, "ttft_p99_ms": 33.53080887, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [277.64677405184915, 274.17763267954734, 280.85990931094966, 280.6911742984565, 281.64521768906764]}
+{"gen": 1, "concurrency": 8, "paired_baseline_minus_merged_mlp_ttft_ms": [0.6741168593750011, 0.7460131406250028, 0.8091918593750016, 0.19871710937499998, 0.5298875156249991], "difference_mean_ms": 0.5915852968750009, "difference_t95_ms": [0.28988134486453193, 0.89328924888547]}
+{"mode": "baseline", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 20.43383838125, "ttft_p50_ms": 21.816009, "ttft_p99_ms": 24.939961920000002, "tpot_mean_ms": 11.435396988244047, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.010000000000005116, 0.00999999999999801], "tokens_per_s": [691.2645563457977, 686.2451726388255, 687.8534428635577, 686.7552786399102, 691.5719050760006]}
+{"mode": "merged_mlp", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 20.672686359375, "ttft_p50_ms": 22.073607, "ttft_p99_ms": 25.07910078, "tpot_mean_ms": 11.514194129017858, "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.00999999999999801, 0.010000000000005116], "tokens_per_s": [690.7718071568535, 684.8339018484087, 681.1858563743533, 683.1663338400709, 679.8180690866444]}
+{"gen": 64, "concurrency": 8, "paired_baseline_minus_merged_mlp_ttft_ms": [-0.4320190468749985, 0.36571164062500117, -0.4560659062500001, -0.2172642031250014, -0.45460237500000034], "difference_mean_ms": -0.23884797812499983, "difference_t95_ms": [-0.6765265422331017, 0.19883058598310208]}
+{"metric": "tpot_ms", "gen": 64, "concurrency": 1, "baseline_blocks": [3.464160628720238, 3.495784759424603, 3.4928940555555554, 3.471210700892857, 3.4567571202876985], "merged_mlp_blocks": [3.333249571924603, 3.347403843998016, 3.3496304305555555, 3.3436071495535713, 3.3073136641865077], "positive_means_improvement": true, "paired_gain": [0.13091105679563508, 0.14838091542658738, 0.1432636249999999, 0.12760355133928591, 0.1494434561011908], "mean_gain": 0.13992052093253982, "gain_t95": [0.12740618781585822, 0.1524348540492214]}
+{"metric": "output_tokens_per_s", "gen": 64, "concurrency": 1, "baseline_blocks": [287.66688366125555, 285.0669556872189, 285.37403063067103, 287.0841290834102, 288.3590404708045], "merged_mlp_blocks": [298.51539097914826, 297.6262356640835, 297.30638171672337, 297.88910351464256, 300.93904276106844], "positive_means_improvement": true, "paired_gain": [10.848507317892711, 12.559279976864559, 11.932351086052336, 10.804974431232381, 12.580002290263963], "mean_gain": 11.74502302046119, "gain_t95": [10.654984814691531, 12.835061226230849]}
+{"metric": "tpot_ms", "gen": 64, "concurrency": 8, "baseline_blocks": [11.390972095982143, 11.477944973214285, 11.448684945188491, 11.471053629712301, 11.388329297123017], "merged_mlp_blocks": [11.392388280505953, 11.507204824156746, 11.557347144345238, 11.530593049603175, 11.583437346478174], "positive_means_improvement": true, "paired_gain": [-0.0014161845238103155, -0.029259850942461085, -0.10866219915674691, -0.05953941989087319, -0.19510804935515758], "mean_gain": -0.07879714077380981, "gain_t95": [-0.1734262033812669, 0.01583192183364729]}
+{"metric": "output_tokens_per_s", "gen": 64, "concurrency": 8, "baseline_blocks": [691.2645563457977, 686.2451726388255, 687.8534428635577, 686.7552786399102, 691.5719050760006], "merged_mlp_blocks": [690.7718071568535, 684.8339018484087, 681.1858563743533, 683.1663338400709, 679.8180690866444], "positive_means_improvement": true, "paired_gain": [-0.4927491889442308, -1.4112707904167792, -6.667586489204382, -3.5889447998392825, -11.753835989356162], "mean_gain": -4.782877451552167, "gain_t95": [-10.450662134029066, 0.8849072309247328]}
+
+EXIT 0

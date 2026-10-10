@@ -596,3 +596,243 @@ The completed comparison supports retaining this reduction-preserving boundary
 for this shared-GPU workload. The next useful uncertainty is actual concurrent
 model-kernel execution and the costs limiting batching/individual decode;
 profile event reduction and max_active8 alone do not answer it.
+
+## Next computation candidate: merged MLP gate/up projection
+
+The complete device-graph diagnostic in finding0023 observes cross-graph
+model-kernel activity overlap and attributes most summed kernel duration
+to GEMV name groups. Those names do not map individual shapes and do not
+prove memory saturation. The largest directly runnable next computation
+change is to combine the gate/up MLP projections,which read the same
+input and have equal output sizes,into one ordinary linear operation.
+Concatenate their weight rows once after model loading,split the projected
+output,then retain the original SiLU,multiply and down projection.
+The mathematical expression is unchanged,but the larger linear shape can
+change numerical reduction/algorithm selection; exact qualification is
+necessary. No new precision setting or relaxed oracle is permitted.
+
+No paper RQ/thesis exists. This is a supporting engineering comparison for
+the user's throughput and latency goal: can this merged projection preserve
+the independent eager-fp16 oracle and lower client TPOT/increase total output
+TPS versus the current retained computation? It tests a new linear-shape
+change,not a repeat of the closed RoPE/RMSNorm or dispatch comparisons.
+True tensor batching previously failed exact qualification,and there is no
+validated repair for it yet. This candidate changes a dominant operation
+class with nine temporary source lines,without a native/module/queue change
+or a new persistent mode. If it diverges,retain the complete qualification
+failure and discard the candidate without collecting a misleading speed
+comparison. If it qualifies but performance is inconclusive or worsens,
+report all cells/costs and retain current computation.
+
+Baseline is current production atc17c440 (same computation asfc58faa).
+Candidate is the frozen source at
+/tmp/bpfusion-qwen-pointwise-5mxeys8g/merged_mlp/qwen_graph:
+the baseline plus nine bootstrap/forward lines. The gate projection receives
+the concatenated gate/up weights and doubled output metadata; the original
+up module is removed after concatenation,so model weights are not retained
+twice. The capture/graph-bank/KV/math outside that linear shape,weights file,
+transport,strict oracle and lifecycle stay unchanged. The source/model
+objects remain owned through native shutdown. Actual HF Linear continues
+to choose its default algorithm; no compiler/precision/tuning fallback is
+introduced. This is a current-practice component comparator,not an external
+optimized-serving baseline.
+
+Qualification folds into this comparison's preflight. First run the existing
+native graph-bank probe using qualify_merged_mlp.py with two private banks:
+all ten gen64 fixed correctness/prompt-edge cases,one mixed France/greeting
+group and one mixed-prompt-length group,12 groups/1,536 tokens. It retains
+every failing row; marker completion is not a correctness pass. Independent
+oracle_cases(64,True) runs before transformed model capture. The probe is
+GPU computation qualification only,not a serving result. If all pass,run
+the documented tests/resident_qwen.py --gen64 --prefill-edges against the
+default-native candidate and the existing serial host-control entrypoint:
+335 valid requests/20,432 exact tokens/259 rejects per mode,empty connections,
+mixed lengths,wrap/reuse,pipeline,half-close,all-thread network trace and
+native counters/cleanup. No correctness or request/shutdown timeout changes.
+Both modes use the unchanged built native libraries.
+
+After qualification,real TCP comparison preflight and full run reuse the
+completed serving driver's request/connect/cell/oracle protocol. Frozen
+merged_perf_baseline and merged_perf_candidate Python sources use the same
+existing bank-comparison native library with common temporary listener
+TCP_NODELAY. Both baseline and candidate keep the retained RoPE/RMSNorm
+fusion. This transport setting is test-local,not a production change.
+Real preflight is gen1/client1/four requests per engine,with inherited eight
+warmups; readiness follows ready or process exit. Full matrix is gen1/gen64,
+clients1/8,five paired process blocks with alternating engine order and
+rotating cell order,64 requests per cell,four prompts16 times each,40 cells,
+2,560 requests,83,200 measured tokens,ten independent starts/shutdowns.
+Keep every block and failed run; no post-hoc exclusions. Bootstrap and
+one-second idle samples are recorded separately,not in steady-state timing.
+
+Primary metrics use the existing
+[NVIDIA serving definitions](https://docs.nvidia.com/nim/benchmarking/llm/metrics):
+gen64 client TPOT=(last-first)/63 and total output TPS over first-send/
+last-arrival at clients1 and8. Report all five paired block effects and
+nominal two-sided t95 intervals,df4,baseline-minus-candidate for latency and
+candidate-minus-baseline for TPS. Judge the four primary effects separately;
+a mixed outcome stays mixed. TTFT,completion,gen1,pooled descriptive tails,
+bootstrap,executor-only CPU and available memory/environment observations
+are costs/diagnostics,not substitutes for correctness or silent vetoes.
+This tests a local component/workload effect,not isolated speed,energy,
+whole-host CPU,open-load capacity,physical NIC or external serving superiority.
+
+Commands in the original Workspace use the inherited default cache:
+
+    HF_HOME=/workspaces/.cache/huggingface python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/qualify_merged_mlp.py 2
+    HF_HOME=/workspaces/.cache/huggingface python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/merged_mlp/qwen_graph
+    HF_HOME=/workspaces/.cache/huggingface python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/merged_mlp_host/qwen_graph_host_launch
+    HF_HOME=/workspaces/.cache/huggingface python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/merged_mlp_bench.py --gen 64 --output bench/results/qwen_merged_mlp_20261010.jsonl --resident-executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/merged_perf_baseline/qwen_graph --host-executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/merged_perf_candidate/qwen_graph
+
+Add --preflight with its own output to the last command for executability.
+Exact sources/commands and terminal raw are retained in cited artifacts.
+
+Shared RTX5090 residency and boot identity are recorded through the existing
+host diagnosis path. Preserve the other owner's SGLang workload. This
+candidate and its native probes run only in the original Workspace,never
+in a new deployment. Request/shutdown sixty-second handling stays fixed;
+normal cleanup removes this experiment's module/hooks/pins and restores
+FREE slots. At plan admission,source preparation was compile-only. Fresh plan and
+terminal result reviews apply; no production retention occurs before
+correctness and complete result review.
+
+Fresh independent read-only plan review admits this computation experiment
+with no scientific or executability blocker. It inspects source/native
+geometry and owner lifetimes,independent oracle,all12 qualification rows,
+the distinct eight-bank strict tests,both identical performance libraries,
+five-pair metrics/signs and shared-GPU limits. The larger linear shape
+remains numerically unproven. GPU probe EXIT0 alone is matrix completion;
+every row must match before proceeding. Production growth would be nine
+lines if correctness and the complete performance comparison support it;
+no production source change is retained at plan admission.
+
+The two-bank GPU qualification completes EXIT0 with all12 groups passing,
+1,536 exact tokens and no mismatch. Every native probe reports one host
+launch,128 model graphs and error0. The
+[complete qualification raw](../../bench/results/qwen_merged_mlp_gpu_qualification_20261010.txt)
+retains the independent oracle,all actual tokens and terminal status;
+[exact adapter/qualifier/driver](../../bench/results/qwen_merged_mlp_adapter_20261010.txt)
+is frozen before execution. This qualifies the linear-shape computation
+in the recorded groups,not eight-bank TCP serving or a speed improvement.
+
+Both default-native real TCP strict modes now terminate EXIT0:
+[resident raw](../../bench/results/qwen_merged_mlp_resident_correctness_20261010.txt)
+and [serial host-control raw](../../bench/results/qwen_merged_mlp_host_correctness_20261010.txt).
+Each passes335 valid requests/20,432 exact tokens/259 rejects,5,000 empty
+connections,mixed lengths/immediate reuse,ring wrap,pipeline/half-close,
+all-thread network tracing and cleanup. Resident counters are one host
+launch,eight banks/max_active8; host control is594 launches,one bank/
+max_active1. Both record20,432 model graphs,error0,594 publications,zero
+admission/registration errors and eight FREE slots. Builds use the documented
+make qwen-graph qwen-graph-control entrypoint with no native rebuild needed.
+This qualifies the integrated candidate,not a performance improvement.
+
+The real paired TCP preflight terminates EXIT0:
+[JSONL](../../bench/results/qwen_merged_mlp_preflight_20261010.jsonl)
+and [stdout](../../bench/results/qwen_merged_mlp_preflight_20261010.stdout.txt),
+15 records,eight exact measured gen1 requests,two normal executor shutdowns.
+Each engine records12 publications,264 model graphs,one host service launch,
+error0,eight banks/max_active1,eight FREE slots and cleanup. This establishes
+the actual comparison path only; its four-request timings are not a speed
+result. The admitted full40-cell comparison was then started on unchanged frozen
+sources,oracle,transport and request/shutdown handling.
+
+## Complete merged-projection comparison: mixed result
+
+The [full JSONL](../../bench/results/qwen_merged_mlp_20261010.jsonl)
+and [stdout](../../bench/results/qwen_merged_mlp_20261010.stdout.txt)
+terminate EXIT0 with2,621 records,all40 cells,2,560 measured requests,
+83,200 exact measured tokens and ten normal executor shutdowns.
+Every process records264 publications,8,580 model graphs,one host service
+launch,error0,eight banks/max_active8,zero admission/registration errors
+and eight final FREE slots. Every paired block is retained,with no failed
+full cell or post-hoc exclusions. Qualification and preflight dependencies
+above remain separately labeled.
+
+The [supplementary analysis](../../bench/results/qwen_merged_mlp_analysis_20261010.txt)
+retains the exact CPU analyzer and independently recomputes every token,
+arrival order,TTFT,completion,TPOT,cell first-send/last-arrival TPS,prompt/index
+balance,process order,counters and the nominal paired intervals below.
+Values are means of five block metrics; TPS is not a pooled rate.
+Positive gain means lower latency or higher TPS. Nominal t95,df4 intervals
+are conditional on this shared-GPU collection,with no familywise adjustment.
+
+| gen64 primary / clients | current mean | merged mean | paired gain | nominal t95 gain |
+|---|---:|---:|---:|---|
+| TPOT ms /1 | 3.476161 | 3.336241 | +0.139921 | [+0.127406,+0.152435] |
+| Output TPS /1 | 286.710208 | 298.455231 | +11.745023 | [+10.654985,+12.835061] |
+| TPOT ms /8 | 11.435397 | 11.514194 | -0.078797 | [-0.173426,+0.015832] |
+| Output TPS /8 | 688.738071 | 683.955194 | -4.782877 | [-10.450662,+0.884907] |
+
+Single-client gen64 TPOT falls about4.03% and TPS rises about4.10%,with
+all five paired effects positive and both intervals excluding zero.
+At eight clients,both primary mean effects are worse in all five pairs;
+their nominal intervals still cross zero. This is no detected eight-client
+benefit,not proof of equivalence or of a fixed regression magnitude.
+The mixed result does not support a general throughput/latency improvement.
+
+| paired block | clients1 TPOT gain ms | clients1 TPS gain | clients8 TPOT gain ms | clients8 TPS gain |
+|---:|---:|---:|---:|---:|
+| 0 | +0.130911 | +10.848507 | -0.001416 | -0.492749 |
+| 1 | +0.148381 | +12.559280 | -0.029260 | -1.411271 |
+| 2 | +0.143264 | +11.932351 | -0.108662 | -6.667586 |
+| 3 | +0.127604 | +10.804974 | -0.059539 | -3.588945 |
+| 4 | +0.149443 | +12.580002 | -0.195108 | -11.753836 |
+
+Single-client gen64 completion falls223.184256 ->214.399029ms,
+gain8.785227ms [7.966568,9.603886]. TTFT4.186085 ->4.215851ms is
+inconclusive,with gain interval[-0.180240,+0.120708].
+Eight-client completion740.863849 ->746.066916ms and TTFT20.433838
+->20.672686ms are also inconclusive; their gain intervals are
+[-11.368701,+0.962566] and[-0.676527,+0.198831].
+Gen1/client1 TPS246.806370 ->244.967377 and TTFT4.040695 ->4.068046ms
+are inconclusive. Gen1/client8 TPS272.426749 ->279.004142 and
+TTFT29.118105 ->28.526519ms improve locally,with gain intervals
+[4.505897,8.648887] and[0.289881,0.893289]. These one-token diagnostics
+do not replace the declared gen64 primary effects.
+
+Five warm/default-cache bootstrap durations average52.774309s current
+(range52.148424..53.707051) and53.378369s merged
+(range52.404482..55.576147). No startup benefit is established.
+Across twenty active cells per mode,executor CPU totals0.07s and0.08s,
+at100Hz/0.01s resolution; the five one-second idle samples are0.00s each.
+These coarse executor-only values establish neither total-host cost nor
+zero CPU/energy. No matched peak-memory delta was measured.
+
+[Host snapshots](../../bench/results/qwen_merged_mlp_environment_20261010.txt)
+before qualification,before full collection and after collection identify
+the same boot and untouched SGLang owner process with18,404MiB residency.
+All per-cell endpoints remain in JSONL. Residency/endpoints do not establish
+constant within-window co-tenant activity or isolate the component effect.
+Post-run inspection finds the module/pins absent; no other owner was changed.
+The exact candidate is preserved in raw,but current production computation
+remains unchanged after the single fresh terminal result review.
+This is a supporting linear-shape/workload boundary,not a new complete
+serving win or evidence of particular GEMV bandwidth/occupancy causes.
+
+### Fresh terminal result review and decision
+
+The independent result reviewer read the admitted plan, candidate/qualifier/
+driver source, all raw records, the analyzer, native transport evidence and
+environment snapshots without rerunning GPU work or editing artifacts. It
+independently recomputed every primary metric, paired effect and interval,
+and checked all qualification tokens and lifecycle counters.
+
+Its verdict is **run valid; overall hypothesis inconclusive, single-client
+sub-effect supported; supporting research value; mechanism/workload boundary**.
+The complete matrix has no failure, omitted or excluded cell. Correctness,
+source identity, matched transport, alternating process order and cleanup
+all pass. The five gen64/eight-client point estimates are negative, while
+their intervals cross zero: neither a fixed regression nor equivalence is
+established. The positive gen1/eight-client secondary outcomes do not replace
+the gen64 primary outcomes.
+
+The decision is to **retain the current production computation and close the
+merged-projection candidate without installing it as the default**. The
+single-client improvement remains a valid local result; an unconditional
+eight-bank optimization is unsupported. No new serving mode, persistent
+helper or precision change is added. Production and test code changes for this
+experiment are both zero; the nine-line temporary candidate and complete raw
+comparison remain reproducible evidence. Do not repeat this unchanged matrix.
+The next computation investigation should distinguish a different mechanism
+that can improve the concurrent path.

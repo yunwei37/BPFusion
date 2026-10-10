@@ -104,6 +104,13 @@ its complete five-pair comparison measures gen64/one-client TPOT3.910 ->
 t95 gain intervals exclude zero in this shared-GPU collection. The exact
 nine-line candidate is retained and the canonical default-cache/default-network
 entrypoint passes the complete strict regression.
+A later merged MLP gate/up projection passes all exact-token qualifications
+and a complete 2,560-request comparison. Single-client gen64 throughput
+improves286.71 ->298.46 tokens/s and TPOT3.476 ->3.336ms, but eight-client
+throughput688.74 ->683.96 and TPOT11.435 ->11.514ms have intervals crossing
+zero with all five point estimates worse. The candidate is not retained in
+the default path; its mixed result, costs and independent review are recorded
+in finding0021.
 [Finding 0022](docs/findings/0022-shared-kv.md) qualifies shared KV append and
 records a complete cache-only TCP comparison, with narrowly supporting
 TPOT/throughput results and a changing shared-GPU environment. That comparison
