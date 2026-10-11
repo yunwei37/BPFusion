@@ -8,13 +8,13 @@ UTC 2026-10-11T10:40:14.711722+00:00
 boot 04dc0087-5ccc-4c46-9997-b9a92f0e5167
 ['nvidia-smi', '--query-compute-apps=pid,process_name,used_memory', '--format=csv,noheader'] 0 3991402, /usr/bin/python3, 652 MiB
 3997226, python3, 1012 MiB
- 
+
 ['ps', '-p', '2762187', '-o', 'pid,lstart,stat,args'] 1     PID                  STARTED STAT COMMAND
- 
+
 ['free', '-m'] 0                total        used        free      shared  buff/cache   available
 Mem:          128260       12644       57061         420       61076      115616
 Swap:           8191        1753        6438
- 
+
 fault_lines
 
 Separate co-tenant Job terminal status (kubectl-home owning read path):
@@ -105,13 +105,30 @@ UTC 2026-10-11T10:42:53.782976+00:00
 /dev/longhorn/pvc-5d1b0ce5-fbee-43ef-93f1-d433037bb5e4   32G   16G   16G  51% /workspaces
 overlay                                                 1.8T  1.5T  346G  81% /
 /dev/longhorn/pvc-5d1b0ce5-fbee-43ef-93f1-d433037bb5e4   32G   16G   16G  51% /workspaces
- 
+
 ['df', '-i', '/workspaces/repository', '/tmp'] 0 Filesystem                                                Inodes   IUsed     IFree IUse% Mounted on
 /dev/longhorn/pvc-5d1b0ce5-fbee-43ef-93f1-d433037bb5e4   2097152    6085   2091067    1% /workspaces
 overlay                                                122101760 8471619 113630141    7% /
- 
+
 ['findmnt', '-T', '/workspaces/repository'] 0 TARGET      SOURCE                                                 FSTYPE OPTIONS
 /workspaces /dev/longhorn/pvc-5d1b0ce5-fbee-43ef-93f1-d433037bb5e4 ext4   rw,relatime
- 
+
 
 Scope: no BPFusion command stopped/restarted the separate Job or SGLang, changed another PVC, or induced GPU isolation. Job logging failed on ENOSPC; these records do not establish why its storage filled or attribute it to BPFusion. No cross-project restart was issued. Host sharing changed during qualification, before all real preflight cells and full collection. No isolated-performance or direct comparison with previous shared-SGLang runs follows.
+
+
+FULL RUN BEFORE UTC 2026-10-11T10:51:29.356265+00:00
+boot_id 04dc0087-5ccc-4c46-9997-b9a92f0e5167
+COMMAND ['nvidia-smi', '--query-compute-apps=pid,process_name,used_gpu_memory', '--format=csv,noheader'] EXIT 0
+4026103, sglang::scheduler, 18398 MiB
+
+COMMAND ['free', '-m'] EXIT 0
+               total        used        free      shared  buff/cache   available
+Mem:          128260       12718       62109         442       55071      115541
+Swap:           8191        1750        6441
+
+COMMAND ['ps', '-p', '2762187', '-o', 'pid,etimes,args'] EXIT 1
+    PID ELAPSED COMMAND
+
+COMMAND ['journalctl', '-k', '--since', '2026-10-11 10:40:14', '--no-pager'] EXIT 0
+No matching kernel fault lines

@@ -159,3 +159,11 @@ receipts replace assumptions of unchanged SGLang residency. Do not compare
 old shared-SGLang performance directly or claim induced isolation.
 The question, compute, oracle, matrix, metrics and native commands are unchanged.
 Record further events and unequal exposure; do not exclude inconvenient samples.
+
+A fresh pre-full observation at10:51:29UTC finds a new SGLang scheduler,
+PID4026103 with18398MiB GPU residency; the original PID2762187 remains absent.
+The owning session may have resumed independently; cause/lifecycle is not
+established here. Full collection therefore starts with this observed shared
+GPU condition, whereas preflight followed the earlier disappearance. Keep
+per-cell and after-run observations; do not claim a permanently absent
+co-tenant or compare preflight timings against full collection as matched.

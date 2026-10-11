@@ -101,3 +101,9 @@ negative, tradeoff and inconclusive outcomes will be retained in this finding
 and docs/evaluation.md. Text processing, continuous batching, physical-NIC
 evaluation and strong external serving comparisons remain open under the
 full user objective.
+
+A fresh observation immediately before full collection, at10:51:29UTC,
+finds SGLang PID4026103 with18398MiB GPU residency and the same host boot.
+The original PID remains absent. Its restart cause/owner action is not
+established by this read. Full collection begins on a shared GPU again;
+preflight and full timing differences are not matched path effects.
