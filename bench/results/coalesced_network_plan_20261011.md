@@ -207,3 +207,17 @@ Qwen09:08:10UTC. Native analysis and separate counter/cleanup inspection
 verify16 exact measured one-token replies/four normal executors,264 graphs
 and launch1/error0 each, kernel busy0/reserved0/eightFREE. They establish
 executability only; the published source will be frozen for the full retry.
+
+## Terminal full run and result review (2026-10-11 UTC)
+
+Frozen source cc07226eb9680c90134279bce0d58fc0b730280e completed the entire
+retry1 matrix with both native commands above. Smol exited0 at09:28:06 UTC;
+Qwen exited0 at09:42:08 UTC. All80 cells/5120 measured requests/166400 exact
+tokens/20 normal executors are retained. The [analysis receipt](coalesced_network_analysis_20261011.stdout.txt)
+contains native analysis and a separate complete reconstruction. The
+[result review](coalesced_network_result_review_20261011.md) confirms completion
+and records its follow-up correction for a global OOM during Qwen user pair3
+throughput. All four primary intervals cross zero. No sample is removed, no
+failed prefix is stitched, and no selective retry is run. The comparison closes
+as supporting and inconclusive; the unequal OOM exposure also prevents Qwen
+transport-only throughput attribution. Full-goal work continues separately.

@@ -34,17 +34,43 @@ Loopback/token-ID HTTP, short prompts, two small checkpoints and a shared GPU
 limit scope. Executor CPU excludes kernel TX/softirq; global CPU is descriptive.
 No attributed total CPU, energy, physical-NIC or full-goal completion claim.
 
-Next decision: retain all negative estimates and crossing-zero intervals;
-close the unchanged matrix. [Header/first-token coalescing](findings/0026-coalesced-network.md)
-now passes all four strict regressions, passive diagnostics and two native real
-preflights. The [reviewed next comparison](../bench/results/coalesced_network_plan_20261011.md)
-uses both optimized transports with unchanged compute, oracle and TCP defaults.
-The first full attempt failed at an admission refusal; its partial data remain
-separate. Atomic reservation repair passes strict graph and historical bridge
-compatibility checks and both fresh native preflights. The entire full retry
-remains pending.
-No new performance claim follows from qualification. This fair kernel-versus-user comparison does not establish a
-causal old/new optimization effect, which requires a separately matched
-before/after run. Passive traces show header/first-token coalescing but retain
-ACK-followed delivery gaps for the remaining short response. Strong external
-serving, attributed host cost and real-NIC evidence remain open.
+Next decision for finding0025: retain all negative estimates and crossing-zero
+intervals and close that unchanged matrix.
+
+The subsequent [header/first-token coalescing comparison](findings/0026-coalesced-network.md)
+is also complete. Its [reviewed plan](../bench/results/coalesced_network_plan_20261011.md)
+tests whether removing the native request/reply worker improves client latency
+or throughput after both transports coalesce output, using identical resident
+HF computation, oracle and default TCP. This supporting experiment adds a
+common transport optimization to the previous component comparison, rather
+than repeating unchanged source or tuning model math.
+
+The first full attempt failed on admission; its partial prefix remains
+separate. The repaired source passes strict graph/legacy bridge qualification
+and fresh native preflights before frozen cc07226 full collection. Both retry1
+models complete:80 cells,5120 exact measured requests,166400 tokens and20 normal
+executors. [Native analysis and independent reconstruction](../bench/results/coalesced_network_analysis_20261011.stdout.txt)
+and [fresh result review with correction](../bench/results/coalesced_network_result_review_20261011.md)
+reconstruct coverage, token agreement, metrics, order, counters and cleanup.
+
+Primary user-minus-kernel gen1/client1 TTFT:
+Smol-0.130363 ms [-0.490798,0.230071], Qwen-0.042867 ms [-0.116078,0.030344].
+Primary kernel-minus-user gen64/client8 TPS:
+Smol+1.229153 [-9.310734,11.769040], Qwen+78.277177 [-132.336242,288.890597].
+All four nominal five-pair t95 intervals cross zero: neither superiority nor
+equivalence. The Qwen user pair3 throughput cell additionally overlaps a
+verified global OOM; its paired kernel cell occurs about80 s later. Preserve
+all samples and the unchanged descriptive estimates. Unequal exposure prevents
+Qwen transport-only attribution; no kernel robustness claim follows.
+The initial reviewer's no-host-fault statement is withdrawn.
+
+Run status: valid completed raw measurements and correctness. Tested hypothesis:
+inconclusive. Research value: supporting. Paper impact: mechanism/workload
+boundary. Close this matrix; the next load-bearing performance uncertainty is
+service-attributed host work and sensitivity under explicitly matched/measured
+interference. Existing process/global CPU counters cannot resolve that question.
+
+No causal old/new coalescing speedup, external SOTA or novelty claim follows.
+Passive traces retain ACK-delayed short-response delivery. Strong external
+serving, physical networking, full text processing and online batching remain
+open. Continue the full retained objective with reused compute.

@@ -131,21 +131,87 @@ exit0 for [Smol](../../bench/results/coalesced_network_smol_preflight_retry1_202
 and [Qwen](../../bench/results/coalesced_network_qwen_preflight_retry1_20261011.jsonl):
 16 exact measured one-token replies/four normal executors, with264 graphs,
 launch1/error0 per executor, kernel busy0/reserved0/eightFREE and cleanup.
-These establish executability only. Qualified source is being published
-before full collection; the entire matrix reruns
-from the beginning, using fresh retry1 outputs without stitching the failed
-prefix. Planned matrix: both models, gen1/gen64,
-one/eight clients, 64 requests per cell; 80 cells, 5120 exact measured
-requests, 166400 generated tokens and 20 normal exits. The unchanged native
-benchmark alternates mode order and rotates cell order. Primary effects are
-user-minus-kernel mean TTFT for gen1/client1 and kernel-minus-user aggregate
-TPS for gen64/client8, with five-pair nominal Student t95 intervals. A fresh
-result review must reconstruct the complete matrix before a performance claim.
+These establish executability only.
+
+The entire repaired-source matrix subsequently completed from frozen
+[cc07226](https://github.com/yunwei37/BPFusion/commit/cc07226eb9680c90134279bce0d58fc0b730280e).
+[Full native stdout](../../bench/results/coalesced_network_retry1_20261011.stdout.txt)
+retains commands, before-host observations and terminal status:
+Smol exited0 at09:28:06 UTC; Qwen exited0 at09:42:08 UTC. Raw outputs are
+[Smol](../../bench/results/coalesced_network_smol_retry1_20261011.jsonl) and
+[Qwen](../../bench/results/coalesced_network_qwen_retry1_20261011.jsonl).
+No successful prefix from the failed source is stitched into these files.
+
+## Complete results and independent review
+
+Each model contains40 cells,2560 exact measured requests and83200 exact
+measured tokens. Combined totals are80 cells,5120 requests,166400 tokens
+and20 normal executors. Each executor records one resident launch,8580
+model graph steps,graph_error0,eight banks andmax_active8. Each kernel
+process has264 publications,head264,busy0,reserved0 andeight FREE slots;
+each user control haspublished264/completed264/rejected0. The264 requests
+include256 measured requests andeight warmups per process; warmups are excluded
+from all primary estimates.
+
+[Native analysis and independent reconstruction](../../bench/results/coalesced_network_analysis_20261011.stdout.txt)
+recompute all request timings, cell TPS, CPU counters, paired estimates, token
+agreement, coverage and execution order. [Fresh independent result review](../../bench/results/coalesced_network_result_review_20261011.md)
+confirms raw completion/correctness and records the corrected host-event interpretation.
+
+| Model | Primary effect | Mean | Nominal paired t95 interval |
+|---|---|---:|---:|
+| SmolLM2-135M | User minus kernel TTFT, gen1/client1 | -0.130363 ms | [-0.490798, 0.230071] ms |
+| Qwen2.5-0.5B | User minus kernel TTFT, gen1/client1 | -0.042867 ms | [-0.116078, 0.030344] ms |
+| SmolLM2-135M | Kernel minus user TPS, gen64/client8 | +1.229153 tokens/s | [-9.310734, 11.769040] |
+| Qwen2.5-0.5B | Kernel minus user TPS, gen64/client8 | +78.277177 tokens/s | [-132.336242, 288.890597] |
+
+All four intervals cross zero. They establish neither superiority nor
+equivalence. These are the predeclared five-pair descriptive t95(df4)
+intervals, without a family-wide significance claim.
+
+## Shared-host OOM during the Qwen user throughput cell
+
+The Qwen user pair3/gen64/client8 cell spans09:37:28.538-09:37:42.526 UTC.
+Explicit-UTC kernel journal records show global OOM at09:37:40, killing
+repl PID3768997 (anon-rss:88120172kB) and its cgroup siblings. The kill and
+reaper kernel source monotonic timestamps,142828604210 us and142831619252 us,
+both lie inside the measured request interval,
+142820616074123-142834495866302 ns. Journal ingestion is later; this overlap
+does not rely on a precise wall-clock calibration.
+
+That cell delivers295.105 TPS and247.94 s global CPU work, versus
+681.010-689.601 TPS and17.66-82.78 s in the other user blocks. Its paired kernel
+cell runs09:39:02.903-09:39:08.992 UTC, about80 s later, without the same
+recorded event. This is a concrete unequal-exposure confound, not evidence of
+kernel robustness or a transport-only throughput gain. Neither the cause of
+host memory pressure nor BPFusion responsibility is established. Logs do not
+quantify how much delay came from client scheduling, the reactor or GPU work.
+
+All blocks remain in the reported estimates. No outlier was removed and no
+selective retry was run. Correct outputs and normal counters remain valid,
+but Qwen throughput cannot identify a clean transport-only effect. The initial
+reviewer's no-host-fault assertion is explicitly withdrawn in its follow-up.
+Exact UTC/source-monotonic journal records and current memory/service observations
+are retained in the same analysis receipt. Subsequent inspection confirms the
+same boot and original SGLang process/residency, TX module/pins/hooks cleaned;
+it does not establish service-level acceptance or interference-free execution.
+
+## Decision and limits
+
+Run status is valid completed raw measurement/correctness; the tested
+superiority hypothesis is inconclusive. Research value is supporting; paper
+impact is the measured transport/workload boundary. Close the unchanged matrix
+and retain its failed prefix, mixed estimates and shared-host incident.
 
 Finding0025 remains historical context, not a matched old/new coalescing
 measurement. Anonymous versus kernel page backing and polling differ; process
-CPU excludes kernel TX/softirq, and global CPU includes unrelated work. The
-SGLang service is preserved on the shared RTX5090. Loopback, token-ID HTTP,
-short prompts and two small models limit inference. Attributed host cost,
-physical networking, text processing, continuous batching and strong external
-serving comparisons remain open.
+CPU excludes kernel TX/softirq, and global CPU includes unrelated work. Kernel
+TCP/eBPF/TX still uses host CPU. This cannot establish syscall-only causation,
+total CPU savings, CPU-free-system operation or novelty.
+
+Loopback, token-ID HTTP, short prompts and two small models limit inference.
+The next performance uncertainty is service-attributed host work and sensitivity
+under matched or measured interference. Physical networking, full text
+processing, continuous batching and strongest external serving comparisons
+remain open. Continue the full user objective with reused compute; this
+component result is not full-goal completion or a reason for model math tuning.

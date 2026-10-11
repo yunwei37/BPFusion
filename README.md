@@ -192,14 +192,15 @@ These local associations guide computation/reuse work; they do not transfer
 duration shares to the device-launched trace or establish a serving speedup.
 
 
-Both native network paths now coalesce the HTTP header and first available
-token in one vectored send while retaining default TCP and identical GPU
-computation. [Finding0026](docs/findings/0026-coalesced-network.md) records
-strict regressions and passive packet evidence. The first full comparison
-failed on a transient admission refusal; an atomic reservation repair passes
-the strict regressions and historical bridge compatibility checks. Fresh
-preflights pass for both models; the full retry remains pending. Short-response ACK delays and
-total host cost are still unresolved.
+Both native network paths coalesce the HTTP header and first available token
+in one vectored send with default TCP and identical GPU computation.
+[Finding0026](docs/findings/0026-coalesced-network.md) retains the failed admission
+attempt, atomic reservation repair and complete repaired-source comparison:
+80 cells, 5120 exact measured replies and 20 normal executors. All four primary
+latency/throughput intervals cross zero. A verified host OOM overlaps one Qwen
+user throughput cell; every sample is retained, and no transport-only benefit
+or kernel robustness is established. Short-response ACK delays and attributed
+host cost remain unresolved.
 
 ## Reusing upstream compute
 

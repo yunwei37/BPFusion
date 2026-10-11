@@ -1,0 +1,141 @@
+FROZEN HEAD cc07226eb9680c90134279bce0d58fc0b730280e
+Source/qualification/plan and prior failed prefix are published in this commit. No tracked diff. No prior successful prefix will be stitched into this80-cell retry.
+BEFORE FULL HOST "{\"utc\": \"2026-10-11T09:12:07.036684+00:00\", \"boot_id\": \"04dc0087-5ccc-4c46-9997-b9a92f0e5167\", \"gpu\": {\"exit\": 0, \"output\": \"NVIDIA GeForce RTX 5090, GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, 18392, 32607, 65, 2550, 13801, 399.78\\n\"}, \"compute_apps\": {\"exit\": 0, \"output\": \"2762187, sglang::scheduler, 18368\\n\"}, \"original_service\": {\"exit\": 0, \"output\": \"    PID                  STARTED ELAPSED COMMAND\\n2762187 Sat Oct 10 21:41:27 2026   16239 sglang::schedul\\n\"}, \"kernel_faults\": {\"exit\": 1, \"output\": \"-- No entries --\\n\"}}\n"
+NATIVE WRAPPER /tmp/bpfusion-coalesced-full-retry1-58mphgfl.py
+import os,subprocess,sys,datetime
+commands=[['/usr/bin/python3', 'bench/resident_dispatch.py', '--gen', '64', '--resident-executor', './build/qwen_graph', '--user-network-executor', './build/qwen_graph_user_network', '--model', 'HuggingFaceTB/SmolLM2-135M', '--output', 'bench/results/coalesced_network_smol_retry1_20261011.jsonl'], ['/usr/bin/python3', 'bench/resident_dispatch.py', '--gen', '64', '--resident-executor', './build/qwen_graph', '--user-network-executor', './build/qwen_graph_user_network', '--model', 'Qwen/Qwen2.5-0.5B-Instruct', '--output', 'bench/results/coalesced_network_qwen_retry1_20261011.jsonl']]
+env=os.environ.copy();env['HF_HOME']='/workspaces/.cache/huggingface'
+def utc():return datetime.datetime.now(datetime.timezone.utc).isoformat()
+print('FULL RETRY1 START',utc(),'PID',os.getpid(),flush=True)
+for i,cmd in enumerate(commands):
+ print('NATIVE FULL COMMAND',i,utc(),repr(cmd),flush=True)
+ child=subprocess.Popen(cmd,cwd='/workspaces/repository',env=env);print('CHILD PID',child.pid,flush=True);rc=child.wait()
+ print('FULL RETRY1 EXIT',i,utc(),rc,flush=True)
+ if rc:sys.exit(rc)
+print('FULL RETRY1 COLLECTION COMPLETE',utc(),flush=True)
+
+FULL RETRY1 LAUNCH PID 89640
+FULL RETRY1 START 2026-10-11T09:12:40.477843+00:00 PID 89640
+NATIVE FULL COMMAND 0 2026-10-11T09:12:40.477884+00:00 ['/usr/bin/python3', 'bench/resident_dispatch.py', '--gen', '64', '--resident-executor', './build/qwen_graph', '--user-network-executor', './build/qwen_graph_user_network', '--model', 'HuggingFaceTB/SmolLM2-135M', '--output', 'bench/results/coalesced_network_smol_retry1_20261011.jsonl']
+CHILD PID 89641
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 7995.81it/s]
+HF reference model=HuggingFaceTB/SmolLM2-135M type=llama vocab=49152
+pair=0 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=0 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=0 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.310
+pair=0 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=15.380
+pair=0 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.270
+pair=0 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=4.430
+pair=1 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=15.230
+pair=1 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.300
+pair=1 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=4.450
+pair=1 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.340
+pair=1 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=1 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=1 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=1 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=2 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=2 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.290
+pair=2 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=4.470
+pair=2 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.330
+pair=2 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=15.430
+pair=3 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=4.460
+pair=3 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.350
+pair=3 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=15.420
+pair=3 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.300
+pair=3 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=3 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=3 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=4 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=4 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.340
+pair=4 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=15.230
+pair=4 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.290
+pair=4 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=4.440
+{"mode": "resident", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 5.392637615625, "ttft_p50_ms": 5.111885, "ttft_p99_ms": 7.48308573, "tpot_mean_ms": null, "completion_mean_ms": 5.392637615625, "host_cpu_work_s_per_cell": [1.62, 1.78, 1.56, 1.37, 1.34], "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [184.60772144236307, 181.52062001635136, 179.26383061557834, 195.64547524855314, 182.97678719596374]}
+{"mode": "user-network", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 5.262274478125, "ttft_p50_ms": 5.0135065, "ttft_p99_ms": 7.41804302, "tpot_mean_ms": null, "completion_mean_ms": 5.262274478125, "host_cpu_work_s_per_cell": [1.92, 1.95, 1.82, 1.56, 1.68], "executor_cpu_s_per_cell": [0.3100000000000023, 0.3400000000000034, 0.3299999999999983, 0.3499999999999943, 0.3399999999999892], "tokens_per_s": [195.84808726082522, 188.70590833746724, 190.1103739838801, 181.71592376327612, 190.0903839381419]}
+{"gen": 1, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [-0.3172508593750001, -0.202352125, -0.30738589062499955, 0.3796544218750002, -0.20448123437499977], "difference_mean_ms": -0.13036313749999984, "difference_t95_ms": [-0.49079762940374955, 0.23007135440374987]}
+{"gen": 1, "concurrency": 1, "paired_resident_minus_user_network_tps": [-11.240365818462152, -7.185288321115877, -10.846543368301752, 13.929551485277017, -7.113596742178174], "difference_mean_tps": -4.491248552956188, "difference_t95_tps": [-17.505060004135615, 8.522562898223237]}
+{"mode": "resident", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 5.47246805, "ttft_p50_ms": 5.1176895, "ttft_p99_ms": 7.50192911, "tpot_mean_ms": 3.706792412748016, "completion_mean_ms": 239.000390053125, "host_cpu_work_s_per_cell": [66.27, 81.56, 78.4, 70.54, 69.86], "executor_cpu_s_per_cell": [0.010000000000005116, 0.009999999999990905, 0.0, 0.009999999999990905, 0.010000000000005116], "tokens_per_s": [264.1674918112837, 267.67233237445924, 269.31652889104913, 269.83078624370063, 267.74678673319323]}
+{"mode": "user-network", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 5.3293883125, "ttft_p50_ms": 5.049287, "ttft_p99_ms": 7.38693111, "tpot_mean_ms": 3.716984065922619, "completion_mean_ms": 239.499384465625, "host_cpu_work_s_per_cell": [87.85, 80.65, 107.8, 81.13, 87.02], "executor_cpu_s_per_cell": [15.38000000000001, 15.230000000000004, 15.430000000000007, 15.420000000000002, 15.230000000000004], "tokens_per_s": [266.47960716002575, 269.1060347680169, 265.46985959694285, 265.7380236728321, 269.12430528455684]}
+{"gen": 64, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [0.16688678125000056, 0.08034573437500026, -0.14577885937499957, -0.32870567187499944, -0.4881466718749996], "difference_mean_ms": -0.14307973749999955, "difference_t95_ms": [-0.4828590238976711, 0.19669954889767202]}
+{"gen": 64, "concurrency": 1, "paired_resident_minus_user_network_tps": [-2.3121153487420543, -1.4337023935576667, 3.8466692941062774, 4.092762570868501, -1.3775185513636075], "difference_mean_tps": 0.5632191142622901, "difference_t95_tps": [-3.3267988895988254, 4.453237118123406]}
+{"mode": "resident", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 36.583247646875, "ttft_p50_ms": 40.772851, "ttft_p99_ms": 44.76906582, "tpot_mean_ms": null, "completion_mean_ms": 36.583247646875, "host_cpu_work_s_per_cell": [1.18, 1.08, 1.58, 1.43, 1.15], "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [209.26702188501108, 223.49916139971685, 210.64179530344433, 222.53307775131185, 222.0271359206484]}
+{"mode": "user-network", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 36.311305590625, "ttft_p50_ms": 40.759978000000004, "ttft_p99_ms": 44.66954628, "tpot_mean_ms": null, "completion_mean_ms": 36.311305590625, "host_cpu_work_s_per_cell": [1.79, 1.63, 1.87, 1.81, 1.78], "executor_cpu_s_per_cell": [0.269999999999996, 0.29999999999999716, 0.29000000000000625, 0.29999999999999716, 0.29000000000000625], "tokens_per_s": [238.64791043245611, 214.75483279577963, 216.28763059219017, 212.91369534376943, 212.56997400823892]}
+{"gen": 1, "concurrency": 8, "paired_user_network_minus_resident_ttft_ms": [-5.0059076562500024, 1.631175671874999, -1.076070937499999, 1.6003676406249951, 1.4907249999999976], "difference_mean_ms": -0.27194205625000195, "difference_t95_ms": [-3.8540646501401743, 3.31018053764017]}
+{"gen": 1, "concurrency": 8, "paired_resident_minus_user_network_tps": [-29.38088854744504, 8.74432860393722, -5.645835288745843, 9.619382407542417, 9.457161912409475], "difference_mean_tps": -1.441170182460354, "difference_t95_tps": [-22.431911590819002, 19.549571225898294]}
+{"mode": "resident", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 16.958900118749998, "ttft_p50_ms": 17.158513999999997, "ttft_p99_ms": 19.69858974, "tpot_mean_ms": 8.5062022202877, "completion_mean_ms": 552.849639996875, "host_cpu_work_s_per_cell": [20.09, 25.75, 20.51, 21.34, 18.23], "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [915.3498691914419, 922.3262055973922, 926.8006692712734, 927.9878444394737, 917.0077375380072]}
+{"mode": "user-network", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 16.717442428125, "ttft_p50_ms": 17.119146999999998, "ttft_p99_ms": 19.7481687, "tpot_mean_ms": 8.522242302777778, "completion_mean_ms": 553.618707503125, "host_cpu_work_s_per_cell": [31.68, 25.33, 30.31, 25.54, 21.11], "executor_cpu_s_per_cell": [4.430000000000007, 4.450000000000003, 4.469999999999999, 4.459999999999994, 4.440000000000012], "tokens_per_s": [923.7015107901119, 920.1128326010124, 915.7090689565756, 920.4134363858087, 923.3897144061569]}
+{"gen": 64, "concurrency": 8, "paired_user_network_minus_resident_ttft_ms": [0.10277010937500108, 0.09371784375000303, 0.42707610937500107, -0.10410948437500167, -1.726743031249999], "difference_mean_ms": -0.24145769062499908, "difference_t95_ms": [-1.2991903465747319, 0.8162749653247338]}
+{"gen": 64, "concurrency": 8, "paired_resident_minus_user_network_tps": [-8.351641598669971, 2.2133729963798032, 11.091600314697757, 7.5744080536650245, -6.3819768681497635], "difference_mean_tps": 1.2291525795845701, "difference_t95_tps": [-9.310734424535086, 11.769039583704226]}
+FULL RETRY1 EXIT 0 2026-10-11T09:28:06.719569+00:00 0
+NATIVE FULL COMMAND 1 2026-10-11T09:28:06.719638+00:00 ['/usr/bin/python3', 'bench/resident_dispatch.py', '--gen', '64', '--resident-executor', './build/qwen_graph', '--user-network-executor', './build/qwen_graph_user_network', '--model', 'Qwen/Qwen2.5-0.5B-Instruct', '--output', 'bench/results/coalesced_network_qwen_retry1_20261011.jsonl']
+CHILD PID 91638
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4770.07it/s]
+HF reference model=Qwen/Qwen2.5-0.5B-Instruct type=qwen2 vocab=151936
+pair=0 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=0 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=0 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.250
+pair=0 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=14.370
+pair=0 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.160
+pair=0 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=5.940
+pair=1 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=14.290
+pair=1 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.230
+pair=1 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=6.000
+pair=1 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.260
+pair=1 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=1 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=1 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=1 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=2 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=2 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.210
+pair=2 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=6.000
+pair=2 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.270
+pair=2 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=14.270
+pair=3 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=5.390
+pair=3 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.260
+pair=3 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=14.230
+pair=3 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.210
+pair=3 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=3 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=3 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=4 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=4 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.260
+pair=4 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=14.440
+pair=4 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.240
+pair=4 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=6.020
+{"mode": "resident", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 4.07741060625, "ttft_p50_ms": 4.3467905, "ttft_p99_ms": 4.562278940000001, "tpot_mean_ms": null, "completion_mean_ms": 4.07741060625, "host_cpu_work_s_per_cell": [1.06, 1.68, 1.44, 0.63, 1.22], "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [246.9280158187643, 244.70908746620088, 246.01188310430172, 241.09459386698373, 242.2000899107284]}
+{"mode": "user-network", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 4.0345437125, "ttft_p50_ms": 4.329822999999999, "ttft_p99_ms": 4.52522456, "tpot_mean_ms": null, "completion_mean_ms": 4.0345437125, "host_cpu_work_s_per_cell": [1.39, 1.58, 3.36, 3.4, 0.64], "executor_cpu_s_per_cell": [0.25, 0.2599999999999909, 0.269999999999996, 0.2599999999999909, 0.2600000000000051], "tokens_per_s": [254.3160564051555, 244.81265321542523, 246.45211482581408, 245.9250195442185, 241.40116053155296]}
+{"gen": 1, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [-0.11220998437499974, 0.0018818281250005953, -0.010465156249999552, -0.10161034375, 0.008069187500000297], "difference_mean_ms": -0.04286689374999968, "difference_t95_ms": [-0.11607786649296348, 0.030344078992964124]}
+{"gen": 1, "concurrency": 1, "paired_resident_minus_user_network_tps": [-7.388040586391213, -0.10356574922434447, -0.4402317215123617, -4.830425677234757, 0.7989293791754335], "difference_mean_tps": -2.3926668710374486, "difference_t95_tps": [-6.788521321053634, 2.0031875789787366]}
+{"mode": "resident", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 4.182615390625, "ttft_p50_ms": 4.4371220000000005, "ttft_p99_ms": 4.68245834, "tpot_mean_ms": 3.4936914015873017, "completion_mean_ms": 224.285173690625, "host_cpu_work_s_per_cell": [66.74, 78.43, 79.09, 58.46, 47.69], "executor_cpu_s_per_cell": [0.0, 0.010000000000005116, 0.0, 0.00999999999999801, 0.00999999999999801], "tokens_per_s": [284.2335500390314, 286.7494661887584, 286.83738450801275, 284.19681284746343, 284.48487225379023]}
+{"mode": "user-network", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 4.107272153125, "ttft_p50_ms": 4.365454, "ttft_p99_ms": 4.52480553, "tpot_mean_ms": 3.4836732205853176, "completion_mean_ms": 223.57868505, "host_cpu_work_s_per_cell": [95.71, 76.59, 191.75, 170.16, 49.51], "executor_cpu_s_per_cell": [14.370000000000005, 14.29, 14.269999999999996, 14.230000000000004, 14.440000000000005], "tokens_per_s": [285.2774374848759, 286.78824871167177, 287.1808866512971, 287.9348889461389, 283.8228218888578]}
+{"gen": 64, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [-0.1262467031249992, -0.05057275000000061, -0.07059478125000052, -0.12147799999999975, -0.007823953125000394], "difference_mean_ms": -0.07534323750000009, "difference_t95_ms": [-0.13716064209382273, -0.013525832906177468]}
+{"gen": 64, "concurrency": 1, "paired_resident_minus_user_network_tps": [-1.0438874458445184, -0.03878252291337958, -0.34350214328435413, -3.738076098675492, 0.6620503649324405], "difference_mean_tps": -0.9004395691570608, "difference_t95_tps": [-3.011885941620415, 1.211006803306293]}
+{"mode": "resident", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 29.044107040625, "ttft_p50_ms": 31.618952, "ttft_p99_ms": 35.82215518, "tpot_mean_ms": null, "completion_mean_ms": 29.044107040625, "host_cpu_work_s_per_cell": [1.43, 1.25, 1.36, 1.01, 0.56], "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [267.56066600515356, 271.68229540296153, 273.32682599103737, 278.024200859835, 279.31410110562075]}
+{"mode": "user-network", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 26.02607856875, "ttft_p50_ms": 31.57623, "ttft_p99_ms": 36.55538322, "tpot_mean_ms": null, "completion_mean_ms": 26.02607856875, "host_cpu_work_s_per_cell": [0.99, 1.15, 2.19, 2.56, 0.89], "executor_cpu_s_per_cell": [0.1599999999999966, 0.23000000000000398, 0.21000000000000085, 0.21000000000000796, 0.23999999999999488], "tokens_per_s": [399.11593326307644, 270.82960202080864, 311.3239494587361, 300.61786741835164, 267.446072497802]}
+{"gen": 1, "concurrency": 8, "paired_user_network_minus_resident_ttft_ms": [-10.232031500000002, 0.1397309999999976, -4.060364484375, -2.127986562500002, 1.1905091875000018], "difference_mean_ms": -3.018028471875001, "difference_t95_ms": [-8.626300264336676, 2.590243320586674]}
+{"gen": 1, "concurrency": 8, "paired_resident_minus_user_network_tps": [-131.55526725792288, 0.8526933821528928, -37.997123467698714, -22.593666558516645, 11.868028607818758], "difference_mean_tps": -35.885067058833314, "difference_t95_tps": [-106.57253746338637, 34.80240334571974]}
+{"mode": "resident", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 20.41482494375, "ttft_p50_ms": 21.801059000000002, "ttft_p99_ms": 24.72692171, "tpot_mean_ms": 11.509725079265873, "completion_mean_ms": 745.5275049375, "host_cpu_work_s_per_cell": [31.77, 34.79, 33.45, 25.77, 13.66], "executor_cpu_s_per_cell": [0.00999999999999801, 0.00999999999999801, 0.00999999999999801, 0.0, 0.0], "tokens_per_s": [688.2967713594846, 687.4376368210791, 689.2260488938668, 676.7517505678467, 680.6143721493556]}
+{"mode": "user-network", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 24.07290485, "ttft_p50_ms": 21.8433755, "ttft_p99_ms": 53.18870511, "tpot_mean_ms": 14.551879581150793, "completion_mean_ms": 940.8413184625, "host_cpu_work_s_per_cell": [44.79, 34.62, 82.78, 247.94, 17.66], "executor_cpu_s_per_cell": [5.939999999999998, 6.0, 6.0, 5.390000000000001, 6.02000000000001], "tokens_per_s": [689.6005756289956, 682.6244787673177, 682.6000741374673, 295.10528307457014, 681.0102808865028]}
+{"gen": 64, "concurrency": 8, "paired_user_network_minus_resident_ttft_ms": [-1.8882694531250017, 0.715367843750002, 0.33585570312500224, 19.380001859375, -0.2525564218750027], "difference_mean_ms": 3.65807990625, "difference_t95_ms": [-7.324342093451472, 14.640501905951472]}
+{"gen": 64, "concurrency": 8, "paired_resident_minus_user_network_tps": [-1.3038042695109198, 4.813158053761413, 6.625974756399501, 381.64646749327653, -0.39590873714712416], "difference_mean_tps": 78.27717745935588, "difference_t95_tps": [-132.3362422735409, 288.89059719225264]}
+FULL RETRY1 EXIT 1 2026-10-11T09:42:08.174131+00:00 0
+FULL RETRY1 COLLECTION COMPLETE 2026-10-11T09:42:08.174255+00:00
