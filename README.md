@@ -181,6 +181,15 @@ These local associations guide computation/reuse work; they do not transfer
 duration shares to the device-launched trace or establish a serving speedup.
 
 
+## Reusing upstream compute
+
+The next backend investigation reuses upstream megakernel computation so a
+matched comparison can attribute effects to the Linux/eBPF serving path.
+[Backend source audit](docs/upstream-backends.md) compares candidates and
+records concrete model, launch, correctness and online-service boundaries.
+No new backend is qualified yet; the current measured executor remains in use.
+
+
 ## Repository layout
 
 ```
