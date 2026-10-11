@@ -19,7 +19,7 @@ preserved.
 | [Mirage / MPK](https://github.com/mirage-project/mirage) | Tensor-program compiler, device task scheduler, online request/completion rings; several model builders | Existing CPU ring producer/drainer remains part of upstream serving. Native SM120 compatibility probes pass after fixes, but complete Qwen3-0.6B outputs fail the unchanged HF oracle under parallel and serial submission. Registered model names are not independent correctness evidence. |
 | [Plow](https://github.com/infervisor/plow) | HF importer, packet compiler, Lean ordering checks and SM120 interpreter; existing native Qwen harness | Native/Rust/Lean builds pass after compile/link compatibility fixes and existing GF2 selection. Four32-token memchecks pass, but only two sequences match the unchanged HF oracle. Decode-only prompt ingestion; no qualified prefill or resident network adapter. See [qualification](findings/0023-batch-execution-qualification.md#upstream-plow-sm120-build-and-mixed-numerical-qualification). |
 | [model-as-a-kernel](https://huggingface.co/kernels/phanerozoic/model-as-a-kernel) | Architecture interpreter; a finite prompt-plus-greedy-generation loop within one launch; single and batched decode interfaces | CUDA capability 12.0 is declared and the card reports an SM120 measurement. Native SM120 build passes with unchanged computation; seven of ten64-token SmolLM2 sequences match HF exactly. Not a qualified strict replacement, online queue or kernel-TX adapter. See source boundaries and qualification below. |
-| [Luminal](https://github.com/luminal-ai/luminal), [compiler design](https://blog.luminal.com/p/compiling-models-to-megakernels) | General inference compiler and symbolic megakernel work queue | Public backend coverage and host generation/control dependencies need an interface audit. General compiler expressiveness does not prove every model has a runnable whole-model megakernel. |
+| [Luminal](https://github.com/luminal-ai/luminal), [compiler design](https://blog.luminal.com/p/compiling-models-to-megakernels) | General inference compiler and symbolic megakernel work queue | The current CUDA-lite path uses host-launched cached graphs; the historical compiler megakernel design is a separate source claim. Broad architecture expressiveness does not prove runnable whole-model online coverage. |
 | [AutoMegaKernel](https://github.com/RightNow-AI/AutoMegaKernel) | HF Llama-family import and whole-forward synthesis, with RTX 5090 evidence | Current generate.py loops on the CPU, lowers/runs each step, synchronizes and reads argmax. Its reported INT8-versus-BF16 gains change precision; they cannot establish our path benefit. |
 | [AlpinDale qwen_megakernel](https://github.com/AlpinDale/qwen_megakernel) | Existing BF16 Qwen3-0.6B kernel targeting RTX 5090 | Body/final norm and LM-head/argmax use separate kernels. Global mutable launch/synchronization state needs a concurrency audit; the bulk no-sync API is not evidence of resident online admission. See pinned source below. |
 | [Lucebox megakernel](https://github.com/Luce-Org/lucebox/tree/main/optimizations/megakernel) | Qwen3.5-0.8B hybrid DeltaNet/Attention implementation; separate Blackwell NVFP4 path | Current kernel is model-specific and batch 1. Half-precision and NVFP4 paths are different compute conditions. The standalone Python decoder drives steps and reads each output on the host. |
@@ -406,3 +406,102 @@ reusing upstream computation. See
 This supports retaining a compute-preserving graph route alongside upstream
 megakernels. It does not qualify the newly searched projects or resolve the
 earlier MPK/Plow/MAK numerical failures.
+
+## Expanded backend and counterexample search
+
+Read-only source observation: 2026-10-11T10:33-10:38UTC. This follow-up
+refreshes earlier leads and adds general compiled-compute alternatives.
+No new backend was installed or GPU-qualified. Pinned revisions distinguish
+source evidence from project performance claims.
+
+- [Luminal revision77d3060](https://github.com/luminal-ai/luminal/tree/77d3060f01dc9d6f649687cf16a651e3f288aa0c)
+  is Apache-2.0. Its January2026 author article describes compiler-generated
+  symbolic megakernel queues, but the inspected current CUDA-lite executor
+  is graph-based: device.rs line1097 instantiates a graph and line1340
+  launches it from the host. runtime.rs exposes borrowed-stream/external-buffer
+  interfaces and the model zoo includes Llama implementations. Do not transfer
+  the historical megakernel description into a claim that this current path
+  already provides persistent online model control.
+- [MLC-LLM revision8978ea9](https://github.com/mlc-ai/mlc-llm/tree/8978ea9aec626d64096aaa92fbc89bda2e3ea802)
+  is Apache-2.0 and contains actual Llama, Qwen, Gemma and Mistral model
+  implementations plus a cached CUDA-graph allocation pass. C++ batch_decode
+  retains running-request, KV/preemption and token-commit/sampling work on
+  the CPU. This is a broad compiled-computation candidate; it is not qualified
+  device-autonomous serving.
+- [llama.cpp revision23b0202](https://github.com/ggml-org/llama.cpp/tree/23b0202a189c44a54625aadcb37a946dd1d6278d)
+  is MIT. ggml-cuda.cu lines4603/4609 instantiate with flags0 and launch on a
+  host stream; graph update likewise uses flags0. The current executable
+  therefore cannot simply be handed to a device scheduler. Quantization,
+  CPU offload and sampling must be equal across a future transport pair.
+- [nano-vLLM revisionbb823b3](https://github.com/GeeeekExplorer/nano-vllm/tree/bb823b3e06983d71485a8e1f23715ebd87d98ef8)
+  is MIT and offers a small adapter surface, but the inspected model runner
+  directly constructs Qwen3. Capture covers the model forward while
+  compute_logits, sampling and token-list transfer remain outside; the
+  engine keeps CPU scheduling. Small source size is not broad model support.
+- [MegaBake revision5a18b82](https://github.com/megabake/megabake/tree/5a18b8226ac39a35c91492825310dc2679ce83a1)
+  is MIT and compiles supported torch.export graphs into cooperative task
+  schedules. Unsupported operators can fall back to eager execution; the
+  loader still binds pointers, resets dependencies and host-launches.
+  A single-token Smol forward demonstration does not qualify full generation.
+- [Fleet revision0275d46](https://github.com/ROCm/fleet-chiplet-megakernel/tree/0275d466c89bc3158e19118b62ad9b02d7f2a364)
+  now has official Apache-2.0 source on its amd_mi350 branch. This corrects
+  the earlier no-public-artifact observation. The MPK-derived chiplet scheduler
+  and Qwen3-8B example target MI350, not the present RTX5090.
+- [Cohere revision67d0b9c](https://github.com/cohere-ai/cohere-megakernel/tree/67d0b9ca22ea3652796b715d1d1863459e0e2c3c)
+  has Apache-2.0 serving source. runtime.cu's DecodeService loop still
+  synchronizes each step, and launch.cuh line165 host-launches the megakernel.
+  It is a useful strong-serving control design, with model/H100 limits above.
+- [AlpinDale revision5030e1](https://github.com/AlpinDale/qwen_megakernel/tree/5030e154d39ecd054df03eb4dd9c8aa8185414d1)
+  retains the separate body and LM-head kernels. Its generate_nosync API
+  feeds tokens back on device, but kernel.cu lines1582-1603 are a host loop
+  submitting body, LM head and update kernels per token. Removing per-token
+  output reads does not remove per-token host launches.
+- [TileRT revision0ea1937](https://github.com/tile-ai/TileRT/tree/0ea19371f120977761bfa0cf6a2d08415d8fce0e)
+  refreshes the hardware boundary: release0.1.6 adds public GLM5.2/5.3
+  ROCm wheels for MI350X/MI355X. CUDA models still target eight B200s and
+  the core backend is binary-distributed. This is broader than NVIDIA-only
+  coverage, but does not establish a single-SM120 source adapter.
+
+Two first-party sources oppose treating CPU removal as an automatic speed win:
+[NanoFlow](https://github.com/efeslab/Nanoflow) overlaps CPU batching/KV work
+with GPU execution, and [CoPilotIO, OSDI2026](https://www.usenix.org/conference/osdi26/presentation/chen-guanyi)
+moves GPU-initiated storage completion polling to CPUs to free GPU resources.
+The latter is a storage result, not a TCP inference baseline. These motivate
+efficient native userspace controls and measuring GPU polling costs.
+
+[Current TensorRT-LLM migration documentation](https://nvidia.github.io/TensorRT-LLM/latest/legacy/tensorrt-backend-removal.html)
+also corrects a version-sensitive reuse assumption: release1.2 removed its
+TensorRT engine backend and retains the PyTorch backend. Blink's historical
+TensorRT-engine reuse remains a design precedent, not a current drop-in recipe.
+[AWS Transformer TKG](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/nki/library/api/transformer-tkg.html)
+is configurable multi-layer compute on Trainium2/3, not CUDA or a complete
+networked generation loop.
+
+The candidate contribution remains a Linux TCP/eBPF integration that removes
+the steady userspace request/control worker while retaining reusable GPU
+computation and correct streaming/reclamation. Blink already demonstrates
+host-CPU-free LLM serving and graph reuse; neither property alone is new.
+Linux TCP/eBPF and asynchronous kernel TX still use host CPU. Backend-independent
+interfaces and improved attributed cost/tail behavior are hypotheses requiring
+matched evidence. Reusing a backend does not imply arbitrary-model support.
+
+For implementation selection, favor the existing qualified HF graph interface
+and general compiler/graph interfaces over another bespoke Qwen arithmetic
+campaign. Keep MPK/Plow/MAK terminal qualification failures visible; resolve
+upstream interface/correctness compatibility only where it enables that serving
+question. Model-specific, other-hardware and layer-only kernels remain
+references rather than an expanding implementation obligation.
+
+General-model graph reuse is another candidate family:
+[ONNX Runtime's CUDA EP](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html)
+supports captured graphs with GPU I/O binding, but requires CUDA-only tensor
+nodes and fixed shapes/addresses per graph ID; If/Loop/Scan and concurrent
+Run calls on one captured session are unsupported. This API does not promise
+a device-launchable executable graph.
+[TensorRT enqueueV3 capture](https://docs.nvidia.com/deeplearning/tensorrt/11.4.0/performance/optimization.html)
+supports models without mid-pipeline CPU interaction, and
+[TensorRT for RTX](https://docs.nvidia.com/deeplearning/tensorrt-rtx/latest/inference-library/work-with-cuda-graphs.html)
+documents explicit graph-capture failure/fallback cases. These offer reusable
+CNN/encoder or other short-forward computation without hand-written model
+arithmetic. Actual device-graph node eligibility and executable/buffer lifetime
+would still need qualification; ordinary host graph replay is insufficient.
