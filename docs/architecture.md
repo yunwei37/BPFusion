@@ -188,6 +188,11 @@ HF computation and kernel TX. The host control has a steady request worker and
 serial computation; against the concurrent default it does not isolate dispatch
 alone. Finding0020 remains the historical matched serial-dispatch measurement.
 
+Upstream model computation candidates are recorded in the
+[backend audit](upstream-backends.md). Finding0023 retains the failed MPK
+whole-model qualification and mixed Plow results; neither changes the current
+HF graph executor or supplies a resident network integration.
+
 ## Ownership rules (the correctness core)
 
 | object | writer | reader | recycle |

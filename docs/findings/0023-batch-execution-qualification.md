@@ -1296,3 +1296,65 @@ acceptance. No reset/reboot or persistent policy was changed. MPK remains an
 unqualified upstream candidate; further model-specific math tuning is not
 admitted as evidence for the eBPF path. A distinct public SM120 backend is the
 next integration candidate.
+
+## Upstream Plow SM120 build and mixed numerical qualification
+
+Plow revision [627f09c6990e0d60fa0596b0a8b20bdba1dd5cf5](https://github.com/infervisor/plow/tree/627f09c6990e0d60fa0596b0a8b20bdba1dd5cf5)
+was built in OS-temporary storage inside the original Workspace, using its
+Rust compiler/runtime, native CMake targets and CUDA13.0.88. The real upstream
+Lean4.15.0 verifier was built and used during packet emission; verification
+was not disabled. Its certificates cover ordering and scoped rewrite checks,
+with explicit gaps for floating-point implementation, complete memory effects
+and empirical performance. The emitted packet also warns about impure prefill
+segments. These warnings are preserved; prefill was not executed or qualified.
+
+The existing qwen3_sm120_chat harness consumes prompts one token at a time
+through its decode program. A temporary compile/link patch guards a cubin-only
+debug symbol and makes the referenced device metadata definitions visible to
+the host pass with C linkage. It changes30 definitions of19 metadata symbols;
+model arithmetic remains upstream. The patch and the compile-only linkage
+probe preserve both the initial failures and the successful build.
+
+The first GPU run fails with CUDA719 under memcheck. The native Qwen harness
+defaults to GF4, while the unchanged Qwen3-0.6B checkpoint has16 query heads
+and8 KV heads. The upstream dispatch explicitly traps when GQA modulo GF is
+nonzero. Selecting the existing GF2 arm resolves this compatibility failure.
+The corrected one-token memcheck and all four32-token memchecks terminate
+with zero reported errors and matching device/host argmax. This is finite
+memory-check evidence, not race freedom or complete model correctness.
+
+All four prompts and the32-token HF eager-BF16 greedy oracle are reused
+unchanged from the earlier MPK qualification. Arithmetic and Chinese prompts
+match all32 generated tokens. The one-token prompt differs at output index0
+(21806 versus14582); the France prompt first differs at index12
+(5429 versus8585). Thus two of four complete sequences pass;128 tokens were
+generated, not128 reference-correct tokens. Ordinary CPU analysis reconstructs
+the actual sequences and first mismatches from each raw log.
+
+The existing PLOW_DUMP_LOGITS interface supplies a fixed-history diagnostic
+at both failed positions. A fresh HF generate call reproduces the original
+oracle prefixes and exposes the corresponding raw logits. Across all151936
+logits, relative L2 errors are0.0148267 and0.0178287; KL(reference||Plow) is
+0.0009691 and0.0019013. The HF top-two margins are0 and0.0625 respectively.
+Plow breaks the first reference tie and introduces a tie at the second
+position. These observations explain argmax sensitivity to the observed
+numeric changes; they neither locate a unique implementation cause nor
+establish general quality equivalence. No new acceptance threshold is adopted.
+An earlier standalone-forward diagnostic uses different invocation geometry
+and must not replace the generate oracle; both records remain visible.
+
+[Frozen patch, commands, build/emit failures, successful builds, complete
+generated sequences, sanitizer receipts and diagnostics](../../bench/results/plow_sm120_qualification_20261011.txt)
+provide reproducible evidence. No model-weight, packet or executable binary
+is committed. The host boot remains04dc0087-5ccc-4c46-9997-b9a92f0e5167;
+SGLang PID2762187 remains resident at18346MiB, and the04:58 UTC journal read
+has no NVRM Xid since04:30. Residency is not other-service acceptance.
+All owned qualification processes are terminal; no reset/reboot, persistent
+configuration, production executor or unrelated WIP was changed.
+
+Plow is a buildable SM120 candidate with mixed numerical results, not a
+qualified replacement, resident network integration or serving performance
+result. Further model-specific arithmetic tuning would not establish the
+eBPF path benefit. Retain the qualified HF graph executor while evaluating
+a distinct upstream computation interface or a clearly declared independent
+quality contract before integrating an alternative backend.

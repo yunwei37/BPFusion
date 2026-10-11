@@ -191,6 +191,9 @@ No new backend is qualified yet; the current measured executor remains in use.
 The [MPK qualification](docs/findings/0023-batch-execution-qualification.md#upstream-mpk-sm120-compatibility-and-terminal-numerical-rejection)
 records repaired native memory/synchronization faults and failed whole-model
 outputs under both parallel and serial submission.
+The [Plow qualification](docs/findings/0023-batch-execution-qualification.md#upstream-plow-sm120-build-and-mixed-numerical-qualification)
+records successful SM120 builds and zero-error finite memchecks, with two of
+four32-token sequences matching HF; it is not a qualified replacement.
 
 
 ## Repository layout
