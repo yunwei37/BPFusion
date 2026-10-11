@@ -268,3 +268,55 @@ Container termination cause
 has not been established by this inspection.
 Full service scope remains text processing, continuous batching, completion
 interfaces/timing, complete host cost, optimized serving and physical NIC.
+
+## Official token-only optimized baseline dependency preparation
+
+After the complete paired-KV collection and its after-host snapshot,the next
+comparison advances to official optimized serving. This is benchmark-only
+dependency setup,not deployment,inference preflight or a performance result.
+
+The existing bench/run_http.sh lifecycle uses broad pkill and its
+tools/llm_http_client.py counts nonempty SSE text chunks as tokens while
+adding chat formatting. It cannot be reused unchanged for a shared-host
+matched token-level comparison. Official vLLM0.31.0 supports
+/inference/v1/generate with --tokens-only:token IDs in/out,no tokenizer or
+detokenization. Its installed serving source uses DELTA output for streams.
+Use actual choice.token_ids and their arrival times,not SSE chunk count.
+The versioned source lacks the newer output_mode field shown in latest docs;
+use the installed/versioned API,not unsupported latest parameters.
+
+Original bpfusion-dev Workspace/lab RTX5090/PVC/session/other SGLang owner
+remain preserved. Both inspected base environment and existing .venv-ml lack
+vLLM;the latter also lacks Torch/Transformers. An OS-temp environment
+/tmp/bpfusion-vllm-uapngodu/venv holds official vLLM dependencies,leaving
+qualified Torch2.14.1/Transformers5.19.0/Triton3.8.0 unchanged.
+A first python3 -m venv attempt fails before package/model activity because
+ensurepip is absent. Existing pip24.0 supports --python targeting the already
+created temporary venv;no global apt package/original environment change.
+
+Successful command:
+python3 -m pip --python /tmp/bpfusion-vllm-uapngodu/venv install vllm==0.31.0 --extra-index-url https://download.pytorch.org/whl/cu129
+
+[Full install log](../../bench/results/qwen_vllm_dependency_install_20261010.txt)
+terminates0. [Version/import/dependency receipt](../../bench/results/qwen_vllm_dependency_versions_20261010.txt)
+records vLLM0.31.0,Torch2.13.0+cu129,Transformers5.17.0,
+FlashInfer0.7.0.post1,httpx0.28.1. CPU vLLM/Torch import and pip check pass.
+This does not prove compatible CUDA execution,model readiness,correct
+generation or performance. No model/server/GPU inference run has occurred.
+
+The cached upstream Qwen2.5-0.5B model revision
+7ae557604adf67be50417f59c2c2f167def9a775 is available for the next frozen
+comparison. Root owns this temporary environment for only that benchmark;
+after terminal benchmark and frozen reproduction artifacts,confirm no live
+process uses it and remove this exact resolved /tmp directory. Future serving
+must remain private loopback,with exact owned-process lifecycle/authentication,
+no broad pkill,new Workspace,gateway,Secret,service or persistent setting.
+Original model/oracle/native/test source and unrelated tools/setup_env.sh
+remain unchanged. Plan/independent review and real preflight precede any
+competitive performance claim;baseline execution or numerical failure is
+not a BPFusion win.
+
+Sources:[vLLM0.31 token client](https://github.com/vllm-project/vllm/blob/v0.31.0/examples/scale_out/token_generation_client.py),
+[versioned serving source](https://github.com/vllm-project/vllm/blob/v0.31.0/vllm/entrypoints/scale_out/token_in_token_out/serving.py),
+[official installation](https://docs.vllm.ai/en/stable/getting_started/installation/gpu/),
+[pip interpreter targeting](https://pip.pypa.io/en/stable/topics/python-option/).
