@@ -1358,3 +1358,42 @@ result. Further model-specific arithmetic tuning would not establish the
 eBPF path benefit. Retain the qualified HF graph executor while evaluating
 a distinct upstream computation interface or a clearly declared independent
 quality contract before integrating an alternative backend.
+
+## Upstream model-as-a-kernel SM120 qualification
+
+Hub v1 revision [5858c6ddbe04c6b749e81daeb47bcd1857c1e618](https://huggingface.co/kernels/phanerozoic/model-as-a-kernel/tree/5858c6ddbe04c6b749e81daeb47bcd1857c1e618)
+was built in temporary storage in the original Workspace, with Torch2.14.1+cu130
+and CUDA13.0.88 on the shared RTX5090. The importer/binding match the pinned
+source bytes; the CUDA file differs only in CRLF/LF line endings. Computation
+was unchanged. A temporary registration-header shim enables the upstream
+torch.ops.mak_ext fallback with a non-Python extension build. Flags are -O3
+and -DCUDA_KERNEL; Torch selects native SM120. No fast-math flag is added.
+
+The initial attempt stops before compilation because Ninja is absent.
+Ninja1.13.2 is installed only under the temporary build directory and added
+to that invocation's PATH. The retry builds and runs the actual model;
+NATIVE_BUILD_PASS and compiler commands are retained in the raw receipt.
+
+The model is HuggingFaceTB/SmolLM2-135M in BF16. The upstream importer consumes
+the same loaded weights as the HF eager reference. Four text prompts plus
+six repeated-pattern prompt lengths1/15/16/17/32/64 each generate64 tokens.
+The oracle prefills the complete prompt, then performs cached greedy decode
+without early EOS termination. Each candidate runs single-launch generation,
+per-step launches and repeated single-launch generation with reused buffers.
+
+All10 cases agree across the two launch modes and repeat. Seven of ten
+complete64-token sequences match HF exactly. The other three first differ
+at zero-based output positions10 (eight-token arithmetic prompt),2
+(two-token Linux prompt), and0 (one-token pattern). Each of the four output
+arrays has64 tokens in every case. Thus determinism and mode agreement pass,
+but the unchanged strict reference qualification fails. This does not locate
+a unique numerical cause or establish general quality equivalence.
+
+[Complete script, shim, build failures/success, inputs, reference outputs,
+candidate outputs and exit receipts](../../bench/results/mak_sm120_qualification_20261011.txt)
+are retained. The terminal qualifier exits2 at2026-10-11T06:02:50UTC.
+A separate CPU reconstruction checks all10 rows and reproduces7 exact cases,
+three first mismatches and all mode/repeat agreements. No sanitizer, network
+integration, online admission or matched serving performance was qualified.
+No model-specific arithmetic tuning follows from this result. The qualified
+HF graph path remains available while broader upstream interfaces are assessed.

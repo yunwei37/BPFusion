@@ -6,8 +6,9 @@ operator tuning is not evidence of an eBPF benefit. A useful comparison keeps
 the backend revision, checkpoint, precision, KV layout and batching behavior
 the same while changing the request/control path.
 
-This is a source audit and candidate comparison, not a GPU qualification or
-performance result. Observation: 2026-10-11T00:48:05.450904+00:00. Sources were inspected from the
+This landscape combines source audit with separately linked local correctness
+qualifications. Source presence alone is not GPU or serving qualification;
+performance claims require matched measurements. Observation: 2026-10-11T00:48:05.450904+00:00. Sources were inspected from the
 original bpfusion-dev Workspace; the existing executor and unrelated WIP were
 preserved.
 
@@ -17,7 +18,7 @@ preserved.
 |---|---|---|
 | [Mirage / MPK](https://github.com/mirage-project/mirage) | Tensor-program compiler, device task scheduler, online request/completion rings; several model builders | Existing CPU ring producer/drainer remains part of upstream serving. Native SM120 compatibility probes pass after fixes, but complete Qwen3-0.6B outputs fail the unchanged HF oracle under parallel and serial submission. Registered model names are not independent correctness evidence. |
 | [Plow](https://github.com/infervisor/plow) | HF importer, packet compiler, Lean ordering checks and SM120 interpreter; existing native Qwen harness | Native/Rust/Lean builds pass after compile/link compatibility fixes and existing GF2 selection. Four32-token memchecks pass, but only two sequences match the unchanged HF oracle. Decode-only prompt ingestion; no qualified prefill or resident network adapter. See [qualification](findings/0023-batch-execution-qualification.md#upstream-plow-sm120-build-and-mixed-numerical-qualification). |
-| [model-as-a-kernel](https://huggingface.co/kernels/phanerozoic/model-as-a-kernel) | Architecture interpreter; a finite prompt-plus-greedy-generation loop within one launch; single and batched decode interfaces | CUDA capability 12.0 is declared and the card reports an SM120 measurement. No BPFusion queue, online admission, kernel TX or request recycling is implemented. See source boundaries below. |
+| [model-as-a-kernel](https://huggingface.co/kernels/phanerozoic/model-as-a-kernel) | Architecture interpreter; a finite prompt-plus-greedy-generation loop within one launch; single and batched decode interfaces | CUDA capability 12.0 is declared and the card reports an SM120 measurement. Native SM120 build passes with unchanged computation; seven of ten64-token SmolLM2 sequences match HF exactly. Not a qualified strict replacement, online queue or kernel-TX adapter. See source boundaries and qualification below. |
 | [Luminal](https://github.com/luminal-ai/luminal), [compiler design](https://blog.luminal.com/p/compiling-models-to-megakernels) | General inference compiler and symbolic megakernel work queue | Public backend coverage and host generation/control dependencies need an interface audit. General compiler expressiveness does not prove every model has a runnable whole-model megakernel. |
 | [AutoMegaKernel](https://github.com/RightNow-AI/AutoMegaKernel) | HF Llama-family import and whole-forward synthesis, with RTX 5090 evidence | Current generate.py loops on the CPU, lowers/runs each step, synchronizes and reads argmax. Its reported INT8-versus-BF16 gains change precision; they cannot establish our path benefit. |
 | [AlpinDale qwen_megakernel](https://github.com/AlpinDale/qwen_megakernel) | Existing BF16 Qwen3-0.6B kernel targeting RTX 5090 | Body/final norm and LM-head/argmax use separate kernels. Global mutable launch/synchronization state needs a concurrency audit; the bulk no-sync API is not evidence of resident online admission. See pinned source below. |
@@ -51,8 +52,9 @@ resident model-serving backend.
 
 Audited Hub v1 revision:
 [5858c6ddbe04c6b749e81daeb47bcd1857c1e618](https://huggingface.co/kernels/phanerozoic/model-as-a-kernel/tree/5858c6ddbe04c6b749e81daeb47bcd1857c1e618).
-The CUDA source, Python model importer, bindings and existing tests were read
-without modifying them or running a model.
+The initial source audit read CUDA, importer, bindings and tests without a model
+run. A later native qualification is recorded separately in
+[the qualification finding](findings/0023-batch-execution-qualification.md#upstream-model-as-a-kernel-sm120-qualification).
 
 - The Python generate() implementation at lines 929-961 calls mak_run_seq()
   once for prompt consumption plus generation. Its alternative uses the same
@@ -147,8 +149,8 @@ the candidate set; none of these source observations is a local model run.
 ## Selection and comparison implications
 
 MPK is the strongest lead for an existing online queue/runtime interface.
-model-as-a-kernel is a concrete source-level lead for reusing a finite whole
-generation with minimal compute changes. Luminal remains a compiler candidate
+model-as-a-kernel exposes a reusable finite generation interface, but the local
+unchanged-compute qualification now has mixed strict-reference results. Luminal remains a compiler candidate
 whose current public runtime needs deeper inspection. The native 5090 Qwen
 implementation is a useful narrower implementation reference.
 
@@ -284,3 +286,77 @@ than another tuning campaign on the same checkpoint. Credible optimized
 userspace controls, CPU-contention/tail behavior and attributed costs are
 proposed experiments, not established performance claims or a replacement of
 the user's goal.
+
+## Additional graph-runtime and networking artifact search
+
+Read-only observation: 2026-10-11T06:05-06:10UTC. Queries covered multi-model
+persistent inference, device-side task graphs, GPU-initiated RPC, Linux/eBPF
+and socket paths, ForgeMegakernel artifacts, DITRON, Mustard, Paella, GPUnet
+and GPU-Ether. An awesome list supplied leads; the decisions below use pinned
+author source, primary papers and official proceedings. No new backend was
+installed or run in this search.
+
+- [DITRON, ICML2026](https://proceedings.mlr.press/v306/zheng26ai.html) has an
+  actual public compute artifact in
+  [Triton-distributed revision7908e4ea9010bb2238f9f05b28c904fd4b71c60a](https://github.com/ByteDance-Seed/Triton-distributed/tree/7908e4ea9010bb2238f9f05b28c904fd4b71c60a).
+  Its MIT-licensed source includes ModelBuilder, DenseModel, paged KV, a Qwen3
+  chat server and a decode benchmark. The megakernel guide reports BF16,
+  batch1/context512 on8 H800 or8 H20 GPUs, including a CUDA-graph baseline.
+  dense.py lines191-200 runs embedding/copy outside the generated kernel;
+  model_server.py lines75-88 retains CPU generation and per-token .cpu().item().
+  This is a concrete compiler/backend candidate, not an autonomous server or
+  measured single-5090/multiple-architecture qualification.
+- [Mustard, ICS2025](https://doi.org/10.1145/3721145.3730426) has MIT source at
+  [38b0e5955829e12a00acc5974776ccbff6ea8bb9](https://github.com/ParCoreLab/mustard/tree/38b0e5955829e12a00acc5974776ccbff6ea8bb9).
+  mustard/mustard.h lines108-129 has a GPU scheduler that dequeues ready
+  subgraphs and invokes cudaGraphLaunch(..., cudaStreamGraphFireAndForget).
+  Existing runnable workloads are LU and Cholesky; CUDA12.3/NVSHMEM/MPI are
+  dependencies. This supplies reusable scheduling code and a compute-preserving
+  precedent, not an HF importer or ready LLM network server.
+- [Toward GPU-centric Networking on Commodity Hardware, EdgeSys2024](https://dejankosticgithub.github.io/documents/publications/gpucentric-edgesys24.pdf)
+  already evaluates GPU-driven inference with RDMA on ordinary Mellanox NICs,
+  including TVM-compiled SqueezeNet and superresolution. Public
+  [apps revisionb7ee60ea8bb67837d5ae6753cec2449ef34af715](https://github.com/rdma-from-gpu/apps/tree/b7ee60ea8bb67837d5ae6753cec2449ef34af715)
+  has TVM loading in executor.cu lines379-409 and self tail-launch in
+  lines355-376. It retains initialization/connection management but supports
+  sleeping host control during serving. It uses RDMA/peermem/PCIe-P2P, rather
+  than ordinary Linux TCP. No LICENSE file appears in this apps tree;
+  reuse licensing across its related repositories remains unestablished.
+  Both CPU-free inference and no-SmartNIC operation have older precedents.
+- [GPUnet, OSDI2014](https://www.usenix.org/conference/osdi14/technical-sessions/presentation/kim)
+  already exposes GPU socket APIs and a face-verification service.
+  [The authors' implementation account](https://acsl.ece.technion.ac.il/gpunet-networking-abstractions-for-gpu-programs/)
+  explicitly retains a CPU NIC-control proxy; TCP also requires CPU transport
+  and data movement. GPU socket syntax is therefore not equivalent to removing
+  a steady userspace worker.
+- [GPU-Ether, INFOCOM2021](https://netsys.ajou.ac.kr/publication/jung2021gpu/jung2021gpu.pdf)
+  already implements persistent GPU packet I/O on commodity Intel Ethernet.
+  It maps descriptors/doorbells using driver changes and GPU P2P.
+  This is a packet-I/O precedent, not evidence of Linux TCP/HTTP compatibility
+  or a complete LLM serving backend. An ordinary Ethernet NIC alone cannot
+  distinguish BPFusion.
+- [Paella's SOSP2023 artifact](https://github.com/eniac/paella/blob/master/sosp23_artifact/README.md)
+  supplies public model-serving traces and direct-CUDA/Triton comparisons.
+  It represents sophisticated userspace/software GPU scheduling. It is an
+  evaluation/baseline lead, not a drop-in modern SM120 compute backend; its
+  artifact uses older T4/P100 hardware and requires reproduction work.
+- [ForgeMegakernel](https://arxiv.org/html/2609.12379v1) reports fourteen
+  generated decode tasks across eight models and integration into SGLang,
+  with independent intermediate-state checks. This search still finds no
+  author-linked complete public repository. The model-generation campaign
+  is a separate compute contribution; adopting its reported gains would not
+  measure an eBPF benefit.
+
+Together with Blink, these sources favor retaining two compute-reuse options:
+upstream megakernel execution and device-launched captured computation.
+Choosing the latter does not inherently require inventing model arithmetic.
+Actual graph eligibility, full prompt/decode correctness, sampling, dynamic
+shapes and buffer lifetimes still need backend-specific verification.
+
+The proposed research boundary remains Linux TCP/HTTP + eBPF/kernel queue +
+resident GPU control + asynchronous kernel TX, with demonstrated streaming and
+recycling. Linux/eBPF still consume CPU. Same-model/same-precision/same-batching
+userspace controls, total attributed host cost, CPU contention and client tail
+latency are necessary evidence; merely eliminating launches or using a normal
+NIC is insufficient novelty. More model-specific Qwen forks, new quantization
+and repeated numerical tuning are not needed to establish this path claim.
