@@ -76,23 +76,48 @@ serving, physical networking, full text processing and online batching remain
 open. Continue the full retained objective with reused compute.
 
 
-The next [timed native control experiment](findings/0027-timed-network-control.md)
-tests whether bounded executor-plus-TX CPU savings survive an efficient native
-request/reply worker while retaining identical FP16 HF computation. Planned
-role: supporting. Finding0026 cannot supply the absent condition/counter
-through reanalysis. Fresh plan review passes; four strict real-model
-regressions and six three-mode preflight executors pass. These dependencies
-do not answer the performance hypothesis.
+The [timed native control experiment](findings/0027-timed-network-control.md)
+is complete. It tests whether executor-process-plus-TX CPU savings survive
+an efficient native request/reply worker with identical FP16 HF computation.
+Role: supporting. Finding0026 cannot supply the absent condition/counter
+through reanalysis. The reviewed plan, strict regressions and real preflight
+precede frozen9f091f9 collection; these dependencies have no independent
+performance value.
 
-Full collection is pending:120 cells,7680 measured requests,249600 tokens,
-30 normal executors across both models. Primary CPU microseconds/request at
-gen64/clients8 accompany standard TTFT/TPS and nominal five-pair intervals.
-The sum excludes RX/softirq/BPF/TCP outside TX; no total host/service CPU
-claim is permitted.
+[Fresh result review](../bench/results/timed_network_result_review_20261011.md)
+independently reconstructs120 cells,7680 exact measured requests,249600 tokens,
+30 normal executors, all150 CPU read brackets/components and native paired
+statistics. Native analysis and full wrapper exit0; no failed/excluded/retried
+full-run rows. Ten resident module unloads each report55176 bytes,264 completed,
+zero abandoned/retries,19 accepted/closed sockets.
 
-An unrelated GPU-SMT candidate Job ends on ENOSPC at10:34:41UTC during
-qualification, before all preflight cells/full collection. Subsequent reads
-confirm the original SGLang process is absent. BPFusion issued no stop/restart
-or other-PVC mutation. The environment receipt preserves observations;
-earlier shared-SGLang performance does not transfer to this host condition.
-Independent full-result review and interpretation remain pending.
+Primary control-minus-resident CPU at gen64/client8,us/request:
+Smol timed-383.283 [-593.022,-173.544], Qwen timed-337.304 [-659.632,-14.976].
+The bounded CPU-saving prediction is contradicted against this efficient
+control in both tested checkpoints. Busy-control differences remain positive,
+but do not establish superiority over efficient CPU orchestration.
+The sum excludes RX/softirq/BPF/TCP outside TX; it is not total service CPU.
+
+Timed-control-minus-resident gen1/client1 TTFT:
+Smol+0.090901ms [-0.141011,0.322813], Qwen-0.026525ms [-0.059269,0.006218].
+Resident-minus-timed gen64/client8 throughput:
+Smol-2.488979 [-9.443425,4.465468], Qwen+2.632198 [-3.308572,8.572968] tokens/s.
+All planned client intervals, including busy controls, cross zero; neither
+superiority nor equivalence. All conditions use the same768-row dispatcher SASS.
+
+The co-tenant Job ends on ENOSPC during qualification; a new SGLang scheduler
+is observed immediately before full collection and alongside BPFusion at
+10:56:58/11:14:58UTC. Its full-Qwen activity/residency is unknown. Retained
+journal reads find no matching faults through the full interval, which does
+not prove no interference. A delayed21:51UTC after-run read finds the same
+boot, no own process/module/pins and an idle GPU; it cannot locate the SGLang
+departure. Qwen global CPU/TX trends also forbid transport-only attribution.
+
+Run status: valid. Tested bounded hypothesis: contradicted by the observed
+efficient-control comparison. Client performance: inconclusive. Research
+value: supporting. Paper impact: mechanism/workload boundary. Close this
+matrix, publish the negative result, and locate/discriminate kernel
+accept/drain/completion cost before selecting a transport change. No model
+arithmetic campaign, general total-CPU/speed claim or external SOTA result
+follows. Compute reuse, physical NIC, strong official serving comparison,
+full text and online batching remain part of the full retained goal.

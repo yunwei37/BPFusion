@@ -505,3 +505,148 @@ documents explicit graph-capture failure/fallback cases. These offer reusable
 CNN/encoder or other short-forward computation without hand-written model
 arithmetic. Actual device-graph node eligibility and executable/buffer lifetime
 would still need qualification; ordinary host graph replay is insufficient.
+
+## Additional execution-interface checks
+
+Read-only source checks on2026-10-11 extend the candidate survey without
+changing the measured model/dispatcher or installing another backend.
+
+[ARK revision3e8539d](https://github.com/microsoft/ark/tree/3e8539d2f21365e1a3cc423fdbac35035fe2cedd)
+exposes caller tensor mappings at launch, which is a potentially useful
+compute-reuse interface. Its loop executor launches ark_loop_kernel once,
+but Executor::run writes an iteration count to a mapped host flag and
+Executor::wait polls that flag
+([executor.cpp lines944-1009](https://github.com/microsoft/ark/blob/3e8539d2f21365e1a3cc423fdbac35035fe2cedd/ark/api/executor.cpp#L944)).
+The public Llama2 generator still copies input IDs, calls runtime.run,
+reads logits and performs NumPy argmax inside a host generation loop
+([generator.py lines142-147](https://github.com/microsoft/ark/blob/3e8539d2f21365e1a3cc423fdbac35035fe2cedd/examples/llama/generator.py#L142)).
+GPU-driven operator execution does not establish a CPU-free online
+generation/admission interface. Reusing this runtime would require control
+adaptation; SM120 and complete-model correctness remain unqualified.
+
+[CUDA PDL reconstruction](https://github.com/tie-pilot-qxw/pdl-megakernel-reconstruction)
+is a useful alternative-mechanism reference: its authors report97.4% of
+matched persistent-megakernel throughput with an81-kernel graph, on H100
+for Llama3.2-1B at batch1/P32/D128. This is their result, not a BPFusion
+measurement. The
+[experiment guide](https://github.com/tie-pilot-qxw/pdl-megakernel-reconstruction/blob/main/experiments/pdl-reconstruction/README.md)
+explicitly permits free-running trajectory token mismatches and uses
+fixed-position checks; that does not satisfy BPFusion's unchanged strict
+greedy-token oracle. It supplies neither ordinary-Linux network ingress nor
+resident online admission. CUDA PDL overlaps dependent kernel execution;
+it does not itself remove host graph submission.
+[Official PDL semantics](https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/programmatic-dependent-launch.html)
+and [device graph requirements](https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html#device-graph-requirements)
+must be checked separately. This motivates preserving upstream kernels
+behind a device-launchable graph rather than requiring one fused model kernel.
+
+Two adjacent precedents constrain claim language without adding runnable
+model backends. [NICA, ATC2019](https://www.usenix.org/conference/atc19/presentation/eran)
+associates sockets with inline FPGA SmartNIC computation and includes
+socket-level lifecycle/state integration. It does not establish commodity
+Linux/eBPF-to-GPU LLM serving, but socket-to-accelerator integration alone
+is not a new abstraction.
+[eBPFML, eBPF2025](https://www.cs.columbia.edu/~kkaffes/papers/empowering-ebpf25.pdf)
+proposes CPU matrix-accelerated models for kernel decisions, rather than a
+discrete-GPU network serving pipeline; the paper describes a design vision,
+not a general upstream-ready model-serving artifact.
+
+The current HF graph capture also has a concrete configuration boundary:
+it derives KV head dimension as hidden_size/num_attention_heads.
+The locally cached
+[Qwen3-0.6B config atc1899de](https://huggingface.co/Qwen/Qwen3-0.6B/blob/c1899de289a04d12100db370d81485cdf75e47ca/config.json)
+specifies head_dim128, hidden_size1024 and16 heads, so that derivation yields
+64 rather than128. Installed Transformers5.19.0 Qwen3Attention uses the
+explicit config.head_dim for its projections and cache shape. Supporting this
+checkpoint requires respecting the discovered model configuration, not
+rewriting Qwen3 arithmetic. This is source/config evidence only: the measured
+Smol/Qwen2 code remains frozen, and Qwen3 graph/network correctness has not
+been qualified.
+
+For a future strong external serving comparison, SGLang's native token-ID
+interface avoids imposing tokenization/text work on only one system.
+[Release0.5.21 tokenizer_manager](https://github.com/sgl-project/sglang/blob/v0.5.21/python/sglang/srt/managers/tokenizer_manager.py)
+accepts input_ids when tokenizer initialization is skipped, maintains
+state.output_ids, and returns cumulative or incremental output IDs according
+to the streaming setting.
+[BatchTokenIDOutput](https://github.com/sgl-project/sglang/blob/v0.5.21/python/sglang/srt/managers/io_struct.py#L1526)
+explicitly identifies its output_ids path with skip_tokenizer_init.
+This makes the official native HTTP API a stronger candidate than an
+in-process eager-loop proxy. It still uses JSON/SSE rather than BPFusion's
+binary body, so protocol/framing and model-computation differences need
+explicit interpretation, independent output checking and native baseline
+engagement before any numerical claim.
+
+The owning BPFusion environment has neither SGLang nor vLLM installed.
+The2026-10-11 release/PyPI read identifies SGLang0.5.21; its
+[package metadata](https://pypi.org/pypi/sglang/0.5.21/json)
+requires Torch2.13.0, whereas this Workspace has Torch2.14.1.
+Reproduction would need a test-local dependency environment; do not replace
+the measured environment or another owner's active scheduler. No installation,
+server run or external-baseline performance evidence follows from this survey.
+
+## Earlier GPU networking and evaluation precedents
+
+Follow-up read-only search on2026-10-11T21:53UTC used ten materially different
+queries on GPU sockets, event loops, GPU-initiated inference, persistent
+operator runtimes and efficient CPU alternatives. The declared questions were:
+whether GPU request ownership itself is new; whether device graphs can reuse
+complete upstream models without a megakernel; and which CPU alternative makes
+an efficiency claim meaningful. This branch adds networking/evaluation
+precedents rather than another obligation to install model kernels.
+
+- [GPUnet, OSDI2014](https://www.usenix.org/conference/osdi14/technical-sessions/presentation/kim)
+  already supplies GPU socket/stream abstractions and GPU-native services.
+  The [authors' description](https://acsl.ece.technion.ac.il/gpunet-networking-abstractions-for-gpu-programs/)
+  explicitly retains CPU assistance for TCP/non-RDMA transport.
+  At [revision10a6da3](https://github.com/ut-osa/gpunet/tree/10a6da3b4bbfced885272c535ba661301f49a551),
+  core/hostloop.cpp calls CPU recv/send at lines673/839 and performs
+  CUDA staging copies on its TCP branch. GPU socket APIs alone therefore
+  cannot distinguish BPFusion; eliminating this steady userspace proxy while
+  keeping Linux transport is the relevant integration question.
+- [GLoop's public artifact](https://github.com/CPFL/gloop/tree/25557429de5283a1803f201d8d054ffe5fc26109)
+  cites its SoCC2017 publication. Its [earlier author paper](https://www.cs.utexas.edu/~mars2016/workshop-program/MaRS_2016_paper_6.pdf),
+  sections3.2-4.2, uses host/device event loops and shared-memory RPC;
+  the CPU performs requested I/O and publishes completions. Device polling
+  and event-driven callbacks are established mechanisms, not new by themselves.
+  This older Kepler/Pascal runtime is a citation/control-design precedent,
+  not a locally qualified modern model backend.
+- [Toward GPU-centric Networking on Commodity Hardware, EdgeSys2024](https://girondi.net/pub/gpunetworking24-cc.pdf)
+  is particularly close: sections4-5 reuse TVM computation in a self-launching
+  CUDA graph containing wait-input, compute, send-output and tail-launch.
+  It evaluates GPU-driven RDMA inference and CPU consumption, on A100/L40.
+  [The official artifact](https://zenodo.org/records/13332456) exposes the
+  CUDA RDMA shim and model-serving applications.
+  [Pinned apps revisionb7ee60e](https://github.com/rdma-from-gpu/apps/tree/b7ee60ea8bb67837d5ae6753cec2449ef34af715)
+  confirms executor.cu's TVM graph loading and device tail launch at lines355-429;
+  worker.cu lines659-665 supplies a sleeping host lifetime alternative.
+  Reused model graphs plus CPU-free RDMA serving are already demonstrated.
+  Ordinary Linux TCP/eBPF integration remains a candidate distinction;
+  changing the transport must deliver measured practical value, not just
+  replace an existing mechanism with a new label.
+- [GASPP, ATC2014](https://www.usenix.org/conference/atc14/technical-sessions/presentation/vasiliadis)
+  already offloads flow state and TCP stream reconstruction to GPUs.
+  It addresses traffic-processing modules, not the current Linux socket
+  service with reused autoregressive computation. Broad claims of first GPU
+  TCP/stream processing are therefore untenable.
+- [GPU-Initiated Networking for NCCL](https://arxiv.org/abs/2511.15076)
+  explicitly distinguishes direct GPU-initiated and CPU-proxy plugin semantics.
+  A device-side API name is not evidence that its selected implementation has
+  no steady CPU proxy. This is a communication/interface precedent, not a
+  token-ID HTTP numerical baseline.
+- [Raising the Bar for Using GPUs in Software Packet Processing, NSDI2015](https://www.usenix.org/conference/nsdi15/technical-sessions/presentation/kalia)
+  finds that suitably optimized CPU implementations can be more resource
+  efficient than GPU versions of packet-processing work. It does not settle
+  BPFusion inference, but strengthens the requirement for an efficient CPU
+  control instead of a busy-loop-only comparison.
+
+The GPUOS source/paper inspected in this branch is the same pinned revision
+already recorded above; no second candidate or new qualification is counted.
+Remaining uncertainties are numerical/backend correctness on SM120, actual
+device-launch eligibility, total attributed CPU cost, physical-network behavior
+and fair strong-serving comparisons. Search coverage now includes early socket
+and event-loop systems, current GPU-network APIs, whole-model compilers,
+graph reuse, conventional serving alternatives and CPU-efficiency counterexamples.
+Further implementation selection should follow those concrete uncertainties;
+model-specific arithmetic, a custom TCP stack and porting every candidate to
+the present GPU are unnecessary to isolate the requested serving-path effect.

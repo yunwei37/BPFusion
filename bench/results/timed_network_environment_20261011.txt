@@ -132,3 +132,92 @@ COMMAND ['ps', '-p', '2762187', '-o', 'pid,etimes,args'] EXIT 1
 
 COMMAND ['journalctl', '-k', '--since', '2026-10-11 10:40:14', '--no-pager'] EXIT 0
 No matching kernel fault lines
+
+
+DURING FULL UTC 2026-10-11T10:56:58.094312+00:00
+['nvidia-smi', '--query-gpu=index,uuid,name,memory.total,memory.used,utilization.gpu', '--format=csv,noheader'] EXIT 0
+0, GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, NVIDIA GeForce RTX 5090, 32607 MiB, 22535 MiB, 100 %
+
+['nvidia-smi', '--query-compute-apps=gpu_uuid,pid,process_name,used_gpu_memory', '--format=csv,noheader'] EXIT 0
+GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, 4026103, sglang::scheduler, 18398 MiB
+GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, 4031730, /usr/bin/python3, 652 MiB
+GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, 4041106, python3, 3452 MiB
+
+['ps', '-p', '4026103', '-o', 'pid,ppid,etimes,args'] EXIT 0
+    PID    PPID ELAPSED COMMAND
+4026103 4025657     356 sglang::scheduler
+
+['journalctl', '-k', '--since', '2026-10-11 10:51:29', '--no-pager'] EXIT 0
+No matching kernel fault lines
+
+
+NEAR SMOL END UTC 2026-10-11T11:14:58.379653+00:00
+boot_id 04dc0087-5ccc-4c46-9997-b9a92f0e5167
+COMMAND ['nvidia-smi', '--query-gpu=index,uuid,name,memory.used,utilization.gpu', '--format=csv,noheader'] EXIT 0
+0, GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, NVIDIA GeForce RTX 5090, 20587 MiB, 100 %
+
+
+COMMAND ['nvidia-smi', '--query-compute-apps=gpu_uuid,pid,process_name,used_gpu_memory', '--format=csv,noheader'] EXIT 0
+GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, 4026103, sglang::scheduler, 18402 MiB
+GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, 4031730, /usr/bin/python3, 652 MiB
+GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, 4093049, python3, 1498 MiB
+
+
+COMMAND ['free', '-m'] EXIT 0
+               total        used        free      shared  buff/cache   available
+Mem:          128260       16899       51859         480       61178      111360
+Swap:           8191        1745        6446
+
+
+COMMAND ['journalctl', '-k', '--since', '2026-10-11 10:56:58', '--no-pager'] EXIT 0
+No matching kernel fault lines
+
+Delayed after-run observation; this is not a contemporaneous 11:36 GPU residency receipt.
+OBSERVED UTC 2026-10-11T21:51:33.632958+00:00
+COMMAND ['cat', '/proc/sys/kernel/random/boot_id'] EXIT 0
+04dc0087-5ccc-4c46-9997-b9a92f0e5167
+
+
+COMMAND ['nvidia-smi', '--query-gpu=uuid,name,memory.total,memory.used,utilization.gpu', '--format=csv'] EXIT 0
+uuid, name, memory.total [MiB], memory.used [MiB], utilization.gpu [%]
+GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, NVIDIA GeForce RTX 5090, 32607 MiB, 15 MiB, 0 %
+
+
+COMMAND ['nvidia-smi', '--query-compute-apps=pid,process_name,used_gpu_memory', '--format=csv'] EXIT 0
+pid, process_name, used_gpu_memory [MiB]
+
+
+COMMAND ['free', '-m'] EXIT 0
+               total        used        free      shared  buff/cache   available
+Mem:          128260       16773       12222         387      100847      111486
+Swap:           8191        1684        6507
+
+
+COMMAND ['journalctl', '-k', '--since', '2026-10-11 11:14:58 UTC', '--until', '2026-10-11 11:36:30 UTC', '--no-pager', '-o', 'short-iso'] EXIT 0
+No matching fault lines in retained requested journal interval
+
+
+Wrapper97579 absent; native full log records terminal exit0 at11:36:20UTC. Workspace inspection at21:51UTC found no matching resident_dispatch/qwen_graph/timed-network-full processes, no bfusion module and empty /sys/fs/bpf. No co-tenant stop/restart performed by BPFusion. Later absence cannot identify when the observed SGLang co-tenant left.
+
+Retrospective module lifecycle journal UTC 2026-10-11T21:55:02.307300+00:00
+COMMAND ['journalctl', '-k', '--since', '2026-10-11 10:53:04 UTC', '--until', '2026-10-11 11:36:30 UTC', '--no-pager', '-o', 'short-iso'] EXIT 0
+2026-10-11T03:54:17-07:00 lab kernel: bfusion_tx: map id=5951 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T03:54:39-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T03:58:56-07:00 lab kernel: bfusion_tx: map id=5965 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T03:59:19-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T04:05:07-07:00 lab kernel: bfusion_tx: map id=5986 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T04:05:30-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T04:11:14-07:00 lab kernel: bfusion_tx: map id=6002 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T04:11:37-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T04:15:51-07:00 lab kernel: bfusion_tx: map id=6016 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T04:16:13-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T04:17:21-07:00 lab kernel: bfusion_tx: map id=6024 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T04:17:44-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T04:21:24-07:00 lab kernel: bfusion_tx: map id=6038 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T04:21:47-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T04:26:45-07:00 lab kernel: bfusion_tx: map id=6054 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T04:27:08-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T04:31:58-07:00 lab kernel: bfusion_tx: map id=6066 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T04:32:21-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T04:35:53-07:00 lab kernel: bfusion_tx: map id=6084 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T04:36:16-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19

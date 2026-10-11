@@ -207,8 +207,11 @@ timed epoll with the same resident GPU computation. The benchmark also measures
 executor-process CPU plus the kernel TX task's adjusted CPU time. Both model
 architectures pass strict kernel/wait regressions and all three native paths
 pass real preflight. [Finding0027](docs/findings/0027-timed-network-control.md)
-records qualification, metric boundaries and commands; full performance
-collection is pending. These counters do not identify total service CPU.
+records the complete120-cell comparison and independent review. At gen64/eight
+clients, the timed userspace control uses less measured executor-plus-TX CPU
+than the kernel path for both models; planned TTFT/throughput remain inconclusive.
+These counters do not identify total service CPU. The negative result directs
+attention to request/completion overhead while retaining upstream computation.
 
 ## Reusing upstream compute
 

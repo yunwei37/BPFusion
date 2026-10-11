@@ -18,8 +18,10 @@ precede execution. There is no formal paper RQ or external SOTA baseline.
 The new condition and TX accounting are absent from finding0026; old raw
 outputs cannot recover them.
 
-Run status: strict qualification and real preflight complete; full comparison
-pending. No performance hypothesis is answered by those dependencies.
+Run status: complete and valid for the declared supporting component comparison.
+The bounded CPU-saving prediction is contradicted against the timed native
+control; client latency/throughput remain inconclusive. See the full result
+and independent review below.
 
 ## Implementation and qualification
 
@@ -65,8 +67,8 @@ Native analysis exits0 for both files. Do not interpret these single-block
 four-request cells as performance results.
 
 Qualification/preflight ran on the six reviewed source changes atop bb059df;
-a7d097e only added the backend source audit, during preflight. Source will
-be committed before full collection; its metadata records the frozen revision.
+a7d097e only added the backend source audit, during preflight. Source was committed before full collection; both metadata records identify
+frozen revision9f091f95d6bc359871a10c74077f1d9af35d5caa.
 
 ## Environment boundary
 
@@ -86,24 +88,104 @@ matched comparison for this host condition. No induced isolation or
 constant co-tenant/activity claim is made; full-run event exposure must be
 reported from current observations.
 
-## Full comparison and pending interpretation
+## Full comparison and interpretation
 
-Run the two full commands in the plan. Required coverage is120 cells,
-7680 exact measured requests,249600 measured tokens and30 normal executors.
-Primary paired CPU microseconds/request use gen64/clients8 for each model and
-each control. TTFT gen1/client1 and TPS gen64/client8 accompany these estimates.
-Raw request timings, tokens, CPU components, idle windows and GPU observations
-remain authoritative. Five-pair nominal t95(df4) intervals are descriptive;
-there is no family-wide significance or equivalence claim.
+Source frozen at9f091f95d6bc359871a10c74077f1d9af35d5caa; both metadata
+records name that same revision. The two native commands run sequentially
+from2026-10-11T10:53:04UTC through11:36:20UTC. Smol exits0 at11:16:19UTC;
+Qwen and the full wrapper exit0 at11:36:20UTC. There is no failed, excluded
+or selectively retried full-run row.
 
-Independent result review and full measurements remain pending. Positive,
-negative, tradeoff and inconclusive outcomes will be retained in this finding
-and docs/evaluation.md. Text processing, continuous batching, physical-NIC
-evaluation and strong external serving comparisons remain open under the
-full user objective.
+[Full command stdout](../../bench/results/timed_network_20261011.stdout.txt),
+[Smol raw](../../bench/results/timed_network_smol_20261011.jsonl),
+[Qwen raw](../../bench/results/timed_network_qwen_20261011.jsonl) and
+[native analysis](../../bench/results/timed_network_analysis_20261011.stdout.txt)
+retain120 cells,7680 exact measured requests,249600 measured tokens and30
+normal executors. All executors report one resident launch,8580 model-graph
+steps,graph_error0,eight banks and max_active8. Each receives eight warmups
+plus256 measured requests. All150 idle/cell CPU component deltas and sequential
+read brackets reconstruct from raw counters. The native analyses both exit0.
 
-A fresh observation immediately before full collection, at10:51:29UTC,
-finds SGLang PID4026103 with18398MiB GPU residency and the same host boot.
-The original PID remains absent. Its restart cause/owner action is not
-established by this read. Full collection begins on a shared GPU again;
-preflight and full timing differences are not matched path effects.
+The five-pair estimates below use nominal two-sided t95(df4), with no
+family-wide or equivalence interpretation. CPU is control-minus-resident
+microseconds per request at gen64/client8; negative values favor the control.
+
+| Model | Control | CPU us/request difference [t95] |
+|---|---|---|
+| SmolLM2-135M | busy native | +67223.325 [66775.581,67671.069] |
+| SmolLM2-135M | timed native | -383.283 [-593.022,-173.544] |
+| Qwen2.5-0.5B | busy native | +91205.752 [89877.246,92534.257] |
+| Qwen2.5-0.5B | timed native | -337.304 [-659.632,-14.976] |
+
+At that primary workload, mean bounded CPU per request is2011.566us resident,
+69234.891us busy and1628.283us timed for Smol;2319.134us resident,
+93524.886us busy and1981.831us timed for Qwen. The efficient control uses
+less measured worker CPU for both models. Kernel TX dominates the resident
+counter; this does not identify which internal activity causes its cost.
+
+Standard client metrics accompany the CPU comparison. TTFT is
+control-minus-resident at gen1/client1 in milliseconds; throughput is
+resident-minus-control at gen64/client8 in output tokens/s.
+
+| Model | Control | TTFT ms difference [t95] | Throughput tokens/s difference [t95] |
+|---|---|---|---|
+| SmolLM2-135M | busy native | -0.090135 [-0.268859,0.088589] | -6.368173 [-15.373800,2.637453] |
+| SmolLM2-135M | timed native | +0.090901 [-0.141011,0.322813] | -2.488979 [-9.443425,4.465468] |
+| Qwen2.5-0.5B | busy native | -0.017408 [-0.037196,0.002381] | +3.320190 [-6.397947,13.038327] |
+| Qwen2.5-0.5B | timed native | -0.026525 [-0.059269,0.006218] | +2.632198 [-3.308572,8.572968] |
+
+All these client intervals cross zero. This establishes neither superiority
+nor equivalence. Mean gen64/client8 throughput is918.517/924.885/921.006
+tokens/s for Smol resident/busy/timed and688.077/684.757/685.445 for Qwen.
+The busy-loop CPU difference is a tradeoff control, not sufficient evidence
+against efficient conventional serving.
+
+[Fresh independent result review](../../bench/results/timed_network_result_review_20261011.md)
+reconstructs the complete matrix, oracle, all CPU/timing values and mechanism
+engagement. It independently confirms the negative efficient-control comparison
+and crossing-zero client intervals. No invalidating defect or rerun is required.
+
+### Event exposure and lifecycle
+
+The full collection starts with a new shared SGLang process observed at
+10:51:29UTC,PID4026103,18398MiB, on the same GPU UUID and host boot.
+At10:56:58 and11:14:58UTC it remains observed alongside BPFusion.
+Per-cell GPU clocks/temperature/power/utilization are retained; these do
+not identify or guarantee constant co-tenant activity.
+
+Retrospective retained kernel journal for the full interval identifies all
+ten resident module lifecycles. Each unload reports55176 bytes,264 completed,
+zero abandoned/retries,19 accepted and19 closed sockets. Host fault reads
+through11:36:30UTC find no matching OOM/Xid/Oops/BUG/Call Trace/I/O/EXT4
+fault lines in the requested retained intervals. Absence of those fault lines
+does not prove freedom from interference or equal exposure.
+
+The after-run process/GPU inspection occurs later, at21:51UTC. It finds no
+benchmark/executor process, bfusion module or pinned BPF object, the same host
+boot and an idle GPU. SGLang is then absent. This delayed observation does
+not establish when SGLang left, continuous residency, or contemporaneous
+after-run GPU conditions; its lifecycle was not changed by BPFusion.
+Do not transfer earlier co-tenant conditions into a claim of isolated data.
+
+### Decision and remaining scope
+
+Run status: valid completed supporting component comparison.
+Tested bounded CPU-saving hypothesis: contradicted at gen64/client8 against
+this efficient native control for both checkpoints. Client latency/throughput:
+inconclusive. Research value: supporting. Paper impact: mechanism/workload
+boundary, not a direct challenge to the complete research goal.
+
+Close this matrix and retain all negative results. Do not claim that removing
+the userspace worker automatically saves CPU or improves speed, or use the
+busy-loop comparison as the headline. The observed difference is not a transport-only causal estimate: shared-host
+conditions and CPU accounting boundaries remain competing explanations. Qwen
+resident gen64/client8 global CPU work changes from34.59/36.69s in its first
+two blocks to17.67/17.02/17.38s later; the cause is not established. The
+immediate uncertainty is where kernel accept/drain/completion work is spent relative to the efficient native
+control. Source-native profiling could discriminate that cause before a
+targeted transport change; the present result alone cannot select such a fix.
+
+Compute reuse remains the intended route. Do not tune model arithmetic to
+erase this result or install every surveyed kernel. Physical-NIC behavior,
+total attributed CPU, full text/tokenization, online batching and a strong
+official serving comparison remain open under the full objective.
