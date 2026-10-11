@@ -98,8 +98,13 @@ Audited upstream revision:
 - The Qwen3 builder registers several names, including a Qwen3.5 alias.
   A registry entry alone does not establish correctness for a different
   hybrid architecture.
-- Temporary Python dependencies were installed in a separate environment.
-  No native MPK build, model run or kernel-queue integration has been qualified.
+- A native build and bounded SM120 Qwen3-0.6B qualification now exist.
+  The temporary compatibility patch repairs attention metadata, shared-memory
+  capacity and LM-head synchronization. Independent LM-head probes pass,
+  but the complete model fails all12 reference prefixes under both parallel
+  and serial submission, from the first output token. MPK is not a qualified
+  model backend or kernel-queue integration. The [qualification finding](findings/0023-batch-execution-qualification.md#upstream-mpk-sm120-compatibility-and-terminal-numerical-rejection)
+  links the exact patch, commands and complete positive/negative raw receipts.
 
 ## Selection and comparison implications
 

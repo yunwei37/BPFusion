@@ -1239,3 +1239,60 @@ historical controls,counters,full66 absence and cleanup. Logical sharing is
 not physical reuse;the rejection does not identify a unique matmul/bias/backend
 cause. Move to a distinct computation mechanism that can improve real TCP
 throughput/latency rather than repeat rejected unchanged qualification.
+
+## Upstream MPK SM120 compatibility and terminal numerical rejection
+
+The upstream-compute investigation follows the requested separation between
+model computation and the Linux/eBPF request path. Mirage revision
+f9eb70c254acefc9f3667b2a973d0dcf25471fce was built in an OS-temporary environment
+inside the original Workspace. The model is Qwen3-0.6B revision
+c1899de289a04d12100db370d81485cdf75e47ca, BF16, on the shared RTX5090.
+The production executor, model math and existing oracle were preserved.
+
+Three defects were identified before model qualification could finish:
+the Ampere attention task reads a ten-field parameter ABI while the selected
+Python path supplied six fields; the selected CUTLASS LM-head three-stage
+pipeline needs110592 shared bytes against98304 allocated; and shared A/C
+storage reuse lacks synchronization. The temporary patch supplies the existing
+attention ABI, uses the upstream two-stage pipeline on SM120 and adds two CTA
+barriers. It also selects existing Ampere RMSNorm/linear tasks and the SM120
+shared-memory budget. These are compatibility/correctness changes, with no
+new model-arithmetic implementation or serving-default promotion.
+
+The original LM-head memcheck reports6081 errors. Two stages remove the
+out-of-bounds access but retain numerical failure and a two-CTA racecheck
+reports9592 errors/3256 warnings. With synchronization, the two-CTA racecheck
+reports zero hazards/errors/warnings. A separate full600-CTA memcheck reports
+zero errors and both constant and dyadic-random cases match all1228800 output
+elements. The preserved two-CTA random-case label misleadingly says all600
+tiles; its actual launch/check covers two tiles, and full coverage belongs
+only to the separate sync_full probe.
+
+The complete patched online-pinned model runs three waves of four requests,
+then shuts down without reported kernel errors. All12 prefixes fail the
+unchanged32-token HF greedy oracle at output index0. A further diagnostic
+submits, completes and releases one request at a time, retaining the same
+compiled kernel, capacities and weights: all12 still fail at index0.
+The one-token prompt has identical complete generated output across modes;
+the other three prompts differ at the first generated token. Prompt bytes
+are preserved in both modes. Each mode generates6072 tokens, which must not
+be described as6072 correct tokens. This shows that simultaneous submission
+is unnecessary for the observed failure, without identifying a unique
+compute, loader, metadata or runtime cause.
+
+[Frozen source, patch, commands, complete outputs, sanitizer receipts and
+ordinary CPU analysis](../../bench/results/mpk_sm120_qualification_20261011.txt)
+preserve the positive and negative controls. Both harnesses exit0 and stop
+their kernel thread, but neither qualifies the model. The10.523978-second
+parallel and26.801169-second serial durations include harness/model work;
+they are not matched client TTFT, TPOT or throughput results. Explicit cleanup
+also triggers an ignored upstream double-finalize assertion at destruction,
+retained in the log. No network/TCP integration or performance collection
+follows from these failed model results.
+
+The host boot and other SGLang process remain present and the04:25 UTC
+journal read has no new NVRM Xid since04:00. Process residency is not service
+acceptance. No reset/reboot or persistent policy was changed. MPK remains an
+unqualified upstream candidate; further model-specific math tuning is not
+admitted as evidence for the eBPF path. A distinct public SM120 backend is the
+next integration candidate.

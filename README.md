@@ -188,6 +188,9 @@ matched comparison can attribute effects to the Linux/eBPF serving path.
 [Backend source audit](docs/upstream-backends.md) compares candidates and
 records concrete model, launch, correctness and online-service boundaries.
 No new backend is qualified yet; the current measured executor remains in use.
+The [MPK qualification](docs/findings/0023-batch-execution-qualification.md#upstream-mpk-sm120-compatibility-and-terminal-numerical-rejection)
+records repaired native memory/synchronization faults and failed whole-model
+outputs under both parallel and serial submission.
 
 
 ## Repository layout
