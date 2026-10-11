@@ -1,0 +1,117 @@
+# Read-only environment observations for timed network comparison
+
+Before qualification, root host diagnosis:
+{"utc": "2026-10-11T10:27:34.606822+00:00", "boot": "04dc0087-5ccc-4c46-9997-b9a92f0e5167", "memory": "               total        used        free      shared  buff/cache   available\nMem:          128260       15047       69818         443       45033      113212\nSwap:           8191        1760        6431\n", "gpu": "2762187, sglang::scheduler, 18368 MiB\n", "service": [], "new_faults": [], "journal_rc": 0}
+
+During real preflight, root host diagnosis:
+UTC 2026-10-11T10:40:14.711722+00:00
+boot 04dc0087-5ccc-4c46-9997-b9a92f0e5167
+['nvidia-smi', '--query-compute-apps=pid,process_name,used_memory', '--format=csv,noheader'] 0 3991402, /usr/bin/python3, 652 MiB
+3997226, python3, 1012 MiB
+ 
+['ps', '-p', '2762187', '-o', 'pid,lstart,stat,args'] 1     PID                  STARTED STAT COMMAND
+ 
+['free', '-m'] 0                total        used        free      shared  buff/cache   available
+Mem:          128260       12644       57061         420       61076      115616
+Swap:           8191        1753        6438
+ 
+fault_lines
+
+Separate co-tenant Job terminal status (kubectl-home owning read path):
+{
+  "name": "gpu-smt-candidate-5090-20261007",
+  "created": "2026-10-10T18:38:16Z",
+  "owners": null,
+  "backoffLimit": 0,
+  "status": {
+    "conditions": [
+      {
+        "lastProbeTime": "2026-10-11T10:34:44Z",
+        "lastTransitionTime": "2026-10-11T10:34:44Z",
+        "message": "Job has reached the specified backoff limit",
+        "reason": "BackoffLimitExceeded",
+        "status": "True",
+        "type": "FailureTarget"
+      },
+      {
+        "lastProbeTime": "2026-10-11T10:34:44Z",
+        "lastTransitionTime": "2026-10-11T10:34:44Z",
+        "message": "Job has reached the specified backoff limit",
+        "reason": "BackoffLimitExceeded",
+        "status": "True",
+        "type": "Failed"
+      }
+    ],
+    "failed": 1,
+    "ready": 0,
+    "startTime": "2026-10-10T18:38:16Z",
+    "terminating": 0,
+    "uncountedTerminatedPods": {}
+  }
+}
+
+Separate co-tenant Job log tail:
+bash: line 37: printf: write error: No space left on device
+date: write error: No space left on device
+completed 133 of 186 tasks
+completed 134 of 186 tasks
+completed 135 of 186 tasks
+completed 136 of 186 tasks
+completed 137 of 186 tasks
+completed 138 of 186 tasks
+completed 139 of 186 tasks
+completed 140 of 186 tasks
+completed 141 of 186 tasks
+completed 142 of 186 tasks
+completed 143 of 186 tasks
+completed 144 of 186 tasks
+completed 145 of 186 tasks
+completed 146 of 186 tasks
+completed 147 of 186 tasks
+completed 148 of 186 tasks
+completed 149 of 186 tasks
+completed 150 of 186 tasks
+completed 151 of 186 tasks
+completed 152 of 186 tasks
+completed 153 of 186 tasks
+completed 154 of 186 tasks
+completed 155 of 186 tasks
+completed 156 of 186 tasks
+completed 157 of 186 tasks
+Traceback (most recent call last):
+  File "/workspaces/repository/bench/lean_generate_goedel_capture.py", line 38, in append
+    out.flush()
+OSError: [Errno 28] No space left on device
+
+During handling of the above exception, another exception occurred:
+
+OSError: [Errno 28] No space left on device
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspaces/repository/bench/lean_generate_goedel_capture.py", line 124, in <module>
+    main()
+  File "/workspaces/repository/bench/lean_generate_goedel_capture.py", line 108, in main
+    append(args.out / "generation-events.jsonl",
+  File "/workspaces/repository/bench/lean_generate_goedel_capture.py", line 36, in append
+    with path.open("a") as out:
+         ^^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device
+
+BPFusion storage read:
+UTC 2026-10-11T10:42:53.782976+00:00
+['df', '-h', '/workspaces/repository', '/tmp', '/workspaces/.cache'] 0 Filesystem                                              Size  Used Avail Use% Mounted on
+/dev/longhorn/pvc-5d1b0ce5-fbee-43ef-93f1-d433037bb5e4   32G   16G   16G  51% /workspaces
+overlay                                                 1.8T  1.5T  346G  81% /
+/dev/longhorn/pvc-5d1b0ce5-fbee-43ef-93f1-d433037bb5e4   32G   16G   16G  51% /workspaces
+ 
+['df', '-i', '/workspaces/repository', '/tmp'] 0 Filesystem                                                Inodes   IUsed     IFree IUse% Mounted on
+/dev/longhorn/pvc-5d1b0ce5-fbee-43ef-93f1-d433037bb5e4   2097152    6085   2091067    1% /workspaces
+overlay                                                122101760 8471619 113630141    7% /
+ 
+['findmnt', '-T', '/workspaces/repository'] 0 TARGET      SOURCE                                                 FSTYPE OPTIONS
+/workspaces /dev/longhorn/pvc-5d1b0ce5-fbee-43ef-93f1-d433037bb5e4 ext4   rw,relatime
+ 
+
+Scope: no BPFusion command stopped/restarted the separate Job or SGLang, changed another PVC, or induced GPU isolation. Job logging failed on ENOSPC; these records do not establish why its storage filled or attribute it to BPFusion. No cross-project restart was issued. Host sharing changed during qualification, before all real preflight cells and full collection. No isolated-performance or direct comparison with previous shared-SGLang runs follows.

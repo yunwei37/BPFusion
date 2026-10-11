@@ -74,3 +74,25 @@ No causal old/new coalescing speedup, external SOTA or novelty claim follows.
 Passive traces retain ACK-delayed short-response delivery. Strong external
 serving, physical networking, full text processing and online batching remain
 open. Continue the full retained objective with reused compute.
+
+
+The next [timed native control experiment](findings/0027-timed-network-control.md)
+tests whether bounded executor-plus-TX CPU savings survive an efficient native
+request/reply worker while retaining identical FP16 HF computation. Planned
+role: supporting. Finding0026 cannot supply the absent condition/counter
+through reanalysis. Fresh plan review passes; four strict real-model
+regressions and six three-mode preflight executors pass. These dependencies
+do not answer the performance hypothesis.
+
+Full collection is pending:120 cells,7680 measured requests,249600 tokens,
+30 normal executors across both models. Primary CPU microseconds/request at
+gen64/clients8 accompany standard TTFT/TPS and nominal five-pair intervals.
+The sum excludes RX/softirq/BPF/TCP outside TX; no total host/service CPU
+claim is permitted.
+
+An unrelated GPU-SMT candidate Job ends on ENOSPC at10:34:41UTC during
+qualification, before all preflight cells/full collection. Subsequent reads
+confirm the original SGLang process is absent. BPFusion issued no stop/restart
+or other-PVC mutation. The environment receipt preserves observations;
+earlier shared-SGLang performance does not transfer to this host condition.
+Independent full-result review and interpretation remain pending.

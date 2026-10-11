@@ -3,6 +3,8 @@
 // publish DONE after its last page access; TX alone never reclaims PENDING.
 #include <linux/module.h>
 #include <linux/kthread.h>
+#include <linux/sched/cputime.h>
+#include <linux/mutex.h>
 #include <linux/delay.h>
 #include <linux/bpf.h>
 #include <linux/file.h>
@@ -32,6 +34,25 @@ static LIST_HEAD(peers);
 static unsigned long accepted, closed;
 static struct net *bf_net;
 static struct task_struct *tx_task;
+static DEFINE_MUTEX(cpu_lock);
+static u64 stopped_cpu_ns;
+
+/* Read-only scheduler accounting for this TX task, not total networking CPU. */
+static int tx_cpu_get(char *buffer, const struct kernel_param *unused)
+{
+    u64 user = 0, system = 0;
+
+    mutex_lock(&cpu_lock);
+    if (tx_task && !IS_ERR(tx_task))
+        task_cputime_adjusted(tx_task, &user, &system);
+    else
+        system = stopped_cpu_ns;
+    mutex_unlock(&cpu_lock);
+    return scnprintf(buffer, PAGE_SIZE, "%llu\n", user + system);
+}
+static const struct kernel_param_ops tx_cpu_ops = { .get = tx_cpu_get };
+module_param_cb(tx_cpu_ns, &tx_cpu_ops, NULL, 0444);
+MODULE_PARM_DESC(tx_cpu_ns, "read-only TX task adjusted user+system CPU nanoseconds");
 static struct bpf_map *page_map;
 static struct bf_page *page;
 static struct {
@@ -306,6 +327,7 @@ static int __init bf_init(void)
 		err = PTR_ERR(tx_task);
 		goto out_listener;
 	}
+	get_task_struct(tx_task);
 	pr_info("bfusion_tx: map id=%u size=%u ring=%zu slot=%zu net=%u\n",
 		page_map->id, page_map->value_size, offsetof(struct bf_page, llm),
 		sizeof(struct bf_llm_slot), bf_net->ns.inum);
@@ -324,7 +346,15 @@ static void __exit bf_exit(void)
 {
 	struct peer *peer, *next;
 
+	u64 user, system;
+
 	kthread_stop(tx_task);
+	mutex_lock(&cpu_lock);
+	task_cputime_adjusted(tx_task, &user, &system);
+	stopped_cpu_ns = user + system;
+	put_task_struct(tx_task);
+	tx_task = NULL;
+	mutex_unlock(&cpu_lock);
 	list_for_each_entry_safe(peer, next, &peers, node) {
 		list_del(&peer->node);
 		sock_release(peer->socket);

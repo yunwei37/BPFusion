@@ -52,8 +52,8 @@ def main():
     parser.add_argument("--prefill-edges",action="store_true",help="also test 1/15/16/17/32/64-token prompt lengths")
     parser.add_argument("--model",default="Qwen/Qwen2.5-0.5B-Instruct",help="HF checkpoint; other models require a graph executor")
     args=parser.parse_args()
-    user_network=Path(args.executor).name=="qwen_graph_user_network"
-    if args.model!="Qwen/Qwen2.5-0.5B-Instruct" and Path(args.executor).name not in ("qwen_graph","qwen_graph_host_launch","qwen_graph_user_network"):
+    user_network=Path(args.executor).name in ("qwen_graph_user_network","qwen_graph_user_network_wait")
+    if args.model!="Qwen/Qwen2.5-0.5B-Instruct" and Path(args.executor).name not in ("qwen_graph","qwen_graph_host_launch","qwen_graph_user_network","qwen_graph_user_network_wait"):
         parser.error("--model requires qwen_graph or qwen_graph_host_launch")
     weights="/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin" if args.model=="Qwen/Qwen2.5-0.5B-Instruct" else args.model
     cases,vocab=oracle_cases(args.gen,args.prefill_edges,args.model)
@@ -203,7 +203,7 @@ def main():
         try:
             if executor is not None:
                 shutdown=time.monotonic()
-                if complete and Path(args.executor).name in ("qwen_graph","qwen_graph_host_launch","qwen_graph_user_network"):
+                if complete and Path(args.executor).name in ("qwen_graph","qwen_graph_host_launch","qwen_graph_user_network","qwen_graph_user_network_wait"):
                     # A signal on a CUDA helper must also wake the host wait.
                     tid=next(int(p.name) for p in Path(f"/proc/{executor.pid}/task").iterdir() if int(p.name)!=executor.pid)
                     assert ctypes.CDLL(None).tgkill(executor.pid,tid,signal.SIGTERM)==0

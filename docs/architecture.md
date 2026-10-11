@@ -204,7 +204,20 @@ plus GPU release. One request per connection is active; later pipeline
 requests stay buffered. There is no eBPF ingress or kernel TX in this control.
 Its busy completion polling and userspace network calls are explicit
 comparison costs, not default production behavior. See finding0025 for the
-qualified scope and pending matched measurements.
+qualified scope and completed matched measurements.
+
+The optional qwen-graph-user-network-wait build adds epoll_pwait2 with a
+60000ns timeout to that same native loop. Readiness wakes it early; GPU
+completion is checked after each wait. It changes host polling, with no
+model/dispatcher change. Finding0027 records its strict qualification and
+pending three-mode CPU/latency comparison.
+
+The module exposes a read-only tx_cpu_ns sysfs parameter for the TX task's
+adjusted user+system CPU time. A retained task reference and mutex cover its
+getter/shutdown lifetime. Native measurement adds this delta to the executor
+process CPU clock and retains sequential-read brackets. CPU charged outside
+these contexts, including RX/softirq/BPF/TCP, is excluded; this sum must not
+be called total service CPU. Connection handling and the page ABI are unchanged.
 
 ## Ownership rules (the correctness core)
 

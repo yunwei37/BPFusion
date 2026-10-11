@@ -52,12 +52,24 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
             reply.header_sent+=sent_header;reply.bytes+=(size_t)n-sent_header;
         }
     };
+#ifdef BF_USER_NETWORK_WAIT
+    printf("userspace completion wait=epoll_pwait2 timeout_ns=60000\n");
+#else
+    printf("userspace completion wait=busy epoll_wait timeout_ms=0\n");
+#endif
+    fflush(stdout);
     auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(seconds);
     while(!*stopped && std::chrono::steady_clock::now()<deadline) {
-        // Busy completion polling is a low-latency control; report its CPU cost.
         epoll_event events[BF_LLM_SLOTS*2];
+#ifdef BF_USER_NETWORK_WAIT
+        // Socket readiness wakes immediately; GPU completions are polled after
+        // the same nominal 60 us lower wait bound used by kernel TX.
+        const timespec timeout={0,60000};
+        int n=epoll_pwait2(ep,events,BF_LLM_SLOTS*2,&timeout,nullptr);
+#else
         int n=epoll_wait(ep,events,BF_LLM_SLOTS*2,0);
-        if(n<0 && errno!=EINTR) { perror("epoll_wait");break; }
+#endif
+        if(n<0 && errno!=EINTR) { perror("epoll wait");break; }
         for(int e=0;e<n;e++) {
             int fd=events[e].data.fd;
             if(fd==listener) {

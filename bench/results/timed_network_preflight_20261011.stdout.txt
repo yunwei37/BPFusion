@@ -1,0 +1,34 @@
+preflight started UTC 2026-10-11T10:37:48.728103+00:00
+COMMAND HF_HOME=/workspaces/.cache/huggingface /usr/bin/python3 bench/resident_dispatch.py --preflight --gen 64 --resident-executor ./build/qwen_graph --user-network-executor ./build/qwen_graph_user_network --user-network-wait-executor ./build/qwen_graph_user_network_wait --model HuggingFaceTB/SmolLM2-135M --output bench/results/timed_network_smol_preflight_20261011.jsonl
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 8196.47it/s]
+HF reference model=HuggingFaceTB/SmolLM2-135M type=llama vocab=49152
+pair=0 mode=resident gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+pair=0 mode=user-network gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.020
+pair=0 mode=user-network-wait gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+{"mode": "resident", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 3.22507225, "ttft_p50_ms": 3.1275709999999997, "ttft_p99_ms": 3.59683836, "tpot_mean_ms": null, "completion_mean_ms": 3.22507225, "host_cpu_work_s_per_cell": [0.07], "executor_cpu_s_per_cell": [0.0], "known_worker_cpu_ns_per_cell": [210084], "kernel_tx_cpu_ns_per_cell": [210084], "tokens_per_s": [308.8417215517011]}
+{"mode": "user-network", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 2.666925, "ttft_p50_ms": 2.6617875, "ttft_p99_ms": 2.6876683, "tpot_mean_ms": null, "completion_mean_ms": 2.666925, "host_cpu_work_s_per_cell": [0.03], "executor_cpu_s_per_cell": [0.020000000000010232], "known_worker_cpu_ns_per_cell": [11015880], "kernel_tx_cpu_ns_per_cell": [0], "tokens_per_s": [371.93532267899803]}
+{"mode": "user-network-wait", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 3.15199575, "ttft_p50_ms": 3.1392825, "ttft_p99_ms": 3.23006373, "tpot_mean_ms": null, "completion_mean_ms": 3.15199575, "host_cpu_work_s_per_cell": [0.06], "executor_cpu_s_per_cell": [0.0], "known_worker_cpu_ns_per_cell": [361772], "kernel_tx_cpu_ns_per_cell": [0], "tokens_per_s": [315.4422879407675]}
+{"control": "user-network", "gen": 1, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [-0.5581472500000002], "difference_mean_ms": -0.5581472500000002, "difference_t95_ms": null}
+{"control": "user-network", "gen": 1, "concurrency": 1, "paired_resident_minus_user_network_tps": [-63.09360112729695], "difference_mean_tps": -63.09360112729695, "difference_t95_tps": null}
+{"control": "user-network", "gen": 1, "concurrency": 1, "paired_control_minus_resident_worker_cpu_us_per_request": [2701.449], "difference_mean_worker_cpu_us_per_request": 2701.449, "difference_t95_worker_cpu_us_per_request": null}
+{"control": "user-network-wait", "gen": 1, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [-0.07307649999999999], "difference_mean_ms": -0.07307649999999999, "difference_t95_ms": null}
+{"control": "user-network-wait", "gen": 1, "concurrency": 1, "paired_resident_minus_user_network_tps": [-6.600566389066444], "difference_mean_tps": -6.600566389066444, "difference_t95_tps": null}
+{"control": "user-network-wait", "gen": 1, "concurrency": 1, "paired_control_minus_resident_worker_cpu_us_per_request": [37.922], "difference_mean_worker_cpu_us_per_request": 37.922, "difference_t95_worker_cpu_us_per_request": null}
+COMMAND EXIT 0 UTC 2026-10-11T10:41:18.290308+00:00
+COMMAND HF_HOME=/workspaces/.cache/huggingface /usr/bin/python3 bench/resident_dispatch.py --preflight --gen 64 --resident-executor ./build/qwen_graph --user-network-executor ./build/qwen_graph_user_network --user-network-wait-executor ./build/qwen_graph_user_network_wait --model Qwen/Qwen2.5-0.5B-Instruct --output bench/results/timed_network_qwen_preflight_20261011.jsonl
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4574.78it/s]
+HF reference model=Qwen/Qwen2.5-0.5B-Instruct type=qwen2 vocab=151936
+pair=0 mode=resident gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+pair=0 mode=user-network gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.020
+pair=0 mode=user-network-wait gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+{"mode": "resident", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 2.42700375, "ttft_p50_ms": 2.4243125, "ttft_p99_ms": 2.51702237, "tpot_mean_ms": null, "completion_mean_ms": 2.42700375, "host_cpu_work_s_per_cell": [0.05], "executor_cpu_s_per_cell": [0.0], "known_worker_cpu_ns_per_cell": [267625], "kernel_tx_cpu_ns_per_cell": [232772], "tokens_per_s": [407.75800377991663]}
+{"mode": "user-network", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 2.3646155, "ttft_p50_ms": 2.372864, "ttft_p99_ms": 2.39331916, "tpot_mean_ms": null, "completion_mean_ms": 2.3646155, "host_cpu_work_s_per_cell": [0.03], "executor_cpu_s_per_cell": [0.020000000000003126], "known_worker_cpu_ns_per_cell": [9999561], "kernel_tx_cpu_ns_per_cell": [0], "tokens_per_s": [418.6394615208062]}
+{"mode": "user-network-wait", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 2.071264, "ttft_p50_ms": 2.0555635, "ttft_p99_ms": 2.13658902, "tpot_mean_ms": null, "completion_mean_ms": 2.071264, "host_cpu_work_s_per_cell": [0.03], "executor_cpu_s_per_cell": [0.0], "known_worker_cpu_ns_per_cell": [247805], "kernel_tx_cpu_ns_per_cell": [0], "tokens_per_s": [480.57411305842413]}
+{"control": "user-network", "gen": 1, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [-0.0623882499999997], "difference_mean_ms": -0.0623882499999997, "difference_t95_ms": null}
+{"control": "user-network", "gen": 1, "concurrency": 1, "paired_resident_minus_user_network_tps": [-10.881457740889573], "difference_mean_tps": -10.881457740889573, "difference_t95_tps": null}
+{"control": "user-network", "gen": 1, "concurrency": 1, "paired_control_minus_resident_worker_cpu_us_per_request": [2432.984], "difference_mean_worker_cpu_us_per_request": 2432.984, "difference_t95_worker_cpu_us_per_request": null}
+{"control": "user-network-wait", "gen": 1, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [-0.3557397499999997], "difference_mean_ms": -0.3557397499999997, "difference_t95_ms": null}
+{"control": "user-network-wait", "gen": 1, "concurrency": 1, "paired_resident_minus_user_network_tps": [-72.8161092785075], "difference_mean_tps": -72.8161092785075, "difference_t95_tps": null}
+{"control": "user-network-wait", "gen": 1, "concurrency": 1, "paired_control_minus_resident_worker_cpu_us_per_request": [-4.955], "difference_mean_worker_cpu_us_per_request": -4.955, "difference_t95_worker_cpu_us_per_request": null}
+COMMAND EXIT 0 UTC 2026-10-11T10:44:14.236539+00:00
+preflight completed exit=0 UTC 2026-10-11T10:44:14.236597+00:00

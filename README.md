@@ -202,6 +202,14 @@ user throughput cell; every sample is retained, and no transport-only benefit
 or kernel robustness is established. Short-response ACK delays and attributed
 host cost remain unresolved.
 
+The optional `make qwen-graph-user-network-wait` control now uses native
+timed epoll with the same resident GPU computation. The benchmark also measures
+executor-process CPU plus the kernel TX task's adjusted CPU time. Both model
+architectures pass strict kernel/wait regressions and all three native paths
+pass real preflight. [Finding0027](docs/findings/0027-timed-network-control.md)
+records qualification, metric boundaries and commands; full performance
+collection is pending. These counters do not identify total service CPU.
+
 ## Reusing upstream compute
 
 The next backend investigation reuses upstream megakernel computation so a
