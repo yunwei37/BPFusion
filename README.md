@@ -195,9 +195,11 @@ duration shares to the device-launched trace or establish a serving speedup.
 Both native network paths now coalesce the HTTP header and first available
 token in one vectored send while retaining default TCP and identical GPU
 computation. [Finding0026](docs/findings/0026-coalesced-network.md) records
-four complete strict regressions, passive packet evidence and two real
-preflights. The next full matched comparison is pending; remaining short
-response ACK delays and total host cost are still unresolved.
+strict regressions and passive packet evidence. The first full comparison
+failed on a transient admission refusal; an atomic reservation repair passes
+the strict regressions and historical bridge compatibility checks. Fresh
+preflights pass for both models; the full retry remains pending. Short-response ACK delays and
+total host cost are still unresolved.
 
 ## Reusing upstream compute
 

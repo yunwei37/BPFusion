@@ -143,8 +143,13 @@ struct bf_page {
 
 	/* LLM request ring (see bf_llm_slot above). Kept at the tail so the
 	 * MLP offsets are unchanged. */
-	__u32 llm_head;
-	__u32 llm_pad; /* last busy reservation: head low29, state bits29..30, head changed bit31 */
+	/* One CPU atomic reservation advances head and owns its physical slot.
+	 * The high-word bit stays set until TX has finished all slot accesses;
+	 * it protects wrap even if the producer has not published WRITING yet. */
+	union {
+		struct { __u32 llm_head, llm_reserved; };
+		__u64 llm_admission;
+	};
 	struct bf_llm_slot llm[BF_LLM_SLOTS];
 };
 

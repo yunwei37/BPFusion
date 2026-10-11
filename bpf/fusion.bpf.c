@@ -76,6 +76,26 @@ union bf_llm_hdr {
 	__u64 v;
 };
 
+/* Reserve the sequence and physical slot in one atomic operation. Separate
+ * state/head CAS can reject another producer's transient WRITING reservation.
+ * The bitmap also prevents wrap over a producer paused before publishing state. */
+static __always_inline struct bf_llm_slot *llm_reserve(struct bf_page *p)
+{
+    for (__u32 attempt=0; attempt<BF_LLM_SLOTS; attempt++) {
+        __u64 word=*(volatile __u64 *)&p->llm_admission;
+        __u32 head=(__u32)word, idx=head%BF_LLM_SLOTS;
+        __u32 reserved=word>>32, bit=1u<<idx;
+        if (reserved&bit) break;
+        __u64 next=((__u64)(reserved|bit)<<32)|(__u32)(head+1);
+        if (__sync_val_compare_and_swap(&p->llm_admission,word,next)==word) {
+            struct bf_llm_slot *slot=&p->llm[idx];
+            slot->state=BF_WRITING;
+            return slot;
+        }
+    }
+    return 0;
+}
+
 /* Fill the next LLM slot from a request whose payload starts at `payload`.
  * `flags` = 0 for a UDP datagram (reply goes to addr_be/port_be), 1 for a TCP
  * segment (reply goes to the accepted socket that addr_be/port_be identify). */
@@ -85,7 +105,7 @@ static __always_inline int llm_fill(struct __sk_buff *skb, __u32 payload,
 	struct bf_page *p;
 	struct bf_llm_slot *s;
 	union bf_llm_hdr h;
-	__u32 idx, zero = 0, i;
+	__u32 tokens[BF_LLM_MAX_TOK] = {}, zero = 0, i;
 
 	if (bpf_skb_load_bytes(skb, payload, &h, sizeof(h)) != 0)
 		return TC_ACT_OK;
@@ -100,21 +120,21 @@ static __always_inline int llm_fill(struct __sk_buff *skb, __u32 payload,
 	p = bpf_map_lookup_elem(&ctl, &zero);
 	if (!p)
 		return TC_ACT_OK;
-	idx = p->llm_head % BF_LLM_SLOTS;
-	s = &p->llm[idx];
-	if (s->state != BF_FREE) {
-		p->drops++;
-		bump(8); /* llm busy */
-		return TC_ACT_OK;
-	}
 	payload += sizeof(h);
 #pragma unroll
 	for (i = 0; i < BF_LLM_MAX_TOK; i++) {
 		if (i < h.n_prompt &&
 		    bpf_skb_load_bytes(skb, payload + i * 4,
-				       &s->tok_in[i], 4) != 0)
+				       &tokens[i], 4) != 0)
 			return TC_ACT_OK;
 	}
+	s = llm_reserve(p);
+	if (!s) {
+		__sync_fetch_and_add(&p->drops, 1);
+		bump(8); /* llm busy */
+		return TC_ACT_OK;
+	}
+	for (i = 0; i < BF_LLM_MAX_TOK; i++) s->tok_in[i] = tokens[i];
 	s->n_prompt = h.n_prompt;
 	s->n_gen = h.n_gen;
 	s->produced = 0;
@@ -123,8 +143,7 @@ static __always_inline int llm_fill(struct __sk_buff *skb, __u32 payload,
 	s->port_be = port_be;
 	s->client_ns = h.client_ns;
 	s->ingress_ns = bpf_ktime_get_ns();
-	p->llm[idx].state = BF_PENDING;
-	__sync_fetch_and_add(&p->llm_head, 1);
+	s->state = BF_PENDING;
 	return TC_ACT_OK;
 }
 
@@ -356,7 +375,7 @@ int stream_publish(struct __sk_buff *skb)
 {
     union bf_llm_hdr h;
     __u32 tokens[BF_LLM_MAX_TOK] = {};
-    __u32 zero=0, head, idx, body;
+    __u32 zero=0, body;
     __u16 http;
     __u32 offset=stream_offset(skb);
     int length=frame_info(skb,&body,&http);
@@ -371,27 +390,8 @@ int stream_publish(struct __sk_buff *skb)
         if (i<h.n_prompt && bpf_skb_load_bytes(skb,offset+body+sizeof(h)+i*4,&tokens[i],4)) return SK_DROP;
     p=bpf_map_lookup_elem(&ctl,&zero);
     if (!p) return SK_DROP;
-    int reserved=0;
-    for (__u32 attempt=0;attempt<BF_LLM_SLOTS;attempt++) {
-        head=p->llm_head;
-        idx=head%BF_LLM_SLOTS;
-        slot=&p->llm[idx];
-        __u32 observed=__sync_val_compare_and_swap(&slot->state,BF_FREE,BF_WRITING);
-        if (observed!=BF_FREE) {
-            /* One atomic-width diagnostic word; no trace call on admission. */
-            __u32 changed=*(volatile __u32 *)&p->llm_head!=head;
-            p->llm_pad=(head&0x1fffffffu) | (observed<<29) | (changed<<31);
-            /* Another producer can reserve this old head before advancing it.
-             * Retry publication contention rather than treating it as full. */
-            if (changed || observed==BF_WRITING) continue;
-            break;
-        }
-        if (__sync_val_compare_and_swap(&p->llm_head,head,head+1)==head) {
-            reserved=1; break;
-        }
-        slot->state=BF_FREE;
-    }
-    if (!reserved) { bump(8); __sync_fetch_and_add(&p->drops,1); return SK_DROP; }
+    slot=llm_reserve(p);
+    if (!slot) { bump(8); __sync_fetch_and_add(&p->drops,1); return SK_DROP; }
     for (__u32 i=0;i<BF_LLM_MAX_TOK;i++) slot->tok_in[i]=tokens[i];
     slot->n_prompt=h.n_prompt; slot->n_gen=h.n_gen; slot->produced=0; slot->pad=(http ? 2 : 1) | BF_LLM_VALIDATING;
     slot->addr_be=skb->remote_ip4; slot->port_be=(__u16)(skb->remote_port>>16);

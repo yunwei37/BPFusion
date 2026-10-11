@@ -4,6 +4,7 @@
 This is NOT a resident-GPU or HTTP benchmark. Loopback, pretokenized requests,
 fp16 eager HF greedy batch-1 inference in both modes. Run from repository root.
 """
+import ctypes
 import gc
 import os
 import socket
@@ -92,7 +93,9 @@ def main():
                 executor.wait()
                 print(open(log_path).read(), flush=True)
             if loaded:
-                subprocess.run(["rmmod", "bfusion_tx"], check=True)
+                lib = ctypes.CDLL(None, use_errno=True)
+                ret = lib.syscall(176, b"bfusion_tx", 0)  # x86_64 delete_module
+                assert ret == 0, os.strerror(ctypes.get_errno())
             subprocess.run(["./build/bpfusion_load", "detach", "lo"], check=True)
 
 

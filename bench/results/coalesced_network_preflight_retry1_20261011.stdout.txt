@@ -1,0 +1,302 @@
+HEAD before publication: 00d8ae344c13356ca401f96c6318da622a207d49
+Repaired WIP source exact diff is frozen through preflight; full collection will follow publication.
+diff --git a/bpf/fusion.bpf.c b/bpf/fusion.bpf.c
+index 3c531b1..72b005b 100644
+--- a/bpf/fusion.bpf.c
++++ b/bpf/fusion.bpf.c
+@@ -76,6 +76,26 @@ union bf_llm_hdr {
+ 	__u64 v;
+ };
+ 
++/* Reserve the sequence and physical slot in one atomic operation. Separate
++ * state/head CAS can reject another producer's transient WRITING reservation.
++ * The bitmap also prevents wrap over a producer paused before publishing state. */
++static __always_inline struct bf_llm_slot *llm_reserve(struct bf_page *p)
++{
++    for (__u32 attempt=0; attempt<BF_LLM_SLOTS; attempt++) {
++        __u64 word=*(volatile __u64 *)&p->llm_admission;
++        __u32 head=(__u32)word, idx=head%BF_LLM_SLOTS;
++        __u32 reserved=word>>32, bit=1u<<idx;
++        if (reserved&bit) break;
++        __u64 next=((__u64)(reserved|bit)<<32)|(__u32)(head+1);
++        if (__sync_val_compare_and_swap(&p->llm_admission,word,next)==word) {
++            struct bf_llm_slot *slot=&p->llm[idx];
++            slot->state=BF_WRITING;
++            return slot;
++        }
++    }
++    return 0;
++}
++
+ /* Fill the next LLM slot from a request whose payload starts at `payload`.
+  * `flags` = 0 for a UDP datagram (reply goes to addr_be/port_be), 1 for a TCP
+  * segment (reply goes to the accepted socket that addr_be/port_be identify). */
+@@ -85,7 +105,7 @@ static __always_inline int llm_fill(struct __sk_buff *skb, __u32 payload,
+ 	struct bf_page *p;
+ 	struct bf_llm_slot *s;
+ 	union bf_llm_hdr h;
+-	__u32 idx, zero = 0, i;
++	__u32 tokens[BF_LLM_MAX_TOK] = {}, zero = 0, i;
+ 
+ 	if (bpf_skb_load_bytes(skb, payload, &h, sizeof(h)) != 0)
+ 		return TC_ACT_OK;
+@@ -100,21 +120,21 @@ static __always_inline int llm_fill(struct __sk_buff *skb, __u32 payload,
+ 	p = bpf_map_lookup_elem(&ctl, &zero);
+ 	if (!p)
+ 		return TC_ACT_OK;
+-	idx = p->llm_head % BF_LLM_SLOTS;
+-	s = &p->llm[idx];
+-	if (s->state != BF_FREE) {
+-		p->drops++;
+-		bump(8); /* llm busy */
+-		return TC_ACT_OK;
+-	}
+ 	payload += sizeof(h);
+ #pragma unroll
+ 	for (i = 0; i < BF_LLM_MAX_TOK; i++) {
+ 		if (i < h.n_prompt &&
+ 		    bpf_skb_load_bytes(skb, payload + i * 4,
+-				       &s->tok_in[i], 4) != 0)
++				       &tokens[i], 4) != 0)
+ 			return TC_ACT_OK;
+ 	}
++	s = llm_reserve(p);
++	if (!s) {
++		__sync_fetch_and_add(&p->drops, 1);
++		bump(8); /* llm busy */
++		return TC_ACT_OK;
++	}
++	for (i = 0; i < BF_LLM_MAX_TOK; i++) s->tok_in[i] = tokens[i];
+ 	s->n_prompt = h.n_prompt;
+ 	s->n_gen = h.n_gen;
+ 	s->produced = 0;
+@@ -123,8 +143,7 @@ static __always_inline int llm_fill(struct __sk_buff *skb, __u32 payload,
+ 	s->port_be = port_be;
+ 	s->client_ns = h.client_ns;
+ 	s->ingress_ns = bpf_ktime_get_ns();
+-	p->llm[idx].state = BF_PENDING;
+-	__sync_fetch_and_add(&p->llm_head, 1);
++	s->state = BF_PENDING;
+ 	return TC_ACT_OK;
+ }
+ 
+@@ -356,7 +375,7 @@ int stream_publish(struct __sk_buff *skb)
+ {
+     union bf_llm_hdr h;
+     __u32 tokens[BF_LLM_MAX_TOK] = {};
+-    __u32 zero=0, head, idx, body;
++    __u32 zero=0, body;
+     __u16 http;
+     __u32 offset=stream_offset(skb);
+     int length=frame_info(skb,&body,&http);
+@@ -371,27 +390,8 @@ int stream_publish(struct __sk_buff *skb)
+         if (i<h.n_prompt && bpf_skb_load_bytes(skb,offset+body+sizeof(h)+i*4,&tokens[i],4)) return SK_DROP;
+     p=bpf_map_lookup_elem(&ctl,&zero);
+     if (!p) return SK_DROP;
+-    int reserved=0;
+-    for (__u32 attempt=0;attempt<BF_LLM_SLOTS;attempt++) {
+-        head=p->llm_head;
+-        idx=head%BF_LLM_SLOTS;
+-        slot=&p->llm[idx];
+-        __u32 observed=__sync_val_compare_and_swap(&slot->state,BF_FREE,BF_WRITING);
+-        if (observed!=BF_FREE) {
+-            /* One atomic-width diagnostic word; no trace call on admission. */
+-            __u32 changed=*(volatile __u32 *)&p->llm_head!=head;
+-            p->llm_pad=(head&0x1fffffffu) | (observed<<29) | (changed<<31);
+-            /* Another producer can reserve this old head before advancing it.
+-             * Retry publication contention rather than treating it as full. */
+-            if (changed || observed==BF_WRITING) continue;
+-            break;
+-        }
+-        if (__sync_val_compare_and_swap(&p->llm_head,head,head+1)==head) {
+-            reserved=1; break;
+-        }
+-        slot->state=BF_FREE;
+-    }
+-    if (!reserved) { bump(8); __sync_fetch_and_add(&p->drops,1); return SK_DROP; }
++    slot=llm_reserve(p);
++    if (!slot) { bump(8); __sync_fetch_and_add(&p->drops,1); return SK_DROP; }
+     for (__u32 i=0;i<BF_LLM_MAX_TOK;i++) slot->tok_in[i]=tokens[i];
+     slot->n_prompt=h.n_prompt; slot->n_gen=h.n_gen; slot->produced=0; slot->pad=(http ? 2 : 1) | BF_LLM_VALIDATING;
+     slot->addr_be=skb->remote_ip4; slot->port_be=(__u16)(skb->remote_port>>16);
+diff --git a/bpf/include/bpfusion_queue.h b/bpf/include/bpfusion_queue.h
+index 8ae7220..895d7af 100644
+--- a/bpf/include/bpfusion_queue.h
++++ b/bpf/include/bpfusion_queue.h
+@@ -143,8 +143,13 @@ struct bf_page {
+ 
+ 	/* LLM request ring (see bf_llm_slot above). Kept at the tail so the
+ 	 * MLP offsets are unchanged. */
+-	__u32 llm_head;
+-	__u32 llm_pad; /* last busy reservation: head low29, state bits29..30, head changed bit31 */
++	/* One CPU atomic reservation advances head and owns its physical slot.
++	 * The high-word bit stays set until TX has finished all slot accesses;
++	 * it protects wrap even if the producer has not published WRITING yet. */
++	union {
++		struct { __u32 llm_head, llm_reserved; };
++		__u64 llm_admission;
++	};
+ 	struct bf_llm_slot llm[BF_LLM_SLOTS];
+ };
+ 
+diff --git a/executor/llm_executor.py b/executor/llm_executor.py
+index 356ed17..5c77e8a 100755
+--- a/executor/llm_executor.py
++++ b/executor/llm_executor.py
+@@ -36,7 +36,7 @@ PEER_SIZE = 8
+ BF_SLOTS = 64
+ PAGE_HDR = 9 * 4 + 4 + 8                         # 9 u32s, 4 pad, u64 stop_ns
+ LLM_HEAD_OFF = PAGE_HDR + BF_SLOTS * (CTL_SLOT_SIZE + PEER_SIZE + DONE_SLOT_SIZE)
+-LLM_RING_OFF = LLM_HEAD_OFF + 8                  # llm_head(4) + llm_pad(4)
++LLM_RING_OFF = LLM_HEAD_OFF + 8                  # llm_head(4) + llm_reserved(4)
+ PAGE_BYTES = LLM_RING_OFF + BF_LLM_SLOTS * LLM_SLOT_SIZE
+ MAP_BYTES = (PAGE_BYTES + 4095) // 4096 * 4096
+ 
+@@ -44,6 +44,14 @@ BF_PENDING = 1
+ BF_FREE = 0
+ BF_DONE = 2
+ 
++# The reference CPU bridge must preserve concurrent producer reservations when
++# recycling a slot, just like kernel TX. GCC's native atomic operation also
++# releases earlier mmap stores; a Python read/modify/write could lose a head.
++_atomic = ctypes.CDLL("libatomic.so.1")
++_release_reservation = getattr(_atomic, "__atomic_fetch_and_8")
++_release_reservation.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.c_int]
++_release_reservation.restype = ctypes.c_uint64
++
+ 
+ def open_page():
+     libbpf = ctypes.CDLL("libbpf.so.1")
+@@ -89,6 +97,8 @@ class Page:
+     def recycle(self, idx):
+         off = LLM_RING_OFF + idx * LLM_SLOT_SIZE        # state
+         struct.pack_into("<I", self.mm, off, BF_FREE)
++        _release_reservation(self.base + LLM_HEAD_OFF,
++                             ctypes.c_uint64(~(1 << (32 + idx))).value, 3)
+ 
+ 
+ def tcp_accept_loop(lsock, conns, lock, stop):
+@@ -178,7 +188,7 @@ def main():
+         (state, n_gen, n_prompt, produced, addr_be, port_be, pad,
+          client_ns, ingress_ns, gpu_done_ns, tok_in, tok_out) = page.slot(idx)
+         if state != BF_PENDING:
+-            seen += 1
++            # Head reserves this sequence before its producer publishes PENDING.
+             continue
+         prompt = list(tok_in[:n_prompt])
+         # For a TCP request, find the accepted connection this segment came
+diff --git a/executor/userspace_tcp.h b/executor/userspace_tcp.h
+index da1b204..3afe3be 100644
+--- a/executor/userspace_tcp.h
++++ b/executor/userspace_tcp.h
+@@ -108,6 +108,7 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
+                 (reply.header_sent==reply.header.size() && reply.bytes==produced*4))) {
+                 peer.slot=-1;reply={};
+                 __atomic_store_n(&slot->state,(unsigned)BF_FREE,__ATOMIC_RELEASE);
++                __atomic_fetch_and(&page->llm_admission,~(1ULL<<(32+i)),__ATOMIC_RELEASE);
+                 completed++;if(rejected) rejected_count++;
+             }
+         }
+@@ -140,7 +141,8 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
+                     }
+                     if(peer->input.size()<offset+bytes) { ++it;continue; }
+                     unsigned i=head%BF_LLM_SLOTS;bf_llm_slot *slot=&page->llm[i];
+-                    if(__atomic_load_n(&slot->state,__ATOMIC_ACQUIRE)==BF_FREE) {
++                    if(!(__atomic_load_n(&page->llm_reserved,__ATOMIC_ACQUIRE)&(1u<<i))) {
++                        __atomic_fetch_or(&page->llm_admission,1ULL<<(32+i),__ATOMIC_ACQ_REL);
+                         __atomic_store_n(&slot->state,(unsigned)BF_WRITING,__ATOMIC_RELEASE);
+                         slot->n_prompt=prompt;slot->n_gen=gen;slot->produced=0;
+                         slot->client_ns=client_ns;
+diff --git a/module/bfusion_tx.c b/module/bfusion_tx.c
+index 35371f6..a00c00b 100644
+--- a/module/bfusion_tx.c
++++ b/module/bfusion_tx.c
+@@ -188,6 +188,10 @@ static void poll_slot(u32 idx)
+ 			completions++;
+ 		memset(&tx[idx], 0, sizeof(tx[idx]));
+ 		smp_store_release(&s->state, BF_FREE);
++		/* Release the reservation last; a new owner may overwrite the slot
++		 * immediately after this atomic operation. Preserve concurrent head
++		 * advances and every other physical slot's reservation. */
++		atomic64_fetch_andnot_release(1ULL << (32 + idx), (atomic64_t *)&page->llm_admission);
+ 	}
+ 	/* release_sock can run the next request's parser from TCP backlog. All
+ 	 * old slot/TX accesses must finish first; keep the sock reference until
+diff --git a/tests/qwen_kernel_tx.py b/tests/qwen_kernel_tx.py
+index 965572f..bb71365 100644
+--- a/tests/qwen_kernel_tx.py
++++ b/tests/qwen_kernel_tx.py
+@@ -4,6 +4,7 @@
+ This is NOT a resident-GPU or HTTP benchmark. Loopback, pretokenized requests,
+ fp16 eager HF greedy batch-1 inference in both modes. Run from repository root.
+ """
++import ctypes
+ import gc
+ import os
+ import socket
+@@ -92,7 +93,9 @@ def main():
+                 executor.wait()
+                 print(open(log_path).read(), flush=True)
+             if loaded:
+-                subprocess.run(["rmmod", "bfusion_tx"], check=True)
++                lib = ctypes.CDLL(None, use_errno=True)
++                ret = lib.syscall(176, b"bfusion_tx", 0)  # x86_64 delete_module
++                assert ret == 0, os.strerror(ctypes.get_errno())
+             subprocess.run(["./build/bpfusion_load", "detach", "lo"], check=True)
+ 
+ 
+diff --git a/tools/bpfusion_load.c b/tools/bpfusion_load.c
+index cc02a67..059c166 100644
+--- a/tools/bpfusion_load.c
++++ b/tools/bpfusion_load.c
+@@ -139,9 +139,7 @@ int main(int argc, char **argv)
+ 			       page->slots[i].x[0], page->done[i].state,
+ 			       page->done[i].id, page->done[i].y[0]);
+ 		printf("llm_head=%u\n", page->llm_head);
+-        if (page->llm_pad)
+-            printf("llm last busy reservation: head_low29=%u state=%u head_changed=%u\n",
+-                   page->llm_pad&0x1fffffffu, (page->llm_pad>>29)&3u, page->llm_pad>>31);
++        printf("llm_reserved=0x%x\n", page->llm_reserved);
+ 		for (i = 0; i < BF_LLM_SLOTS; i++)
+ 			printf("llm[%d]: state=%u prompt=%u gen=%u produced=%u client_ns=%llu\n",
+ 			       i, page->llm[i].state, page->llm[i].n_prompt,
+NATIVE WRAPPER /tmp/bpfusion-coalesced-preflight-retry1-1mnuv_74.py
+import os,subprocess,sys,datetime
+commands=[['/usr/bin/python3', 'bench/resident_dispatch.py', '--preflight', '--gen', '64', '--resident-executor', './build/qwen_graph', '--user-network-executor', './build/qwen_graph_user_network', '--model', 'HuggingFaceTB/SmolLM2-135M', '--output', 'bench/results/coalesced_network_smol_preflight_retry1_20261011.jsonl'], ['/usr/bin/python3', 'bench/resident_dispatch.py', '--preflight', '--gen', '64', '--resident-executor', './build/qwen_graph', '--user-network-executor', './build/qwen_graph_user_network', '--model', 'Qwen/Qwen2.5-0.5B-Instruct', '--output', 'bench/results/coalesced_network_qwen_preflight_retry1_20261011.jsonl']]
+env=os.environ.copy();env['HF_HOME']='/workspaces/.cache/huggingface'
+print('REPAIRED PREFLIGHT START',datetime.datetime.now(datetime.timezone.utc).isoformat(),'PID',os.getpid(),flush=True)
+for i,cmd in enumerate(commands):
+ print('NATIVE PREFLIGHT COMMAND',i,repr(cmd),flush=True)
+ p=subprocess.Popen(cmd,cwd='/workspaces/repository',env=env);print('CHILD PID',p.pid,flush=True);rc=p.wait()
+ print('REPAIRED PREFLIGHT EXIT',i,datetime.datetime.now(datetime.timezone.utc).isoformat(),rc,flush=True)
+ if rc:sys.exit(rc)
+print('REPAIRED PREFLIGHT COMPLETE',datetime.datetime.now(datetime.timezone.utc).isoformat(),flush=True)
+
+LAUNCH PID 88638
+REPAIRED PREFLIGHT START 2026-10-11T09:03:26.698042+00:00 PID 88638
+NATIVE PREFLIGHT COMMAND 0 ['/usr/bin/python3', 'bench/resident_dispatch.py', '--preflight', '--gen', '64', '--resident-executor', './build/qwen_graph', '--user-network-executor', './build/qwen_graph_user_network', '--model', 'HuggingFaceTB/SmolLM2-135M', '--output', 'bench/results/coalesced_network_smol_preflight_retry1_20261011.jsonl']
+CHILD PID 88639
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 7354.82it/s]
+HF reference model=HuggingFaceTB/SmolLM2-135M type=llama vocab=49152
+pair=0 mode=resident gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+pair=0 mode=user-network gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.010
+{"mode": "resident", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 5.50414475, "ttft_p50_ms": 5.4471615, "ttft_p99_ms": 7.23730602, "tpot_mean_ms": null, "completion_mean_ms": 5.50414475, "host_cpu_work_s_per_cell": [0.19], "executor_cpu_s_per_cell": [0.0], "tokens_per_s": [180.71561939555684]}
+{"mode": "user-network", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 5.21504725, "ttft_p50_ms": 4.995687, "ttft_p99_ms": 7.2414535, "tpot_mean_ms": null, "completion_mean_ms": 5.21504725, "host_cpu_work_s_per_cell": [0.19], "executor_cpu_s_per_cell": [0.010000000000005116], "tokens_per_s": [190.78771046686657]}
+{"gen": 1, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [-0.28909750000000045], "difference_mean_ms": -0.28909750000000045, "difference_t95_ms": null}
+{"gen": 1, "concurrency": 1, "paired_resident_minus_user_network_tps": [-10.072091071309728], "difference_mean_tps": -10.072091071309728, "difference_t95_tps": null}
+REPAIRED PREFLIGHT EXIT 0 2026-10-11T09:06:00.804714+00:00 0
+NATIVE PREFLIGHT COMMAND 1 ['/usr/bin/python3', 'bench/resident_dispatch.py', '--preflight', '--gen', '64', '--resident-executor', './build/qwen_graph', '--user-network-executor', './build/qwen_graph_user_network', '--model', 'Qwen/Qwen2.5-0.5B-Instruct', '--output', 'bench/results/coalesced_network_qwen_preflight_retry1_20261011.jsonl']
+CHILD PID 89114
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 3886.47it/s]
+HF reference model=Qwen/Qwen2.5-0.5B-Instruct type=qwen2 vocab=151936
+pair=0 mode=resident gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+pair=0 mode=user-network gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.010
+{"mode": "resident", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 3.6918302499999998, "ttft_p50_ms": 3.798168, "ttft_p99_ms": 4.40345782, "tpot_mean_ms": null, "completion_mean_ms": 3.6918302499999998, "host_cpu_work_s_per_cell": [0.11], "executor_cpu_s_per_cell": [0.0], "tokens_per_s": [269.4915671035686]}
+{"mode": "user-network", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 3.4344805000000003, "ttft_p50_ms": 3.630166, "ttft_p99_ms": 4.38080816, "tpot_mean_ms": null, "completion_mean_ms": 3.4344805000000003, "host_cpu_work_s_per_cell": [0.1], "executor_cpu_s_per_cell": [0.00999999999999801], "tokens_per_s": [289.5864914851798]}
+{"gen": 1, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [-0.2573497499999995], "difference_mean_ms": -0.2573497499999995, "difference_t95_ms": null}
+{"gen": 1, "concurrency": 1, "paired_resident_minus_user_network_tps": [-20.09492438161118], "difference_mean_tps": -20.09492438161118, "difference_t95_tps": null}
+REPAIRED PREFLIGHT EXIT 1 2026-10-11T09:08:10.249173+00:00 0
+REPAIRED PREFLIGHT COMPLETE 2026-10-11T09:08:10.249240+00:00
+TERMINAL INDEPENDENT COUNTS/COUNTERS/CLEANUP VERIFIED 2026-10-11T09:09:46.120202+00:00
+16 measured exact gen1 replies, four normal native executor records; each 12 publications/completions (8 warmups excluded),264 graphs/error0/launch1. Kernel busy0/reserved0/eightFREE; module/hooks/pins absent.
+Host observation during preflight: "{\"utc\": \"2026-10-11T09:07:54.697939+00:00\", \"boot_id\": \"04dc0087-5ccc-4c46-9997-b9a92f0e5167\", \"gpu\": {\"exit\": 0, \"output\": \"NVIDIA GeForce RTX 5090, GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, 24179, 32607, 65, 2625, 13801, 399.58\\n\"}, \"compute_apps\": {\"exit\": 0, \"output\": \"2762187, sglang::scheduler, 18368\\n3676536, /usr/bin/python3, 652\\n3680480, python3, 5126\\n\"}, \"original_service\": {\"exit\": 0, \"output\": \"    PID                  STARTED ELAPSED COMMAND\\n2762187 Sat Oct 10 21:41:27 2026   15987 sglang::schedul\\n\"}, \"kernel_faults\": {\"exit\": 1, \"output\": \"-- No entries --\\n\"}}\n"

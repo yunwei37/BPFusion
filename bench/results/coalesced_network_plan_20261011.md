@@ -116,14 +116,14 @@ runner replacement.
 
 Exact preflight commands, sequentially:
 ```bash
-HF_HOME=/workspaces/.cache/huggingface /usr/bin/python3 bench/resident_dispatch.py --preflight --gen 64 --resident-executor ./build/qwen_graph --user-network-executor ./build/qwen_graph_user_network --model HuggingFaceTB/SmolLM2-135M --output bench/results/coalesced_network_smol_preflight_20261011.jsonl
-HF_HOME=/workspaces/.cache/huggingface /usr/bin/python3 bench/resident_dispatch.py --preflight --gen 64 --resident-executor ./build/qwen_graph --user-network-executor ./build/qwen_graph_user_network --model Qwen/Qwen2.5-0.5B-Instruct --output bench/results/coalesced_network_qwen_preflight_20261011.jsonl
+HF_HOME=/workspaces/.cache/huggingface /usr/bin/python3 bench/resident_dispatch.py --preflight --gen 64 --resident-executor ./build/qwen_graph --user-network-executor ./build/qwen_graph_user_network --model HuggingFaceTB/SmolLM2-135M --output bench/results/coalesced_network_smol_preflight_retry1_20261011.jsonl
+HF_HOME=/workspaces/.cache/huggingface /usr/bin/python3 bench/resident_dispatch.py --preflight --gen 64 --resident-executor ./build/qwen_graph --user-network-executor ./build/qwen_graph_user_network --model Qwen/Qwen2.5-0.5B-Instruct --output bench/results/coalesced_network_qwen_preflight_retry1_20261011.jsonl
 ```
 
 Exact full commands, sequentially:
 ```bash
-HF_HOME=/workspaces/.cache/huggingface /usr/bin/python3 bench/resident_dispatch.py --gen 64 --resident-executor ./build/qwen_graph --user-network-executor ./build/qwen_graph_user_network --model HuggingFaceTB/SmolLM2-135M --output bench/results/coalesced_network_smol_20261011.jsonl
-HF_HOME=/workspaces/.cache/huggingface /usr/bin/python3 bench/resident_dispatch.py --gen 64 --resident-executor ./build/qwen_graph --user-network-executor ./build/qwen_graph_user_network --model Qwen/Qwen2.5-0.5B-Instruct --output bench/results/coalesced_network_qwen_20261011.jsonl
+HF_HOME=/workspaces/.cache/huggingface /usr/bin/python3 bench/resident_dispatch.py --gen 64 --resident-executor ./build/qwen_graph --user-network-executor ./build/qwen_graph_user_network --model HuggingFaceTB/SmolLM2-135M --output bench/results/coalesced_network_smol_retry1_20261011.jsonl
+HF_HOME=/workspaces/.cache/huggingface /usr/bin/python3 bench/resident_dispatch.py --gen 64 --resident-executor ./build/qwen_graph --user-network-executor ./build/qwen_graph_user_network --model Qwen/Qwen2.5-0.5B-Instruct --output bench/results/coalesced_network_qwen_retry1_20261011.jsonl
 ```
 
 Archive exact native stdout/exit, source snapshot and host observations.
@@ -136,3 +136,74 @@ condition invalidates the affected comparison; do not count it as a win.
 Fresh result reviewer independently audits complete raw evidence and estimates.
 Update docs/evaluation.md and the existing finding sequence with honest
 qualified implementation/diagnostic/matched-result boundaries.
+
+
+## Recorded failed attempt and source repair (2026-10-11 UTC)
+
+The original frozen 00d8ae3 full command exited1 at 08:34:27 UTC during
+Smol pair2/resident/gen64/client8. Its
+[raw output](coalesced_network_smol_20261011.jsonl) and
+[native stdout](coalesced_network_20261011.stdout.txt) remain preserved.
+There are17 complete cells,1144 exact measured replies,four completed executor
+records and one failure. Qwen did not start. This prefix cannot support the
+declared five-pair performance estimate.
+
+The failure records one busy refusal at observed head72, stateBF_WRITING,
+head_changed0. The former producer first reserved slot state and then advanced
+head; its bounded loop could exhaust on that transient reservation. The repair
+uses the existing adjacent head/pad bytes as one aligned64-bit admission word:
+low32 head and high32 physical-slot reservation bitmap. A successful CAS
+advances head and reserves its slot together. The bit protects the slot even
+before that producer sets WRITING/PENDING. TX clears it atomically only after
+finishing old slot accesses and publishing FREE. Concurrent clears preserve
+head and other reservations. Capacity and retry count remain BF_LLM_SLOTS;
+this does not promise lossless overload admission or unlimited contention.
+
+The canonical layout size/offsets are unchanged. UDP and stream producers share
+the reservation operation; kernel TX, native user control and the historical
+CPU bridge release the bitmap. The bridge uses the existing host libatomic
+through ctypes because a Python mmap read/modify/write could lose concurrent
+head advances. No extra map, service or control interface is added.
+
+The native user reactor records its physical-slot ownership in the same word.
+Its single producer retains its existing publication sequence. All model
+capture, GPU dispatcher, numerical oracle, client timeout, service lifetime,
+matrix, repetition order and primary-effect definitions are unchanged.
+Native cuobjdump verifies1536 identical dispatcher instruction/encoding rows
+across frozen00d8ae3 kernel and repaired kernel/user binaries.
+
+Qualification is rerun using the same four strict two-model/two-transport
+commands and fresh native real preflights; source must be committed/pushed
+before full retry. The current full commands above use fresh retry1 paths.
+The entire80-cell matrix is rerun from the beginning; no successful prefix
+is stitched across source versions. Previous preflights/diagnostics qualify
+their historical source only. The
+[repair qualification receipt](coalescing_admission_repair_20261011.stdout.txt)
+retains exact source, commands and terminal outputs.
+
+Follow-up1 identified a historical bridge consumer that skipped requests in
+the head-before-PENDING window. It now waits without advancing seen until the
+reserved request is published; graph consumers already wait. Compatibility is
+qualified separately with real Qwen TCP requests and a delayed-publication
+case, rather than inferred from graph tests. Kernel reservation release now
+uses atomic64_fetch_andnot_release: the previous actual x86 locked operation
+was ordered, but the explicit API expresses the portable ownership contract.
+Both affected kernel regressions are rerun after rebuilding that module; the
+two user regressions retain unchanged source/binaries. Fresh preflight paths
+above retain the historical files and satisfy native exclusive output creation.
+
+Qualification completed on the repaired source: both native user regressions
+remain terminal0; both kernel regressions reran terminal0 after explicit
+release. The original bridge test delivered48 exact replies but exited1 in
+cleanup because rmmod is absent. Only that test cleanup was changed to native
+x86 delete_module, matching the graph executor; oracle/input/timeout unchanged.
+The rerun exits0 for both24-reply modes, and the actual-main publication-gap
+diagnostic exits0 with8 exact Qwen tokens and native reservation preservation.
+Original failed output remains in the same receipt. Final module/hook/pin
+cleanup was separately verified before preflight.
+
+Both fresh repaired-source preflights exited0, Smol09:06:00UTC and
+Qwen09:08:10UTC. Native analysis and separate counter/cleanup inspection
+verify16 exact measured one-token replies/four normal executors,264 graphs
+and launch1/error0 each, kernel busy0/reserved0/eightFREE. They establish
+executability only; the published source will be frozen for the full retry.

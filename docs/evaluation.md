@@ -39,8 +39,11 @@ close the unchanged matrix. [Header/first-token coalescing](findings/0026-coales
 now passes all four strict regressions, passive diagnostics and two native real
 preflights. The [reviewed next comparison](../bench/results/coalesced_network_plan_20261011.md)
 uses both optimized transports with unchanged compute, oracle and TCP defaults.
-Its full matrix remains uncollected; no new performance claim follows from
-qualification. This fair kernel-versus-user comparison does not establish a
+The first full attempt failed at an admission refusal; its partial data remain
+separate. Atomic reservation repair passes strict graph and historical bridge
+compatibility checks and both fresh native preflights. The entire full retry
+remains pending.
+No new performance claim follows from qualification. This fair kernel-versus-user comparison does not establish a
 causal old/new optimization effect, which requires a separately matched
 before/after run. Passive traces show header/first-token coalescing but retain
 ACK-followed delivery gaps for the remaining short response. Strong external

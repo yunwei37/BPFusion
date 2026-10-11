@@ -85,3 +85,68 @@ numbers cannot identify a causal coalescing effect.
 
 No extra baseline/model/runner/configuration layer or repeated unchanged
 experiment is required. No follow-up review or required repair.
+
+## PLAN REVIEW follow-up1: atomic admission repair
+
+Returned2026-10-11 around08:50UTC by the same independent reviewer.
+The hypothesis and matched comparison remain admissible, with two required
+executability repairs before collection: the legacy CPU bridge advances seen
+when a newly reserved request is not yet PENDING, and both amended preflight
+commands still reuse occupied JSONL paths opened with mode x. Graph consumers
+already wait for PENDING, so the bridge defect does not invalidate graph-only
+qualification; those runs cannot establish historical bridge compatibility.
+
+The admission CAS updates low32 head and high32 physical-slot ownership together.
+A paused producer cannot be overwritten on wrap. Recycle occurs only after old
+slot accesses and FREE, and clears only its bit, preserving head and other
+reservations. Capacity and bounded contention remain; no lossless-overload claim.
+Admission offset12848 and ring offset12856 and page size are unchanged. Native
+user control remains a single producer with its historical publication order.
+
+Actual x86 ordering is sufficient: matching kernel arch_atomic64_and uses locked
+andq with compiler memory clobber, and built module stores FREE before that
+locked clear. Generic atomic64_andnot is relaxed; atomic64_fetch_andnot_release
+would express ownership release portably. This recommendation does not invalidate
+the inspected x86 run; if applied, requalify that module before full collection.
+The bridge mask/libatomic are present but need an actual native call and delayed
+publication qualification.
+
+Reviewer independently extracted1536 identical dispatcher SASS instruction/
+encoding rows across both frozen00d8ae3 libraries and both repaired libraries.
+No diff to tests/resident_qwen.py, bench/resident_dispatch.py, qwen_graph.py or
+qwen_graph.cu: numerical oracle, model arithmetic, GPU dispatcher, timeouts,
+matrix and estimator remain unchanged. Failure receipt independently retains
+TimeoutError and one admission refusal at head72/WRITING/head_changed0. This
+supports the investigated window without proving exhaustive failure causality.
+Do not stitch the failed prefix into the repaired matrix or interpret this as
+causal coalescing speedup. Fix required items, retain failures, qualify and run
+fresh preflights, then collect the unchanged complete matrix.
+
+## PLAN REVIEW follow-up2: final disposition
+
+Returned2026-10-11 around08:59UTC by the same reviewer. Admit amended experiment:
+no remaining scientific/executability blocker. Bridge waits through FREE/
+WRITING, retains exactly-once seen advancement after finish/recycle at line226.
+The intermediate missing-increment alert was factually incorrect and withdrawn.
+Fresh retry1 preflight paths were verified absent. Explicit
+atomic64_fetch_andnot_release expresses ownership release portably.
+
+Existing qwen_kernel_tx.py checks actual bridge TCP in user/kernel modes,
+24 successive exact replies each, three lengths and slot reuse. Temporary
+actual-main real-Qwen diagnostic checks delayed head-before-PENDING publication,
+eight exact tokens and native Page.recycle preserving head/another reservation.
+This is a focused compatibility dependency, not exhaustive race proof or a
+resident-GPU performance result. At review time earlier cases0-3 and rebuilt
+Smol kernel rerun were terminal0; wrapper86759/Qwen and bridge tests remained
+live/pending. Fresh preflight/full results were still uncollected.
+
+Oracle, benchmark, GPU code, matrix/timeouts/effects remain unchanged. Previous
+1536 identical SASS rows still apply to unchanged graph binaries. Recollect the
+complete80-cell matrix on frozen repaired source; keep failed prefix separate
+and avoid causal coalescing claims. Six production files coherently define,
+reserve, release and observe ownership without changing layout. Removing a
+producer/releaser update reopens ownership errors. Loader's one existing-path
+reservation diagnostic is useful; no material reduction warrants reopening the
+repair. No production test framework/persistent helper/map/service/control
+interface was added. Complete current qualification and fresh preflights, then
+publish/freeze source before unchanged full retry.

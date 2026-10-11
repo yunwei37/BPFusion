@@ -26,6 +26,9 @@ arithmetic, precision, server NODELAY/QUICKACK or polling parameter changes.
 
 ## Qualification and diagnostic evidence
 
+The first qualification and traces below apply to the original coalescing
+candidate, before the later admission repair.
+
 [Native builds and four strict regressions](../../bench/results/coalescing_qualification_20261011.stdout.txt)
 complete for SmolLM2-135M and Qwen2.5-0.5B in both transports:
 1340 valid requests, 81728 exact generated tokens, 1036 rejections and
@@ -74,18 +77,64 @@ receive timestamps include observer scheduling; they do not measure GPU-ready
 time or establish every full-run request's cause. Coalescing the first token
 does not establish that all streaming latency is removed.
 
+## Full failure and atomic admission repair
+
+The first full run on frozen00d8ae3 exited1 at08:34:27UTC during Smol
+pair2/resident/gen64/client8. Its [raw prefix](../../bench/results/coalesced_network_smol_20261011.jsonl)
+and [stdout](../../bench/results/coalesced_network_20261011.stdout.txt) retain
+17 complete cells,1144 exact measured replies,four executor records and a timeout.
+Qwen did not start. That prefix cannot support the five-pair performance estimate.
+
+The failure recorded one busy refusal at head72/stateWRITING/head_changed0.
+The former producer reserved state before advancing head; bounded retries could
+exhaust in that window. This supports the investigated admission explanation,
+without establishing exhaustive failure causality. The repair atomically advances
+head and reserves its physical slot in the existing aligned64-bit head/pad
+region. Its high32 bitmap protects a producer even before WRITING/PENDING.
+Kernel TX releases its bit after old accesses and FREE, using an explicit
+release RMW that preserves concurrent head advances and other reservations.
+Native control and the historical bridge use the same ownership representation.
+Page size/offsets, capacity and retry count remain unchanged; no lossless-overload
+or unlimited-contention claim follows.
+
+[Repair qualification](../../bench/results/coalescing_admission_repair_20261011.stdout.txt)
+retains builds, exact source,1536 unchanged dispatcher SASS rows and terminal
+results. Four graph regressions pass; the two affected kernel cases reran after
+the explicit-release module build. Both user cases retain unchanged binaries.
+The final measured-path qualification covers1340 valid requests,81728 exact
+tokens,1036 rejections and20000 empty connections, with the original oracle and
+timeouts. Kernel final reservation bits are zero and all slots FREE.
+
+The historical bridge now waits through head-before-PENDING publication rather
+than skipping a request. Its real Qwen TCP check passes24 successive replies per
+mode, three lengths and slot reuse. A separate actual-main diagnostic holds FREE
+then WRITING before PENDING, obtains8 exact Qwen tokens, and verifies native
+libatomic recycling preserves head and another reservation. These are compatibility
+dependencies, not resident-GPU performance results or exhaustive race proofs.
+The first bridge check delivered48 exact replies but exited1 in cleanup because
+rmmod was absent. Only its cleanup was repaired to native x86 delete_module;
+oracle/input/timeout are unchanged, and the complete rerun exits0. Module,
+hooks and all test pins were separately verified cleaned.
+
 ## Preflight and full comparison
 
-[Two native real preflights](../../bench/results/coalesced_network_preflight_20261011.stdout.txt)
-qualify execution only. Their raw outputs retain the actual oracle, metrics,
+[Two historical native real preflights](../../bench/results/coalesced_network_preflight_20261011.stdout.txt)
+qualify their original candidate only. Their raw outputs retain the actual oracle, metrics,
 model/runtime versions and executor counters:
 [Smol](../../bench/results/coalesced_network_smol_preflight_20261011.jsonl),
 [Qwen](../../bench/results/coalesced_network_qwen_preflight_20261011.jsonl).
 Each model has eight exact measured one-token requests and two normal
 executors; each executor also checks eight warmups and 264 model graph steps.
 
-The complete comparison is not yet collected. The source will be committed
-before the native five-pair run. Planned matrix: both models, gen1/gen64,
+[Fresh repaired-source preflights](../../bench/results/coalesced_network_preflight_retry1_20261011.stdout.txt)
+exit0 for [Smol](../../bench/results/coalesced_network_smol_preflight_retry1_20261011.jsonl)
+and [Qwen](../../bench/results/coalesced_network_qwen_preflight_retry1_20261011.jsonl):
+16 exact measured one-token replies/four normal executors, with264 graphs,
+launch1/error0 per executor, kernel busy0/reserved0/eightFREE and cleanup.
+These establish executability only. Qualified source is being published
+before full collection; the entire matrix reruns
+from the beginning, using fresh retry1 outputs without stitching the failed
+prefix. Planned matrix: both models, gen1/gen64,
 one/eight clients, 64 requests per cell; 80 cells, 5120 exact measured
 requests, 166400 generated tokens and 20 normal exits. The unchanged native
 benchmark alternates mode order and rotates cell order. Primary effects are

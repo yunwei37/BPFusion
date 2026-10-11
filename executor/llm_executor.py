@@ -36,13 +36,21 @@ PEER_SIZE = 8
 BF_SLOTS = 64
 PAGE_HDR = 9 * 4 + 4 + 8                         # 9 u32s, 4 pad, u64 stop_ns
 LLM_HEAD_OFF = PAGE_HDR + BF_SLOTS * (CTL_SLOT_SIZE + PEER_SIZE + DONE_SLOT_SIZE)
-LLM_RING_OFF = LLM_HEAD_OFF + 8                  # llm_head(4) + llm_pad(4)
+LLM_RING_OFF = LLM_HEAD_OFF + 8                  # llm_head(4) + llm_reserved(4)
 PAGE_BYTES = LLM_RING_OFF + BF_LLM_SLOTS * LLM_SLOT_SIZE
 MAP_BYTES = (PAGE_BYTES + 4095) // 4096 * 4096
 
 BF_PENDING = 1
 BF_FREE = 0
 BF_DONE = 2
+
+# The reference CPU bridge must preserve concurrent producer reservations when
+# recycling a slot, just like kernel TX. GCC's native atomic operation also
+# releases earlier mmap stores; a Python read/modify/write could lose a head.
+_atomic = ctypes.CDLL("libatomic.so.1")
+_release_reservation = getattr(_atomic, "__atomic_fetch_and_8")
+_release_reservation.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.c_int]
+_release_reservation.restype = ctypes.c_uint64
 
 
 def open_page():
@@ -89,6 +97,8 @@ class Page:
     def recycle(self, idx):
         off = LLM_RING_OFF + idx * LLM_SLOT_SIZE        # state
         struct.pack_into("<I", self.mm, off, BF_FREE)
+        _release_reservation(self.base + LLM_HEAD_OFF,
+                             ctypes.c_uint64(~(1 << (32 + idx))).value, 3)
 
 
 def tcp_accept_loop(lsock, conns, lock, stop):
@@ -178,7 +188,7 @@ def main():
         (state, n_gen, n_prompt, produced, addr_be, port_be, pad,
          client_ns, ingress_ns, gpu_done_ns, tok_in, tok_out) = page.slot(idx)
         if state != BF_PENDING:
-            seen += 1
+            # Head reserves this sequence before its producer publishes PENDING.
             continue
         prompt = list(tok_in[:n_prompt])
         # For a TCP request, find the accepted connection this segment came

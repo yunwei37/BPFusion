@@ -108,6 +108,7 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
                 (reply.header_sent==reply.header.size() && reply.bytes==produced*4))) {
                 peer.slot=-1;reply={};
                 __atomic_store_n(&slot->state,(unsigned)BF_FREE,__ATOMIC_RELEASE);
+                __atomic_fetch_and(&page->llm_admission,~(1ULL<<(32+i)),__ATOMIC_RELEASE);
                 completed++;if(rejected) rejected_count++;
             }
         }
@@ -140,7 +141,8 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
                     }
                     if(peer->input.size()<offset+bytes) { ++it;continue; }
                     unsigned i=head%BF_LLM_SLOTS;bf_llm_slot *slot=&page->llm[i];
-                    if(__atomic_load_n(&slot->state,__ATOMIC_ACQUIRE)==BF_FREE) {
+                    if(!(__atomic_load_n(&page->llm_reserved,__ATOMIC_ACQUIRE)&(1u<<i))) {
+                        __atomic_fetch_or(&page->llm_admission,1ULL<<(32+i),__ATOMIC_ACQ_REL);
                         __atomic_store_n(&slot->state,(unsigned)BF_WRITING,__ATOMIC_RELEASE);
                         slot->n_prompt=prompt;slot->n_gen=gen;slot->produced=0;
                         slot->client_ns=client_ns;

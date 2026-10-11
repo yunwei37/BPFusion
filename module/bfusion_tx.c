@@ -188,6 +188,10 @@ static void poll_slot(u32 idx)
 			completions++;
 		memset(&tx[idx], 0, sizeof(tx[idx]));
 		smp_store_release(&s->state, BF_FREE);
+		/* Release the reservation last; a new owner may overwrite the slot
+		 * immediately after this atomic operation. Preserve concurrent head
+		 * advances and every other physical slot's reservation. */
+		atomic64_fetch_andnot_release(1ULL << (32 + idx), (atomic64_t *)&page->llm_admission);
 	}
 	/* release_sock can run the next request's parser from TCP backlog. All
 	 * old slot/TX accesses must finish first; keep the sock reference until
