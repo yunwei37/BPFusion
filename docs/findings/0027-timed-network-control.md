@@ -189,3 +189,40 @@ Compute reuse remains the intended route. Do not tune model arithmetic to
 erase this result or install every surveyed kernel. Physical-NIC behavior,
 total attributed CPU, full text/tokenization, online batching and a strong
 official serving comparison remain open under the full objective.
+
+## Follow-up CPU localization (dependency evidence)
+
+A separate unchanged-source diagnostic on2026-10-11 samples only the TX task
+during the canonical Qwen gen64 strict test's eight-client256-valid/
+256-rejection closed-loop stage. The
+[qualification log](../../bench/results/tx_profile_qualification_20261011.stdout.txt)
+ends normally with335 valid requests,20432 exact tokens,259 rejections,
+594 publications,graph_error0,eight banks and cleanup. The pre-measurement
+5000 empty connections are outside the sampled stage.
+
+[Native perf report and command receipts](../../bench/results/tx_cpu_profile_report_20261011.stdout.txt),
+[raw perf data](../../bench/results/tx_cpu_profile_20261011.perf.data),
+[decoded samples](../../bench/results/tx_cpu_profile_samples_20261011.txt) and
+[load-time module symbols](../../bench/results/tx_cpu_profile_module_symbols_20261011.txt)
+retain1116 software cpu-clock samples,zero lost samples, targeted PID1725252.
+Default sample frequency is used with kernel call graphs. Deliberate SIGINT
+ends recording after the target stage; perf returns-2 after finalizing data.
+Native reports/script subsequently exit0 on that same recording. Builtin
+kernel symbols resolve; some module addresses remain unknown after unload.
+
+Exclusive stack counts are327 recv,233 accept,195 send,184 sleep/schedule,
+177 other. These are localization diagnostics, not a new paper metric.
+Source Linux7.3-rc3 kernel_accept creates a socket before checking the accept
+queue, then releases it on failure; the current module calls it every sweep.
+kernel_recvmsg also repeats per connected peer even when no input is ready.
+The trace supports inspecting these paths, not a claim that all their cost
+is wasted or a predicted speedup.
+
+This stage mixes rejected/valid requests, runs under the strict driver's
+strace, and is not the primary performance matrix's cell window.
+cpu-clock call-stack sampling can include inline softirq/interrupt context
+and has overhead; it is not identical to adjusted scheduler TX CPU.
+No fraction of total service CPU or causal before/after improvement follows.
+This diagnostic has dependency value only. A readiness-check candidate can
+use Linux's existing TCP/sockmap readiness semantics to avoid unnecessary
+accept/recv calls; its correctness and matched performance remain unproven.
