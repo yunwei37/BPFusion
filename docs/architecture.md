@@ -181,12 +181,14 @@ Captured graphs append into their request's private shared KV buffers and expose
 only the exact attention prefix, avoiding repeated prefix concatenation/copy-back
 (finding0022). Both64-token/prompt-edge/mixed-length controls pass; the custom
 WMMA reference retains its separately recorded accuracy boundary.
-The `qwen-graph-control` variant captures one bank and uses the same dispatcher
-kernel with once=true, admitting only one unretired request before returning
-so the host can launch/synchronize again. Both modes retain GPU-controlled decode,
-HF computation and kernel TX. The host control has a steady request worker and
-serial computation; against the concurrent default it does not isolate dispatch
-alone. Finding0020 remains the historical matched serial-dispatch measurement.
+The `qwen-graph-control` variant now captures the same eight banks and uses
+the same admission/compute dispatcher with once=true. After publishing one
+FIFO DONE it returns so the host can synchronize and resume. An unfinished bank
+moves from awaiting child sampling to awaiting its next launch before that
+return; re-entry cannot sample the previous output twice. Both modes retain
+GPU-controlled decode, HF computation and kernel TX. The host control has a
+steady dispatch worker. Finding0024 qualifies both concurrent modes;
+finding0020 remains the historical matched serial-dispatch measurement.
 
 Upstream model computation candidates are recorded in the
 [backend audit](upstream-backends.md). Finding0023 retains the failed MPK

@@ -91,7 +91,7 @@ $(BUILD)/qwen_graph.so: executor/qwen_graph.cu bpf/include/bpfusion_queue.h | $(
 	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -rdc=true -shared -Xcompiler=-fPIC \
 		-Ibpf/include $< -o $@ $(LDLIBS)
 
-# Same GPU dispatcher/model graphs, one host service-graph launch per request.
+# Same concurrent GPU graph banks; host resumes once per retired request.
 .PHONY: qwen-graph-control
 qwen-graph-control: $(BUILD)/qwen_graph_host_launch.so $(BUILD)/qwen_graph_host_launch
 

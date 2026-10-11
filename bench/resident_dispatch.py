@@ -30,6 +30,11 @@ def cpu_seconds(pid):
     return (int(fields[11])+int(fields[12]))/os.sysconf("SC_CLK_TCK")
 
 
+def host_cpu_ticks():
+    # Global host counters include clients, kernel work and other workloads.
+    return [int(value) for value in Path("/proc/stat").read_text().splitlines()[0].split()[1:]]
+
+
 def gpu_state():
     return command("nvidia-smi","--query-gpu=timestamp,name,clocks.sm,clocks.mem,temperature.gpu,power.draw,utilization.gpu","--format=csv,noheader,nounits")
 
@@ -83,14 +88,16 @@ def cell(pid,cases,gen,concurrency,count,rows):
     with ThreadPoolExecutor(max_workers=concurrency) as pool:
         futures=[pool.submit(worker,i) for i in range(concurrency)]
         ready.wait(timeout=60)
-        before=cpu_seconds(pid); start=time.monotonic_ns()
+        before=cpu_seconds(pid); host_before=host_cpu_ticks(); start=time.monotonic_ns()
         barrier.wait(timeout=60)
         for future in futures: future.result()
-        finish=time.monotonic_ns(); after=cpu_seconds(pid)
+        finish=time.monotonic_ns(); host_after=host_cpu_ticks(); after=cpu_seconds(pid)
     first=min(row["start_ns"] for row in rows)
     last=max(row["arrival_ns"][-1] for row in rows)
     return {
         "window_ns":finish-start,"executor_cpu_s":after-before,
+        "host_cpu_ticks_before":host_before,"host_cpu_ticks_after":host_after,
+        "host_cpu_work_s":sum(host_after[i]-host_before[i] for i in (0,1,2,5,6))/os.sysconf("SC_CLK_TCK"),
         "output_tokens_per_s":count*gen/((last-first)/1e9)}
 
 
@@ -124,6 +131,8 @@ def analyze(path):
             print(json.dumps({"mode":mode,"gen":gen,"concurrency":concurrency,"requests":len(selected),
                 "ttft_mean_ms":statistics.mean(ttft),"ttft_p50_ms":percentile(ttft,.5),"ttft_p99_ms":percentile(ttft,.99),
                 "tpot_mean_ms":statistics.mean(tpot) if tpot else None,
+                "completion_mean_ms":statistics.mean(row["latency_ms"] for row in selected),
+                "host_cpu_work_s_per_cell":[row.get("host_cpu_work_s") for row in selected_cells],
                 "executor_cpu_s_per_cell":[row["executor_cpu_s"] for row in selected_cells],
                 "tokens_per_s":[row["output_tokens_per_s"] for row in selected_cells]}))
         differences=[host-resident for host,resident in zip(pair_means["host-launch"],pair_means["resident"])]
@@ -132,6 +141,12 @@ def analyze(path):
         margin=2.776445105*statistics.stdev(differences)/math.sqrt(5) if len(differences)==5 else None
         print(json.dumps({"gen":gen,"concurrency":concurrency,"paired_host_minus_resident_ttft_ms":differences,
             "difference_mean_ms":mean,"difference_t95_ms":[mean-margin,mean+margin] if margin is not None else None}))
+        differences=[next(row["output_tokens_per_s"] for row in cells if row["pair"]==pair and row["mode"]=="resident" and row["gen"]==gen and row["concurrency"]==concurrency)-
+                     next(row["output_tokens_per_s"] for row in cells if row["pair"]==pair and row["mode"]=="host-launch" and row["gen"]==gen and row["concurrency"]==concurrency) for pair in range(meta["repetitions"])]
+        mean=statistics.mean(differences)
+        margin=2.776445105*statistics.stdev(differences)/math.sqrt(5) if len(differences)==5 else None
+        print(json.dumps({"gen":gen,"concurrency":concurrency,"paired_resident_minus_host_tps":differences,
+            "difference_mean_tps":mean,"difference_t95_tps":[mean-margin,mean+margin] if margin is not None else None}))
 
 
 def main():
@@ -158,7 +173,8 @@ def main():
              kernel=platform.release(),torch=torch.__version__,transformers=transformers.__version__,
              nvcc=command("/usr/local/cuda/bin/nvcc","--version"),gpu=gpu_state(),cpu_tick_hz=os.sysconf("SC_CLK_TCK"),
              cases=cases,matrix=matrix,repetitions=repetitions,requests_per_cell=count,
-             timing="client monotonic; tokens completed in one recv share arrival timestamp; process CPU excludes kernel TX/softirq")
+             timing="client monotonic; tokens completed in one recv share arrival timestamp; process CPU excludes kernel TX/softirq",
+             host_cpu="global /proc/stat user+nice+system+irq+softirq; includes clients and unrelated host workloads; approximate cell window, not service attribution")
         for pair in range(repetitions):
             modes=("resident","host-launch") if pair%2==0 else ("host-launch","resident")
             cells=matrix[pair%len(matrix):]+matrix[:pair%len(matrix)]
@@ -169,12 +185,13 @@ def main():
                     try:
                         command("./build/bpfusion_load","stream-attach")
                         binary=args.resident_executor if mode=="resident" else args.host_executor
+                        started=time.monotonic()
                         with logpath.open("w") as log:
                             executor=subprocess.Popen([binary,"/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","300"],stdout=log,stderr=subprocess.STDOUT)
-                        started=time.monotonic()
                         while "resident Qwen ready" not in logpath.read_text():
-                            assert executor.poll() is None and time.monotonic()-started<60,logpath.read_text()
+                            assert executor.poll() is None,logpath.read_text()
                             time.sleep(.05)
+                        emit("bootstrap",pair=pair,mode=mode,seconds=time.monotonic()-started)
                         with connect() as client:
                             for gen in (1,args.gen):
                                 for ids,expected in cases: request(client,ids,expected[:gen])
@@ -195,6 +212,10 @@ def main():
                         executor.terminate(); assert executor.wait(timeout=60)==0,logpath.read_text()
                         log=logpath.read_text(); launches=1 if mode=="resident" else 8+count*len(matrix)
                         assert f"dispatch={mode} launches={launches}" in log,log
+                        if "device_graph_launches=" in log:
+                            model_steps=4*(1+args.gen)+count*sum(gen for gen,_ in matrix)
+                            assert f"device_graph_launches={model_steps} graph_error=0 banks=8" in log,log
+                            if not args.preflight: assert "max_active=8" in log,log
                         emit("executor",pair=pair,mode=mode,log=log,stats=command("./build/bpfusion_load","stats"))
                     except Exception as error:
                         emit("failure",pair=pair,mode=mode,error=repr(error),

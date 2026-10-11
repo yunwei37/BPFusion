@@ -197,6 +197,10 @@ def main():
                     assert f"dispatch=host-launch launches={valid+259}" in log,log
                 elif complete:
                     assert "dispatch=resident launches=1" in log,log
+                if complete and "device_graph_launches=" in log:
+                    assert f"device_graph_launches={valid*args.gen-16*(args.gen-1)} graph_error=0 banks=8" in log,log
+                    if args.gen==64: assert "max_active=8" in log,log
+                    print("PASS concurrent graph-bank accounting and zero graph errors",flush=True)
                 if complete: print("PASS expected CUDA launch count for the selected dispatch",flush=True)
                 trace=open("/tmp/bpfusion-qwen-network.trace").read()
                 if complete: assert "resident Qwen ready" in trace,"missing executor ready marker in trace"

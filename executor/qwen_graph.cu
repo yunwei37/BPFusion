@@ -29,15 +29,17 @@ __global__ void dispatch(bf_page *p,Step *steps,long long **inputs,unsigned coun
     if(threadIdx.x || blockIdx.x) return;
     while(!queue_load((unsigned long long *)&p->stop_ns)) {
         // A parent tail resumes only after all private child graphs finish.
+        // phase1 awaits sampling; phase3 awaits launch, including after a
+        // host-control return that publishes another request's DONE.
         for(unsigned i=0;i<BF_LLM_SLOTS;i++) {
             Request *r=&c->requests[i];
             if(r->phase!=1) continue;
-            unsigned bank=once ? 0 : i;
+            unsigned bank=i;
             unsigned token=(unsigned)*steps[bank*count+r->step].output;
             bf_llm_slot *slot=&p->llm[i];
             __stcg(&slot->tok_out[r->k],token);__threadfence_system();__stcg(&slot->produced,r->k+1);
             if(++r->k==r->gen) r->phase=2;
-            else { inputs[bank][0]=token;r->step=BF_LLM_MAX_TOK+r->prompt+r->k-1; }
+            else { inputs[bank][0]=token;r->step=BF_LLM_MAX_TOK+r->prompt+r->k-1;r->phase=3; }
         }
         // The head-indexed ring must reclaim in admission order. Hold final
         // tokens until the previous DONE was reclaimed by kernel TX. A reused
@@ -51,11 +53,11 @@ __global__ void dispatch(bf_page *p,Step *steps,long long **inputs,unsigned coun
         }
         // Admission remains sequential; computation uses each physical slot's
         // private KV/input/output bank. No producer or page ABI change.
-        while((!once || c->seen==c->retired) && queue_load(&p->llm_head)!=c->seen) {
+        while(queue_load(&p->llm_head)!=c->seen) {
             idx=c->seen%BF_LLM_SLOTS;
             bf_llm_slot *slot=&p->llm[idx];
             if(c->requests[idx].phase || queue_load(&slot->state)!=BF_PENDING) break;
-            unsigned bank=once ? 0 : idx;
+            unsigned bank=idx;
             unsigned np=__ldcg(&slot->n_prompt),ng=__ldcg(&slot->n_gen);
             bool bad=!np || np>BF_LLM_MAX_TOK || !ng || ng>BF_LLM_MAX_TOK;
             for(unsigned j=0;j<np && j<BF_LLM_MAX_TOK;j++) {
@@ -67,13 +69,12 @@ __global__ void dispatch(bf_page *p,Step *steps,long long **inputs,unsigned coun
             __threadfence_system();
             __stcg(&slot->pad,(unsigned short)((flags&~BF_LLM_VALIDATING)|(bad ? BF_LLM_REJECTED : 0)));
             c->requests[idx]={0,np,ng,np,bad ? 2u : 3u};c->seen++;
-            if(once) break;
         }
         unsigned active=0;
         for(unsigned i=0;i<BF_LLM_SLOTS;i++) {
             Request *r=&c->requests[i];
-            if(r->phase!=1 && r->phase!=3) continue;
-            unsigned bank=once ? 0 : i;
+            if(r->phase!=3) continue;
+            unsigned bank=i;
             cudaError_t e=cudaGraphLaunch(steps[bank*count+r->step].graph,cudaStreamGraphFireAndForget);
             if(e!=cudaSuccess) { c->error=e;return; }
             r->phase=1;c->launches++;active++;
@@ -88,13 +89,7 @@ __global__ void dispatch(bf_page *p,Step *steps,long long **inputs,unsigned coun
     }
 }
 extern "C" unsigned max_tokens() { return BF_LLM_MAX_TOK; }
-extern "C" unsigned max_requests() {
-#ifdef BF_HOST_LAUNCH
-    return 1;
-#else
-    return BF_LLM_SLOTS;
-#endif
-}
+extern "C" unsigned max_requests() { return BF_LLM_SLOTS; }
 static volatile sig_atomic_t stopped=0;
 static void stop_signal(int) { stopped=1; }
 extern "C" int serve(const unsigned long long *graphs,const unsigned long long *outputs,unsigned count,const unsigned long long *input_ptrs,unsigned vocab,unsigned layers,unsigned h,unsigned seconds) {
@@ -137,14 +132,14 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
     if(launched==cudaSuccess) {
         printf("resident Qwen ready: %u layers h=%u vocab=%u; device-tail graphs, dispatch=%s\n",layers,h,vocab,mode);fflush(stdout);
         if(once) {
-            signal(SIGALRM,stop_signal);alarm(seconds);unsigned seen=0;
+            signal(SIGALRM,stop_signal);alarm(seconds);unsigned retired=0;
             while(!stopped) {
-                if(__atomic_load_n(&page->llm_head,__ATOMIC_ACQUIRE)==seen ||
-                   __atomic_load_n(&page->llm[seen%BF_LLM_SLOTS].state,__ATOMIC_ACQUIRE)!=BF_PENDING) continue;
+                if(__atomic_load_n(&page->llm_head,__ATOMIC_ACQUIRE)==retired ||
+                   __atomic_load_n(&page->llm[retired%BF_LLM_SLOTS].state,__ATOMIC_ACQUIRE)!=BF_PENDING) continue;
                 launched=cudaGraphLaunch(parent,0);launches++;
                 if(launched!=cudaSuccess) break;
                 launched=cudaDeviceSynchronize();if(launched!=cudaSuccess) break;
-                seen++;
+                retired++;
             }
             alarm(0);
         } else sleep(seconds);

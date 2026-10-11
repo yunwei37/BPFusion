@@ -146,9 +146,14 @@ TCP comparison on the shared RTX5090 measures gen64/eight-client throughput
 TPOT worsens4.33 -> 13.23ms; single-client effects remain inconclusive,
 bootstrap increases10.31 -> 54.06s, and graph memory is a substantial cost.
 The comparison uses common temporary TCP_NODELAY settings and does not prove
-kernel overlap, isolated speedup or an optimized-serving win. The host control uses one bank and is a serial
-correctness control; it no longer isolates dispatch alone against this concurrent
+kernel overlap, isolated speedup or an optimized-serving win. That measurement's host control used one bank and was a serial
+correctness control; it did not isolate dispatch alone against the concurrent
 default. Ordinary tensor batching failed exact qualification and is not retained.
+[Finding0024](docs/findings/0024-concurrent-graph-dispatch.md) now qualifies a
+concurrent host control with the same eight banks, admission and GPU decoding.
+Both current modes pass335 valid requests/20432 exact tokens/259 rejects.
+The host resumes after each retired request; unfinished bank state survives
+re-entry. Its matched performance comparison remains unmeasured.
 A subsequent numerical diagnosis completes99 groups across original Linear
 per-lane,attention per-lane and combined slicing. None qualifies the complete
 fixed token reference; partial recoveries and new divergences rule out
