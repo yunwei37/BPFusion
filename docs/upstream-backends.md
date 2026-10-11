@@ -29,6 +29,13 @@ preserved.
 | [TileRT](https://github.com/tile-ai/TileRT) | Tile runtime and model backends for large multi-GPU serving | Current supported wheels target 8 B200s or 8 MI350-class GPUs, with exact PyTorch ABI requirements; core backend is distributed as a binary. Not a demonstrated single-5090 source adapter. |
 | [ARK](https://github.com/microsoft/ark) | GPU-driven computation/communication loop-kernel framework and Llama2 example | A relevant execution-model precedent; current model breadth and 5090 compatibility still need verification. |
 
+
+| [NVIDIA low-latency LSTM](https://github.com/NVIDIA/dl-lowlat-infer) | Apache-2.0 streaming LSTM persistent kernels, reference and ping-pong measurements | Small/medium always-spinning modes retain CPU publication/output polling; large mode launches per iteration. A useful non-LLM compute candidate, not a qualified network adapter. |
+| [Qwen3-TTS adapter](https://github.com/gauravlochab/qwen3-tts-megakernel) | Apache-2.0 example reusing AlpinDale's trunk for speech on RTX5090 | Batch1; host/PyTorch codec head and sampling. Hidden-state cosine is not exact closed-loop agreement. A reuse example, not a ready GPU-only speech server. |
+| [Qwen3 RTX5090 reproduction](https://github.com/emmanuelalo52/Qwen3-0.6B-megakernel-RTX-5090) | Dynamic-persistent CUDA/CuTeDSL decode paths and HF comparison scripts | No license found; test accepts partial-prefix matches. Eager-vLLM README gains are not matched serving-path evidence. |
+| [MaruthiV megakernel](https://github.com/MaruthiV/megakernel) | Qwen3 BF16 whole-forward implementation targeting A100/H100/T4 | Single-token input interface; validation skips absent callbacks and generation hook takes only the last prompt token. No license or full-prompt correctness established. |
+| [UCCL mKernel](https://github.com/uccl-project/mKernel) | MIT distributed compute/communication fusion for GEMM, MoE and attention | Components, not whole-model serving. Hopper default; Blackwell source targets SM103a/B300 and eight GPUs, not qualified SM120/RTX5090 support. |
+
 [Event Tensor](https://arxiv.org/abs/2604.13327),
 [Ada-MK](https://arxiv.org/abs/2605.11581), and
 [ForgeMegakernel](https://arxiv.org/abs/2609.12379) are additional relevant
@@ -191,3 +198,89 @@ advances a static cohort, while the host publishes input and waits for output.
 Its benefit includes shared-weight batching, not solely eliminating dispatch.
 No reusable public source artifact was established in this search; treat it as
 a mechanism/evaluation reference rather than a ready backend.
+
+
+## Further search and source checks
+
+Expanded observation: 2026-10-11T05:53:47UTC onwards. This round used24 additional
+queries across reusable/multi-model persistent runtimes, consumer-GPU kernels,
+GPU-initiated serving, eBPF/sockmap, kernel-to-GPU inference and citation
+branches from Blink. Search results were leads; judgments below use first-party
+source, official proceedings or papers. No new model benchmark or clone was run.
+
+Pinned source observations:
+
+- NVIDIA/dl-lowlat-infer
+  [a718567b47e8d80ac38d58ac76df8d98a0eaab3d](https://github.com/NVIDIA/dl-lowlat-infer/tree/a718567b47e8d80ac38d58ac76df8d98a0eaab3d):
+  docs/persistent_timing.md distinguishes small/medium always-spinning and large
+  launch-per-iteration modes. ModelPersistentBase.cuh lines204-220 publish CPU
+  input signals and poll output. ModelAsSingleStepGemv.cu retains precompute,
+  synchronization and an optional host preprocessing thread. README exposes
+  three sizes, reference/ping-pong measurement and a CUDA120a build example.
+  This is a useful short-compute/non-LLM lead without new model arithmetic;
+  its persistent final timestep is not an entirely host-free whole pipeline.
+- Qwen3-TTS
+  [61cb00e0b1e50d058a5f3c67de1e2f99b845ce87](https://github.com/gauravlochab/qwen3-tts-megakernel/tree/61cb00e0b1e50d058a5f3c67de1e2f99b845ce87):
+  README describes embedding injection, a changed host RoPE table and PyTorch
+  codec-head/sampling. talker/megakernel_talker.py asserts batch1;
+  validate_talker_trunk.py checks hidden-state cosine over110 prefill positions,
+  not exact closed-loop outputs. Absorb the adapter pattern without treating
+  its quality/performance claims as our qualification or importing its separate
+  math optimizations.
+- RTX5090 reproduction
+  [5bb05f54c1339a8d1ccc8968ca2278772f38b120](https://github.com/emmanuelalo52/Qwen3-0.6B-megakernel-RTX-5090/tree/5bb05f54c1339a8d1ccc8968ca2278772f38b120):
+  megakernel_dynamic/test_dps.py lines138-139 allow partial-prefix matches unless
+  shorter than roughly half the compared sequence. This is weaker than our
+  unchanged exact oracle. No license was found in the inspected tree/API.
+- MaruthiV
+  [f2c8fd5c7e221ffabd017dc85afbf4a133c0e12c](https://github.com/MaruthiV/megakernel/tree/f2c8fd5c7e221ffabd017dc85afbf4a133c0e12c):
+  src/megakernel.cu lines86-106 accept one input_token/current_pos.
+  host/validate.py lines142-161 skip absent callbacks, and the generation hook
+  receives prompt_ids[-1]. A validation command is not complete-prompt proof.
+  No license was found in the inspected tree/API.
+- mKernel
+  [97e916b3a731689e4ea98db60bfe5f8adcaf685a](https://github.com/uccl-project/mKernel/tree/97e916b3a731689e4ea98db60bfe5f8adcaf685a):
+  Makefile lines34-48 already contain Blackwell SM103a/B300 despite the README
+  roadmap. Do not call all Blackwell support absent or equate that component
+  implementation with RTX5090 or a complete model server.
+
+### Compute reuse and closest-work implications
+
+[Blink sections4.2-4.3](https://arxiv.org/html/2604.07609v1#S4.SS2) reuse captured
+TensorRT engines plus a persistent device scheduler. A whole-model megakernel
+is not required. Its same-engine TensorRT-LLM comparison is a causal precedent.
+This supports investigating mature graph-capturable compute alongside
+megakernels. It does not establish that any existing framework graph is directly
+reusable: [CUDA device-graph requirements](https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html#device-graph-requirements)
+require a single device, supported node types, host instantiation/upload and
+proper executable-graph lifetimes. CPU callbacks, dynamic allocation and
+host-only sampling/control need inspection in the actual backend.
+
+- [Lynx, ASPLOS2020](https://doi.org/10.1145/3373376.3378528), verified through
+  [the authors' institution](https://cris.technion.ac.il/en/publications/lynx-a-smartnic-driven-accelerator-centric-architecture-for-netwo-2/),
+  offloads server data/control to SmartNICs and demonstrates neural inference
+  without host CPU involvement. Accelerator network services without host CPU
+  are older precedents than Blink.
+- [SplitRPC, SIGMETRICS/POMACS2023](https://sigmetrics.hosting.acm.org/opentoc/acm23_vol7_issue2_toc.html)
+  optimizes accelerator RPC on commodity NICs while retaining CPU orchestration
+  across runtimes. "No expensive SmartNIC" alone is insufficient differentiation:
+  conventional Linux TCP and steady userspace-worker removal must be demonstrated
+  together. A runnable official artifact was not established here.
+- [LAKE, ASPLOS2023](https://utns.cs.utexas.edu/assets/papers/lake_camera_ready.pdf)
+  exposes accelerators to kernel applications with
+  [public source](https://github.com/utcs-scea/LAKE). Its artifact uses a userspace
+  API-remoting daemon. Kernel access to GPU compute alone is not our distinction;
+  avoiding the steady request/control upcall is the candidate boundary.
+- [Concordia](https://arxiv.org/html/2606.23521v1) is a persistent-queue/checkpoint
+  precedent. Its paper bounds main claims to checkpoint/recovery and warns
+  against interpreting executor microbenchmarks as faster static-graph decode.
+  A reusable official artifact was not established in this search.
+
+Investigation priorities remain backend correctness, actual request/step
+control, online admission, KV/output ownership, streaming/reclamation and model
+coverage. One compiler name or more Qwen forks do not prove broad support.
+A qualified second architecture or short-compute model is more informative
+than another tuning campaign on the same checkpoint. Credible optimized
+userspace controls, CPU-contention/tail behavior and attributed costs are
+proposed experiments, not established performance claims or a replacement of
+the user's goal.
