@@ -195,6 +195,17 @@ Upstream model computation candidates are recorded in the
 whole-model qualification and mixed Plow results; neither changes the current
 HF graph executor or supplies a resident network integration.
 
+The optional qwen-graph-user-network target reuses the same capture and GPU
+dispatcher with a CUDA-registered anonymous page of the existing ABI. A native
+epoll loop accepts and buffers token-ID TCP/HTTP requests, publishes PENDING
+and streams produced tokens after validation. It withholds the last token
+until DONE and returns FREE only after response completion or disconnect
+plus GPU release. One request per connection is active; later pipeline
+requests stay buffered. There is no eBPF ingress or kernel TX in this control.
+Its busy completion polling and userspace network calls are explicit
+comparison costs, not default production behavior. See finding0025 for the
+qualified scope and pending matched measurements.
+
 ## Ownership rules (the correctness core)
 
 | object | writer | reader | recycle |

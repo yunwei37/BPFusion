@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Matched real-Qwen dispatch ablation on the existing token HTTP path."""
+"""Matched HF graph dispatch/network controls on the token HTTP path."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import json
@@ -120,9 +120,10 @@ def analyze(path):
         ordered=sorted(values); pos=(len(ordered)-1)*q
         low=math.floor(pos); high=math.ceil(pos)
         return ordered[low]+(ordered[high]-ordered[low])*(pos-low)
+    modes=tuple(meta["executors"]);control=modes[1]
     for gen,concurrency in meta["matrix"]:
         pair_means={}
-        for mode in ("resident","host-launch"):
+        for mode in modes:
             selected=[row for row in samples if row["mode"]==mode and row["gen"]==gen and row["concurrency"]==concurrency]
             selected_cells=[row for row in cells if row["mode"]==mode and row["gen"]==gen and row["concurrency"]==concurrency]
             ttft=[row["ttft_ms"] for row in selected]
@@ -135,17 +136,17 @@ def analyze(path):
                 "host_cpu_work_s_per_cell":[row.get("host_cpu_work_s") for row in selected_cells],
                 "executor_cpu_s_per_cell":[row["executor_cpu_s"] for row in selected_cells],
                 "tokens_per_s":[row["output_tokens_per_s"] for row in selected_cells]}))
-        differences=[host-resident for host,resident in zip(pair_means["host-launch"],pair_means["resident"])]
+        differences=[host-resident for host,resident in zip(pair_means[control],pair_means["resident"])]
         mean=statistics.mean(differences)
         # Five independent paired process blocks; Student t, df=4, two-sided 95%.
         margin=2.776445105*statistics.stdev(differences)/math.sqrt(5) if len(differences)==5 else None
-        print(json.dumps({"gen":gen,"concurrency":concurrency,"paired_host_minus_resident_ttft_ms":differences,
+        print(json.dumps({"gen":gen,"concurrency":concurrency,("paired_host_minus_resident_ttft_ms" if control=="host-launch" else "paired_user_network_minus_resident_ttft_ms"):differences,
             "difference_mean_ms":mean,"difference_t95_ms":[mean-margin,mean+margin] if margin is not None else None}))
         differences=[next(row["output_tokens_per_s"] for row in cells if row["pair"]==pair and row["mode"]=="resident" and row["gen"]==gen and row["concurrency"]==concurrency)-
-                     next(row["output_tokens_per_s"] for row in cells if row["pair"]==pair and row["mode"]=="host-launch" and row["gen"]==gen and row["concurrency"]==concurrency) for pair in range(meta["repetitions"])]
+                     next(row["output_tokens_per_s"] for row in cells if row["pair"]==pair and row["mode"]==control and row["gen"]==gen and row["concurrency"]==concurrency) for pair in range(meta["repetitions"])]
         mean=statistics.mean(differences)
         margin=2.776445105*statistics.stdev(differences)/math.sqrt(5) if len(differences)==5 else None
-        print(json.dumps({"gen":gen,"concurrency":concurrency,"paired_resident_minus_host_tps":differences,
+        print(json.dumps({"gen":gen,"concurrency":concurrency,("paired_resident_minus_host_tps" if control=="host-launch" else "paired_resident_minus_user_network_tps"):differences,
             "difference_mean_tps":mean,"difference_t95_tps":[mean-margin,mean+margin] if margin is not None else None}))
 
 
@@ -157,9 +158,16 @@ def main():
     parser.add_argument("--analyze",action="store_true")
     parser.add_argument("--resident-executor",default="./build/qwen")
     parser.add_argument("--host-executor",default="./build/qwen_host_launch")
+    parser.add_argument("--user-network-executor",help="same resident GPU compute with userspace network control")
+    parser.add_argument("--model",default="Qwen/Qwen2.5-0.5B-Instruct",help="HF checkpoint for graph executors")
     args=parser.parse_args()
     if args.analyze: analyze(args.output); return
-    cases,_=oracle_cases(args.gen)
+    control="user-network" if args.user_network_executor else "host-launch"
+    executors={"resident":args.resident_executor,control:args.user_network_executor or args.host_executor}
+    if args.model!="Qwen/Qwen2.5-0.5B-Instruct" and any("qwen_graph" not in Path(binary).name for binary in executors.values()):
+        parser.error("--model requires graph executors")
+    weights="/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin" if args.model=="Qwen/Qwen2.5-0.5B-Instruct" else args.model
+    cases,_=oracle_cases(args.gen,name=args.model)
     matrix=[(1,1)] if args.preflight else [(1,1),(args.gen,1),(1,8),(args.gen,8)]
     repetitions=1 if args.preflight else 5
     count=4 if args.preflight else 64
@@ -169,25 +177,27 @@ def main():
             raw.write(json.dumps({"event":event,**values})+"\n"); raw.flush()
         import torch, transformers
         emit("metadata",utc=time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),commit=command("git","rev-parse","HEAD"),
-             executors={"resident":args.resident_executor,"host-launch":args.host_executor},
+             executors=executors,model=args.model,
+             network_control="native epoll busy polling, anonymous CUDA-registered page; same resident GPU dispatcher" if args.user_network_executor else None,
              kernel=platform.release(),torch=torch.__version__,transformers=transformers.__version__,
              nvcc=command("/usr/local/cuda/bin/nvcc","--version"),gpu=gpu_state(),cpu_tick_hz=os.sysconf("SC_CLK_TCK"),
              cases=cases,matrix=matrix,repetitions=repetitions,requests_per_cell=count,
              timing="client monotonic; tokens completed in one recv share arrival timestamp; process CPU excludes kernel TX/softirq",
              host_cpu="global /proc/stat user+nice+system+irq+softirq; includes clients and unrelated host workloads; approximate cell window, not service attribution")
         for pair in range(repetitions):
-            modes=("resident","host-launch") if pair%2==0 else ("host-launch","resident")
+            modes=("resident",control) if pair%2==0 else (control,"resident")
             cells=matrix[pair%len(matrix):]+matrix[:pair%len(matrix)]
             for mode in modes:
                 executor=None
                 with tempfile.TemporaryDirectory(prefix="bpfusion-dispatch-") as tmp:
                     logpath=Path(tmp)/"executor.log"
                     try:
-                        command("./build/bpfusion_load","stream-attach")
-                        binary=args.resident_executor if mode=="resident" else args.host_executor
+                        if mode!="user-network":command("./build/bpfusion_load","stream-attach")
+                        else:assert not Path("/sys/module/bfusion_tx").exists(),"kernel TX must be absent for network control"
+                        binary=executors[mode]
                         started=time.monotonic()
                         with logpath.open("w") as log:
-                            executor=subprocess.Popen([binary,"/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","300"],stdout=log,stderr=subprocess.STDOUT)
+                            executor=subprocess.Popen([binary,weights,"300"],stdout=log,stderr=subprocess.STDOUT)
                         while "resident Qwen ready" not in logpath.read_text():
                             assert executor.poll() is None,logpath.read_text()
                             time.sleep(.05)
@@ -210,17 +220,23 @@ def main():
                                  gpu_before=gpu_before,gpu_after=gpu_after,**summary)
                             print(f"pair={pair} mode={mode} gen={gen} c={concurrency} requests={count} exact_tokens={count*gen} cpu_s={summary['executor_cpu_s']:.3f}",flush=True)
                         executor.terminate(); assert executor.wait(timeout=60)==0,logpath.read_text()
-                        log=logpath.read_text(); launches=1 if mode=="resident" else 8+count*len(matrix)
-                        assert f"dispatch={mode} launches={launches}" in log,log
+                        log=logpath.read_text(); launches=1 if mode in ("resident","user-network") else 8+count*len(matrix)
+                        dispatch="resident" if mode=="user-network" else mode
+                        assert f"dispatch={dispatch} launches={launches}" in log,log
+                        if mode=="user-network":
+                            requests=8+count*len(matrix)
+                            assert f"published={requests} completed={requests} rejected=0" in log,log
+                            assert "network=userspace epoll" in log,log
+                            assert not Path("/sys/module/bfusion_tx").exists()
                         if "device_graph_launches=" in log:
                             model_steps=4*(1+args.gen)+count*sum(gen for gen,_ in matrix)
                             assert f"device_graph_launches={model_steps} graph_error=0 banks=8" in log,log
                             if not args.preflight: assert "max_active=8" in log,log
-                        emit("executor",pair=pair,mode=mode,log=log,stats=command("./build/bpfusion_load","stats"))
+                        emit("executor",pair=pair,mode=mode,log=log,stats=command("./build/bpfusion_load","stats") if mode!="user-network" else None)
                     except Exception as error:
                         emit("failure",pair=pair,mode=mode,error=repr(error),
                              log=logpath.read_text() if logpath.exists() else "",
-                             stats=command("./build/bpfusion_load","stats"))
+                             stats=command("./build/bpfusion_load","stats") if mode!="user-network" else None)
                         raise
                     finally:
                         if executor is not None and executor.poll() is None:

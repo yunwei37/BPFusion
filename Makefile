@@ -99,5 +99,13 @@ $(BUILD)/qwen_graph_host_launch.so: executor/qwen_graph.cu bpf/include/bpfusion_
 	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
 		-Ibpf/include $< -o $@ $(LDLIBS)
 
-$(BUILD)/qwen_graph $(BUILD)/qwen_graph_host_launch: executor/qwen_graph.py | $(BUILD)
+$(BUILD)/qwen_graph $(BUILD)/qwen_graph_host_launch $(BUILD)/qwen_graph_user_network: executor/qwen_graph.py | $(BUILD)
 	ln -sf $(abspath executor/qwen_graph.py) $@
+
+# Same resident GPU graphs with an epoll userspace TCP/HTTP control.
+.PHONY: qwen-graph-user-network
+qwen-graph-user-network: $(BUILD)/qwen_graph_user_network.so $(BUILD)/qwen_graph_user_network
+
+$(BUILD)/qwen_graph_user_network.so: executor/qwen_graph.cu executor/userspace_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
+	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -rdc=true -shared -Xcompiler=-fPIC \
+		-Ibpf/include $< -o $@ $(LDLIBS)

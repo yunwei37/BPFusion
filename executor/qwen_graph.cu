@@ -12,6 +12,9 @@
 #include <vector>
 #include "bpfusion_queue.h"
 #define CUDA(x) do { cudaError_t e=(x); if(e!=cudaSuccess) { fprintf(stderr,"%s: %s\n",#x,cudaGetErrorString(e)); return (int)e; } } while(0)
+#ifdef BF_USER_NETWORK
+#include "userspace_tcp.h"
+#endif
 struct Step { cudaGraphExec_t graph; long long *output; };
 struct Request { unsigned k,prompt,gen,step,phase; };
 struct Control { unsigned seen,retired,reclaim,error,launches,max_active; Request requests[BF_LLM_SLOTS]; };
@@ -102,8 +105,12 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
     }
     Step *steps;CUDA(cudaMalloc(&steps,size*sizeof(Step)));CUDA(cudaMemcpy(steps,host.data(),size*sizeof(Step),cudaMemcpyHostToDevice));
     Control *control;CUDA(cudaMalloc(&control,sizeof(Control)));CUDA(cudaMemset(control,0,sizeof(Control)));
+#ifdef BF_USER_NETWORK
+    bf_page *page=(bf_page *)mmap(nullptr,BF_PAGE_MMAP_BYTES,PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANONYMOUS,-1,0);
+#else
     int fd=bpf_obj_get("/sys/fs/bpf/bpfusion_ctl");if(fd<0) { perror("bpf_obj_get");return 1; }
     bf_page *page=(bf_page *)mmap(nullptr,BF_PAGE_MMAP_BYTES,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
+#endif
     if(page==MAP_FAILED) { perror("mmap");return 1; }
     CUDA(cudaHostRegister(page,BF_PAGE_MMAP_BYTES,cudaHostRegisterMapped));
     bf_page *device;CUDA(cudaHostGetDevicePointer((void **)&device,page,0));
@@ -122,15 +129,23 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
     cudaKernelNodeParams params={};params.func=(void *)dispatch;params.gridDim=dim3(1);params.blockDim=dim3(32);params.kernelParams=args;
     cudaGraph_t graph;CUDA(cudaGraphCreate(&graph,0));cudaGraphNode_t node;CUDA(cudaGraphAddKernelNode(&node,graph,nullptr,0,&params));
     cudaGraphExec_t parent;CUDA(cudaGraphInstantiate(&parent,graph,cudaGraphInstantiateFlagDeviceLaunch));CUDA(cudaGraphUpload(parent,0));CUDA(cudaDeviceSynchronize());
+#ifndef BF_USER_NETWORK
     int module=open("module/bfusion_tx.ko",O_RDONLY|O_CLOEXEC);if(module<0) { perror("module open");return 1; }
     char params_module[80];snprintf(params_module,sizeof(params_module),"map_fd=%d listen_fd=%d",fd,listener);
     if(syscall(SYS_finit_module,module,params_module,0)) { perror("finit_module");return 1; }
     close(module);close(fd);
+#endif
     signal(SIGTERM,stop_signal);signal(SIGINT,stop_signal);
+#ifdef BF_USER_NETWORK
+    printf("network=userspace epoll; same resident GPU graph dispatch\n");fflush(stdout);
+#endif
     cudaError_t launched=cudaSuccess;unsigned launches=0;
     if(!once) { launched=cudaGraphLaunch(parent,0);launches++; }
     if(launched==cudaSuccess) {
         printf("resident Qwen ready: %u layers h=%u vocab=%u; device-tail graphs, dispatch=%s\n",layers,h,vocab,mode);fflush(stdout);
+#ifdef BF_USER_NETWORK
+        launched=user_network(page,listener,seconds,&stopped) ? cudaErrorUnknown : cudaSuccess;
+#else
         if(once) {
             signal(SIGALRM,stop_signal);alarm(seconds);unsigned retired=0;
             while(!stopped) {
@@ -143,10 +158,13 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
             }
             alarm(0);
         } else while(seconds-- && !stopped) sleep(1);
+#endif
     }
     __atomic_store_n(&page->stop_ns,1,__ATOMIC_RELEASE);
     cudaError_t finished=cudaDeviceSynchronize();
+#ifndef BF_USER_NETWORK
     if(syscall(SYS_delete_module,"bfusion_tx",0)) { perror("delete_module");return 1; }
+#endif
     close(listener);CUDA(launched);CUDA(finished);
     Control result;CUDA(cudaMemcpy(&result,control,sizeof(result),cudaMemcpyDeviceToHost));
     CUDA(cudaHostUnregister(page));munmap(page,BF_PAGE_MMAP_BYTES);

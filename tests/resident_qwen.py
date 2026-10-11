@@ -52,7 +52,8 @@ def main():
     parser.add_argument("--prefill-edges",action="store_true",help="also test 1/15/16/17/32/64-token prompt lengths")
     parser.add_argument("--model",default="Qwen/Qwen2.5-0.5B-Instruct",help="HF checkpoint; other models require a graph executor")
     args=parser.parse_args()
-    if args.model!="Qwen/Qwen2.5-0.5B-Instruct" and Path(args.executor).name not in ("qwen_graph","qwen_graph_host_launch"):
+    user_network=Path(args.executor).name=="qwen_graph_user_network"
+    if args.model!="Qwen/Qwen2.5-0.5B-Instruct" and Path(args.executor).name not in ("qwen_graph","qwen_graph_host_launch","qwen_graph_user_network"):
         parser.error("--model requires qwen_graph or qwen_graph_host_launch")
     weights="/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin" if args.model=="Qwen/Qwen2.5-0.5B-Instruct" else args.model
     cases,vocab=oracle_cases(args.gen,args.prefill_edges,args.model)
@@ -60,7 +61,10 @@ def main():
     print(f"HF eager fp16 oracle ready, model={args.model}, model released",flush=True)
     subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
     subprocess.run(["./build/bpfusion_load","stream-detach"],check=True)
-    subprocess.run(["./build/bpfusion_load","stream-attach"],check=True)
+    if not user_network:
+        subprocess.run(["./build/bpfusion_load","stream-attach"],check=True)
+    else:
+        assert not Path("/sys/module/bfusion_tx").exists(),"kernel TX must be absent for userspace control"
     executor=None
     complete=False
     logpath="/tmp/bpfusion-resident-qwen.log"
@@ -73,7 +77,8 @@ def main():
             time.sleep(.1)
         for _ in range(5000):
             socket.create_connection(("127.0.0.1",39403),timeout=5).close()
-        print("PASS 5000 empty connections accepted/drained by kernel; exceeds undrained listener backlog",flush=True)
+        owner="userspace" if user_network else "kernel"
+        print(f"PASS 5000 empty connections accepted/drained by {owner}; exceeds undrained listener backlog",flush=True)
         def request(idx, ids, expected, http=False, client=None, split=True, reject=False):
             with (nullcontext(client) if client is not None else socket.create_connection(("127.0.0.1",39403),timeout=60)) as client:
                 start=time.perf_counter()
@@ -191,13 +196,14 @@ def main():
             assert client.recv(1)==b"","binary rejection must close the connection"
         request(0,ids,expected)
         print("PASS invalid first/last token IDs: HTTP 400, binary EOF, same-stream and later requests still exact",flush=True)
-        print(f"PASS {valid} valid TCP/HTTP requests, {valid*args.gen-16*(args.gen-1)} real model greedy tokens, 259 rejections, no host accept/read/send worker",flush=True)
+        network="userspace network control" if user_network else "no host accept/read/send worker"
+        print(f"PASS {valid} valid TCP/HTTP requests, {valid*args.gen-16*(args.gen-1)} real model greedy tokens, 259 rejections, {network}",flush=True)
         complete=True
     finally:
         try:
             if executor is not None:
                 shutdown=time.monotonic()
-                if complete and Path(args.executor).name in ("qwen_graph","qwen_graph_host_launch"):
+                if complete and Path(args.executor).name in ("qwen_graph","qwen_graph_host_launch","qwen_graph_user_network"):
                     # A signal on a CUDA helper must also wake the host wait.
                     tid=next(int(p.name) for p in Path(f"/proc/{executor.pid}/task").iterdir() if int(p.name)!=executor.pid)
                     assert ctypes.CDLL(None).tgkill(executor.pid,tid,signal.SIGTERM)==0
@@ -220,9 +226,17 @@ def main():
                 if complete: assert "resident Qwen ready" in trace,"missing executor ready marker in trace"
                 if "resident Qwen ready" in trace:
                     active=trace.split("resident Qwen ready",1)[1]
-                    assert not re.search(r"\b(?:accept4?|recvfrom|recvmsg|recvmmsg|sendto|sendmsg|sendmmsg)\(",active),active
-                    print("PASS traced all executor threads: no accept/receive/send syscalls after ready",flush=True)
-            subprocess.run(["./build/bpfusion_load","stats"],check=True)
+                    if user_network:
+                        for syscall in ("accept4","recvfrom","sendto"):
+                            assert re.search(r"\b"+syscall+r"\(",active),syscall
+                        assert "userspace TCP stopped: accepted=5058 published=594 completed=594 rejected=259" in log,log
+                        assert not Path("/sys/module/bfusion_tx").exists()
+                        print("PASS traced userspace accept/receive/send control with no kernel TX module",flush=True)
+                    else:
+                        assert not re.search(r"\b(?:accept4?|recvfrom|recvmsg|recvmmsg|sendto|sendmsg|sendmmsg)\(",active),active
+                        print("PASS traced all executor threads: no accept/receive/send syscalls after ready",flush=True)
+            if not user_network:
+                subprocess.run(["./build/bpfusion_load","stats"],check=True)
         finally:
             subprocess.run(["./build/bpfusion_load","stream-detach"],check=True)
             subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
