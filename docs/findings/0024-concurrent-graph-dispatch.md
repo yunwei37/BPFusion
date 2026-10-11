@@ -72,3 +72,19 @@ Fresh result review must independently check the complete unique matrix,
 request indices and prompt balance, exact tokens, timestamp-derived metrics,
 native launch counts, zero drops and final FREE slots. These are evidence checks,
 not a new runtime control interface. No reviewer ran GPU work or edited source.
+
+
+## Real preflight
+
+The [raw preflight](../../bench/results/concurrent_graph_dispatch_preflight_20261011.jsonl)
+and [command/stdout receipt](../../bench/results/concurrent_graph_dispatch_preflight_20261011.stdout.txt)
+complete with exit0 at2026-10-11T05:29:01.658986UTC. Both modes use the actual
+default TCP path, eight graph banks and unchanged gen64 oracle warmups.
+Independent reconstruction confirms two unique measured cells, four prompt
+cases/mode, eight measured exact gen1 tokens,24 total request publications
+including warmups and528 model graphs. Resident/host service launches are1/12;
+both have graph_error0, zero registration/admission drops and eight final
+FREE slots. No module or BPFusion map pins remain after cleanup.
+
+This confirms executability only. One paired preflight block produces null
+confidence intervals and is not evidence of a serving speedup.

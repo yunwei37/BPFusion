@@ -20,10 +20,12 @@ preserved.
 | [model-as-a-kernel](https://huggingface.co/kernels/phanerozoic/model-as-a-kernel) | Architecture interpreter; a finite prompt-plus-greedy-generation loop within one launch; single and batched decode interfaces | CUDA capability 12.0 is declared and the card reports an SM120 measurement. No BPFusion queue, online admission, kernel TX or request recycling is implemented. See source boundaries below. |
 | [Luminal](https://github.com/luminal-ai/luminal), [compiler design](https://blog.luminal.com/p/compiling-models-to-megakernels) | General inference compiler and symbolic megakernel work queue | Public backend coverage and host generation/control dependencies need an interface audit. General compiler expressiveness does not prove every model has a runnable whole-model megakernel. |
 | [AutoMegaKernel](https://github.com/RightNow-AI/AutoMegaKernel) | HF Llama-family import and whole-forward synthesis, with RTX 5090 evidence | Current generate.py loops on the CPU, lowers/runs each step, synchronizes and reads argmax. Its reported INT8-versus-BF16 gains change precision; they cannot establish our path benefit. |
-| [AlpinDale qwen_megakernel](https://github.com/AlpinDale/qwen_megakernel) | Existing BF16 Qwen3-0.6B kernel targeting RTX 5090 | Narrow model/hardware coverage. Useful for assessing a small adapter; not automatic multi-model support. |
+| [AlpinDale qwen_megakernel](https://github.com/AlpinDale/qwen_megakernel) | Existing BF16 Qwen3-0.6B kernel targeting RTX 5090 | Body/final norm and LM-head/argmax use separate kernels. Global mutable launch/synchronization state needs a concurrency audit; the bulk no-sync API is not evidence of resident online admission. See pinned source below. |
 | [Lucebox megakernel](https://github.com/Luce-Org/lucebox/tree/main/optimizations/megakernel) | Qwen3.5-0.8B hybrid DeltaNet/Attention implementation; separate Blackwell NVFP4 path | Current kernel is model-specific and batch 1. Half-precision and NVFP4 paths are different compute conditions. The standalone Python decoder drives steps and reads each output on the host. |
+| [Mini-vLLM](https://github.com/BoundlessWindMoon/minivllm) | Small Qwen3 whole-layer CUDA decode implementation; HTTP and continuous-batching paths also exist | The inspected megakernel wrapper synchronizes and reads output on CPU per step. Qwen3.5 source presence is not qualified megakernel support. README says MIT but the inspected tree has no license file. |
+| [MegaQwen](https://github.com/Infatoshi/MegaQwen) | Consumer-GPU Qwen3-0.6B cooperative decode implementation and detailed optimization experiments | Static batch1/short-context scope; separate LM head and CPU generation/argmax. README says MIT but no license file was found. A compute reference, not a general resident serving runtime. |
 | [HazyResearch Megakernels](https://github.com/HazyResearch/Megakernels) | ThunderKittens-based Llama whole-forward implementation | Published build choices are H100/B200; a 5090 port is not verified. |
-| [Cohere megakernel](https://github.com/cohere-ai/cohere-megakernel), [serving design](https://cohere.com/blog/megakernels) | Complete serving features around a decode megakernel, including paged KV and continuous batching | Current research release targets North Mini Code on one H100. Python controls admission/prefill; a C++ loop updates positions, launches, samples and streams each decode step. |
+| [Cohere megakernel](https://github.com/cohere-ai/cohere-megakernel), [serving design](https://cohere.com/blog/megakernels) | OpenAI-compatible serving and paged KV around a decode megakernel | Current research release targets North Mini Code on one H100, BF16, batches1-8. Prefill pauses decode. Python controls admission/prefill; a C++ loop updates positions, launches, samples and streams each decode step. |
 | [TileRT](https://github.com/tile-ai/TileRT) | Tile runtime and model backends for large multi-GPU serving | Current supported wheels target 8 B200s or 8 MI350-class GPUs, with exact PyTorch ABI requirements; core backend is distributed as a binary. Not a demonstrated single-5090 source adapter. |
 | [ARK](https://github.com/microsoft/ark) | GPU-driven computation/communication loop-kernel framework and Llama2 example | A relevant execution-model precedent; current model breadth and 5090 compatibility still need verification. |
 
@@ -107,6 +109,34 @@ Audited upstream revision:
   model backend or kernel-queue integration. The [qualification finding](findings/0023-batch-execution-qualification.md#upstream-mpk-sm120-compatibility-and-terminal-numerical-rejection)
   links the exact patch, commands and complete positive/negative raw receipts.
 
+### Additional source checks
+
+A supplementary read-only search and source inspection on2026-10-11 expands
+the candidate set; none of these source observations is a local model run.
+
+- AlpinDale revision [5030e154d39ecd054df03eb4dd9c8aa8185414d1](https://github.com/AlpinDale/qwen_megakernel/tree/5030e154d39ecd054df03eb4dd9c8aa8185414d1)
+  has an MIT license. csrc/kernel.cu keeps barrier/position/token state in
+  process-global pointers. csrc/torch_bindings.cpp's generate_nosync()
+  invokes the bulk launcher and synchronizes once at the end; this establishes
+  a useful API boundary, not autonomous service across arriving requests.
+- Lucebox revision [ae039d0acc2f03cd0e8cff33836ad05e4f64d310](https://github.com/Luce-Org/lucebox/tree/ae039d0acc2f03cd0e8cff33836ad05e4f64d310)
+  is Apache-2.0. Its megakernel README documents the separate Blackwell
+  NVFP4 path; model.py and model_nvfp4.py generate() call step() in a CPU
+  loop and read the result with item(). The latter also exposes step_many();
+  its existence is not qualification of an autonomous online request loop.
+- Mini-vLLM revision [c5bde277518942bbebec0730f5b6684f396d7042](https://github.com/BoundlessWindMoon/minivllm/tree/c5bde277518942bbebec0730f5b6684f396d7042)
+  and MegaQwen revision [0bc1fdedb82744481373000c5c7d3c58795c7a3a](https://github.com/Infatoshi/MegaQwen/tree/0bc1fdedb82744481373000c5c7d3c58795c7a3a)
+  have public source but no license path in their inspected trees.
+- [FlashFormer](https://arxiv.org/abs/2505.22758)'s author repository migrated
+  to [cheetah-lang/flashformer](https://github.com/cheetah-lang/flashformer/tree/4768b7684ddf94d4845e5c36e2370a3f3c5bd112).
+  Its47-file tree exposes operators, memory/synchronization primitives and
+  component tests; a complete whole-model runner and license were not
+  established. Do not count this as a runnable backend solely from the paper.
+- [AutoMegaKernel's experiments](https://github.com/RightNow-AI/AutoMegaKernel/blob/main/EXPERIMENTS.md)
+  describe10/10 supported configurations including three named real
+  checkpoints, configuration sizes and a toy. This is not ten independently
+  qualified real-model serving backends.
+
 ## Selection and comparison implications
 
 MPK is the strongest lead for an existing online queue/runtime interface.
@@ -141,3 +171,23 @@ eBPF/sockmap and a kernel/GPU shared queue, with the existing Linux networking
 and asynchronous kernel TX semantics. Kernel networking, eBPF and kernel TX
 still use CPU. Removing the userspace request worker is not removing all host
 CPU work; total cost and useful latency/throughput gains remain to be measured.
+
+
+[NVIDIA's DOCA GPU packet-processing application](https://docs.nvidia.com/doca/sdk/doca-gpu-packet-processing-application-guide/)
+already demonstrates GPU processing and replying to HTTP. CPU DPDK handles
+SYN/FIN/RST and installs flow rules; CUDA kernels handle data and responses.
+It bypasses OS sockets and kernel networking. Therefore GPU-handled HTTP itself
+is not the distinction from this prior artifact.
+
+[Linux device-memory TCP](https://kernel.org/doc/html/latest/networking/devmem.html)
+already provides direct NIC/device-memory payload transfer while keeping TCP
+header processing in the kernel. Its documented API retains userspace recvmsg,
+sendmsg and buffer-return/completion handling. Zero-copy transfer and removing
+the steady userspace request/control worker are different properties.
+
+[Wave Persistent Kernel](https://dotwave.ai/technical-notes/wpk-persistent-kernel/)
+is a first-party continuous-voice execution precedent: the resident program
+advances a static cohort, while the host publishes input and waits for output.
+Its benefit includes shared-weight batching, not solely eliminating dispatch.
+No reusable public source artifact was established in this search; treat it as
+a mechanism/evaluation reference rather than a ready backend.

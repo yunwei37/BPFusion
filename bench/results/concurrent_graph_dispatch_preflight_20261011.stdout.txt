@@ -1,0 +1,11 @@
+UTC 2026-10-11T05:26:52.798651+00:00
+COMMAND HF_HOME=/workspaces/.cache/huggingface python3 bench/resident_dispatch.py --gen 64 --preflight --resident-executor ./build/qwen_graph --host-executor ./build/qwen_graph_host_launch --output bench/results/concurrent_graph_dispatch_preflight_20261011.jsonl
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4714.97it/s]
+pair=0 mode=resident gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+pair=0 mode=host-launch gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.140
+{"mode": "resident", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 32.33036175, "ttft_p50_ms": 41.038935, "ttft_p99_ms": 42.8029876, "tpot_mean_ms": null, "completion_mean_ms": 32.33036175, "host_cpu_work_s_per_cell": [0.75], "executor_cpu_s_per_cell": [0.0], "tokens_per_s": [30.907999603821263]}
+{"mode": "host-launch", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 32.73328225, "ttft_p50_ms": 41.7708315, "ttft_p99_ms": 43.06678499, "tpot_mean_ms": null, "completion_mean_ms": 32.73328225, "host_cpu_work_s_per_cell": [0.76], "executor_cpu_s_per_cell": [0.14000000000000057], "tokens_per_s": [30.528740149033833]}
+{"gen": 1, "concurrency": 1, "paired_host_minus_resident_ttft_ms": [0.40292050000000046], "difference_mean_ms": 0.40292050000000046, "difference_t95_ms": null}
+{"gen": 1, "concurrency": 1, "paired_resident_minus_host_tps": [0.3792594547874302], "difference_mean_tps": 0.3792594547874302, "difference_t95_tps": null}
+
+PREFLIGHT_EXIT 0 UTC 2026-10-11T05:29:01.658986+00:00
