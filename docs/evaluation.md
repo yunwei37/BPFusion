@@ -121,3 +121,16 @@ accept/drain/completion cost before selecting a transport change. No model
 arithmetic campaign, general total-CPU/speed claim or external SOTA result
 follows. Compute reuse, physical NIC, strong official serving comparison,
 full text and online batching remain part of the full retained goal.
+
+
+The [socket-readiness candidate](findings/0028-socket-readiness.md) tests the
+next concrete request-path hypothesis after finding0027. Its reviewed plan
+retains identical model computation and the efficient native control; the only
+behavior change is avoiding accept/recv attempts when existing Linux poll
+reports no input/EOF/error readiness. Role: supporting. Build and plan review
+pass; both affected-kernel strict runs finish normally with670 valid requests,
+40864 exact tokens and518 rejections. Current three-mode preflight also
+completes: six normal executors,24 exact measured replies,both native analyses
+exit0 and all12 idle/cell CPU brackets/components reconstruct. Full frozen-source
+collection and fresh result review remain pending; no performance gain is
+established. The old negative matrix remains closed.

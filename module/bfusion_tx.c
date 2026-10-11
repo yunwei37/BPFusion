@@ -9,6 +9,7 @@
 #include <linux/bpf.h>
 #include <linux/file.h>
 #include <linux/net.h>
+#include <linux/poll.h>
 #include <net/inet_sock.h>
 #include <linux/nsproxy.h>
 #include <linux/uio.h>
@@ -249,7 +250,9 @@ static void accept_and_drain(void)
 
 	if (!listener)
 		return;
-	while (kernel_accept(listener, &socket, O_NONBLOCK) == 0) {
+	/* kernel_accept allocates even when the accept queue is empty. */
+	while ((READ_ONCE(listener->ops)->poll(NULL, listener, NULL) & EPOLLIN) &&
+	       kernel_accept(listener, &socket, O_NONBLOCK) == 0) {
 		peer = kmalloc(sizeof(*peer), GFP_KERNEL);
 		if (!peer) {
 			sock_release(socket);
@@ -264,6 +267,10 @@ static void accept_and_drain(void)
 		struct kvec vec = { .iov_base = discard, .iov_len = sizeof(discard) };
 		int ret;
 
+		/* TCP poll includes sockmap ingress messages and EOF/error readiness. */
+		if (!(READ_ONCE(peer->socket->ops)->poll(NULL, peer->socket, NULL) &
+		      (EPOLLIN | EPOLLRDNORM | EPOLLRDHUP | EPOLLHUP | EPOLLERR)))
+			continue;
 		do {
 			struct msghdr msg = {};
 

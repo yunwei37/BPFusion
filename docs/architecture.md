@@ -215,6 +215,14 @@ executor-plus-TX CPU at gen64/eight clients in both models; client latency
 and throughput remain inconclusive. This does not identify total service CPU
 or a transport-only causal effect.
 
+The module checks each owned socket's existing TCP poll callback before
+accepting or draining input. Listener readiness reflects the accept queue;
+peer readiness includes sockmap ingress data,EOF/shutdown and errors.
+It preserves kernel accept/recv and queue/socket reclamation on readiness,
+as well as the existing60-120us sweep. An arrival after a false readiness
+snapshot can wait for the next sweep. Finding0028 records strict qualification
+and the pending matched comparison; CPU or latency gains are not yet proven.
+
 The module exposes a read-only tx_cpu_ns sysfs parameter for the TX task's
 adjusted user+system CPU time. A retained task reference and mutex cover its
 getter/shutdown lifetime. Native measurement adds this delta to the executor

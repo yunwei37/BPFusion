@@ -213,6 +213,13 @@ than the kernel path for both models; planned TTFT/throughput remain inconclusiv
 These counters do not identify total service CPU. The negative result directs
 attention to request/completion overhead while retaining upstream computation.
 
+The kernel request worker now checks existing Linux socket readiness before
+accept/recv attempts. Both real-model strict suites pass with the same
+computation,and all six three-mode preflight executors pass.
+[Finding0028](docs/findings/0028-socket-readiness.md) records
+the small source change and reviewed comparison; full performance measurement
+is pending.
+
 ## Reusing upstream compute
 
 The next backend investigation reuses upstream megakernel computation so a
