@@ -40,3 +40,134 @@ COMMAND ['journalctl', '-k', '--since', '2026-10-11 22:11:33 UTC', '--no-pager',
 2026-10-11T15:19:24-07:00 lab kernel: bfusion_tx: exit bytes=2000 completed=12 abandoned=0 retries=0 accepted=2 closed=2
 2026-10-11T15:23:29-07:00 lab kernel: bfusion_tx: map id=7013 size=17336 ring=12856 slot=560 net=4026534538
 2026-10-11T15:23:31-07:00 lab kernel: bfusion_tx: exit bytes=2000 completed=12 abandoned=0 retries=0 accepted=2 closed=2
+
+READINESS FULL DURING OBSERVATION UTC 2026-10-11T22:38:44.219208+00:00
+COMMAND ['cat', '/proc/sys/kernel/random/boot_id'] EXIT 0
+04dc0087-5ccc-4c46-9997-b9a92f0e5167
+
+
+COMMAND ['nvidia-smi', '--query-gpu=uuid,name,memory.total,memory.used,clocks.sm,temperature.gpu,power.draw,utilization.gpu', '--format=csv'] EXIT 0
+uuid, name, memory.total [MiB], memory.used [MiB], clocks.current.sm [MHz], temperature.gpu, power.draw [W], utilization.gpu [%]
+GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, NVIDIA GeForce RTX 5090, 32607 MiB, 3551 MiB, 2685 MHz, 44, 83.99 W, 11 %
+
+
+COMMAND ['nvidia-smi', '--query-compute-apps=pid,process_name,used_gpu_memory', '--format=csv'] EXIT 0
+pid, process_name, used_gpu_memory [MiB]
+1987913, /usr/bin/python3, 652 MiB
+2063928, python3, 2872 MiB
+
+
+COMMAND ['free', '-m'] EXIT 0
+               total        used        free      shared  buff/cache   available
+Mem:          128260       28390       26728         423       74768       99869
+Swap:           8191        1714        6477
+
+
+COMMAND ['journalctl', '-k', '--since', '2026-10-11 22:28:12 UTC', '--no-pager', '-o', 'short-iso'] EXIT 0
+2026-10-11T15:32:45-07:00 lab kernel: bfusion_tx: map id=7035 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T15:32:57-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T15:36:43-07:00 lab kernel: bfusion_tx: map id=7043 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T15:36:55-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+
+
+GPU process identity read UTC 2026-10-11T22:39:27.928141+00:00
+HOST PID 1987913 EXISTS True
+Name:	python3
+NSpid:	1987913	110013
+COMMAND /usr/bin/python3 bench/resident_dispatch.py --gen 64 --resident-executor ./build/qwen_graph --user-network-executor ./build/qwen_graph_user_network --user-network-wait-executor ./build/qwen_graph_user_network_wait --model HuggingFaceTB/SmolLM2-135M --output bench/results/readiness_network_smol_20261011.jsonl
+CGROUP 0::/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod3e8994f8_77ba_4a73_a3a5_35ed69a0a8a2.slice/cri-containerd-a83771de83c8751ca3851fb01f648f254b33bee02efedf85f1d50713ebbf644d.scope
+
+HOST PID 2063928 EXISTS True
+Name:	python3
+NSpid:	2063928	111061
+COMMAND python3 ./build/qwen_graph_user_network HuggingFaceTB/SmolLM2-135M 300
+CGROUP 0::/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod3e8994f8_77ba_4a73_a3a5_35ed69a0a8a2.slice/cri-containerd-a83771de83c8751ca3851fb01f648f254b33bee02efedf85f1d50713ebbf644d.scope
+
+
+
+READINESS SMOL COMPLETE / QWEN UNDERWAY UTC 2026-10-11T22:53:30.393246+00:00
+COMMAND ['cat', '/proc/sys/kernel/random/boot_id'] EXIT 0
+04dc0087-5ccc-4c46-9997-b9a92f0e5167
+
+
+COMMAND ['nvidia-smi', '--query-gpu=uuid,name,memory.total,memory.used,clocks.sm,temperature.gpu,power.draw,utilization.gpu', '--format=csv'] EXIT 0
+uuid, name, memory.total [MiB], memory.used [MiB], clocks.current.sm [MHz], temperature.gpu, power.draw [W], utilization.gpu [%]
+GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, NVIDIA GeForce RTX 5090, 32607 MiB, 9797 MiB, 2887 MHz, 49, 270.01 W, 100 %
+
+
+COMMAND ['nvidia-smi', '--query-compute-apps=pid,process_name,used_gpu_memory', '--format=csv'] EXIT 0
+pid, process_name, used_gpu_memory [MiB]
+2214962, /usr/bin/python3, 652 MiB
+2224113, python3, 9116 MiB
+
+
+GPU HOST PID 2214962 Name:	python3
+NSpid:	2214962	112857
+CGROUP 0::/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod3e8994f8_77ba_4a73_a3a5_35ed69a0a8a2.slice/cri-containerd-a83771de83c8751ca3851fb01f648f254b33bee02efedf85f1d50713ebbf644d.scope
+
+OWN COMMAND /usr/bin/python3 bench/resident_dispatch.py --gen 64 --resident-executor ./build/qwen_graph --user-network-executor ./build/qwen_graph_user_network --user-network-wait-executor ./build/qwen_graph_user_network_wait --model Qwen/Qwen2.5-0.5B-Instruct --output bench/results/readiness_network_qwen_20261011.jsonl
+GPU HOST PID 2224113 Name:	python3
+NSpid:	2224113	113178
+CGROUP 0::/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod3e8994f8_77ba_4a73_a3a5_35ed69a0a8a2.slice/cri-containerd-a83771de83c8751ca3851fb01f648f254b33bee02efedf85f1d50713ebbf644d.scope
+
+OWN COMMAND python3 ./build/qwen_graph_user_network /workspaces/.cache/bpfusion/qwen25-05b-fp16.bin 300
+COMMAND ['free', '-m'] EXIT 0
+               total        used        free      shared  buff/cache   available
+Mem:          128260       36051       23477         432       70359       92208
+Swap:           8191        1787        6404
+
+
+COMMAND ['journalctl', '-k', '--since', '2026-10-11 22:38:44 UTC', '--no-pager', '-o', 'short-iso'] EXIT 0
+2026-10-11T15:41:52-07:00 lab kernel: bfusion_tx: map id=7063 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T15:42:04-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T15:47:07-07:00 lab kernel: bfusion_tx: map id=7073 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T15:47:19-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T15:51:02-07:00 lab kernel: bfusion_tx: map id=7091 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T15:51:14-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T15:52:16-07:00 lab kernel: bfusion_tx: map id=7101 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T15:52:29-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+
+
+Observation transport note: one SSH read timed out around22:57UTC on2026-10-11. A subsequent actual execution at22:58:03UTC confirmed the same wrapper110012 and continued Qwen output. Cluster read returned original Pod Running,1/1,zero restarts,lab,IP10.42.1.238. No experiment/Workspace/service restart or host mutation was performed. The transient read failure does not establish a workload outage or its cause.
+
+READINESS AFTER FULL UTC 2026-10-11T23:13:20.486780+00:00
+COMMAND ['cat', '/proc/sys/kernel/random/boot_id'] EXIT 0
+04dc0087-5ccc-4c46-9997-b9a92f0e5167
+
+
+COMMAND ['nvidia-smi', '--query-gpu=uuid,name,memory.total,memory.used,clocks.sm,temperature.gpu,power.draw,utilization.gpu', '--format=csv'] EXIT 0
+uuid, name, memory.total [MiB], memory.used [MiB], clocks.current.sm [MHz], temperature.gpu, power.draw [W], utilization.gpu [%]
+GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, NVIDIA GeForce RTX 5090, 32607 MiB, 15 MiB, 180 MHz, 45, 12.21 W, 0 %
+
+
+COMMAND ['nvidia-smi', '--query-compute-apps=pid,process_name,used_gpu_memory', '--format=csv'] EXIT 0
+pid, process_name, used_gpu_memory [MiB]
+
+
+COMMAND ['free', '-m'] EXIT 0
+               total        used        free      shared  buff/cache   available
+Mem:          128260       24486       25543         394       79821      103773
+Swap:           8191        1757        6434
+
+
+COMMAND ['journalctl', '-k', '--since', '2026-10-11 22:31:35 UTC', '--until', '2026-10-11 23:10:10 UTC', '--no-pager', '-o', 'short-iso'] EXIT 0
+2026-10-11T15:32:45-07:00 lab kernel: bfusion_tx: map id=7035 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T15:32:57-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T15:36:43-07:00 lab kernel: bfusion_tx: map id=7043 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T15:36:55-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T15:41:52-07:00 lab kernel: bfusion_tx: map id=7063 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T15:42:04-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T15:47:07-07:00 lab kernel: bfusion_tx: map id=7073 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T15:47:19-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T15:51:02-07:00 lab kernel: bfusion_tx: map id=7091 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T15:51:14-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T15:52:16-07:00 lab kernel: bfusion_tx: map id=7101 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T15:52:29-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T15:55:35-07:00 lab kernel: bfusion_tx: map id=7111 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T15:55:47-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T16:01:07-07:00 lab kernel: bfusion_tx: map id=7127 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T16:01:19-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T16:06:13-07:00 lab kernel: bfusion_tx: map id=7145 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T16:06:25-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19
+2026-10-11T16:09:41-07:00 lab kernel: bfusion_tx: map id=7160 size=17336 ring=12856 slot=560 net=4026534538
+2026-10-11T16:09:53-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19

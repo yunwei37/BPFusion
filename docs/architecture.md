@@ -221,7 +221,9 @@ peer readiness includes sockmap ingress data,EOF/shutdown and errors.
 It preserves kernel accept/recv and queue/socket reclamation on readiness,
 as well as the existing60-120us sweep. An arrival after a false readiness
 snapshot can wait for the next sweep. Finding0028 records strict qualification
-and the pending matched comparison; CPU or latency gains are not yet proven.
+and the complete matched comparison with fresh result review; both primary
+efficient-control CPU intervals and planned client-performance intervals cross
+zero. CPU or latency gains are not established.
 
 The module exposes a read-only tx_cpu_ns sysfs parameter for the TX task's
 adjusted user+system CPU time. A retained task reference and mutex cover its

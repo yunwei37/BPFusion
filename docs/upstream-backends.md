@@ -650,3 +650,74 @@ graph reuse, conventional serving alternatives and CPU-efficiency counterexample
 Further implementation selection should follow those concrete uncertainties;
 model-specific arithmetic, a custom TCP stack and porting every candidate to
 the present GPU are unnecessary to isolate the requested serving-path effect.
+
+## Additional general compilers and new public backend leads
+
+Read-only follow-up on2026-10-11 after the readiness comparison. Queries
+included persistent megakernels beyond the existing Qwen implementations,
+GPU-resident graph launch,non-LLM compiled models,consumer-GPU artifacts,
+and eBPF/TCP serving. Search/awesome-list/Reddit results were leads only;
+decisions use primary papers,official proceedings and pinned author source.
+No candidate was installed,built or GPU-qualified in this search.
+
+- [MonoNN,OSDI2024](https://www.usenix.org/conference/osdi24/presentation/zhuang)
+  is a general compiler for static whole-network inference,with an
+  [official Apache-2.0 artifact at2ff5b42](https://github.com/AlibabaResearch/mononn/tree/2ff5b42c0c0bf7046ce2496f2f580fcdd2468d45).
+  README lines123-124 expose a BERT example; lines177-180 describe generated
+  CUDA/PTX and direct use. This is a concrete non-autoregressive reuse lead
+  for testing model breadth and short-compute request costs without writing
+  model arithmetic. Its published dependencies are TensorFlow2.9.2,
+  Python3.8,CUDA11.6 and T4/A100/A10,so present SM120 compatibility is
+  unqualified. Finite static inference is not online resident admission.
+- [Rammer,OSDI2020](https://www.usenix.org/conference/osdi20/presentation/ma)
+  supplies task-based compile-time scheduling and inter/intra-operator
+  co-scheduling. The [MIT NNFusion source at00c1317](https://github.com/microsoft/nnfusion/tree/00c13173a155556e50510575f6682a6a654cd585)
+  links the paper and provides a frozen LSTM example and model export paths.
+  It broadens reusable computation beyond one hand-written LLM. Neither
+  the general compiler nor its paper establishes an already resident
+  Linux-TCP request server or local SM120 qualification.
+- [PipeThreader,OSDI2025](https://www.usenix.org/conference/osdi25/presentation/cheng)
+  uses software-defined pipelining and a task graph over specialized GPU
+  units; its official proceedings link [TileLang](https://github.com/tile-ai/tilelang)
+  as code. Attention/Mamba2 examples concern computation scheduling rather
+  than complete online model serving. Use it as a compiler/mechanism
+  precedent; adopting it does not require a new operator-tuning campaign.
+- [OpenJet's megakernel at2993f47](https://github.com/L-Forster/open-jet/tree/2993f47fd044adedb4bd4709d655239cc22b671c/megakernel)
+  is newly observed public AGPL-3.0 source for Qwen3.8-27B Q4_K_M,
+  advertising SM86/89/120 and single-conversation speculative decoding.
+  The pinned README limits supported weights and reports approximate
+  fidelity,not token-exact agreement. qwen38_mk.cu line2487 launches a
+  cooperative speculative cycle; capi.cpp line95 exposes one host step,
+  and server/mk_server.py lines114-119 call it and return host token IDs.
+  It therefore offers a narrow compute/interface reference,not a
+  multi-model resident online backend or proof of our eBPF benefit.
+  Its reported3090 speedups and precision/speculation choices cannot be
+  transferred to the current FP16 graph comparison.
+- [Weave](https://arxiv.org/html/2609.21483v1) fuses MoE dispatch,expert GEMMs,
+  activation and combine with dynamic compute/communication scheduling.
+  It is a layer/distributed-compute mechanism,not complete prompt-to-token
+  network serving. No complete author-linked serving artifact was
+  established here; do not turn this citation into another required port.
+- [GPU Resident Inference Lab at e27e56d](https://github.com/manishklach/gpu-resident-inference-lab/tree/e27e56d4d192d8e76c070af26f26dbfdd929c01c)
+  explicitly describes deterministic placeholder transformer math,CUDA
+  control-flow scaffolds and future real-model TTFT/ITL/tok/s. It is
+  excluded as a ready inference backend despite matching search keywords.
+  Its research-use license file is not an established permissive license.
+
+This branch reinforces the existing two reuse options: upstream megakernels
+and device-launched captured/compiled computation. Whole-model fusion,
+GPU-side task queues and CPU-free serving already have prior work. The
+candidate distinction remains correct Linux TCP/HTTP + eBPF/kernel/GPU
+integration that eliminates a steady userspace request/control worker,
+with measured practical value and explicitly attributed remaining CPU cost.
+A compiler's model breadth is not BPFusion's tested model breadth.
+
+Decision implications: retain the currently qualified graph backend for
+matched path comparisons; treat MonoNN/NNFusion as general/non-LLM reuse
+leads and OpenJet as a narrower consumer-card reference. No need to port
+every candidate,write model-specific GEMM/attention,implement a TCP stack,
+or inherit speculative/quantized compute gains into the eBPF claim.
+Physical-network behavior,total attributed CPU and a strong official serving
+baseline remain higher-value unresolved acceptance boundaries. The latest
+[readiness result](findings/0028-socket-readiness.md) does not establish
+an advantage over its efficient native control.

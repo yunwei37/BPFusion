@@ -12,9 +12,10 @@ accompanies it?
 admit a supporting component comparison,not an external SOTA claim.
 Finding0027's valid negative result remains unchanged and closed.
 
-The candidate module builds; both affected-kernel strict runs and all six
-three-mode preflight executors pass. Full comparison and independent result
-review remain pending; no performance gain has been established.
+Build,strict qualification,preflight and the complete frozen-source comparison
+pass. Fresh independent result review finds no invalidating defect. The
+efficient-control CPU hypothesis and planned TTFT/throughput comparisons are
+inconclusive; no reliable performance advantage has been established.
 
 ## Mechanism and evidence
 
@@ -87,7 +88,7 @@ and no matching OOM/Xid/Oops/BUG/CallTrace/I/O/EXT4 fault lines.
 An idle endpoint observation does not establish continuous isolation,
 equal host load or a causal old/new comparison.
 
-## Planned comparison and boundaries
+## Comparison protocol and boundaries
 
 Use unchanged bench/resident_dispatch.py with kernel,busy native epoll,
 and timed native epoll_pwait2 controls. Models SmolLM2-135M/Qwen2.5-0.5B,
@@ -107,6 +108,80 @@ isolation. Record co-tenant changes/unknowns and all failures/negative outcomes;
 never remove inconvenient pairs.
 
 Strict/preflight/correctness/accounting availability have dependency value only.
-Publish full measurements and a fresh result review before judging the
-hypothesis. Physical-NIC,strong official serving,total attributed CPU,full text
+Full measurements and fresh result review are linked below. Physical-NIC,strong official serving,total attributed CPU,full text
 and online batching remain open under the unchanged full research goal.
+
+## Complete collection and independent result review
+
+Frozen full-run source: b129c331cfa8fb0582c791315ed3748bd867a353.
+Smol exits normally at2026-10-11T22:51:20UTC,Qwen at23:09:58UTC.
+[Full native stdout](../../bench/results/readiness_network_20261011.stdout.txt),
+[Smol raw](../../bench/results/readiness_network_smol_20261011.jsonl),
+[Qwen raw](../../bench/results/readiness_network_qwen_20261011.jsonl),
+[both native analyses](../../bench/results/readiness_network_analysis_20261011.stdout.txt)
+and [fresh independent result review](../../bench/results/readiness_network_result_review_20261011.md)
+retain all120 cells,7680 measured requests,249600 exact tokens and30 normal
+executors. No failure row,excluded pair or selected retry. All150 idle/cell
+CPU component deltas and sequential read brackets reconstruct; native
+analyses both exit0. All executors report1hostlaunch,8580 modelgraphsteps,
+zeroerrors,eightbanks,maxactive8. Ten resident module lifecycles each have
+55176bytes,264 completions,zeroabandoned/retries,19accepted/closed.
+Warmups are separate from measured requests.
+
+The retained reviewer is fresh to this candidate/run and did not plan or
+implement it. A new reviewer could not be spawned because the thread limit
+was reached; an existing completed reviewer from an unrelated experiment
+performed the read-only independent review. No invalidating defect was found.
+Root separately reconstructs Qwen primary means and planned TTFT intervals.
+
+### Primary and accompanying planned results
+
+CPU and TTFT differences are efficient timed control minus kernel; throughput
+is kernel minus timed control. Nominal paired t95 uses five process blocks,
+df4,without a multiple-comparison adjustment or equivalence margin.
+
+| Model / planned metric | Kernel mean | Timed control mean | Difference | Nominal t95 |
+|---|---:|---:|---:|---|
+| Smol gen64/c8 bounded CPU,us/request | 745.145853 | 927.288075 | +182.142222 | [-60.833662,425.118106] |
+| Qwen gen64/c8 bounded CPU,us/request | 1000.443231 | 1255.726428 | +255.283197 | [-44.867063,555.433457] |
+| Smol gen1/c1 TTFT,ms | 2.917334 | 2.726689 | -0.190644 | [-0.562401,0.181112] |
+| Qwen gen1/c1 TTFT,ms | 2.242427 | 2.257563 | +0.015137 | [-0.202058,0.232332] |
+| Smol gen64/c8 output tokens/s | 1850.077800 | 1850.960533 | -0.882733 | [-4.541080,2.775614] |
+| Qwen gen64/c8 output tokens/s | 1417.012211 | 1414.195521 | +2.816690 | [-7.988008,13.621387] |
+
+Both CPU primary intervals cross zero; positive means do not prove an
+advantage. Neither equivalence nor regression follows from these intervals.
+Planned TTFT/throughput also remain inconclusive. Against busy epoll,the CPU
+differences are Smol+34157.920969[33304.525555,35011.316383] and
+Qwen+44318.680884[44076.929141,44560.432628]us/request. That is a busy-loop
+tradeoff result,not a substitute for the efficient-control comparison.
+
+The resident gen64/c8 CPU sum decomposes into executor23.019503+
+TX722.126350us/request for Smol and executor31.456825+
+TX968.986406 for Qwen. The earlier bounded-accounting exclusions remain:
+this does not identify total service CPU. CPU/TPS windows have different
+definitions; tokens received together can share an arrival timestamp.
+Idle resident also has measurable CPU cost.
+
+### Environment, limitations and decision
+
+Before/after GPU compute-app lists are empty; two during receipts identify
+only own runner/executor GPU PIDs through cmdline/cgroup. These discrete
+observations cannot establish continuous isolation or equal host load.
+Retained full-window journal contains no matching OOM/Xid/Oops/BUG/CallTrace/
+I/O/EXT4 fault lines. A read-only SSH observation times out once,then the
+same runner is observed continuing and both actual commands exit0; there is
+no workload restart. Own processes,module and pins are absent afterwards.
+
+No dynamic skip counts or same-window old/new control were collected.
+The difference from finding0027 cannot be credited causally to guards:
+environment and historical run windows differ. The guards are retained as
+an engineering change without a performance benefit promise.
+
+Run status: valid/complete. Tested efficient-control CPU hypothesis:
+inconclusive. Client performance: inconclusive. Research value: supporting.
+Paper impact: current mechanism/workload boundary. Close this matrix and
+retain its complete negative/inconclusive evidence; do not repeat it
+unchanged to search for significance. This is not external SOTA,total CPU,
+physical-NIC,full-text or online-batching acceptance. Those remain open
+under the full retained research goal.

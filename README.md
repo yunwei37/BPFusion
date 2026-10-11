@@ -217,8 +217,9 @@ The kernel request worker now checks existing Linux socket readiness before
 accept/recv attempts. Both real-model strict suites pass with the same
 computation,and all six three-mode preflight executors pass.
 [Finding0028](docs/findings/0028-socket-readiness.md) records
-the small source change and reviewed comparison; full performance measurement
-is pending.
+the small source change and completed120-cell comparison with independent
+review. Both efficient-control CPU intervals and planned TTFT/throughput
+intervals cross zero; reliable performance gains remain unproven.
 
 ## Reusing upstream compute
 

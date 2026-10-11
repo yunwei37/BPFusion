@@ -132,5 +132,12 @@ pass; both affected-kernel strict runs finish normally with670 valid requests,
 40864 exact tokens and518 rejections. Current three-mode preflight also
 completes: six normal executors,24 exact measured replies,both native analyses
 exit0 and all12 idle/cell CPU brackets/components reconstruct. Full frozen-source
-collection and fresh result review remain pending; no performance gain is
-established. The old negative matrix remains closed.
+collection now completes120 cells,7680 exact requests,249600 tokens and30
+normal executors. Both native analyses and fresh independent result review
+pass; all150 idle/cell CPU rows reconstruct. Efficient-control-minus-kernel
+CPU differences at gen64/c8 are Smol+182.142222[-60.833662,425.118106] and
+Qwen+255.283197[-44.867063,555.433457]us/request,nominal five-pair t95.
+Both cross zero; planned TTFT1/c1 and throughput64/c8 also cross zero.
+Run valid/complete,hypothesis inconclusive,role supporting. No total CPU,
+historical causal improvement or external SOTA follows. Close this matrix
+without unchanged repeats; the old negative matrix remains separately closed.
