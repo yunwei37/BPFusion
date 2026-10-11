@@ -1432,3 +1432,258 @@ source,native library identity,oracle,device probe,strict raws and cleanup.
 Launch-reduction mechanism is contradicted;single-client gains have narrow
 nominal support,concurrent primary effects remain inconclusive. Retention
 is unmet:close candidate,keep default. Supporting component evidence only.
+
+
+### Actual paired KV bit-copy candidate: plan and admission review
+
+## Single-kernel bit-preserving paired KV append
+
+Under the unchanged worker-free real-model TCP/HTTP throughput/latency goal,
+the completed default-compiler paired-copy candidate stays48 KV kernels/model
+graph. Its five-pair comparison has narrow single-client support but
+inconclusive concurrent primary effects and does not meet retention.
+No unchanged retry is proposed. A distinct single kernel can eliminate one
+launch per layer while preserving both original copies and model arithmetic.
+This is supporting engineering evidence;qualification/profile are dependencies
+of one real TCP performance experiment,not new paper RQs or contributions.
+
+Hypothesis:one strided bit-copy kernel replacing two separate KV copies
+improves concurrent gen64 throughput/TPOT with unchanged greedy tokens,
+cache contents/positions and request lifecycle. Fewer kernels alone is not
+the primary success criterion;it may be slower,especially at prefill.
+Positive effects can retain the implementation;negative/mixed/inconclusive
+effects preserve default. This directly tests the missing launch-reduction
+mechanism versus the closed compiler candidate. The best qualified default
+is the main component comparator;the serial host path remains a correctness
+control,not an external baseline. No optimized-serving superiority claim.
+
+Scope:existing Workspace/main. Current production remains byte-exactfc58faa.
+Net24 source lines in a temporary candidate;no native/module/queue/test,
+model/precision/oracle/transport change. Triton is already installed/used by
+retained pointwise compilation;no installation/helper/service/mode/entity.
+Use the ordinary installed jit/load/store path,following
+https://triton-lang.org/main/getting-started/tutorials/01-vector-add.html .
+No autotune/backend/num_warps/options override. Fixed128-element tile is
+kernel geometry matching this model's two64-wide KV heads per position,
+not a service runtime tuning setting;larger prefill spans multiple tiles.
+No tuning sweep or claimed optimal launch geometry.
+
+Kernel copy_kv maps flattened B,H,N,D logical indices to original source
+strides for key/value and target strides for both. SharedLayer passes the
+same pos:end target views,so their data pointers already include the cache
+offset. Key/value destination strides coincide because original allocation
+uses values=zeros_like(keys);both are independently allocated. Input strides
+may differ and are passed separately. In-place stores target the original
+buffers;returned prefix views are unchanged. Actual model tensors arefp16.
+Pointers are reinterpreted as uint16;loads/stores perform no floating
+arithmetic or value conversion. Mask x<TOTAL covers partial final tiles.
+This is a source argument requiring actual oracle/lifecycle validation,
+not an assumption that finite passed prompts prove general correctness.
+
+Only this copy implementation differs. Temporary paired_kv/qwen_graph and
+paired_kv_host/qwen_graph_host_launch use canonical native libraries.
+paired_kv_perf_baseline/qwen_graph is byte-exact current production;
+paired_kv_perf_candidate/qwen_graph is byte-exact candidate. Both performance
+entries use the same existing eight-bank temporary TCP_NODELAY native library.
+Host control is serialized for correctness only. Other SGLang owner,
+original Workspace/PVC/session/tools/setup_env.sh are preserved.
+
+Reuse the already complete fixed protocol:
+- qualifier computes independent eager-fp16 batch1 oracle BEFORE candidate,
+12 groups/two device-launched private banks/1536 generated tokens;
+fresh prefills overwrite relevant KV,then63 candidate-selected decode steps.
+Any mismatch closes the unchanged candidate without performance collection.
+- Both canonical strict resident/host regressions:335 valid requests,
+20432 exact tokens,259 rejects each,mixed lengths,reuse,wrap,invalid-then-valid,
+pipeline,half-close,5000 empty connections,network trace and cleanup.
+- Actual TCP gen1 preflight,two resident engines/eight exact measured tokens.
+- All five alternating process pairs with rotated gen1/64 x clients1/8 cells,
+64 requests/cell,four prompts16 times/cell:
+40cells2560 measured requests83200 exact tokens,ten normal exits.
+Inherited metrics/exclusions,ready-or-exit and request/shutdown60s behavior
+remain unchanged. All failed/negative/inconclusive rows remain. No oracle,
+timeout or evaluation change during qualification or performance.
+
+The qualifier/profiler ordinarily derive capture/probe code from the exact
+candidate,as in prior experiments. Triton jit needs inspectable real source:
+write the generated model to an ordinary OS-temp .py file and execute with
+runpy.run_path instead of compile/string exec. Frozen adapter and raw commands
+preserve this necessary loader difference. It changes no model/capture/probe
+operation. CPU syntax checks happen before GPU execution.
+
+From repository root with existing HF_HOME=/workspaces/.cache/huggingface:
+python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/qualify_paired_kv.py 2
+python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/paired_kv/qwen_graph
+python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/paired_kv_host/qwen_graph_host_launch
+python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/profile_paired_kv.py
+python3 /tmp/bpfusion-qwen-pointwise-5mxeys8g/paired_kv_bench.py --gen 64 --preflight --output bench/results/qwen_paired_kv_preflight_20261010.jsonl --resident-executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/paired_kv_perf_baseline/qwen_graph --host-executor /tmp/bpfusion-qwen-pointwise-5mxeys8g/paired_kv_perf_candidate/qwen_graph
+Full removes --preflight and writes qwen_paired_kv_20261010.jsonl.
+Ordinary qualifier/strict/profile/stdout/analysis/environment raws share
+qwen_paired_kv prefix. Freeze all actual source/analyzer/driver and collection
+HEAD before GPU execution. analyze_paired_kv.py checks tokens,timestamps,
+TPS denominator,prompt/cell balance,engine order,counters and all intervals.
+
+Profile one bank/five graph indices5,64,80,128,190 with installed profiler,
+preserving ALL grouped device names/counts. Expect24 copy_kv kernels and
+total CUDA events785,857,737,737,737 versus retained default809,881,761,761,761.
+Confirm empirically;do not infer from source/kernel names alone. Host replay
+timings/allocations are diagnostics,not serving speed or matched peak memory.
+No custom checker framework or independent toy bandwidth benchmark.
+
+Primary gen64 TPS/TPOT at clients1/8 are separate nominal paired df4 t95
+effects from five process-block means;positive gain=candidate-minus-baseline
+TPS or baseline-minus-candidate latency. Retain only when both concurrent
+primary effects support improvement and no primary effect supports regression.
+Report single-client inconclusive effects separately. Secondary TTFT,
+completion,gen1,bootstrap,executorCPU or fewer kernels cannot substitute.
+All metrics/formulas are the published component protocol in0021.
+
+Fresh plan/independent terminal result review;before/after boot/residency,
+own-process/module/map cleanup. If retention is supported,promote only
+this source change and pass canonical default-cache/default-network complete
+strict regression before commit/push. If not,production/native/test growth0.
+Do not repeat unchanged full matrices to seek significance.
+
+Shared RTX5090/warm cache/one small model stack/finite short prompts/closed
+loop/common temporary TCP_NODELAY/coarse processCPU limit interpretation.
+No total-hostCPU,energy,isolated bandwidth,physicalNIC,text processing or
+external optimized-serving win. A smaller kernel count does not by itself
+establish improved throughput/latency or complete the user goal.
+
+Plan review round1 found one execution defect before GPU execution:
+runpy changes argv[0] and __file__,so original source chooses absent
+/tmp/build/qwen_graph.so. Correct only generated-source native library
+binding:qualifier uses the existing graph_bank_probe/qwen_graph.so;
+profiler uses canonical /workspaces/repository/build/qwen_graph.so.
+Actual candidate entries,model math,oracle,capture/probe,protocol and
+performance/native identity are unchanged. Re-freeze adapters before run.
+
+Frozen [adapter/source/analysis](../../bench/results/qwen_paired_kv_adapter_20261010.txt). Collection parent commit 6ad1e1122ccfa2b0ce77f7b94d8951aac0520d66. No GPU execution yet.
+
+Plan review follow-up1:ADMIT. Independent inspection confirms both explicit
+existing native paths,syntax,frozen adapter,byte-exact actual entries and
+collection commit. Sole runpy loader blocker repaired before execution;
+all prior mechanism/oracle/fairness/count/retention checks stand.
+No GPU/model/service/test was executed by reviewer. Begin qualification.
+
+Device-bank qualification completes12 groups/two banks/1536 exact tokens,
+each128 model graphs/one host launch/error0. All candidate-selected decode
+sequences pass the unchanged independently constructed eager-fp16 reference.
+No loader fault recurs. Proceed to both canonical strict TCP regressions.
+
+Both canonical strict modes pass335 valid requests/20432 exact tokens/
+259 rejects,594 publications,zero graph errors and cleanup. Resident uses
+one host launch/eight banks/max_active8;host correctness control uses594
+host launches/one bank/max_active1. All executor threads trace no network
+accept/receive/send after ready and all eight final queue slots are FREE.
+
+Actual one-bank profile confirms24 copy_kv physical kernels in each of five
+model graphs. Total device event counts785,857,737,737,737 versus retained
+default809,881,761,761,761:24 fewer events per graph. The single-kernel
+paired-copy mechanism engages. Host replay timings are diagnostic only;
+the actual TCP experiment determines throughput/latency effects.
+
+Real TCP preflight completes15 records/eight exact measured gen1 tokens,
+two normal resident executor exits. Each uses one host launch/264 model
+graphs/error0/eight banks/max_active1,12 publications/eight final FREE slots.
+No failure row. Begin unchanged full five-pair40-cell TCP comparison.
+
+### Actual paired KV kernel complete result: mechanism engages, performance inconclusive
+
+[Full raw](../../bench/results/qwen_paired_kv_20261010.jsonl) and
+[stdout](../../bench/results/qwen_paired_kv_20261010.stdout.txt) terminate0:
+2621 records,40 unique cells,2560 measured requests,83200 exact tokens,
+five alternating process pairs,ten normal engine starts/exits,no failure row.
+Every executor records one host launch/8580 model graphs/graph_error0,
+eight banks/max_active8,264 publications,zero queue/registration failures
+and eight final FREE slots. No measured sample/block was removed or rerun.
+The frozen [CPU analysis](../../bench/results/qwen_paired_kv_analysis_20261010.txt)
+recomputes every token,timestamp,TPS denominator,prompt/cell balance,
+process ordering/counters and effect interval.
+
+Means are arithmetic means of five paired process blocks. Positive gain is
+candidate-minus-baseline throughput or baseline-minus-candidate latency.
+Separate nominal two-sided paired t95 intervals use df4,with no adjustment
+for the four primary comparisons.
+
+| Primary gen64 | baseline | paired KV kernel | gain | nominal t95 gain |
+|---|---:|---:|---:|---|
+| clients1 output_tokens_per_s | 286.237192 | 290.222213 | +3.985021 | [-0.101312,+8.071355] |
+| clients1 tpot_ms | 3.481845 | 3.434050 | +0.047795 | [-0.001202,+0.096793] |
+| clients8 output_tokens_per_s | 682.401193 | 688.183273 | +5.782080 | [-6.977520,+18.541680] |
+| clients8 tpot_ms | 11.542205 | 11.451740 | +0.090466 | [-0.134973,+0.315905] |
+
+All four primary intervals cross zero. Single-client mean throughput
+286.24->290.22 tokens/s and TPOT3.482->3.434ms favor the candidate;
+eight-client mean throughput682.40->688.18 and TPOT11.542->11.452ms also
+favor it,but one process pair worsens both client regimes. This supports
+neither a primary performance improvement nor equivalence or regression.
+The predeclared concurrent retention condition is unmet:close candidate,
+keep production byte-exactfc58faa,production/native/test growth0.
+Do not repeat the unchanged matrix to seek significance.
+
+The actual mechanism succeeds:each profiled graph has24 copy_kv kernels
+instead of48 KV-copy kernels,and total device events decline by24 in all
+five profiled shapes. This confirms single-kernel paired copying;it does
+not establish physical bandwidth savings,unique causal attribution or
+TCP performance. The throughput/TPOT hypothesis remains inconclusive.
+
+Warm-cache bootstrap means52.872640s baseline versus58.619656s candidate,
+ranges[52.456020,53.405419] and[57.117530,61.641073]s.
+Active-cell executor CPU totals0.07s versus0.06s;idle totals0 each at100Hz.
+Zero accounting ticks are not exact-zero work,total-host CPU or energy.
+One-bank capture allocated1089993728/reserved1518338048bytes and held
+57735680bytes of logits,matching retained diagnostic allocations.
+This is not a matched peak service-memory result.
+
+Both canonical strict [resident](../../bench/results/qwen_paired_kv_resident_regression_20261010.txt)
+and [host control](../../bench/results/qwen_paired_kv_host_regression_20261010.txt)
+pass335 valid requests/20432 exact tokens/259 rejects.
+[Qualification](../../bench/results/qwen_paired_kv_qualification_20261010.txt),
+[profile](../../bench/results/qwen_paired_kv_profile_20261010.txt),
+[real preflight](../../bench/results/qwen_paired_kv_preflight_20261010.jsonl),
+[frozen adapter](../../bench/results/qwen_paired_kv_adapter_20261010.txt)
+and [host environment](../../bench/results/qwen_paired_kv_environment_20261010.txt)
+preserve commands/source/reference/costs. The runpy loader defect was caught
+and repaired before execution;no qualification/strict/performance failure
+was hidden. All subsequent invocations terminate0 with unchanged evaluation.
+
+Terminal own executor/driver/module/map pins are absent. Before/after boot
+04dc0087-5ccc-4c46-9997-b9a92f0e5167 and other owner SGLang732929/18404MiB
+remain unchanged. Shared-GPU/warm-cache/one model+stack/finite short prompts/
+closed-loop/common temporary TCP_NODELAY/coarse process CPU limit the result.
+No isolated speedup,optimized-serving superiority,real NIC,text/API,
+total-host CPU/energy or whole-goal completion follows.
+
+This is supporting component evidence:the proposed launch-reduction
+mechanism engages,but concurrent performance is inconclusive. Further
+unchanged copy experiments add little. The next material discriminator is
+a faithful token-counted comparison with an official optimized serving
+implementation,and independent per-bank scheduling remains an architectural
+lead rather than a tested candidate. Existing bench/run_http.sh uses broad
+pkill and tools/llm_http_client.py counts nonempty SSE text chunks as tokens;
+neither can serve unchanged as a shared-host matched token-latency comparison.
+Official [vLLM completion protocol](https://docs.vllm.ai/en/stable/api/vllm/entrypoints/openai/completion/protocol/)
+accepts token-ID prompts and can return delta token IDs,avoiding that metric
+defect. Current base and existing /workspaces/.venv-ml imports lack vLLM;
+live vLLM0.31.0 requires torch2.13.0/transformers<5.18,so preserve the
+qualified torch2.14.1/transformers5.19 environment. These are read-only
+feasibility observations;no external serving run or package installation
+occurred during this collection,and no competitive result is claimed.
+
+The complete secondary analysis also shows nominal gen1/eight-client support:
+throughput gain+10.301454 tokens/s,[+2.645129,+17.957778],and TTFT/completion
+reduction1.082429ms,[+0.282247,+1.882610]. Other secondary intervals cross zero.
+These are secondary observations with no multiplicity adjustment;they do not
+substitute for gen64 primary retention and do not justify changing default.
+
+Fresh independent terminal result review:valid/complete,no invalidating
+defect. It recomputes all2621 records/40cells/2560requests/83200 exact tokens,
+primary and secondary effects,costs,order/counters and final FREE slots;
+actual/frozen native/source/oracle/adapter identity and profile/strict/cleanup
+also match. It independently reads39 printed expected/actual pairs in each
+strict raw;the remaining aggregate strict correctness relies on unchanged
+test assertions and successful exit,not a claim that every strict token is
+printed. Single-kernel mechanism is supported,gen64 performance inconclusive,
+supporting component evidence only. Close candidate,keep default,no unchanged
+rerun;official optimized-serving comparison remains a separate next experiment.

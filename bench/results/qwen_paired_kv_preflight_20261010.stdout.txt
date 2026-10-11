@@ -1,0 +1,11 @@
+COMMAND ['python3', '/tmp/bpfusion-qwen-pointwise-5mxeys8g/paired_kv_bench.py', '--gen', '64', '--preflight', '--output', 'bench/results/qwen_paired_kv_preflight_20261010.jsonl', '--resident-executor', '/tmp/bpfusion-qwen-pointwise-5mxeys8g/paired_kv_perf_baseline/qwen_graph', '--host-executor', '/tmp/bpfusion-qwen-pointwise-5mxeys8g/paired_kv_perf_candidate/qwen_graph']
+UTC 2026-10-11T00:01:11.090664+00:00
+COMMIT 6ad1e1122ccfa2b0ce77f7b94d8951aac0520d66
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4669.77it/s]
+pair=0 mode=baseline gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+pair=0 mode=paired_kv gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+{"mode": "baseline", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 4.1272575, "ttft_p50_ms": 4.3963565, "ttft_p99_ms": 4.50747436, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0], "tokens_per_s": [241.54793579172772]}
+{"mode": "paired_kv", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 4.05695625, "ttft_p50_ms": 4.337289999999999, "ttft_p99_ms": 4.48054508, "tpot_mean_ms": null, "executor_cpu_s_per_cell": [0.0], "tokens_per_s": [245.83752511921736]}
+{"gen": 1, "concurrency": 1, "paired_baseline_minus_paired_kv_ttft_ms": [0.07030124999999998], "difference_mean_ms": 0.07030124999999998, "difference_t95_ms": null}
+
+EXIT 0

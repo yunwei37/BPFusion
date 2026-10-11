@@ -122,6 +122,10 @@ and the full83200-token TCP comparison. It still launches48 copy kernels
 per model graph. Single-client throughput improves285.99->288.79tokens/s,
 while eight-client throughput/TPOT intervals cross zero. It is not retained;
 no paired-kernel fusion or concurrent performance benefit is established.
+An actual single-kernel paired KV copy then reduces48 KV launches to24
+and completes the same83200-token TCP comparison. All four primary
+throughput/TPOT paired intervals cross zero;the candidate is not retained.
+The mechanism engages,but performance remains inconclusive in finding0021.
 A grouped-query attention candidate avoids explicit repeated KV heads but
 fails the unchanged greedy oracle in five of twelve qualification groups.
 It is rejected before TCP performance collection; the existing attention
