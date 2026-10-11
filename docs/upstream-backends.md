@@ -360,3 +360,49 @@ userspace controls, total attributed host cost, CPU contention and client tail
 latency are necessary evidence; merely eliminating launches or using a normal
 NIC is insufficient novelty. More model-specific Qwen forks, new quantization
 and repeated numerical tuning are not needed to establish this path claim.
+
+## Further public source leads and current graph reuse
+
+Source observation: 2026-10-11UTC. Additional searches covered
+whole-model Llama kernels, general persistent operator runtimes, non-LLM
+model graph exports, Event Tensor/TIRx integration and dynamic megakernel
+artifacts. These are source leads, not installed or GPU-qualified backends.
+
+- [FlashFormer](https://github.com/cheetah-lang/flashformer/tree/4768b7684ddf94d4845e5c36e2370a3f3c5bd112)
+  has public kernel primitives and attention/GLU tests. Its README describes
+  a whole-model forward, but this tree does not establish a ready HF import
+  or online-generation entry point. setup.py pins Torch 2.5.1 and depends on
+  Cheetah; no LICENSE file or repository license metadata was found. Keep
+  it as a Llama compute lead rather than assuming a drop-in multi-model server.
+- [FlashRT](https://github.com/flashrt-project/FlashRT/tree/66b18eb766e73e2fcad406bc622bd3bfd70664c1)
+  is Apache-2.0 and exposes model graph, buffer, stage and lifetime contracts
+  in docs/model_runtime_api.md. This is a useful non-LLM reuse lead, with
+  Pi0.5/VLA graph producers and SM120 source. Its API still describes host
+  stage scheduling; opaque stages are synchronous and do not promise capture.
+  docs/adding_new_model.md explicitly requires translating model forwards
+  into kernel calls. Adapting an existing graph producer differs from
+  implementing that model translation ourselves; device-launch eligibility
+  and unchanged-reference correctness remain unverified.
+- [GPUOS](https://github.com/Multi-V-VM/GPUOS/tree/b51648e3c1929f35b0afc790b96be011354df09e)
+  is MIT and supplies persistent workers, host-mapped completion and runtime
+  operator injection. The public README and scheduler implement host-side
+  aggregation/publication of small tensor operations. This is a general
+  execution-mechanism precedent, not evidence of a complete HF importer or
+  autonomous TCP model service. The
+  [paper](https://arxiv.org/html/2604.17861v1) also explicitly describes a
+  host-managed work queue.
+- [TVM's official TIRx account](https://tvm.incubator.apache.org/2026/06/22/tirx)
+  explicitly says TIRx is not a complete megakernel compiler, and describes
+  Event Tensor integration as follow-up work. The
+  [Event Tensor paper](https://arxiv.org/html/2604.13327v1) remains a dynamic
+  shape/dependency precedent; this search does not establish a complete,
+  directly reusable released compiler artifact. Secondary summaries claiming
+  a ready et-compiler are not used as artifact evidence.
+
+The existing HF graph interface now separately qualifies Qwen2.5-0.5B and
+SmolLM2-135M (Llama), each under resident and host-control dispatch, while
+reusing upstream computation. See
+[the final four-case qualification](findings/0023-batch-execution-qualification.md#hf-graph-reuse-across-qwen-and-llama-architectures).
+This supports retaining a compute-preserving graph route alongside upstream
+megakernels. It does not qualify the newly searched projects or resolve the
+earlier MPK/Plow/MAK numerical failures.

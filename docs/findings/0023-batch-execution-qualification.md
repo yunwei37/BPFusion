@@ -1397,3 +1397,86 @@ three first mismatches and all mode/repeat agreements. No sanitizer, network
 integration, online admission or matched serving performance was qualified.
 No model-specific arithmetic tuning follows from this result. The qualified
 HF graph path remains available while broader upstream interfaces are assessed.
+
+## HF graph reuse across Qwen and Llama architectures
+
+The existing graph bootstrap now accepts an HF checkpoint or model directory,
+in addition to the original Qwen weight binary. It captures the upstream HF
+forward into the existing eight graph/KV banks. The mask adapter passes the
+causal tensor accepted by both installed Qwen2 and Llama implementations.
+No new model operator, quantization, kernel arithmetic or per-model tuning
+was added. Existing Qwen-specific compile wrappers remain unchanged; they
+do not modify Llama computation.
+
+The final matrix ran in the original Workspace on the shared RTX 5090 with
+Torch 2.14.1+cu130, Transformers 5.19.0 and CUDA 13.0.88. Checkpoints were:
+
+- Qwen/Qwen2.5-0.5B-Instruct, cache revision
+  7ae557604adf67be50417f59c2c2f167def9a775: Qwen2, 24 layers, hidden 896,
+  14 attention heads, 2 KV heads and vocabulary 151936.
+- HuggingFaceTB/SmolLM2-135M, cache revision
+  93efa2f097d58c2a74874c7e644dbc9b0cee75a2: Llama, 30 layers, hidden 576,
+  9 attention heads, 3 KV heads and vocabulary 49152.
+
+Each used its own independent HF eager-FP16 full-prompt plus cached greedy
+reference. Four text prompts and prompt lengths 1/15/16/17/32/64 generated
+64 tokens, without early EOS termination. The existing TCP/HTTP regression
+also checks eight concurrent clients, rejection followed by valid requests,
+mixed generation lengths, repeated slot reuse, pipelining and half-close.
+
+| Final case | Valid requests | Exact generated tokens | Rejections | Empty connections | Host launches after bootstrap | Device graph launches |
+|---|---:|---:|---:|---:|---:|---:|
+| SmolLM2 resident |335|20432|259|5000|1|20432|
+| SmolLM2 host-control |335|20432|259|5000|594|20432|
+| Qwen default resident |335|20432|259|5000|1|20432|
+| Qwen default host-control |335|20432|259|5000|594|20432|
+
+All four exited 0, with zero graph errors, eight banks and max_active 8.
+Each trace includes all executor threads and has no accept/receive/send
+syscalls after readiness. All queue slots returned FREE with zero admission
+drops; test hooks, map pins and the module were removed. Total final coverage
+is 1340 valid requests, 81728 exact generated tokens, 1036 rejections and 20000
+empty connections. A separate CPU reconstruction checks all 156 printed
+64-token reference/actual pairs, counters, trace boundaries, exits and cleanup;
+the harness checks the other response arrays before printing its aggregate.
+
+The qualification found a real shutdown issue in the resident native path:
+SIGTERM delivered to a CUDA helper sets the stop flag but does not interrupt
+the main thread's long sleep. The host lifecycle wait now checks that flag
+between one-second sleeps. This is not a request worker or compute change.
+The final test deliberately sends SIGTERM to a non-main executor thread;
+the trace confirms all four target threads differ from the readiness writer.
+Whole-executor cleanup took 5.542/4.723/4.066/3.591 seconds respectively,
+including CUDA destruction; these are lifecycle observations, not latency
+benchmarks or a claim of one-second process exit.
+
+Reproduce after building the existing graph targets:
+
+```sh
+make qwen-graph qwen-graph-control
+python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor ./build/qwen_graph --model HuggingFaceTB/SmolLM2-135M
+python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor ./build/qwen_graph_host_launch --model HuggingFaceTB/SmolLM2-135M
+python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor ./build/qwen_graph
+python3 tests/resident_qwen.py --gen 64 --prefill-edges --executor ./build/qwen_graph_host_launch
+```
+
+The [raw receipt](../../bench/results/hf_graph_multimodel_20261011.txt)
+preserves final source, commands, traces, build output and independent
+reconstruction. Earlier attempts include a logging-attribute failure, the
+Llama mask-interface failure and a manually assisted old-build shutdown.
+The first failed attempt's stale trace is explicitly excluded. Only ATTEMPT4,
+2026-10-11T06:26:03--06:34:15UTC, supports the final four-case qualification.
+
+The 06:36:54UTC host observation retains boot
+04dc0087-5ccc-4c46-9997-b9a92f0e5167 and SGLang PID 2762187 at 18348 MiB;
+no NVRM Xid appears in the journal read since 06:00UTC. Residency is not
+other-service acceptance. All owned qualification processes are terminal,
+and unrelated setup_env.sh WIP remains untouched.
+
+This qualifies two checkpoint/architecture combinations in the existing
+fixed-context, greedy graph interface, not arbitrary HF models, MoE/hybrid
+architectures or shared-weight continuous batching. It is FP16 HF graph
+reuse, distinct from the earlier BF16 model-as-a-kernel strict-reference
+failure. It supplies a second architecture without a model arithmetic
+campaign; no alternative megakernel, serving speedup, real-NIC result or
+complete userspace-path comparison is established by this matrix.

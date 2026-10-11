@@ -5,6 +5,8 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import nullcontext
 from threading import Barrier
 import argparse
+import ctypes
+import signal
 import gc
 import re
 import socket
@@ -16,11 +18,11 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
-def oracle_cases(gen, prefill_edges=False):
-    name="Qwen/Qwen2.5-0.5B-Instruct"
+def oracle_cases(gen, prefill_edges=False, name="Qwen/Qwen2.5-0.5B-Instruct"):
     tok=AutoTokenizer.from_pretrained(name)
     model=AutoModelForCausalLM.from_pretrained(name,dtype=torch.float16,attn_implementation="eager").to("cuda").eval()
     vocab=model.config.vocab_size
+    print(f"HF reference model={name} type={model.config.model_type} vocab={vocab}",flush=True)
     cases=[]
     inputs=[tok(prompt).input_ids for prompt in ("The capital of France is", "What is 2 plus 2?", "Write a short greeting.", "Linux is")]
     if prefill_edges:
@@ -48,10 +50,14 @@ def main():
     parser.add_argument("--gen",type=int,default=8,choices=range(1,65))
     parser.add_argument("--executor",default="./build/qwen")
     parser.add_argument("--prefill-edges",action="store_true",help="also test 1/15/16/17/32/64-token prompt lengths")
+    parser.add_argument("--model",default="Qwen/Qwen2.5-0.5B-Instruct",help="HF checkpoint; other models require a graph executor")
     args=parser.parse_args()
-    cases,vocab=oracle_cases(args.gen,args.prefill_edges)
+    if args.model!="Qwen/Qwen2.5-0.5B-Instruct" and Path(args.executor).name not in ("qwen_graph","qwen_graph_host_launch"):
+        parser.error("--model requires qwen_graph or qwen_graph_host_launch")
+    weights="/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin" if args.model=="Qwen/Qwen2.5-0.5B-Instruct" else args.model
+    cases,vocab=oracle_cases(args.gen,args.prefill_edges,args.model)
     valid=305+3*len(cases)
-    print("HF eager fp16 oracle ready, model released",flush=True)
+    print(f"HF eager fp16 oracle ready, model={args.model}, model released",flush=True)
     subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
     subprocess.run(["./build/bpfusion_load","stream-detach"],check=True)
     subprocess.run(["./build/bpfusion_load","stream-attach"],check=True)
@@ -60,7 +66,7 @@ def main():
     logpath="/tmp/bpfusion-resident-qwen.log"
     try:
         with open(logpath,"w") as log:
-            executor=subprocess.Popen(["strace","-D","-f","-e","trace=network,write","-o","/tmp/bpfusion-qwen-network.trace",args.executor,"/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","300"],stdout=log,stderr=subprocess.STDOUT)
+            executor=subprocess.Popen(["strace","-D","-f","-e","trace=network,write","-o","/tmp/bpfusion-qwen-network.trace",args.executor,weights,"300"],stdout=log,stderr=subprocess.STDOUT)
         while "resident Qwen ready" not in open(logpath).read():
             if executor.poll() is not None:
                 raise AssertionError(open(logpath).read())
@@ -107,7 +113,7 @@ def main():
         with ThreadPoolExecutor(max_workers=8) as clients:
             futures=[clients.submit(request,i,*cases[i%len(cases)],i>=4) for i in range(8)]
             for future in futures: future.result()
-        print("PASS eight concurrent clients, exact Qwen replies, no admission drops",flush=True)
+        print("PASS eight concurrent clients, exact model replies, no admission drops",flush=True)
         # A reply must return queue ownership before the immediate next send.
         # Eight persistent closed-loop clients repeatedly wrap the eight slots.
         barrier=Barrier(8)
@@ -185,12 +191,20 @@ def main():
             assert client.recv(1)==b"","binary rejection must close the connection"
         request(0,ids,expected)
         print("PASS invalid first/last token IDs: HTTP 400, binary EOF, same-stream and later requests still exact",flush=True)
-        print(f"PASS {valid} valid TCP/HTTP requests, {valid*args.gen-16*(args.gen-1)} real Qwen greedy tokens, 259 rejections, no host accept/read/send worker",flush=True)
+        print(f"PASS {valid} valid TCP/HTTP requests, {valid*args.gen-16*(args.gen-1)} real model greedy tokens, 259 rejections, no host accept/read/send worker",flush=True)
         complete=True
     finally:
         try:
             if executor is not None:
-                executor.terminate(); executor.wait()
+                shutdown=time.monotonic()
+                if complete and Path(args.executor).name in ("qwen_graph","qwen_graph_host_launch"):
+                    # A signal on a CUDA helper must also wake the host wait.
+                    tid=next(int(p.name) for p in Path(f"/proc/{executor.pid}/task").iterdir() if int(p.name)!=executor.pid)
+                    assert ctypes.CDLL(None).tgkill(executor.pid,tid,signal.SIGTERM)==0
+                    print(f"sent SIGTERM to executor helper tid={tid}",flush=True)
+                else: executor.terminate()
+                executor.wait()
+                print(f"executor shutdown seconds={time.monotonic()-shutdown:.3f}",flush=True)
                 log=open(logpath).read()
                 print(log,flush=True)
                 if complete and "dispatch=host-launch" in log:

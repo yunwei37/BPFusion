@@ -142,7 +142,7 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
                 retired++;
             }
             alarm(0);
-        } else sleep(seconds);
+        } else while(seconds-- && !stopped) sleep(1);
     }
     __atomic_store_n(&page->stop_ns,1,__ATOMIC_RELEASE);
     cudaError_t finished=cudaDeviceSynchronize();

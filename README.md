@@ -197,7 +197,13 @@ The next backend investigation reuses upstream megakernel computation so a
 matched comparison can attribute effects to the Linux/eBPF serving path.
 [Backend source audit](docs/upstream-backends.md) compares candidates and
 records concrete model, launch, correctness and online-service boundaries.
-No new backend is qualified yet; the current measured executor remains in use.
+No alternative megakernel is qualified yet; the measured executor remains in use.
+The existing HF graph interface now also accepts HF checkpoints/model directories.
+[Qwen and Llama qualification](docs/findings/0023-batch-execution-qualification.md#hf-graph-reuse-across-qwen-and-llama-architectures)
+passes both resident and host-control dispatch for Qwen2.5-0.5B and
+SmolLM2-135M: 1340 valid requests and 81728 exact generated tokens in total.
+This extends tested computation reuse without new model arithmetic; it does
+not establish arbitrary-model support or a new serving-speed result.
 The [MPK qualification](docs/findings/0023-batch-execution-qualification.md#upstream-mpk-sm120-compatibility-and-terminal-numerical-rejection)
 records repaired native memory/synchronization faults and failed whole-model
 outputs under both parallel and serial submission.
@@ -214,7 +220,7 @@ bpf/include/bpfusion_queue.h   canonical kernel<->GPU page layout (single source
 executor/executor.cu           resident synthetic-MLP CUDA kernel + responder + latency sampling
 executor/llm_executor.py       host HF Qwen baseline on the token ring (--tcp)
 executor/qwen.cu               real Qwen reference in one resident CUDA kernel
-executor/qwen_graph.py/.cu     bootstrap capture + GPU-tail Qwen graph dispatch
+executor/qwen_graph.py/.cu     HF bootstrap capture + GPU-tail graph dispatch
 module/bfusion_tx.c            kernel accept/drain and asynchronous TCP/HTTP TX
 executor/cuda_timer.h          %globaltimer <-> CLOCK_MONOTONIC calibration
 tools/bpfusion_load.c          attach/detach/stats; owns and pins the BPF maps

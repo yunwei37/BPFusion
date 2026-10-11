@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Capture Qwen at bootstrap; the native GPU graph dispatcher owns requests."""
+"""Capture HF decoder graphs at bootstrap; native GPU dispatch owns requests."""
 import ctypes
 import struct
 import sys
@@ -30,6 +30,8 @@ class SharedLayer(DynamicLayer):
 
 
 def load_model(path):
+    if not Path(path).is_file() and not str(path).endswith('.bin'):
+        return AutoModelForCausalLM.from_pretrained(path,dtype=torch.float16,attn_implementation='eager').to('cuda').eval()
     with open(path,'rb') as f:header=struct.unpack('<6I2f',f.read(32))
     config=AutoConfig.from_pretrained('Qwen/Qwen2.5-0.5B-Instruct')
     dimensions=(config.hidden_size,config.intermediate_size,config.num_hidden_layers,config.num_attention_heads,config.num_key_value_heads,config.vocab_size)
@@ -60,7 +62,7 @@ def load_model(path):
 
 
 def main():
-    if len(sys.argv)<2:raise SystemExit('usage: qwen_graph.py WEIGHTS.bin [seconds]')
+    if len(sys.argv)<2:raise SystemExit('usage: qwen_graph.py WEIGHTS.bin|HF_MODEL [seconds]')
     seconds=int(sys.argv[2]) if len(sys.argv)>2 else 60
     entry=Path(sys.argv[0])
     library=entry.with_suffix('.so') if entry.name in ('qwen_graph','qwen_graph_host_launch') else Path(__file__).resolve().parents[1]/'build/qwen_graph.so'
@@ -70,6 +72,7 @@ def main():
     limit=lib.max_tokens();context=2*limit;banks=[]
     with torch.no_grad():
         model=load_model(sys.argv[1]);config=model.config
+        print(f'capturing model={config._name_or_path} type={config.model_type} fp16 eager',flush=True)
         from transformers.models.qwen2 import modeling_qwen2 as qwen2
         qwen2.apply_rotary_pos_emb=torch.compile(qwen2.apply_rotary_pos_emb,options={"emulate_precision_casts":True})
         @torch.compile(options={"emulate_precision_casts":True})
@@ -96,7 +99,7 @@ def main():
                 def cache():
                     return Cache(layers=[SharedLayer(k,v,pos) for k,v in zip(keys,values)])
                 def forward():
-                    return model(inp,position_ids=positions,attention_mask={'full_attention':mask},past_key_values=cache(),use_cache=True,logits_to_keep=1)
+                    return model(inp,position_ids=positions,attention_mask=mask,past_key_values=cache(),use_cache=True,logits_to_keep=1)
                 mask=create_causal_mask(config=config,inputs_embeds=model.model.embed_tokens(inp),attention_mask=None,past_key_values=cache(),position_ids=positions)
                 stream.wait_stream(torch.cuda.current_stream())
                 with torch.cuda.stream(stream):warm=forward()
