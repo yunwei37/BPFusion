@@ -43,12 +43,11 @@ static struct {
 } tx[BF_LLM_SLOTS];
 static unsigned long sent_bytes, completions, abandoned, retries;
 
-static int reply_tcp(u32 idx, struct bf_llm_slot *s, void *data, u32 bytes,
-                     struct sock **locked)
+static int reply_tcp(u32 idx, struct bf_llm_slot *s, struct kvec *vec,
+                     u32 nvec, u32 bytes, struct sock **locked)
 {
 	struct sock *sk = tx[idx].sk;
 	struct msghdr msg = { .msg_flags = MSG_DONTWAIT | MSG_NOSIGNAL };
-	struct kvec vec;
 	int ret;
 
 	if (!sk) {
@@ -64,9 +63,7 @@ static int reply_tcp(u32 idx, struct bf_llm_slot *s, void *data, u32 bytes,
 		}
 		tx[idx].sk = sk;
 	}
-	vec.iov_base = data;
-	vec.iov_len = bytes;
-	iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, &vec, 1, vec.iov_len);
+	iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, vec, nvec, bytes);
 	/* No RCU read section across lock_sock/send. No sk_socket dereference:
 	 * close can detach that object even while a sock reference is held. */
 	lock_sock(sk);
@@ -75,7 +72,7 @@ static int reply_tcp(u32 idx, struct bf_llm_slot *s, void *data, u32 bytes,
 	    (sk->sk_state != TCP_ESTABLISHED && sk->sk_state != TCP_CLOSE_WAIT))
 		ret = -ENOTCONN;
 	else
-		ret = tcp_sendmsg_locked(sk, &msg, vec.iov_len);
+		ret = tcp_sendmsg_locked(sk, &msg, bytes);
 	/* Caller recycles a completed slot before releasing incoming backlog. */
 	return ret;
 }
@@ -150,18 +147,27 @@ static void poll_slot(u32 idx)
 			rejected ? "400 Bad Request" : "200 OK",
 			rejected ? 0 : s->n_gen * (u32)sizeof(u32));
 	header = tx[idx].header_sent < tx[idx].header_length;
-	if (!tx[idx].failed && (header || produced * sizeof(u32) > tx[idx].bytes)) {
-		if (header)
-			ret = reply_tcp(idx, s, tx[idx].header + tx[idx].header_sent,
-				tx[idx].header_length - tx[idx].header_sent, &locked);
-		else
-			ret = reply_tcp(idx, s, (u8 *)s->tok_out + tx[idx].bytes,
-				produced * sizeof(u32) - tx[idx].bytes, &locked);
+	/* A valid HTTP header waits for the first available token so one send
+	 * carries both. Bodyless rejection headers still complete immediately. */
+	if (!tx[idx].failed && (!header || produced || rejected) &&
+	    (header || produced * sizeof(u32) > tx[idx].bytes)) {
+		struct kvec vec[2];
+		u32 count = 0, header_bytes = 0, bytes = 0;
+		if (header) {
+			header_bytes = tx[idx].header_length - tx[idx].header_sent;
+			vec[count++] = (struct kvec){ tx[idx].header + tx[idx].header_sent, header_bytes };
+			bytes += header_bytes;
+		}
+		if (produced * sizeof(u32) > tx[idx].bytes) {
+			u32 body_bytes = produced * sizeof(u32) - tx[idx].bytes;
+			vec[count++] = (struct kvec){ (u8 *)s->tok_out + tx[idx].bytes, body_bytes };
+			bytes += body_bytes;
+		}
+		ret = reply_tcp(idx, s, vec, count, bytes, &locked);
 		if (ret > 0) {
-			if (header)
-				tx[idx].header_sent += ret;
-			else
-				tx[idx].bytes += ret; /* exact byte offset, including partial u32 */
+			u32 sent_header = min_t(u32, ret, header_bytes);
+			tx[idx].header_sent += sent_header;
+			tx[idx].bytes += ret - sent_header; /* includes a partial u32 */
 			sent_bytes += ret;
 		} else {
 			retries++;

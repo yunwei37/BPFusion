@@ -227,7 +227,7 @@ def main():
                 if "resident Qwen ready" in trace:
                     active=trace.split("resident Qwen ready",1)[1]
                     if user_network:
-                        for syscall in ("accept4","recvfrom","sendto"):
+                        for syscall in ("accept4","recvfrom","sendmsg"):
                             assert re.search(r"\b"+syscall+r"\(",active),syscall
                         assert "userspace TCP stopped: accepted=5058 published=594 completed=594 rejected=259" in log,log
                         assert not Path("/sys/module/bfusion_tx").exists()

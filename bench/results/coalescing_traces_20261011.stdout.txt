@@ -1,0 +1,261 @@
+EXACT COMMANDS [{"tag": "smol", "mode": "kernel", "model": "HuggingFaceTB/SmolLM2-135M", "output": "/workspaces/repository/bench/results/coalescing_trace_smol_kernel_20261011.jsonl", "command": ["/usr/bin/python3", "bench/tcp_stream_trace.py", "--executor", "./build/qwen_graph", "--model", "HuggingFaceTB/SmolLM2-135M"]}, {"tag": "smol", "mode": "user", "model": "HuggingFaceTB/SmolLM2-135M", "output": "/workspaces/repository/bench/results/coalescing_trace_smol_user_20261011.jsonl", "command": ["/usr/bin/python3", "bench/tcp_stream_trace.py", "--executor", "./build/qwen_graph_user_network", "--model", "HuggingFaceTB/SmolLM2-135M"]}, {"tag": "qwen", "mode": "kernel", "model": "Qwen/Qwen2.5-0.5B-Instruct", "output": "/workspaces/repository/bench/results/coalescing_trace_qwen_kernel_20261011.jsonl", "command": ["/usr/bin/python3", "bench/tcp_stream_trace.py", "--executor", "./build/qwen_graph", "--model", "Qwen/Qwen2.5-0.5B-Instruct"]}, {"tag": "qwen", "mode": "user", "model": "Qwen/Qwen2.5-0.5B-Instruct", "output": "/workspaces/repository/bench/results/coalescing_trace_qwen_user_20261011.jsonl", "command": ["/usr/bin/python3", "bench/tcp_stream_trace.py", "--executor", "./build/qwen_graph_user_network", "--model", "Qwen/Qwen2.5-0.5B-Instruct"]}]
+BEGIN WRAPPER /tmp/bpfusion-coalescing-traces-vvlziomu.py
+from pathlib import Path
+import subprocess,os,sys,json,datetime
+r=Path('/workspaces/repository');commands=[{'tag': 'smol', 'mode': 'kernel', 'model': 'HuggingFaceTB/SmolLM2-135M', 'output': '/workspaces/repository/bench/results/coalescing_trace_smol_kernel_20261011.jsonl', 'command': ['/usr/bin/python3', 'bench/tcp_stream_trace.py', '--executor', './build/qwen_graph', '--model', 'HuggingFaceTB/SmolLM2-135M']}, {'tag': 'smol', 'mode': 'user', 'model': 'HuggingFaceTB/SmolLM2-135M', 'output': '/workspaces/repository/bench/results/coalescing_trace_smol_user_20261011.jsonl', 'command': ['/usr/bin/python3', 'bench/tcp_stream_trace.py', '--executor', './build/qwen_graph_user_network', '--model', 'HuggingFaceTB/SmolLM2-135M']}, {'tag': 'qwen', 'mode': 'kernel', 'model': 'Qwen/Qwen2.5-0.5B-Instruct', 'output': '/workspaces/repository/bench/results/coalescing_trace_qwen_kernel_20261011.jsonl', 'command': ['/usr/bin/python3', 'bench/tcp_stream_trace.py', '--executor', './build/qwen_graph', '--model', 'Qwen/Qwen2.5-0.5B-Instruct']}, {'tag': 'qwen', 'mode': 'user', 'model': 'Qwen/Qwen2.5-0.5B-Instruct', 'output': '/workspaces/repository/bench/results/coalescing_trace_qwen_user_20261011.jsonl', 'command': ['/usr/bin/python3', 'bench/tcp_stream_trace.py', '--executor', './build/qwen_graph_user_network', '--model', 'Qwen/Qwen2.5-0.5B-Instruct']}]
+env=os.environ.copy();env['HF_HOME']='/workspaces/.cache/huggingface'
+def utc():return datetime.datetime.now(datetime.timezone.utc).isoformat()
+print('TRACE WRAPPER START',utc(),'PID',os.getpid(),flush=True)
+for index,case in enumerate(commands):
+ print('TRACE START',index,utc(),json.dumps(case),flush=True)
+ with open(case['output'],'x') as raw:
+  child=subprocess.Popen(case['command'],cwd=r,env=env,stdout=raw)
+  print('TRACE CHILD PID',child.pid,flush=True);rc=child.wait()
+ print('TRACE EXIT',index,utc(),rc,flush=True)
+ if rc:
+  print('TRACE TERMINAL FAILURE',index,flush=True);sys.exit(rc)
+print('TRACES COMPLETE',utc(),flush=True)
+
+END WRAPPER
+BEGIN TRACE SOURCE
+#!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+"""Passive loopback TCP metadata capture for the native Qwen token HTTP path."""
+import argparse
+import json
+from pathlib import Path
+import socket
+import struct
+import subprocess
+import tempfile
+import threading
+import time
+from resident_dispatch import command,connect,request,oracle_cases
+
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--executor",default="./build/qwen")
+parser.add_argument("--model",default="Qwen/Qwen2.5-0.5B-Instruct")
+args=parser.parse_args()
+user_network=Path(args.executor).name=="qwen_graph_user_network"
+weights="/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin" if args.model=="Qwen/Qwen2.5-0.5B-Instruct" else args.model
+cases,_=oracle_cases(8,name=args.model)
+packets=[]; stop=threading.Event()
+with socket.socket(socket.AF_PACKET,socket.SOCK_RAW,socket.htons(0x0800)) as capture:
+    capture.bind(("lo",0)); capture.settimeout(.05)
+    def collect():
+        while not stop.is_set():
+            try: packet,address=capture.recvfrom(65535)
+            except socket.timeout: continue
+            ns=time.monotonic_ns()
+            if address[2]==socket.PACKET_OUTGOING or len(packet)<54 or packet[23]!=6: continue
+            ip=14+(packet[14]&15)*4
+            sport,dport,seq,ack=struct.unpack_from("!HHII",packet,ip)
+            if 39403 not in (sport,dport): continue
+            end=14+struct.unpack_from("!H",packet,16)[0]
+            body=packet[ip+(packet[ip+12]>>4)*4:end]
+            kind="request" if body.startswith(b"POST") else "header" if body.startswith(b"HTTP") else "tokens" if body else "empty"
+            header_bytes=body.find(b"\r\n\r\n")+4 if kind=="header" and b"\r\n\r\n" in body else 0
+            packets.append({"event":"packet","mono_ns":ns,"sport":sport,"dport":dport,
+                "seq":seq,"ack":ack,"flags":packet[ip+13],"bytes":len(body),"kind":kind,"header_bytes":header_bytes,
+                "token_bytes":len(body)-header_bytes if kind=="header" and header_bytes else len(body) if kind=="tokens" else 0})
+    observer=threading.Thread(target=collect); observer.start()
+    executor=None
+    with tempfile.TemporaryDirectory(prefix="bpfusion-tcp-trace-") as tmp:
+        logpath=Path(tmp)/"executor.log"
+        try:
+            if not user_network: command("./build/bpfusion_load","stream-attach")
+            else: assert not Path("/sys/module/bfusion_tx").exists()
+            with logpath.open("w") as log:
+                executor=subprocess.Popen([args.executor,weights,"60"],stdout=log,stderr=subprocess.STDOUT)
+            started=time.monotonic()
+            while "resident Qwen ready" not in logpath.read_text():
+                assert executor.poll() is None and time.monotonic()-started<60,logpath.read_text()
+                time.sleep(.05)
+            print(json.dumps({"event":"metadata","commit":command("git","rev-parse","HEAD"),"executor":args.executor,"model":args.model,"clock":"client and passive capture monotonic_ns; receive timestamps include observer scheduling"}),flush=True)
+            with connect() as client:
+                for case,(ids,expected) in enumerate(cases):
+                    print(json.dumps({"event":"reply","case":case,**request(client,ids,expected)}),flush=True)
+            time.sleep(.1)
+        finally:
+            stop.set(); observer.join()
+            for packet in packets: print(json.dumps(packet),flush=True)
+            if executor is not None:
+                executor.terminate(); executor.wait(timeout=60)
+                print(json.dumps({"event":"executor","log":logpath.read_text(),"stats":None if user_network else command("./build/bpfusion_load","stats")}),flush=True)
+            command("./build/bpfusion_load","stream-detach")
+            command("./build/bpfusion_load","detach","lo")
+            for name in ("bpfusion_ctl","bpfusion_stats","bpfusion_db"):
+                Path("/sys/fs/bpf",name).unlink(missing_ok=True)
+
+END TRACE SOURCE
+TRACE WRAPPER START 2026-10-11T08:03:28.326471+00:00 PID 80971
+TRACE START 0 2026-10-11T08:03:28.326526+00:00 {"tag": "smol", "mode": "kernel", "model": "HuggingFaceTB/SmolLM2-135M", "output": "/workspaces/repository/bench/results/coalescing_trace_smol_kernel_20261011.jsonl", "command": ["/usr/bin/python3", "bench/tcp_stream_trace.py", "--executor", "./build/qwen_graph", "--model", "HuggingFaceTB/SmolLM2-135M"]}
+TRACE CHILD PID 80972
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 8091.60it/s]
+Traceback (most recent call last):
+  File "/workspaces/repository/bench/tcp_stream_trace.py", line 52, in <module>
+    assert executor.poll() is None and time.monotonic()-started<60,logpath.read_text()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 272/272 [00:00<00:00, 7959.44it/s]
+capturing model=HuggingFaceTB/SmolLM2-135M type=llama fp16 eager
+captured bank 0 model graph 32/190
+captured bank 0 model graph 64/190
+captured bank 0 model graph 96/190
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+
+TRACE EXIT 0 2026-10-11T08:04:35.202987+00:00 1
+TRACE TERMINAL FAILURE 0
+
+DIAGNOSTIC DEVIATION 2026-10-11T08:08:40.161941+00:00
+Attempt 1 terminated with exit 1 while graph bank 7 was still capturing: diagnostic-only fixed 60-second initialization assertion. No live trace/executor remained; module and pins observed above. Removed only the startup deadline to use the native benchmark readiness/child-exit condition; unchanged model oracle, request socket timeout, executor service lifetime, and shutdown wait. Retain attempt 1 raw and stdout. Retry output files carry _retry1; this is attempt 2, not a new preflight.
+BEGIN RETRY SOURCE
+#!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+"""Passive loopback TCP metadata capture for the native Qwen token HTTP path."""
+import argparse
+import json
+from pathlib import Path
+import socket
+import struct
+import subprocess
+import tempfile
+import threading
+import time
+from resident_dispatch import command,connect,request,oracle_cases
+
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--executor",default="./build/qwen")
+parser.add_argument("--model",default="Qwen/Qwen2.5-0.5B-Instruct")
+args=parser.parse_args()
+user_network=Path(args.executor).name=="qwen_graph_user_network"
+weights="/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin" if args.model=="Qwen/Qwen2.5-0.5B-Instruct" else args.model
+cases,_=oracle_cases(8,name=args.model)
+packets=[]; stop=threading.Event()
+with socket.socket(socket.AF_PACKET,socket.SOCK_RAW,socket.htons(0x0800)) as capture:
+    capture.bind(("lo",0)); capture.settimeout(.05)
+    def collect():
+        while not stop.is_set():
+            try: packet,address=capture.recvfrom(65535)
+            except socket.timeout: continue
+            ns=time.monotonic_ns()
+            if address[2]==socket.PACKET_OUTGOING or len(packet)<54 or packet[23]!=6: continue
+            ip=14+(packet[14]&15)*4
+            sport,dport,seq,ack=struct.unpack_from("!HHII",packet,ip)
+            if 39403 not in (sport,dport): continue
+            end=14+struct.unpack_from("!H",packet,16)[0]
+            body=packet[ip+(packet[ip+12]>>4)*4:end]
+            kind="request" if body.startswith(b"POST") else "header" if body.startswith(b"HTTP") else "tokens" if body else "empty"
+            header_bytes=body.find(b"\r\n\r\n")+4 if kind=="header" and b"\r\n\r\n" in body else 0
+            packets.append({"event":"packet","mono_ns":ns,"sport":sport,"dport":dport,
+                "seq":seq,"ack":ack,"flags":packet[ip+13],"bytes":len(body),"kind":kind,"header_bytes":header_bytes,
+                "token_bytes":len(body)-header_bytes if kind=="header" and header_bytes else len(body) if kind=="tokens" else 0})
+    observer=threading.Thread(target=collect); observer.start()
+    executor=None
+    with tempfile.TemporaryDirectory(prefix="bpfusion-tcp-trace-") as tmp:
+        logpath=Path(tmp)/"executor.log"
+        try:
+            if not user_network: command("./build/bpfusion_load","stream-attach")
+            else: assert not Path("/sys/module/bfusion_tx").exists()
+            with logpath.open("w") as log:
+                executor=subprocess.Popen([args.executor,weights,"60"],stdout=log,stderr=subprocess.STDOUT)
+            while "resident Qwen ready" not in logpath.read_text():
+                assert executor.poll() is None,logpath.read_text()
+                time.sleep(.05)
+            print(json.dumps({"event":"metadata","commit":command("git","rev-parse","HEAD"),"executor":args.executor,"model":args.model,"clock":"client and passive capture monotonic_ns; receive timestamps include observer scheduling"}),flush=True)
+            with connect() as client:
+                for case,(ids,expected) in enumerate(cases):
+                    print(json.dumps({"event":"reply","case":case,**request(client,ids,expected)}),flush=True)
+            time.sleep(.1)
+        finally:
+            stop.set(); observer.join()
+            for packet in packets: print(json.dumps(packet),flush=True)
+            if executor is not None:
+                executor.terminate(); executor.wait(timeout=60)
+                print(json.dumps({"event":"executor","log":logpath.read_text(),"stats":None if user_network else command("./build/bpfusion_load","stats")}),flush=True)
+            command("./build/bpfusion_load","stream-detach")
+            command("./build/bpfusion_load","detach","lo")
+            for name in ("bpfusion_ctl","bpfusion_stats","bpfusion_db"):
+                Path("/sys/fs/bpf",name).unlink(missing_ok=True)
+
+BEGIN RETRY WRAPPER /tmp/bpfusion-coalescing-traces-retry1-qy3rb4i2.py
+from pathlib import Path
+import subprocess,os,sys,json,datetime
+r=Path('/workspaces/repository')
+commands=[{'tag': 'smol', 'mode': 'kernel', 'model': 'HuggingFaceTB/SmolLM2-135M', 'output': '/workspaces/repository/bench/results/coalescing_trace_smol_kernel_retry1_20261011.jsonl', 'command': ['/usr/bin/python3', 'bench/tcp_stream_trace.py', '--executor', './build/qwen_graph', '--model', 'HuggingFaceTB/SmolLM2-135M']}, {'tag': 'smol', 'mode': 'user', 'model': 'HuggingFaceTB/SmolLM2-135M', 'output': '/workspaces/repository/bench/results/coalescing_trace_smol_user_retry1_20261011.jsonl', 'command': ['/usr/bin/python3', 'bench/tcp_stream_trace.py', '--executor', './build/qwen_graph_user_network', '--model', 'HuggingFaceTB/SmolLM2-135M']}, {'tag': 'qwen', 'mode': 'kernel', 'model': 'Qwen/Qwen2.5-0.5B-Instruct', 'output': '/workspaces/repository/bench/results/coalescing_trace_qwen_kernel_retry1_20261011.jsonl', 'command': ['/usr/bin/python3', 'bench/tcp_stream_trace.py', '--executor', './build/qwen_graph', '--model', 'Qwen/Qwen2.5-0.5B-Instruct']}, {'tag': 'qwen', 'mode': 'user', 'model': 'Qwen/Qwen2.5-0.5B-Instruct', 'output': '/workspaces/repository/bench/results/coalescing_trace_qwen_user_retry1_20261011.jsonl', 'command': ['/usr/bin/python3', 'bench/tcp_stream_trace.py', '--executor', './build/qwen_graph_user_network', '--model', 'Qwen/Qwen2.5-0.5B-Instruct']}]
+env=os.environ.copy();env['HF_HOME']='/workspaces/.cache/huggingface'
+def utc():return datetime.datetime.now(datetime.timezone.utc).isoformat()
+print('TRACE RETRY1 START',utc(),'PID',os.getpid(),flush=True)
+for index,case in enumerate(commands):
+ print('TRACE START',index,utc(),json.dumps(case),flush=True)
+ with open(case['output'],'x') as raw:
+  child=subprocess.Popen(case['command'],cwd=r,env=env,stdout=raw)
+  print('TRACE CHILD PID',child.pid,flush=True);rc=child.wait()
+ print('TRACE EXIT',index,utc(),rc,flush=True)
+ if rc:print('TRACE TERMINAL FAILURE',index,flush=True);sys.exit(rc)
+print('TRACES COMPLETE',utc(),flush=True)
+
+END RETRY WRAPPER
+TRACE RETRY1 START 2026-10-11T08:08:40.185105+00:00 PID 81319
+TRACE START 0 2026-10-11T08:08:40.185144+00:00 {"tag": "smol", "mode": "kernel", "model": "HuggingFaceTB/SmolLM2-135M", "output": "/workspaces/repository/bench/results/coalescing_trace_smol_kernel_retry1_20261011.jsonl", "command": ["/usr/bin/python3", "bench/tcp_stream_trace.py", "--executor", "./build/qwen_graph", "--model", "HuggingFaceTB/SmolLM2-135M"]}
+TRACE CHILD PID 81320
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 8344.80it/s]
+TRACE EXIT 0 2026-10-11T08:09:54.260972+00:00 0
+TRACE START 1 2026-10-11T08:09:54.261033+00:00 {"tag": "smol", "mode": "user", "model": "HuggingFaceTB/SmolLM2-135M", "output": "/workspaces/repository/bench/results/coalescing_trace_smol_user_retry1_20261011.jsonl", "command": ["/usr/bin/python3", "bench/tcp_stream_trace.py", "--executor", "./build/qwen_graph_user_network", "--model", "HuggingFaceTB/SmolLM2-135M"]}
+TRACE CHILD PID 81619
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 8258.30it/s]
+TRACE EXIT 1 2026-10-11T08:11:07.976558+00:00 0
+TRACE START 2 2026-10-11T08:11:07.976612+00:00 {"tag": "qwen", "mode": "kernel", "model": "Qwen/Qwen2.5-0.5B-Instruct", "output": "/workspaces/repository/bench/results/coalescing_trace_qwen_kernel_retry1_20261011.jsonl", "command": ["/usr/bin/python3", "bench/tcp_stream_trace.py", "--executor", "./build/qwen_graph", "--model", "Qwen/Qwen2.5-0.5B-Instruct"]}
+TRACE CHILD PID 81923
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 5228.23it/s]
+TRACE EXIT 2 2026-10-11T08:12:11.096640+00:00 0
+TRACE START 3 2026-10-11T08:12:11.096691+00:00 {"tag": "qwen", "mode": "user", "model": "Qwen/Qwen2.5-0.5B-Instruct", "output": "/workspaces/repository/bench/results/coalescing_trace_qwen_user_retry1_20261011.jsonl", "command": ["/usr/bin/python3", "bench/tcp_stream_trace.py", "--executor", "./build/qwen_graph_user_network", "--model", "Qwen/Qwen2.5-0.5B-Instruct"]}
+TRACE CHILD PID 82212
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4918.35it/s]
+TRACE EXIT 3 2026-10-11T08:13:13.748995+00:00 0
+TRACES COMPLETE 2026-10-11T08:13:13.749051+00:00
+
+ROOT DIAGNOSTIC AUDIT 2026-10-11T08:14:18.946655+00:00
+[{"file": "bench/results/coalescing_trace_qwen_kernel_retry1_20261011.jsonl", "replies": 4, "exact_tokens": 32, "headers_with_token": 4, "ttft_ms": [3.353927, 2.939173, 4.527005, 4.503541], "non_json_native_loader_lines": ["HF reference model=Qwen/Qwen2.5-0.5B-Instruct type=qwen2 vocab=151936"]}, {"file": "bench/results/coalescing_trace_qwen_user_retry1_20261011.jsonl", "replies": 4, "exact_tokens": 32, "headers_with_token": 4, "ttft_ms": [2.279902, 4.532175, 4.075344, 2.503876], "non_json_native_loader_lines": ["HF reference model=Qwen/Qwen2.5-0.5B-Instruct type=qwen2 vocab=151936"]}, {"file": "bench/results/coalescing_trace_smol_kernel_retry1_20261011.jsonl", "replies": 4, "exact_tokens": 32, "headers_with_token": 4, "ttft_ms": [5.014082, 7.220505, 5.008578, 5.243564], "non_json_native_loader_lines": ["HF reference model=HuggingFaceTB/SmolLM2-135M type=llama vocab=49152"]}, {"file": "bench/results/coalescing_trace_smol_user_retry1_20261011.jsonl", "replies": 4, "exact_tokens": 32, "headers_with_token": 4, "ttft_ms": [5.049416, 5.012966, 6.02714, 7.355323], "non_json_native_loader_lines": ["HF reference model=HuggingFaceTB/SmolLM2-135M type=llama vocab=49152"]}]
+All four diagnostic exits 0 and cleanup verified; header+token coalescing observed. Root first JSON-only parser probe failed on native BPF loader stdout; raw output unchanged, metadata parsed by JSON lines with loader lines retained. Diagnostics are not a matched optimization performance result.
+
+ACK/BODY METADATA RECONSTRUCTION
+[{"file": "bench/results/coalescing_trace_qwen_kernel_retry1_20261011.jsonl", "details": [{"ack_after_header_ms": 40.668, "body_after_header_ms": 40.685, "body_bytes": 28}, {"ack_after_header_ms": 40.397, "body_after_header_ms": 40.41, "body_bytes": 28}, {"ack_after_header_ms": 40.609, "body_after_header_ms": 40.623, "body_bytes": 28}]}, {"file": "bench/results/coalescing_trace_qwen_user_retry1_20261011.jsonl", "details": [{"ack_after_header_ms": 41.164, "body_after_header_ms": 41.2, "body_bytes": 28}, {"ack_after_header_ms": 40.762, "body_after_header_ms": 40.792, "body_bytes": 28}, {"ack_after_header_ms": 41.107, "body_after_header_ms": 41.14, "body_bytes": 28}]}, {"file": "bench/results/coalescing_trace_smol_kernel_retry1_20261011.jsonl", "details": [{"ack_after_header_ms": 40.429, "body_after_header_ms": 40.458, "body_bytes": 28}, {"ack_after_header_ms": 40.876, "body_after_header_ms": 40.906, "body_bytes": 28}, {"ack_after_header_ms": 40.507, "body_after_header_ms": 40.53, "body_bytes": 28}]}, {"file": "bench/results/coalescing_trace_smol_user_retry1_20261011.jsonl", "details": [{"ack_after_header_ms": 41.533, "body_after_header_ms": 41.554, "body_bytes": 28}, {"ack_after_header_ms": 42.255, "body_after_header_ms": 42.277, "body_bytes": 28}, {"ack_after_header_ms": 41.397, "body_after_header_ms": 41.417, "body_bytes": 28}]}]
+Correction: non-JSON diagnostic stdout above is native HF reference status, not BPF loader stdout. Probe-only errors did not alter raw traces or execution.

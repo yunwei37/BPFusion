@@ -192,6 +192,13 @@ These local associations guide computation/reuse work; they do not transfer
 duration shares to the device-launched trace or establish a serving speedup.
 
 
+Both native network paths now coalesce the HTTP header and first available
+token in one vectored send while retaining default TCP and identical GPU
+computation. [Finding0026](docs/findings/0026-coalesced-network.md) records
+four complete strict regressions, passive packet evidence and two real
+preflights. The next full matched comparison is pending; remaining short
+response ACK delays and total host cost are still unresolved.
+
 ## Reusing upstream compute
 
 The next backend investigation reuses upstream megakernel computation so a

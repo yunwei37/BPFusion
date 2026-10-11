@@ -1,0 +1,1677 @@
+OBSERVATION UTC 2026-10-11T07:53:31.227169+00:00
+SOURCE HEAD 6688caf879ca2cdc53de5336df10aca6eca6b540
+SCOPE: existing strict correctness harness; no performance claim
+UTC 2026-10-11T07:53:00.303536+00:00
+COMMAND make -C module CC=gcc-15 KDIR=/usr/src/linux-headers-7.3.0-070300rc3-generic
+EXIT 0
+make: Entering directory '/workspaces/repository/module'
+make CC=gcc-15 -C /usr/src/linux-headers-7.3.0-070300rc3-generic M=/workspaces/repository/module modules
+make[1]: Entering directory '/usr/src/linux-headers-7.3.0-070300rc3-generic'
+make[2]: Entering directory '/workspaces/repository/module'
+  CC [M]  bfusion_tx.o
+  MODPOST Module.symvers
+  LD [M]  bfusion_tx.ko
+  BTF [M] bfusion_tx.ko
+make[2]: Leaving directory '/workspaces/repository/module'
+make[1]: Leaving directory '/usr/src/linux-headers-7.3.0-070300rc3-generic'
+make: Leaving directory '/workspaces/repository/module'
+warning: the compiler differs from the one used to build the kernel
+  The kernel was built by: x86_64-linux-gnu-gcc-15 (Ubuntu 15.2.0-12ubuntu1) 15.2.0
+  You are using:           gcc-15 (Ubuntu 15.2.0-14ubuntu1~24~ppa1) 15.2.0
+warning: pahole version differs from the one used to build the kernel
+  The kernel was built with: 130
+  You are using:             125
+Skipping BTF generation for bfusion_tx.ko due to unavailability of vmlinux
+
+COMMANDS [{"model": "HuggingFaceTB/SmolLM2-135M", "executor": "qwen_graph", "command": ["/usr/bin/python3", "tests/resident_qwen.py", "--gen", "64", "--prefill-edges", "--executor", "./build/qwen_graph", "--model", "HuggingFaceTB/SmolLM2-135M"]}, {"model": "HuggingFaceTB/SmolLM2-135M", "executor": "qwen_graph_user_network", "command": ["/usr/bin/python3", "tests/resident_qwen.py", "--gen", "64", "--prefill-edges", "--executor", "./build/qwen_graph_user_network", "--model", "HuggingFaceTB/SmolLM2-135M"]}, {"model": "Qwen/Qwen2.5-0.5B-Instruct", "executor": "qwen_graph", "command": ["/usr/bin/python3", "tests/resident_qwen.py", "--gen", "64", "--prefill-edges", "--executor", "./build/qwen_graph", "--model", "Qwen/Qwen2.5-0.5B-Instruct"]}, {"model": "Qwen/Qwen2.5-0.5B-Instruct", "executor": "qwen_graph_user_network", "command": ["/usr/bin/python3", "tests/resident_qwen.py", "--gen", "64", "--prefill-edges", "--executor", "./build/qwen_graph_user_network", "--model", "Qwen/Qwen2.5-0.5B-Instruct"]}]
+BEGIN SOURCE module/bfusion_tx.c
+// SPDX-License-Identifier: GPL-2.0-only
+// Experimental kernel TCP TX for the shared token ring. The executor must
+// publish DONE after its last page access; TX alone never reclaims PENDING.
+#include <linux/module.h>
+#include <linux/kthread.h>
+#include <linux/delay.h>
+#include <linux/bpf.h>
+#include <linux/file.h>
+#include <linux/net.h>
+#include <net/inet_sock.h>
+#include <linux/nsproxy.h>
+#include <linux/uio.h>
+#include <net/inet_hashtables.h>
+#include <net/net_namespace.h>
+#include <net/sock.h>
+#include <net/tcp.h>
+#include "../bpf/include/bpfusion_queue.h"
+MODULE_IMPORT_NS("BPF_INTERNAL");
+
+static int map_fd = -1;
+module_param(map_fd, int, 0400);
+MODULE_PARM_DESC(map_fd, "BPF map FD in the loading process (use bpfusion_load tx-load)");
+static u32 reply_addr = 0x0100007fu;
+module_param(reply_addr, uint, 0444);
+MODULE_PARM_DESC(reply_addr, "local server IPv4 address, network order");
+static int listen_fd = -1;
+module_param(listen_fd, int, 0400);
+MODULE_PARM_DESC(listen_fd, "optional bootstrap listener FD for kernel accept/drain");
+static struct socket *listener;
+struct peer { struct list_head node; struct socket *socket; };
+static LIST_HEAD(peers);
+static unsigned long accepted, closed;
+static struct net *bf_net;
+static struct task_struct *tx_task;
+static struct bpf_map *page_map;
+static struct bf_page *page;
+static struct {
+	struct sock *sk; /* lookup owns a reference, held until slot completion */
+	u32 bytes;
+	bool failed;
+	u16 header_length, header_sent;
+	char header[128];
+} tx[BF_LLM_SLOTS];
+static unsigned long sent_bytes, completions, abandoned, retries;
+
+static int reply_tcp(u32 idx, struct bf_llm_slot *s, struct kvec *vec,
+                     u32 nvec, u32 bytes, struct sock **locked)
+{
+	struct sock *sk = tx[idx].sk;
+	struct msghdr msg = { .msg_flags = MSG_DONTWAIT | MSG_NOSIGNAL };
+	int ret;
+
+	if (!sk) {
+		rcu_read_lock();
+		sk = __inet_lookup_established(bf_net, (__be32)s->addr_be,
+			(__be16)s->port_be, (__be32)reply_addr, BF_LLM_TCP_PORT, 0, 0);
+		rcu_read_unlock();
+		if (!sk)
+			return -ENOENT;
+		if (!sk_fullsock(sk)) {
+			sock_gen_put(sk);
+			return -ENOTCONN;
+		}
+		tx[idx].sk = sk;
+	}
+	iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, vec, nvec, bytes);
+	/* No RCU read section across lock_sock/send. No sk_socket dereference:
+	 * close can detach that object even while a sock reference is held. */
+	lock_sock(sk);
+	*locked = sk;
+	if (sock_flag(sk, SOCK_DEAD) || (sk->sk_shutdown & SEND_SHUTDOWN) ||
+	    (sk->sk_state != TCP_ESTABLISHED && sk->sk_state != TCP_CLOSE_WAIT))
+		ret = -ENOTCONN;
+	else
+		ret = tcp_sendmsg_locked(sk, &msg, bytes);
+	/* Caller recycles a completed slot before releasing incoming backlog. */
+	return ret;
+}
+
+/* Stream responses must retain request order on a persistent connection,
+ * including ring wrap and a partially sent preceding response. */
+static bool earlier_peer(u32 idx, struct bf_llm_slot *s)
+{
+    for (u32 i = 0; i < BF_LLM_SLOTS; i++) {
+        struct bf_llm_slot *other = &page->llm[i];
+        u32 state;
+
+        if (i == idx)
+            continue;
+        state = smp_load_acquire(&other->state);
+        if ((state == BF_PENDING || state == BF_DONE) &&
+            other->addr_be == s->addr_be && other->port_be == s->port_be &&
+            other->ingress_ns < s->ingress_ns)
+            return true;
+    }
+    return false;
+}
+
+/* Binary replies have no status header. Reject by ending the owned peer,
+ * so the client observes EOF and the rest of the GPU queue remains live. */
+static void reject_binary(struct bf_llm_slot *s)
+{
+    struct peer *peer;
+
+    list_for_each_entry(peer, &peers, node) {
+        struct inet_sock *inet = inet_sk(peer->socket->sk);
+        if ((__force u32)inet->inet_daddr == s->addr_be &&
+            (__force u16)inet->inet_dport == s->port_be) {
+            kernel_sock_shutdown(peer->socket, SHUT_RDWR);
+            return;
+        }
+    }
+}
+
+static void poll_slot(u32 idx)
+{
+	struct bf_llm_slot *s = &page->llm[idx];
+	struct sock *locked = NULL, *put = NULL;
+	u32 state = smp_load_acquire(&s->state);
+	u32 produced;
+	u16 flags = READ_ONCE(s->pad), transport = flags & BF_LLM_TRANSPORT_MASK;
+	bool header, rejected = flags & BF_LLM_REJECTED;
+	int ret;
+
+	if ((state != BF_PENDING && state != BF_DONE) ||
+	    (transport != 1 && transport != 2))
+		return;
+	/* A bodyless rejection header also completes a response. */
+	if ((flags & BF_LLM_VALIDATING) || (rejected && state != BF_DONE))
+		return;
+	if (earlier_peer(idx, s))
+		return;
+	produced = smp_load_acquire(&s->produced);
+	/* Keep the last token until GPU release. Receiving a whole response must
+	 * not permit a new request while this slot is still executor-owned. */
+	if (state != BF_DONE && produced && produced == READ_ONCE(s->n_gen))
+		produced--;
+	if (produced > BF_LLM_MAX_TOK || (!rejected && READ_ONCE(s->n_gen) > BF_LLM_MAX_TOK))
+		tx[idx].failed = true;
+	if (rejected && transport == 1 && !tx[idx].failed) {
+		reject_binary(s);
+		tx[idx].failed = true;
+	}
+	if (transport == 2 && !tx[idx].header_length)
+		tx[idx].header_length = scnprintf(tx[idx].header, sizeof(tx[idx].header),
+			"HTTP/1.1 %s\r\nContent-Type: application/octet-stream\r\nContent-Length: %u\r\n\r\n",
+			rejected ? "400 Bad Request" : "200 OK",
+			rejected ? 0 : s->n_gen * (u32)sizeof(u32));
+	header = tx[idx].header_sent < tx[idx].header_length;
+	/* A valid HTTP header waits for the first available token so one send
+	 * carries both. Bodyless rejection headers still complete immediately. */
+	if (!tx[idx].failed && (!header || produced || rejected) &&
+	    (header || produced * sizeof(u32) > tx[idx].bytes)) {
+		struct kvec vec[2];
+		u32 count = 0, header_bytes = 0, bytes = 0;
+		if (header) {
+			header_bytes = tx[idx].header_length - tx[idx].header_sent;
+			vec[count++] = (struct kvec){ tx[idx].header + tx[idx].header_sent, header_bytes };
+			bytes += header_bytes;
+		}
+		if (produced * sizeof(u32) > tx[idx].bytes) {
+			u32 body_bytes = produced * sizeof(u32) - tx[idx].bytes;
+			vec[count++] = (struct kvec){ (u8 *)s->tok_out + tx[idx].bytes, body_bytes };
+			bytes += body_bytes;
+		}
+		ret = reply_tcp(idx, s, vec, count, bytes, &locked);
+		if (ret > 0) {
+			u32 sent_header = min_t(u32, ret, header_bytes);
+			tx[idx].header_sent += sent_header;
+			tx[idx].bytes += ret - sent_header; /* includes a partial u32 */
+			sent_bytes += ret;
+		} else {
+			retries++;
+			if (ret == -EPIPE || ret == -ECONNRESET || ret == -ENOTCONN ||
+			    (ret == -ENOENT && state == BF_DONE))
+				tx[idx].failed = true;
+		}
+	}
+	/* A disconnected peer cannot release memory still owned by an executor.
+	 * DONE is its release; produced == n_gen is not a release. */
+	if (state == BF_DONE && (tx[idx].failed ||
+	    (tx[idx].header_sent == tx[idx].header_length &&
+	    tx[idx].bytes == produced * sizeof(u32)))) {
+		put = tx[idx].sk;
+		if (tx[idx].failed)
+			abandoned++;
+		else
+			completions++;
+		memset(&tx[idx], 0, sizeof(tx[idx]));
+		smp_store_release(&s->state, BF_FREE);
+	}
+	/* release_sock can run the next request's parser from TCP backlog. All
+	 * old slot/TX accesses must finish first; keep the sock reference until
+	 * after unlocking, even when completion cleared tx[idx].sk. */
+	if (locked)
+		release_sock(locked);
+	if (put)
+		sock_put(put);
+}
+
+/* The bootstrap process owns the listener file; sockfd_lookup pins it.
+ * Accepted sockets and receive-buffer draining are entirely kernel-owned. */
+static bool peer_pending(struct sock *sk)
+{
+	struct inet_sock *inet = inet_sk(sk);
+
+	for (u32 i = 0; i < BF_LLM_SLOTS; i++) {
+		struct bf_llm_slot *s = &page->llm[i];
+		u32 state = smp_load_acquire(&s->state);
+
+		if (state != BF_FREE && ((s->pad & BF_LLM_TRANSPORT_MASK) == 1 ||
+                                  (s->pad & BF_LLM_TRANSPORT_MASK) == 2) &&
+		    s->addr_be == (__force u32)inet->inet_daddr &&
+		    s->port_be == (__force u16)inet->inet_dport)
+			return true;
+	}
+	return false;
+}
+
+static void accept_and_drain(void)
+{
+	struct socket *socket;
+	struct peer *peer, *next;
+
+	if (!listener)
+		return;
+	while (kernel_accept(listener, &socket, O_NONBLOCK) == 0) {
+		peer = kmalloc(sizeof(*peer), GFP_KERNEL);
+		if (!peer) {
+			sock_release(socket);
+			continue;
+		}
+		peer->socket = socket;
+		list_add_tail(&peer->node, &peers);
+		accepted++;
+	}
+	list_for_each_entry_safe(peer, next, &peers, node) {
+		char discard[256];
+		struct kvec vec = { .iov_base = discard, .iov_len = sizeof(discard) };
+		int ret;
+
+		do {
+			struct msghdr msg = {};
+
+			ret = kernel_recvmsg(peer->socket, &msg, &vec, 1,
+					     sizeof(discard), MSG_DONTWAIT);
+		} while (ret > 0);
+		if ((ret == 0 && !peer_pending(peer->socket->sk)) ||
+		    (ret < 0 && ret != -EAGAIN && ret != -EWOULDBLOCK)) {
+			list_del(&peer->node);
+			sock_release(peer->socket);
+			kfree(peer);
+			closed++;
+		}
+	}
+}
+
+static int tx_thread(void *unused)
+{
+	while (!kthread_should_stop()) {
+		accept_and_drain();
+		for (u32 i = 0; i < BF_LLM_SLOTS; i++)
+			poll_slot(i);
+		usleep_range(60, 120);
+	}
+	return 0;
+}
+
+static int __init bf_init(void)
+{
+	struct bpf_array *array;
+	int err;
+
+	/* bpf_map_get validates the actual BPF FD and acquires a map reference.
+	 * A bpffs filp_open FD is a seq_file, not a BPF map FD. */
+	page_map = bpf_map_get(map_fd);
+	if (IS_ERR(page_map))
+		return PTR_ERR(page_map);
+	if (page_map->map_type != BPF_MAP_TYPE_ARRAY ||
+	    !(page_map->map_flags & BPF_F_MMAPABLE) ||
+	    page_map->max_entries != 1 || page_map->value_size != sizeof(*page)) {
+		err = -EINVAL;
+		goto out_map;
+	}
+	array = container_of(page_map, struct bpf_array, map);
+	page = (struct bf_page *)array->value;
+	bf_net = get_net(current->nsproxy->net_ns);
+	if (listen_fd >= 0) {
+		listener = sockfd_lookup(listen_fd, &err);
+		if (!listener)
+			goto out_net;
+		if (listener->type != SOCK_STREAM || listener->sk->sk_protocol != IPPROTO_TCP ||
+		    listener->sk->sk_state != TCP_LISTEN ||
+		    inet_sk(listener->sk)->inet_num != BF_LLM_TCP_PORT ||
+		    !net_eq(sock_net(listener->sk), bf_net)) {
+			err = -EINVAL;
+			goto out_listener;
+		}
+	}
+	tx_task = kthread_run(tx_thread, NULL, "bfusion_tx");
+	if (IS_ERR(tx_task)) {
+		err = PTR_ERR(tx_task);
+		goto out_listener;
+	}
+	pr_info("bfusion_tx: map id=%u size=%u ring=%zu slot=%zu net=%u\n",
+		page_map->id, page_map->value_size, offsetof(struct bf_page, llm),
+		sizeof(struct bf_llm_slot), bf_net->ns.inum);
+	return 0;
+out_listener:
+	if (listener)
+		sockfd_put(listener);
+out_net:
+	put_net(bf_net);
+out_map:
+	bpf_map_put(page_map);
+	return err;
+}
+
+static void __exit bf_exit(void)
+{
+	struct peer *peer, *next;
+
+	kthread_stop(tx_task);
+	list_for_each_entry_safe(peer, next, &peers, node) {
+		list_del(&peer->node);
+		sock_release(peer->socket);
+		kfree(peer);
+	}
+	if (listener)
+		sockfd_put(listener);
+	for (u32 i = 0; i < BF_LLM_SLOTS; i++)
+		if (tx[i].sk)
+			sock_put(tx[i].sk);
+	bpf_map_put(page_map);
+	put_net(bf_net);
+	pr_info("bfusion_tx: exit bytes=%lu completed=%lu abandoned=%lu retries=%lu accepted=%lu closed=%lu\n",
+		sent_bytes, completions, abandoned, retries, accepted, closed);
+}
+module_init(bf_init);
+module_exit(bf_exit);
+MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("BPFusion experimental asynchronous kernel TCP reply");
+
+END SOURCE module/bfusion_tx.c
+BEGIN SOURCE executor/userspace_tcp.h
+// SPDX-License-Identifier: Apache-2.0
+// Matched userspace network control: same page ABI and resident GPU dispatcher.
+#include <sys/epoll.h>
+#include <sys/uio.h>
+#include <cerrno>
+#include <cstring>
+#include <map>
+#include <memory>
+#include <string>
+#include <chrono>
+
+static int user_network(bf_page *page,int listener,unsigned seconds,
+                        volatile sig_atomic_t *stopped) {
+    struct Peer {
+        int fd;
+        bool eof=false;
+        int slot=-1;
+        std::string input;
+    };
+    struct Reply {
+        std::shared_ptr<Peer> peer;
+        std::string header;
+        size_t header_sent=0,bytes=0;
+    } replies[BF_LLM_SLOTS];
+    std::map<int,std::shared_ptr<Peer>> peers;
+    unsigned head=0,completed=0,rejected_count=0,accepted=0;
+    int ep=epoll_create1(EPOLL_CLOEXEC);
+    if(ep<0) { perror("epoll_create1");return 1; }
+    fcntl(listener,F_SETFL,fcntl(listener,F_GETFL)|O_NONBLOCK);
+    epoll_event watch={};watch.events=EPOLLIN;watch.data.fd=listener;
+    if(epoll_ctl(ep,EPOLL_CTL_ADD,listener,&watch)) { close(ep);return 1; }
+    auto disconnect=[&](Peer &peer) {
+        if(peer.fd>=0) {
+            epoll_ctl(ep,EPOLL_CTL_DEL,peer.fd,nullptr);
+            close(peer.fd);peer.fd=-1;
+        }
+        peer.eof=true;
+    };
+    auto send_reply=[&](Peer &peer,Reply &reply,bf_llm_slot *slot,unsigned produced) {
+        iovec vec[2];unsigned count=0;
+        size_t header_bytes=reply.header.size()-reply.header_sent;
+        if(header_bytes) vec[count++]={reply.header.data()+reply.header_sent,header_bytes};
+        if(produced*4>reply.bytes)
+            vec[count++]={(char *)slot->tok_out+reply.bytes,produced*4-reply.bytes};
+        if(!count) return;
+        msghdr msg={};msg.msg_iov=vec;msg.msg_iovlen=count;
+        ssize_t n=sendmsg(peer.fd,&msg,MSG_DONTWAIT|MSG_NOSIGNAL);
+        if(n<0 && errno!=EAGAIN && errno!=EWOULDBLOCK && errno!=EINTR)
+            disconnect(peer);
+        if(n>0) {
+            size_t sent_header=(size_t)n<header_bytes ? (size_t)n : header_bytes;
+            reply.header_sent+=sent_header;reply.bytes+=(size_t)n-sent_header;
+        }
+    };
+    auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(seconds);
+    while(!*stopped && std::chrono::steady_clock::now()<deadline) {
+        // Busy completion polling is a low-latency control; report its CPU cost.
+        epoll_event events[BF_LLM_SLOTS*2];
+        int n=epoll_wait(ep,events,BF_LLM_SLOTS*2,0);
+        if(n<0 && errno!=EINTR) { perror("epoll_wait");break; }
+        for(int e=0;e<n;e++) {
+            int fd=events[e].data.fd;
+            if(fd==listener) {
+                while(true) {
+                    int child=accept4(listener,nullptr,nullptr,SOCK_NONBLOCK|SOCK_CLOEXEC);
+                    if(child<0) break;
+                    auto peer=std::make_shared<Peer>();peer->fd=child;
+                    peers[child]=peer;accepted++;
+                    watch.events=EPOLLIN|EPOLLRDHUP;watch.data.fd=child;
+                    if(epoll_ctl(ep,EPOLL_CTL_ADD,child,&watch)) disconnect(*peer);
+                }
+            } else {
+                auto it=peers.find(fd);if(it==peers.end()) continue;
+                Peer &peer=*it->second;
+                char buffer[4096];
+                while(peer.fd>=0) {
+                    ssize_t got=recv(peer.fd,buffer,sizeof(buffer),MSG_DONTWAIT);
+                    if(got>0) peer.input.append(buffer,got);
+                    else {
+                        if(got==0) {
+                            peer.eof=true;epoll_ctl(ep,EPOLL_CTL_DEL,peer.fd,nullptr);
+                        } else if(errno!=EAGAIN && errno!=EWOULDBLOCK && errno!=EINTR)
+                            disconnect(peer);
+                        break;
+                    }
+                }
+            }
+        }
+        for(unsigned i=0;i<BF_LLM_SLOTS;i++) {
+            Reply &reply=replies[i];if(!reply.peer) continue;
+            Peer &peer=*reply.peer;bf_llm_slot *slot=&page->llm[i];
+            unsigned state=__atomic_load_n(&slot->state,__ATOMIC_ACQUIRE);
+            unsigned short flags=__atomic_load_n(&slot->pad,__ATOMIC_ACQUIRE);
+            bool rejected=flags&BF_LLM_REJECTED;
+            if((flags&BF_LLM_VALIDATING) || (rejected && state!=BF_DONE)) continue;
+            unsigned produced=__atomic_load_n(&slot->produced,__ATOMIC_ACQUIRE);
+            if(state!=BF_DONE && produced==slot->n_gen && produced) produced--;
+            if(rejected && (flags&BF_LLM_TRANSPORT_MASK)==1) disconnect(peer);
+            if((flags&BF_LLM_TRANSPORT_MASK)==2 && reply.header.empty()) {
+                reply.header="HTTP/1.1 "+std::string(rejected ? "400 Bad Request" : "200 OK")
+                    +"\r\nContent-Type: application/octet-stream\r\nContent-Length: "
+                    +std::to_string(rejected ? 0 : slot->n_gen*4)+"\r\n\r\n";
+            }
+            // Keep default TCP buffering; submit header and first tokens together.
+            if(peer.fd>=0 && (produced || rejected))
+                send_reply(peer,reply,slot,produced);
+            if(state==BF_DONE && (peer.fd<0 ||
+                (reply.header_sent==reply.header.size() && reply.bytes==produced*4))) {
+                peer.slot=-1;reply={};
+                __atomic_store_n(&slot->state,(unsigned)BF_FREE,__ATOMIC_RELEASE);
+                completed++;if(rejected) rejected_count++;
+            }
+        }
+        for(auto it=peers.begin();it!=peers.end();) {
+            auto peer=it->second;
+            if(peer->fd>=0 && peer->slot<0 && !peer->input.empty()) {
+                size_t offset=0;
+                bool http=peer->input.compare(0,4,"POST")==0;
+                if(http) {
+                    size_t end=peer->input.find("\r\n\r\n");
+                    if(end==std::string::npos) { ++it;continue; }
+                    offset=end+4;
+                }
+                if(peer->input.size()<offset+24) { ++it;continue; }
+                unsigned fields[4];unsigned long long client_ns;
+                memcpy(fields,peer->input.data()+offset,16);
+                memcpy(&client_ns,peer->input.data()+offset+16,8);
+                unsigned prompt=fields[1],gen=fields[2];
+                if(fields[0]!=BF_LLM_MAGIC || !prompt || prompt>BF_LLM_MAX_TOK ||
+                   !gen || gen>BF_LLM_MAX_TOK) {
+                    disconnect(*peer);
+                } else {
+                    size_t bytes=24+prompt*4;
+                    if(http) {
+                        size_t key=peer->input.find("\r\nContent-Length: ");
+                        if(key==std::string::npos || key>=offset ||
+                           strtoul(peer->input.c_str()+key+18,nullptr,10)!=bytes) {
+                            disconnect(*peer);++it;continue;
+                        }
+                    }
+                    if(peer->input.size()<offset+bytes) { ++it;continue; }
+                    unsigned i=head%BF_LLM_SLOTS;bf_llm_slot *slot=&page->llm[i];
+                    if(__atomic_load_n(&slot->state,__ATOMIC_ACQUIRE)==BF_FREE) {
+                        __atomic_store_n(&slot->state,(unsigned)BF_WRITING,__ATOMIC_RELEASE);
+                        slot->n_prompt=prompt;slot->n_gen=gen;slot->produced=0;
+                        slot->client_ns=client_ns;
+                        slot->pad=(http ? 2 : 1)|BF_LLM_VALIDATING;
+                        memcpy(slot->tok_in,peer->input.data()+offset+24,prompt*4);
+                        peer->input.erase(0,offset+bytes);
+                        replies[i].peer=peer;peer->slot=i;
+                        __atomic_store_n(&slot->state,(unsigned)BF_PENDING,__ATOMIC_RELEASE);
+                        __atomic_store_n(&page->llm_head,++head,__ATOMIC_RELEASE);
+                    }
+                }
+            }
+            if(peer->slot<0 && (peer->fd<0 || (peer->eof && peer->input.empty()))) {
+                disconnect(*peer);it=peers.erase(it);
+            } else ++it;
+        }
+    }
+    for(auto &item:peers) disconnect(*item.second);
+    close(ep);
+    printf("userspace TCP stopped: accepted=%u published=%u completed=%u rejected=%u\n",
+           accepted,head,completed,rejected_count);fflush(stdout);
+    return 0;
+}
+
+END SOURCE executor/userspace_tcp.h
+BEGIN SOURCE tests/resident_qwen.py
+#!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+"""Resident CUDA Qwen vs eager HF fp16 greedy oracle on real TCP replies."""
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import nullcontext
+from threading import Barrier
+import argparse
+import ctypes
+import signal
+import gc
+import re
+import socket
+import struct
+import subprocess
+import time
+from pathlib import Path
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+
+def oracle_cases(gen, prefill_edges=False, name="Qwen/Qwen2.5-0.5B-Instruct"):
+    tok=AutoTokenizer.from_pretrained(name)
+    model=AutoModelForCausalLM.from_pretrained(name,dtype=torch.float16,attn_implementation="eager").to("cuda").eval()
+    vocab=model.config.vocab_size
+    print(f"HF reference model={name} type={model.config.model_type} vocab={vocab}",flush=True)
+    cases=[]
+    inputs=[tok(prompt).input_ids for prompt in ("The capital of France is", "What is 2 plus 2?", "Write a short greeting.", "Linux is")]
+    if prefill_edges:
+        pattern=inputs[0]
+        inputs.extend((pattern*((n+len(pattern)-1)//len(pattern)))[:n] for n in (1,15,16,17,32,64))
+    for ids in inputs:
+        with torch.no_grad():
+            out=model(torch.tensor([ids],device="cuda"),use_cache=True)
+            past=out.past_key_values
+            nxt=int(out.logits[:,-1].argmax(-1))
+            expected=[nxt]
+            for _ in range(gen-1):
+                out=model(torch.tensor([[nxt]],device="cuda"),past_key_values=past,use_cache=True)
+                past=out.past_key_values
+                nxt=int(out.logits[:,-1].argmax(-1))
+                expected.append(nxt)
+        cases.append((ids,expected))
+    del model,out,past
+    gc.collect(); torch.cuda.empty_cache()
+    return cases,vocab
+
+
+def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--gen",type=int,default=8,choices=range(1,65))
+    parser.add_argument("--executor",default="./build/qwen")
+    parser.add_argument("--prefill-edges",action="store_true",help="also test 1/15/16/17/32/64-token prompt lengths")
+    parser.add_argument("--model",default="Qwen/Qwen2.5-0.5B-Instruct",help="HF checkpoint; other models require a graph executor")
+    args=parser.parse_args()
+    user_network=Path(args.executor).name=="qwen_graph_user_network"
+    if args.model!="Qwen/Qwen2.5-0.5B-Instruct" and Path(args.executor).name not in ("qwen_graph","qwen_graph_host_launch","qwen_graph_user_network"):
+        parser.error("--model requires qwen_graph or qwen_graph_host_launch")
+    weights="/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin" if args.model=="Qwen/Qwen2.5-0.5B-Instruct" else args.model
+    cases,vocab=oracle_cases(args.gen,args.prefill_edges,args.model)
+    valid=305+3*len(cases)
+    print(f"HF eager fp16 oracle ready, model={args.model}, model released",flush=True)
+    subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
+    subprocess.run(["./build/bpfusion_load","stream-detach"],check=True)
+    if not user_network:
+        subprocess.run(["./build/bpfusion_load","stream-attach"],check=True)
+    else:
+        assert not Path("/sys/module/bfusion_tx").exists(),"kernel TX must be absent for userspace control"
+    executor=None
+    complete=False
+    logpath="/tmp/bpfusion-resident-qwen.log"
+    try:
+        with open(logpath,"w") as log:
+            executor=subprocess.Popen(["strace","-D","-f","-e","trace=network,write","-o","/tmp/bpfusion-qwen-network.trace",args.executor,weights,"300"],stdout=log,stderr=subprocess.STDOUT)
+        while "resident Qwen ready" not in open(logpath).read():
+            if executor.poll() is not None:
+                raise AssertionError(open(logpath).read())
+            time.sleep(.1)
+        for _ in range(5000):
+            socket.create_connection(("127.0.0.1",39403),timeout=5).close()
+        owner="userspace" if user_network else "kernel"
+        print(f"PASS 5000 empty connections accepted/drained by {owner}; exceeds undrained listener backlog",flush=True)
+        def request(idx, ids, expected, http=False, client=None, split=True, reject=False):
+            with (nullcontext(client) if client is not None else socket.create_connection(("127.0.0.1",39403),timeout=60)) as client:
+                start=time.perf_counter()
+                client.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
+                wire=struct.pack("<IIIIQ",0x514c4d51,len(ids),len(expected),0,time.monotonic_ns())+struct.pack(f"<{len(ids)}I",*ids)
+                if http:
+                    wire=(f"POST /generate HTTP/1.1\r\nHost: localhost\r\nContent-Type: application/octet-stream\r\nContent-Length: {len(wire)}\r\n\r\n".encode()+wire)
+                # Separate writes across header and payload; the parser
+                # must frame one request after TCP stream reassembly.
+                if split:
+                    for byte in wire:
+                        client.sendall(bytes([byte]))
+                        time.sleep(.001)
+                else:
+                    client.sendall(wire)
+                reply=[] if reject else expected
+                if http:
+                    header=b""
+                    while not header.endswith(b"\r\n\r\n"):
+                        chunk=client.recv(1); assert chunk,"short HTTP header"; header+=chunk
+                    status=b"400 Bad Request" if reject else b"200 OK"
+                    assert header.startswith(b"HTTP/1.1 "+status+b"\r\n"),header
+                    assert f"Content-Length: {len(reply)*4}\r\n".encode() in header,header
+                data=b""
+                while len(data)<len(reply)*4:
+                    chunk=client.recv(len(reply)*4-len(data))
+                    assert chunk,"short reply"
+                    data+=chunk
+                actual=list(struct.unpack(f"<{len(reply)}I",data))
+                elapsed=time.perf_counter()-start
+                if split:
+                    print(f"http={http} case={idx} expected={expected} actual={actual} seconds={elapsed:.3f}",flush=True)
+                assert actual==reply,(idx,actual,reply)
+        for repetition in range(3):
+            for idx,(ids,expected) in enumerate(cases):
+                request(idx,ids,expected,http=repetition==1)
+        with ThreadPoolExecutor(max_workers=8) as clients:
+            futures=[clients.submit(request,i,*cases[i%len(cases)],i>=4) for i in range(8)]
+            for future in futures: future.result()
+        print("PASS eight concurrent clients, exact model replies, no admission drops",flush=True)
+        # A reply must return queue ownership before the immediate next send.
+        # Eight persistent closed-loop clients repeatedly wrap the eight slots.
+        barrier=Barrier(8)
+        def closed_loop(i):
+            with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+                barrier.wait(timeout=60)
+                for repeat in range(32):
+                    ids,expected=cases[(i+repeat)%len(cases)]
+                    invalid=ids.copy(); invalid[0]=vocab
+                    request(i+8*repeat,invalid,expected,http=True,client=client,split=False,reject=True)
+                    request(i+8*repeat,ids,expected,http=True,client=client,split=False)
+        with ThreadPoolExecutor(max_workers=8) as clients:
+            futures=[clients.submit(closed_loop,i) for i in range(8)]
+            for future in futures: future.result()
+        print("PASS 256 HTTP rejections immediately followed by 256 exact valid replies on eight persistent clients, repeated ring wrap",flush=True)
+        # Different decode lengths complete out of admission order. Immediate
+        # reuse must preserve the head-indexed ring and independent KV owners.
+        mixed_barrier=Barrier(8)
+        def mixed_loop(i):
+            with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+                mixed_barrier.wait(timeout=60)
+                for repeat in range(4):
+                    ids,expected=cases[(i+repeat)%len(cases)]
+                    count=1 if (i+repeat)%2 else args.gen
+                    request(i+8*repeat,ids,expected[:count],http=True,client=client,split=False)
+        with ThreadPoolExecutor(max_workers=8) as clients:
+            futures=[clients.submit(mixed_loop,i) for i in range(8)]
+            for future in futures: future.result()
+        print("PASS 32 mixed-length exact replies on eight persistent clients, immediate reuse and ring wrap",flush=True)
+        # Pipelining on one persistent stream crosses the slot ring boundary.
+        with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+            for i in range(6):
+                ids,expected=cases[i%len(cases)]
+                body=struct.pack("<IIIIQ",0x514c4d51,len(ids),len(expected),0,time.monotonic_ns())+struct.pack(f"<{len(ids)}I",*ids)
+                client.sendall(f"POST /generate HTTP/1.1\r\nHost: localhost\r\nContent-Length: {len(body)}\r\n\r\n".encode()+body)
+            client.shutdown(socket.SHUT_WR)
+            for i in range(6):
+                _,expected=cases[i%len(cases)]
+                header=b""
+                while not header.endswith(b"\r\n\r\n"):
+                    chunk=client.recv(1); assert chunk,"short pipelined HTTP header"; header+=chunk
+                assert header.startswith(b"HTTP/1.1 200 OK\r\n"),header
+                assert f"Content-Length: {len(expected)*4}\r\n".encode() in header,header
+                data=b""
+                while len(data)<len(expected)*4:
+                    chunk=client.recv(len(expected)*4-len(data)); assert chunk; data+=chunk
+                actual=list(struct.unpack(f"<{len(expected)}I",data))
+                assert actual==expected,("pipeline",i,actual,expected)
+        print("PASS six pipelined HTTP responses in order, ring wrap, half-close",flush=True)
+        ids,expected=cases[0]
+        bad_last=ids.copy(); bad_last[-1]=vocab
+        bad_first=ids.copy(); bad_first[0]=0xffffffff
+        def body(tokens):
+            return struct.pack("<IIIIQ",0x514c4d51,len(tokens),len(expected),0,time.monotonic_ns())+struct.pack(f"<{len(tokens)}I",*tokens)
+        # An invalid request must not terminate the grid or poison a later
+        # request on this same stream, including coalesced skb framing.
+        with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+            for tokens in (bad_last,ids,bad_first,ids):
+                payload=body(tokens)
+                client.sendall(f"POST /generate HTTP/1.1\r\nHost: localhost\r\nContent-Length: {len(payload)}\r\n\r\n".encode()+payload)
+            for invalid in (True,False,True,False):
+                header=b""
+                while not header.endswith(b"\r\n\r\n"):
+                    chunk=client.recv(1); assert chunk,"short rejection/pipeline header"; header+=chunk
+                status=b"400 Bad Request" if invalid else b"200 OK"
+                assert header.startswith(b"HTTP/1.1 "+status+b"\r\n"),header
+                count=0 if invalid else len(expected)*4
+                assert f"Content-Length: {count}\r\n".encode() in header,header
+                data=b""
+                while len(data)<count:
+                    chunk=client.recv(count-len(data)); assert chunk; data+=chunk
+                if not invalid: assert list(struct.unpack(f"<{len(expected)}I",data))==expected
+        with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+            client.sendall(body(bad_first))
+            assert client.recv(1)==b"","binary rejection must close the connection"
+        request(0,ids,expected)
+        print("PASS invalid first/last token IDs: HTTP 400, binary EOF, same-stream and later requests still exact",flush=True)
+        network="userspace network control" if user_network else "no host accept/read/send worker"
+        print(f"PASS {valid} valid TCP/HTTP requests, {valid*args.gen-16*(args.gen-1)} real model greedy tokens, 259 rejections, {network}",flush=True)
+        complete=True
+    finally:
+        try:
+            if executor is not None:
+                shutdown=time.monotonic()
+                if complete and Path(args.executor).name in ("qwen_graph","qwen_graph_host_launch","qwen_graph_user_network"):
+                    # A signal on a CUDA helper must also wake the host wait.
+                    tid=next(int(p.name) for p in Path(f"/proc/{executor.pid}/task").iterdir() if int(p.name)!=executor.pid)
+                    assert ctypes.CDLL(None).tgkill(executor.pid,tid,signal.SIGTERM)==0
+                    print(f"sent SIGTERM to executor helper tid={tid}",flush=True)
+                else: executor.terminate()
+                executor.wait()
+                print(f"executor shutdown seconds={time.monotonic()-shutdown:.3f}",flush=True)
+                log=open(logpath).read()
+                print(log,flush=True)
+                if complete and "dispatch=host-launch" in log:
+                    assert f"dispatch=host-launch launches={valid+259}" in log,log
+                elif complete:
+                    assert "dispatch=resident launches=1" in log,log
+                if complete and "device_graph_launches=" in log:
+                    assert f"device_graph_launches={valid*args.gen-16*(args.gen-1)} graph_error=0 banks=8" in log,log
+                    if args.gen==64: assert "max_active=8" in log,log
+                    print("PASS concurrent graph-bank accounting and zero graph errors",flush=True)
+                if complete: print("PASS expected CUDA launch count for the selected dispatch",flush=True)
+                trace=open("/tmp/bpfusion-qwen-network.trace").read()
+                if complete: assert "resident Qwen ready" in trace,"missing executor ready marker in trace"
+                if "resident Qwen ready" in trace:
+                    active=trace.split("resident Qwen ready",1)[1]
+                    if user_network:
+                        for syscall in ("accept4","recvfrom","sendmsg"):
+                            assert re.search(r"\b"+syscall+r"\(",active),syscall
+                        assert "userspace TCP stopped: accepted=5058 published=594 completed=594 rejected=259" in log,log
+                        assert not Path("/sys/module/bfusion_tx").exists()
+                        print("PASS traced userspace accept/receive/send control with no kernel TX module",flush=True)
+                    else:
+                        assert not re.search(r"\b(?:accept4?|recvfrom|recvmsg|recvmmsg|sendto|sendmsg|sendmmsg)\(",active),active
+                        print("PASS traced all executor threads: no accept/receive/send syscalls after ready",flush=True)
+            if not user_network:
+                subprocess.run(["./build/bpfusion_load","stats"],check=True)
+        finally:
+            subprocess.run(["./build/bpfusion_load","stream-detach"],check=True)
+            subprocess.run(["./build/bpfusion_load","detach","lo"],check=True)
+            for name in ("bpfusion_ctl","bpfusion_stats","bpfusion_db"):
+                Path("/sys/fs/bpf",name).unlink(missing_ok=True)
+            print("PASS test map pins removed after module shutdown and hook detach",flush=True)
+
+
+
+if __name__=="__main__": main()
+
+END SOURCE tests/resident_qwen.py
+BEGIN SOURCE executor/qwen_graph.py
+#!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+"""Capture HF decoder graphs at bootstrap; native GPU dispatch owns requests."""
+import ctypes
+import struct
+import sys
+from pathlib import Path
+import numpy as np
+import torch
+from transformers import AutoConfig,AutoModelForCausalLM
+from transformers.models.qwen2.modeling_qwen2 import Qwen2RotaryEmbedding
+from transformers.cache_utils import Cache,DynamicLayer
+from transformers.masking_utils import create_causal_mask
+
+
+class SharedLayer(DynamicLayer):
+    """A graph owns fixed offsets; GPU copies append into the shared KV buffers."""
+    def __init__(self,key,value,pos):
+        super().__init__()
+        self.storage_key,self.storage_value=key,value
+        self.keys,self.values=key[:,:,:pos],value[:,:,:pos]
+        self.is_initialized=True
+
+    def update(self,key_states,value_states,*args,**kwargs):
+        pos=self.keys.shape[-2];end=pos+key_states.shape[-2]
+        self.storage_key[:,:,pos:end].copy_(key_states)
+        self.storage_value[:,:,pos:end].copy_(value_states)
+        self.keys,self.values=self.storage_key[:,:,:end],self.storage_value[:,:,:end]
+        return self.keys,self.values
+
+
+def load_model(path):
+    if not Path(path).is_file() and not str(path).endswith('.bin'):
+        return AutoModelForCausalLM.from_pretrained(path,dtype=torch.float16,attn_implementation='eager').to('cuda').eval()
+    with open(path,'rb') as f:header=struct.unpack('<6I2f',f.read(32))
+    config=AutoConfig.from_pretrained('Qwen/Qwen2.5-0.5B-Instruct')
+    dimensions=(config.hidden_size,config.intermediate_size,config.num_hidden_layers,config.num_attention_heads,config.num_key_value_heads,config.vocab_size)
+    if tuple(header[:6])!=dimensions or np.float32(config.rms_norm_eps)!=header[6] or config.rope_parameters['rope_theta']!=header[7]:
+        raise ValueError('weight/config layout mismatch')
+    with torch.device('meta'):
+        model=AutoModelForCausalLM.from_config(config,dtype=torch.float16,attn_implementation='eager')
+    model.to_empty(device='cuda')
+    # to_empty leaves buffers uninitialized; rebuild the real CPU RoPE initializer.
+    model.model.rotary_emb=Qwen2RotaryEmbedding(config).to('cuda')
+    weights=np.memmap(path,dtype=np.float16,offset=32,mode='r');cursor=0
+    def copy(parameter):
+        nonlocal cursor
+        n=parameter.numel()
+        data=np.array(weights[cursor:cursor+n]).reshape(tuple(parameter.shape))
+        parameter.copy_(torch.from_numpy(data).to('cuda'));cursor+=n
+    copy(model.model.embed_tokens.weight)
+    for layer in model.model.layers:
+        copy(layer.input_layernorm.weight)
+        for projection in [layer.self_attn.q_proj,layer.self_attn.k_proj,layer.self_attn.v_proj]:
+            copy(projection.weight);copy(projection.bias)
+        copy(layer.self_attn.o_proj.weight);copy(layer.post_attention_layernorm.weight)
+        for projection in [layer.mlp.gate_proj,layer.mlp.up_proj,layer.mlp.down_proj]:copy(projection.weight)
+    copy(model.model.norm.weight)
+    if cursor!=weights.size:raise ValueError('weight layout mismatch')
+    model.tie_weights()
+    return model.eval()
+
+
+def main():
+    if len(sys.argv)<2:raise SystemExit('usage: qwen_graph.py WEIGHTS.bin|HF_MODEL [seconds]')
+    seconds=int(sys.argv[2]) if len(sys.argv)>2 else 60
+    entry=Path(sys.argv[0])
+    library=entry.with_suffix('.so') if entry.name in ('qwen_graph','qwen_graph_host_launch','qwen_graph_user_network') else Path(__file__).resolve().parents[1]/'build/qwen_graph.so'
+    lib=ctypes.CDLL(str(library))
+    lib.max_tokens.restype=ctypes.c_uint
+    lib.max_requests.restype=ctypes.c_uint
+    limit=lib.max_tokens();context=2*limit;banks=[]
+    with torch.no_grad():
+        model=load_model(sys.argv[1]);config=model.config
+        print(f'capturing model={config._name_or_path} type={config.model_type} fp16 eager',flush=True)
+        from transformers.models.qwen2 import modeling_qwen2 as qwen2
+        qwen2.apply_rotary_pos_emb=torch.compile(qwen2.apply_rotary_pos_emb,options={"emulate_precision_casts":True})
+        @torch.compile(options={"emulate_precision_casts":True})
+        def norm_finish(hidden_states,variance,weight,eps,input_dtype):
+            return weight*(hidden_states*torch.rsqrt(variance+eps)).to(input_dtype)
+        def norm_forward(self,hidden_states):
+            input_dtype=hidden_states.dtype
+            hidden_states=hidden_states.to(torch.float32)
+            variance=hidden_states.pow(2).mean(-1,keepdim=True)
+            return norm_finish(hidden_states,variance,self.weight,self.variance_epsilon,input_dtype)
+        qwen2.Qwen2RMSNorm.forward=norm_forward
+        dim=config.hidden_size//config.num_attention_heads
+        for bank in range(lib.max_requests()):
+            keys=[torch.zeros((1,config.num_key_value_heads,context,dim),dtype=torch.float16,device='cuda') for _ in model.model.layers]
+            values=[torch.zeros_like(k) for k in keys]
+            tokens=torch.zeros(limit,dtype=torch.long,device='cuda')
+            graphs=[None];selected=[None];keepers=[]
+            stream=torch.cuda.Stream();stream.wait_stream(torch.cuda.current_stream())
+            for index in range(1,limit+context-1):
+                count=index if index<=limit else 1
+                pos=0 if index<=limit else index-limit
+                inp=tokens[:count].reshape(1,count)
+                positions=torch.arange(pos,pos+count,device='cuda').reshape(1,count)
+                def cache():
+                    return Cache(layers=[SharedLayer(k,v,pos) for k,v in zip(keys,values)])
+                def forward():
+                    return model(inp,position_ids=positions,attention_mask=mask,past_key_values=cache(),use_cache=True,logits_to_keep=1)
+                mask=create_causal_mask(config=config,inputs_embeds=model.model.embed_tokens(inp),attention_mask=None,past_key_values=cache(),position_ids=positions)
+                stream.wait_stream(torch.cuda.current_stream())
+                with torch.cuda.stream(stream):warm=forward()
+                torch.cuda.current_stream().wait_stream(stream);torch.cuda.synchronize()
+                graph=torch.cuda.CUDAGraph(keep_graph=True)
+                with torch.cuda.graph(graph,stream=stream):
+                    output=forward()
+                    token=output.logits[:,-1,:].argmax(-1)
+                graphs.append(graph);selected.append(token);keepers.append((output,positions,mask,inp))
+                if index%32==0:print(f'captured bank {bank} model graph {index}/{limit+context-2}',flush=True)
+            torch.cuda.synchronize()
+            banks.append((tokens,graphs,selected,keepers))
+        lib.serve.argtypes=[ctypes.POINTER(ctypes.c_ulonglong),ctypes.POINTER(ctypes.c_ulonglong),ctypes.c_uint,ctypes.POINTER(ctypes.c_ulonglong),ctypes.c_uint,ctypes.c_uint,ctypes.c_uint,ctypes.c_uint]
+        lib.serve.restype=ctypes.c_int
+        count=len(graphs);size=count*len(banks)
+        raw=(ctypes.c_ulonglong*size)(*(g.raw_cuda_graph() if g else 0 for _,graphs,_,_ in banks for g in graphs))
+        out=(ctypes.c_ulonglong*size)(*(t.data_ptr() if t is not None else 0 for _,_,selected,_ in banks for t in selected))
+        inputs=(ctypes.c_ulonglong*len(banks))(*(tokens.data_ptr() for tokens,_,_,_ in banks))
+        status=lib.serve(raw,out,count,inputs,config.vocab_size,config.num_hidden_layers,config.hidden_size,seconds)
+        if status:raise SystemExit(status)
+
+
+if __name__=='__main__':main()
+
+END SOURCE executor/qwen_graph.py
+BEGIN DIFF
+diff --git a/bench/tcp_stream_trace.py b/bench/tcp_stream_trace.py
+index 84f39db..82c8d59 100644
+--- a/bench/tcp_stream_trace.py
++++ b/bench/tcp_stream_trace.py
+@@ -14,8 +14,11 @@ from resident_dispatch import command,connect,request,oracle_cases
+ 
+ parser=argparse.ArgumentParser(description=__doc__)
+ parser.add_argument("--executor",default="./build/qwen")
++parser.add_argument("--model",default="Qwen/Qwen2.5-0.5B-Instruct")
+ args=parser.parse_args()
+-cases,_=oracle_cases(8)
++user_network=Path(args.executor).name=="qwen_graph_user_network"
++weights="/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin" if args.model=="Qwen/Qwen2.5-0.5B-Instruct" else args.model
++cases,_=oracle_cases(8,name=args.model)
+ packets=[]; stop=threading.Event()
+ with socket.socket(socket.AF_PACKET,socket.SOCK_RAW,socket.htons(0x0800)) as capture:
+     capture.bind(("lo",0)); capture.settimeout(.05)
+@@ -31,21 +34,24 @@ with socket.socket(socket.AF_PACKET,socket.SOCK_RAW,socket.htons(0x0800)) as cap
+             end=14+struct.unpack_from("!H",packet,16)[0]
+             body=packet[ip+(packet[ip+12]>>4)*4:end]
+             kind="request" if body.startswith(b"POST") else "header" if body.startswith(b"HTTP") else "tokens" if body else "empty"
++            header_bytes=body.find(b"\r\n\r\n")+4 if kind=="header" and b"\r\n\r\n" in body else 0
+             packets.append({"event":"packet","mono_ns":ns,"sport":sport,"dport":dport,
+-                "seq":seq,"ack":ack,"flags":packet[ip+13],"bytes":len(body),"kind":kind})
++                "seq":seq,"ack":ack,"flags":packet[ip+13],"bytes":len(body),"kind":kind,"header_bytes":header_bytes,
++                "token_bytes":len(body)-header_bytes if kind=="header" and header_bytes else len(body) if kind=="tokens" else 0})
+     observer=threading.Thread(target=collect); observer.start()
+     executor=None
+     with tempfile.TemporaryDirectory(prefix="bpfusion-tcp-trace-") as tmp:
+         logpath=Path(tmp)/"executor.log"
+         try:
+-            command("./build/bpfusion_load","stream-attach")
++            if not user_network: command("./build/bpfusion_load","stream-attach")
++            else: assert not Path("/sys/module/bfusion_tx").exists()
+             with logpath.open("w") as log:
+-                executor=subprocess.Popen([args.executor,"/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin","60"],stdout=log,stderr=subprocess.STDOUT)
++                executor=subprocess.Popen([args.executor,weights,"60"],stdout=log,stderr=subprocess.STDOUT)
+             started=time.monotonic()
+             while "resident Qwen ready" not in logpath.read_text():
+                 assert executor.poll() is None and time.monotonic()-started<60,logpath.read_text()
+                 time.sleep(.05)
+-            print(json.dumps({"event":"metadata","commit":command("git","rev-parse","HEAD"),"executor":args.executor,"clock":"client and passive capture monotonic_ns; receive timestamps include observer scheduling"}),flush=True)
++            print(json.dumps({"event":"metadata","commit":command("git","rev-parse","HEAD"),"executor":args.executor,"model":args.model,"clock":"client and passive capture monotonic_ns; receive timestamps include observer scheduling"}),flush=True)
+             with connect() as client:
+                 for case,(ids,expected) in enumerate(cases):
+                     print(json.dumps({"event":"reply","case":case,**request(client,ids,expected)}),flush=True)
+@@ -55,7 +61,7 @@ with socket.socket(socket.AF_PACKET,socket.SOCK_RAW,socket.htons(0x0800)) as cap
+             for packet in packets: print(json.dumps(packet),flush=True)
+             if executor is not None:
+                 executor.terminate(); executor.wait(timeout=60)
+-                print(json.dumps({"event":"executor","log":logpath.read_text(),"stats":command("./build/bpfusion_load","stats")}),flush=True)
++                print(json.dumps({"event":"executor","log":logpath.read_text(),"stats":None if user_network else command("./build/bpfusion_load","stats")}),flush=True)
+             command("./build/bpfusion_load","stream-detach")
+             command("./build/bpfusion_load","detach","lo")
+             for name in ("bpfusion_ctl","bpfusion_stats","bpfusion_db"):
+diff --git a/executor/userspace_tcp.h b/executor/userspace_tcp.h
+index aa2df70..da1b204 100644
+--- a/executor/userspace_tcp.h
++++ b/executor/userspace_tcp.h
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: Apache-2.0
+ // Matched userspace network control: same page ABI and resident GPU dispatcher.
+ #include <sys/epoll.h>
++#include <sys/uio.h>
+ #include <cerrno>
+ #include <cstring>
+ #include <map>
+@@ -35,11 +36,21 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
+         }
+         peer.eof=true;
+     };
+-    auto send_part=[&](Peer &peer,const void *data,size_t count) {
+-        ssize_t n=send(peer.fd,data,count,MSG_DONTWAIT|MSG_NOSIGNAL);
++    auto send_reply=[&](Peer &peer,Reply &reply,bf_llm_slot *slot,unsigned produced) {
++        iovec vec[2];unsigned count=0;
++        size_t header_bytes=reply.header.size()-reply.header_sent;
++        if(header_bytes) vec[count++]={reply.header.data()+reply.header_sent,header_bytes};
++        if(produced*4>reply.bytes)
++            vec[count++]={(char *)slot->tok_out+reply.bytes,produced*4-reply.bytes};
++        if(!count) return;
++        msghdr msg={};msg.msg_iov=vec;msg.msg_iovlen=count;
++        ssize_t n=sendmsg(peer.fd,&msg,MSG_DONTWAIT|MSG_NOSIGNAL);
+         if(n<0 && errno!=EAGAIN && errno!=EWOULDBLOCK && errno!=EINTR)
+             disconnect(peer);
+-        return n>0 ? (size_t)n : (size_t)0;
++        if(n>0) {
++            size_t sent_header=(size_t)n<header_bytes ? (size_t)n : header_bytes;
++            reply.header_sent+=sent_header;reply.bytes+=(size_t)n-sent_header;
++        }
+     };
+     auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(seconds);
+     while(!*stopped && std::chrono::steady_clock::now()<deadline) {
+@@ -90,11 +101,9 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
+                     +"\r\nContent-Type: application/octet-stream\r\nContent-Length: "
+                     +std::to_string(rejected ? 0 : slot->n_gen*4)+"\r\n\r\n";
+             }
+-            if(peer.fd>=0 && reply.header_sent<reply.header.size())
+-                reply.header_sent+=send_part(peer,reply.header.data()+reply.header_sent,
+-                                            reply.header.size()-reply.header_sent);
+-            if(peer.fd>=0 && reply.header_sent==reply.header.size() && produced*4>reply.bytes)
+-                reply.bytes+=send_part(peer,(char *)slot->tok_out+reply.bytes,produced*4-reply.bytes);
++            // Keep default TCP buffering; submit header and first tokens together.
++            if(peer.fd>=0 && (produced || rejected))
++                send_reply(peer,reply,slot,produced);
+             if(state==BF_DONE && (peer.fd<0 ||
+                 (reply.header_sent==reply.header.size() && reply.bytes==produced*4))) {
+                 peer.slot=-1;reply={};
+diff --git a/module/bfusion_tx.c b/module/bfusion_tx.c
+index 462c62c..35371f6 100644
+--- a/module/bfusion_tx.c
++++ b/module/bfusion_tx.c
+@@ -43,12 +43,11 @@ static struct {
+ } tx[BF_LLM_SLOTS];
+ static unsigned long sent_bytes, completions, abandoned, retries;
+ 
+-static int reply_tcp(u32 idx, struct bf_llm_slot *s, void *data, u32 bytes,
+-                     struct sock **locked)
++static int reply_tcp(u32 idx, struct bf_llm_slot *s, struct kvec *vec,
++                     u32 nvec, u32 bytes, struct sock **locked)
+ {
+ 	struct sock *sk = tx[idx].sk;
+ 	struct msghdr msg = { .msg_flags = MSG_DONTWAIT | MSG_NOSIGNAL };
+-	struct kvec vec;
+ 	int ret;
+ 
+ 	if (!sk) {
+@@ -64,9 +63,7 @@ static int reply_tcp(u32 idx, struct bf_llm_slot *s, void *data, u32 bytes,
+ 		}
+ 		tx[idx].sk = sk;
+ 	}
+-	vec.iov_base = data;
+-	vec.iov_len = bytes;
+-	iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, &vec, 1, vec.iov_len);
++	iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, vec, nvec, bytes);
+ 	/* No RCU read section across lock_sock/send. No sk_socket dereference:
+ 	 * close can detach that object even while a sock reference is held. */
+ 	lock_sock(sk);
+@@ -75,7 +72,7 @@ static int reply_tcp(u32 idx, struct bf_llm_slot *s, void *data, u32 bytes,
+ 	    (sk->sk_state != TCP_ESTABLISHED && sk->sk_state != TCP_CLOSE_WAIT))
+ 		ret = -ENOTCONN;
+ 	else
+-		ret = tcp_sendmsg_locked(sk, &msg, vec.iov_len);
++		ret = tcp_sendmsg_locked(sk, &msg, bytes);
+ 	/* Caller recycles a completed slot before releasing incoming backlog. */
+ 	return ret;
+ }
+@@ -150,18 +147,27 @@ static void poll_slot(u32 idx)
+ 			rejected ? "400 Bad Request" : "200 OK",
+ 			rejected ? 0 : s->n_gen * (u32)sizeof(u32));
+ 	header = tx[idx].header_sent < tx[idx].header_length;
+-	if (!tx[idx].failed && (header || produced * sizeof(u32) > tx[idx].bytes)) {
+-		if (header)
+-			ret = reply_tcp(idx, s, tx[idx].header + tx[idx].header_sent,
+-				tx[idx].header_length - tx[idx].header_sent, &locked);
+-		else
+-			ret = reply_tcp(idx, s, (u8 *)s->tok_out + tx[idx].bytes,
+-				produced * sizeof(u32) - tx[idx].bytes, &locked);
++	/* A valid HTTP header waits for the first available token so one send
++	 * carries both. Bodyless rejection headers still complete immediately. */
++	if (!tx[idx].failed && (!header || produced || rejected) &&
++	    (header || produced * sizeof(u32) > tx[idx].bytes)) {
++		struct kvec vec[2];
++		u32 count = 0, header_bytes = 0, bytes = 0;
++		if (header) {
++			header_bytes = tx[idx].header_length - tx[idx].header_sent;
++			vec[count++] = (struct kvec){ tx[idx].header + tx[idx].header_sent, header_bytes };
++			bytes += header_bytes;
++		}
++		if (produced * sizeof(u32) > tx[idx].bytes) {
++			u32 body_bytes = produced * sizeof(u32) - tx[idx].bytes;
++			vec[count++] = (struct kvec){ (u8 *)s->tok_out + tx[idx].bytes, body_bytes };
++			bytes += body_bytes;
++		}
++		ret = reply_tcp(idx, s, vec, count, bytes, &locked);
+ 		if (ret > 0) {
+-			if (header)
+-				tx[idx].header_sent += ret;
+-			else
+-				tx[idx].bytes += ret; /* exact byte offset, including partial u32 */
++			u32 sent_header = min_t(u32, ret, header_bytes);
++			tx[idx].header_sent += sent_header;
++			tx[idx].bytes += ret - sent_header; /* includes a partial u32 */
+ 			sent_bytes += ret;
+ 		} else {
+ 			retries++;
+diff --git a/tests/resident_qwen.py b/tests/resident_qwen.py
+index 26a3a2c..c12e127 100644
+--- a/tests/resident_qwen.py
++++ b/tests/resident_qwen.py
+@@ -227,7 +227,7 @@ def main():
+                 if "resident Qwen ready" in trace:
+                     active=trace.split("resident Qwen ready",1)[1]
+                     if user_network:
+-                        for syscall in ("accept4","recvfrom","sendto"):
++                        for syscall in ("accept4","recvfrom","sendmsg"):
+                             assert re.search(r"\b"+syscall+r"\(",active),syscall
+                         assert "userspace TCP stopped: accepted=5058 published=594 completed=594 rejected=259" in log,log
+                         assert not Path("/sys/module/bfusion_tx").exists()
+
+END DIFF
+BEGIN WRAPPER /tmp/bpfusion-coalescing-qualification-ybu8fu5x.py
+from pathlib import Path
+import subprocess,os,sys,datetime,shutil,json
+r=Path('/workspaces/repository')
+d=Path('/tmp/bpfusion-coalescing-proposal-4eeidc3y')
+commands=[{'model': 'HuggingFaceTB/SmolLM2-135M', 'executor': 'qwen_graph', 'command': ['/usr/bin/python3', 'tests/resident_qwen.py', '--gen', '64', '--prefill-edges', '--executor', './build/qwen_graph', '--model', 'HuggingFaceTB/SmolLM2-135M']}, {'model': 'HuggingFaceTB/SmolLM2-135M', 'executor': 'qwen_graph_user_network', 'command': ['/usr/bin/python3', 'tests/resident_qwen.py', '--gen', '64', '--prefill-edges', '--executor', './build/qwen_graph_user_network', '--model', 'HuggingFaceTB/SmolLM2-135M']}, {'model': 'Qwen/Qwen2.5-0.5B-Instruct', 'executor': 'qwen_graph', 'command': ['/usr/bin/python3', 'tests/resident_qwen.py', '--gen', '64', '--prefill-edges', '--executor', './build/qwen_graph', '--model', 'Qwen/Qwen2.5-0.5B-Instruct']}, {'model': 'Qwen/Qwen2.5-0.5B-Instruct', 'executor': 'qwen_graph_user_network', 'command': ['/usr/bin/python3', 'tests/resident_qwen.py', '--gen', '64', '--prefill-edges', '--executor', './build/qwen_graph_user_network', '--model', 'Qwen/Qwen2.5-0.5B-Instruct']}]
+env=os.environ.copy();env['HF_HOME']='/workspaces/.cache/huggingface'
+def utc():return datetime.datetime.now(datetime.timezone.utc).isoformat()
+print('WRAPPER START',utc(),'PID',os.getpid(),flush=True)
+for index,case in enumerate(commands):
+ print('CASE START',index,utc(),json.dumps(case),flush=True)
+ child=subprocess.Popen(case['command'],cwd=r,env=env)
+ print('CHILD PID',child.pid,flush=True)
+ rc=child.wait()
+ print('CASE EXIT',index,utc(),rc,flush=True)
+ for source,tail in [('/tmp/bpfusion-qwen-network.trace','network.trace.txt'),('/tmp/bpfusion-resident-qwen.log','executor.stdout.txt')]:
+  p=Path(source)
+  if p.exists():shutil.copy2(p,d/f'qualification-{index}-{tail}')
+ if rc:
+  print('QUALIFICATION TERMINAL FAILURE',index,utc(),flush=True)
+  sys.exit(rc)
+print('QUALIFICATION COMPLETE',utc(),flush=True)
+
+END WRAPPER
+WRAPPER START 2026-10-11T07:53:31.270437+00:00 PID 79516
+CASE START 0 2026-10-11T07:53:31.270485+00:00 {"model": "HuggingFaceTB/SmolLM2-135M", "executor": "qwen_graph", "command": ["/usr/bin/python3", "tests/resident_qwen.py", "--gen", "64", "--prefill-edges", "--executor", "./build/qwen_graph", "--model", "HuggingFaceTB/SmolLM2-135M"]}
+CHILD PID 79517
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 8323.00it/s]
+HF reference model=HuggingFaceTB/SmolLM2-135M type=llama vocab=49152
+HF eager fp16 oracle ready, model=HuggingFaceTB/SmolLM2-135M, model released
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+stream sockops detached
+sockhash capacity follows somaxconn=4096
+stream parser/verdict and sockops attached to current Workspace cgroup
+PASS 5000 empty connections accepted/drained by kernel; exceeds undrained listener backlog
+http=False case=0 expected=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] actual=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] seconds=0.286
+http=False case=1 expected=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] actual=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] seconds=0.296
+http=False case=2 expected=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] actual=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] seconds=0.285
+http=False case=3 expected=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] actual=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] seconds=0.273
+http=False case=4 expected=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] actual=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] seconds=0.269
+http=False case=5 expected=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] actual=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] seconds=0.335
+http=False case=6 expected=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] actual=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] seconds=0.338
+http=False case=7 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.338
+http=False case=8 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.408
+http=False case=9 expected=[314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282] actual=[314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282] seconds=0.541
+http=True case=0 expected=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] actual=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] seconds=0.403
+http=True case=1 expected=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] actual=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] seconds=0.415
+http=True case=2 expected=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] actual=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] seconds=0.403
+http=True case=3 expected=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] actual=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] seconds=0.390
+http=True case=4 expected=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] actual=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] seconds=0.381
+http=True case=5 expected=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] actual=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] seconds=0.449
+http=True case=6 expected=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] actual=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] seconds=0.450
+http=True case=7 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.455
+http=True case=8 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.516
+http=True case=9 expected=[314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282] actual=[314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282] seconds=0.650
+http=False case=0 expected=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] actual=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] seconds=0.284
+http=False case=1 expected=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] actual=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] seconds=0.298
+http=False case=2 expected=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] actual=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] seconds=0.288
+http=False case=3 expected=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] actual=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] seconds=0.272
+http=False case=4 expected=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] actual=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] seconds=0.265
+http=False case=5 expected=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] actual=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] seconds=0.330
+http=False case=6 expected=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] actual=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] seconds=0.336
+http=False case=7 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.339
+http=False case=8 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.407
+http=False case=9 expected=[314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282] actual=[314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282] seconds=0.541
+http=False case=3 expected=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] actual=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] seconds=0.518
+http=False case=0 expected=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] actual=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] seconds=0.552
+http=False case=2 expected=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] actual=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] seconds=0.559
+http=False case=1 expected=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] actual=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] seconds=0.564
+http=True case=4 expected=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] actual=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] seconds=0.642
+http=True case=5 expected=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] actual=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] seconds=0.698
+http=True case=6 expected=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] actual=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] seconds=0.702
+http=True case=7 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.702
+PASS eight concurrent clients, exact model replies, no admission drops
+PASS 256 HTTP rejections immediately followed by 256 exact valid replies on eight persistent clients, repeated ring wrap
+PASS 32 mixed-length exact replies on eight persistent clients, immediate reuse and ring wrap
+PASS six pipelined HTTP responses in order, ring wrap, half-close
+http=False case=0 expected=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] actual=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] seconds=0.290
+PASS invalid first/last token IDs: HTTP 400, binary EOF, same-stream and later requests still exact
+PASS 335 valid TCP/HTTP requests, 20432 real model greedy tokens, 259 rejections, no host accept/read/send worker
+sent SIGTERM to executor helper tid=79680
+executor shutdown seconds=5.469
+
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]
+Loading weights:  24%|██▍       | 65/272 [00:00<00:00, 645.81it/s]
+Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1454.35it/s]
+capturing model=HuggingFaceTB/SmolLM2-135M type=llama fp16 eager
+captured bank 0 model graph 32/190
+captured bank 0 model graph 64/190
+captured bank 0 model graph 96/190
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+resident Qwen ready: 30 layers h=576 vocab=49152; device-tail graphs, dispatch=resident
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=20432 graph_error=0 banks=8 max_active=8
+
+PASS concurrent graph-bank accounting and zero graph errors
+PASS expected CUDA launch count for the selected dispatch
+PASS traced all executor threads: no accept/receive/send syscalls after ready
+seen pkts      0
+ip+udp/ip+tcp pkts 0
+magic pkts     0
+drops          0
+published      0
+drop: ctl busy 0
+drop: done busy 0
+llm magic      0
+llm busy       0
+tcp dest       0
+tcp magic      0
+stream publish 594
+sockhash linked 5058
+sockhash failed 0
+parser calls   2613
+parser invalid 0
+head=0 done_seq=0 published=0 acked=0 drops=0 ready=0
+slot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+llm_head=594
+llm[0]: state=0 prompt=5 gen=64 produced=0 client_ns=136707440430737
+llm[1]: state=0 prompt=5 gen=64 produced=64 client_ns=136707440702001
+llm[2]: state=0 prompt=1 gen=64 produced=64 client_ns=136706618854709
+llm[3]: state=0 prompt=15 gen=64 produced=64 client_ns=136706618858882
+llm[4]: state=0 prompt=5 gen=64 produced=0 client_ns=136707094636208
+llm[5]: state=0 prompt=5 gen=64 produced=64 client_ns=136707094656010
+llm[6]: state=0 prompt=5 gen=64 produced=0 client_ns=136707094679248
+llm[7]: state=0 prompt=5 gen=64 produced=64 client_ns=136707094688780
+stream sockops detached
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+PASS test map pins removed after module shutdown and hook detach
+CASE EXIT 0 2026-10-11T07:55:42.022900+00:00 0
+CASE START 1 2026-10-11T07:55:42.023511+00:00 {"model": "HuggingFaceTB/SmolLM2-135M", "executor": "qwen_graph_user_network", "command": ["/usr/bin/python3", "tests/resident_qwen.py", "--gen", "64", "--prefill-edges", "--executor", "./build/qwen_graph_user_network", "--model", "HuggingFaceTB/SmolLM2-135M"]}
+CHILD PID 79867
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 6198.42it/s]
+HF reference model=HuggingFaceTB/SmolLM2-135M type=llama vocab=49152
+HF eager fp16 oracle ready, model=HuggingFaceTB/SmolLM2-135M, model released
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+stream sockops detached
+PASS 5000 empty connections accepted/drained by userspace; exceeds undrained listener backlog
+http=False case=0 expected=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] actual=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] seconds=0.566
+http=False case=1 expected=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] actual=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] seconds=0.297
+http=False case=2 expected=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] actual=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] seconds=0.285
+http=False case=3 expected=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] actual=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] seconds=0.271
+http=False case=4 expected=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] actual=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] seconds=0.266
+http=False case=5 expected=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] actual=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] seconds=0.334
+http=False case=6 expected=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] actual=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] seconds=0.334
+http=False case=7 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.339
+http=False case=8 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.406
+http=False case=9 expected=[314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282] actual=[314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282] seconds=0.543
+http=True case=0 expected=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] actual=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] seconds=0.398
+http=True case=1 expected=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] actual=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] seconds=0.418
+http=True case=2 expected=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] actual=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] seconds=0.399
+http=True case=3 expected=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] actual=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] seconds=0.384
+http=True case=4 expected=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] actual=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] seconds=0.384
+http=True case=5 expected=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] actual=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] seconds=0.443
+http=True case=6 expected=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] actual=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] seconds=0.450
+http=True case=7 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.457
+http=True case=8 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.521
+http=True case=9 expected=[314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282] actual=[314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282] seconds=0.678
+http=False case=0 expected=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] actual=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] seconds=0.291
+http=False case=1 expected=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] actual=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] seconds=0.304
+http=False case=2 expected=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] actual=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] seconds=0.292
+http=False case=3 expected=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] actual=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] seconds=0.275
+http=False case=4 expected=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] actual=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] seconds=0.270
+http=False case=5 expected=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] actual=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] seconds=0.333
+http=False case=6 expected=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] actual=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] seconds=0.338
+http=False case=7 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.341
+http=False case=8 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.406
+http=False case=9 expected=[314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282] actual=[314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282] seconds=0.545
+http=False case=3 expected=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] actual=[253, 1035, 2378, 6256, 1789, 30, 657, 314, 804, 281, 800, 896, 3253, 28, 1285, 3877, 1421, 28, 6220, 9527, 28, 284, 908, 3341, 4252, 30, 198, 198, 2705, 282, 260, 768, 2378, 6256, 4575, 314, 5905, 30, 5905, 314, 253, 904, 29, 4638, 6256, 1789, 338, 314, 2807, 288, 835, 284, 722, 30, 657, 314, 597, 253, 3269, 1763, 327, 940, 2318, 284] seconds=0.527
+http=False case=2 expected=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] actual=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] seconds=0.552
+http=False case=0 expected=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] actual=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] seconds=0.558
+http=False case=1 expected=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] actual=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] seconds=0.565
+http=True case=4 expected=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] actual=[808, 2775, 288, 536, 314, 288, 820, 253, 1123, 3163, 417, 99, 2801, 30, 669, 314, 260, 768, 1070, 2775, 346, 416, 536, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260, 1194, 30, 198, 198, 504, 1796, 2775, 346, 416, 536, 314, 288, 820, 634, 3388, 30, 15382, 314, 253, 1109, 970, 288, 724, 469, 1248, 8516, 429, 260, 2435, 282, 260] seconds=0.651
+http=True case=5 expected=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] actual=[198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 4649, 314, 198, 198, 504, 3575] seconds=0.705
+http=True case=6 expected=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] actual=[3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314] seconds=0.712
+http=True case=7 expected=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] actual=[282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504, 3575, 282, 4649, 314, 504] seconds=0.712
+PASS eight concurrent clients, exact model replies, no admission drops
+PASS 256 HTTP rejections immediately followed by 256 exact valid replies on eight persistent clients, repeated ring wrap
+PASS 32 mixed-length exact replies on eight persistent clients, immediate reuse and ring wrap
+PASS six pipelined HTTP responses in order, ring wrap, half-close
+http=False case=0 expected=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] actual=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] seconds=0.277
+PASS invalid first/last token IDs: HTTP 400, binary EOF, same-stream and later requests still exact
+PASS 335 valid TCP/HTTP requests, 20432 real model greedy tokens, 259 rejections, userspace network control
+sent SIGTERM to executor helper tid=80030
+executor shutdown seconds=5.043
+
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]
+Loading weights:  34%|███▍      | 92/272 [00:00<00:00, 909.39it/s]
+Loading weights:  71%|███████   | 193/272 [00:00<00:00, 959.35it/s]
+Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1161.27it/s]
+capturing model=HuggingFaceTB/SmolLM2-135M type=llama fp16 eager
+captured bank 0 model graph 32/190
+captured bank 0 model graph 64/190
+captured bank 0 model graph 96/190
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+network=userspace epoll; same resident GPU graph dispatch
+resident Qwen ready: 30 layers h=576 vocab=49152; device-tail graphs, dispatch=resident
+userspace TCP stopped: accepted=5058 published=594 completed=594 rejected=259
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=20432 graph_error=0 banks=8 max_active=8
+
+PASS concurrent graph-bank accounting and zero graph errors
+PASS expected CUDA launch count for the selected dispatch
+PASS traced userspace accept/receive/send control with no kernel TX module
+stream sockops detached
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+PASS test map pins removed after module shutdown and hook detach
+CASE EXIT 1 2026-10-11T07:57:50.036360+00:00 0
+CASE START 2 2026-10-11T07:57:50.038933+00:00 {"model": "Qwen/Qwen2.5-0.5B-Instruct", "executor": "qwen_graph", "command": ["/usr/bin/python3", "tests/resident_qwen.py", "--gen", "64", "--prefill-edges", "--executor", "./build/qwen_graph", "--model", "Qwen/Qwen2.5-0.5B-Instruct"]}
+CHILD PID 80217
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 3150.21it/s]
+HF reference model=Qwen/Qwen2.5-0.5B-Instruct type=qwen2 vocab=151936
+HF eager fp16 oracle ready, model=Qwen/Qwen2.5-0.5B-Instruct, model released
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+stream sockops detached
+sockhash capacity follows somaxconn=4096
+stream parser/verdict and sockops attached to current Workspace cgroup
+PASS 5000 empty connections accepted/drained by kernel; exceeds undrained listener backlog
+http=False case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] seconds=0.274
+http=False case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] seconds=0.288
+http=False case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] seconds=0.275
+http=False case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] seconds=0.261
+http=False case=4 expected=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] actual=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] seconds=0.254
+http=False case=5 expected=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] actual=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] seconds=0.315
+http=False case=6 expected=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] actual=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] seconds=0.325
+http=False case=7 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.323
+http=False case=8 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.388
+http=False case=9 expected=[374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315] actual=[374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315] seconds=0.535
+http=True case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] seconds=0.387
+http=True case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] seconds=0.397
+http=True case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] seconds=0.389
+http=True case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] seconds=0.374
+http=True case=4 expected=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] actual=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] seconds=0.368
+http=True case=5 expected=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] actual=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] seconds=0.430
+http=True case=6 expected=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] actual=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] seconds=0.439
+http=True case=7 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.442
+http=True case=8 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.511
+http=True case=9 expected=[374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315] actual=[374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315] seconds=0.651
+http=False case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] seconds=0.271
+http=False case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] seconds=0.283
+http=False case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] seconds=0.271
+http=False case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] seconds=0.259
+http=False case=4 expected=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] actual=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] seconds=0.254
+http=False case=5 expected=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] actual=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] seconds=0.317
+http=False case=6 expected=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] actual=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] seconds=0.324
+http=False case=7 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.326
+http=False case=8 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.391
+http=False case=9 expected=[374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315] actual=[374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315] seconds=0.532
+http=False case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] seconds=0.612
+http=False case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] seconds=0.654
+http=False case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] seconds=0.662
+http=False case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] seconds=0.678
+http=True case=4 expected=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] actual=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] seconds=0.766
+http=True case=5 expected=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] actual=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] seconds=0.810
+http=True case=7 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.815
+http=True case=6 expected=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] actual=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] seconds=0.815
+PASS eight concurrent clients, exact model replies, no admission drops
+PASS 256 HTTP rejections immediately followed by 256 exact valid replies on eight persistent clients, repeated ring wrap
+PASS 32 mixed-length exact replies on eight persistent clients, immediate reuse and ring wrap
+PASS six pipelined HTTP responses in order, ring wrap, half-close
+http=False case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] seconds=0.255
+PASS invalid first/last token IDs: HTTP 400, binary EOF, same-stream and later requests still exact
+PASS 335 valid TCP/HTTP requests, 20432 real model greedy tokens, 259 rejections, no host accept/read/send worker
+sent SIGTERM to executor helper tid=80380
+executor shutdown seconds=4.192
+capturing model=Qwen/Qwen2.5-0.5B-Instruct type=qwen2 fp16 eager
+captured bank 0 model graph 32/190
+captured bank 0 model graph 64/190
+captured bank 0 model graph 96/190
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+resident Qwen ready: 24 layers h=896 vocab=151936; device-tail graphs, dispatch=resident
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=20432 graph_error=0 banks=8 max_active=8
+
+PASS concurrent graph-bank accounting and zero graph errors
+PASS expected CUDA launch count for the selected dispatch
+PASS traced all executor threads: no accept/receive/send syscalls after ready
+seen pkts      0
+ip+udp/ip+tcp pkts 0
+magic pkts     0
+drops          0
+published      0
+drop: ctl busy 0
+drop: done busy 0
+llm magic      0
+llm busy       0
+tcp dest       0
+tcp magic      0
+stream publish 594
+sockhash linked 5058
+sockhash failed 0
+parser calls   2612
+parser invalid 0
+head=0 done_seq=0 published=0 acked=0 drops=0 ready=0
+slot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+slot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000
+llm_head=594
+llm[0]: state=0 prompt=5 gen=64 produced=0 client_ns=136956811911697
+llm[1]: state=0 prompt=5 gen=64 produced=64 client_ns=136956812517451
+llm[2]: state=0 prompt=1 gen=64 produced=64 client_ns=136955917874224
+llm[3]: state=0 prompt=15 gen=64 produced=64 client_ns=136955917876938
+llm[4]: state=0 prompt=5 gen=64 produced=0 client_ns=136956503453176
+llm[5]: state=0 prompt=5 gen=64 produced=64 client_ns=136956503471773
+llm[6]: state=0 prompt=5 gen=64 produced=0 client_ns=136956503481312
+llm[7]: state=0 prompt=5 gen=64 produced=64 client_ns=136956503486575
+stream sockops detached
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+PASS test map pins removed after module shutdown and hook detach
+CASE EXIT 2 2026-10-11T07:59:50.108404+00:00 0
+CASE START 3 2026-10-11T07:59:50.108954+00:00 {"model": "Qwen/Qwen2.5-0.5B-Instruct", "executor": "qwen_graph_user_network", "command": ["/usr/bin/python3", "tests/resident_qwen.py", "--gen", "64", "--prefill-edges", "--executor", "./build/qwen_graph_user_network", "--model", "Qwen/Qwen2.5-0.5B-Instruct"]}
+CHILD PID 80565
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4575.09it/s]
+HF reference model=Qwen/Qwen2.5-0.5B-Instruct type=qwen2 vocab=151936
+HF eager fp16 oracle ready, model=Qwen/Qwen2.5-0.5B-Instruct, model released
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+stream sockops detached
+PASS 5000 empty connections accepted/drained by userspace; exceeds undrained listener backlog
+http=False case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] seconds=0.644
+http=False case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] seconds=0.280
+http=False case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] seconds=0.269
+http=False case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] seconds=0.254
+http=False case=4 expected=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] actual=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] seconds=0.252
+http=False case=5 expected=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] actual=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] seconds=0.312
+http=False case=6 expected=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] actual=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] seconds=0.318
+http=False case=7 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.323
+http=False case=8 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.385
+http=False case=9 expected=[374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315] actual=[374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315] seconds=0.524
+http=True case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] seconds=0.379
+http=True case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] seconds=0.394
+http=True case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] seconds=0.385
+http=True case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] seconds=0.369
+http=True case=4 expected=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] actual=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] seconds=0.345
+http=True case=5 expected=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] actual=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] seconds=0.420
+http=True case=6 expected=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] actual=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] seconds=0.434
+http=True case=7 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.432
+http=True case=8 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.498
+http=True case=9 expected=[374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315] actual=[374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315] seconds=0.643
+http=False case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] seconds=0.268
+http=False case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] seconds=0.281
+http=False case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] seconds=0.270
+http=False case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] seconds=0.257
+http=False case=4 expected=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] actual=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] seconds=0.250
+http=False case=5 expected=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] actual=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] seconds=0.311
+http=False case=6 expected=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] actual=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] seconds=0.316
+http=False case=7 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.323
+http=False case=8 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.385
+http=False case=9 expected=[374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315] actual=[374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315] seconds=0.523
+http=False case=3 expected=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] actual=[264, 1910, 323, 1787, 30774, 3162, 7982, 429, 374, 6188, 311, 387, 1483, 389, 264, 6884, 2088, 315, 10350, 5942, 11, 2670, 5515, 11, 67178, 11, 323, 14340, 13, 1084, 374, 264, 5411, 5754, 369, 13402, 323, 3847, 25992, 11, 438, 432, 374, 3881, 369, 1181, 19753, 11, 4763, 11, 323, 14219, 315, 990, 13, 14340, 374, 1083, 3881, 369, 1181, 1787, 30774, 6993] seconds=0.624
+http=False case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] seconds=0.654
+http=False case=2 expected=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] actual=[4710, 15216, 6556, 11, 5019, 0, 4710, 40, 3900, 498, 678, 614, 264, 11117, 1899, 8305, 13, 4710, 5501, 1077, 752, 1414, 421, 498, 1184, 4113, 13, 4710, 13060, 498, 369, 697, 882, 323, 6529, 13, 4710, 15216, 28374, 0, 4710, 44364, 334, 9112, 66963, 576, 42113, 330, 15216, 6556, 11, 5019, 8958, 374, 264, 4185, 323, 8311, 42113, 304, 1657, 26735, 323, 15459] seconds=0.662
+http=False case=1 expected=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] actual=[2014, 11625, 279, 3491, 315, 7842, 220, 17, 323, 220, 17, 11, 582, 646, 1795, 1493, 7354, 1447, 16, 13, 5145, 448, 279, 1372, 220, 17, 624, 17, 13, 2691, 279, 1372, 220, 17, 311, 279, 1482, 1372, 220, 17, 382, 4416, 11, 582, 2736, 279, 5256, 1447, 78045, 220, 17, 488, 220, 17, 284, 220, 19, 1124, 2533, 54815, 11, 279, 4226, 374] seconds=0.679
+http=True case=4 expected=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] actual=[2701, 374, 264, 3175, 62626, 3405, 504, 264, 8453, 14667, 7006, 13, 5209, 3293, 279, 4396, 4226, 624, 785, 1887, 729, 315, 279, 3720, 34021, 1849, 304, 264, 1803, 374, 311, 36277, 279, 9315, 4766, 279, 1803, 13, 2160, 419, 5114, 4396, 5267, 32, 13, 39970, 198, 33, 13, 81857, 198, 16141, 1447, 32, 271, 785, 2701, 374, 264, 3175, 62626, 3405, 504, 264] seconds=0.760
+http=True case=5 expected=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] actual=[59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604, 13, 576, 6722, 315, 9625, 374, 59604] seconds=0.806
+http=True case=7 expected=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] actual=[315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785] seconds=0.810
+http=True case=6 expected=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] actual=[6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374, 785, 6722, 315, 9625, 374] seconds=0.811
+PASS eight concurrent clients, exact model replies, no admission drops
+PASS 256 HTTP rejections immediately followed by 256 exact valid replies on eight persistent clients, repeated ring wrap
+PASS 32 mixed-length exact replies on eight persistent clients, immediate reuse and ring wrap
+PASS six pipelined HTTP responses in order, ring wrap, half-close
+http=False case=0 expected=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] actual=[12095, 13, 1084, 374, 279, 7772, 3283, 304, 4505, 323, 279, 4843, 7772, 304, 279, 1879, 13, 1084, 374, 7407, 304, 279, 9806, 315, 9625, 11, 389, 279, 13959, 315, 279, 10948, 1345, 482, 13, 1084, 374, 30083, 389, 279, 59108, 273, 409, 1187, 356, 12815, 11, 892, 374, 264, 2613, 12922, 304, 279, 6149, 315, 279, 1345, 482, 13, 576, 3283, 374, 22865] seconds=0.270
+PASS invalid first/last token IDs: HTTP 400, binary EOF, same-stream and later requests still exact
+PASS 335 valid TCP/HTTP requests, 20432 real model greedy tokens, 259 rejections, userspace network control
+sent SIGTERM to executor helper tid=80736
+executor shutdown seconds=3.587
+capturing model=Qwen/Qwen2.5-0.5B-Instruct type=qwen2 fp16 eager
+captured bank 0 model graph 32/190
+captured bank 0 model graph 64/190
+captured bank 0 model graph 96/190
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+network=userspace epoll; same resident GPU graph dispatch
+resident Qwen ready: 24 layers h=896 vocab=151936; device-tail graphs, dispatch=resident
+userspace TCP stopped: accepted=5058 published=594 completed=594 rejected=259
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=20432 graph_error=0 banks=8 max_active=8
+
+PASS concurrent graph-bank accounting and zero graph errors
+PASS expected CUDA launch count for the selected dispatch
+PASS traced userspace accept/receive/send control with no kernel TX module
+stream sockops detached
+libbpf: Kernel error message: Parent Qdisc doesn't exists
+detached from lo
+PASS test map pins removed after module shutdown and hook detach
+CASE EXIT 3 2026-10-11T08:01:49.933870+00:00 0
+QUALIFICATION COMPLETE 2026-10-11T08:01:49.936296+00:00
+
+DISPATCHER COMPARISON
+{
+  "utc": "2026-10-11T08:02:08.247351+00:00",
+  "paths": [
+    "build/qwen_graph.so",
+    "build/qwen_graph_user_network.so"
+  ],
+  "native_command": "/usr/local/cuda/bin/cuobjdump --dump-sass PATH",
+  "function": "_Z8dispatchP7bf_pageP4StepPPxjjP7Controlb",
+  "encoding_instruction_lines": 1536,
+  "identical": true,
+  "prior_probe_failure": "An initially assumed bf_graph_service symbol was absent; actual cuobjdump function inventory identified mangled dispatch. No candidate source change.",
+  "instruction_rows": 768,
+  "includes_continuation_encoding_rows": true,
+  "inspection_regex": "/\\*\\s*(?:0x)?[0-9a-fA-F]+\\s*\\*/",
+  "probe_notes": "First symbol-name probe failed; actual inventory has mangled dispatch. First continuation regex omitted internal spaces, so count-only expectation failed; regex now compares all 1536 instruction/encoding rows. No binary or source change."
+}
+
+ROOT QUALIFICATION RECONSTRUCTION
+{"utc": "2026-10-11T08:05:09.676495+00:00", "case_exits": [["0", "2026-10-11T07:55:42.022900+00:00", "0"], ["1", "2026-10-11T07:57:50.036360+00:00", "0"], ["2", "2026-10-11T07:59:50.108404+00:00", "0"], ["3", "2026-10-11T08:01:49.933870+00:00", "0"]], "valid_requests": 1340, "exact_tokens": 81728, "rejections": 1036, "empty_connections": 20000, "printed_exact_64_token_arrays": 156, "oracle_timeouts_unchanged": true, "numeric_assertions_cover_unprinted_requests_in_native_harness": true}

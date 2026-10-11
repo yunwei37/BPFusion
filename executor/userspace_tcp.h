@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Matched userspace network control: same page ABI and resident GPU dispatcher.
 #include <sys/epoll.h>
+#include <sys/uio.h>
 #include <cerrno>
 #include <cstring>
 #include <map>
@@ -35,11 +36,21 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
         }
         peer.eof=true;
     };
-    auto send_part=[&](Peer &peer,const void *data,size_t count) {
-        ssize_t n=send(peer.fd,data,count,MSG_DONTWAIT|MSG_NOSIGNAL);
+    auto send_reply=[&](Peer &peer,Reply &reply,bf_llm_slot *slot,unsigned produced) {
+        iovec vec[2];unsigned count=0;
+        size_t header_bytes=reply.header.size()-reply.header_sent;
+        if(header_bytes) vec[count++]={reply.header.data()+reply.header_sent,header_bytes};
+        if(produced*4>reply.bytes)
+            vec[count++]={(char *)slot->tok_out+reply.bytes,produced*4-reply.bytes};
+        if(!count) return;
+        msghdr msg={};msg.msg_iov=vec;msg.msg_iovlen=count;
+        ssize_t n=sendmsg(peer.fd,&msg,MSG_DONTWAIT|MSG_NOSIGNAL);
         if(n<0 && errno!=EAGAIN && errno!=EWOULDBLOCK && errno!=EINTR)
             disconnect(peer);
-        return n>0 ? (size_t)n : (size_t)0;
+        if(n>0) {
+            size_t sent_header=(size_t)n<header_bytes ? (size_t)n : header_bytes;
+            reply.header_sent+=sent_header;reply.bytes+=(size_t)n-sent_header;
+        }
     };
     auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(seconds);
     while(!*stopped && std::chrono::steady_clock::now()<deadline) {
@@ -90,11 +101,9 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
                     +"\r\nContent-Type: application/octet-stream\r\nContent-Length: "
                     +std::to_string(rejected ? 0 : slot->n_gen*4)+"\r\n\r\n";
             }
-            if(peer.fd>=0 && reply.header_sent<reply.header.size())
-                reply.header_sent+=send_part(peer,reply.header.data()+reply.header_sent,
-                                            reply.header.size()-reply.header_sent);
-            if(peer.fd>=0 && reply.header_sent==reply.header.size() && produced*4>reply.bytes)
-                reply.bytes+=send_part(peer,(char *)slot->tok_out+reply.bytes,produced*4-reply.bytes);
+            // Keep default TCP buffering; submit header and first tokens together.
+            if(peer.fd>=0 && (produced || rejected))
+                send_reply(peer,reply,slot,produced);
             if(state==BF_DONE && (peer.fd<0 ||
                 (reply.header_sent==reply.header.size() && reply.bytes==produced*4))) {
                 peer.slot=-1;reply={};

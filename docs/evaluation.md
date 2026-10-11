@@ -35,8 +35,13 @@ limit scope. Executor CPU excludes kernel TX/softirq; global CPU is descriptive.
 No attributed total CPU, energy, physical-NIC or full-goal completion claim.
 
 Next decision: retain all negative estimates and crossing-zero intervals;
-close the unchanged matrix. Qualify header/first-token coalescing in both
-transports, then use a matched before/after comparison with unchanged compute,
-oracle and TCP defaults. Existing packet evidence motivates ACK/Nagle buffering,
-but does not prove every current plateau's cause. Strong external serving
-and real-NIC evidence remain open.
+close the unchanged matrix. [Header/first-token coalescing](findings/0026-coalesced-network.md)
+now passes all four strict regressions, passive diagnostics and two native real
+preflights. The [reviewed next comparison](../bench/results/coalesced_network_plan_20261011.md)
+uses both optimized transports with unchanged compute, oracle and TCP defaults.
+Its full matrix remains uncollected; no new performance claim follows from
+qualification. This fair kernel-versus-user comparison does not establish a
+causal old/new optimization effect, which requires a separately matched
+before/after run. Passive traces show header/first-token coalescing but retain
+ACK-followed delivery gaps for the remaining short response. Strong external
+serving, attributed host cost and real-NIC evidence remain open.
