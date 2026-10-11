@@ -194,3 +194,94 @@ Frozen benchmark source in stdout and the qualification/source receipt,
 together with the subsequent control commit, make that distinction explicit.
 The full matrix runs on committed source. No correctness or timeout change
 was made between qualification and preflight.
+
+## Complete paired result
+
+Full collection on committed source9983198d6f41e34730d7fa193775f62cf9674a99
+ends normally: Smol07:18:33UTC and Qwen07:32:40UTC on2026-10-11.
+Across both models:80 unique cells,5120 measured requests,166400 exact tokens,
+20 normal executor exits and no failed or excluded row. Each process records
+264 completions including eight excluded warmups,8580 model graphs,one service
+launch,banks8,max_active8,graph_error0. Kernel admission/registration/parser
+errors are zero and all slots FREE; native accepted19,published/completed264,
+rejected0. Alternating paired order, matched rotated cells, balanced prompts,
+every token/timestamp/metric and throughput denominator pass independent
+reconstruction.
+
+Raw [Smol JSONL](../../bench/results/userspace_network_smol_20261011.jsonl)
+and [Qwen JSONL](../../bench/results/userspace_network_qwen_20261011.jsonl)
+retain every cell and pair. Their stdout receipts freeze command, wrapper and
+benchmark source plus terminal exit. Smol stdout includes its independent
+one-model reconstruction; Qwen stdout includes the integrated reconstruction,
+source and during/after host observations. The temporary wrapper is archived
+there and removed after exit.
+
+### All cells
+
+Kernel is resident GPU plus eBPF/kernel TCP; user is the matched native epoll
+reactor plus the same resident GPU. Values pool320 requests per mode/cell;
+TPS and executor CPU are arithmetic means of five process-block cells.
+
+| Model | Gen | Clients | Path | TTFT ms | TPOT ms | Completion ms | Output TPS | Executor CPU s/cell |
+|---|---:|---:|---|---:|---:|---:|---:|---:|
+| SmolLM2-135M | 1 | 1 | kernel | 40.508 | — | 40.508 | 24.665 | 0.004 |
+| SmolLM2-135M | 1 | 1 | user | 41.562 | — | 41.562 | 24.038 | 2.664 |
+| SmolLM2-135M | 64 | 1 | kernel | 40.414 | 3.194 | 241.626 | 264.836 | 0.008 |
+| SmolLM2-135M | 64 | 1 | user | 41.094 | 3.148 | 239.390 | 267.310 | 15.336 |
+| SmolLM2-135M | 1 | 8 | kernel | 40.005 | — | 40.005 | 189.084 | 0.000 |
+| SmolLM2-135M | 1 | 8 | user | 40.312 | — | 40.312 | 191.054 | 0.336 |
+| SmolLM2-135M | 64 | 8 | kernel | 44.578 | 8.088 | 554.143 | 919.759 | 0.004 |
+| SmolLM2-135M | 64 | 8 | user | 44.650 | 8.031 | 550.619 | 925.658 | 4.428 |
+| Qwen2.5-0.5B | 1 | 1 | kernel | 40.524 | — | 40.524 | 24.655 | 0.002 |
+| Qwen2.5-0.5B | 1 | 1 | user | 41.631 | — | 41.631 | 23.999 | 2.666 |
+| Qwen2.5-0.5B | 64 | 1 | kernel | 40.386 | 2.893 | 222.653 | 287.397 | 0.010 |
+| Qwen2.5-0.5B | 64 | 1 | user | 40.847 | 2.876 | 222.028 | 288.193 | 14.220 |
+| Qwen2.5-0.5B | 1 | 8 | kernel | 38.862 | — | 38.862 | 196.479 | 0.000 |
+| Qwen2.5-0.5B | 1 | 8 | user | 39.790 | — | 39.790 | 193.329 | 0.332 |
+| Qwen2.5-0.5B | 64 | 8 | kernel | 46.222 | 11.064 | 743.236 | 686.455 | 0.006 |
+| Qwen2.5-0.5B | 64 | 8 | user | 45.888 | 11.016 | 739.877 | 689.649 | 5.944 |
+
+### All paired effects
+
+Positive effects favor kernel. Primary effects are gen1/clients1 TTFT and
+gen64/clients8 TPS. Preserve all other cells as secondary observations.
+
+| Model | Gen | Clients | User minus kernel TTFT ms [nominal t95] | Kernel minus user TPS [nominal t95] |
+|---|---:|---:|---:|---:|
+| SmolLM2-135M | 1 | 1 | 1.054 [0.949, 1.160] | 0.627 [0.569, 0.686] |
+| SmolLM2-135M | 64 | 1 | 0.680 [0.544, 0.816] | -2.473 [-5.983, 1.036] |
+| SmolLM2-135M | 1 | 8 | 0.306 [-0.333, 0.945] | -1.970 [-8.109, 4.169] |
+| SmolLM2-135M | 64 | 8 | 0.072 [-0.873, 1.017] | -5.899 [-13.040, 1.242] |
+| Qwen2.5-0.5B | 1 | 1 | 1.107 [0.923, 1.292] | 0.656 [0.544, 0.769] |
+| Qwen2.5-0.5B | 64 | 1 | 0.461 [-0.048, 0.971] | -0.796 [-2.740, 1.148] |
+| Qwen2.5-0.5B | 1 | 8 | 0.927 [0.269, 1.586] | 3.150 [-3.931, 10.231] |
+| Qwen2.5-0.5B | 64 | 8 | -0.334 [-1.530, 0.862] | -3.194 [-10.281, 3.894] |
+
+Both primary TTFT intervals exclude zero locally: kernel is faster by
+1.054ms for Smol and1.107ms for Qwen. Both primary TPS intervals cross zero;
+their negative point estimates are retained. Concurrent long-output throughput
+is inconclusive, not equivalent. Long-output completion/TPOT intervals also
+cross zero in the fresh review. This is narrow support for single-client
+one-token latency, not a general serving-speed win.
+
+[Fresh independent result review](../../bench/results/userspace_network_result_review_20261011.md)
+confirms the matrix, metrics, fixed references, identical dispatcher SASS,
+native counters and cleanup without running another workload. It finds no
+scientific repair or required repeat. Its direct libbpf observation finds no
+owned sockops/program/map, empty bpffs and absent TX module/worker state.
+Archived host observations preserve boot04dc0087-5ccc-4c46-9997-b9a92f0e5167,
+original SGLang2762187 GPU residency and no observed NVRM Xid during collection.
+Other-service residency remains distinct from acceptance.
+
+The process CPU difference measures the specific busy reactor versus the
+bootstrap executor; kernel TX/softirq and clients are excluded. Near-zero
+kernel-process readings are100Hz quantization, not zero total host work.
+Transport/page backing/polling/write grouping change together; syscall-only
+attribution is unsupported. Shared-device and nominal-interval limits remain.
+
+Next decision: close this unchanged matrix. Qualify header/first-token
+coalescing in both transports using the same model computation, strict oracle,
+ownership rules and default TCP settings. Historical packet traces motivate
+this hypothesis; this run does not prove the cause of every40ms plateau.
+Matched before/after evidence is required to claim a causal optimization
+effect. Optimized external serving, real NIC and the full goal remain open.

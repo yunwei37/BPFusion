@@ -7,20 +7,36 @@ correctness and throughput/latency evidence. Do not substitute model arithmetic
 tuning or a component result for that complete goal.
 
 The [native userspace network comparison](findings/0025-native-userspace-network.md)
-is the current supporting component experiment. It tests whether the kernel
-request/reply implementation improves client latency or output throughput
-against a native epoll control with the same resident HF graph computation.
-Finding0024's dispatch comparison cannot answer this absent network condition.
-The [fresh plan review](../bench/results/userspace_network_plan_review_20261011.md)
-admits it. Both user-control model regressions and both real preflights pass.
-Independent reconstruction confirms exact outputs, complete process counts
-and cleanup. The full paired matrix is next; preflight supplies no performance
-conclusion.
+is complete and valid as a supporting component ablation. It tests kernel
+request/reply versus a native epoll control with identical resident HF graph
+computation. Finding0024 lacks that native network condition, so the new
+comparison fills independent evidence rather than repeating its dispatch test.
 
-Positive effects support the tested transport boundary; negative/mixed effects
-redirect optimization toward polling/write grouping and transport buffering.
-Intervals crossing zero remain inconclusive. This is not an external SOTA,
-physical-NIC, text/JSON, attributed total CPU or full-goal completion result.
-Raw paths, commands, metrics, fixed correctness contract and limitations live
-in the linked plan. Update this status only from terminal collection and fresh
-independent result review.
+The [plan review](../bench/results/userspace_network_plan_review_20261011.md),
+strict real-model regressions and preflights precede the committed-source full
+run. [Fresh result review](../bench/results/userspace_network_result_review_20261011.md)
+independently reconstructs80 cells,5120 requests,166400 exact measured tokens,
+20 normal exits, order, metrics, counters and cleanup. No failed/excluded row
+or required scientific repair. Commands and all raw/result tables are linked
+from the finding.
+
+Primary user-minus-kernel gen1/clients1 TTFT:
+Smol1.054ms [0.949,1.160], Qwen1.107ms [0.923,1.292].
+Primary kernel-minus-user gen64/clients8 TPS:
+Smol-5.899 [-13.040,1.242], Qwen-3.194 [-10.281,3.894].
+These five-pair nominal t95 intervals narrowly support single-client one-token
+latency; concurrent long-output throughput is inconclusive, not equivalent.
+
+Research value is supporting evidence; paper impact is a transport/workload
+boundary, not an external SOTA result or novelty proof. Polling, write grouping
+and page backing change with transport, preventing syscall-only attribution.
+Loopback/token-ID HTTP, short prompts, two small checkpoints and a shared GPU
+limit scope. Executor CPU excludes kernel TX/softirq; global CPU is descriptive.
+No attributed total CPU, energy, physical-NIC or full-goal completion claim.
+
+Next decision: retain all negative estimates and crossing-zero intervals;
+close the unchanged matrix. Qualify header/first-token coalescing in both
+transports, then use a matched before/after comparison with unchanged compute,
+oracle and TCP defaults. Existing packet evidence motivates ACK/Nagle buffering,
+but does not prove every current plateau's cause. Strong external serving
+and real-NIC evidence remain open.

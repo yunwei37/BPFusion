@@ -1,0 +1,659 @@
+START 2026-10-11T07:02:50.757972+00:00
+COMMIT 9983198d6f41e34730d7fa193775f62cf9674a99
+COMMAND HF_HOME=/workspaces/.cache/huggingface ['/usr/bin/python3', 'bench/resident_dispatch.py', '--gen', '64', '--resident-executor', './build/qwen_graph', '--user-network-executor', './build/qwen_graph_user_network', '--output', 'bench/results/userspace_network_smol_20261011.jsonl', '--model', 'HuggingFaceTB/SmolLM2-135M']
+WRAPPER_SOURCE
+from pathlib import Path
+import subprocess,os,sys
+from datetime import datetime,timezone
+p=Path('/workspaces/repository')
+os.chdir(p)
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+for kind,model in [('smol','HuggingFaceTB/SmolLM2-135M'),('qwen',None)]:
+ args=['/usr/bin/python3','bench/resident_dispatch.py','--gen','64','--resident-executor','./build/qwen_graph','--user-network-executor','./build/qwen_graph_user_network','--output','bench/results/userspace_network_'+kind+'_20261011.jsonl']
+ if model:args+=['--model',model]
+ out=p/'bench/results'/('userspace_network_'+kind+'_20261011.stdout.txt')
+ env=os.environ.copy();env['HF_HOME']='/workspaces/.cache/huggingface'
+ with out.open('x') as f:
+  f.write('START '+datetime.now(timezone.utc).isoformat()+'\nCOMMIT '+head+'\nCOMMAND HF_HOME=/workspaces/.cache/huggingface '+repr(args)+'\nWRAPPER_SOURCE\n'+Path(__file__).read_text()+'\nBENCH_SOURCE\n'+(p/'bench/resident_dispatch.py').read_text()+'\n')
+  f.flush()
+  child=subprocess.Popen(args,stdout=f,stderr=subprocess.STDOUT,env=env)
+  f.write('CHILD_PID '+str(child.pid)+'\n');f.flush()
+  code=child.wait()
+  f.write('\nEXIT '+str(code)+' '+datetime.now(timezone.utc).isoformat()+'\n');f.flush()
+ if code:sys.exit(code)
+
+BENCH_SOURCE
+#!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+"""Matched HF graph dispatch/network controls on the token HTTP path."""
+import argparse
+from concurrent.futures import ThreadPoolExecutor
+import json
+import math
+import os
+from pathlib import Path
+import platform
+import socket
+import statistics
+import struct
+import subprocess
+import sys
+import tempfile
+import threading
+import time
+
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"tests"))
+from resident_qwen import oracle_cases
+
+
+def command(*args):
+    return subprocess.check_output(args,text=True,stderr=subprocess.STDOUT).strip()
+
+
+def cpu_seconds(pid):
+    fields=Path(f"/proc/{pid}/stat").read_text().rsplit(") ",1)[1].split()
+    return (int(fields[11])+int(fields[12]))/os.sysconf("SC_CLK_TCK")
+
+
+def host_cpu_ticks():
+    # Global host counters include clients, kernel work and other workloads.
+    return [int(value) for value in Path("/proc/stat").read_text().splitlines()[0].split()[1:]]
+
+
+def gpu_state():
+    return command("nvidia-smi","--query-gpu=timestamp,name,clocks.sm,clocks.mem,temperature.gpu,power.draw,utilization.gpu","--format=csv,noheader,nounits")
+
+
+def request(client,ids,expected):
+    body=struct.pack("<IIIIQ",0x514c4d51,len(ids),len(expected),0,time.monotonic_ns())+struct.pack(f"<{len(ids)}I",*ids)
+    wire=f"POST /generate HTTP/1.1\r\nHost: localhost\r\nContent-Length: {len(body)}\r\n\r\n".encode()+body
+    start=time.monotonic_ns()
+    client.sendall(wire)
+    header=b""; data=b""; arrivals=[]
+    while len(data)<4*len(expected):
+        chunk=client.recv(4096)
+        arrived=time.monotonic_ns()
+        assert chunk,"short reply"
+        if header is not None:
+            header+=chunk
+            if b"\r\n\r\n" not in header: continue
+            head,chunk=header.split(b"\r\n\r\n",1)
+            assert head.startswith(b"HTTP/1.1 200 OK\r\n"),head
+            assert f"Content-Length: {4*len(expected)}".encode() in head,head
+            header=None
+        data+=chunk
+        arrivals.extend([arrived]*((len(data)//4)-len(arrivals)))
+    assert len(data)==4*len(expected),data
+    actual=list(struct.unpack(f"<{len(expected)}I",data))
+    assert actual==expected,(ids,actual,expected)
+    return {"start_ns":start,"arrival_ns":arrivals,"tokens":actual,
+            "ttft_ms":(arrivals[0]-start)/1e6,
+            "latency_ms":(arrivals[-1]-start)/1e6,
+            "tpot_ms":(arrivals[-1]-arrivals[0])/(len(expected)-1)/1e6 if len(expected)>1 else None}
+
+
+def connect():
+    client=socket.create_connection(("127.0.0.1",39403),timeout=60)
+    client.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
+    return client
+
+
+def cell(pid,cases,gen,concurrency,count,rows):
+    # Connections and thread creation precede both the timer and CPU window.
+    barrier=threading.Barrier(concurrency+1)
+    ready=threading.Barrier(concurrency+1)
+    def worker(worker_id):
+        with connect() as client:
+            ready.wait(timeout=60)
+            barrier.wait(timeout=60)
+            for index in range(worker_id,count,concurrency):
+                case=index%len(cases); ids,expected=cases[case]
+                row=request(client,ids,expected[:gen]); row.update(index=index,case=case)
+                rows.append(row)
+    with ThreadPoolExecutor(max_workers=concurrency) as pool:
+        futures=[pool.submit(worker,i) for i in range(concurrency)]
+        ready.wait(timeout=60)
+        before=cpu_seconds(pid); host_before=host_cpu_ticks(); start=time.monotonic_ns()
+        barrier.wait(timeout=60)
+        for future in futures: future.result()
+        finish=time.monotonic_ns(); host_after=host_cpu_ticks(); after=cpu_seconds(pid)
+    first=min(row["start_ns"] for row in rows)
+    last=max(row["arrival_ns"][-1] for row in rows)
+    return {
+        "window_ns":finish-start,"executor_cpu_s":after-before,
+        "host_cpu_ticks_before":host_before,"host_cpu_ticks_after":host_after,
+        "host_cpu_work_s":sum(host_after[i]-host_before[i] for i in (0,1,2,5,6))/os.sysconf("SC_CLK_TCK"),
+        "output_tokens_per_s":count*gen/((last-first)/1e9)}
+
+
+def analyze(path):
+    records=[json.loads(line) for line in Path(path).read_text().splitlines()]
+    meta=next(row for row in records if row["event"]=="metadata")
+    cells=[row for row in records if row["event"]=="cell"]
+    samples=[row for row in records if row["event"]=="request"]
+    expected_cells=meta["repetitions"]*2*len(meta["matrix"])
+    assert len(cells)==expected_cells,(len(cells),expected_cells)
+    assert len(samples)==expected_cells*meta["requests_per_cell"]
+    assert len([row for row in records if row["event"]=="executor"])==2*meta["repetitions"]
+    for row in samples:
+        assert row["tokens"]==meta["cases"][row["case"]][1][:row["gen"]],row
+        assert row["ttft_ms"]==(row["arrival_ns"][0]-row["start_ns"])/1e6,row
+    for block in cells:
+        selected=[row for row in samples if all(row[key]==block[key] for key in ("pair","mode","gen","concurrency"))]
+        assert sorted(row["index"] for row in selected)==list(range(meta["requests_per_cell"])),block
+    def percentile(values,q):
+        ordered=sorted(values); pos=(len(ordered)-1)*q
+        low=math.floor(pos); high=math.ceil(pos)
+        return ordered[low]+(ordered[high]-ordered[low])*(pos-low)
+    modes=tuple(meta["executors"]);control=modes[1]
+    for gen,concurrency in meta["matrix"]:
+        pair_means={}
+        for mode in modes:
+            selected=[row for row in samples if row["mode"]==mode and row["gen"]==gen and row["concurrency"]==concurrency]
+            selected_cells=[row for row in cells if row["mode"]==mode and row["gen"]==gen and row["concurrency"]==concurrency]
+            ttft=[row["ttft_ms"] for row in selected]
+            tpot=[row["tpot_ms"] for row in selected if row["tpot_ms"] is not None]
+            pair_means[mode]=[statistics.mean(row["ttft_ms"] for row in selected if row["pair"]==pair) for pair in range(meta["repetitions"])]
+            print(json.dumps({"mode":mode,"gen":gen,"concurrency":concurrency,"requests":len(selected),
+                "ttft_mean_ms":statistics.mean(ttft),"ttft_p50_ms":percentile(ttft,.5),"ttft_p99_ms":percentile(ttft,.99),
+                "tpot_mean_ms":statistics.mean(tpot) if tpot else None,
+                "completion_mean_ms":statistics.mean(row["latency_ms"] for row in selected),
+                "host_cpu_work_s_per_cell":[row.get("host_cpu_work_s") for row in selected_cells],
+                "executor_cpu_s_per_cell":[row["executor_cpu_s"] for row in selected_cells],
+                "tokens_per_s":[row["output_tokens_per_s"] for row in selected_cells]}))
+        differences=[host-resident for host,resident in zip(pair_means[control],pair_means["resident"])]
+        mean=statistics.mean(differences)
+        # Five independent paired process blocks; Student t, df=4, two-sided 95%.
+        margin=2.776445105*statistics.stdev(differences)/math.sqrt(5) if len(differences)==5 else None
+        print(json.dumps({"gen":gen,"concurrency":concurrency,("paired_host_minus_resident_ttft_ms" if control=="host-launch" else "paired_user_network_minus_resident_ttft_ms"):differences,
+            "difference_mean_ms":mean,"difference_t95_ms":[mean-margin,mean+margin] if margin is not None else None}))
+        differences=[next(row["output_tokens_per_s"] for row in cells if row["pair"]==pair and row["mode"]=="resident" and row["gen"]==gen and row["concurrency"]==concurrency)-
+                     next(row["output_tokens_per_s"] for row in cells if row["pair"]==pair and row["mode"]==control and row["gen"]==gen and row["concurrency"]==concurrency) for pair in range(meta["repetitions"])]
+        mean=statistics.mean(differences)
+        margin=2.776445105*statistics.stdev(differences)/math.sqrt(5) if len(differences)==5 else None
+        print(json.dumps({"gen":gen,"concurrency":concurrency,("paired_resident_minus_host_tps" if control=="host-launch" else "paired_resident_minus_user_network_tps"):differences,
+            "difference_mean_tps":mean,"difference_t95_tps":[mean-margin,mean+margin] if margin is not None else None}))
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output",required=True)
+    parser.add_argument("--preflight",action="store_true")
+    parser.add_argument("--gen",type=int,default=8,choices=range(2,65),help="long output length; paired with one-token requests")
+    parser.add_argument("--analyze",action="store_true")
+    parser.add_argument("--resident-executor",default="./build/qwen")
+    parser.add_argument("--host-executor",default="./build/qwen_host_launch")
+    parser.add_argument("--user-network-executor",help="same resident GPU compute with userspace network control")
+    parser.add_argument("--model",default="Qwen/Qwen2.5-0.5B-Instruct",help="HF checkpoint for graph executors")
+    args=parser.parse_args()
+    if args.analyze: analyze(args.output); return
+    control="user-network" if args.user_network_executor else "host-launch"
+    executors={"resident":args.resident_executor,control:args.user_network_executor or args.host_executor}
+    if args.model!="Qwen/Qwen2.5-0.5B-Instruct" and any("qwen_graph" not in Path(binary).name for binary in executors.values()):
+        parser.error("--model requires graph executors")
+    weights="/workspaces/.cache/bpfusion/qwen25-05b-fp16.bin" if args.model=="Qwen/Qwen2.5-0.5B-Instruct" else args.model
+    cases,_=oracle_cases(args.gen,name=args.model)
+    matrix=[(1,1)] if args.preflight else [(1,1),(args.gen,1),(1,8),(args.gen,8)]
+    repetitions=1 if args.preflight else 5
+    count=4 if args.preflight else 64
+    output=Path(args.output); output.parent.mkdir(parents=True,exist_ok=True)
+    with output.open("x") as raw:
+        def emit(event,**values):
+            raw.write(json.dumps({"event":event,**values})+"\n"); raw.flush()
+        import torch, transformers
+        emit("metadata",utc=time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),commit=command("git","rev-parse","HEAD"),
+             executors=executors,model=args.model,
+             network_control="native epoll busy polling, anonymous CUDA-registered page; same resident GPU dispatcher" if args.user_network_executor else None,
+             kernel=platform.release(),torch=torch.__version__,transformers=transformers.__version__,
+             nvcc=command("/usr/local/cuda/bin/nvcc","--version"),gpu=gpu_state(),cpu_tick_hz=os.sysconf("SC_CLK_TCK"),
+             cases=cases,matrix=matrix,repetitions=repetitions,requests_per_cell=count,
+             timing="client monotonic; tokens completed in one recv share arrival timestamp; process CPU excludes kernel TX/softirq",
+             host_cpu="global /proc/stat user+nice+system+irq+softirq; includes clients and unrelated host workloads; approximate cell window, not service attribution")
+        for pair in range(repetitions):
+            modes=("resident",control) if pair%2==0 else (control,"resident")
+            cells=matrix[pair%len(matrix):]+matrix[:pair%len(matrix)]
+            for mode in modes:
+                executor=None
+                with tempfile.TemporaryDirectory(prefix="bpfusion-dispatch-") as tmp:
+                    logpath=Path(tmp)/"executor.log"
+                    try:
+                        if mode!="user-network":command("./build/bpfusion_load","stream-attach")
+                        else:assert not Path("/sys/module/bfusion_tx").exists(),"kernel TX must be absent for network control"
+                        binary=executors[mode]
+                        started=time.monotonic()
+                        with logpath.open("w") as log:
+                            executor=subprocess.Popen([binary,weights,"300"],stdout=log,stderr=subprocess.STDOUT)
+                        while "resident Qwen ready" not in logpath.read_text():
+                            assert executor.poll() is None,logpath.read_text()
+                            time.sleep(.05)
+                        emit("bootstrap",pair=pair,mode=mode,seconds=time.monotonic()-started)
+                        with connect() as client:
+                            for gen in (1,args.gen):
+                                for ids,expected in cases: request(client,ids,expected[:gen])
+                        before=cpu_seconds(executor.pid); idle_start=time.monotonic_ns(); time.sleep(1)
+                        emit("idle",pair=pair,mode=mode,window_ns=time.monotonic_ns()-idle_start,executor_cpu_s=cpu_seconds(executor.pid)-before)
+                        for gen,concurrency in cells:
+                            gpu_before=gpu_state()
+                            rows=[]
+                            try:
+                                summary=cell(executor.pid,cases,gen,concurrency,count,rows)
+                            finally:
+                                for row in sorted(rows,key=lambda row:row["index"]):
+                                    emit("request",pair=pair,mode=mode,gen=gen,concurrency=concurrency,**row)
+                            gpu_after=gpu_state()
+                            emit("cell",pair=pair,mode=mode,gen=gen,concurrency=concurrency,requests=count,
+                                 gpu_before=gpu_before,gpu_after=gpu_after,**summary)
+                            print(f"pair={pair} mode={mode} gen={gen} c={concurrency} requests={count} exact_tokens={count*gen} cpu_s={summary['executor_cpu_s']:.3f}",flush=True)
+                        executor.terminate(); assert executor.wait(timeout=60)==0,logpath.read_text()
+                        log=logpath.read_text(); launches=1 if mode in ("resident","user-network") else 8+count*len(matrix)
+                        dispatch="resident" if mode=="user-network" else mode
+                        assert f"dispatch={dispatch} launches={launches}" in log,log
+                        if mode=="user-network":
+                            requests=8+count*len(matrix)
+                            assert f"published={requests} completed={requests} rejected=0" in log,log
+                            assert "network=userspace epoll" in log,log
+                            assert not Path("/sys/module/bfusion_tx").exists()
+                        if "device_graph_launches=" in log:
+                            model_steps=4*(1+args.gen)+count*sum(gen for gen,_ in matrix)
+                            assert f"device_graph_launches={model_steps} graph_error=0 banks=8" in log,log
+                            if not args.preflight: assert "max_active=8" in log,log
+                        emit("executor",pair=pair,mode=mode,log=log,stats=command("./build/bpfusion_load","stats") if mode!="user-network" else None)
+                    except Exception as error:
+                        emit("failure",pair=pair,mode=mode,error=repr(error),
+                             log=logpath.read_text() if logpath.exists() else "",
+                             stats=command("./build/bpfusion_load","stats") if mode!="user-network" else None)
+                        raise
+                    finally:
+                        if executor is not None and executor.poll() is None:
+                            executor.terminate(); executor.wait(timeout=60)
+                        command("./build/bpfusion_load","stream-detach")
+                        command("./build/bpfusion_load","detach","lo")
+                        for name in ("bpfusion_ctl","bpfusion_stats","bpfusion_db"):
+                            Path("/sys/fs/bpf",name).unlink(missing_ok=True)
+    analyze(output)
+
+
+if __name__=="__main__": main()
+
+CHILD_PID 74347
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 7159.49it/s]
+HF reference model=HuggingFaceTB/SmolLM2-135M type=llama vocab=49152
+pair=0 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.010
+pair=0 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=0 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=0 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=0 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=2.660
+pair=0 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=15.480
+pair=0 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.330
+pair=0 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=4.420
+pair=1 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=15.330
+pair=1 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.350
+pair=1 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=4.410
+pair=1 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=2.670
+pair=1 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=1 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=1 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=1 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=2 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=2 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.010
+pair=2 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=2 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.330
+pair=2 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=4.440
+pair=2 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=2.670
+pair=2 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=15.310
+pair=3 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=4.460
+pair=3 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=2.660
+pair=3 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=15.370
+pair=3 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.340
+pair=3 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=3 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.010
+pair=3 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=resident gen=1 c=1 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=resident gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=0.020
+pair=4 mode=resident gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.000
+pair=4 mode=resident gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=0.000
+pair=4 mode=user-network gen=1 c=1 requests=64 exact_tokens=64 cpu_s=2.660
+pair=4 mode=user-network gen=64 c=1 requests=64 exact_tokens=4096 cpu_s=15.190
+pair=4 mode=user-network gen=1 c=8 requests=64 exact_tokens=64 cpu_s=0.330
+pair=4 mode=user-network gen=64 c=8 requests=64 exact_tokens=4096 cpu_s=4.410
+{"mode": "resident", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 40.507648471875, "ttft_p50_ms": 40.9639365, "ttft_p99_ms": 42.937922289999996, "tpot_mean_ms": null, "completion_mean_ms": 40.507648471875, "host_cpu_work_s_per_cell": [5.95, 6.63, 9.99, 15.56, 13.84], "executor_cpu_s_per_cell": [0.009999999999990905, 0.0, 0.009999999999990905, 0.0, 0.0], "tokens_per_s": [24.681746217594316, 24.677731432676822, 24.65566218098705, 24.647086114649813, 24.662174793715668]}
+{"mode": "user-network", "gen": 1, "concurrency": 1, "requests": 320, "ttft_mean_ms": 41.56177489375, "ttft_p50_ms": 41.963695, "ttft_p99_ms": 44.03535271, "tpot_mean_ms": null, "completion_mean_ms": 41.56177489375, "host_cpu_work_s_per_cell": [16.51, 11.91, 10.51, 13.7, 12.22], "executor_cpu_s_per_cell": [2.6599999999999966, 2.6700000000000017, 2.6700000000000017, 2.6599999999999966, 2.6599999999999966], "tokens_per_s": [24.095197520108716, 24.015693607348677, 23.96639978455285, 24.032025976012605, 24.079460020817972]}
+{"gen": 1, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [0.9724086093750017, 1.108831656250004, 1.1699208124999956, 1.0399646718749977, 0.9795063593750015], "difference_mean_ms": 1.0541264218750002, "difference_t95_ms": [0.948680864997993, 1.1595719787520073]}
+{"gen": 1, "concurrency": 1, "paired_resident_minus_user_network_tps": [0.5865486974856005, 0.6620378253281451, 0.6892623964342022, 0.6150601386372081, 0.5827147728976954], "difference_mean_tps": 0.6271247661565702, "difference_t95_tps": [0.5687393969428925, 0.6855101353702479]}
+{"mode": "resident", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 40.41442095, "ttft_p50_ms": 40.775583499999996, "ttft_p99_ms": 43.27704307, "tpot_mean_ms": 3.1938369357142857, "completion_mean_ms": 241.6261479, "host_cpu_work_s_per_cell": [47.64, 52.14, 46.28, 100.13, 64.37], "executor_cpu_s_per_cell": [0.0, 0.00999999999999801, 0.0, 0.010000000000005116, 0.020000000000003126], "tokens_per_s": [264.6970106638198, 266.6997771488242, 266.8579300517382, 262.56231103076453, 263.3642911192669]}
+{"mode": "user-network", "gen": 64, "concurrency": 1, "requests": 320, "ttft_mean_ms": 41.09425280625, "ttft_p50_ms": 41.625746, "ttft_p99_ms": 44.10690994, "tpot_mean_ms": 3.147545398115079, "completion_mean_ms": 239.3896128875, "host_cpu_work_s_per_cell": [98.54, 66.64, 64.77, 90.97, 78.91], "executor_cpu_s_per_cell": [15.480000000000004, 15.329999999999998, 15.310000000000002, 15.370000000000005, 15.189999999999998], "tokens_per_s": [264.74808009325085, 267.2740107323028, 267.8342980310181, 266.6576433435311, 270.03441673488527]}
+{"gen": 64, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [0.7121321093749984, 0.7304386875000048, 0.5675648749999951, 0.5691858593750041, 0.8198377499999978], "difference_mean_ms": 0.6798318562500001, "difference_t95_ms": [0.543740129596869, 0.8159235829031312]}
+{"gen": 64, "concurrency": 1, "paired_resident_minus_user_network_tps": [-0.051069429431038316, -0.5742335834786445, -0.9763679792798712, -4.095332312766573, -6.67012561561836], "difference_mean_tps": -2.473425784114897, "difference_t95_tps": [-5.983120018063156, 1.0362684498333614]}
+{"mode": "resident", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 40.005341384375, "ttft_p50_ms": 41.012885999999995, "ttft_p99_ms": 48.1180711, "tpot_mean_ms": null, "completion_mean_ms": 40.005341384375, "host_cpu_work_s_per_cell": [1.27, 2.06, 0.8, 2.66, 1.48], "executor_cpu_s_per_cell": [0.0, 0.0, 0.0, 0.0, 0.0], "tokens_per_s": [188.65659091904095, 186.75125494727783, 189.5081910962579, 189.21524264186638, 191.28881439464826]}
+{"mode": "user-network", "gen": 1, "concurrency": 8, "requests": 320, "ttft_mean_ms": 40.311679621875, "ttft_p50_ms": 42.183113, "ttft_p99_ms": 49.6387305, "tpot_mean_ms": null, "completion_mean_ms": 40.311679621875, "host_cpu_work_s_per_cell": [1.88, 1.71, 1.16, 2.48, 1.61], "executor_cpu_s_per_cell": [0.3299999999999983, 0.3499999999999943, 0.3299999999999983, 0.3400000000000034, 0.3299999999999983], "tokens_per_s": [194.6887479805415, 185.22124866268086, 193.51473991644656, 184.33970812687525, 197.50390552400677]}
+{"gen": 1, "concurrency": 8, "paired_user_network_minus_resident_ttft_ms": [0.006722453125000527, 0.25445789062500523, -0.1912044687500014, 1.1546374843750016, 0.30707782812500284], "difference_mean_ms": 0.3063382375000018, "difference_t95_ms": [-0.3327334763976889, 0.9454099513976925]}
+{"gen": 1, "concurrency": 8, "paired_resident_minus_user_network_tps": [-6.0321570615005555, 1.5300062845969649, -4.006548820188669, 4.875534514991131, -6.2150911293585125], "difference_mean_tps": -1.9696512422919283, "difference_t95_tps": [-8.108698354829595, 4.169395870245739]}
+{"mode": "resident", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 44.5782491875, "ttft_p50_ms": 49.2783985, "ttft_p99_ms": 52.233721280000005, "tpot_mean_ms": 8.088326992361111, "completion_mean_ms": 554.14284970625, "host_cpu_work_s_per_cell": [12.11, 19.39, 11.82, 28.86, 21.24], "executor_cpu_s_per_cell": [0.010000000000005116, 0.0, 0.0, 0.009999999999990905, 0.0], "tokens_per_s": [917.0698924209065, 923.9990580334915, 924.4510229245909, 915.5298156950616, 917.7446152817407]}
+{"mode": "user-network", "gen": 64, "concurrency": 8, "requests": 320, "ttft_mean_ms": 44.650433865625, "ttft_p50_ms": 49.577297, "ttft_p99_ms": 53.13757581, "tpot_mean_ms": 8.03124311656746, "completion_mean_ms": 550.618750209375, "host_cpu_work_s_per_cell": [27.29, 19.74, 21.66, 26.44, 18.23], "executor_cpu_s_per_cell": [4.420000000000002, 4.409999999999997, 4.439999999999998, 4.460000000000008, 4.409999999999997], "tokens_per_s": [926.4483934950583, 928.5459833769988, 922.927602306772, 919.1128603564148, 931.2539740456226]}
+{"gen": 64, "concurrency": 8, "paired_user_network_minus_resident_ttft_ms": [-0.30706785937500314, -0.303521109375005, -0.2749665937499941, 1.4302943593749973, -0.18381540624999815], "difference_mean_ms": 0.07218467812499937, "difference_t95_ms": [-0.8725207670065904, 1.0168901232565892]}
+{"gen": 64, "concurrency": 8, "paired_resident_minus_user_network_tps": [-9.378501074151814, -4.546925343507382, 1.5234206178189424, -3.583044661353142, -13.509358763881892], "difference_mean_tps": -5.898881845015057, "difference_t95_tps": [-13.040030648489044, 1.242266958458928]}
+
+EXIT 0 2026-10-11T07:18:33.584300+00:00
+
+INDEPENDENT_SMOL_AUDIT_SOURCE_AND_OUTPUT
+from pathlib import Path
+import json,re,math,statistics,subprocess
+from collections import Counter
+from datetime import datetime,timezone
+p=Path('/workspaces/repository')
+summaries=[]
+for kind in ['smol']:
+ raw=p/'bench/results'/('userspace_network_'+kind+'_20261011.jsonl')
+ rows=[json.loads(line) for line in raw.read_text().splitlines()]
+ meta=rows[0]
+ assert meta['event']=='metadata' and meta['commit']=='9983198d6f41e34730d7fa193775f62cf9674a99'
+ assert meta['matrix']==[[1,1],[64,1],[1,8],[64,8]] and meta['repetitions']==5 and meta['requests_per_cell']==64
+ assert tuple(meta['executors'])==('resident','user-network') and len(meta['cases'])==4
+ events=Counter(r['event'] for r in rows)
+ assert events==Counter(metadata=1,bootstrap=10,idle=10,request=2560,cell=40,executor=10),events
+ cells=[r for r in rows if r['event']=='cell'];samples=[r for r in rows if r['event']=='request'];executors=[r for r in rows if r['event']=='executor']
+ expected={(pair,mode,gen,c) for pair in range(5) for mode in meta['executors'] for gen,c in meta['matrix']}
+ key=lambda r:(r['pair'],r['mode'],r['gen'],r['concurrency'])
+ assert len({key(r) for r in cells})==40 and {key(r) for r in cells}==expected
+ expected_order=[(pair,mode) for pair in range(5) for mode in (('resident','user-network') if pair%2==0 else ('user-network','resident'))]
+ assert [(r['pair'],r['mode']) for r in executors]==expected_order
+ assert [(r['pair'],r['mode']) for r in rows if r['event']=='bootstrap']==expected_order
+ total_tokens=0
+ for pair,mode in expected_order:
+  ordered=[r for r in cells if r['pair']==pair and r['mode']==mode]
+  rotated=meta['matrix'][pair%4:]+meta['matrix'][:pair%4]
+  assert [[r['gen'],r['concurrency']] for r in ordered]==rotated
+  native=next(r for r in executors if r['pair']==pair and r['mode']==mode)
+  log=native['log']
+  assert 'dispatch=resident launches=1 device_graph_launches=8580 graph_error=0 banks=8 max_active=8' in log
+  if mode=='user-network':
+   assert native['stats'] is None and 'network=userspace epoll' in log
+   assert 'userspace TCP stopped: accepted=19 published=264 completed=264 rejected=0' in log
+  else:
+   stats=native['stats']
+   assert re.search(r'^stream publish\s+264$',stats,re.M) and 'llm_head=264' in stats
+   assert re.search(r'^sockhash linked\s+19$',stats,re.M)
+   for label in ['sockhash failed','parser invalid','llm busy','drops','drop: ctl busy','drop: done busy']:
+    assert re.search('^'+label+r'\s+0$',stats,re.M),(label,stats)
+   assert len(re.findall(r'^llm\[\d+\]: state=0 ',stats,re.M))==8
+ for block in cells:
+  selected=[r for r in samples if key(r)==key(block)]
+  assert sorted(r['index'] for r in selected)==list(range(64))
+  assert Counter(r['case'] for r in selected)==Counter({i:16 for i in range(4)})
+  assert block['requests']==64 and block['window_ns']>0
+  for r in selected:
+   gen=r['gen'];assert r['case']==r['index']%4
+   assert r['tokens']==meta['cases'][r['case']][1][:gen] and len(r['tokens'])==gen
+   arrivals=r['arrival_ns'];assert len(arrivals)==gen and arrivals[0]>=r['start_ns']
+   assert arrivals==sorted(arrivals)
+   assert r['ttft_ms']==(arrivals[0]-r['start_ns'])/1e6
+   assert r['latency_ms']==(arrivals[-1]-r['start_ns'])/1e6
+   if gen==1:assert r['tpot_ms'] is None
+   else:assert r['tpot_ms']==(arrivals[-1]-arrivals[0])/(gen-1)/1e6
+   total_tokens+=gen
+  tps=len(selected)*block['gen']*1e9/(max(r['arrival_ns'][-1] for r in selected)-min(r['start_ns'] for r in selected))
+  assert math.isclose(tps,block['output_tokens_per_s'],rel_tol=1e-12)
+  cpu=sum(b-a for i,(a,b) in enumerate(zip(block['host_cpu_ticks_before'],block['host_cpu_ticks_after'])) if i in (0,1,2,5,6))/meta['cpu_tick_hz']
+  assert math.isclose(cpu,block['host_cpu_work_s'],rel_tol=1e-12)
+ assert total_tokens==83200,total_tokens
+ stdout=(p/'bench/results'/('userspace_network_'+kind+'_20261011.stdout.txt')).read_text()
+ assert re.search(r'^EXIT 0 ',stdout,re.M) and 'COMMIT '+meta['commit'] in stdout
+ def interval(diffs):
+  mean=statistics.mean(diffs);margin=2.776445105*statistics.stdev(diffs)/math.sqrt(5)
+  return {'paired_differences':diffs,'mean':mean,'nominal_t95':[mean-margin,mean+margin]}
+ result={'model':meta['model'],'events':dict(events),'exact_tokens':total_tokens,'cells':[],'effects':[]}
+ for gen,c in meta['matrix']:
+  for mode in meta['executors']:
+   subset=[r for r in samples if (r['mode'],r['gen'],r['concurrency'])==(mode,gen,c)]
+   blocks=[r for r in cells if (r['mode'],r['gen'],r['concurrency'])==(mode,gen,c)]
+   result['cells'].append({'gen':gen,'clients':c,'mode':mode,'ttft_ms':statistics.mean(r['ttft_ms'] for r in subset),'tpot_ms':statistics.mean(r['tpot_ms'] for r in subset) if gen>1 else None,'completion_ms':statistics.mean(r['latency_ms'] for r in subset),'tps':statistics.mean(r['output_tokens_per_s'] for r in blocks),'executor_cpu_s_per_cell':statistics.mean(r['executor_cpu_s'] for r in blocks)})
+  means={mode:[statistics.mean(r['ttft_ms'] for r in samples if (r['pair'],r['mode'],r['gen'],r['concurrency'])==(pair,mode,gen,c)) for pair in range(5)] for mode in meta['executors']}
+  dttft=[u-k for u,k in zip(means['user-network'],means['resident'])]
+  dtps=[next(r['output_tokens_per_s'] for r in cells if key(r)==(pair,'resident',gen,c))-next(r['output_tokens_per_s'] for r in cells if key(r)==(pair,'user-network',gen,c)) for pair in range(5)]
+  result['effects'].append({'gen':gen,'clients':c,'user_minus_kernel_ttft_ms':interval(dttft),'kernel_minus_user_tps':interval(dtps),'primary_ttft':gen==1 and c==1,'primary_tps':gen==64 and c==8})
+ summaries.append(result)
+assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=p,text=True).strip()=='9983198d6f41e34730d7fa193775f62cf9674a99'
+assert not subprocess.check_output(['git','diff','--name-only'],cwd=p,text=True).strip()
+print('INDEPENDENT_SMOL_RECONSTRUCTION_QWEN_STILL_RUNNING',datetime.now(timezone.utc).isoformat())
+print(json.dumps(summaries,indent=2))
+
+INDEPENDENT_SMOL_RECONSTRUCTION_QWEN_STILL_RUNNING 2026-10-11T07:18:57.521496+00:00
+[
+  {
+    "model": "HuggingFaceTB/SmolLM2-135M",
+    "events": {
+      "metadata": 1,
+      "bootstrap": 10,
+      "idle": 10,
+      "request": 2560,
+      "cell": 40,
+      "executor": 10
+    },
+    "exact_tokens": 83200,
+    "cells": [
+      {
+        "gen": 1,
+        "clients": 1,
+        "mode": "resident",
+        "ttft_ms": 40.507648471875,
+        "tpot_ms": null,
+        "completion_ms": 40.507648471875,
+        "tps": 24.664880147924734,
+        "executor_cpu_s_per_cell": 0.003999999999996362
+      },
+      {
+        "gen": 1,
+        "clients": 1,
+        "mode": "user-network",
+        "ttft_ms": 41.56177489375,
+        "tpot_ms": null,
+        "completion_ms": 41.56177489375,
+        "tps": 24.037755381768164,
+        "executor_cpu_s_per_cell": 2.663999999999999
+      },
+      {
+        "gen": 64,
+        "clients": 1,
+        "mode": "resident",
+        "ttft_ms": 40.41442095,
+        "tpot_ms": 3.1938369357142857,
+        "completion_ms": 241.6261479,
+        "tps": 264.83626400288273,
+        "executor_cpu_s_per_cell": 0.008000000000001251
+      },
+      {
+        "gen": 64,
+        "clients": 1,
+        "mode": "user-network",
+        "ttft_ms": 41.09425280625,
+        "tpot_ms": 3.147545398115079,
+        "completion_ms": 239.3896128875,
+        "tps": 267.30968978699764,
+        "executor_cpu_s_per_cell": 15.336000000000002
+      },
+      {
+        "gen": 1,
+        "clients": 8,
+        "mode": "resident",
+        "ttft_ms": 40.005341384375,
+        "tpot_ms": null,
+        "completion_ms": 40.005341384375,
+        "tps": 189.08401879981827,
+        "executor_cpu_s_per_cell": 0.0
+      },
+      {
+        "gen": 1,
+        "clients": 8,
+        "mode": "user-network",
+        "ttft_ms": 40.311679621875,
+        "tpot_ms": null,
+        "completion_ms": 40.311679621875,
+        "tps": 191.05367004211018,
+        "executor_cpu_s_per_cell": 0.3359999999999985
+      },
+      {
+        "gen": 64,
+        "clients": 8,
+        "mode": "resident",
+        "ttft_ms": 44.5782491875,
+        "tpot_ms": 8.088326992361111,
+        "completion_ms": 554.14284970625,
+        "tps": 919.7588808711582,
+        "executor_cpu_s_per_cell": 0.003999999999999204
+      },
+      {
+        "gen": 64,
+        "clients": 8,
+        "mode": "user-network",
+        "ttft_ms": 44.650433865625,
+        "tpot_ms": 8.03124311656746,
+        "completion_ms": 550.618750209375,
+        "tps": 925.6577627161734,
+        "executor_cpu_s_per_cell": 4.428
+      }
+    ],
+    "effects": [
+      {
+        "gen": 1,
+        "clients": 1,
+        "user_minus_kernel_ttft_ms": {
+          "paired_differences": [
+            0.9724086093750017,
+            1.108831656250004,
+            1.1699208124999956,
+            1.0399646718749977,
+            0.9795063593750015
+          ],
+          "mean": 1.0541264218750002,
+          "nominal_t95": [
+            0.948680864997993,
+            1.1595719787520073
+          ]
+        },
+        "kernel_minus_user_tps": {
+          "paired_differences": [
+            0.5865486974856005,
+            0.6620378253281451,
+            0.6892623964342022,
+            0.6150601386372081,
+            0.5827147728976954
+          ],
+          "mean": 0.6271247661565702,
+          "nominal_t95": [
+            0.5687393969428925,
+            0.6855101353702479
+          ]
+        },
+        "primary_ttft": true,
+        "primary_tps": false
+      },
+      {
+        "gen": 64,
+        "clients": 1,
+        "user_minus_kernel_ttft_ms": {
+          "paired_differences": [
+            0.7121321093749984,
+            0.7304386875000048,
+            0.5675648749999951,
+            0.5691858593750041,
+            0.8198377499999978
+          ],
+          "mean": 0.6798318562500001,
+          "nominal_t95": [
+            0.543740129596869,
+            0.8159235829031312
+          ]
+        },
+        "kernel_minus_user_tps": {
+          "paired_differences": [
+            -0.051069429431038316,
+            -0.5742335834786445,
+            -0.9763679792798712,
+            -4.095332312766573,
+            -6.67012561561836
+          ],
+          "mean": -2.473425784114897,
+          "nominal_t95": [
+            -5.983120018063156,
+            1.0362684498333614
+          ]
+        },
+        "primary_ttft": false,
+        "primary_tps": false
+      },
+      {
+        "gen": 1,
+        "clients": 8,
+        "user_minus_kernel_ttft_ms": {
+          "paired_differences": [
+            0.006722453125000527,
+            0.25445789062500523,
+            -0.1912044687500014,
+            1.1546374843750016,
+            0.30707782812500284
+          ],
+          "mean": 0.3063382375000018,
+          "nominal_t95": [
+            -0.3327334763976889,
+            0.9454099513976925
+          ]
+        },
+        "kernel_minus_user_tps": {
+          "paired_differences": [
+            -6.0321570615005555,
+            1.5300062845969649,
+            -4.006548820188669,
+            4.875534514991131,
+            -6.2150911293585125
+          ],
+          "mean": -1.9696512422919283,
+          "nominal_t95": [
+            -8.108698354829595,
+            4.169395870245739
+          ]
+        },
+        "primary_ttft": false,
+        "primary_tps": false
+      },
+      {
+        "gen": 64,
+        "clients": 8,
+        "user_minus_kernel_ttft_ms": {
+          "paired_differences": [
+            -0.30706785937500314,
+            -0.303521109375005,
+            -0.2749665937499941,
+            1.4302943593749973,
+            -0.18381540624999815
+          ],
+          "mean": 0.07218467812499937,
+          "nominal_t95": [
+            -0.8725207670065904,
+            1.0168901232565892
+          ]
+        },
+        "kernel_minus_user_tps": {
+          "paired_differences": [
+            -9.378501074151814,
+            -4.546925343507382,
+            1.5234206178189424,
+            -3.583044661353142,
+            -13.509358763881892
+          ],
+          "mean": -5.898881845015057,
+          "nominal_t95": [
+            -13.040030648489044,
+            1.242266958458928
+          ]
+        },
+        "primary_ttft": false,
+        "primary_tps": true
+      }
+    ]
+  }
+]
+
+HOST_OBSERVATION_DURING_COLLECTION
+"HOST_OBSERVATION 2026-10-11T07:04:11.693091+00:00\nBOOT 04dc0087-5ccc-4c46-9997-b9a92f0e5167\nPREVIOUS_SGLANG_PID_2762187 True\n['Name:\\tsglang::schedul', 'Umask:\\t0022', 'State:\\tR (running)', 'Tgid:\\t2762187']\nGPU_PROCESS_RESIDENCY 0 2762187, sglang::scheduler, 18348\n3251098, /usr/bin/python3, 652\n3252111, python3, 12370\n\nKERNEL_JOURNAL_READ_EXIT 0\nXID_LINES []\n"
