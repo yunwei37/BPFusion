@@ -153,7 +153,12 @@ default. Ordinary tensor batching failed exact qualification and is not retained
 concurrent host control with the same eight banks, admission and GPU decoding.
 Both current modes pass335 valid requests/20432 exact tokens/259 rejects.
 The host resumes after each retired request; unfinished bank state survives
-re-entry. Its matched performance comparison remains unmeasured.
+re-entry. Five matched pairs complete2560 requests/83200 exact tokens with
+default TCP. At gen64/eight clients, resident TTFT is46.39 vs45.22ms and
+output throughput688.14 vs684.58tok/s; the paired throughput interval crosses
+zero. Resident removes most executor CPU cost against this busy-polling
+control, but these results do not establish a general latency/throughput win
+or attributed whole-service CPU savings.
 A subsequent numerical diagnosis completes99 groups across original Linear
 per-lane,attention per-lane and combined slicing. None qualifies the complete
 fixed token reference; partial recoveries and new divergences rule out
