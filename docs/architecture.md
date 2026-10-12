@@ -295,6 +295,13 @@ The supported scope is one full-attention KV group on the two qualified
 checkpoints, not arbitrary backend support. Finding0032 records strict traced
 service fidelity and the completed matched traced comparison.
 
+The optional BF_PAD_PREFILL build packs pending mixed-length prompts into
+uniform-query upstream graphs using leading dummy Q entries. Real positions/
+lengths/KV remain unchanged; dummy slots are -1 and skipped by upstream cache
+writes. The original grouped default remains. Finding0033 records real service,
+independent replay and padded-versus-compact semantic qualification; its
+same-backend policy comparison is running.
+
 ## Ownership rules (the correctness core)
 
 | object | writer | reader | recycle |

@@ -98,25 +98,37 @@ __global__ void dispatch(bf_page* p,Step* steps,Inputs in,unsigned vocab,Control
         unsigned query=0;
         for(unsigned id=c->retired;id!=c->seen;id++) {
             Request* r=&c->requests[id%BF_LLM_SLOTS];
-            if(r->phase==3) { query=r->prompt;break; }
+            if(r->phase==3) {
+#ifdef BF_PAD_PREFILL
+                if(r->prompt>query)query=r->prompt;
+#else
+                query=r->prompt;break;
+#endif
+            }
         }
         for(unsigned id=c->retired;id!=c->seen;id++) {
             i=id%BF_LLM_SLOTS;Request* r=&c->requests[i];
-            if((query && r->phase==3 && r->prompt==query) || (!query && r->phase==1))c->selected[c->batch++]=i;
+            if((query && r->phase==3
+#ifndef BF_PAD_PREFILL
+                && r->prompt==query
+#endif
+            ) || (!query && r->phase==1))c->selected[c->batch++]=i;
         }
         if(!c->batch)continue;
         unsigned length=query ? query : 1;
         for(unsigned row=0;row<c->batch;row++) {
             i=c->selected[row];Request* r=&c->requests[i];
-            in.lens[row]=query ? query : r->position+1;
+            in.lens[row]=query ? r->prompt : r->position+1;
             in.starts[row]=row*length;
             for(unsigned column=0;column<in.pages_per_request;column++)
                 in.table[row*in.stride+column]=in.pages[i*in.pages_per_request+column];
             for(unsigned j=0;j<length;j++) {
-                unsigned index=row*length+j,position=query ? j : r->position;
-                in.ids[index]=query ? __ldcg(&p->llm[i].tok_in[j]) : r->last;
-                in.positions[index]=position;in.padding[index]=false;
-                in.slots[index]=(long long)in.pages[i*in.pages_per_request+position/in.block_size]*in.block_size+position%in.block_size;
+                unsigned index=row*length+j,pad=query ? query-r->prompt : 0;
+                bool dummy=j<pad;
+                unsigned position=query ? (dummy ? 0 : j-pad) : r->position;
+                in.ids[index]=dummy ? 0 : (query ? __ldcg(&p->llm[i].tok_in[j-pad]) : r->last);
+                in.positions[index]=position;in.padding[index]=dummy;
+                in.slots[index]=dummy ? -1 : (long long)in.pages[i*in.pages_per_request+position/in.block_size]*in.block_size+position%in.block_size;
             }
             r->phase=4;
         }

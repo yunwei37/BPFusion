@@ -60,7 +60,10 @@ def analyze(path):
             assert len([r for r in records if r["event"]=="network_verified" and (r["pair"],r["mode"])==(pair,mode)])==1
         print(json.dumps(dict(event="verified_executor",pair=pair,mode=mode,requests=len(requests),
             tokens=sum(len(r["tokens"]) for r in requests),rejections=sum(r["bad"] for r in requests),
-            actual_batches=sorted({e["batch"] for e in computes}),graphs=len(computes))))
+            actual_batches=sorted({e["batch"] for e in computes}),graphs=len(computes),
+            prefill_graphs=sum(bool(e["query"]) for e in computes),decode_graphs=sum(not e["query"] for e in computes),
+            real_prompt_tokens=sum(len(a["input_ids"]) for a in admissions if not a["bad"]),
+            padded_query_tokens=sum(e["query"]*e["batch"] for e in computes if e["query"])-sum(len(a["input_ids"]) for a in admissions if not a["bad"]))))
     print(json.dumps(dict(event="coverage",requests=total_requests,tokens=total_tokens,actual_batches=sorted(all_batches))))
     if meta["correctness"]:return
     samples=[r for r in records if r["event"]=="request" and r["kind"]=="measured"]
@@ -91,13 +94,18 @@ def analyze(path):
                 ttft_p99_ms=quantile([r["ttft_ms"] for r in selected],.99),
                 tpot_mean_ms=statistics.mean(r["tpot_ms"] for r in selected) if gen>1 else None,
                 tokens_per_s=statistics.mean(summaries[pair,mode,gen,c]["tokens_per_s"] for pair in range(meta["repetitions"])))))
-        for metric in ("ttft_ms","tokens_per_s"):
-            sign=1 if metric=="tokens_per_s" else -1
-            differences=[sign*(summaries[pair,"kernel",gen,c][metric]-summaries[pair,"userspace",gen,c][metric])
-                         for pair in range(meta["repetitions"])]
-            mean=statistics.mean(differences);assert len(differences)==5
-            margin=2.776445105*statistics.stdev(differences)/math.sqrt(5)
-            print(json.dumps(dict(event="paired_difference_favoring_kernel",metric=metric,gen=gen,concurrency=c,
-                differences=differences,mean=mean,nominal_t95=[mean-margin,mean+margin])))
+        comparisons=[("userspace","kernel","kernel")] if len(meta["modes"])==2 else [
+            ("grouped-kernel","packed-kernel","packing"),
+            ("grouped-userspace","packed-userspace","packing"),
+            ("packed-userspace","packed-kernel","kernel")]
+        for baseline,candidate,favors in comparisons:
+            for metric in ("ttft_ms","tokens_per_s"):
+                sign=1 if metric=="tokens_per_s" else -1
+                differences=[sign*(summaries[pair,candidate,gen,c][metric]-summaries[pair,baseline,gen,c][metric])
+                             for pair in range(meta["repetitions"])]
+                mean=statistics.mean(differences);assert len(differences)==5
+                margin=2.776445105*statistics.stdev(differences)/math.sqrt(5)
+                print(json.dumps(dict(event="paired_difference_favoring_"+favors,baseline=baseline,candidate=candidate,
+                    metric=metric,gen=gen,concurrency=c,differences=differences,mean=mean,nominal_t95=[mean-margin,mean+margin])))
 if __name__=="__main__":
     ap=argparse.ArgumentParser(description=__doc__);ap.add_argument("path",type=Path);args=ap.parse_args();analyze(args.path)

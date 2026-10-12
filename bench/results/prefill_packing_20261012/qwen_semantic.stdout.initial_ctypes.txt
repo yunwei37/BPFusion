@@ -1,0 +1,27 @@
+Traceback (most recent call last):
+  File "/tmp/bpfusion-padding-b45ull5p/semantic.py", line 73, in <module>
+    runpy.run_path(str(root/"executor/vllm_graph.py"),run_name="__main__");code=0
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspaces/repository/executor/vllm_graph.py", line 14, in <module>
+    from vllm.v1.worker.gpu.cudagraph_utils import ModelCudaGraphManager,BatchExecutionDescriptor
+  File "/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/vllm/v1/worker/gpu/cudagraph_utils.py", line 38, in <module>
+    from vllm.v1.hisparse.binding import release_hisparse_profiling_cache
+  File "/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/vllm/v1/hisparse/binding.py", line 33, in <module>
+    from vllm.v1.worker.utils import allocate_kv_cache, select_common_block_size
+  File "/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/vllm/v1/worker/utils.py", line 15, in <module>
+    from vllm.model_executor.layers.attention import Attention
+  File "/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/vllm/model_executor/layers/attention/__init__.py", line 6, in <module>
+    from vllm.model_executor.layers.attention.attention import Attention
+  File "/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/vllm/model_executor/layers/attention/attention.py", line 22, in <module>
+    from vllm.model_executor.layers.linear import (
+  File "/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/vllm/model_executor/layers/linear.py", line 32, in <module>
+    from vllm.model_executor.layers.utils import (
+  File "/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/vllm/model_executor/layers/utils.py", line 13, in <module>
+    from vllm._aiter_ops import rocm_aiter_ops
+  File "/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/vllm/_aiter_ops.py", line 134, in <module>
+    _HIP_RUNTIME_HANDLE: ctypes.CDLL | None = None
+                         ~~~~~~~~~~~~^~~~~~
+TypeError: unsupported operand type(s) for |: 'function' and 'NoneType'

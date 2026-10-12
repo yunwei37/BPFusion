@@ -129,26 +129,28 @@ def main():
                             bad=bad,client_ns=event["client_ns"],tokens=[])
                     elif event["event"]=="compute":
                         query=event["query"];batch=event["batch"];length=query or 1
-                        ids=event["request_ids"];packed=[];positions=[];lens=[];slot_ids=[]
+                        ids=event["request_ids"];packed=[];positions=[];lens=[];slot_ids=[];padding=[]
+                        if query:assert query==max(len(requests[rid]["prompt"]) for rid in ids)
                         for row,request_id in enumerate(ids):
                             request=requests[request_id];assert not request["bad"]
                             prompt=request["prompt"];history=request["tokens"];physical=request_id%banks
                             if query:
-                                assert not history and len(prompt)==query
-                                values=prompt;pos=list(range(len(prompt)));seq=len(prompt)
+                                assert not history and len(prompt)<=query
+                                pad=query-len(prompt)
+                                values=[0]*pad+prompt;pos=[0]*pad+list(range(len(prompt)));seq=len(prompt)
                             else:
                                 assert history and len(history)<request["gen"]
-                                values=[history[-1]];pos=[len(prompt)+len(history)-1];seq=pos[0]+1
+                                pad=0;values=[history[-1]];pos=[len(prompt)+len(history)-1];seq=pos[0]+1
                             packed+=values;positions+=pos;lens.append(seq)
-                            slots=[rows[physical][p//bt.kernel_block_sizes[0]]*bt.kernel_block_sizes[0]+p%bt.kernel_block_sizes[0] for p in pos]
-                            slot_ids+=slots
+                            slots=[rows[physical][p//bt.kernel_block_sizes[0]]*bt.kernel_block_sizes[0]+p%bt.kernel_block_sizes[0] for p in pos[pad:]]
+                            slot_ids+=[-1]*pad+slots;padding+=[True]*pad+[False]*(length-pad)
                             bt.input_block_tables[0][row,:pages.shape[1]].copy_(pages[physical])
                         count=length*batch
                         buf.input_ids[:count].copy_(torch.tensor(packed,dtype=torch.int32,device="cuda"))
                         buf.positions[:count].copy_(torch.tensor(positions,dtype=torch.int64,device="cuda"))
                         buf.seq_lens[:batch].copy_(torch.tensor(lens,dtype=torch.int32,device="cuda"))
                         buf.query_start_loc[:batch+1].copy_(torch.arange(batch+1,dtype=torch.int32,device="cuda")*length)
-                        buf.is_padding[:count].fill_(False)
+                        buf.is_padding[:count].copy_(torch.tensor(padding,dtype=torch.bool,device="cuda"))
                         bt.slot_mappings[0,:count].copy_(torch.tensor(slot_ids,dtype=torch.int64,device="cuda"))
                         index=query*banks+batch-1
                         body,head,output,indices=graphs[index];body.replay();head.replay()

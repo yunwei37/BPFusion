@@ -243,3 +243,20 @@ no untraced/physical-path/total-CPU/general-backend claim follows. Close this
 unchanged matrix and select a causal discriminator for broader acceptance. See the [plan](../bench/results/vllm_server_plan_20261012.md),
 [plan review](../bench/results/vllm_server_plan_review_20261012.md) and
 [integration finding](findings/0032-vllm-kernel-serving.md).
+
+## Mixed-length prefill packing
+
+Finding0033 admits a supporting causal comparison of grouped versus packed
+GPU prefill with unchanged upstream arithmetic/catalogue and transport.
+It tests the exposed gen1/eight-client queueing cost, rather than repeating
+the inconclusive transport matrix. Source-backed bottom-right attention and
+negative-slot cache semantics motivate the candidate; actual service and
+independent metadata replay validate it. Semantic setup verifies631488 active
+FP16 hidden elements bit-identical against compact unpadded query metadata at
+the same total tensor shape. Default untraced single-client qualification adds
+160 real requests/5200 exact frozen-upstream tokens, with no broader timing claim.
+The complete160-cell/four-condition/two-model matrix is running; no performance
+conclusion is drawn from setup. See [plan](../bench/results/prefill_packing_plan_20261012.md),
+[plan review](../bench/results/prefill_packing_plan_review_20261012.md) and
+[finding](findings/0033-prefill-packing.md). Preserve all ordinary unpadded
+fidelity differences and actual batch trajectories. The goal remains active.

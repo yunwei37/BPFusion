@@ -88,6 +88,11 @@ checked tokens across both models/transports. The completed matched traced
 comparison measures1.201/1.474ms kernel TTFT and5358/4576tokens/s at eight
 clients for Smol/Qwen. All primary kernel-versus-efficient-userspace intervals
 contain zero; no eBPF speedup or uninstrumented timing is established.
+The [mixed-length prefill packing candidate](docs/findings/0033-prefill-packing.md)
+now passes strict service/replay and bit-identical padded-versus-compact semantic
+checks for both models. Its matched timing is in progress; grouped serving
+remains the default. The default untraced paths pass the recorded single-client
+prompt-edge/gen1/64 qualification; dynamic untraced timing remains unqualified.
 The existing HF graph interface now also accepts HF checkpoints/model directories.
 [Qwen and Llama qualification](docs/findings/0023-batch-execution-qualification.md#hf-graph-reuse-across-qwen-and-llama-architectures)
 passes both resident and host-control dispatch for Qwen2.5-0.5B and

@@ -12,6 +12,7 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--model",required=True);ap.add_argument("--output",required=True)
     ap.add_argument("--correctness",action="store_true")
+    ap.add_argument("--packing-comparison",action="store_true")
     args=ap.parse_args()
     root=Path(__file__).resolve().parents[1];os.chdir(root)
     output=Path(args.output).resolve();output.parent.mkdir(parents=True,exist_ok=True)
@@ -21,7 +22,9 @@ def main():
         with lock:raw.write(json.dumps(dict(event=event,utc=time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),**kw))+"\n")
     tok=AutoTokenizer.from_pretrained(args.model);config=AutoConfig.from_pretrained(args.model)
     prompts=[tok(text).input_ids for text in ("The capital of France is","What is 2 plus 2?","Write a short greeting.","Linux is")]
-    modes=("kernel","userspace");matrix=((1,1),(64,1),(1,8),(64,8));repetitions=1 if args.correctness else 5
+    modes=("packed-kernel","packed-userspace") if args.correctness and args.packing_comparison else (
+        ("grouped-kernel","packed-kernel","grouped-userspace","packed-userspace") if args.packing_comparison else ("kernel","userspace"))
+    matrix=((1,1),(64,1),(1,8),(64,8));repetitions=1 if args.correctness else 5
     emit("metadata",model=args.model,vocab=config.vocab_size,prompts=prompts,precision="fp16",
          modes=modes,matrix=matrix,repetitions=repetitions,requests_per_cell=64,warmups_per_executor=8,
          correctness=args.correctness,trace_condition="both transports identically BF_TRACE",
@@ -29,10 +32,21 @@ def main():
          driver_source=Path(__file__).read_text(),client_source=(root/"bench/resident_dispatch.py").read_text(),
          backend_source=(root/"executor/vllm_graph.py").read_text(),native_source=(root/"executor/vllm_graph.cu").read_text(),
          python=sys.version,torch=subprocess.check_output(["python3","-c","import torch;print(torch.__version__)"],text=True).strip())
+    frozen={}
+    if args.packing_comparison:
+        for previous in (root/"bench/results/vllm_server_20261012").glob("*_correctness.jsonl"):
+            previous_meta=next(json.loads(line) for line in previous.open() if json.loads(line)["event"]=="metadata")
+            if previous_meta["model"]!=args.model:continue
+            reference=previous.with_name(previous.stem+"_p0_kernel.gpu.jsonl.references.jsonl")
+            first=[json.loads(line) for line in reference.open()][:10]
+            frozen={tuple(row["prompt"]):row["tokens"] for row in first}
+            emit("frozen_unpadded_reference",path=str(reference),references=first)
     exit_code=1
     try:
         for pair in range(repetitions):
-            for mode in (modes if pair%2==0 else modes[::-1]):
+            order=modes if len(modes)==2 or (pair//2)%2==0 else modes[2:]+modes[:2]
+            for mode in (order if pair%2==0 else order[::-1]):
+                kernel_mode=mode.endswith("kernel")
                 assert not Path("/sys/module/bfusion_tx").exists()
                 assert not Path("/sys/fs/bpf/bpfusion_ctl").exists()
                 p=None;attached=False;rows=[];success=False
@@ -40,11 +54,12 @@ def main():
                 trace=Path(str(prefix)+".gpu.jsonl");logpath=Path(str(prefix)+".stdout.txt")
                 nettrace=Path(str(prefix)+".network.txt")
                 budget=(3*10+sum(range(1,9))+8*32*2+8*4+6+4+2) if args.correctness else 264
-                command=["./build/vllm_graph_trace" if mode=="kernel" else "./build/vllm_graph_user_network_wait_trace",
+                binary="vllm_graph"+("_padded" if mode.startswith("packed") else "")+("" if kernel_mode else "_user_network_wait")+"_trace"
+                command=["./build/"+binary,
                     args.model,"300","--trace-output",str(trace),"--trace-requests",str(budget)]
                 if args.correctness:command=["strace","-D","-f","-e","trace=network,write","-o",str(nettrace),*command]
                 try:
-                    if mode=="kernel":
+                    if kernel_mode:
                         r=subprocess.run(["./build/bpfusion_load","stream-attach"],capture_output=True,text=True)
                         emit("attach",pair=pair,mode=mode,code=r.returncode,stdout=r.stdout,stderr=r.stderr)
                         assert r.returncode==0;attached=True
@@ -175,6 +190,11 @@ def main():
                         assert ref["tokens"]==row["tokens"],(row,ref)
                         checked+=len(row["tokens"])
                     assert not by_marker
+                    if frozen:
+                        known=[row for row in rows if not row["bad"] and tuple(row["input_ids"]) in frozen]
+                        emit("unpadded_fidelity_diagnostic",pair=pair,mode=mode,sequences=len(known),
+                            equal_sequences=sum(row["tokens"]==frozen[tuple(row["input_ids"])][:row["gen"]] for row in known),
+                            first_token_equal=sum(row["tokens"][0]==frozen[tuple(row["input_ids"])][0] for row in known))
                     events=[json.loads(line) for line in trace.open()]
                     assert events[-1]["overflows"]==0
                     batches=sorted({e["batch"] for e in events if e["event"]=="compute"})
@@ -185,11 +205,11 @@ def main():
                         network=nettrace.read_text();assert "resident vLLM ready" in network
                         active=network.split("resident vLLM ready",1)[1]
                         calls=r"\b(?:accept4?|recvfrom|recvmsg|recvmmsg|sendto|sendmsg|sendmmsg)\("
-                        if mode=="kernel":assert not re.search(calls,active),active
+                        if kernel_mode:assert not re.search(calls,active),active
                         else:
                             for call in ("accept4","recvfrom","sendmsg"):assert re.search(r"\b"+call+r"\(",active),call
                         emit("network_verified",pair=pair,mode=mode,trace_path=str(nettrace))
-                    if mode=="kernel":
+                    if kernel_mode:
                         r=subprocess.run(["./build/bpfusion_load","stats"],capture_output=True,text=True)
                         emit("stats",pair=pair,mode=mode,code=r.returncode,stdout=r.stdout,stderr=r.stderr);assert r.returncode==0
                     assert not Path("/sys/module/bfusion_tx").exists()
