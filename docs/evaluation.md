@@ -207,3 +207,25 @@ metadata/slot advancement,1197 child launches/1216 parent invocations and
 match. Role dependency-only, no serving/performance claim. Official KV
 reservation and prefill still need replacement by bootstrap-owned slots and
 GPU request admission before kernel-queue integration. Full goal open.
+
+## Actual optimized kernel-queue integration
+
+Finding0032 integrates upstream model/head graphs into GPU-owned new-request
+prefill and tensor-batched decode through the existing eBPF queue/kernel TCP.
+The supporting comparison tests matched optimized computation against efficient
+native timed-epoll networking; it adds online prefill/admission/lifetime and
+tensor-batching evidence beyond the earlier CPU-prefilled generation probe.
+The initial OOM and wrong import failures precede requests and remain archived.
+Queue-derived KV allocation/context bounds are necessary bootstrap deviations;
+both modes use them and no earlier default-context qualification transfers.
+
+Strict traced service qualification is complete for both models/transports:
+2488 requests/88896 exact replayed tokens,1036 intended rejections,all batch
+counts1..8,fragmentation/reuse/wrap/pipeline/half-close/helper-thread shutdown.
+This is dependency evidence within the integrated comparison, not an independent
+paper result or a task-quality/model-math oracle. All actual client output bytes
+match independently advanced host replay of the same upstream graphs.
+The five-pair full performance matrix is running; no conclusion or completed
+comparison claim is made from that prefix. See the [plan](../bench/results/vllm_server_plan_20261012.md),
+[plan review](../bench/results/vllm_server_plan_review_20261012.md) and
+[integration finding](findings/0032-vllm-kernel-serving.md).

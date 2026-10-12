@@ -1,0 +1,41 @@
+{
+  "kernel": {
+    "command": [
+      "uname",
+      "-a"
+    ],
+    "exit_code": 0,
+    "stdout": "Linux coder-eb48d962-76f4-4ff7-bac5-7bc62ec2ada3-5c8bb655f6-khnns 7.3.0-070300rc3-generic #202609132247 SMP PREEMPT_DYNAMIC Sun Sep 13 23:07:09 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux\n",
+    "stderr": ""
+  },
+  "gpu": {
+    "command": [
+      "nvidia-smi",
+      "--query-gpu=uuid,name,driver_version,memory.total",
+      "--format=csv,noheader"
+    ],
+    "exit_code": 0,
+    "stdout": "GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, NVIDIA GeForce RTX 5090, 610.57.04, 32607 MiB\n",
+    "stderr": ""
+  },
+  "compiler": {
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "--version"
+    ],
+    "exit_code": 0,
+    "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Wed_Aug_20_01:58:59_PM_PDT_2025\nCuda compilation tools, release 13.0, V13.0.88\nBuild cuda_13.0.r13.0/compiler.36424714_0\n",
+    "stderr": ""
+  },
+  "versions": {
+    "command": [
+      "/tmp/bpfusion-vllm-server-93s64rmc/venv/bin/python",
+      "-c",
+      "import torch,transformers,importlib.metadata;print(\"torch\",torch.__version__,\"transformers\",transformers.__version__,\"vllm\",importlib.metadata.version(\"vllm\"))"
+    ],
+    "exit_code": 0,
+    "stdout": "torch 2.13.0+cu129 transformers 5.17.0 vllm 0.31.0\n",
+    "stderr": ""
+  },
+  "utc": "2026-10-12T21:06:00Z"
+}

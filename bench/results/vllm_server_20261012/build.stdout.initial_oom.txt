@@ -1,0 +1,8 @@
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	 -DBF_TRACE executor/vllm_graph.cu -o build/vllm_graph_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_trace.so.o -o build/vllm_graph_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_trace.so.o build/vllm_graph_trace.so.dlink.o /tmp/bpfusion-vllm-server-93s64rmc/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-vllm-server-93s64rmc/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_trace.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -DBF_TRACE executor/vllm_graph.cu -o build/vllm_graph_user_network_wait_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_user_network_wait_trace.so.o -o build/vllm_graph_user_network_wait_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_user_network_wait_trace.so.o build/vllm_graph_user_network_wait_trace.so.dlink.o /tmp/bpfusion-vllm-server-93s64rmc/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-vllm-server-93s64rmc/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_user_network_wait_trace.so -lbpf -lelf -lz -lpthread

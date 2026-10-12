@@ -117,3 +117,22 @@ qwen-graph-user-network-wait: $(BUILD)/qwen_graph_user_network_wait.so $(BUILD)/
 $(BUILD)/qwen_graph_user_network_wait.so: executor/qwen_graph.cu executor/userspace_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
 	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC \
 		-Ibpf/include $< -o $@ $(LDLIBS)
+
+# Upstream vLLM graphs with bootstrap-owned KV and GPU prefill/decode.
+VLLM_PYTHON ?= python3
+VLLM_CUDART = $(shell $(VLLM_PYTHON) -c 'import pathlib,torch; print(next(line.rsplit(" ",1)[-1] for line in pathlib.Path("/proc/self/maps").read_text().splitlines() if "/libcudart.so."+torch.version.cuda.split(".")[0] in line))')
+VLLM_NAMES := vllm_graph vllm_graph_user_network_wait vllm_graph_trace vllm_graph_user_network_wait_trace
+
+.PHONY: vllm-graph vllm-graph-user-network-wait vllm-graph-trace
+vllm-graph: $(BUILD)/vllm_graph.so $(BUILD)/vllm_graph
+vllm-graph-user-network-wait: $(BUILD)/vllm_graph_user_network_wait.so $(BUILD)/vllm_graph_user_network_wait
+vllm-graph-trace: $(BUILD)/vllm_graph_trace.so $(BUILD)/vllm_graph_trace $(BUILD)/vllm_graph_user_network_wait_trace.so $(BUILD)/vllm_graph_user_network_wait_trace
+
+$(addprefix $(BUILD)/,$(VLLM_NAMES)): executor/vllm_graph.py | $(BUILD)
+	ln -sf $(abspath executor/vllm_graph.py) $@
+
+$(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_NAMES))): $(BUILD)/%.so: executor/vllm_graph.cu executor/userspace_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
+	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+		$(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT) $(if $(findstring trace,$*),-DBF_TRACE) $< -o $@.o
+	$(NVCC) -arch=$(SM_ARCH) -dlink -Xcompiler=-fPIC $@.o -o $@.dlink.o
+	$(CXX) -shared -Wl,-z,defs $@.o $@.dlink.o $(VLLM_CUDART) -Wl,-rpath,$(dir $(VLLM_CUDART)) -o $@ $(LDLIBS)

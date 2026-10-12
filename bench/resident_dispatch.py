@@ -69,13 +69,17 @@ def gpu_state():
     return command("nvidia-smi","--query-gpu=timestamp,name,clocks.sm,clocks.mem,temperature.gpu,power.draw,utilization.gpu","--format=csv,noheader,nounits")
 
 
-def request(client,ids,expected):
-    body=struct.pack("<IIIIQ",0x514c4d51,len(ids),len(expected),0,time.monotonic_ns())+struct.pack(f"<{len(ids)}I",*ids)
+def request(client,ids,expected,gen=None):
+    # A dynamic-batch backend validates against independent trajectory replay.
+    if expected is not None: gen=len(expected)
+    assert isinstance(gen,int) and gen>0
+    client_ns=time.monotonic_ns()
+    body=struct.pack("<IIIIQ",0x514c4d51,len(ids),gen,0,client_ns)+struct.pack(f"<{len(ids)}I",*ids)
     wire=f"POST /generate HTTP/1.1\r\nHost: localhost\r\nContent-Length: {len(body)}\r\n\r\n".encode()+body
     start=time.monotonic_ns()
     client.sendall(wire)
     header=b""; data=b""; arrivals=[]
-    while len(data)<4*len(expected):
+    while len(data)<4*gen:
         chunk=client.recv(4096)
         arrived=time.monotonic_ns()
         assert chunk,"short reply"
@@ -84,17 +88,17 @@ def request(client,ids,expected):
             if b"\r\n\r\n" not in header: continue
             head,chunk=header.split(b"\r\n\r\n",1)
             assert head.startswith(b"HTTP/1.1 200 OK\r\n"),head
-            assert f"Content-Length: {4*len(expected)}".encode() in head,head
+            assert f"Content-Length: {4*gen}".encode() in head,head
             header=None
         data+=chunk
         arrivals.extend([arrived]*((len(data)//4)-len(arrivals)))
-    assert len(data)==4*len(expected),data
-    actual=list(struct.unpack(f"<{len(expected)}I",data))
-    assert actual==expected,(ids,actual,expected)
-    return {"start_ns":start,"arrival_ns":arrivals,"tokens":actual,
+    assert len(data)==4*gen,data
+    actual=list(struct.unpack(f"<{gen}I",data))
+    if expected is not None: assert actual==expected,(ids,actual,expected)
+    return {"client_ns":client_ns,"start_ns":start,"arrival_ns":arrivals,"tokens":actual,
             "ttft_ms":(arrivals[0]-start)/1e6,
             "latency_ms":(arrivals[-1]-start)/1e6,
-            "tpot_ms":(arrivals[-1]-arrivals[0])/(len(expected)-1)/1e6 if len(expected)>1 else None}
+            "tpot_ms":(arrivals[-1]-arrivals[0])/(gen-1)/1e6 if gen>1 else None}
 
 
 def connect():

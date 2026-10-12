@@ -23,12 +23,15 @@ tokens without a steady userspace request worker.
 
 The HTTP frontend accepts Content-Length POST requests with binary token-ID
 bodies and returns token IDs. It is not yet a text/JSON or OpenAI-compatible
-service. Arbitrary model/backend support, shared-weight tensor batching and
-full-service CPU attribution remain open.
+service. The optional [vLLM adapter](docs/findings/0032-vllm-kernel-serving.md) now
+qualifies shared-weight tensor batching for both checkpoints through the same
+protocol. Arbitrary model/backend support and full-service CPU attribution
+remain open.
 
 | Path | Compute/control | Network/reply | Role |
 |---|---|---|---|
-| `qwen_graph` | Reused HF graphs, GPU-controlled generation | eBPF admission, kernel accept/drain and TCP TX | Current worker-free prototype |
+| `qwen_graph` | Reused HF graphs, GPU-controlled generation | eBPF admission, kernel accept/drain and TCP TX | Qualified HF prototype |
+| `vllm_graph_trace` | Upstream optimized graphs/head, GPU prefill and tensor-batched decode | Same eBPF/kernel transport | Qualified optimized adapter; matched timing in progress |
 | `qwen_graph_user_network_wait` | Identical resident GPU computation | Efficient native userspace timed epoll and nonblocking send | Matched alternative mechanism |
 | `qwen_graph_control` | Same graph banks, host resumes after requests | Same eBPF/kernel transport | Dispatch ablation |
 | `qwen.cu`, Python HF and synthetic MLP paths | Earlier implementations with different maturity | See their individual findings | Historical references and controls |
@@ -77,8 +80,11 @@ No alternative megakernel is qualified yet; the measured executor remains in use
 passes1197 actual GPU launches at batch1/2/4/8 with bit-identical hidden states.
 This qualifies the computation interface. The [GPU-owned decode follow-up](docs/findings/0031-optimized-serving.md#optimized-backend-integration-gpu-owned-decode-and-sampling)
 then generates4662 tokens with official head/sampling and GPU metadata advancement,
-matching74 frozen official sequences after CPU prefill. Prefill/admission and
-kernel-queue integration remain unfinished; no optimized-serving speedup is claimed.
+matching74 frozen official sequences after CPU prefill. The
+[complete kernel-queue integration](docs/findings/0032-vllm-kernel-serving.md)
+now qualifies GPU prefill and batched online request handling with88896
+checked tokens across both models/transports. Its matched timing is in progress;
+no optimized-serving speedup is claimed.
 The existing HF graph interface now also accepts HF checkpoints/model directories.
 [Qwen and Llama qualification](docs/findings/0023-batch-execution-qualification.md#hf-graph-reuse-across-qwen-and-llama-architectures)
 passes both resident and host-control dispatch for Qwen2.5-0.5B and
@@ -102,6 +108,7 @@ executor/executor.cu           resident synthetic-MLP CUDA kernel + responder + 
 executor/llm_executor.py       host HF Qwen baseline on the token ring (--tcp)
 executor/qwen.cu               real Qwen reference in one resident CUDA kernel
 executor/qwen_graph.py/.cu     HF bootstrap capture + GPU-tail graph dispatch
+executor/vllm_graph.py/.cu     optimized graph bootstrap + GPU prefill/batched decode
 module/bfusion_tx.c            kernel accept/drain and asynchronous TCP/HTTP TX
 executor/cuda_timer.h          %globaltimer <-> CLOCK_MONOTONIC calibration
 tools/bpfusion_load.c          attach/detach/stats; owns and pins the BPF maps

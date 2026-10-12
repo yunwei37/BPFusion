@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspaces/repository/./build/vllm_graph_trace", line 167, in <module>
+    if __name__=="__main__":main()
+                            ^^^^^^
+  File "/workspaces/repository/./build/vllm_graph_trace", line 34, in main
+    from vllm.v1.worker.gpu_worker import GPUWorker
+ImportError: cannot import name 'GPUWorker' from 'vllm.v1.worker.gpu_worker' (/tmp/bpfusion-vllm-server-93s64rmc/venv/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py). Did you mean: 'Worker'?
