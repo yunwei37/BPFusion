@@ -101,13 +101,88 @@ The diagnostic drivers own their attach/module/pin lifecycle. The untraced
 vllm_graph and vllm_graph_user_network_wait variants build, but untraced service
 correctness/timing is not yet established by these traced runs.
 
-## Matched performance status
+## Completed matched performance comparison
 
-The integrated matrix is in progress: five alternating process pairs/model,
-four gen1/64 × clients1/8 cells with64 measured requests and8 excluded checked
-warmups/executor. Both paths use identical optimized computation, allocation,
-GPU batching policy and BF_TRACE instrumentation. This is a matched component
-comparison against efficient native networking, not official-vLLM-server or
-external-SOTA superiority. No performance conclusion follows from this
-correctness prefix. The full goal remains active until the matrix, fresh
-result review, honest publication and restoration are verified.
+Both checkpoints complete all five alternating process pairs and four
+gen1/64 × clients1/8 cells per mode:80 cells,5120 measured requests and166400
+measured tokens. Another160 checked gen1 warmups are excluded from metrics.
+All20 executor waits and both complete replay analyses exit0. No failed,
+excluded or retried full-run row occurs. Individual graph/batch trajectories
+and output references are retained for every process.
+
+| Model | Primary condition | Kernel | Native timed userspace | Difference favoring kernel | Nominal paired t95, df4 |
+|---|---|---:|---:|---:|---|
+| SmolLM2-135M | gen1/c1 mean TTFT, ms |1.201405|1.222876|+0.021471|[-0.044829,0.087771]|
+| Qwen2.5-0.5B | gen1/c1 mean TTFT, ms |1.473674|1.432418|-0.041256|[-0.093513,0.011001]|
+| SmolLM2-135M | gen64/c8 output tokens/s |5358.410349|5363.427331|-5.016982|[-391.065270,381.031306]|
+| Qwen2.5-0.5B | gen64/c8 output tokens/s |4576.218124|4630.119229|-53.901104|[-208.235786,100.433577]|
+
+Latency difference is user-minus-kernel; throughput is kernel-minus-user.
+All primary intervals contain zero: reliable superiority and equivalence
+remain unproven. Qwen pair0's -275.985358TPS and the large opposing Smol pair1/2
+differences remain in the estimates, without selective exclusion or invented
+cause. These are separate nominal intervals, with no familywide superiority
+test or isolated-GPU assumption. Secondary conditions and finite-request
+nearest-rank p50/p99, TPOT and completion are retained in the replay output.
+
+Both paths reuse identical graph arithmetic, checkpoint/precision, reserved
+KV allocation and GPU batching policy. The actual arrival/batch trajectories
+differ. All single-client matched sequences agree320/320 per model/condition.
+At c8, Qwen cross-mode agreement is312/320 forgen1 and278/320 forgen64;
+Smol is320/320 forgen1 and290/320 forgen64. Every actual sequence separately
+matches its independently advanced host replay. These optimized FP16 trajectory
+differences preclude an identical-output superiority claim. Fixed token-ID
+lengths and wire encoding remain matched. Anonymous versus kernel-backed
+pages, polling, connection handling and trajectory effects prevent attributing
+any difference solely to eBPF instructions or saved syscalls.
+
+The absolute results demonstrate a working optimized worker-free backend
+with real tensor batching. They do not establish an eBPF speedup or a causal
+speedup over the older HF/cross-node/profiling conditions. This new comparison
+is loopback and identically BF_TRACE-instrumented; it measures neither physical
+delivery nor uninstrumented production timing. No total CPU/energy, text API,
+arbitrary model, shared-prefix cache or external-serving superiority follows.
+
+- [Qwen full raw](../../bench/results/vllm_server_20261012/qwen_performance.jsonl),
+  [wait status](../../bench/results/vllm_server_20261012/qwen_performance_status.json)
+  and [complete reconstruction](../../bench/results/vllm_server_20261012/qwen_performance_analysis.stdout.txt).
+- [Smol full raw](../../bench/results/vllm_server_20261012/smol_performance.jsonl),
+  [wait status](../../bench/results/vllm_server_20261012/smol_performance_status.json)
+  and [complete reconstruction](../../bench/results/vllm_server_20261012/smol_performance_analysis.stdout.txt).
+- [Cross-mode sequence agreement](../../bench/results/vllm_server_20261012/cross_mode_output_agreement.json)
+  and [bounded host journal](../../bench/results/vllm_server_20261012/host_journal.json).
+
+Reproduce a complete model matrix with
+`python3 bench/vllm_serving.py --model MODEL --output /tmp/new-performance.jsonl`.
+Replay either archived raw with
+`python3 bench/vllm_serving_analysis.py bench/results/vllm_server_20261012/qwen_performance.jsonl`
+(and the analogous Smol filename). Replay requires only standard Python.
+Each raw snapshot embeds source/config/actual invocations; integration
+publication during collection and removal of unused Python locals change
+no computation behavior or measurement definition.
+
+The ten performance kernel TX lifecycles each retain54160 bytes,
+264 completed,0 abandoned/retries and19 accepted/closed. Strict correctness
+has621 completed plus the one deliberate invalid binary EOF abandonment per
+kernel executor; these are not missing valid replies. All terminal kernel
+maps have reserved0/eight FREE slots. Successful bounded journal read
+20:20:00–21:20:45UTC has no listed fault matches, but does not establish
+continuous isolation. No changes to the original base runtime or host settings.
+[Final owner restoration](../../bench/results/vllm_server_20261012/restoration.json)
+records absent owner processes/module/pins/GPU applications, unchanged original
+Torch2.14.1+cu130/Transformers5.19.0, removal of the owned temporary environment
+and runtime-linked build artifacts. Existing Workspace/PVC/model caches and
+unrelated tools/setup_env.sh remain. The [live Workspace read](../../bench/results/vllm_server_20261012/workspace_final.txt)
+confirms the original UID Running/Ready with zero restarts.
+[Installed package versions](../../bench/results/vllm_server_20261012/installed_packages.json)
+remain as provenance. Two cleanup observation commands used unavailable pip
+and an incorrect Python path; neither removed state. Installed distribution
+metadata and the actual base interpreter supplied the successful observations.
+[Fresh combined result review](../../bench/results/vllm_server_result_review_20261012.md)
+independently reconstructs every model/cell/metric and trajectory, admits the
+run as valid/complete supporting evidence and finds no blocker within the
+declared instrumented scope. It does not declare the whole goal achieved.
+Close this matrix with its inconclusive transport-performance outcome; do not
+repeat unchanged conditions to obtain a favorable estimate. Keep the optimized
+adapter and select a causal discriminator for broader default service/network
+and CPU-cost acceptance, with the full retained goal still active.

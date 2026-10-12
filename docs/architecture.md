@@ -293,7 +293,7 @@ reconstructs metadata, groups equal-length prefills, tensor-batches active
 decodes and publishes results. The same ordered DONE/TCP recycle rules apply.
 The supported scope is one full-attention KV group on the two qualified
 checkpoints, not arbitrary backend support. Finding0032 records strict traced
-service fidelity and the matched-performance status.
+service fidelity and the completed matched traced comparison.
 
 ## Ownership rules (the correctness core)
 
@@ -331,6 +331,7 @@ completion the responder is still reading.
 | `executor/llm_executor.py` | host-driven HF Qwen baseline on the token ring |
 | `executor/qwen.cu` | real resident Qwen inference, bootstrap and shutdown only on the host |
 | `executor/qwen_graph.py` / `.cu` | bootstrap-only HF graph capture and native GPU request/model dispatch |
+| `executor/vllm_graph.py` / `.cu` | upstream optimized capture/head and GPU prefill/tensor-batched decode |
 | `module/bfusion_tx.c` | kernel connection ownership, completion polling and ordered TCP/HTTP TX |
 | `tools/llm_bench.py` | LLM TTFT/TPOT vs a direct in-process baseline |
 | `tools/llm_load.py` | LLM concurrency sweep (goodput / TTFT / TPOT) |
@@ -351,8 +352,9 @@ completion the responder is still reading.
   unqualified.
 - General serving and shared-prefix KV caching. The HF graph path advances
   private batch1 banks; the optional vLLM adapter now qualifies tensor-batched
-  prefill/decode for two full-attention checkpoints. Its matched timing is in
-  progress; arbitrary models and shared-prefix reuse remain unqualified.
+  prefill/decode for two full-attention checkpoints. Its matched traced timing
+  is complete and inconclusive; arbitrary models and shared-prefix reuse
+  remain unqualified.
 - Direct-NIC and loss/retransmission/overload evaluation. Finding0029 now measures
   actual cross-node TCP over flannel/Tailscale and Ethernet; it is not bare-NIC
   TCP or GPUDirect.

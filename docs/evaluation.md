@@ -225,7 +225,21 @@ counts1..8,fragmentation/reuse/wrap/pipeline/half-close/helper-thread shutdown.
 This is dependency evidence within the integrated comparison, not an independent
 paper result or a task-quality/model-math oracle. All actual client output bytes
 match independently advanced host replay of the same upstream graphs.
-The five-pair full performance matrix is running; no conclusion or completed
-comparison claim is made from that prefix. See the [plan](../bench/results/vllm_server_plan_20261012.md),
+The five-pair full performance matrix is complete:80 cells/5120 measured
+requests/166400 measured tokens,20 normal executor waits and two complete
+replay analyses. Smol kernel/user TTFT1.201405/1.222876ms and TPS5358.410/5363.427;
+Qwen1.473674/1.432418ms and4576.218/4630.119. All primary paired t95 intervals
+contain zero; superiority and equivalence remain unproven. This is supporting
+mechanism/workload-boundary evidence, not a paper RQ or novelty proof.
+Actual concurrent batch trajectories and some greedy outputs differ between
+transports; every actual sequence matches its own independent host replay.
+Both modes use identical BF_TRACE; default untraced and new cross-node timing,
+total CPU and arbitrary-backend support remain unqualified. [Fresh combined result review](../bench/results/vllm_server_result_review_20261012.md)
+admits valid/complete supporting evidence and no blocker within the traced
+contract. Owner restoration verifies no processes/module/pins/GPU applications,
+unchanged base runtime and removal of owned temporary/build artifacts; original
+Workspace UID is Running/Ready with zero restarts. The full goal remains active:
+no untraced/physical-path/total-CPU/general-backend claim follows. Close this
+unchanged matrix and select a causal discriminator for broader acceptance. See the [plan](../bench/results/vllm_server_plan_20261012.md),
 [plan review](../bench/results/vllm_server_plan_review_20261012.md) and
 [integration finding](findings/0032-vllm-kernel-serving.md).

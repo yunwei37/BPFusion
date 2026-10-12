@@ -31,7 +31,7 @@ remain open.
 | Path | Compute/control | Network/reply | Role |
 |---|---|---|---|
 | `qwen_graph` | Reused HF graphs, GPU-controlled generation | eBPF admission, kernel accept/drain and TCP TX | Qualified HF prototype |
-| `vllm_graph_trace` | Upstream optimized graphs/head, GPU prefill and tensor-batched decode | Same eBPF/kernel transport | Qualified optimized adapter; matched timing in progress |
+| `vllm_graph_trace` | Upstream optimized graphs/head, GPU prefill and tensor-batched decode | Same eBPF/kernel transport | Qualified optimized adapter; matched traced comparison |
 | `qwen_graph_user_network_wait` | Identical resident GPU computation | Efficient native userspace timed epoll and nonblocking send | Matched alternative mechanism |
 | `qwen_graph_control` | Same graph banks, host resumes after requests | Same eBPF/kernel transport | Dispatch ablation |
 | `qwen.cu`, Python HF and synthetic MLP paths | Earlier implementations with different maturity | See their individual findings | Historical references and controls |
@@ -75,7 +75,8 @@ Backend integration reuses upstream optimized computation so a matched
 comparison can attribute effects to the Linux/eBPF serving path.
 [Backend source audit](docs/upstream-backends.md) compares candidates and
 records concrete model, launch, correctness and online-service boundaries.
-No alternative megakernel is qualified yet; the measured executor remains in use.
+No alternative megakernel is qualified yet. The HF executor remains available
+alongside the qualified upstream vLLM graph adapter.
 [Official vLLM FULL-graph reuse](docs/findings/0031-optimized-serving.md#optimized-backend-integration-actual-full-graph-reuse)
 passes1197 actual GPU launches at batch1/2/4/8 with bit-identical hidden states.
 This qualifies the computation interface. The [GPU-owned decode follow-up](docs/findings/0031-optimized-serving.md#optimized-backend-integration-gpu-owned-decode-and-sampling)
@@ -83,8 +84,10 @@ then generates4662 tokens with official head/sampling and GPU metadata advanceme
 matching74 frozen official sequences after CPU prefill. The
 [complete kernel-queue integration](docs/findings/0032-vllm-kernel-serving.md)
 now qualifies GPU prefill and batched online request handling with88896
-checked tokens across both models/transports. Its matched timing is in progress;
-no optimized-serving speedup is claimed.
+checked tokens across both models/transports. The completed matched traced
+comparison measures1.201/1.474ms kernel TTFT and5358/4576tokens/s at eight
+clients for Smol/Qwen. All primary kernel-versus-efficient-userspace intervals
+contain zero; no eBPF speedup or uninstrumented timing is established.
 The existing HF graph interface now also accepts HF checkpoints/model directories.
 [Qwen and Llama qualification](docs/findings/0023-batch-execution-qualification.md#hf-graph-reuse-across-qwen-and-llama-architectures)
 passes both resident and host-control dispatch for Qwen2.5-0.5B and
