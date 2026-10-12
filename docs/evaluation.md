@@ -255,8 +255,12 @@ independent metadata replay validate it. Semantic setup verifies631488 active
 FP16 hidden elements bit-identical against compact unpadded query metadata at
 the same total tensor shape. Default untraced single-client qualification adds
 160 real requests/5200 exact frozen-upstream tokens, with no broader timing claim.
-The complete160-cell/four-condition/two-model matrix is running; no performance
-conclusion is drawn from setup. See [plan](../bench/results/prefill_packing_plan_20261012.md),
+The complete160-cell/four-condition/two-model matrix passes10240 measured
+requests/332800 tokens plus320 checked warmups. Qwen kernel primary packing
+gain is0.158787ms with nominal paired t95[0.017962,0.299612]; other three
+primary intervals cross0. All gen64/c8 TTFT intervals are positive, with
+reported TPS/completion/TPOT tradeoffs. All packed transport TTFT/TPS intervals
+cross0. Keep every outlier and distinguish real policy effects from eBPF gains. See [plan](../bench/results/prefill_packing_plan_20261012.md),
 [plan review](../bench/results/prefill_packing_plan_review_20261012.md) and
 [finding](findings/0033-prefill-packing.md). Preserve all ordinary unpadded
 fidelity differences and actual batch trajectories. The goal remains active.

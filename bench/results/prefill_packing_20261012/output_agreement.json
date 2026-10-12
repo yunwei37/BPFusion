@@ -1,0 +1,1358 @@
+{
+  "qwen": {
+    "comparisons": [
+      {
+        "baseline": "grouped-kernel",
+        "candidate": "packed-kernel",
+        "gen": 1,
+        "concurrency": 1,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "grouped-kernel",
+        "candidate": "packed-kernel",
+        "gen": 64,
+        "concurrency": 1,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "grouped-kernel",
+        "candidate": "packed-kernel",
+        "gen": 1,
+        "concurrency": 8,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 63,
+            "first_token_equal": 63
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 62,
+            "first_token_equal": 62
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 63,
+            "first_token_equal": 63
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 62,
+            "first_token_equal": 62
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 62,
+            "first_token_equal": 62
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 312,
+        "first_token_equal": 312
+      },
+      {
+        "baseline": "grouped-kernel",
+        "candidate": "packed-kernel",
+        "gen": 64,
+        "concurrency": 8,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 55,
+            "first_token_equal": 55
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 54,
+            "first_token_equal": 54
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 60,
+            "first_token_equal": 60
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 56,
+            "first_token_equal": 56
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 59,
+            "first_token_equal": 59
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 284,
+        "first_token_equal": 284
+      },
+      {
+        "baseline": "grouped-userspace",
+        "candidate": "packed-userspace",
+        "gen": 1,
+        "concurrency": 1,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "grouped-userspace",
+        "candidate": "packed-userspace",
+        "gen": 64,
+        "concurrency": 1,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "grouped-userspace",
+        "candidate": "packed-userspace",
+        "gen": 1,
+        "concurrency": 8,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 63,
+            "first_token_equal": 63
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 63,
+            "first_token_equal": 63
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 63,
+            "first_token_equal": 63
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 317,
+        "first_token_equal": 317
+      },
+      {
+        "baseline": "grouped-userspace",
+        "candidate": "packed-userspace",
+        "gen": 64,
+        "concurrency": 8,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 53,
+            "first_token_equal": 53
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 60,
+            "first_token_equal": 60
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 55,
+            "first_token_equal": 55
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 55,
+            "first_token_equal": 55
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 60,
+            "first_token_equal": 60
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 283,
+        "first_token_equal": 283
+      },
+      {
+        "baseline": "packed-userspace",
+        "candidate": "packed-kernel",
+        "gen": 1,
+        "concurrency": 1,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "packed-userspace",
+        "candidate": "packed-kernel",
+        "gen": 64,
+        "concurrency": 1,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "packed-userspace",
+        "candidate": "packed-kernel",
+        "gen": 1,
+        "concurrency": 8,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 63,
+            "first_token_equal": 63
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 63,
+            "first_token_equal": 63
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 63,
+            "first_token_equal": 63
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 317,
+        "first_token_equal": 317
+      },
+      {
+        "baseline": "packed-userspace",
+        "candidate": "packed-kernel",
+        "gen": 64,
+        "concurrency": 8,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 62,
+            "first_token_equal": 62
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 62,
+            "first_token_equal": 62
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 59,
+            "first_token_equal": 59
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 63,
+            "first_token_equal": 63
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 59,
+            "first_token_equal": 59
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 305,
+        "first_token_equal": 305
+      }
+    ],
+    "frozen_unpadded_fidelity": [
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T21:57:58Z",
+        "pair": 0,
+        "mode": "grouped-kernel",
+        "sequences": 264,
+        "equal_sequences": 240,
+        "first_token_equal": 256
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T21:58:41Z",
+        "pair": 0,
+        "mode": "packed-kernel",
+        "sequences": 264,
+        "equal_sequences": 234,
+        "first_token_equal": 250
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T21:59:22Z",
+        "pair": 0,
+        "mode": "grouped-userspace",
+        "sequences": 264,
+        "equal_sequences": 244,
+        "first_token_equal": 260
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:00:01Z",
+        "pair": 0,
+        "mode": "packed-userspace",
+        "sequences": 264,
+        "equal_sequences": 233,
+        "first_token_equal": 249
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:00:40Z",
+        "pair": 1,
+        "mode": "packed-userspace",
+        "sequences": 264,
+        "equal_sequences": 237,
+        "first_token_equal": 253
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:01:21Z",
+        "pair": 1,
+        "mode": "grouped-userspace",
+        "sequences": 264,
+        "equal_sequences": 236,
+        "first_token_equal": 252
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:02:03Z",
+        "pair": 1,
+        "mode": "packed-kernel",
+        "sequences": 264,
+        "equal_sequences": 236,
+        "first_token_equal": 252
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:02:45Z",
+        "pair": 1,
+        "mode": "grouped-kernel",
+        "sequences": 264,
+        "equal_sequences": 242,
+        "first_token_equal": 258
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:03:25Z",
+        "pair": 2,
+        "mode": "grouped-userspace",
+        "sequences": 264,
+        "equal_sequences": 238,
+        "first_token_equal": 254
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:04:08Z",
+        "pair": 2,
+        "mode": "packed-userspace",
+        "sequences": 264,
+        "equal_sequences": 238,
+        "first_token_equal": 254
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:04:54Z",
+        "pair": 2,
+        "mode": "grouped-kernel",
+        "sequences": 264,
+        "equal_sequences": 238,
+        "first_token_equal": 254
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:05:41Z",
+        "pair": 2,
+        "mode": "packed-kernel",
+        "sequences": 264,
+        "equal_sequences": 237,
+        "first_token_equal": 253
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:06:24Z",
+        "pair": 3,
+        "mode": "packed-kernel",
+        "sequences": 264,
+        "equal_sequences": 232,
+        "first_token_equal": 248
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:07:02Z",
+        "pair": 3,
+        "mode": "grouped-kernel",
+        "sequences": 264,
+        "equal_sequences": 242,
+        "first_token_equal": 258
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:07:40Z",
+        "pair": 3,
+        "mode": "packed-userspace",
+        "sequences": 264,
+        "equal_sequences": 233,
+        "first_token_equal": 249
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:08:17Z",
+        "pair": 3,
+        "mode": "grouped-userspace",
+        "sequences": 264,
+        "equal_sequences": 242,
+        "first_token_equal": 258
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:08:55Z",
+        "pair": 4,
+        "mode": "grouped-kernel",
+        "sequences": 264,
+        "equal_sequences": 236,
+        "first_token_equal": 252
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:09:33Z",
+        "pair": 4,
+        "mode": "packed-kernel",
+        "sequences": 264,
+        "equal_sequences": 237,
+        "first_token_equal": 253
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:10:10Z",
+        "pair": 4,
+        "mode": "grouped-userspace",
+        "sequences": 264,
+        "equal_sequences": 240,
+        "first_token_equal": 256
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:10:47Z",
+        "pair": 4,
+        "mode": "packed-userspace",
+        "sequences": 264,
+        "equal_sequences": 239,
+        "first_token_equal": 255
+      }
+    ]
+  },
+  "smol": {
+    "comparisons": [
+      {
+        "baseline": "grouped-kernel",
+        "candidate": "packed-kernel",
+        "gen": 1,
+        "concurrency": 1,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "grouped-kernel",
+        "candidate": "packed-kernel",
+        "gen": 64,
+        "concurrency": 1,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "grouped-kernel",
+        "candidate": "packed-kernel",
+        "gen": 1,
+        "concurrency": 8,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "grouped-kernel",
+        "candidate": "packed-kernel",
+        "gen": 64,
+        "concurrency": 8,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 58,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 56,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 56,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 54,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 56,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 280,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "grouped-userspace",
+        "candidate": "packed-userspace",
+        "gen": 1,
+        "concurrency": 1,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "grouped-userspace",
+        "candidate": "packed-userspace",
+        "gen": 64,
+        "concurrency": 1,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "grouped-userspace",
+        "candidate": "packed-userspace",
+        "gen": 1,
+        "concurrency": 8,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "grouped-userspace",
+        "candidate": "packed-userspace",
+        "gen": 64,
+        "concurrency": 8,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 57,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 56,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 57,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 59,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 57,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 286,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "packed-userspace",
+        "candidate": "packed-kernel",
+        "gen": 1,
+        "concurrency": 1,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "packed-userspace",
+        "candidate": "packed-kernel",
+        "gen": 64,
+        "concurrency": 1,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "packed-userspace",
+        "candidate": "packed-kernel",
+        "gen": 1,
+        "concurrency": 8,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 64,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 320,
+        "first_token_equal": 320
+      },
+      {
+        "baseline": "packed-userspace",
+        "candidate": "packed-kernel",
+        "gen": 64,
+        "concurrency": 8,
+        "pairs": [
+          {
+            "pair": 0,
+            "sequences": 64,
+            "equal_sequences": 61,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 1,
+            "sequences": 64,
+            "equal_sequences": 56,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 2,
+            "sequences": 64,
+            "equal_sequences": 61,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 3,
+            "sequences": 64,
+            "equal_sequences": 57,
+            "first_token_equal": 64
+          },
+          {
+            "pair": 4,
+            "sequences": 64,
+            "equal_sequences": 59,
+            "first_token_equal": 64
+          }
+        ],
+        "sequences": 320,
+        "equal_sequences": 294,
+        "first_token_equal": 320
+      }
+    ],
+    "frozen_unpadded_fidelity": [
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:11:25Z",
+        "pair": 0,
+        "mode": "grouped-kernel",
+        "sequences": 264,
+        "equal_sequences": 240,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:11:58Z",
+        "pair": 0,
+        "mode": "packed-kernel",
+        "sequences": 264,
+        "equal_sequences": 236,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:12:32Z",
+        "pair": 0,
+        "mode": "grouped-userspace",
+        "sequences": 264,
+        "equal_sequences": 242,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:13:04Z",
+        "pair": 0,
+        "mode": "packed-userspace",
+        "sequences": 264,
+        "equal_sequences": 235,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:13:37Z",
+        "pair": 1,
+        "mode": "packed-userspace",
+        "sequences": 264,
+        "equal_sequences": 240,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:14:09Z",
+        "pair": 1,
+        "mode": "grouped-userspace",
+        "sequences": 264,
+        "equal_sequences": 244,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:14:42Z",
+        "pair": 1,
+        "mode": "packed-kernel",
+        "sequences": 264,
+        "equal_sequences": 236,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:15:15Z",
+        "pair": 1,
+        "mode": "grouped-kernel",
+        "sequences": 264,
+        "equal_sequences": 240,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:15:47Z",
+        "pair": 2,
+        "mode": "grouped-userspace",
+        "sequences": 264,
+        "equal_sequences": 246,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:16:19Z",
+        "pair": 2,
+        "mode": "packed-userspace",
+        "sequences": 264,
+        "equal_sequences": 239,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:16:52Z",
+        "pair": 2,
+        "mode": "grouped-kernel",
+        "sequences": 264,
+        "equal_sequences": 242,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:17:26Z",
+        "pair": 2,
+        "mode": "packed-kernel",
+        "sequences": 264,
+        "equal_sequences": 238,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:17:58Z",
+        "pair": 3,
+        "mode": "packed-kernel",
+        "sequences": 264,
+        "equal_sequences": 236,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:18:31Z",
+        "pair": 3,
+        "mode": "grouped-kernel",
+        "sequences": 264,
+        "equal_sequences": 244,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:19:03Z",
+        "pair": 3,
+        "mode": "packed-userspace",
+        "sequences": 264,
+        "equal_sequences": 241,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:19:36Z",
+        "pair": 3,
+        "mode": "grouped-userspace",
+        "sequences": 264,
+        "equal_sequences": 240,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:20:08Z",
+        "pair": 4,
+        "mode": "grouped-kernel",
+        "sequences": 264,
+        "equal_sequences": 242,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:20:41Z",
+        "pair": 4,
+        "mode": "packed-kernel",
+        "sequences": 264,
+        "equal_sequences": 236,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:21:14Z",
+        "pair": 4,
+        "mode": "grouped-userspace",
+        "sequences": 264,
+        "equal_sequences": 246,
+        "first_token_equal": 264
+      },
+      {
+        "event": "unpadded_fidelity_diagnostic",
+        "utc": "2026-10-12T22:21:46Z",
+        "pair": 4,
+        "mode": "packed-userspace",
+        "sequences": 264,
+        "equal_sequences": 239,
+        "first_token_equal": 264
+      }
+    ]
+  }
+}

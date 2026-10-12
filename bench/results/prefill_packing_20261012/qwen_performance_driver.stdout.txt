@@ -1,0 +1,40 @@
+START pair=0 mode=grouped-kernel pid=151113
+PASS pair=0 mode=grouped-kernel requests=264 tokens=8328 batches=[1, 2, 3, 4, 8]
+START pair=0 mode=packed-kernel pid=151376
+PASS pair=0 mode=packed-kernel requests=264 tokens=8328 batches=[1, 2, 6, 7, 8]
+START pair=0 mode=grouped-userspace pid=151630
+PASS pair=0 mode=grouped-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 8]
+START pair=0 mode=packed-userspace pid=151877
+PASS pair=0 mode=packed-userspace requests=264 tokens=8328 batches=[1, 2, 6, 7, 8]
+START pair=1 mode=packed-userspace pid=152132
+PASS pair=1 mode=packed-userspace requests=264 tokens=8328 batches=[1, 2, 3, 5, 6, 7, 8]
+START pair=1 mode=grouped-userspace pid=152372
+PASS pair=1 mode=grouped-userspace requests=264 tokens=8328 batches=[1, 2, 4, 8]
+START pair=1 mode=packed-kernel pid=152613
+PASS pair=1 mode=packed-kernel requests=264 tokens=8328 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=1 mode=grouped-kernel pid=152857
+PASS pair=1 mode=grouped-kernel requests=264 tokens=8328 batches=[1, 2, 3, 4, 8]
+START pair=2 mode=grouped-userspace pid=153138
+PASS pair=2 mode=grouped-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 8]
+START pair=2 mode=packed-userspace pid=153395
+PASS pair=2 mode=packed-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=2 mode=grouped-kernel pid=153651
+PASS pair=2 mode=grouped-kernel requests=264 tokens=8328 batches=[1, 2, 3, 4, 8]
+START pair=2 mode=packed-kernel pid=153919
+PASS pair=2 mode=packed-kernel requests=264 tokens=8328 batches=[1, 2, 3, 5, 6, 7, 8]
+START pair=3 mode=packed-kernel pid=154199
+PASS pair=3 mode=packed-kernel requests=264 tokens=8328 batches=[1, 2, 3, 5, 6, 7, 8]
+START pair=3 mode=grouped-kernel pid=154442
+PASS pair=3 mode=grouped-kernel requests=264 tokens=8328 batches=[1, 2, 3, 4, 8]
+START pair=3 mode=packed-userspace pid=154693
+PASS pair=3 mode=packed-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=3 mode=grouped-userspace pid=154939
+PASS pair=3 mode=grouped-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 8]
+START pair=4 mode=grouped-kernel pid=155192
+PASS pair=4 mode=grouped-kernel requests=264 tokens=8328 batches=[1, 2, 3, 4, 8]
+START pair=4 mode=packed-kernel pid=155434
+PASS pair=4 mode=packed-kernel requests=264 tokens=8328 batches=[1, 3, 5, 7, 8]
+START pair=4 mode=grouped-userspace pid=155682
+PASS pair=4 mode=grouped-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 8]
+START pair=4 mode=packed-userspace pid=155922
+PASS pair=4 mode=packed-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 6, 7, 8]
