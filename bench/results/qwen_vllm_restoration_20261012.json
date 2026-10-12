@@ -1,0 +1,44 @@
+{
+  "observed_utc": "2026-10-12T19:18:45.519958+00:00",
+  "production_frozen_commit": "442ab452b38680fb4bd6aa58ff21b7ab68be4d31",
+  "preflight_publication_commit": "85c77fad8422d25784573006e0e5a411e14cef41",
+  "own_detached_driver_absent": true,
+  "detached_driver_wait_status": "not retained",
+  "temporary_root": "/tmp/bpfusion-vllm-uapngodu",
+  "temporary_directory_process_users": [],
+  "actual_comparator_archived_byte_equal": true,
+  "gpu_query_exit": 0,
+  "gpu_compute_apps": "",
+  "own_modules": [],
+  "own_pins": [],
+  "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167",
+  "host_journal": {
+    "observed_utc": "2026-10-12T19:12:02.316135+00:00",
+    "since_utc": "2026-10-12 18:50:00 UTC",
+    "exit": 0,
+    "relevant": [
+      "2026-10-12T11:57:37-07:00 lab kernel: bfusion_tx: map id=8846 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T11:57:41-07:00 lab kernel: bfusion_tx: exit bytes=8360 completed=40 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T12:00:08-07:00 lab kernel: bfusion_tx: map id=8864 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T12:00:20-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T12:02:21-07:00 lab kernel: bfusion_tx: map id=8876 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T12:02:34-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T12:03:27-07:00 lab kernel: bfusion_tx: map id=8884 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T12:03:39-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T12:05:42-07:00 lab kernel: bfusion_tx: map id=8894 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T12:05:54-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T12:07:00-07:00 lab kernel: bfusion_tx: map id=8902 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T12:07:12-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19"
+    ]
+  },
+  "original_workspace": {
+    "uid": "3e8994f8-77ba-4a73-a3a5-35ed69a0a8a2",
+    "phase": "Running",
+    "ready": true,
+    "restarts": 0,
+    "observed_utc": "2026-10-12T19:12:02Z"
+  },
+  "shared_model_and_compiler_caches": "preserved",
+  "unrelated_preserved": "tools/setup_env.sh",
+  "temporary_root_absent": true
+}

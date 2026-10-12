@@ -149,3 +149,11 @@ equal the frozen oracle. vLLM outputs disagree on some cells and are retained
 separately as planned. Own driver/API/engine/model/module/pins absent;
 successful nvidia-smi is empty before full collection. Begin unchanged
 five-pair40-cell full matrix on source442ab45 with the repaired child PATH.
+
+Terminal audit clarification: ten recorded wait exit0 codes belong to
+launching parents. The official vLLM shutdown can force-kill its EngineCore
+child and native HF shutdown logs SubprocPool unclean exit. Retain those
+framework messages; do not claim every child exited0 or wholly graceful
+shutdown. Adapter timeout-force cleanup is not observed. Owned groups
+clear and all measured requests are complete; the detached wrapper wait
+code was not retained, while actual replay analysis exits0.

@@ -1,0 +1,153 @@
+{
+  "observed_utc": "2026-10-12T19:12:46.156957+00:00",
+  "launcher_parent_wait_exit_codes": [
+    {
+      "pair": 0,
+      "mode": "bpfusion",
+      "exit": 0
+    },
+    {
+      "pair": 0,
+      "mode": "vllm",
+      "exit": 0
+    },
+    {
+      "pair": 1,
+      "mode": "vllm",
+      "exit": 0
+    },
+    {
+      "pair": 1,
+      "mode": "bpfusion",
+      "exit": 0
+    },
+    {
+      "pair": 2,
+      "mode": "bpfusion",
+      "exit": 0
+    },
+    {
+      "pair": 2,
+      "mode": "vllm",
+      "exit": 0
+    },
+    {
+      "pair": 3,
+      "mode": "vllm",
+      "exit": 0
+    },
+    {
+      "pair": 3,
+      "mode": "bpfusion",
+      "exit": 0
+    },
+    {
+      "pair": 4,
+      "mode": "bpfusion",
+      "exit": 0
+    },
+    {
+      "pair": 4,
+      "mode": "vllm",
+      "exit": 0
+    }
+  ],
+  "framework_shutdown_messages": [
+    {
+      "pair": 0,
+      "mode": "bpfusion",
+      "matching_lines": [
+        "W1012 19:00:20.971000 132526 torch/_inductor/compile_worker/subproc_pool.py:338] SubprocPool unclean exit"
+      ]
+    },
+    {
+      "pair": 0,
+      "mode": "vllm",
+      "matching_lines": [
+        "(APIServer pid=132685) WARNING 10-12 19:00:56 [utils.py:658] [shutdown] Process manager: force killing remaining processes count=1",
+        "(APIServer pid=132685) WARNING 10-12 19:00:56 [utils.py:663] [shutdown] Process manager: force killing remaining process EngineCore pid 132744"
+      ]
+    },
+    {
+      "pair": 1,
+      "mode": "vllm",
+      "matching_lines": [
+        "(APIServer pid=132992) WARNING 10-12 19:01:30 [utils.py:658] [shutdown] Process manager: force killing remaining processes count=1",
+        "(APIServer pid=132992) WARNING 10-12 19:01:30 [utils.py:663] [shutdown] Process manager: force killing remaining process EngineCore pid 133051"
+      ]
+    },
+    {
+      "pair": 1,
+      "mode": "bpfusion",
+      "matching_lines": [
+        "W1012 19:02:34.017000 133302 torch/_inductor/compile_worker/subproc_pool.py:338] SubprocPool unclean exit"
+      ]
+    },
+    {
+      "pair": 2,
+      "mode": "bpfusion",
+      "matching_lines": [
+        "W1012 19:03:39.369000 133516 torch/_inductor/compile_worker/subproc_pool.py:338] SubprocPool unclean exit"
+      ]
+    },
+    {
+      "pair": 2,
+      "mode": "vllm",
+      "matching_lines": [
+        "(APIServer pid=133675) WARNING 10-12 19:04:17 [utils.py:658] [shutdown] Process manager: force killing remaining processes count=1",
+        "(APIServer pid=133675) WARNING 10-12 19:04:17 [utils.py:663] [shutdown] Process manager: force killing remaining process EngineCore pid 133734"
+      ]
+    },
+    {
+      "pair": 3,
+      "mode": "vllm",
+      "matching_lines": [
+        "(APIServer pid=134000) WARNING 10-12 19:04:50 [utils.py:658] [shutdown] Process manager: force killing remaining processes count=1",
+        "(APIServer pid=134000) WARNING 10-12 19:04:50 [utils.py:663] [shutdown] Process manager: force killing remaining process EngineCore pid 134064"
+      ]
+    },
+    {
+      "pair": 3,
+      "mode": "bpfusion",
+      "matching_lines": [
+        "W1012 19:05:54.743000 134311 torch/_inductor/compile_worker/subproc_pool.py:338] SubprocPool unclean exit"
+      ]
+    },
+    {
+      "pair": 4,
+      "mode": "bpfusion",
+      "matching_lines": [
+        "W1012 19:07:12.651000 134477 torch/_inductor/compile_worker/subproc_pool.py:338] SubprocPool unclean exit"
+      ]
+    },
+    {
+      "pair": 4,
+      "mode": "vllm",
+      "matching_lines": [
+        "(APIServer pid=134636) WARNING 10-12 19:07:56 [utils.py:658] [shutdown] Process manager: force killing remaining processes count=1",
+        "(APIServer pid=134636) WARNING 10-12 19:07:56 [utils.py:663] [shutdown] Process manager: force killing remaining process EngineCore pid 134700"
+      ]
+    }
+  ],
+  "adapter_timeout_force_cleanup": "not observed in complete raw/stdout",
+  "detached_wrapper_exit": "not retained; driver is absent; full data and replay analysis exit0 retained",
+  "host_journal": {
+    "observed_utc": "2026-10-12T19:12:02.316135+00:00",
+    "since_utc": "2026-10-12 18:50:00 UTC",
+    "exit": 0,
+    "relevant": [
+      "2026-10-12T11:57:37-07:00 lab kernel: bfusion_tx: map id=8846 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T11:57:41-07:00 lab kernel: bfusion_tx: exit bytes=8360 completed=40 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T12:00:08-07:00 lab kernel: bfusion_tx: map id=8864 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T12:00:20-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T12:02:21-07:00 lab kernel: bfusion_tx: map id=8876 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T12:02:34-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T12:03:27-07:00 lab kernel: bfusion_tx: map id=8884 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T12:03:39-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T12:05:42-07:00 lab kernel: bfusion_tx: map id=8894 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T12:05:54-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T12:07:00-07:00 lab kernel: bfusion_tx: map id=8902 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T12:07:12-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19"
+    ]
+  }
+}

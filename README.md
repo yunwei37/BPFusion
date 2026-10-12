@@ -44,6 +44,9 @@ The [short-input diagnosis](docs/findings/0030-short-input-latency.md) finds
 that the existing captured model region occupies about 95%/92% of profiled
 local TTFT for Smol/Qwen; even 2-token inputs traverse 1460/808 GPU kernels.
 This guides backend reuse, without establishing an eBPF speedup.
+The [official optimized-serving comparison](docs/findings/0031-optimized-serving.md)
+finds lower single-request first-token time but much lower eight-client
+long-output throughput, with different compute, outputs and wire interfaces.
 
 ## Service and compute boundary
 
