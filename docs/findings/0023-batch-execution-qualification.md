@@ -1480,3 +1480,57 @@ reuse, distinct from the earlier BF16 model-as-a-kernel strict-reference
 failure. It supplies a second architecture without a model arithmetic
 campaign; no alternative megakernel, serving speedup, real-NIC result or
 complete userspace-path comparison is established by this matrix.
+
+## AlpinDale RTX5090 Qwen qualification: complete numerical rejection
+
+The pinned MIT backend5030e154d39ecd054df03eb4dd9c8aa8185414d1 builds
+with its own JIT/default CUDA flags on the existing RTX5090. Its cached
+Qwen3-0.6B checkpoint is c1899de289a04d12100db370d81485cdf75e47ca.
+This is BF16 Qwen3 computation, distinct from the current FP16 Qwen2.5 path.
+
+Source inspection before execution finds importer RoPE theta10000 versus
+checkpoint theta1000000. The reviewed plan declares both unchanged-theta
+and checkpoint-theta conditions. Both retain the upstream CUDA/binding
+source, flags, reductions and sampling. The only shared loader compatibility
+edit replaces device_map="cuda" with explicit .to("cuda"), avoiding an absent
+accelerate dependency. Required ninja1.13.2 is confined to owned OS-temp;
+the existing Python environment is preserved.
+
+All planned32 complete64-token sequences finish normally,2048 actual tokens:
+four full tokenized prompts, step and bulk APIs, two repetitions and two
+theta conditions. Independent HF BF16 eager and default-attention references
+are frozen before loading the native backend. Each condition has0/16 exact
+sequences against either reference. Step/bulk outputs agree and repeated
+reset calls agree; this is stable numerical disagreement, not a missing reply
+or partial collection. First eager mismatch indices are[3,0,4,2] for the
+four prompts in both conditions. For France, the first actual token changes
+from32671 to1112 after theta correction, versus reference12095.
+The two HF attention references first disagree later on Hello/France
+(indices17/12), so their own differences do not explain the earlier native
+mismatches. No EOS truncation, selected suffix or oracle replacement is used.
+
+The native build and mode/repeat checks are dependency evidence. Close this
+strict replacement candidate without a CUDA arithmetic campaign or a serving
+performance claim. A theta importer correction alone is insufficient; no
+cause for the remaining disagreement is established. There is no new
+network adapter, production source change, concurrent-safety qualification
+or accepted latency/throughput gain.
+
+- [Reviewed plan](../../bench/results/alpindale_plan_20261012.md)
+  and [plan review](../../bench/results/alpindale_plan_review_20261012.md).
+- [Actual qualifier](../../bench/results/alpindale_qualify_20261012.py)
+  and [complete raw with original/adapter sources](../../bench/results/alpindale_qualification_20261012.jsonl).
+- [Full stdout](../../bench/results/alpindale_stdout_20261012.txt),
+  [native build commands](../../bench/results/alpindale_build_20261012.txt),
+  [fresh result review](../../bench/results/alpindale_result_review_20261012.md)
+  and [restoration audit](../../bench/results/alpindale_restoration_20261012.json).
+
+Actual invocation:
+`HF_HOME=/workspaces/.cache/huggingface python3 /tmp/bpfusion-alpindale-8dv7jm6x/qualify.py`.
+For reproduction, reconstruct the pinned source tree from the raw metadata
+under a fresh OS-temp directory, install the recorded ninja dependency there
+and copy the archived qualifier into that directory. Select a new result
+destination in the copy before running; preserve the original archived raw.
+The qualifier records its actual source and source-native flags again.
+Source/build/dependency apparatus is removed after archival and review.
+The original Workspace/cache and unrelated tools/setup_env.sh remain.

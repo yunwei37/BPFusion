@@ -167,3 +167,11 @@ Tiny ingress-to-GPU stages are unresolved within clock calibration, and
 profiling/shared-device conditions prevent exact attribution of the previous
 cross-node 3 ms. Qualify reused faster compute before another same-backend
 serving comparison. The retained system/performance goal remains open.
+
+The [AlpinDale native-backend qualification](findings/0023-batch-execution-qualification.md#alpindale-rtx5090-qwen-qualification-complete-numerical-rejection)
+completes32 sequences/2048 tokens on unchanged CUDA/binding source. Both
+predeclared theta conditions fail all16 sequences against both HF references,
+while generation modes and repeats agree. Native build passes; strict backend
+qualification fails. Role dependency-only; no independent serving result.
+Close this candidate without numerical tuning. The retained performance and
+reusable-backend objective remains open.
