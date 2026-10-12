@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/bpfusion-short-input-latency-uhkfzipi/analyze.py", line 43, in <module>
+    assert gpu_begin-(high-low)/2>=r['queue']['ingress_ns'],(name,r['index'],'GPU starts before ingress',gpu_begin,r['queue'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('smol', 0, 'GPU starts before ingress', 260132080741475.5, {'slot': 0, 'client_ns': 260132080706810, 'ingress_ns': 260132080737708, 'state': 0})

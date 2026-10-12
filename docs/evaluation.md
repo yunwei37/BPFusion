@@ -20,7 +20,7 @@ independently reconstructs80 cells,5120 requests,166400 exact measured tokens,
 or required scientific repair. Commands and all raw/result tables are linked
 from the finding.
 
-Primary user-minus-kernel gen1/clients1 TTFT:
+Primary user-minus-kernel gen 1/clients1 TTFT:
 Smol1.054ms [0.949,1.160], Qwen1.107ms [0.923,1.292].
 Primary kernel-minus-user gen64/clients8 TPS:
 Smol-5.899 [-13.040,1.242], Qwen-3.194 [-10.281,3.894].
@@ -53,7 +53,7 @@ executors. [Native analysis and independent reconstruction](../bench/results/coa
 and [fresh result review with correction](../bench/results/coalesced_network_result_review_20261011.md)
 reconstruct coverage, token agreement, metrics, order, counters and cleanup.
 
-Primary user-minus-kernel gen1/client1 TTFT:
+Primary user-minus-kernel gen 1/client1 TTFT:
 Smol-0.130363 ms [-0.490798,0.230071], Qwen-0.042867 ms [-0.116078,0.030344].
 Primary kernel-minus-user gen64/client8 TPS:
 Smol+1.229153 [-9.310734,11.769040], Qwen+78.277177 [-132.336242,288.890597].
@@ -98,7 +98,7 @@ control in both tested checkpoints. Busy-control differences remain positive,
 but do not establish superiority over efficient CPU orchestration.
 The sum excludes RX/softirq/BPF/TCP outside TX; it is not total service CPU.
 
-Timed-control-minus-resident gen1/client1 TTFT:
+Timed-control-minus-resident gen 1/client1 TTFT:
 Smol+0.090901ms [-0.141011,0.322813], Qwen-0.026525ms [-0.059269,0.006218].
 Resident-minus-timed gen64/client8 throughput:
 Smol-2.488979 [-9.443425,4.465468], Qwen+2.632198 [-3.308572,8.572968] tokens/s.
@@ -157,3 +157,13 @@ retained and the temporary client Job/Pod and own server resources are removed;
 the original Workspace remains Ready. Close this unchanged matrix. Full-service
 CPU attribution/interference, strong official serving, full text/API, broader
 qualified backends and online batching remain under the retained objective.
+
+The [short-input latency diagnosis](findings/0030-short-input-latency.md)
+completes 40 exact gen 1 replies and full model-node trace coverage on
+unchanged 9954855 source. Sixteen measured profiled-loopback requests/model
+place 95.48%/91.69% of TTFT inside the existing Smol/Qwen captured model
+region. Run valid/complete; hypothesis narrowly supported; role dependency-only.
+Tiny ingress-to-GPU stages are unresolved within clock calibration, and
+profiling/shared-device conditions prevent exact attribution of the previous
+cross-node 3 ms. Qualify reused faster compute before another same-backend
+serving comparison. The retained system/performance goal remains open.

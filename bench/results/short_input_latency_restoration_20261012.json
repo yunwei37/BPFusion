@@ -1,0 +1,60 @@
+{
+  "observed_utc": "2026-10-12T18:27:12.610707+00:00",
+  "source_commit": "9954855859fdc14b7f38dc2ec21768b4fc054f02",
+  "branch": "main",
+  "own_processes": {
+    "129957": "absent",
+    "129988": "absent",
+    "130142": "absent"
+  },
+  "own_modules": [],
+  "own_pins": [],
+  "gpu_query_exit": 0,
+  "gpu_compute_apps": "",
+  "driver_stdout": "SHORT_INPUT_LATENCY_DONE\n",
+  "analyzer_archived_byte_equal": true,
+  "journal_scope": "2026-10-12 18:10:00 UTC to 18:25:30 UTC",
+  "journal_exit": 0,
+  "journal_tx": [
+    {
+      "time_utc": "2026-10-12 18:12:40 UTC",
+      "bytes": 1640,
+      "completed": 20,
+      "abandoned": 0,
+      "retries": 0,
+      "accepted": 1,
+      "closed": 1
+    },
+    {
+      "time_utc": "2026-10-12 18:13:39 UTC",
+      "bytes": 1640,
+      "completed": 20,
+      "abandoned": 0,
+      "retries": 0,
+      "accepted": 1,
+      "closed": 1
+    }
+  ],
+  "journal_warnings": [
+    {
+      "time_utc": "2026-10-12 18:11:36 UTC",
+      "message": "NVRM: GPU0 refcntRequestReference_IMPL: Failed to enter state 1 (current state: 0, status: 0x00000056)"
+    },
+    {
+      "time_utc": "2026-10-12 18:12:48 UTC",
+      "message": "NVRM: GPU0 refcntRequestReference_IMPL: Failed to enter state 1 (current state: 0, status: 0x00000056)"
+    }
+  ],
+  "journal_warning_latency_relation": "unknown",
+  "unrelated_preserved": "tools/setup_env.sh",
+  "temporary_root": "/tmp/bpfusion-short-input-latency-uhkfzipi",
+  "temporary_root_absent": true,
+  "workspace_status": {
+    "observed_utc": "2026-10-12T18:28:00Z",
+    "uid": "3e8994f8-77ba-4a73-a3a5-35ed69a0a8a2",
+    "phase": "Running",
+    "ready": true,
+    "restarts": 0,
+    "node": "lab"
+  }
+}

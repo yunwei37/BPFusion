@@ -36,10 +36,14 @@ full-service CPU attribution remain open.
 Strict regressions cover output agreement, fragmented messages, concurrent
 requests, connection reuse, pipelining, half-close, invalid inputs and queue
 recycling. The [completed cross-node comparison](docs/findings/0029-cross-node-network.md)
-uses a Raspberry Pi client and lab RTX5090 server over the existing
+uses a Raspberry Pi client and lab RTX 5090 server over the existing
 flannel/Tailscale/Ethernet path. Its primary latency and throughput intervals
 contain zero for both models; reliable superiority remains unproven.
 [Evaluation status](docs/evaluation.md) links the plans, raw data and reviews.
+The [short-input diagnosis](docs/findings/0030-short-input-latency.md) finds
+that the existing captured model region occupies about 95%/92% of profiled
+local TTFT for Smol/Qwen; even 2-token inputs traverse 1460/808 GPU kernels.
+This guides backend reuse, without establishing an eBPF speedup.
 
 ## Service and compute boundary
 
