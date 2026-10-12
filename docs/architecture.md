@@ -1,9 +1,53 @@
 # BPFusion architecture
 
-Three paths share the page: a synthetic resident-MLP reference, a host-driven
-HF LLM baseline, and a real Qwen CUDA reference with kernel-owned TCP/HTTP
-requests and replies. Their compute and control paths differ; compare the
-scope table in README before interpreting performance.
+The current qualified service uses bootstrap-captured Hugging Face model graphs
+and a resident GPU dispatcher. Earlier synthetic MLP, host-driven HF and
+handwritten Qwen paths remain separate references. Their maturity and compute
+differ; see the README scope table before comparing results.
+
+## Service and compute boundary
+
+The service path owns Linux connections, request framing/admission, the shared
+queue, completion observation, response ordering and recycling. The GPU backend
+owns model computation and the input/output buffers that its execution consumes
+and publishes. Current Qwen and Llama graph reuse demonstrates two architectures
+through one capture interface, not arbitrary backend compatibility.
+
+The intended reusable boundary keeps those service mechanisms independent of
+model arithmetic. The existing queue carries token-ID requests and the
+dispatcher performs LLM generation, so protocol and execution adapters are still
+needed for a different output type or execution contract. No new runtime/plugin
+framework has been implemented or claimed.
+
+The matched comparison runs the same GPU computation with two network
+paths. The native userspace alternative also retains GPU-controlled generation;
+it is not forced into a Python per-token loop. Linux/eBPF and kernel TX remain
+host CPU work.
+
+## Linux kernel dependency
+
+Observation: 2026-10-12. The tested host runs Linux7.3-rc3. Its installed
+`include/linux/bpf_ksock.h` and compiled/BTF symbol names include
+`bpf_ksock_create/connect/send/acquire/release`; saying BPF cannot send data
+at all would be incorrect.
+
+The latest mainline release on this date is7.3-rc7. The
+[exact upstream header](https://github.com/torvalds/linux/blob/v7.3-rc7/include/linux/bpf_ksock.h)
+and [implementation](https://github.com/torvalds/linux/blob/v7.3-rc7/net/core/bpf_ksock.c)
+were also read through the official GitHub contents API. Creation rejects socket
+types other than SOCK_DGRAM and protocols other than UDP/zero.
+Create/connect/send require a user-task context; workqueue/kernel-thread
+contexts return EOPNOTSUPP. Send is registered for sleepable syscall/LSM
+contexts. These interfaces do not supply this prototype's asynchronous TCP
+server response and connection lifecycle.
+
+The prototype consequently uses `module/bfusion_tx.c` for kernel accept/receive
+draining, completion polling, ordered TCP sends and socket/slot lifetime.
+That is a current implementation and upstream-API boundary, not an old-kernel
+bug or proof that a module-free design is impossible. Future upstream APIs
+should be evaluated against TCP support, completion context and connection
+ownership before replacing this adapter. No host kernel was changed during
+the matched comparison.
 
 ## Data path
 
@@ -289,14 +333,17 @@ completion the responder is still reading.
   pipelining, half-close and concurrent correctness controls.
   The separate Python baseline still uses tc packet ingress (`0012`). Physical
   packet loss/retransmission and overload response behavior remain unmeasured.
-- **GPU-side tokenization and sampling** — the LLM executor is host Python
-  driving HF `transformers` in the Python baseline; the optional CUDA Qwen
-  reference performs prefill/decode/KV/argmax and token publication on-device
-  but still consumes pretokenized input.
+- GPU-side tokenization/detokenization and configurable sampling. The graph
+  path already performs greedy token selection on-device, but still consumes
+  pretokenized input. Full text conversion and stochastic sampling remain
+  unqualified.
 - Tensor-batched/general serving and shared-prefix KV caching. The graph path
   now advances concurrent requests with private batch1 graph/KV banks; finding0023
   measures its local shared-GPU benefit/tradeoffs against the serial resident
   path. Comparison with optimized serving remains unmeasured.
-- Real-NIC measurement (the `tc` hook is on `lo`).
-- An asynchronous kernel→waiting-userspace wake to replace the doorbell poll
-  (`bpf_send_signal` or a module); see `docs/findings/0001-ingress-wake.md`.
+- Direct-NIC and loss/retransmission/overload evaluation. Finding0029 now measures
+  actual cross-node TCP over flannel/Tailscale and Ethernet; it is not bare-NIC
+  TCP or GPUDirect.
+- GPU-completion notification to replace the current kernel worker's
+  60–120us polling sweep. Current measurements do not qualify an interrupt-
+  or event-driven completion path.

@@ -1,233 +1,63 @@
 # BPFusion
 
-A Linux-native accelerator serving path: an eBPF ingress hook feeds an
-mmap'able kernel control page, a **resident GPU executor** drains it, and a
-socket path puts completions back on the wire. The target is a request path with
-no per-request control-plane work in userspace: eBPF handles requests directly,
-and userspace only bootstraps/loads/inits/controls.
+BPFusion is a research prototype for eBPF-driven GPU serving over Linux TCP.
+It studies whether a server can remove its steady userspace request worker
+while reusing the same GPU model computation.
 
-This repository is the measured, iterative path toward that target. It is **not**
-there yet; each [finding](docs/findings) states exactly what is proven and what
-is not.
+```
+client TCP/HTTP -> eBPF framing/admission -> kernel/GPU shared queue
+                -> resident GPU model execution -> kernel TCP reply
+```
+
+Userspace loads weights, captures model graphs and initializes the service.
+After startup, the GPU controls inference and the kernel owns connection
+handling, response transmission and recycling. Linux networking and the kernel
+worker still consume CPU; this is not removal of all host CPU work.
 
 ## Project status
 
-Execution paths are built today at different maturity. Keep them
-separate when reading any result:
+The current qualified path reuses Hugging Face FP16 model graphs for
+Qwen2.5-0.5B-Instruct and SmolLM2-135M (Llama architecture). A persistent
+device dispatcher advances up to eight private graph/KV banks and publishes
+tokens without a steady userspace request worker.
 
-| path | request model | GPU execution | reply | maturity |
-|---|---|---|---|---|
-| **Synthetic MLP** — [`executor/executor.cu`](executor/executor.cu) | UDP `:39400` -> tc/clsact ingress -> page | **one resident CUDA kernel**, launched once, spins on the page; no per-request/per-batch host launch or control call | userspace responder `sendto()` per reply | reference/intermediate: proves the resident-kernel + page mechanism (not yet a no-userspace-worker path) |
-| **Real LLM** — [`executor/llm_executor.py`](executor/llm_executor.py) | UDP `:39402` or TCP `:39403` -> tc ingress -> token ring | **host Python + HF `transformers`** on Qwen (prefill + batch-1 decode); prefill/decode run on the GPU, but host code drives every step | UDP: client polls `produced`; TCP: `send()` on the accepted socket | host-driven baseline, labelled as such; this is where TTFT/TPOT evidence comes from |
-| **Resident Qwen reference** — [`executor/qwen.cu`](executor/qwen.cu) | TCP token IDs -> sockmap stream -> page | **one resident CUDA kernel** executes real prefill/decode/KV/argmax | kernel TCP TX | correctness reference: eight-token oracle agreement; one cooperative grid, binary token bodies over TCP/HTTP, kernel accept/drain; longer-decode divergence recorded |
-| **Device-scheduled Qwen graphs** — [`executor/qwen_graph.py`](executor/qwen_graph.py) + [`executor/qwen_graph.cu`](executor/qwen_graph.cu) | same binary TCP/HTTP sockmap queue | HF graphs captured at bootstrap, **scheduled and sampled on the GPU** | same kernel TCP TX | 64-token strict oracle/lifecycle regressions pass; private graph/KV banks advance concurrent requests, no steady userspace request worker |
-| **Native userspace graph network control** — same [capture](executor/qwen_graph.py) + [dispatcher](executor/qwen_graph.cu), [epoll adapter](executor/userspace_tcp.h) | same binary token-ID TCP/HTTP requests, parsed/published by userspace | identical resident GPU dispatcher and eight HF graph banks | userspace nonblocking send | strict regressions and [80-cell matched comparison](docs/findings/0025-native-userspace-network.md) pass; narrow gen1/client1 TTFT advantage, gen64/client8 throughput inconclusive |
+The HTTP frontend accepts Content-Length POST requests with binary token-ID
+bodies and returns token IDs. It is not yet a text/JSON or OpenAI-compatible
+service. Arbitrary model/backend support, shared-weight tensor batching and
+full-service CPU attribution remain open.
 
-In the synthetic MLP path the no-userspace-worker property covers only GPU
-compute; even there a userspace responder thread still `sendto()`s every
-reply and the TCP/HTTP reply is not yet a kernel TX. The **real Qwen TCP path is
-a host worker**: the Python executor accepts connections, runs HF decode, and
-sends tokens — it is the current baseline, not the final closed loop.
+| Path | Compute/control | Network/reply | Role |
+|---|---|---|---|
+| `qwen_graph` | Reused HF graphs, GPU-controlled generation | eBPF admission, kernel accept/drain and TCP TX | Current worker-free prototype |
+| `qwen_graph_user_network_wait` | Identical resident GPU computation | Efficient native userspace timed epoll and nonblocking send | Matched alternative mechanism |
+| `qwen_graph_control` | Same graph banks, host resumes after requests | Same eBPF/kernel transport | Dispatch ablation |
+| `qwen.cu`, Python HF and synthetic MLP paths | Earlier implementations with different maturity | See their individual findings | Historical references and controls |
 
-An experimental kernel TCP TX path now passes exact-token correctness controls:
-`module/bfusion_tx.c` watches the same map as ingress and sends on a referenced
-TCP socket. HF still drives inference and accepts connections; this is another
-intermediate, not the no-userspace-worker goal. See [finding 0012](docs/findings/0012-kernel-tcp-tx.md).
+Strict regressions cover output agreement, fragmented messages, concurrent
+requests, connection reuse, pipelining, half-close, invalid inputs and queue
+recycling. The [completed cross-node comparison](docs/findings/0029-cross-node-network.md)
+uses a Raspberry Pi client and lab RTX5090 server over the existing
+flannel/Tailscale/Ethernet path. Its primary latency and throughput intervals
+contain zero for both models; reliable superiority remains unproven.
+[Evaluation status](docs/evaluation.md) links the plans, raw data and reviews.
 
-The resident Qwen reference now closes TCP/HTTP token requests -> sockmap/eBPF
--> shared page -> real resident-model inference -> kernel TCP replies, with
-kernel accept/drain and no steady userspace request worker. The HTTP endpoint
-uses Content-Length and binary token-ID bodies; it is not a text/JSON or
-OpenAI-compatible API. [Finding 0015](docs/findings/0015-http-token-transport.md)
-records split writes, concurrency, persistent connections and response ordering.
-[Finding 0017](docs/findings/0017-invalid-token-rejection.md) adds GPU vocabulary
-validation, HTTP 400/binary EOF rejection and continued service after bad input.
-The complete service target still needs GPU text processing, continuous
-batching, completion-event measurement and real-NIC evaluation. No serving
-speedup is claimed for this correctness reference. The GPU now uses one
-cooperative resident grid; [finding 0016](docs/findings/0016-cooperative-resident-qwen.md)
-records the eight-token passes and the failed 64-token oracle control.
-Its Tensor Core follow-up passes the strengthened short-output regressions;
-the first two 64-token prompts now match, but the third still diverges at
-output 63. Linear layers use WMMA with fp16 boundaries; whole prompts now
-use matrix prefill, while requests remain serial. The 16/17/32/64-token
-prompt-edge regressions pass in both execution modes. The earlier dispatch measurements below precede this math change.
-A matched host-dispatch control now builds with `make qwen-control`: it launches
-that same device kernel once per request while retaining eBPF ingress and
-kernel TX. It is a mechanism ablation, not an optimized serving baseline.
-[Finding 0018](docs/findings/0018-resident-dispatch.md) records its fixed-oracle
-regressions and the client-latency/executor-process CPU experiment.
-Its initial five-pair, 2,560-request measurement finds no detected TTFT
-advantage while removing the control's busy executor-process cost. A real
-completion/reclamation race was subsequently captured and repaired; four
-strengthened regressions pass. A further matched five-pair, 2,560-request
-experiment with temporary TCP_NODELAY settings also detects no TTFT advantage,
-with approximately 2.61 ms client TPOT. The temporary settings were removed.
-Packet diagnostics support ACK/Nagle buffering in the original transport;
-total host CPU and optimized serving comparisons remain unmeasured.
+## Service and compute boundary
 
-A device-scheduled graph executor now preserves the actual HF GPU computation
-while moving request/decode control to GPU graph tail launches. Its 64-token
-TCP/HTTP regression and maximum-prompt edge cases pass the unchanged oracle.
-Python captures at bootstrap, then the native host sleeps; the GPU handles
-queue validation, input movement, model dispatch and token publication.
-[Finding 0019](docs/findings/0019-device-scheduled-qwen.md) records the mechanism,
-commands, failed startup probes and successful lifecycle/trace evidence.
-This initial milestone did not establish a serving speedup; text, continuous
-batching and physical-NIC evaluation remain open. At that stage, `make qwen-graph-control` provided
-an identical-dispatcher host control: it launches a service graph once per
-whole request while both modes keep decode on GPU graph tail launches. Both
-pass the 64-token lifecycle regression; this is an ablation with a host worker,
-and [finding 0020](docs/findings/0020-graph-dispatch.md) records its complete
-matched measurement: 2,560 requests / 83,200 exact tokens, about 2.31 ms
-single-client TPOT and 431 output tokens/s. Only the one-token/eight-client
-cell detects a small TTFT benefit; the other three paired intervals cross zero.
-In that measurement, eight clients queued behind serial GPU requests. Executor-process CPU
-is lower than this busy control, while total host cost remains unmeasured.
-[Finding 0021](docs/findings/0021-qwen-compute-optimization.md) removes unused
-prefill logits with one forward argument, saving about 0.62 GB of PyTorch
-capture allocations while preserving both strict regressions. Its SDPA
-candidate failed the fixed oracle and was rejected; no compute latency
-speedup is claimed for that change. A later two-line RoPE-only pointwise
-fusion preserves fp16 casts, passes both complete strict TCP regressions and
-removes 192 profiled device events per model graph. Its completed five-pair
-TCP comparison against the current concurrent path measures gen64/one-client
-TPOT 4.373 → 3.899 ms and throughput 227.78 → 255.49 tokens/s; at eight clients,
-TPOT 13.282 → 12.110 ms and throughput 592.84 → 650.34 tokens/s. All four nominal
-paired t95 gain intervals exclude zero in this shared-GPU collection. The
-exact candidate is retained; warm compiler-cache startup, temporary common
-TCP_NODELAY and non-isolation limits remain explicit in finding 0021.
-A subsequent RMSNorm fusion preserves the original eager reduction and
-fuses only its pointwise tail. Both strict default-native regressions pass;
-its complete five-pair comparison measures gen64/one-client TPOT3.910 ->
-3.494ms and throughput254.82 ->285.22 tokens/s, and eight-client TPOT12.153
-->11.678ms and throughput647.94 ->674.52 tokens/s. All four nominal paired
-t95 gain intervals exclude zero in this shared-GPU collection. The exact
-nine-line candidate is retained and the canonical default-cache/default-network
-entrypoint passes the complete strict regression.
-A later merged MLP gate/up projection passes all exact-token qualifications
-and a complete 2,560-request comparison. Single-client gen64 throughput
-improves286.71 ->298.46 tokens/s and TPOT3.476 ->3.336ms, but eight-client
-throughput688.74 ->683.96 and TPOT11.435 ->11.514ms have intervals crossing
-zero with all five point estimates worse. The candidate is not retained in
-the default path; its mixed result, costs and independent review are recorded
-in finding0021.
-A conversion/square pointwise norm fusion also passes all qualification and
-strict regressions and removes49 diagnostic device events per model graph.
-Its complete2,560-request comparison improves single-client gen64
-throughput285.79->300.98 and TPOT3.488->3.310ms,but eight-client primary
-throughput/TPOT intervals cross zero. The candidate is not retained under
-the predeclared concurrent retention rule; full evidence remains in finding0021.
-A paired KV-copy compilation candidate also completes strict regressions
-and the full83200-token TCP comparison. It still launches48 copy kernels
-per model graph. Single-client throughput improves285.99->288.79tokens/s,
-while eight-client throughput/TPOT intervals cross zero. It is not retained;
-no paired-kernel fusion or concurrent performance benefit is established.
-An actual single-kernel paired KV copy then reduces48 KV launches to24
-and completes the same83200-token TCP comparison. All four primary
-throughput/TPOT paired intervals cross zero;the candidate is not retained.
-The mechanism engages,but performance remains inconclusive in finding0021.
-A grouped-query attention candidate avoids explicit repeated KV heads but
-fails the unchanged greedy oracle in five of twelve qualification groups.
-It is rejected before TCP performance collection; the existing attention
-implementation remains in use and no speed benefit is claimed.
-[Finding 0022](docs/findings/0022-shared-kv.md) qualifies shared KV append and
-records a complete cache-only TCP comparison, with narrowly supporting
-TPOT/throughput results and a changing shared-GPU environment. That comparison
-used serial requests and did not establish batching or competitive serving.
-[Finding 0023](docs/findings/0023-batch-execution-qualification.md) now advances
-independent batch1 graph/KV banks through GPU-controlled fork/join execution
-and preserves head-indexed FIFO reclamation. Both default-resident and serial
-host-control regressions pass 335 requests / 20,432 exact tokens / 259 rejects,
-including mixed decode lengths and immediate reuse. Resident execution records
-one host launch and eight model graphs in flight. Its complete five-pair
-TCP comparison on the shared RTX5090 measures gen64/eight-client throughput
-230.34 -> 595.07 output tokens/s, TTFT1829.28 -> 23.66ms, and completion
-2102.08 -> 857.13ms against the previous serial resident path. Per-request
-TPOT worsens4.33 -> 13.23ms; single-client effects remain inconclusive,
-bootstrap increases10.31 -> 54.06s, and graph memory is a substantial cost.
-The comparison uses common temporary TCP_NODELAY settings and does not prove
-kernel overlap, isolated speedup or an optimized-serving win. That measurement's host control used one bank and was a serial
-correctness control; it did not isolate dispatch alone against the concurrent
-default. Ordinary tensor batching failed exact qualification and is not retained.
-[Finding0024](docs/findings/0024-concurrent-graph-dispatch.md) now qualifies a
-concurrent host control with the same eight banks, admission and GPU decoding.
-Both current modes pass335 valid requests/20432 exact tokens/259 rejects.
-The host resumes after each retired request; unfinished bank state survives
-re-entry. Five matched pairs complete2560 requests/83200 exact tokens with
-default TCP. At gen64/eight clients, resident TTFT is46.39 vs45.22ms and
-output throughput688.14 vs684.58tok/s; the paired throughput interval crosses
-zero. Resident removes most executor CPU cost against this busy-polling
-control, but these results do not establish a general latency/throughput win
-or attributed whole-service CPU savings.
-A subsequent numerical diagnosis completes99 groups across original Linear
-per-lane,attention per-lane and combined slicing. None qualifies the complete
-fixed token reference; partial recoveries and new divergences rule out
-promoting these slices directly to tensor-batched serving. Full actual outputs
-remain in finding0023; no serving-speed result or production change follows.
-A fixed-history follow-up reproduces the selected prior prediction differences
-and localizes first observed unequal outputs to normalization,projection or
-attention boundaries depending on the condition. Some early byte differences
-do not change greedy tokens. Saved CPU arrays permit independent checks of
-earliest/previous pairs;the result guides batching implementation without
-establishing a unique numerical cause or qualifying a serving candidate.
-A subsequent per-lane mean intervention qualifies all33 fixed-reference groups
-only when Linear and attention are also per-lane;9856 generated tokens match.
-The three variants retaining batched Linear and/or attention still fail.
-This supplies a numerical correctness control for further implementation,
-not shared-weight batched execution or a default serving/performance change.
-A subsequent device-graph activity diagnostic in finding0023 captures complete
-model-kernel record counts: one client has no overlapping model kernels,
-while eight clients show up to eight distinct execution graphs overlapping.
-Cross-graph overlap occupies72.88% of the model-kernel interval union under
-profiling. This resolves the mechanism uncertainty for that workload; it is
-not a new serving-speed result,SM instruction-parallelism or utilization claim.
-The two largest GEMV name groups dominate summed model-kernel durations,
-motivating the next computation/weight-reuse investigation.
-A subsequent shape-aware eager diagnostic associates every physical CUDA
-record with its actual CPU operation across five shapes and all169 Linear
-modules. Decode MLP projections account for about34% of summed kernel
-durations,the vocabulary head about9%,and copy operations about13%.
-These local associations guide computation/reuse work; they do not transfer
-duration shares to the device-launched trace or establish a serving speedup.
+The intended open-source boundary is a reusable serving path around existing
+GPU backends: receive and admit requests, publish inputs, observe completion,
+stream responses and reclaim resources. Backend adapters provide model
+execution, input/output interpretation and their buffer lifetimes. Reusing a
+megakernel or device-launchable captured graph are both valid compute routes.
 
+The current implementation has qualified two LLM architectures, but its token
+protocol and GPU generation dispatcher are still LLM-specific. It is not yet
+an arbitrary-CUDA-kernel server. Linux kernel integration also remains a real
+dependency; see the [architecture and upstream BPF socket boundary](docs/architecture.md#linux-kernel-dependency).
 
-Both native network paths coalesce the HTTP header and first available token
-in one vectored send with default TCP and identical GPU computation.
-[Finding0026](docs/findings/0026-coalesced-network.md) retains the failed admission
-attempt, atomic reservation repair and complete repaired-source comparison:
-80 cells, 5120 exact measured replies and 20 normal executors. All four primary
-latency/throughput intervals cross zero. A verified host OOM overlaps one Qwen
-user throughput cell; every sample is retained, and no transport-only benefit
-or kernel robustness is established. Short-response ACK delays and attributed
-host cost remain unresolved.
-
-The optional `make qwen-graph-user-network-wait` control now uses native
-timed epoll with the same resident GPU computation. The benchmark also measures
-executor-process CPU plus the kernel TX task's adjusted CPU time. Both model
-architectures pass strict kernel/wait regressions and all three native paths
-pass real preflight. [Finding0027](docs/findings/0027-timed-network-control.md)
-records the complete120-cell comparison and independent review. At gen64/eight
-clients, the timed userspace control uses less measured executor-plus-TX CPU
-than the kernel path for both models; planned TTFT/throughput remain inconclusive.
-These counters do not identify total service CPU. The negative result directs
-attention to request/completion overhead while retaining upstream computation.
-
-The kernel request worker now checks existing Linux socket readiness before
-accept/recv attempts. Both real-model strict suites pass with the same
-computation,and all six three-mode preflight executors pass.
-[Finding0028](docs/findings/0028-socket-readiness.md) records
-the small source change and completed120-cell comparison with independent
-review. Both efficient-control CPU intervals and planned TTFT/throughput
-intervals cross zero; reliable performance gains remain unproven.
-
-Graph executors also accept the existing BF_BIND environment variable for a
-concrete IPv4 listener; the default remains127.0.0.1. Kernel TX discovers
-the bound local address from the listener. Both strict model suites and
-four real cross-node preflight executors pass.
-[Finding0029](docs/findings/0029-cross-node-network.md) records the actual
-Raspberry Pi client,lab server,overlay/Ethernet path and pending full
-comparison. This establishes delivery,not a performance advantage.
+To attribute a latency difference to the serving path, keep the backend
+revision, checkpoint, precision, KV layout and concurrency/batching identical
+between the kernel/eBPF and efficient userspace paths. Model arithmetic
+improvements belong to the backend and do not prove an eBPF benefit.
 
 ## Reusing upstream compute
 
@@ -288,6 +118,27 @@ GPUs, e.g. `make executor SM_ARCH=sm_90`. This tree is verified on one RTX 5090
 [bench/results/HOST.md](bench/results/HOST.md).
 
 ## Run
+
+For the qualified graph/TCP path on the recorded host:
+
+```sh
+make qwen-graph qwen-graph-user-network-wait
+make -C module KDIR=/usr/src/linux-headers-7.3.0-070300rc3-generic CC=gcc-15
+HF_HOME=/workspaces/.cache/huggingface python3 tests/resident_qwen.py --executor ./build/qwen_graph --gen 64 --prefill-edges
+```
+
+The module must be built against the running kernel's headers/compiler; the
+path and compiler above describe the tested host. Use the same strict command
+with `--executor ./build/qwen_graph_user_network_wait` for the native network
+alternative, or add `--model HuggingFaceTB/SmolLM2-135M` for the second qualified
+architecture. These tests check real model outputs and connection/queue
+lifetimes; they do not establish a performance advantage.
+
+The [cross-node plan](bench/results/physical_network_plan_20261011.md) and
+[actual invocations](bench/results/physical_network_full_invocations_20261011.txt)
+describe the completed matched experiment and temporary client lifecycle.
+The older synthetic and Python-driven reference commands follow.
+
 
 The bench drivers in `bench/run_*.sh` are the reproducible entry points: each
 synchronizes on the executor's ready line, runs the client, prints the

@@ -143,16 +143,17 @@ historical causal improvement or external SOTA follows. Close this matrix
 without unchanged repeats; the old negative matrix remains separately closed.
 
 
-The [cross-node comparison](findings/0029-cross-node-network.md) addresses
-the untested real-network boundary without changing qualified computation.
-Role supporting; strongest runnable alternative is efficient native timed
-networking with the same resident graphs. Both bound-address kernel strict
-suites,Qwen timed strict,and default-loopback compatibility pass. Four real
-cross-node preflight executors complete16 exact measuredtokens and normal
-exits; both direct client analyses pass. Packet/route receipts establish
-Linux TCP over existing flannel/Tailscale and Ethernet,not bare-NIC or
-GPUDirect. The80-cell full matrix and independent result review are pending;
-preflight has dependency value only. Planned per-model primary effects are
-TTFT1/c1 and TPS64/c8 with five paired nominal t95 intervals. Server/total CPU
-is not measured by the remote client adapter. Strong official serving,total
-CPU,full text/API,broader qualified backends and online batching remain open.
+The [cross-node comparison](findings/0029-cross-node-network.md) is now complete
+on frozen eaa9c8e source:80 cells,5120 exact measured requests,166400 tokens
+and20 normal executors. Its efficient userspace alternative uses the same
+resident HF computation. Native direct analysis passes; the fresh independent
+review and all raw evidence are linked from the finding. Both per-model primary
+TTFT1/c1 and TPS64/c8 nominal paired t95 intervals contain zero.
+
+Run status: complete; tested hypothesis: inconclusive; research role: supporting;
+paper impact: network/workload boundary. The actual path is flannel/Tailscale over
+Ethernet,not bare-NIC/GPUDirect. Server/total CPU is not measured. All rows are
+retained and the temporary client Job/Pod and own server resources are removed;
+the original Workspace remains Ready. Close this unchanged matrix. Full-service
+CPU attribution/interference, strong official serving, full text/API, broader
+qualified backends and online batching remain under the retained objective.

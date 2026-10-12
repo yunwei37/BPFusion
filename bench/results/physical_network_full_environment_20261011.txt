@@ -1,0 +1,71 @@
+{
+  "journal": {
+    "command": [
+      "journalctl",
+      "-k",
+      "--since",
+      "2026-10-12 17:06:00 UTC",
+      "--until",
+      "2026-10-12 17:41:35 UTC",
+      "--no-pager",
+      "-o",
+      "short-iso-precise"
+    ],
+    "exit": 0,
+    "end_utc": "2026-10-12T17:41:35.450672+00:00",
+    "lines": [
+      "2026-10-12T10:08:08.817542-07:00 lab kernel: bfusion_tx: map id=8610 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T10:09:12.727558-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T10:16:33.712440-07:00 lab kernel: bfusion_tx: map id=8628 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T10:16:56.760783-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T10:18:05.777530-07:00 lab kernel: bfusion_tx: map id=8638 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T10:18:29.131554-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T10:22:43.523567-07:00 lab kernel: bfusion_tx: map id=8650 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T10:23:07.536447-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T10:24:16.804215-07:00 lab kernel: bfusion_tx: map id=8658 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T10:24:41.402454-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T10:27:12.867445-07:00 lab kernel: bfusion_tx: map id=8670 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T10:27:36.739446-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T10:31:17.547446-07:00 lab kernel: bfusion_tx: map id=8688 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T10:31:40.899451-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T10:32:37.856461-07:00 lab kernel: bfusion_tx: map id=8696 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T10:33:01.496469-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T10:36:57.577448-07:00 lab kernel: bfusion_tx: map id=8706 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T10:37:21.616446-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19",
+      "2026-10-12T10:38:20.498451-07:00 lab kernel: bfusion_tx: map id=8714 size=17336 ring=12856 slot=560 net=4026534538",
+      "2026-10-12T10:38:44.291457-07:00 lab kernel: bfusion_tx: exit bytes=55176 completed=264 abandoned=0 retries=0 accepted=19 closed=19"
+    ],
+    "stderr": ""
+  },
+  "cleanup": {
+    "server_phase": "Running",
+    "server_status": {
+      "ready": true,
+      "restartCount": 0,
+      "containerID": "containerd://a83771de83c8751ca3851fb01f648f254b33bee02efedf85f1d50713ebbf644d"
+    },
+    "client_items": [],
+    "server_uid": "3e8994f8-77ba-4a73-a3a5-35ed69a0a8a2",
+    "server_node": "lab",
+    "observed_utc": "2026-10-12T17:41:39.1184402Z",
+    "server_ip": "10.42.1.238"
+  },
+  "frozen": "eaa9c8e6bd5f79d35c0a260770833c7071302380",
+  "initialObservation": ", '--query-compute-apps=pid,process_name,used_memory', '--format=csv,noheader'] \nCHECK ['git', 'symbolic-ref', '--short', 'HEAD'] main\n\nCHECK ['git', 'rev-parse', 'HEAD'] eaa9c8e6bd5f79d35c0a260770833c7071302380\n\nOWNPINS []\nOWNMODULE False\n",
+  "observation_note": "Initial and per-executor GPU snapshots are discrete; early query return statuses were not archived. No continuous isolation or full-window software-version observation is claimed.",
+  "current_versions_utc": "2026-10-12T17:45:34.702663+00:00",
+  "packages_now": {
+    "torch": "2.14.1",
+    "transformers": "5.19.0"
+  },
+  "kernel_now": "7.3.0-070300rc3-generic",
+  "gpu_now": "NVIDIA GeForce RTX 5090, GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, 610.57.04, 15 MiB",
+  "gpu_compute_apps_now": "",
+  "module_now": false,
+  "pins_now": []
+}
+
+Upstream API audit at 2026-10-12T17:49:52.180615+00:00
+Source: https://github.com/torvalds/linux/blob/v7.3-rc7/net/core/bpf_ksock.c (official GitHub contents API, v7.3-rc7)
+Header: https://github.com/torvalds/linux/blob/v7.3-rc7/include/linux/bpf_ksock.h
+ksock creation rejects non-SOCK_DGRAM and non-UDP/nonzero protocols. Create/connect/send reject kernel-thread or missing namespace context. The send kfunc is sleepable and registered for syscall/LSM contexts. Installed rc3 header and kallsyms also contain this UDP interface. No kernel upgrade or kfunc runtime probe was performed.
