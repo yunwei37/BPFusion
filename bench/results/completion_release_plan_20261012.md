@@ -120,3 +120,44 @@ distinguish actual gen1/c8 prefix publication from an unrelated long-output max.
 Final actual binary/compile/driver mapping and invocations follow implementation
 and precede the first candidate serve. No serving source is changed before the
 prior study's combined review report is complete.
+
+## Actual implementation and executable binding before serving
+
+Prior study closes with fresh combined report and main617c28ad84e884773764d8390038abb42549803e.
+Original default serving remains grouped/serialized while this candidate qualifies.
+The native component control uses BF_PAD_PREFILL; candidate adds BF_PREFIX_RELEASE.
+Both traced controls add BF_TRACE, user variants also add BF_USER_NETWORK and
+BF_USER_NETWORK_WAIT (existing60000ns wait). Shared release-ID events/counters
+and trace capacity requests×66 apply to both; no BPF,module,wire ABI or model
+arithmetic changes. Independent replay now checks release-before-reuse/one-time
+FIFO release only for actual new release traces; old archives still replay
+byte-identically. Common native source exports releases after stop.
+
+Actual make vllm-graph-release (VLLM_PYTHON=/tmp/bpfusion-padding-b45ull5p/venv/bin/python)
+rebuilds all eight needed padded-control/prefix variants successfully; command,
+stdout and exit0 are in /tmp/bpfusion-release-9vepwjeh/build*. Runtime remains
+the already-installed pinned temporary dependency environment. No reinstallation
+or original-base mutation. New raw/setup records go to that ordinary temp root
+and then bench/results/completion_release_20261012/.
+
+Driver --release-comparison maps serial-kernel/prefix-kernel/serial-userspace/
+prefix-userspace to vllm_graph_padded_trace/vllm_graph_padded_prefix_trace/
+vllm_graph_padded_user_network_wait_trace/vllm_graph_padded_prefix_user_network_wait_trace.
+Both strict and full modes use all four conditions; thus shared-instrumentation
+baselines receive fresh strict qualification as well as both candidate transports.
+Each strict model has4×622 requests/4×22224 checked tokens and20000 empty connects.
+
+Commands use the pinned temporary Python with VLLM_ENABLE_V1_MULTIPROCESSING=0
+and HF_HOME=/workspaces/.cache/huggingface, with its bin directory on PATH.
+Actual mixed preflight: python /tmp/bpfusion-release-9vepwjeh/preflight.py,
+16 requests/520 tokens across eight-client gen1 andgen64 conditions; require
+actual multi-request prefix release in each, complete references and normal stop.
+Then for each cached model, python bench/vllm_serving.py --release-comparison
+--correctness --model MODEL --output /tmp/bpfusion-release-9vepwjeh/MODEL_correctness.jsonl;
+python bench/vllm_serving_analysis.py RAW. Only after those pass, the full command
+omits --correctness and writes fresh MODEL_performance.jsonl and retained
+wait/status/stdout/trace/reference records. A wrapper waits the actual sequential
+processes and propagates failure, preserving failed receipts rather than retrying
+or starting a duplicate. The native original300-second test-local positional
+serve argument and existing protocol bounds remain; no new deadline, wait,
+quota or stop policy is introduced. Source remains frozen during collection.

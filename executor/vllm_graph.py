@@ -119,10 +119,14 @@ def main():
         if trace_path:
             records=[json.loads(line) for line in trace_path.open()]
             assert records[-1]["event"]=="terminal" and records[-1]["overflows"]==0
-            requests={};checked=0
+            requests={};checked=0;released=set();owners={}
+            release_trace=any(event["event"]=="release" for event in records)
             with trace_path.with_suffix(trace_path.suffix+".references.jsonl").open("w") as references,torch.inference_mode():
                 for event in records:
                     if event["event"]=="admission":
+                        if release_trace:
+                            physical=event["id"]%banks;assert physical not in owners,event
+                            owners[physical]=event["id"]
                         bad=not(1<=event["query"]<=limit and 1<=event["gen"]<=limit) or any(token>=config.vocab_size for token in event["input_ids"])
                         assert bool(event["bad"])==bad,event
                         requests[event["id"]]=dict(prompt=event["input_ids"],gen=event["gen"],
@@ -133,6 +137,7 @@ def main():
                         if query:assert query==max(len(requests[rid]["prompt"]) for rid in ids)
                         for row,request_id in enumerate(ids):
                             request=requests[request_id];assert not request["bad"]
+                            if release_trace:assert request_id not in released and owners[request_id%banks]==request_id
                             prompt=request["prompt"];history=request["tokens"];physical=request_id%banks
                             if query:
                                 assert not history and len(prompt)<=query
@@ -158,6 +163,15 @@ def main():
                         assert actual==event["tokens"],(event,actual)
                         for request_id,token in zip(ids,actual):requests[request_id]["tokens"].append(token)
                         checked+=batch
+                    elif event["event"]=="release":
+                        ids=event["request_ids"];assert len(ids)==event["batch"]
+                        assert ids==list(range(len(released),len(released)+len(ids))),event
+                        for request_id in ids:
+                            request=requests[request_id]
+                            assert request["bad"] or len(request["tokens"])==request["gen"],event
+                            assert request_id not in released and owners.pop(request_id%banks)==request_id
+                            released.add(request_id)
+                if release_trace:assert not owners and released==set(requests)
                 for request_id,request in requests.items():
                     assert request["bad"] or len(request["tokens"])==request["gen"],(request_id,request)
                     references.write(json.dumps(dict(id=request_id,**request))+"\n")

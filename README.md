@@ -93,7 +93,11 @@ now passes strict service/replay and bit-identical padded-versus-compact semanti
 checks for both models. The complete160-cell comparison shows a small Qwen
 kernel gen1/c8 benefit, three inconclusive primary conditions and lower gen64/c8
 TTFT in all four model/transport cases. Transport speedup remains unproven;
-grouped serving remains the default pending the next release-policy qualification. The default untraced paths pass the recorded single-client
+grouped serving remains the default pending the next release-policy qualification.
+The [FIFO completion-release candidate](docs/findings/0034-completion-release.md)
+passes4976 strict requests/177792 independently checked tokens across both
+models and all controls. Its matched timing is running; production behavior
+remains unchanged while the full candidate is qualified. The default untraced paths pass the recorded single-client
 prompt-edge/gen1/64 qualification; dynamic untraced timing remains unqualified.
 The existing HF graph interface now also accepts HF checkpoints/model directories.
 [Qwen and Llama qualification](docs/findings/0023-batch-execution-qualification.md#hf-graph-reuse-across-qwen-and-llama-architectures)

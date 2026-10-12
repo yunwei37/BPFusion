@@ -1,0 +1,8 @@
+START pair=0 mode=serial-kernel pid=162081
+PASS pair=0 mode=serial-kernel requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=0 mode=prefix-kernel pid=162364
+PASS pair=0 mode=prefix-kernel requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=0 mode=serial-userspace pid=162647
+PASS pair=0 mode=serial-userspace requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=0 mode=prefix-userspace pid=162937
+PASS pair=0 mode=prefix-userspace requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]

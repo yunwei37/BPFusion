@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Real vLLM graph TCP correctness and matched transport comparison."""
+"""Real vLLM graph TCP correctness and matched serving-policy comparison."""
 import argparse,ctypes,json,math,os,re,signal,socket,statistics,struct,subprocess,sys,threading,time,traceback
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -12,7 +12,9 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--model",required=True);ap.add_argument("--output",required=True)
     ap.add_argument("--correctness",action="store_true")
-    ap.add_argument("--packing-comparison",action="store_true")
+    comparisons=ap.add_mutually_exclusive_group()
+    comparisons.add_argument("--packing-comparison",action="store_true")
+    comparisons.add_argument("--release-comparison",action="store_true")
     args=ap.parse_args()
     root=Path(__file__).resolve().parents[1];os.chdir(root)
     output=Path(args.output).resolve();output.parent.mkdir(parents=True,exist_ok=True)
@@ -22,18 +24,18 @@ def main():
         with lock:raw.write(json.dumps(dict(event=event,utc=time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),**kw))+"\n")
     tok=AutoTokenizer.from_pretrained(args.model);config=AutoConfig.from_pretrained(args.model)
     prompts=[tok(text).input_ids for text in ("The capital of France is","What is 2 plus 2?","Write a short greeting.","Linux is")]
-    modes=("packed-kernel","packed-userspace") if args.correctness and args.packing_comparison else (
-        ("grouped-kernel","packed-kernel","grouped-userspace","packed-userspace") if args.packing_comparison else ("kernel","userspace"))
+    modes=("serial-kernel","prefix-kernel","serial-userspace","prefix-userspace") if args.release_comparison else (("packed-kernel","packed-userspace") if args.correctness and args.packing_comparison else (
+        ("grouped-kernel","packed-kernel","grouped-userspace","packed-userspace") if args.packing_comparison else ("kernel","userspace")))
     matrix=((1,1),(64,1),(1,8),(64,8));repetitions=1 if args.correctness else 5
     emit("metadata",model=args.model,vocab=config.vocab_size,prompts=prompts,precision="fp16",
          modes=modes,matrix=matrix,repetitions=repetitions,requests_per_cell=64,warmups_per_executor=8,
-         correctness=args.correctness,trace_condition="both transports identically BF_TRACE",
+         correctness=args.correctness,comparison="release" if args.release_comparison else ("packing" if args.packing_comparison else "transport"),trace_condition="both transports identically BF_TRACE",
          commit=subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip(),
          driver_source=Path(__file__).read_text(),client_source=(root/"bench/resident_dispatch.py").read_text(),
          backend_source=(root/"executor/vllm_graph.py").read_text(),native_source=(root/"executor/vllm_graph.cu").read_text(),
          python=sys.version,torch=subprocess.check_output(["python3","-c","import torch;print(torch.__version__)"],text=True).strip())
     frozen={}
-    if args.packing_comparison:
+    if args.packing_comparison or args.release_comparison:
         for previous in (root/"bench/results/vllm_server_20261012").glob("*_correctness.jsonl"):
             previous_meta=next(json.loads(line) for line in previous.open() if json.loads(line)["event"]=="metadata")
             if previous_meta["model"]!=args.model:continue
@@ -54,7 +56,8 @@ def main():
                 trace=Path(str(prefix)+".gpu.jsonl");logpath=Path(str(prefix)+".stdout.txt")
                 nettrace=Path(str(prefix)+".network.txt")
                 budget=(3*10+sum(range(1,9))+8*32*2+8*4+6+4+2) if args.correctness else 264
-                binary="vllm_graph"+("_padded" if mode.startswith("packed") else "")+("" if kernel_mode else "_user_network_wait")+"_trace"
+                binary=("vllm_graph_padded"+("_prefix" if mode.startswith("prefix") else "") if args.release_comparison
+                        else "vllm_graph"+("_padded" if mode.startswith("packed") else ""))+("" if kernel_mode else "_user_network_wait")+"_trace"
                 command=["./build/"+binary,
                     args.model,"300","--trace-output",str(trace),"--trace-requests",str(budget)]
                 if args.correctness:command=["strace","-D","-f","-e","trace=network,write","-o",str(nettrace),*command]
@@ -197,6 +200,12 @@ def main():
                             first_token_equal=sum(row["tokens"][0]==frozen[tuple(row["input_ids"])][0] for row in known))
                     events=[json.loads(line) for line in trace.open()]
                     assert events[-1]["overflows"]==0
+                    if args.release_comparison:
+                        releases=[e for e in events if e["event"]=="release"]
+                        assert sum(e["batch"] for e in releases)==len(rows)
+                        actual_max=max(e["batch"] for e in releases)
+                        assert actual_max==1 if mode.startswith("serial") else actual_max>1
+                        emit("release_verified",pair=pair,mode=mode,rounds=len(releases),max_prefix=actual_max)
                     batches=sorted({e["batch"] for e in events if e["event"]=="compute"})
                     queries=sorted({e["query"] for e in events if e["event"]=="compute"})
                     emit("verified",pair=pair,mode=mode,requests=len(rows),tokens=checked,

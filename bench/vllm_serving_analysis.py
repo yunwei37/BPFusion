@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Recompute complete traced vLLM serving evidence and paired client metrics."""
 import argparse,json,math,statistics
+from collections import Counter
 from pathlib import Path
 
 def analyze(path):
@@ -50,6 +51,36 @@ def analyze(path):
             for request_id,token in zip(event["request_ids"],event["tokens"]):trace_tokens[request_id].append(token)
         assert all(trace_tokens[key]==value["tokens"] for key,value in by_id.items())
         assert sum(len(r["tokens"]) for r in requests)==sum(e["batch"] for e in computes)
+        releases=[e for e in events if e["event"]=="release"];release_summary={}
+        if releases:
+            owners={};emitted=Counter();released=[]
+            for event in events:
+                if event["event"]=="admission":
+                    physical=event["id"]%8;assert physical not in owners
+                    owners[physical]=event["id"]
+                elif event["event"]=="compute":
+                    for request_id in event["request_ids"]:
+                        assert owners[request_id%8]==request_id and request_id not in released
+                        emitted[request_id]+=1
+                elif event["event"]=="release":
+                    ids=event["request_ids"];assert len(ids)==event["batch"]
+                    assert ids==list(range(len(released),len(released)+len(ids)))
+                    for request_id in ids:
+                        assert owners.pop(request_id%8)==request_id
+                        assert emitted[request_id]==len(by_id[request_id]["tokens"])
+                        released.append(request_id)
+            assert not owners and set(released)==set(by_id)
+            release_summary=dict(release_rounds=len(releases),max_release=max(e["batch"] for e in releases))
+            if meta.get("comparison")=="release":
+                assert release_summary["max_release"]==1 if mode.startswith("serial") else release_summary["max_release"]>1
+            clients={ref["id"]:next(row for row in requests if row["client_ns"]==ref["client_ns"]) for ref in refs}
+            for gen,c in meta["matrix"] if not meta["correctness"] else []:
+                ids={rid for rid,row in clients.items() if row["kind"]=="measured" and (row["gen"],row["concurrency"])==(gen,c)}
+                selected=[e for e in releases if any(rid in ids for rid in e["request_ids"])]
+                assert sum(sum(rid in ids for rid in e["request_ids"]) for e in selected)==64
+                print(json.dumps(dict(event="cell_release",pair=pair,mode=mode,gen=gen,concurrency=c,
+                    release_rounds=len(selected),max_prefix=max(e["batch"] for e in selected),
+                    multi_release_requests=sum(sum(rid in ids for rid in e["request_ids"]) for e in selected if e["batch"]>1))))
         total_tokens+=sum(len(r["tokens"]) for r in requests);total_requests+=len(requests)
         all_batches.update(e["batch"] for e in computes)
         if meta["correctness"]:
@@ -63,7 +94,7 @@ def analyze(path):
             actual_batches=sorted({e["batch"] for e in computes}),graphs=len(computes),
             prefill_graphs=sum(bool(e["query"]) for e in computes),decode_graphs=sum(not e["query"] for e in computes),
             real_prompt_tokens=sum(len(a["input_ids"]) for a in admissions if not a["bad"]),
-            padded_query_tokens=sum(e["query"]*e["batch"] for e in computes if e["query"])-sum(len(a["input_ids"]) for a in admissions if not a["bad"]))))
+            padded_query_tokens=sum(e["query"]*e["batch"] for e in computes if e["query"])-sum(len(a["input_ids"]) for a in admissions if not a["bad"]),**release_summary)))
     print(json.dumps(dict(event="coverage",requests=total_requests,tokens=total_tokens,actual_batches=sorted(all_batches))))
     if meta["correctness"]:return
     samples=[r for r in records if r["event"]=="request" and r["kind"]=="measured"]
@@ -95,10 +126,13 @@ def analyze(path):
                 tpot_mean_ms=statistics.mean(r["tpot_ms"] for r in selected) if gen>1 else None,
                 completion_mean_ms=statistics.mean(r["latency_ms"] for r in selected),
                 tokens_per_s=statistics.mean(summaries[pair,mode,gen,c]["tokens_per_s"] for pair in range(meta["repetitions"])))))
-        comparisons=[("userspace","kernel","kernel")] if len(meta["modes"])==2 else [
+        comparisons=[("userspace","kernel","kernel")] if len(meta["modes"])==2 else ([
+            ("serial-kernel","prefix-kernel","release"),
+            ("serial-userspace","prefix-userspace","release"),
+            ("prefix-userspace","prefix-kernel","kernel")] if meta.get("comparison")=="release" else [
             ("grouped-kernel","packed-kernel","packing"),
             ("grouped-userspace","packed-userspace","packing"),
-            ("packed-userspace","packed-kernel","kernel")]
+            ("packed-userspace","packed-kernel","kernel")])
         for baseline,candidate,favors in comparisons:
             for metric in ("ttft_ms","completion_ms","tokens_per_s")+(("tpot_ms",) if gen>1 else ()):
                 sign=1 if metric=="tokens_per_s" else -1

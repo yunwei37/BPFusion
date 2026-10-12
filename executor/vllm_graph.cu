@@ -31,7 +31,7 @@ struct Trace {
     unsigned requests[BF_LLM_SLOTS],tokens[BF_LLM_MAX_TOK];
 };
 struct Control {
-    unsigned seen,retired,reclaim,error,launches,max_active,batch,query;
+    unsigned seen,retired,reclaim,error,launches,max_active,batch,query,release_rounds,max_release;
     unsigned selected[BF_LLM_SLOTS];
     Request requests[BF_LLM_SLOTS];
     Trace* trace;
@@ -71,11 +71,29 @@ __global__ void dispatch(bf_page* p,Step* steps,Inputs in,unsigned vocab,Control
             c->batch=0;
         }
         if(queue_load((unsigned long long*)&p->stop_ns))return;
+        unsigned release_begin=c->retired,i=c->retired%BF_LLM_SLOTS;
+#ifdef BF_PREFIX_RELEASE
+        // Model/head work is complete. TX owns each reservation until its
+        // final slot access; releasing the FIFO prefix needs no global wait.
+        while(c->retired!=c->seen && c->requests[i].phase==2) {
+            __threadfence_system();__stcg(&p->llm[i].state,(unsigned)BF_DONE);
+            c->requests[i].phase=0;c->retired++;i=c->retired%BF_LLM_SLOTS;
+        }
+#else
         if(c->reclaim && queue_load(&p->llm[(c->retired-1)%BF_LLM_SLOTS].state)!=BF_DONE)c->reclaim=0;
-        unsigned i=c->retired%BF_LLM_SLOTS;
         if(!c->reclaim && c->retired!=c->seen && c->requests[i].phase==2) {
             __threadfence_system();__stcg(&p->llm[i].state,(unsigned)BF_DONE);
             c->requests[i].phase=0;c->retired++;c->reclaim=1;
+        }
+#endif
+        unsigned released=c->retired-release_begin;
+        if(released) {
+            c->release_rounds++;if(released>c->max_release)c->max_release=released;
+            Trace* event=trace_next(c);
+            if(event) {
+                event->kind=3;event->batch=released;
+                for(unsigned row=0;row<released;row++)event->requests[row]=release_begin+row;
+            }
         }
         while(queue_load(&p->llm_head)!=c->seen) {
             i=c->seen%BF_LLM_SLOTS;bf_llm_slot* slot=&p->llm[i];
@@ -171,7 +189,7 @@ extern "C" int serve(const unsigned long long* bodies,const unsigned long long* 
 #ifdef BF_TRACE
     Trace* trace=nullptr;
     if(!trace_requests || !trace_path || !*trace_path) { fprintf(stderr,"traced candidate requires bounded workload and output path\n");return 1; }
-    initial.trace_capacity=trace_requests*(BF_LLM_MAX_TOK+1);
+    initial.trace_capacity=trace_requests*(BF_LLM_MAX_TOK+2);
     CUDA(cudaMalloc(&trace,initial.trace_capacity*sizeof(Trace)));initial.trace=trace;
 #endif
     Control* control;CUDA(cudaMalloc(&control,sizeof(Control)));CUDA(cudaMemcpy(control,&initial,sizeof(initial),cudaMemcpyHostToDevice));
@@ -225,6 +243,9 @@ extern "C" int serve(const unsigned long long* bodies,const unsigned long long* 
         if(r.kind==1) {
             fprintf(file,"{\"event\":\"admission\",\"id\":%u,\"query\":%u,\"gen\":%u,\"bad\":%u,\"client_ns\":%llu,\"input_ids\":[",r.id,r.query,r.gen,r.bad,r.client_ns);
             for(unsigned j=0;j<r.query && j<BF_LLM_MAX_TOK;j++)fprintf(file,"%s%u",j ? "," : "",r.tokens[j]);
+        }else if(r.kind==3) {
+            fprintf(file,"{\"event\":\"release\",\"batch\":%u,\"request_ids\":[",r.batch);
+            for(unsigned j=0;j<r.batch;j++)fprintf(file,"%s%u",j ? "," : "",r.requests[j]);
         }else {
             fprintf(file,"{\"event\":\"compute\",\"query\":%u,\"batch\":%u,\"request_ids\":[",r.query,r.batch);
             for(unsigned j=0;j<r.batch;j++)fprintf(file,"%s%u",j ? "," : "",r.requests[j]);
@@ -240,6 +261,6 @@ extern "C" int serve(const unsigned long long* bodies,const unsigned long long* 
     CUDA(cudaHostUnregister(page));munmap(page,BF_PAGE_MMAP_BYTES);
     CUDA(cudaGraphExecDestroy(parent));CUDA(cudaGraphDestroy(parent_graph));CUDA(cudaFree(steps));CUDA(cudaFree(control));
     for(unsigned index=BF_LLM_SLOTS;index<size;index++) { CUDA(cudaGraphExecDestroy(host[index].graph));CUDA(cudaGraphDestroy(combined[index])); }
-    printf("resident vLLM stopped: launches=1 device_graph_launches=%u graph_error=%u max_active=%u admitted=%u retired=%u trace_overflows=%u\n",result.launches,result.error,result.max_active,result.seen,result.retired,result.trace_overflows);fflush(stdout);
+    printf("resident vLLM stopped: launches=1 device_graph_launches=%u graph_error=%u max_active=%u admitted=%u retired=%u trace_overflows=%u release_rounds=%u max_release=%u\n",result.launches,result.error,result.max_active,result.seen,result.retired,result.trace_overflows,result.release_rounds,result.max_release);fflush(stdout);
     return result.error || result.trace_overflows;
 }
