@@ -93,13 +93,14 @@ def analyze(path):
                 ttft_p50_ms=quantile([r["ttft_ms"] for r in selected],.5),
                 ttft_p99_ms=quantile([r["ttft_ms"] for r in selected],.99),
                 tpot_mean_ms=statistics.mean(r["tpot_ms"] for r in selected) if gen>1 else None,
+                completion_mean_ms=statistics.mean(r["latency_ms"] for r in selected),
                 tokens_per_s=statistics.mean(summaries[pair,mode,gen,c]["tokens_per_s"] for pair in range(meta["repetitions"])))))
         comparisons=[("userspace","kernel","kernel")] if len(meta["modes"])==2 else [
             ("grouped-kernel","packed-kernel","packing"),
             ("grouped-userspace","packed-userspace","packing"),
             ("packed-userspace","packed-kernel","kernel")]
         for baseline,candidate,favors in comparisons:
-            for metric in ("ttft_ms","tokens_per_s"):
+            for metric in ("ttft_ms","completion_ms","tokens_per_s")+(("tpot_ms",) if gen>1 else ()):
                 sign=1 if metric=="tokens_per_s" else -1
                 differences=[sign*(summaries[pair,candidate,gen,c][metric]-summaries[pair,baseline,gen,c][metric])
                              for pair in range(meta["repetitions"])]
