@@ -1,0 +1,25 @@
+START pair=0 mode=vllm owned_pgid=131899 log=/tmp/bpfusion-vllm-uapngodu/qwen_vllm_preflight_path_20261012-pair0-vllm.log
+pair=0 mode=vllm gen=1 c=1 requests=8 reference_matches=8 tps=129.579
+pair=0 mode=vllm gen=64 c=1 requests=8 reference_matches=2 tps=535.210
+pair=0 mode=vllm gen=1 c=8 requests=8 reference_matches=7 tps=431.054
+pair=0 mode=vllm gen=64 c=8 requests=8 reference_matches=4 tps=4713.060
+START pair=0 mode=bpfusion owned_pgid=132304 log=/tmp/bpfusion-vllm-uapngodu/qwen_vllm_preflight_path_20261012-pair0-bpfusion.log
+pair=0 mode=bpfusion gen=1 c=1 requests=8 reference_matches=8 tps=410.634
+pair=0 mode=bpfusion gen=64 c=1 requests=8 reference_matches=8 tps=503.652
+pair=0 mode=bpfusion gen=1 c=8 requests=8 reference_matches=8 tps=1032.978
+pair=0 mode=bpfusion gen=64 c=8 requests=8 reference_matches=8 tps=1422.248
+{"records": 94, "cells": 8, "requests": 64, "actual_tokens": 2080, "reference_matches_by_mode": {"bpfusion": 32, "vllm": 21}}
+{"gen": 1, "concurrency": 1, "metric": "output_tokens_per_s", "block_means": {"bpfusion": [410.6335403114584], "vllm": [129.57941970416078]}, "means": {"bpfusion": 410.6335403114584, "vllm": 129.57941970416078}, "gain": 281.0541206072976, "paired_gains": [281.0541206072976], "nominal_t95_gain": null}
+{"gen": 1, "concurrency": 1, "metric": "ttft_ms", "block_means": {"bpfusion": [2.4155495], "vllm": [7.64909175]}, "means": {"bpfusion": 2.4155495, "vllm": 7.64909175}, "gain": 5.23354225, "paired_gains": [5.23354225], "nominal_t95_gain": null}
+{"gen": 1, "concurrency": 1, "metric": "latency_ms", "block_means": {"bpfusion": [2.4155495], "vllm": [7.64909175]}, "means": {"bpfusion": 2.4155495, "vllm": 7.64909175}, "gain": 5.23354225, "paired_gains": [5.23354225], "nominal_t95_gain": null}
+{"gen": 64, "concurrency": 1, "metric": "output_tokens_per_s", "block_means": {"bpfusion": [503.65156087329063], "vllm": [535.2104311626591]}, "means": {"bpfusion": 503.65156087329063, "vllm": 535.2104311626591}, "gain": -31.558870289368485, "paired_gains": [-31.558870289368485], "nominal_t95_gain": null}
+{"gen": 64, "concurrency": 1, "metric": "ttft_ms", "block_means": {"bpfusion": [2.417125875], "vllm": [9.132825875]}, "means": {"bpfusion": 2.417125875, "vllm": 9.132825875}, "gain": 6.7157, "paired_gains": [6.7157], "nominal_t95_gain": null}
+{"gen": 64, "concurrency": 1, "metric": "tpot_ms", "block_means": {"bpfusion": [1.9779928015873016], "vllm": [1.7516803571428572]}, "means": {"bpfusion": 1.9779928015873016, "vllm": 1.7516803571428572}, "gain": -0.22631244444444443, "paired_gains": [-0.22631244444444443], "nominal_t95_gain": null}
+{"gen": 64, "concurrency": 1, "metric": "latency_ms", "block_means": {"bpfusion": [127.030672375], "vllm": [119.48868837500001]}, "means": {"bpfusion": 127.030672375, "vllm": 119.48868837500001}, "gain": -7.541983999999985, "paired_gains": [-7.541983999999985], "nominal_t95_gain": null}
+{"gen": 1, "concurrency": 8, "metric": "output_tokens_per_s", "block_means": {"bpfusion": [1032.9780835622455], "vllm": [431.0544097351052]}, "means": {"bpfusion": 1032.9780835622455, "vllm": 431.0544097351052}, "gain": 601.9236738271403, "paired_gains": [601.9236738271403], "nominal_t95_gain": null}
+{"gen": 1, "concurrency": 8, "metric": "ttft_ms", "block_means": {"bpfusion": [6.6883395], "vllm": [17.950542374999998]}, "means": {"bpfusion": 6.6883395, "vllm": 17.950542374999998}, "gain": 11.262202874999998, "paired_gains": [11.262202874999998], "nominal_t95_gain": null}
+{"gen": 1, "concurrency": 8, "metric": "latency_ms", "block_means": {"bpfusion": [6.6883395], "vllm": [17.950542374999998]}, "means": {"bpfusion": 6.6883395, "vllm": 17.950542374999998}, "gain": 11.262202874999998, "paired_gains": [11.262202874999998], "nominal_t95_gain": null}
+{"gen": 64, "concurrency": 8, "metric": "output_tokens_per_s", "block_means": {"bpfusion": [1422.2483955433902], "vllm": [4713.059545567536]}, "means": {"bpfusion": 1422.2483955433902, "vllm": 4713.059545567536}, "gain": -3290.8111500241457, "paired_gains": [-3290.8111500241457], "nominal_t95_gain": null}
+{"gen": 64, "concurrency": 8, "metric": "ttft_ms", "block_means": {"bpfusion": [6.877194625], "vllm": [18.08592775]}, "means": {"bpfusion": 6.877194625, "vllm": 18.08592775}, "gain": 11.208733125, "paired_gains": [11.208733125], "nominal_t95_gain": null}
+{"gen": 64, "concurrency": 8, "metric": "tpot_ms", "block_means": {"bpfusion": [5.587848297619048], "vllm": [1.4233097619047619]}, "means": {"bpfusion": 5.587848297619048, "vllm": 1.4233097619047619}, "gain": -4.164538535714286, "paired_gains": [-4.164538535714286], "nominal_t95_gain": null}
+{"gen": 64, "concurrency": 8, "metric": "latency_ms", "block_means": {"bpfusion": [358.911637375], "vllm": [107.75444275000001]}, "means": {"bpfusion": 358.911637375, "vllm": 107.75444275000001}, "gain": -251.157194625, "paired_gains": [-251.157194625], "nominal_t95_gain": null}

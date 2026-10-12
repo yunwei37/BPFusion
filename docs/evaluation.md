@@ -175,3 +175,14 @@ while generation modes and repeats agree. Native build passes; strict backend
 qualification fails. Role dependency-only; no independent serving result.
 Close this candidate without numerical tuning. The retained performance and
 reusable-backend objective remains open.
+
+The official vLLM0.31.0 token-only comparison is now collecting on frozen
+production442ab45 source. The [reviewed plan](../bench/results/qwen_vllm_plan_20261012.md)
+and [plan review](../bench/results/qwen_vllm_plan_review_20261012.md) admit
+one strongest external competitor with matched FP16 parameter bits, while
+reporting output/kernel/interface differences separately. Default preflight
+fails before requests because child PATH lacks installed ninja; that raw
+is retained. The repaired existing-venv PATH preflight completes8 cells,
+64 requests,2080 measured tokens and two normal exits0, with native analysis
+passing. Full five-pair40-cell collection is active; no completed comparison
+or performance verdict is claimed. Role supporting; broader goal remains open.
