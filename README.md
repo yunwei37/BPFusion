@@ -75,8 +75,10 @@ records concrete model, launch, correctness and online-service boundaries.
 No alternative megakernel is qualified yet; the measured executor remains in use.
 [Official vLLM FULL-graph reuse](docs/findings/0031-optimized-serving.md#optimized-backend-integration-actual-full-graph-reuse)
 passes1197 actual GPU launches at batch1/2/4/8 with bit-identical hidden states.
-This qualifies the computation interface; CPU sampling/scheduling and kernel-queue
-integration remain unfinished, and no optimized-serving speedup is claimed.
+This qualifies the computation interface. The [GPU-owned decode follow-up](docs/findings/0031-optimized-serving.md#optimized-backend-integration-gpu-owned-decode-and-sampling)
+then generates4662 tokens with official head/sampling and GPU metadata advancement,
+matching74 frozen official sequences after CPU prefill. Prefill/admission and
+kernel-queue integration remain unfinished; no optimized-serving speedup is claimed.
 The existing HF graph interface now also accepts HF checkpoints/model directories.
 [Qwen and Llama qualification](docs/findings/0023-batch-execution-qualification.md#hf-graph-reuse-across-qwen-and-llama-architectures)
 passes both resident and host-control dispatch for Qwen2.5-0.5B and

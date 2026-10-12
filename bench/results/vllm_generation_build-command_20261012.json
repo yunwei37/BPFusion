@@ -1,0 +1,34 @@
+[
+  [
+    "/usr/local/cuda/bin/nvcc",
+    "--cudart=none",
+    "-gencode",
+    "arch=compute_120,code=sm_120",
+    "-Xcompiler=-fPIC",
+    "-dc",
+    "/tmp/bpfusion-vllm-reuse-j3k3go83/generate.cu",
+    "-o",
+    "/tmp/bpfusion-vllm-reuse-j3k3go83/generate.o"
+  ],
+  [
+    "/usr/local/cuda/bin/nvcc",
+    "-gencode",
+    "arch=compute_120,code=sm_120",
+    "-Xcompiler=-fPIC",
+    "-dlink",
+    "/tmp/bpfusion-vllm-reuse-j3k3go83/generate.o",
+    "-o",
+    "/tmp/bpfusion-vllm-reuse-j3k3go83/generate_dlink.o"
+  ],
+  [
+    "g++",
+    "-shared",
+    "-Wl,-z,defs",
+    "/tmp/bpfusion-vllm-reuse-j3k3go83/generate.o",
+    "/tmp/bpfusion-vllm-reuse-j3k3go83/generate_dlink.o",
+    "/tmp/bpfusion-vllm-reuse-j3k3go83/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+    "-Wl,-rpath,/tmp/bpfusion-vllm-reuse-j3k3go83/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib",
+    "-o",
+    "/tmp/bpfusion-vllm-reuse-j3k3go83/generate.so"
+  ]
+]

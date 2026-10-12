@@ -198,3 +198,12 @@ agreement36/74 remains separate. Fresh result review admits valid/complete
 FULL-body device launch; role dependency-only, no serving/performance claim.
 Three failed setup attempts and the fourth repair are retained. Next implement
 GPU-owned generation and prefill/queue/lifetime integration; full goal open.
+
+The [GPU-owned optimized decode qualification](findings/0031-optimized-serving.md#optimized-backend-integration-gpu-owned-decode-and-sampling)
+completes19 groups/74 lanes and4736 exact official-reference output IDs,
+including4662 GPU-sampled tokens after74 CPU-prefill seeds. Device-owned
+metadata/slot advancement,1197 child launches/1216 parent invocations and
+19 host parent submissions engage; restored official CPU trajectories also
+match. Role dependency-only, no serving/performance claim. Official KV
+reservation and prefill still need replacement by bootstrap-owned slots and
+GPU request admission before kernel-queue integration. Full goal open.

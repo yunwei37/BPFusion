@@ -212,6 +212,77 @@ research value dependency-only. There is no latency/TPS result here.
 Prefill, sampling, per-token CPU scheduling and kernel-queue integration are
 not moved by this mirror. Next implement GPU-owned metadata advancement and
 official head/sampling, then prefill/admission/lifetime and the existing TCP
-path. The owner temp environment remains in use for that unfinished
-integration; the completed probe's processes are gone. The full goal remains
+path. At this FULL-body step's publication, the owner temp environment remained
+in use for generation integration; the completed probe's processes were gone. The full goal remains
 open, and this is not an optimized worker-free server.
+
+
+## Optimized-backend integration: GPU-owned decode and sampling
+
+The next native adapter composes the already qualified FULL body with the
+actual vLLM model.compute_logits and upstream gumbel_sample at temperature0.
+A device parent reads sampled tokens, advances input IDs,positions,seq_lens
+and paged-KV slot mappings, then tail-launches itself. Model arithmetic,
+attention and sampling implementations are reused.
+
+Official prefill supplies one seed token per lane. The actual upstream
+KVCacheManager reserves future blocks once, and BlockTables publishes them
+with the real request row mapping. The following63 tokens/lane are generated
+autonomously by GPU code, with one host parent submission per group.
+This is not yet GPU prefill or kernel request admission.
+
+On unchanged production279f565, all19 groups/74 lanes complete:
+4736 checked output IDs,including4662 new GPU-sampled IDs and74 CPU-prefill
+seeds. Every complete native GPU sequence matches the pre-frozen official
+reference. All continuing official CPU sequences also match after restoring
+prepared metadata/hidden states. Native output matching is checked independently
+of that restored CPU continuation, so the latter cannot conceal a bad loop.
+HF eager agreement remains36/74 complete sequences, separately reported.
+
+Actual device counts are1197 child launches and1216 parent invocations,
+with19 host parent submissions. Each group has63 children,64 parent calls
+and64*batch output writes. Initial/final positions andseq_lens advance by62;
+slot IDs reconstruct from the retained allocator block IDs. Batch1/2/4/8,
+homogeneous/mixed prompt groups and KV block crossings all engage. All four
+native handles destroy0; successful preflight/full launching-parent waits exit0.
+
+The first preflight's native loop completes, but result joining fails because
+upstream internal request IDs carry randomized suffixes while public IDs do
+not. Preserve that failed attempt. The repair uses the official live
+OutputProcessor external_req_id mapping; no ID parsing, randomization override,
+computation, input, oracle or equality change is made.
+
+- [Plan](../../bench/results/vllm_generation_plan_20261012.md),
+  [plan review](../../bench/results/vllm_generation_plan_review_20261012.md),
+  and [fresh result review](../../bench/results/vllm_generation_result_review_20261012.md).
+- [Actual qualifier](../../bench/results/vllm_generation_qualify_20261012.py),
+  [native generation adapter](../../bench/results/vllm_generation_native_20261012.cu),
+  [build](../../bench/results/vllm_generation_build-command_20261012.json)
+  and [full invocation](../../bench/results/vllm_generation_full-command_20261012.json).
+- [Full raw](../../bench/results/vllm_generation_full_20261012.jsonl),
+  [stdout](../../bench/results/vllm_generation_full_20261012.stdout.txt),
+  [wait status](../../bench/results/vllm_generation_full-status_20261012.json),
+  [CPU replay](../../bench/results/vllm_generation_analysis_20261012.py)
+  and [reconstruction](../../bench/results/vllm_generation_analysis_20261012.txt).
+
+This is a correctness/implementation qualification, not a latency/TPS result.
+Recorded native-call wall durations exclude bootstrap/head capture and include
+submission/synchronization/status copy; they are not client TTFT/TPOT or
+comparable to the previous serving matrix. The qualified scope is one full
+attention KV group on this Qwen checkpoint, fixed-length greedy generation,
+supported in-process bootstrap and the recorded mixed CUDA runtime build.
+
+Next move prefill and request admission/state ownership into the GPU service
+path, connect the existing eBPF queue/kernel TX and qualify slot reuse/rejection/
+streaming/shutdown. Then compare kernel/eBPF and efficient userspace paths with
+identical optimized computation and batching. The production network executor
+still uses HF graphs, and the complete service/performance objective remains open.
+
+[Owner restoration](../../bench/results/vllm_generation_restoration_20261012.json)
+records no remaining owner commands or GPU compute applications, no own
+module/pins, unchanged original Torch2.14.1/Transformers5.19 environment,
+and removal of the owned temporary source/venv after complete archival/review.
+Original Workspace UID remains Running/Ready with zero restarts; unrelated
+tools/setup_env.sh is preserved. A successful bounded host-journal read from
+19:40:00–20:19:20UTC has no matching listed fault lines; it does not establish
+continuous isolation or kernel/driver portability. Original caches/PVC remain.

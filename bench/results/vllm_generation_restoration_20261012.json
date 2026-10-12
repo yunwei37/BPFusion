@@ -1,0 +1,44 @@
+{
+  "utc": "2026-10-12T20:18:48Z",
+  "temp_root": "/tmp/bpfusion-vllm-reuse-j3k3go83",
+  "own_commands": [],
+  "module_present": false,
+  "pins": [],
+  "unrelated_setup_preserved": true,
+  "workspace_uid": "3e8994f8-77ba-4a73-a3a5-35ed69a0a8a2",
+  "workspace_observation": "2026-10-12T20:16:58Z Running Ready true restart0 from owning cluster API",
+  "gpu_apps": {
+    "code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "gpu": {
+    "code": 0,
+    "stdout": "GPU-7eb74118-ee90-99c7-6567-e2d50fdf1d5a, NVIDIA GeForce RTX 5090, 610.57.04, 15 MiB\n",
+    "stderr": ""
+  },
+  "base_python": {
+    "code": 0,
+    "stdout": "{\"torch\": \"2.14.1+cu130\", \"transformers\": \"5.19.0\"}\n",
+    "stderr": ""
+  },
+  "temp_removed": true,
+  "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167",
+  "host_journal": {
+    "command": [
+      "journalctl",
+      "-k",
+      "--since",
+      "2026-10-12 19:40:00 UTC",
+      "--until",
+      "2026-10-12 20:19:20 UTC",
+      "--no-pager",
+      "-o",
+      "short-iso"
+    ],
+    "exit_code": 0,
+    "matching_lines": [],
+    "stderr": "",
+    "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167"
+  }
+}
