@@ -1,0 +1,14 @@
+{"path": "bench/results/physical_network_smol_preflight_20261011.jsonl", "complete_cells": 2, "exact_requests": 8, "exact_tokens": 8, "normal_executors": 2}
+{"mode": "resident", "gen": 1, "concurrency": 1, "output_tokens_per_s": 285.91199385803856, "ttft_ms_mean": 3.419409, "ttft_ms_p50": 3.380067, "ttft_ms_p95": 3.523639, "ttft_ms_p99": 3.523639, "latency_ms_mean": 3.419409, "latency_ms_p50": 3.380067, "latency_ms_p95": 3.523639, "latency_ms_p99": 3.523639, "tpot_ms_mean": null, "tpot_ms_p50": null, "tpot_ms_p95": null, "tpot_ms_p99": null}
+{"mode": "user-network-wait", "gen": 1, "concurrency": 1, "output_tokens_per_s": 281.55059485305804, "ttft_ms_mean": 3.46547, "ttft_ms_p50": 3.439789, "ttft_ms_p95": 3.522828, "ttft_ms_p99": 3.522828, "latency_ms_mean": 3.46547, "latency_ms_p50": 3.439789, "latency_ms_p95": 3.522828, "latency_ms_p99": 3.522828, "tpot_ms_mean": null, "tpot_ms_p50": null, "tpot_ms_p95": null, "tpot_ms_p99": null}
+{"gen": 1, "concurrency": 1, "metric": "ttft_ms", "direction": "control-minus-resident", "paired_differences": [0.04606099999999991], "mean": 0.04606099999999991, "nominal_t95_df4": null}
+{"gen": 1, "concurrency": 1, "metric": "output_tokens_per_s", "direction": "resident-minus-control", "paired_differences": [4.3613990049805125], "mean": 4.3613990049805125, "nominal_t95_df4": null}
+
+ANALYSIS EXIT 0
+{"path": "bench/results/physical_network_qwen_preflight_20261011.jsonl", "complete_cells": 2, "exact_requests": 8, "exact_tokens": 8, "normal_executors": 2}
+{"mode": "resident", "gen": 1, "concurrency": 1, "output_tokens_per_s": 337.0528235926191, "ttft_ms_mean": 2.89832825, "ttft_ms_p50": 2.91818, "ttft_ms_p95": 2.955107, "ttft_ms_p99": 2.955107, "latency_ms_mean": 2.89832825, "latency_ms_p50": 2.91818, "latency_ms_p95": 2.955107, "latency_ms_p99": 2.955107, "tpot_ms_mean": null, "tpot_ms_p50": null, "tpot_ms_p95": null, "tpot_ms_p99": null}
+{"mode": "user-network-wait", "gen": 1, "concurrency": 1, "output_tokens_per_s": 355.13558011041874, "ttft_ms_mean": 2.74498725, "ttft_ms_p50": 2.752506, "ttft_ms_p95": 2.803728, "ttft_ms_p99": 2.803728, "latency_ms_mean": 2.74498725, "latency_ms_p50": 2.752506, "latency_ms_p95": 2.803728, "latency_ms_p99": 2.803728, "tpot_ms_mean": null, "tpot_ms_p50": null, "tpot_ms_p95": null, "tpot_ms_p99": null}
+{"gen": 1, "concurrency": 1, "metric": "ttft_ms", "direction": "control-minus-resident", "paired_differences": [-0.15334100000000017], "mean": -0.15334100000000017, "nominal_t95_df4": null}
+{"gen": 1, "concurrency": 1, "metric": "output_tokens_per_s", "direction": "resident-minus-control", "paired_differences": [-18.082756517799623], "mean": -18.082756517799623, "nominal_t95_df4": null}
+
+ANALYSIS EXIT 0

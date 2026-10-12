@@ -8,6 +8,7 @@ import argparse
 import ctypes
 import signal
 import gc
+import os
 import re
 import socket
 import struct
@@ -52,6 +53,7 @@ def main():
     parser.add_argument("--prefill-edges",action="store_true",help="also test 1/15/16/17/32/64-token prompt lengths")
     parser.add_argument("--model",default="Qwen/Qwen2.5-0.5B-Instruct",help="HF checkpoint; other models require a graph executor")
     args=parser.parse_args()
+    server=(os.environ.get("BF_BIND","127.0.0.1"),39403)
     user_network=Path(args.executor).name in ("qwen_graph_user_network","qwen_graph_user_network_wait")
     if args.model!="Qwen/Qwen2.5-0.5B-Instruct" and Path(args.executor).name not in ("qwen_graph","qwen_graph_host_launch","qwen_graph_user_network","qwen_graph_user_network_wait"):
         parser.error("--model requires qwen_graph or qwen_graph_host_launch")
@@ -76,11 +78,11 @@ def main():
                 raise AssertionError(open(logpath).read())
             time.sleep(.1)
         for _ in range(5000):
-            socket.create_connection(("127.0.0.1",39403),timeout=5).close()
+            socket.create_connection(server,timeout=5).close()
         owner="userspace" if user_network else "kernel"
         print(f"PASS 5000 empty connections accepted/drained by {owner}; exceeds undrained listener backlog",flush=True)
         def request(idx, ids, expected, http=False, client=None, split=True, reject=False):
-            with (nullcontext(client) if client is not None else socket.create_connection(("127.0.0.1",39403),timeout=60)) as client:
+            with (nullcontext(client) if client is not None else socket.create_connection(server,timeout=60)) as client:
                 start=time.perf_counter()
                 client.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
                 wire=struct.pack("<IIIIQ",0x514c4d51,len(ids),len(expected),0,time.monotonic_ns())+struct.pack(f"<{len(ids)}I",*ids)
@@ -123,7 +125,7 @@ def main():
         # Eight persistent closed-loop clients repeatedly wrap the eight slots.
         barrier=Barrier(8)
         def closed_loop(i):
-            with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+            with socket.create_connection(server,timeout=60) as client:
                 barrier.wait(timeout=60)
                 for repeat in range(32):
                     ids,expected=cases[(i+repeat)%len(cases)]
@@ -138,7 +140,7 @@ def main():
         # reuse must preserve the head-indexed ring and independent KV owners.
         mixed_barrier=Barrier(8)
         def mixed_loop(i):
-            with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+            with socket.create_connection(server,timeout=60) as client:
                 mixed_barrier.wait(timeout=60)
                 for repeat in range(4):
                     ids,expected=cases[(i+repeat)%len(cases)]
@@ -149,7 +151,7 @@ def main():
             for future in futures: future.result()
         print("PASS 32 mixed-length exact replies on eight persistent clients, immediate reuse and ring wrap",flush=True)
         # Pipelining on one persistent stream crosses the slot ring boundary.
-        with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+        with socket.create_connection(server,timeout=60) as client:
             for i in range(6):
                 ids,expected=cases[i%len(cases)]
                 body=struct.pack("<IIIIQ",0x514c4d51,len(ids),len(expected),0,time.monotonic_ns())+struct.pack(f"<{len(ids)}I",*ids)
@@ -175,7 +177,7 @@ def main():
             return struct.pack("<IIIIQ",0x514c4d51,len(tokens),len(expected),0,time.monotonic_ns())+struct.pack(f"<{len(tokens)}I",*tokens)
         # An invalid request must not terminate the grid or poison a later
         # request on this same stream, including coalesced skb framing.
-        with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+        with socket.create_connection(server,timeout=60) as client:
             for tokens in (bad_last,ids,bad_first,ids):
                 payload=body(tokens)
                 client.sendall(f"POST /generate HTTP/1.1\r\nHost: localhost\r\nContent-Length: {len(payload)}\r\n\r\n".encode()+payload)
@@ -191,7 +193,7 @@ def main():
                 while len(data)<count:
                     chunk=client.recv(count-len(data)); assert chunk; data+=chunk
                 if not invalid: assert list(struct.unpack(f"<{len(expected)}I",data))==expected
-        with socket.create_connection(("127.0.0.1",39403),timeout=60) as client:
+        with socket.create_connection(server,timeout=60) as client:
             client.sendall(body(bad_first))
             assert client.recv(1)==b"","binary rejection must close the connection"
         request(0,ids,expected)

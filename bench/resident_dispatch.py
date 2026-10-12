@@ -98,7 +98,7 @@ def request(client,ids,expected):
 
 
 def connect():
-    client=socket.create_connection(("127.0.0.1",39403),timeout=60)
+    client=socket.create_connection((os.environ.get("BF_BIND","127.0.0.1"),39403),timeout=60)
     client.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
     return client
 
@@ -225,7 +225,7 @@ def main():
             raw.write(json.dumps({"event":event,**values})+"\n"); raw.flush()
         import torch, transformers
         emit("metadata",utc=time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),commit=command("git","rev-parse","HEAD"),
-             executors=executors,model=args.model,
+             executors=executors,model=args.model,server=[os.environ.get("BF_BIND","127.0.0.1"),39403],
              network_control={name:("native epoll_pwait2 60000ns wait" if name=="user-network-wait" else "native epoll busy polling") for name in executors if name.startswith("user-network")},
              worker_cpu="POSIX executor process CPU + adjusted kernel TX task CPU; excludes RX/softirq/BPF and other TCP work; read brackets retained",
              kernel=platform.release(),torch=torch.__version__,transformers=transformers.__version__,

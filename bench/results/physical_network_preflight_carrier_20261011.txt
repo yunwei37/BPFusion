@@ -1,0 +1,27 @@
+tcpdump: listening on enp129s0, link-type EN10MB (Ethernet), snapshot length 256 bytes
+68122 packets captured
+68142 packets received by filter
+0 packets dropped by kernel
+
+Carrier capture includes unrelated encrypted peer traffic; retain bounded actual header examples only. No per-service carrier bytes/energy attribution. Physical enp129s0 route and inner TCP tuples are separate evidence. Full carrier encrypted payload is not published.
+reading from file /tmp/bpfusion-cross-node-capture-n_czz2cx/carrier.pcap, link-type EN10MB (Ethernet), snapshot length 256
+2026-10-11 21:42:08.979321 e4:5f:01:a4:38:3f > 9c:6b:00:84:c0:74, ethertype IPv4 (0x0800), length 1290: 128.114.59.130.41641 > 128.114.59.42.41641: UDP, length 1248
+2026-10-11 21:42:08.979722 9c:6b:00:84:c0:74 > e4:5f:01:a4:38:3f, ethertype IPv4 (0x0800), length 138: 128.114.59.42.41641 > 128.114.59.130.41641: UDP, length 96
+2026-10-11 21:42:08.981917 e4:5f:01:a4:38:3f > 9c:6b:00:84:c0:74, ethertype IPv4 (0x0800), length 666: 128.114.59.130.41641 > 128.114.59.42.41641: UDP, length 624
+2026-10-11 21:42:08.981970 e4:5f:01:a4:38:3f > 9c:6b:00:84:c0:74, ethertype IPv4 (0x0800), length 666: 128.114.59.130.41641 > 128.114.59.42.41641: UDP, length 624
+2026-10-11 21:42:08.982199 9c:6b:00:84:c0:74 > e4:5f:01:a4:38:3f, ethertype IPv4 (0x0800), length 138: 128.114.59.42.41641 > 128.114.59.130.41641: UDP, length 96
+2026-10-11 21:42:09.142809 e4:5f:01:a4:38:3f > 9c:6b:00:84:c0:74, ethertype IPv4 (0x0800), length 362: 128.114.59.130.41641 > 128.114.59.42.41641: UDP, length 320
+2026-10-11 21:42:09.151136 e4:5f:01:a4:38:3f > 9c:6b:00:84:c0:74, ethertype IPv4 (0x0800), length 266: 128.114.59.130.41641 > 128.114.59.42.41641: UDP, length 224
+2026-10-11 21:42:09.151527 9c:6b:00:84:c0:74 > e4:5f:01:a4:38:3f, ethertype IPv4 (0x0800), length 138: 128.114.59.42.41641 > 128.114.59.130.41641: UDP, length 96
+2026-10-11 21:42:09.195434 e4:5f:01:a4:38:3f > 9c:6b:00:84:c0:74, ethertype IPv4 (0x0800), length 314: 128.114.59.130.41641 > 128.114.59.42.41641: UDP, length 272
+2026-10-11 21:42:09.236698 9c:6b:00:84:c0:74 > e4:5f:01:a4:38:3f, ethertype IPv4 (0x0800), length 138: 128.114.59.42.41641 > 128.114.59.130.41641: UDP, length 96
+2026-10-11 21:42:09.252130 9c:6b:00:84:c0:74 > e4:5f:01:a4:38:3f, ethertype IPv4 (0x0800), length 166: 128.114.59.42.41641 > 128.114.59.130.41641: UDP, length 124
+2026-10-11 21:42:09.252436 e4:5f:01:a4:38:3f > 9c:6b:00:84:c0:74, ethertype IPv4 (0x0800), length 152: 128.114.59.130.41641 > 128.114.59.42.41641: UDP, length 110
+2026-10-11 21:42:09.366256 e4:5f:01:a4:38:3f > 9c:6b:00:84:c0:74, ethertype IPv4 (0x0800), length 298: 128.114.59.130.41641 > 128.114.59.42.41641: UDP, length 256
+2026-10-11 21:42:09.366634 9c:6b:00:84:c0:74 > e4:5f:01:a4:38:3f, ethertype IPv4 (0x0800), length 138: 128.114.59.42.41641 > 128.114.59.130.41641: UDP, length 96
+2026-10-11 21:42:09.462570 e4:5f:01:a4:38:3f > 9c:6b:00:84:c0:74, ethertype IPv4 (0x0800), length 602: 128.114.59.130.41641 > 128.114.59.42.41641: UDP, length 560
+2026-10-11 21:42:09.462624 e4:5f:01:a4:38:3f > 9c:6b:00:84:c0:74, ethertype IPv4 (0x0800), length 602: 128.114.59.130.41641 > 128.114.59.42.41641: UDP, length 560
+2026-10-11 21:42:09.462860 9c:6b:00:84:c0:74 > e4:5f:01:a4:38:3f, ethertype IPv4 (0x0800), length 138: 128.114.59.42.41641 > 128.114.59.130.41641: UDP, length 96
+2026-10-11 21:42:09.462875 9c:6b:00:84:c0:74 > e4:5f:01:a4:38:3f, ethertype IPv4 (0x0800), length 138: 128.114.59.42.41641 > 128.114.59.130.41641: UDP, length 96
+2026-10-11 21:42:09.466887 e4:5f:01:a4:38:3f > 9c:6b:00:84:c0:74, ethertype IPv4 (0x0800), length 586: 128.114.59.130.41641 > 128.114.59.42.41641: UDP, length 544
+2026-10-11 21:42:09.467110 9c:6b:00:84:c0:74 > e4:5f:01:a4:38:3f, ethertype IPv4 (0x0800), length 138: 128.114.59.42.41641 > 128.114.59.130.41641: UDP, length 96

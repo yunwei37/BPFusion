@@ -141,3 +141,18 @@ Both cross zero; planned TTFT1/c1 and throughput64/c8 also cross zero.
 Run valid/complete,hypothesis inconclusive,role supporting. No total CPU,
 historical causal improvement or external SOTA follows. Close this matrix
 without unchanged repeats; the old negative matrix remains separately closed.
+
+
+The [cross-node comparison](findings/0029-cross-node-network.md) addresses
+the untested real-network boundary without changing qualified computation.
+Role supporting; strongest runnable alternative is efficient native timed
+networking with the same resident graphs. Both bound-address kernel strict
+suites,Qwen timed strict,and default-loopback compatibility pass. Four real
+cross-node preflight executors complete16 exact measuredtokens and normal
+exits; both direct client analyses pass. Packet/route receipts establish
+Linux TCP over existing flannel/Tailscale and Ethernet,not bare-NIC or
+GPUDirect. The80-cell full matrix and independent result review are pending;
+preflight has dependency value only. Planned per-model primary effects are
+TTFT1/c1 and TPS64/c8 with five paired nominal t95 intervals. Server/total CPU
+is not measured by the remote client adapter. Strong official serving,total
+CPU,full text/API,broader qualified backends and online batching remain open.

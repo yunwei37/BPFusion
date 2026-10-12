@@ -25,7 +25,7 @@ module_param(map_fd, int, 0400);
 MODULE_PARM_DESC(map_fd, "BPF map FD in the loading process (use bpfusion_load tx-load)");
 static u32 reply_addr = 0x0100007fu;
 module_param(reply_addr, uint, 0444);
-MODULE_PARM_DESC(reply_addr, "local server IPv4 address, network order");
+MODULE_PARM_DESC(reply_addr, "fallback local IPv4 address without listener FD, network order");
 static int listen_fd = -1;
 module_param(listen_fd, int, 0400);
 MODULE_PARM_DESC(listen_fd, "optional bootstrap listener FD for kernel accept/drain");
@@ -321,13 +321,17 @@ static int __init bf_init(void)
 		listener = sockfd_lookup(listen_fd, &err);
 		if (!listener)
 			goto out_net;
-		if (listener->type != SOCK_STREAM || listener->sk->sk_protocol != IPPROTO_TCP ||
+		if (listener->type != SOCK_STREAM || listener->sk->sk_family != AF_INET ||
+		    listener->sk->sk_protocol != IPPROTO_TCP ||
 		    listener->sk->sk_state != TCP_LISTEN ||
 		    inet_sk(listener->sk)->inet_num != BF_LLM_TCP_PORT ||
+		    !inet_sk(listener->sk)->inet_rcv_saddr ||
 		    !net_eq(sock_net(listener->sk), bf_net)) {
 			err = -EINVAL;
 			goto out_listener;
 		}
+		/* The bound listener is the authority for established-socket lookup. */
+		reply_addr = (__force u32)inet_sk(listener->sk)->inet_rcv_saddr;
 	}
 	tx_task = kthread_run(tx_thread, NULL, "bfusion_tx");
 	if (IS_ERR(tx_task)) {

@@ -1,0 +1,31 @@
+UTC 2026-10-11T23:34:53.812823+00:00 COMMAND ['make', 'qwen-graph', 'qwen-graph-control', 'qwen-graph-user-network', 'qwen-graph-user-network-wait']
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o build/qwen_graph.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o build/qwen_graph_host_launch.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_USER_NETWORK -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o build/qwen_graph_user_network.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o build/qwen_graph_user_network_wait.so -lbpf -lelf -lz -lpthread
+EXIT 0
+UTC 2026-10-11T23:34:59.844596+00:00 COMMAND ['make', '-C', 'module', 'KDIR=/usr/src/linux-headers-7.3.0-070300rc3-generic', 'CC=gcc-15']
+make: Entering directory '/workspaces/repository/module'
+make CC=gcc-15 -C /usr/src/linux-headers-7.3.0-070300rc3-generic M=/workspaces/repository/module modules
+make[1]: Entering directory '/usr/src/linux-headers-7.3.0-070300rc3-generic'
+make[2]: Entering directory '/workspaces/repository/module'
+warning: the compiler differs from the one used to build the kernel
+  The kernel was built by: x86_64-linux-gnu-gcc-15 (Ubuntu 15.2.0-12ubuntu1) 15.2.0
+  You are using:           gcc-15 (Ubuntu 15.2.0-14ubuntu1~24~ppa1) 15.2.0
+warning: pahole version differs from the one used to build the kernel
+  The kernel was built with: 130
+  You are using:             125
+  CC [M]  bfusion_tx.o
+  MODPOST Module.symvers
+  CC [M]  bfusion_tx.mod.o
+  LD [M]  bfusion_tx.ko
+  BTF [M] bfusion_tx.ko
+Skipping BTF generation for bfusion_tx.ko due to unavailability of vmlinux
+make[2]: Leaving directory '/workspaces/repository/module'
+make[1]: Leaving directory '/usr/src/linux-headers-7.3.0-070300rc3-generic'
+make: Leaving directory '/workspaces/repository/module'
+EXIT 0

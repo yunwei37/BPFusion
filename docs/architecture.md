@@ -232,6 +232,13 @@ process CPU clock and retains sequential-read brackets. CPU charged outside
 these contexts, including RX/softirq/BPF/TCP, is excluded; this sum must not
 be called total service CPU. Connection handling and the page ABI are unchanged.
 
+The graph listener defaults to loopback and reuses BF_BIND for a concrete
+IPv4 interface. With a listener FD,kernel TX derives its local lookup address
+from inet_rcv_saddr; reply_addr is only the legacy no-listener fallback.
+Concrete IPv4 binding avoids ambiguous wildcard lookup.
+[Cross-node qualification](findings/0029-cross-node-network.md) retains actual
+client/server tuples and the existing overlay/physical carrier boundary.
+
 ## Ownership rules (the correctness core)
 
 | object | writer | reader | recycle |

@@ -1,0 +1,19 @@
+DEFAULT LOOPBACK COMPATIBILITY PREFLIGHT 2026-10-11T23:44:49.381899+00:00
+
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 290/290 [00:00<00:00, 4993.92it/s]
+HF reference model=Qwen/Qwen2.5-0.5B-Instruct type=qwen2 vocab=151936
+pair=0 mode=resident gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+pair=0 mode=user-network gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.010
+pair=0 mode=user-network-wait gen=1 c=1 requests=4 exact_tokens=4 cpu_s=0.000
+{"mode": "resident", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 2.45721225, "ttft_p50_ms": 2.4715945, "ttft_p99_ms": 2.50419603, "tpot_mean_ms": null, "completion_mean_ms": 2.45721225, "host_cpu_work_s_per_cell": [0.04], "executor_cpu_s_per_cell": [0.0], "known_worker_cpu_ns_per_cell": [218199], "kernel_tx_cpu_ns_per_cell": [175119], "tokens_per_s": [404.66735230805057]}
+{"mode": "user-network", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 2.129407, "ttft_p50_ms": 2.1581729999999997, "ttft_p99_ms": 2.21944213, "tpot_mean_ms": null, "completion_mean_ms": 2.129407, "host_cpu_work_s_per_cell": [0.02], "executor_cpu_s_per_cell": [0.00999999999999801], "known_worker_cpu_ns_per_cell": [8978212], "kernel_tx_cpu_ns_per_cell": [0], "tokens_per_s": [466.1552632658465]}
+{"mode": "user-network-wait", "gen": 1, "concurrency": 1, "requests": 4, "ttft_mean_ms": 2.04731375, "ttft_p50_ms": 2.0435945, "ttft_p99_ms": 2.0985661500000004, "tpot_mean_ms": null, "completion_mean_ms": 2.04731375, "host_cpu_work_s_per_cell": [0.02], "executor_cpu_s_per_cell": [0.0], "known_worker_cpu_ns_per_cell": [244303], "kernel_tx_cpu_ns_per_cell": [0], "tokens_per_s": [486.3169261755101]}
+{"control": "user-network", "gen": 1, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [-0.32780524999999994], "difference_mean_ms": -0.32780524999999994, "difference_t95_ms": null}
+{"control": "user-network", "gen": 1, "concurrency": 1, "paired_resident_minus_user_network_tps": [-61.48791095779592], "difference_mean_tps": -61.48791095779592, "difference_t95_tps": null}
+{"control": "user-network", "gen": 1, "concurrency": 1, "paired_control_minus_resident_worker_cpu_us_per_request": [2190.00325], "difference_mean_worker_cpu_us_per_request": 2190.00325, "difference_t95_worker_cpu_us_per_request": null}
+{"control": "user-network-wait", "gen": 1, "concurrency": 1, "paired_user_network_minus_resident_ttft_ms": [-0.40989850000000017], "difference_mean_ms": -0.40989850000000017, "difference_t95_ms": null}
+{"control": "user-network-wait", "gen": 1, "concurrency": 1, "paired_resident_minus_user_network_tps": [-81.64957386745954], "difference_mean_tps": -81.64957386745954, "difference_t95_tps": null}
+{"control": "user-network-wait", "gen": 1, "concurrency": 1, "paired_control_minus_resident_worker_cpu_us_per_request": [6.526], "difference_mean_worker_cpu_us_per_request": 6.526, "difference_t95_worker_cpu_us_per_request": null}
+
+PREFLIGHT EXIT 0 2026-10-11T23:47:47.447711+00:00

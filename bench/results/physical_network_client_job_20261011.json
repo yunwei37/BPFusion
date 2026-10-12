@@ -1,0 +1,47 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "bpfusion-cross-node-client-20261011",
+    "namespace": "coder",
+    "annotations": {
+      "admission.yunwei37.com/approval-ref": "https://github.com/yunwei37/BPFusion/blob/main/bench/results/physical_network_plan_20261011.md",
+      "admission.yunwei37.com/user-words": "性能能不能想办法改进一下. 尤其是 tp / lantency, 理论上应该可以做到很快, 你想想, 往这个目标继续做"
+    }
+  },
+  "spec": {
+    "template": {
+      "spec": {
+        "restartPolicy": "Never",
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "node-role.kubernetes.io/control-plane",
+                      "operator": "Exists"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "containers": [
+          {
+            "name": "client",
+            "image": "python:3.12.12-slim-bookworm",
+            "command": [
+              "python3",
+              "-u",
+              "-c",
+              "import signal; signal.pause()"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

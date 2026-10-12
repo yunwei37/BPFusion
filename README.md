@@ -221,6 +221,14 @@ the small source change and completed120-cell comparison with independent
 review. Both efficient-control CPU intervals and planned TTFT/throughput
 intervals cross zero; reliable performance gains remain unproven.
 
+Graph executors also accept the existing BF_BIND environment variable for a
+concrete IPv4 listener; the default remains127.0.0.1. Kernel TX discovers
+the bound local address from the listener. Both strict model suites and
+four real cross-node preflight executors pass.
+[Finding0029](docs/findings/0029-cross-node-network.md) records the actual
+Raspberry Pi client,lab server,overlay/Ethernet path and pending full
+comparison. This establishes delivery,not a performance advantage.
+
 ## Reusing upstream compute
 
 The next backend investigation reuses upstream megakernel computation so a

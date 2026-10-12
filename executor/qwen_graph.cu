@@ -6,6 +6,8 @@
 #include <sys/syscall.h>
 #include <fcntl.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
+#include <cstdlib>
 #include <unistd.h>
 #include <cstdio>
 #include <csignal>
@@ -115,7 +117,11 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
     CUDA(cudaHostRegister(page,BF_PAGE_MMAP_BYTES,cudaHostRegisterMapped));
     bf_page *device;CUDA(cudaHostGetDevicePointer((void **)&device,page,0));
     int listener=socket(AF_INET,SOCK_STREAM,0),yes=1;setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));
-    sockaddr_in addr={};addr.sin_family=AF_INET;addr.sin_port=htons(BF_LLM_TCP_PORT);addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
+    sockaddr_in addr={};addr.sin_family=AF_INET;addr.sin_port=htons(BF_LLM_TCP_PORT);
+    const char *bind_addr=getenv("BF_BIND");
+    if(inet_pton(AF_INET,bind_addr ? bind_addr : "127.0.0.1",&addr.sin_addr)!=1) {
+        fprintf(stderr,"BF_BIND must be an IPv4 address\n");return 1;
+    }
     if(bind(listener,(sockaddr *)&addr,sizeof(addr)) || listen(listener,SOMAXCONN)) { perror("listen");return 1; }
     __atomic_store_n(&page->stop_ns,0,__ATOMIC_RELEASE);
     long long **inputs;CUDA(cudaMalloc(&inputs,banks*sizeof(long long *)));
