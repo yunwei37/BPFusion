@@ -1,0 +1,17 @@
+[
+  "/usr/local/cuda/bin/nvcc",
+  "--shared",
+  "--cudart=none",
+  "-rdc=true",
+  "-gencode",
+  "arch=compute_120,code=sm_120",
+  "-Xcompiler=-fPIC",
+  "/tmp/bpfusion-vllm-reuse-j3k3go83/bridge.cu",
+  "/tmp/bpfusion-vllm-reuse-j3k3go83/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+  "-Xlinker",
+  "-rpath",
+  "-Xlinker",
+  "/tmp/bpfusion-vllm-reuse-j3k3go83/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib",
+  "-o",
+  "/tmp/bpfusion-vllm-reuse-j3k3go83/bridge.so"
+]

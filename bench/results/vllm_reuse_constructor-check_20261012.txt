@@ -1,0 +1,12 @@
+import torch
+Original=torch.cuda.CUDAGraph
+print('INIT',Original.__init__)
+class Kept(Original):
+ def __new__(cls,keep_graph=False):return super().__new__(cls,True)
+ def __init__(self,keep_graph=False):super().__init__(True)
+g=Kept()
+try:print('RAW_BEFORE_CAPTURE',g.raw_cuda_graph())
+except Exception as e:print(type(e).__name__,str(e))
+
+INIT <instancemethod __init__ at 0x7e7571764040>
+RuntimeError You cannot access the raw cudaGraph_t instance until capture_end() has been called

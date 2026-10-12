@@ -161,3 +161,57 @@ The temporary environment/source apparatus is removed after archiving and
 review; own processes/module/pins are absent and successful nvidia-smi is
 empty. Original Workspace/PVC/cache and unrelated tools/setup_env.sh remain.
 The full retained performance and serving objective remains open.
+
+
+## Optimized-backend integration: actual FULL graph reuse
+
+The next integration step reuses the official vLLM FULL decode graphs.
+This is dependency evidence within backend integration, not another serving
+comparison or paper result. Frozen productiona40fd5b, the same pinned vLLM
+packages/checkpoint/FP16 condition, supported in-process bootstrap and retained
+raw graphs are used; upstream model/attention/compilation are unchanged.
+
+The complete qualification has19 groups,74 lanes and4736 official CPU-loop
+tokens per phase. All74 instrumented sequences match the independently frozen
+official host sequences; only36/74 match the previous eager-HF sequences.
+The latter difference remains explicit rather than becoming an accuracy claim.
+
+Actual device launches cover batch1/2/4/8 with252/315/315/315 calls:
+1197 in total. Each call first freezes the official host hidden states,
+poisons the dedicated output buffer with NaNs, then launches the same graph
+from GPU code. All4177152 active FP16 elements are finite and equal at the
+stored int16-bit level; all launch statuses/counters pass. This demonstrates
+actual device output rather than agreement on leftover host output.
+The batch1 graph contains265 kernel/25memcpy nodes; batch2/4/8 each contain
+337 kernel/1memcpy node. All four native handles destroy successfully.
+Launching process wait exits0 for both successful preflight and full run.
+
+Three failed setup attempts are retained: missing device-link registration,
+inherited keep_graph initialization reset, and unsupported default-stream
+capture of the parent. The fourth uses explicit parent graph construction,
+as the current dispatcher does. No failed attempt is counted as a pass.
+The native host dependency is libcudart.so.12, with CUDA13.0 compiler/device
+linking; both12/13 runtimes appear in the actual process maps. Successful real
+replay qualifies this tested combination only, not general ABI portability.
+
+- [Plan](../../bench/results/vllm_reuse_plan_20261012.md),
+  [plan review](../../bench/results/vllm_reuse_plan_review_20261012.md),
+  and [fresh result review](../../bench/results/vllm_reuse_result_review_20261012.md).
+- [Actual qualifier](../../bench/results/vllm_reuse_qualify_20261012.py),
+  [native bridge](../../bench/results/vllm_reuse_bridge_20261012.cu),
+  [build commands](../../bench/results/vllm_reuse_build-command_20261012.json)
+  and [full invocation](../../bench/results/vllm_reuse_full-command_20261012.json).
+- [Full raw](../../bench/results/vllm_reuse_full_20261012.jsonl),
+  [stdout](../../bench/results/vllm_reuse_full_20261012.stdout.txt),
+  [wait status](../../bench/results/vllm_reuse_full-status_20261012.json),
+  [CPU replay analyzer](../../bench/results/vllm_reuse_analysis_20261012.py)
+  and [reconstruction](../../bench/results/vllm_reuse_analysis_20261012.txt).
+
+Run valid/complete; tested FULL-body device-launch interface supported;
+research value dependency-only. There is no latency/TPS result here.
+Prefill, sampling, per-token CPU scheduling and kernel-queue integration are
+not moved by this mirror. Next implement GPU-owned metadata advancement and
+official head/sampling, then prefill/admission/lifetime and the existing TCP
+path. The owner temp environment remains in use for that unfinished
+integration; the completed probe's processes are gone. The full goal remains
+open, and this is not an optimized worker-free server.

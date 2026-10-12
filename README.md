@@ -68,11 +68,15 @@ improvements belong to the backend and do not prove an eBPF benefit.
 
 ## Reusing upstream compute
 
-The next backend investigation reuses upstream megakernel computation so a
-matched comparison can attribute effects to the Linux/eBPF serving path.
+Backend integration reuses upstream optimized computation so a matched
+comparison can attribute effects to the Linux/eBPF serving path.
 [Backend source audit](docs/upstream-backends.md) compares candidates and
 records concrete model, launch, correctness and online-service boundaries.
 No alternative megakernel is qualified yet; the measured executor remains in use.
+[Official vLLM FULL-graph reuse](docs/findings/0031-optimized-serving.md#optimized-backend-integration-actual-full-graph-reuse)
+passes1197 actual GPU launches at batch1/2/4/8 with bit-identical hidden states.
+This qualifies the computation interface; CPU sampling/scheduling and kernel-queue
+integration remain unfinished, and no optimized-serving speedup is claimed.
 The existing HF graph interface now also accepts HF checkpoints/model directories.
 [Qwen and Llama qualification](docs/findings/0023-batch-execution-qualification.md#hf-graph-reuse-across-qwen-and-llama-architectures)
 passes both resident and host-control dispatch for Qwen2.5-0.5B and

@@ -1,0 +1,27 @@
+#$ _NVVM_BRANCH_=nvvm
+#$ _SPACE_= 
+#$ _CUDART_=cudart
+#$ _HERE_=/usr/local/cuda/bin
+#$ _THERE_=/usr/local/cuda/bin
+#$ _TARGET_SIZE_=
+#$ _TARGET_DIR_=
+#$ _TARGET_DIR_=targets/x86_64-linux
+#$ TOP=/usr/local/cuda/bin/..
+#$ CICC_PATH=/usr/local/cuda/bin/../nvvm/bin
+#$ NVVMIR_LIBRARY_DIR=/usr/local/cuda/bin/../nvvm/libdevice
+#$ LD_LIBRARY_PATH=/usr/local/cuda/bin/../lib:
+#$ PATH=/usr/local/cuda/bin/../nvvm/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#$ INCLUDES="-I/usr/local/cuda/bin/../targets/x86_64-linux/include"  
+#$ SYSTEM_INCLUDES="-isystem" "/usr/local/cuda/bin/../targets/x86_64-linux/include/cccl"  
+#$ LIBRARIES=  "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib"
+#$ CUDAFE_FLAGS=
+#$ PTXAS_FLAGS=
+#$ gcc -D__CUDA_ARCH_LIST__=1200 -E -x c++ -D__CUDACC__ -D__NVCC__ -D__CUDACC_RDC__  -fPIC "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"   "-isystem" "/usr/local/cuda/bin/../targets/x86_64-linux/include/cccl"    -D__CUDACC_VER_MAJOR__=13 -D__CUDACC_VER_MINOR__=0 -D__CUDACC_VER_BUILD__=88 -D__CUDA_API_VER_MAJOR__=13 -D__CUDA_API_VER_MINOR__=0 -D__NVCC_DIAG_PRAGMA_SUPPORT__=1 -D__CUDACC_DEVICE_ATOMIC_BUILTINS__=1 -include "cuda_runtime.h" -m64 "/tmp/bpfusion-vllm-reuse-j3k3go83/bridge.cu" -o "/tmp/tmpxft_00021378_00000000-5_bridge.cpp4.ii" 
+#$ cudafe++ --c++17 --device-hidden-visibility --gnu_version=130300 --display_error_number --orig_src_file_name "/tmp/bpfusion-vllm-reuse-j3k3go83/bridge.cu" --orig_src_path_name "/tmp/bpfusion-vllm-reuse-j3k3go83/bridge.cu" --allow_managed  --device-c  --m64 --parse_templates --gen_c_file_name "/tmp/tmpxft_00021378_00000000-6_bridge.cudafe1.cpp" --stub_file_name "tmpxft_00021378_00000000-6_bridge.cudafe1.stub.c" --gen_module_id_file --module_id_file_name "/tmp/tmpxft_00021378_00000000-4_bridge.module_id" "/tmp/tmpxft_00021378_00000000-5_bridge.cpp4.ii" 
+#$ gcc -D__CUDA_ARCH__=1200 -D__CUDA_ARCH_LIST__=1200 -E -x c++  -DCUDA_DOUBLE_MATH_FUNCTIONS -D__CUDACC__ -D__NVCC__ -D__CUDACC_RDC__  -fPIC "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"   "-isystem" "/usr/local/cuda/bin/../targets/x86_64-linux/include/cccl"    -D__CUDACC_VER_MAJOR__=13 -D__CUDACC_VER_MINOR__=0 -D__CUDACC_VER_BUILD__=88 -D__CUDA_API_VER_MAJOR__=13 -D__CUDA_API_VER_MINOR__=0 -D__NVCC_DIAG_PRAGMA_SUPPORT__=1 -D__CUDACC_DEVICE_ATOMIC_BUILTINS__=1 -include "cuda_runtime.h" -m64 "/tmp/bpfusion-vllm-reuse-j3k3go83/bridge.cu" -o "/tmp/tmpxft_00021378_00000000-7_bridge.cpp1.ii" 
+#$ "$CICC_PATH/cicc" --c++17 --device-hidden-visibility --gnu_version=130300 --display_error_number --orig_src_file_name "/tmp/bpfusion-vllm-reuse-j3k3go83/bridge.cu" --orig_src_path_name "/tmp/bpfusion-vllm-reuse-j3k3go83/bridge.cu" --allow_managed  --device-c   -arch compute_120 -m64 --no-version-ident -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name "tmpxft_00021378_00000000-3_bridge.fatbin.c" -tused --module_id_file_name "/tmp/tmpxft_00021378_00000000-4_bridge.module_id" --gen_c_file_name "/tmp/tmpxft_00021378_00000000-6_bridge.cudafe1.c" --stub_file_name "/tmp/tmpxft_00021378_00000000-6_bridge.cudafe1.stub.c" --gen_device_file_name "/tmp/tmpxft_00021378_00000000-6_bridge.cudafe1.gpu"  "/tmp/tmpxft_00021378_00000000-7_bridge.cpp1.ii" -o "/tmp/tmpxft_00021378_00000000-6_bridge.ptx"
+#$ ptxas -arch=sm_120 -m64 --compile-only  "/tmp/tmpxft_00021378_00000000-6_bridge.ptx"  -o "/tmp/tmpxft_00021378_00000000-8_bridge.cubin" 
+#$ fatbinary -64 --cmdline="--compile-only  " --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " "--image3=kind=elf,sm=120,file=/tmp/tmpxft_00021378_00000000-8_bridge.cubin" --embedded-fatbin="/tmp/tmpxft_00021378_00000000-3_bridge.fatbin.c"  --device-c
+#$ rm /tmp/tmpxft_00021378_00000000-3_bridge.fatbin
+#$ gcc -D__CUDA_ARCH__=1200 -D__CUDA_ARCH_LIST__=1200 -c -x c++  -DCUDA_DOUBLE_MATH_FUNCTIONS -fPIC -Wno-psabi "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"   "-isystem" "/usr/local/cuda/bin/../targets/x86_64-linux/include/cccl"   -m64 "/tmp/tmpxft_00021378_00000000-6_bridge.cudafe1.cpp" -o "/tmp/tmpxft_00021378_00000000-9_bridge.o" 
+#$ g++ -D__CUDA_ARCH_LIST__=1200 -fPIC -m64 -Wl,--start-group "/tmp/tmpxft_00021378_00000000-9_bridge.o" -shared -Xlinker /tmp/bpfusion-vllm-reuse-j3k3go83/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Xlinker -rpath -Xlinker /tmp/bpfusion-vllm-reuse-j3k3go83/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib   "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib"  -Wl,--end-group -o "/tmp/bpfusion-vllm-reuse-j3k3go83/bridge.so" 

@@ -189,3 +189,12 @@ or eBPF causal claim. Run complete; effects mixed; role supporting; broader
 goal open. Qualify optimized compute/batching reuse before another identical-
 backend serving-path comparison. Independent result review and restoration
 are linked from the finding.
+
+The [official FULL-graph integration qualification](findings/0031-optimized-serving.md#optimized-backend-integration-actual-full-graph-reuse)
+completes19 groups/74 lanes,1197 actual GPU launches across batch1/2/4/8,
+and4177152 finite bit-identical FP16 output elements after NaN poisoning.
+All74 complete CPU-loop sequences match frozen official references; HF eager
+agreement36/74 remains separate. Fresh result review admits valid/complete
+FULL-body device launch; role dependency-only, no serving/performance claim.
+Three failed setup attempts and the fourth repair are retained. Next implement
+GPU-owned generation and prefill/queue/lifetime integration; full goal open.
