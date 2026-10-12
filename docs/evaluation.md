@@ -264,3 +264,29 @@ cross0. Keep every outlier and distinguish real policy effects from eBPF gains. 
 [plan review](../bench/results/prefill_packing_plan_review_20261012.md) and
 [finding](findings/0033-prefill-packing.md). Preserve all ordinary unpadded
 fidelity differences and actual batch trajectories. The goal remains active.
+
+
+## Completed FIFO-prefix release
+
+[Finding0034](findings/0034-completion-release.md) closes the supporting release
+comparison after the [fresh combined result review](../bench/results/completion_release_result_review_20261012.md).
+All160 cells/40 executors pass10240 measured requests/332800 tokens plus320
+checked warmups. Strict coverage additionally passes4976 requests/177792 tokens,
+all batch sizes and protocol/reuse/rejection/lifecycle controls.
+Gen1/c8 serial-minus-prefix TTFT gains are Qwen kernel6.225782ms
+[6.106539,6.345024],native6.371787[6.025879,6.717696];Smol kernel5.159548
+[5.107920,5.211176],native4.925218[4.701560,5.148875],nominal paired t95 df4.
+Request-joined releases/prefills support the scheduler mechanism in each primary
+cell. This common benefit is not eBPF-only. C1 and long-output tradeoffs,opposing
+transport exceptions,FP16 sequence divergences and host OOM/bootstrap unequal
+exposure remain in the complete result; no clean-host/universal advantage follows.
+
+The ordinary adapter adopts the exact qualified packed/prefix policy after
+fresh review. All12 mapped binaries rebuild; real untraced default c1 edge/gen1/64
+checks pass160 requests/5200 frozen-upstream tokens. Explicit packed-serial and
+grouped-serial controls remain; current driver mappings preserve their roles.
+No source-math change or transfer of traced timing to untraced serving follows.
+Run valid/complete,narrow observed prediction supported,role supporting,
+paper impact mechanism/workload boundary. Close the unchanged matrix; full
+retained acceptance remains open for broader dynamic-untraced/CPU/general
+backend/service evidence. Do not count build/archive/checks as new paper results.

@@ -92,13 +92,17 @@ The [mixed-length prefill packing candidate](docs/findings/0033-prefill-packing.
 now passes strict service/replay and bit-identical padded-versus-compact semantic
 checks for both models. The complete160-cell comparison shows a small Qwen
 kernel gen1/c8 benefit, three inconclusive primary conditions and lower gen64/c8
-TTFT in all four model/transport cases. Transport speedup remains unproven;
-grouped serving remains the default pending the next release-policy qualification.
-The [FIFO completion-release candidate](docs/findings/0034-completion-release.md)
-passes4976 strict requests/177792 independently checked tokens across both
-models and all controls. Its matched timing is running; production behavior
-remains unchanged while the full candidate is qualified. The default untraced paths pass the recorded single-client
-prompt-edge/gen1/64 qualification; dynamic untraced timing remains unqualified.
+TTFT in all four model/transport cases. Transport superiority remains workload-dependent.
+The [completed FIFO release comparison](docs/findings/0034-completion-release.md)
+reduces traced eight-client single-token latency from8.821→2.596ms for Qwen
+and7.051→1.891ms for Smol on the kernel path; native controls show the same
+scheduler benefit. All four primary paired intervals favor prefix release.
+Long-output and transport results are mixed; shared-host OOM exposure and FP16
+batch-dependent output differences remain documented. The vLLM adapter now
+uses packed prefill and FIFO prefix release by default,with explicit grouped/
+serial controls. Actual ordinary untraced single-client prompt-edge/gen1/64
+checks pass160 requests/5200 frozen-upstream tokens across both models/transports.
+Dynamic untraced timing and general eBPF superiority remain unqualified.
 The existing HF graph interface now also accepts HF checkpoints/model directories.
 [Qwen and Llama qualification](docs/findings/0023-batch-execution-qualification.md#hf-graph-reuse-across-qwen-and-llama-architectures)
 passes both resident and host-control dispatch for Qwen2.5-0.5B and

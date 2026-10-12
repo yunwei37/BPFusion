@@ -1,0 +1,115 @@
+{
+  "model": "smol",
+  "utc": "2026-10-12T23:17:55Z",
+  "comparisons": [
+    {
+      "baseline": "serial-kernel",
+      "candidate": "prefix-kernel",
+      "gen": 1,
+      "concurrency": 1,
+      "sequences": 320,
+      "equal_sequences": 320,
+      "equal_first_tokens": 320
+    },
+    {
+      "baseline": "serial-kernel",
+      "candidate": "prefix-kernel",
+      "gen": 64,
+      "concurrency": 1,
+      "sequences": 320,
+      "equal_sequences": 320,
+      "equal_first_tokens": 320
+    },
+    {
+      "baseline": "serial-kernel",
+      "candidate": "prefix-kernel",
+      "gen": 1,
+      "concurrency": 8,
+      "sequences": 320,
+      "equal_sequences": 320,
+      "equal_first_tokens": 320
+    },
+    {
+      "baseline": "serial-kernel",
+      "candidate": "prefix-kernel",
+      "gen": 64,
+      "concurrency": 8,
+      "sequences": 320,
+      "equal_sequences": 290,
+      "equal_first_tokens": 320
+    },
+    {
+      "baseline": "serial-userspace",
+      "candidate": "prefix-userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "sequences": 320,
+      "equal_sequences": 320,
+      "equal_first_tokens": 320
+    },
+    {
+      "baseline": "serial-userspace",
+      "candidate": "prefix-userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "sequences": 320,
+      "equal_sequences": 320,
+      "equal_first_tokens": 320
+    },
+    {
+      "baseline": "serial-userspace",
+      "candidate": "prefix-userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "sequences": 320,
+      "equal_sequences": 320,
+      "equal_first_tokens": 320
+    },
+    {
+      "baseline": "serial-userspace",
+      "candidate": "prefix-userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "sequences": 320,
+      "equal_sequences": 288,
+      "equal_first_tokens": 320
+    },
+    {
+      "baseline": "prefix-kernel",
+      "candidate": "prefix-userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "sequences": 320,
+      "equal_sequences": 320,
+      "equal_first_tokens": 320
+    },
+    {
+      "baseline": "prefix-kernel",
+      "candidate": "prefix-userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "sequences": 320,
+      "equal_sequences": 320,
+      "equal_first_tokens": 320
+    },
+    {
+      "baseline": "prefix-kernel",
+      "candidate": "prefix-userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "sequences": 320,
+      "equal_sequences": 320,
+      "equal_first_tokens": 320
+    },
+    {
+      "baseline": "prefix-kernel",
+      "candidate": "prefix-userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "sequences": 320,
+      "equal_sequences": 286,
+      "equal_first_tokens": 320
+    }
+  ],
+  "note": "Cross-run output agreement is diagnostic. Every actual received sequence independently matches its own upstream replay; no task-quality claim."
+}

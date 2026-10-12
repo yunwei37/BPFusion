@@ -121,12 +121,17 @@ $(BUILD)/qwen_graph_user_network_wait.so: executor/qwen_graph.cu executor/usersp
 # Upstream vLLM graphs with bootstrap-owned KV and GPU prefill/decode.
 VLLM_PYTHON ?= python3
 VLLM_CUDART = $(shell $(VLLM_PYTHON) -c 'import pathlib,torch; print(next(line.rsplit(" ",1)[-1] for line in pathlib.Path("/proc/self/maps").read_text().splitlines() if "/libcudart.so."+torch.version.cuda.split(".")[0] in line))')
-VLLM_PREFIX_NAMES := vllm_graph_padded_prefix vllm_graph_padded_prefix_user_network_wait vllm_graph_padded_prefix_trace vllm_graph_padded_prefix_user_network_wait_trace
-VLLM_NAMES := vllm_graph vllm_graph_user_network_wait vllm_graph_trace vllm_graph_user_network_wait_trace vllm_graph_padded vllm_graph_padded_user_network_wait vllm_graph_padded_trace vllm_graph_padded_user_network_wait_trace $(VLLM_PREFIX_NAMES)
+# Default uses the qualified packed prefill and complete-prefix release policy.
+# Named serial/grouped controls keep causal comparisons explicit.
+VLLM_DEFAULT_NAMES := vllm_graph vllm_graph_user_network_wait vllm_graph_trace vllm_graph_user_network_wait_trace
+VLLM_PADDED_NAMES := vllm_graph_padded vllm_graph_padded_user_network_wait vllm_graph_padded_trace vllm_graph_padded_user_network_wait_trace
+VLLM_GROUPED_NAMES := vllm_graph_grouped vllm_graph_grouped_user_network_wait vllm_graph_grouped_trace vllm_graph_grouped_user_network_wait_trace
+VLLM_NAMES := $(VLLM_DEFAULT_NAMES) $(VLLM_PADDED_NAMES) $(VLLM_GROUPED_NAMES)
 
-.PHONY: vllm-graph vllm-graph-user-network-wait vllm-graph-trace vllm-graph-padded vllm-graph-release
-vllm-graph-release: vllm-graph-padded $(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_PREFIX_NAMES))) $(addprefix $(BUILD)/,$(VLLM_PREFIX_NAMES))
-vllm-graph-padded: $(addprefix $(BUILD)/,$(addsuffix .so,$(filter %padded %padded_trace %padded_user_network_wait %padded_user_network_wait_trace,$(VLLM_NAMES)))) $(addprefix $(BUILD)/,$(filter %padded %padded_trace %padded_user_network_wait %padded_user_network_wait_trace,$(VLLM_NAMES)))
+.PHONY: vllm-graph vllm-graph-user-network-wait vllm-graph-trace vllm-graph-padded vllm-graph-grouped vllm-graph-release
+vllm-graph-release: vllm-graph vllm-graph-user-network-wait vllm-graph-trace vllm-graph-padded
+vllm-graph-padded: $(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_PADDED_NAMES))) $(addprefix $(BUILD)/,$(VLLM_PADDED_NAMES))
+vllm-graph-grouped: $(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_GROUPED_NAMES))) $(addprefix $(BUILD)/,$(VLLM_GROUPED_NAMES))
 vllm-graph: $(BUILD)/vllm_graph.so $(BUILD)/vllm_graph
 vllm-graph-user-network-wait: $(BUILD)/vllm_graph_user_network_wait.so $(BUILD)/vllm_graph_user_network_wait
 vllm-graph-trace: $(BUILD)/vllm_graph_trace.so $(BUILD)/vllm_graph_trace $(BUILD)/vllm_graph_user_network_wait_trace.so $(BUILD)/vllm_graph_user_network_wait_trace
@@ -136,6 +141,6 @@ $(addprefix $(BUILD)/,$(VLLM_NAMES)): executor/vllm_graph.py | $(BUILD)
 
 $(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_NAMES))): $(BUILD)/%.so: executor/vllm_graph.cu executor/userspace_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
 	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
-		$(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT) $(if $(findstring trace,$*),-DBF_TRACE) $(if $(findstring padded,$*),-DBF_PAD_PREFILL) $(if $(findstring prefix,$*),-DBF_PREFIX_RELEASE) $< -o $@.o
+		$(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT) $(if $(findstring trace,$*),-DBF_TRACE) $(if $(filter $*,$(VLLM_DEFAULT_NAMES) $(VLLM_PADDED_NAMES)),-DBF_PAD_PREFILL) $(if $(filter $*,$(VLLM_DEFAULT_NAMES)),-DBF_PREFIX_RELEASE) $< -o $@.o
 	$(NVCC) -arch=$(SM_ARCH) -dlink -Xcompiler=-fPIC $@.o -o $@.dlink.o
 	$(CXX) -shared -Wl,-z,defs $@.o $@.dlink.o $(VLLM_CUDART) -Wl,-rpath,$(dir $(VLLM_CUDART)) -o $@ $(LDLIBS)

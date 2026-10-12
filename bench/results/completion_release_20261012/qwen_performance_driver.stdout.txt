@@ -1,0 +1,40 @@
+START pair=0 mode=serial-kernel pid=164437
+PASS pair=0 mode=serial-kernel requests=264 tokens=8328 batches=[1, 3, 5, 6, 7, 8]
+START pair=0 mode=prefix-kernel pid=164686
+PASS pair=0 mode=prefix-kernel requests=264 tokens=8328 batches=[1, 2, 3, 5, 6, 7, 8]
+START pair=0 mode=serial-userspace pid=164935
+PASS pair=0 mode=serial-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 6, 7, 8]
+START pair=0 mode=prefix-userspace pid=165175
+PASS pair=0 mode=prefix-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=1 mode=prefix-userspace pid=165422
+PASS pair=1 mode=prefix-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 5, 7, 8]
+START pair=1 mode=serial-userspace pid=165669
+PASS pair=1 mode=serial-userspace requests=264 tokens=8328 batches=[1, 2, 6, 7, 8]
+START pair=1 mode=prefix-kernel pid=165910
+PASS pair=1 mode=prefix-kernel requests=264 tokens=8328 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=1 mode=serial-kernel pid=166153
+PASS pair=1 mode=serial-kernel requests=264 tokens=8328 batches=[1, 2, 3, 5, 6, 7, 8]
+START pair=2 mode=serial-userspace pid=166396
+PASS pair=2 mode=serial-userspace requests=264 tokens=8328 batches=[1, 2, 5, 6, 7, 8]
+START pair=2 mode=prefix-userspace pid=166642
+PASS pair=2 mode=prefix-userspace requests=264 tokens=8328 batches=[1, 2, 3, 5, 6, 7, 8]
+START pair=2 mode=serial-kernel pid=166889
+PASS pair=2 mode=serial-kernel requests=264 tokens=8328 batches=[1, 6, 7, 8]
+START pair=2 mode=prefix-kernel pid=167129
+PASS pair=2 mode=prefix-kernel requests=264 tokens=8328 batches=[1, 3, 4, 5, 6, 7, 8]
+START pair=3 mode=prefix-kernel pid=167373
+PASS pair=3 mode=prefix-kernel requests=264 tokens=8328 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=3 mode=serial-kernel pid=167615
+PASS pair=3 mode=serial-kernel requests=264 tokens=8328 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=3 mode=prefix-userspace pid=167857
+PASS pair=3 mode=prefix-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=3 mode=serial-userspace pid=168101
+PASS pair=3 mode=serial-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 6, 7, 8]
+START pair=4 mode=serial-kernel pid=168341
+PASS pair=4 mode=serial-kernel requests=264 tokens=8328 batches=[1, 2, 6, 7, 8]
+START pair=4 mode=prefix-kernel pid=168586
+PASS pair=4 mode=prefix-kernel requests=264 tokens=8328 batches=[1, 2, 5, 6, 7, 8]
+START pair=4 mode=serial-userspace pid=168856
+PASS pair=4 mode=serial-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=4 mode=prefix-userspace pid=169095
+PASS pair=4 mode=prefix-userspace requests=264 tokens=8328 batches=[1, 2, 3, 4, 5, 6, 7, 8]

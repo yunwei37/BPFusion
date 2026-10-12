@@ -1,0 +1,61 @@
+mkdir -p build
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	  -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE executor/vllm_graph.cu -o build/vllm_graph.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph.so.o -o build/vllm_graph.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph.so.o build/vllm_graph.so.dlink.o /tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT  -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE executor/vllm_graph.cu -o build/vllm_graph_user_network_wait.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_user_network_wait.so.o -o build/vllm_graph_user_network_wait.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_user_network_wait.so.o build/vllm_graph_user_network_wait.so.dlink.o /tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_user_network_wait.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_user_network_wait
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	 -DBF_TRACE -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE executor/vllm_graph.cu -o build/vllm_graph_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_trace.so.o -o build/vllm_graph_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_trace.so.o build/vllm_graph_trace.so.dlink.o /tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_trace.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_trace
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -DBF_TRACE -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE executor/vllm_graph.cu -o build/vllm_graph_user_network_wait_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_user_network_wait_trace.so.o -o build/vllm_graph_user_network_wait_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_user_network_wait_trace.so.o build/vllm_graph_user_network_wait_trace.so.dlink.o /tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_user_network_wait_trace.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_user_network_wait_trace
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	  -DBF_PAD_PREFILL  executor/vllm_graph.cu -o build/vllm_graph_padded.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_padded.so.o -o build/vllm_graph_padded.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_padded.so.o build/vllm_graph_padded.so.dlink.o /tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_padded.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT  -DBF_PAD_PREFILL  executor/vllm_graph.cu -o build/vllm_graph_padded_user_network_wait.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_padded_user_network_wait.so.o -o build/vllm_graph_padded_user_network_wait.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_padded_user_network_wait.so.o build/vllm_graph_padded_user_network_wait.so.dlink.o /tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_padded_user_network_wait.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	 -DBF_TRACE -DBF_PAD_PREFILL  executor/vllm_graph.cu -o build/vllm_graph_padded_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_padded_trace.so.o -o build/vllm_graph_padded_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_padded_trace.so.o build/vllm_graph_padded_trace.so.dlink.o /tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_padded_trace.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -DBF_TRACE -DBF_PAD_PREFILL  executor/vllm_graph.cu -o build/vllm_graph_padded_user_network_wait_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_padded_user_network_wait_trace.so.o -o build/vllm_graph_padded_user_network_wait_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_padded_user_network_wait_trace.so.o build/vllm_graph_padded_user_network_wait_trace.so.dlink.o /tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_padded_user_network_wait_trace.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_padded
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_padded_user_network_wait
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_padded_trace
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_padded_user_network_wait_trace
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	    executor/vllm_graph.cu -o build/vllm_graph_grouped.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_grouped.so.o -o build/vllm_graph_grouped.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_grouped.so.o build/vllm_graph_grouped.so.dlink.o /tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_grouped.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT    executor/vllm_graph.cu -o build/vllm_graph_grouped_user_network_wait.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_grouped_user_network_wait.so.o -o build/vllm_graph_grouped_user_network_wait.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_grouped_user_network_wait.so.o build/vllm_graph_grouped_user_network_wait.so.dlink.o /tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_grouped_user_network_wait.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	 -DBF_TRACE   executor/vllm_graph.cu -o build/vllm_graph_grouped_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_grouped_trace.so.o -o build/vllm_graph_grouped_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_grouped_trace.so.o build/vllm_graph_grouped_trace.so.dlink.o /tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_grouped_trace.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -DBF_TRACE   executor/vllm_graph.cu -o build/vllm_graph_grouped_user_network_wait_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_grouped_user_network_wait_trace.so.o -o build/vllm_graph_grouped_user_network_wait_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_grouped_user_network_wait_trace.so.o build/vllm_graph_grouped_user_network_wait_trace.so.dlink.o /tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-padding-b45ull5p/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_grouped_user_network_wait_trace.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_grouped
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_grouped_user_network_wait
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_grouped_trace
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_grouped_user_network_wait_trace

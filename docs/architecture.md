@@ -1,7 +1,7 @@
 # BPFusion architecture
 
-The current qualified service uses bootstrap-captured Hugging Face model graphs
-and a resident GPU dispatcher. Earlier synthetic MLP, host-driven HF and
+The qualified service paths use bootstrap-captured upstream model graphs
+and resident GPU dispatchers,with HF references and an optimized vLLM adapter. Earlier synthetic MLP, host-driven HF and
 handwritten Qwen paths remain separate references. Their maturity and compute
 differ; see the README scope table before comparing results.
 
@@ -289,18 +289,26 @@ The optional vllm_graph backend captures upstream vLLM model/attention/compiler
 graphs and official output-head/greedy-sampler computation. It reserves the
 existing eight128-token slot regions once through the official KV block pool;
 new requests require no host prefill or per-request allocation. GPU code
-reconstructs metadata, groups equal-length prefills, tensor-batches active
-decodes and publishes results. The same ordered DONE/TCP recycle rules apply.
+reconstructs metadata,packs mixed-length prefills,tensor-batches active
+decodes and publishes the already-complete FIFO prefix before selecting new
+work. Per-slot ownership and ordered DONE/TCP recycle rules remain.
 The supported scope is one full-attention KV group on the two qualified
 checkpoints, not arbitrary backend support. Finding0032 records strict traced
 service fidelity and the completed matched traced comparison.
 
-The optional BF_PAD_PREFILL build packs pending mixed-length prompts into
-uniform-query upstream graphs using leading dummy Q entries. Real positions/
-lengths/KV remain unchanged; dummy slots are -1 and skipped by upstream cache
-writes. The original grouped default remains. Finding0033 records real service,
-independent replay and padded-versus-compact semantic qualification; its
-same-backend policy comparison is running.
+The ordinary adapter compiles BF_PAD_PREFILL and BF_PREFIX_RELEASE.
+Leading dummy Q entries pack mixed lengths into unchanged uniform-query
+upstream graphs. Real positions/lengths/KV remain unchanged; dummy slots-1
+are skipped by upstream cache writes. Prefix publication drains consecutive
+phase2 requests after all child outputs are consumed and a system fence.
+It does not wait between publications for local TX reclamation; TX still owns
+reservation release after its last slot access. DONE departure is local send
+acceptance/recycle,not remote TCP ACK. Logical release IDs come from local
+records,without rereading a published/reclaimed shared slot.
+Findings0033/0034 record completed semantic/service/policy comparisons and
+actual ordinary untraced single-client qualification. Named padded(serial) and
+grouped(serial) executables preserve explicit compute-policy controls. Broader
+untraced dynamic-batch timing and arbitrary-backend support remain open.
 
 ## Ownership rules (the correctness core)
 

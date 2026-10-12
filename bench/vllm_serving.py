@@ -56,8 +56,9 @@ def main():
                 trace=Path(str(prefix)+".gpu.jsonl");logpath=Path(str(prefix)+".stdout.txt")
                 nettrace=Path(str(prefix)+".network.txt")
                 budget=(3*10+sum(range(1,9))+8*32*2+8*4+6+4+2) if args.correctness else 264
-                binary=("vllm_graph_padded"+("_prefix" if mode.startswith("prefix") else "") if args.release_comparison
-                        else "vllm_graph"+("_padded" if mode.startswith("packed") else ""))+("" if kernel_mode else "_user_network_wait")+"_trace"
+                binary=(("vllm_graph" if mode.startswith("prefix") else "vllm_graph_padded") if args.release_comparison
+                        else ("vllm_graph_padded" if mode.startswith("packed") else "vllm_graph_grouped") if args.packing_comparison
+                        else "vllm_graph")+("" if kernel_mode else "_user_network_wait")+"_trace"
                 command=["./build/"+binary,
                     args.model,"300","--trace-output",str(trace),"--trace-requests",str(budget)]
                 if args.correctness:command=["strace","-D","-f","-e","trace=network,write","-o",str(nettrace),*command]
