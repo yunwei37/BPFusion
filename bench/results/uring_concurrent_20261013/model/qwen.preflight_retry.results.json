@@ -1,0 +1,349 @@
+{
+  "model": "qwen",
+  "mode": "preflight_retry",
+  "start": "2026-10-13T02:21:34.720289+00:00",
+  "oracle_frozen_at": "2026-10-13T01:50:59.810351+00:00",
+  "source_head": "0112b898f48c39c350d54b8a0ea29020b081dcce",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict, sockops and diagnostic io_uring recycle attached\n",
+    "stderr": ""
+  },
+  "ready_time_ns": 1791858148722376516,
+  "native_pid": 202235,
+  "empty_connections": 24,
+  "client_tuples": [
+    [
+      "127.0.0.1",
+      36618
+    ]
+  ],
+  "rows": [
+    {
+      "connection": 0,
+      "wave": 0,
+      "case": 0,
+      "client_ns": 289525125831632,
+      "protocol": "binary",
+      "prompt": [
+        77
+      ],
+      "gen": 1,
+      "request_hex": "514d4c51010000000100000000000000d05b4752520701004d000000",
+      "reply_hex": "1c010000",
+      "expected_hex": "1c010000",
+      "exact": true,
+      "chunks": [
+        {
+          "bytes": 4,
+          "arrived_ns": 289525129058967
+        }
+      ]
+    },
+    {
+      "connection": 0,
+      "wave": 1,
+      "case": 1,
+      "client_ns": 289525129086133,
+      "protocol": "http",
+      "prompt": [
+        78,
+        79
+      ],
+      "gen": 64,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2033320d0a0d0a514d4c51020000004000000000000000b5047952520701004e0000004f000000",
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "expected_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "exact": true,
+      "chunks": [
+        {
+          "bytes": 4,
+          "arrived_ns": 289525172446975
+        },
+        {
+          "bytes": 84,
+          "arrived_ns": 289525214030430
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525215878409
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525217855529
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525219841220
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525221831167
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525223902231
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525225896343
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525227890689
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525229895628
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525231928173
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525233819855
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525235813391
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525237810877
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525239804316
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525241926278
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525243813524
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525245799540
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525247805475
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525249801022
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525251802020
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525253902334
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525255882689
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525257887531
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525259882333
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525261901464
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525263883504
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525265793253
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525267769054
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525269767872
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525271759960
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525273883851
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525275896641
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525277779963
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525279773710
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525281771474
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525283788340
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525285789572
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525287802167
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525289799772
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525291922019
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525293969565
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525295808690
+        },
+        {
+          "bytes": 4,
+          "arrived_ns": 289525297811268
+        }
+      ]
+    },
+    {
+      "connection": 0,
+      "wave": 2,
+      "case": 2,
+      "client_ns": 289525297874842,
+      "protocol": "binary",
+      "prompt": [
+        79,
+        80,
+        81,
+        82,
+        83
+      ],
+      "gen": 1,
+      "request_hex": "514d4c510500000001000000000000009a87885c520701004f00000050000000510000005200000053000000",
+      "reply_hex": "c6000000",
+      "expected_hex": "c6000000",
+      "exact": true,
+      "chunks": [
+        {
+          "bytes": 4,
+          "arrived_ns": 289525340481111
+        }
+      ]
+    }
+  ],
+  "cmd": [
+    "strace",
+    "-f",
+    "-ttt",
+    "-o",
+    "/tmp/bpfusion-uring-concurrent-9mn1zoub/model/qwen.preflight_retry.strace",
+    "-e",
+    "trace=accept,accept4,recvfrom,recvmsg,sendto,sendmsg,io_uring_setup,io_uring_enter,io_uring_register",
+    "python3",
+    "/tmp/bpfusion-uring-concurrent-9mn1zoub/model/qwen_graph.py",
+    "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "180"
+  ],
+  "exit": 0,
+  "stdout": "capturing model=/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775 type=qwen2 fp16 eager\ncaptured bank 0 model graph 32/190\ncaptured bank 0 model graph 64/190\ncaptured bank 0 model graph 96/190\ncaptured bank 0 model graph 128/190\ncaptured bank 0 model graph 160/190\ncaptured bank 1 model graph 32/190\ncaptured bank 1 model graph 64/190\ncaptured bank 1 model graph 96/190\ncaptured bank 1 model graph 128/190\ncaptured bank 1 model graph 160/190\ncaptured bank 2 model graph 32/190\ncaptured bank 2 model graph 64/190\ncaptured bank 2 model graph 96/190\ncaptured bank 2 model graph 128/190\ncaptured bank 2 model graph 160/190\ncaptured bank 3 model graph 32/190\ncaptured bank 3 model graph 64/190\ncaptured bank 3 model graph 96/190\ncaptured bank 3 model graph 128/190\ncaptured bank 3 model graph 160/190\ncaptured bank 4 model graph 32/190\ncaptured bank 4 model graph 64/190\ncaptured bank 4 model graph 96/190\ncaptured bank 4 model graph 128/190\ncaptured bank 4 model graph 160/190\ncaptured bank 5 model graph 32/190\ncaptured bank 5 model graph 64/190\ncaptured bank 5 model graph 96/190\ncaptured bank 5 model graph 128/190\ncaptured bank 5 model graph 160/190\ncaptured bank 6 model graph 32/190\ncaptured bank 6 model graph 64/190\ncaptured bank 6 model graph 96/190\ncaptured bank 6 model graph 128/190\ncaptured bank 6 model graph 160/190\ncaptured bank 7 model graph 32/190\ncaptured bank 7 model graph 64/190\ncaptured bank 7 model graph 96/190\ncaptured bank 7 model graph 128/190\ncaptured bank 7 model graph 160/190\nNET_READY pid=202235 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384\nRESULT {\"accepted\":25,\"closed\":25,\"received\":3,\"sends\":66,\"bytes\":344,\"completed\":3,\"aborted\":0,\"max_connections\":1,\"max_requests\":1,\"pending\":0,\"error\":0,\"head\":3,\"reserved\":0,\"dropped\":0,\"overflow\":0,\"sqhead\":147,\"sqtail\":147,\"cqhead\":147,\"cqtail\":147,\"trace_count\":3,\"trace_overflow\":0}\nREPLY {\"seq\":0,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":4,\"aborted\":0,\"client_ns\":289525125831632}\nREPLY {\"seq\":1,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":289525129086133}\nREPLY {\"seq\":2,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":4,\"aborted\":0,\"client_ns\":289525297874842}\nCLEANUP ring_connections_buffers_released\nresident Qwen stopped: dispatch=resident launches=1 device_graph_launches=66 graph_error=0 banks=8 max_active=1\n",
+  "stderr": "\nLoading weights:   0%|          | 0/290 [00:00<?, ?it/s]\nLoading weights:  50%|\u2588\u2588\u2588\u2588\u2589     | 144/290 [00:00<00:00, 1433.59it/s]\nLoading weights:  99%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589| 288/290 [00:00<00:00, 1409.81it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 290/290 [00:00<00:00, 1419.31it/s]\n",
+  "native_stats": {
+    "accepted": 25,
+    "closed": 25,
+    "received": 3,
+    "sends": 66,
+    "bytes": 344,
+    "completed": 3,
+    "aborted": 0,
+    "max_connections": 1,
+    "max_requests": 1,
+    "pending": 0,
+    "error": 0,
+    "head": 3,
+    "reserved": 0,
+    "dropped": 0,
+    "overflow": 0,
+    "sqhead": 147,
+    "sqtail": 147,
+    "cqhead": 147,
+    "cqtail": 147,
+    "trace_count": 3,
+    "trace_overflow": 0
+  },
+  "replies": [
+    {
+      "seq": 0,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 4,
+      "aborted": 0,
+      "client_ns": 289525125831632
+    },
+    {
+      "seq": 1,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 289525129086133
+    },
+    {
+      "seq": 2,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 4,
+      "aborted": 0,
+      "client_ns": 289525297874842
+    }
+  ],
+  "bpf_stats": {
+    "exit": 0,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\npublished      3\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 3\nsockhash linked 25\nsockhash failed 0\nparser calls   5\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=3\nllm_reserved=0x0\nllm[0]: state=0 prompt=1 gen=1 produced=1 client_ns=289525125831632\nllm[1]: state=0 prompt=2 gen=64 produced=64 client_ns=289525129086133\nllm[2]: state=0 prompt=5 gen=1 produced=1 client_ns=289525297874842\nllm[3]: state=0 prompt=0 gen=0 produced=0 client_ns=0\nllm[4]: state=0 prompt=0 gen=0 produced=0 client_ns=0\nllm[5]: state=0 prompt=0 gen=0 produced=0 client_ns=0\nllm[6]: state=0 prompt=0 gen=0 produced=0 client_ns=0\nllm[7]: state=0 prompt=0 gen=0 produced=0 client_ns=0\n",
+    "stderr": ""
+  },
+  "pass": true,
+  "end": "2026-10-13T02:22:36.890374+00:00",
+  "cleanup_pins": [
+    "bpfusion_ctl",
+    "bpfusion_stats",
+    "bpfusion_db",
+    "bpfusion_streams",
+    "bpfusion_stream_link",
+    "bpfusion_uring_link",
+    "bpfusion_uring_owner",
+    "bpfusion_uring_bind_link"
+  ],
+  "remaining_pins": []
+}

@@ -372,3 +372,17 @@ wake calls are0. Root replay self-review and both drivers/pipeline pass0; no
 independent result review or latency/throughput/CPU benefit follows. Production
 source/defaults remain unchanged. Concurrent/general ring ownership,abort/
 backpressure/rejection and optimized-backend integration remain open.
+
+## Multi-connection io_uring implementation
+
+[Finding0040](findings/0040-io-uring-concurrent.md) adds the optional normal
+HF build target and actual-ring correlation,with PID-namespace repair and
+a foreign-ring negative control. Both models pass24 mixed/eight-client
+requests780tokens and24 all-gen64 requests1536tokens each. Lifecycle and
+fresh production artifacts pass rejection/reuse,RST and in-flight SIGTERM,
+all slots FREE,reserved/pending/error0. Across repaired preflight/eight runs,
+5218 complete tokens plus8 prefix tokens are checked; abandoned outputs stay
+separate. Source versions/initial failure remain. Root self-review and public
+build tests pass; default loader creates no new hooks/maps. No timing/CPU or
+independent-review claim. Optimized-backend integration and matched benefit,
+overload/backpressure/partial-send/device-error/extended operation remain open.

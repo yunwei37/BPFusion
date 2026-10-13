@@ -1,0 +1,132 @@
+{
+  "model": "smol",
+  "mode": "concurrent",
+  "start": "2026-10-13T02:25:49.142955+00:00",
+  "oracle_frozen_at": "2026-10-13T01:50:59.810351+00:00",
+  "source_head": "0112b898f48c39c350d54b8a0ea29020b081dcce",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict, sockops and diagnostic io_uring recycle attached\n",
+    "stderr": ""
+  },
+  "ready_time_ns": 1791858414681851621,
+  "native_pid": 202726,
+  "empty_connections": 24,
+  "client_tuples": [
+    [
+      "127.0.0.1",
+      39206
+    ],
+    [
+      "127.0.0.1",
+      39220
+    ],
+    [
+      "127.0.0.1",
+      39230
+    ],
+    [
+      "127.0.0.1",
+      39234
+    ],
+    [
+      "127.0.0.1",
+      39238
+    ],
+    [
+      "127.0.0.1",
+      39252
+    ],
+    [
+      "127.0.0.1",
+      39268
+    ],
+    [
+      "127.0.0.1",
+      39274
+    ]
+  ],
+  "cmd": [
+    "strace",
+    "-f",
+    "-ttt",
+    "-o",
+    "/tmp/bpfusion-uring-concurrent-9mn1zoub/model/smol.concurrent.strace",
+    "-e",
+    "trace=accept,accept4,recvfrom,recvmsg,sendto,sendmsg,io_uring_setup,io_uring_enter,io_uring_register",
+    "python3",
+    "/tmp/bpfusion-uring-concurrent-9mn1zoub/model/qwen_graph.py",
+    "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+    "180"
+  ],
+  "exit": 0,
+  "native_stats": {
+    "accepted": 32,
+    "closed": 32,
+    "received": 24,
+    "sends": 780,
+    "bytes": 4066,
+    "completed": 24,
+    "aborted": 0,
+    "max_connections": 8,
+    "max_requests": 8,
+    "pending": 0,
+    "error": 0,
+    "head": 24,
+    "reserved": 0,
+    "dropped": 0,
+    "overflow": 0,
+    "sqhead": 903,
+    "sqtail": 903,
+    "cqhead": 903,
+    "cqtail": 903,
+    "trace_count": 24,
+    "trace_overflow": 0
+  },
+  "bpf_stats": {
+    "exit": 0,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\npublished      24\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 24\nsockhash linked 32\nsockhash failed 0\nparser calls   36\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=24\nllm_reserved=0x0\nllm[0]: state=0 prompt=31 gen=1 produced=1 client_ns=289791562521112\nllm[1]: state=0 prompt=8 gen=1 produced=1 client_ns=289791562583603\nllm[2]: state=0 prompt=2 gen=1 produced=1 client_ns=289791562503721\nllm[3]: state=0 prompt=16 gen=64 produced=64 client_ns=289791562602892\nllm[4]: state=0 prompt=64 gen=64 produced=64 client_ns=289791562674072\nllm[5]: state=0 prompt=63 gen=64 produced=64 client_ns=289791562639659\nllm[6]: state=0 prompt=5 gen=1 produced=1 client_ns=289791562562205\nllm[7]: state=0 prompt=1 gen=64 produced=64 client_ns=289791563034883\n",
+    "stderr": ""
+  },
+  "pass": true,
+  "end": "2026-10-13T02:27:04.822722+00:00",
+  "cleanup_pins": [
+    "bpfusion_ctl",
+    "bpfusion_stats",
+    "bpfusion_db",
+    "bpfusion_streams",
+    "bpfusion_stream_link",
+    "bpfusion_uring_link",
+    "bpfusion_uring_owner",
+    "bpfusion_uring_bind_link"
+  ],
+  "remaining_pins": []
+}
+":5,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":289791086495319}
+REPLY {"seq":6,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":289791086523703}
+REPLY {"seq":7,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":289791086593224}
+REPLY {"seq":8,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":289791324438220}
+REPLY {"seq":9,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":289791324416669}
+REPLY {"seq":10,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":289791324381854}
+REPLY {"seq":11,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":289791324484247}
+REPLY {"seq":12,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":289791324403047}
+REPLY {"seq":13,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":289791324392438}
+REPLY {"seq":14,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":289791324460342}
+REPLY {"seq":15,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":289791324369308}
+REPLY {"seq":16,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":289791562521112}
+REPLY {"seq":17,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":289791562583603}
+REPLY {"seq":18,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":289791562503721}
+REPLY {"seq":19,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":289791562602892}
+REPLY {"seq":20,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":289791562674072}
+REPLY {"seq":21,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":289791562639659}
+REPLY {"seq":22,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":289791562562205}
+REPLY {"seq":23,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":289791563034883}
+CLEANUP ring_connections_buffers_released
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=780 graph_error=0 banks=8 max_active=6
+
+
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]
+Loading weights:  53%|█████▎    | 143/272 [00:00<00:00, 1416.32it/s]
+Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1377.51it/s]
+
+CONCURRENT_DRIVER_TERMINAL

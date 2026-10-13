@@ -46,9 +46,14 @@ int main(int argc, char **argv)
 	struct bpf_tc_opts opts;
 	uint64_t v;
 	int i;
-	int stream_mode = !strcmp(cmd, "stream-attach");
+	int uring_mode = !strcmp(cmd, "stream-uring-attach");
+	int stream_mode = !strcmp(cmd, "stream-attach") || uring_mode;
 
 	if (!strcmp(cmd, "stream-detach")) {
+        const char *uring_pins[]={"/sys/fs/bpf/bpfusion_uring_link",
+            "/sys/fs/bpf/bpfusion_uring_bind_link","/sys/fs/bpf/bpfusion_uring_owner"};
+        for (unsigned j=0;j<sizeof(uring_pins)/sizeof(uring_pins[0]);j++)
+            if (unlink(uring_pins[j]) && errno!=ENOENT) { perror("unlink io_uring"); return 1; }
 		if (unlink("/sys/fs/bpf/bpfusion_stream_link") && errno != ENOENT) {
 			perror("unlink stream link");
 			return 1;
@@ -120,6 +125,8 @@ int main(int argc, char **argv)
 			perror("mmap ctl");
 			return 1;
 		}
+        int context=bpf_obj_get("/sys/fs/bpf/bpfusion_uring_owner");
+        if (context>=0) { stats_name[4]="uring recycled"; close(context); }
 		for (i = 0; i < 16; i++) {
 			__u32 k = (__u32)i;
 
@@ -155,9 +162,11 @@ int main(int argc, char **argv)
 	}
 	bpf_object__for_each_program(prog, bo) {
 		int stream_program = !strncmp(bpf_program__name(prog), "stream_", 7);
-		bpf_program__set_autoload(prog, stream_program == stream_mode);
+		int uring_program = !strncmp(bpf_program__name(prog), "uring_", 6);
+		bpf_program__set_autoload(prog, uring_program ? uring_mode : stream_program == stream_mode);
 	}
 	bpf_map__set_autocreate(bpf_object__find_map_by_name(bo, "streams"), stream_mode);
+	bpf_map__set_autocreate(bpf_object__find_map_by_name(bo, "uring_owner"), uring_mode);
 	if (stream_mode) {
 		unsigned backlog;
 		FILE *setting = fopen("/proc/sys/net/core/somaxconn", "r");
@@ -177,6 +186,10 @@ int main(int argc, char **argv)
 			m = bpf_object__find_map_by_name(bo, "streams");
 			bpf_map__set_pin_path(m, "/sys/fs/bpf/bpfusion_streams");
 		}
+        if (uring_mode) {
+            m = bpf_object__find_map_by_name(bo, "uring_owner");
+            bpf_map__set_pin_path(m,"/sys/fs/bpf/bpfusion_uring_owner");
+        }
 		m = bpf_object__find_map_by_name(bo, "ctl");
 		bpf_map__set_pin_path(m, "/sys/fs/bpf/bpfusion_ctl");
 		m = bpf_object__find_map_by_name(bo, "stats");
@@ -227,6 +240,17 @@ int main(int argc, char **argv)
 		if (bpf_link__pin(link, "/sys/fs/bpf/bpfusion_stream_link")) {
 			bpf_link__destroy(link); perror("stream link pin"); return 1;
 		}
+        if (uring_mode) {
+            const char *names[]={"uring_bind","uring_recycle"};
+            const char *events[]={"io_uring_create","io_uring_complete"};
+            const char *paths[]={"/sys/fs/bpf/bpfusion_uring_bind_link","/sys/fs/bpf/bpfusion_uring_link"};
+            for (unsigned j=0;j<2;j++) {
+                prog=bpf_object__find_program_by_name(bo,names[j]);
+                link=bpf_program__attach_tracepoint(prog,"io_uring",events[j]);
+                if (!link || libbpf_get_error(link)) { fprintf(stderr,"io_uring attach failed\n"); return 1; }
+                if (bpf_link__pin(link,paths[j])) { bpf_link__destroy(link);perror("io_uring pin");return 1; }
+            }
+        }
 		close(cgroup);
 		puts("stream parser/verdict and sockops attached to current Workspace cgroup");
 		return 0;

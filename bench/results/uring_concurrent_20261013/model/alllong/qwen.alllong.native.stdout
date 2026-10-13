@@ -1,0 +1,70 @@
+capturing model=/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775 type=qwen2 fp16 eager
+captured bank 0 model graph 32/190
+captured bank 0 model graph 64/190
+captured bank 0 model graph 96/190
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+NET_READY pid=203598 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384
+resident Qwen ready: 24 layers h=896 vocab=151936; device-tail graphs, dispatch=resident
+RESULT {"accepted":32,"closed":32,"received":24,"sends":1536,"bytes":7104,"completed":24,"aborted":0,"max_connections":8,"max_requests":8,"pending":0,"error":0,"head":24,"reserved":0,"dropped":0,"overflow":0,"sqhead":1659,"sqtail":1659,"cqhead":1659,"cqtail":1659,"trace_count":24,"trace_overflow":0}
+REPLY {"seq":0,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":292460797621843}
+REPLY {"seq":1,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":292460797643107}
+REPLY {"seq":2,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":292460797703044}
+REPLY {"seq":3,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":292460797685450}
+REPLY {"seq":4,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":292460797565930}
+REPLY {"seq":5,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":292460797663704}
+REPLY {"seq":6,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":292460797751751}
+REPLY {"seq":7,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":292460797722152}
+REPLY {"seq":8,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":292461156920731}
+REPLY {"seq":9,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":292461156760459}
+REPLY {"seq":10,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":292461156748873}
+REPLY {"seq":11,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":292461156869416}
+REPLY {"seq":12,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":292461156726332}
+REPLY {"seq":13,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":292461157031340}
+REPLY {"seq":14,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":292461156895140}
+REPLY {"seq":15,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":292461157012834}
+REPLY {"seq":16,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":292461557955525}
+REPLY {"seq":17,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":292461557966066}
+REPLY {"seq":18,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":292461558006975}
+REPLY {"seq":19,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":292461557983965}
+REPLY {"seq":20,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":292461558022920}
+REPLY {"seq":21,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":292461558462636}
+REPLY {"seq":22,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":292461558407424}
+REPLY {"seq":23,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":292461557933611}
+CLEANUP ring_connections_buffers_released
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=1536 graph_error=0 banks=8 max_active=8

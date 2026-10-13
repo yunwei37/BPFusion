@@ -81,6 +81,7 @@ union bf_llm_hdr {
  * The bitmap also prevents wrap over a producer paused before publishing state. */
 static __always_inline struct bf_llm_slot *llm_reserve(struct bf_page *p)
 {
+    if (*(volatile __u64 *)&p->stop_ns) return 0;
     for (__u32 attempt=0; attempt<BF_LLM_SLOTS; attempt++) {
         __u64 word=*(volatile __u64 *)&p->llm_admission;
         __u32 head=(__u32)word, idx=head%BF_LLM_SLOTS;
@@ -402,3 +403,42 @@ int stream_publish(struct __sk_buff *skb)
 }
 
 char _license[] SEC("license") = "GPL";
+
+struct {
+    __uint(type,BPF_MAP_TYPE_ARRAY);
+    __uint(max_entries,1);
+    __type(key,__u32);
+    __type(value,struct bf_uring_context);
+} uring_owner SEC(".maps");
+
+SEC("tracepoint/io_uring/io_uring_create")
+int uring_bind(struct trace_event_raw_io_uring_create *ctx)
+{
+    __u32 zero=0;
+    struct bf_uring_context *owner=bpf_map_lookup_elem(&uring_owner,&zero);
+    struct bpf_pidns_info ns={};
+    if(owner && !bpf_get_ns_current_pid_tgid(owner->nsdev,owner->nsino,&ns,sizeof(ns)) && owner->pid==ns.tgid)
+        __sync_val_compare_and_swap(&owner->ring,0,(__u64)ctx->ctx);
+    return 0;
+}
+SEC("tracepoint/io_uring/io_uring_complete")
+int uring_recycle(struct trace_event_raw_io_uring_complete *ctx)
+{
+    __u32 zero=0;
+    struct bf_uring_context *owner=bpf_map_lookup_elem(&uring_owner,&zero);
+    if(!owner || !owner->ring || owner->ring!=(__u64)ctx->ctx)return 0;
+    __u64 tag=ctx->user_data;__u32 prefix=tag>>48;
+    if(prefix!=BF_IO_SEND_TAG && prefix!=BF_IO_ABORT_TAG)return 0;
+    __u32 length=(tag>>32)&0xffff,sequence=(__u32)tag;
+    if((prefix==BF_IO_SEND_TAG && (!length || ctx->res!=length)) ||
+       (prefix==BF_IO_ABORT_TAG && ctx->res!=0))return 0;
+    struct bf_page *page=bpf_map_lookup_elem(&ctl,&zero);
+    if(!page)return 0;
+    __u32 index=sequence%BF_LLM_SLOTS;
+    struct bf_llm_slot *slot=&page->llm[index];
+    if(slot->state!=BF_DONE)return 0;
+    slot->state=BF_FREE;
+    __sync_fetch_and_and(&page->llm_admission,~(1ULL<<(32+index)));
+    bump(4);
+    return 0;
+}

@@ -33,6 +33,7 @@ remain open.
 | `qwen_graph` | Reused HF graphs, GPU-controlled generation | eBPF admission, kernel accept/drain and TCP TX | Qualified HF prototype |
 | `vllm_graph_trace` | Upstream optimized graphs/head, GPU prefill and tensor-batched decode | Same eBPF/kernel transport | Qualified optimized adapter; matched traced comparison |
 | `qwen_graph_user_network_wait` | Identical resident GPU computation | Efficient native userspace timed epoll and nonblocking send | Matched alternative mechanism |
+| `qwen_graph_uring` | Same HF graphs and GPU-controlled model generation | GPU-owned stock io_uring TCP, eBPF admission/reclamation | Optional multi-connection/streaming path; qualified on the current Linux7.3rc3/RTX5090 setup |
 | `qwen_graph_control` | Same graph banks, host resumes after requests | Same eBPF/kernel transport | Dispatch ablation |
 | `qwen.cu`, Python HF and synthetic MLP paths | Earlier implementations with different maturity | See their individual findings | Historical references and controls |
 
@@ -50,6 +51,13 @@ This guides backend reuse, without establishing an eBPF speedup.
 The [official optimized-serving comparison](docs/findings/0031-optimized-serving.md)
 finds lower single-request first-token time but much lower eight-client
 long-output throughput, with different compute, outputs and wire interfaces.
+
+The [optional stock io_uring path](docs/findings/0040-io-uring-concurrent.md)
+now has normal make/load/run entrypoints. Both checkpoints pass eight-client
+1/64-token streaming, connection reuse, rejection, reset and in-flight stop
+checks without bfusion_tx or a steady userspace request worker. Its latency,
+throughput and total CPU benefit remain unestablished; default serving stays
+on the existing qualified module path.
 
 ## Service and compute boundary
 

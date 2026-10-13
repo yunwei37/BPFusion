@@ -56,6 +56,14 @@ typedef unsigned short __u16;
 #define BF_MAX_BATCH 16
 #define BF_VEC 16
 
+/* Bootstrap correlation of kernel io_uring events with the model page. */
+struct bf_uring_context {
+    __u32 pid, pad;
+    __u64 ring, nsdev, nsino;
+};
+#define BF_IO_SEND_TAG 0xbff0ULL
+#define BF_IO_ABORT_TAG 0xbff1ULL
+
 struct bf_llm_slot {
 	__u32 state;      /* producer FREE->PENDING; executor ->DONE; TX ->FREE */
 	__u32 n_gen;      /* tokens requested */

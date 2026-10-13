@@ -1,0 +1,13 @@
+{
+  "cmd": [
+    "make",
+    "probes",
+    "tools",
+    "qwen-graph-uring",
+    "qwen-graph",
+    "qwen-graph-user-network-wait"
+  ],
+  "exit": 0,
+  "stdout": "clang -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -Ibpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value -c bpf/fusion.bpf.c -o build/fusion.bpf.o\nclang -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -Ibpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value -c bpf/wake_probe.bpf.c -o build/wake_probe.bpf.o\ncc -O2 -g -Wall -Wextra -Wno-unused-parameter -Ibpf/include tools/client.c -o build/client\ncc -O2 -g -Wall -Wextra -Wno-unused-parameter -Ibpf/include tools/bpfusion_load.c -o build/bpfusion_load -lbpf -lelf -lz -lpthread\n/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_URING_NETWORK -rdc=true -shared -Xcompiler=-fPIC \\\n\t-Ibpf/include executor/qwen_graph.cu -o build/qwen_graph_uring.so -lbpf -lelf -lz -lpthread\nln -sf /workspaces/repository/executor/qwen_graph.py build/qwen_graph_uring\n/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -rdc=true -shared -Xcompiler=-fPIC \\\n\t-Ibpf/include executor/qwen_graph.cu -o build/qwen_graph.so -lbpf -lelf -lz -lpthread\n/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC \\\n\t-Ibpf/include executor/qwen_graph.cu -o build/qwen_graph_user_network_wait.so -lbpf -lelf -lz -lpthread\n",
+  "stderr": ""
+}

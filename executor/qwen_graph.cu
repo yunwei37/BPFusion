@@ -17,6 +17,9 @@
 #ifdef BF_USER_NETWORK
 #include "userspace_tcp.h"
 #endif
+#ifdef BF_URING_NETWORK
+#include "io_uring_tcp.h"
+#endif
 struct Step { cudaGraphExec_t graph; long long *output; };
 struct Request { unsigned k,prompt,gen,step,phase; };
 struct Control { unsigned seen,retired,reclaim,error,launches,max_active; Request requests[BF_LLM_SLOTS]; };
@@ -135,7 +138,11 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
     cudaKernelNodeParams params={};params.func=(void *)dispatch;params.gridDim=dim3(1);params.blockDim=dim3(32);params.kernelParams=args;
     cudaGraph_t graph;CUDA(cudaGraphCreate(&graph,0));cudaGraphNode_t node;CUDA(cudaGraphAddKernelNode(&node,graph,nullptr,0,&params));
     cudaGraphExec_t parent;CUDA(cudaGraphInstantiate(&parent,graph,cudaGraphInstantiateFlagDeviceLaunch));CUDA(cudaGraphUpload(parent,0));CUDA(cudaDeviceSynchronize());
-#ifndef BF_USER_NETWORK
+#ifdef BF_URING_NETWORK
+    UringNetwork network{};
+    if(uring_start(page,device,listener,&network))return 1;
+    close(fd);
+#elif !defined(BF_USER_NETWORK)
     int module=open("module/bfusion_tx.ko",O_RDONLY|O_CLOEXEC);if(module<0) { perror("module open");return 1; }
     char params_module[80];snprintf(params_module,sizeof(params_module),"map_fd=%d listen_fd=%d",fd,listener);
     if(syscall(SYS_finit_module,module,params_module,0)) { perror("finit_module");return 1; }
@@ -167,9 +174,16 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
 #endif
     }
     __atomic_store_n(&page->stop_ns,1,__ATOMIC_RELEASE);
+#ifdef BF_URING_NETWORK
+    cudaError_t finished=cudaStreamSynchronize(0);CUDA(finished);
+    uring_quiesce(&network);
+    finished=cudaDeviceSynchronize();
+    if(uring_finish(&network))return 1;
+#else
     cudaError_t finished=cudaDeviceSynchronize();
 #ifndef BF_USER_NETWORK
     if(syscall(SYS_delete_module,"bfusion_tx",0)) { perror("delete_module");return 1; }
+#endif
 #endif
     close(listener);CUDA(launched);CUDA(finished);
     Control result;CUDA(cudaMemcpy(&result,control,sizeof(result),cudaMemcpyDeviceToHost));
