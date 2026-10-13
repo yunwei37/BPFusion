@@ -64,5 +64,44 @@
     "--reference-path",
     "/tmp/bpfusion-tail-chain-cwekbdzh/frozen_references.json",
     "--preflight"
+  ],
+  "untraced_preflight_analysis": [
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "bench/vllm_serving_analysis.py",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/untraced_preflight.jsonl"
+  ],
+  "qwen_performance_driver": [
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "bench/vllm_serving.py",
+    "--dispatch-comparison",
+    "--model",
+    "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "--output",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/qwen_performance.jsonl",
+    "--untraced",
+    "--reference-path",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/frozen_references.json"
+  ],
+  "qwen_performance_analysis": [
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "bench/vllm_serving_analysis.py",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/qwen_performance.jsonl"
+  ],
+  "smol_performance_driver": [
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "bench/vllm_serving.py",
+    "--dispatch-comparison",
+    "--model",
+    "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+    "--output",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/smol_performance.jsonl",
+    "--untraced",
+    "--reference-path",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/frozen_references.json"
+  ],
+  "smol_performance_analysis": [
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "bench/vllm_serving_analysis.py",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/smol_performance.jsonl"
   ]
 }

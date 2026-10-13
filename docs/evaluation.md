@@ -320,7 +320,14 @@ candidate that uses1 device launch/model-step instead of2 while reusing the
 same upstream computation and transports. Fresh plan review admits the causal
 A/B; eight strict executors finish4976 requests/177792 exact independently
 replayed tokens,2072 intended rejects and40000 empty connects,all batch sizes.
-Traced real preflight passes160 requests/4192 tokens. The full ordinary
-untraced four-condition matrix remains in progress; setup is dependency-only,
-no performance/default-adoption claim. Retain finite-set fidelity limits and
-the first baseline setup's global-OOM/NotReady window.
+Traced real preflight passes160 requests/4192 tokens. The complete ordinary
+untraced four-condition matrix passes40 executors/160 cells/10240 measured
+requests/332800 tokens plus320 checked warmups. All eight predeclared primary
+TTFT1/c1 and TPS64/c8 candidate-gain intervals cross zero, as do recorded
+secondary/control intervals. Preserve negative throughput estimates and close
+this unchanged candidate; ordinary separate dispatch remains the default.
+Finite-set fidelity does not reconstruct unobserved batch trajectories. The
+first baseline setup's global-OOM/NotReady window stays archived. The [fresh combined result review](../bench/results/tail_chain_result_review_20261012.md)
+admits valid/complete supporting evidence with an inconclusive prediction.
+Owned runtime/build output is removed with final restoration receipt; no
+default-adoption/general speedup follows.

@@ -721,3 +721,47 @@ Physical-network behavior,total attributed CPU and a strong official serving
 baseline remain higher-value unresolved acceptance boundaries. The latest
 [readiness result](findings/0028-socket-readiness.md) does not establish
 an advantage over its efficient native control.
+
+
+## Stock I/O interfaces and additional closest work, 2026-10-13
+
+The [gpu-libc-artifacts prototype atba41b17](https://github.com/phd-artifacts/gpu-libc-artifacts/tree/ba41b17eeaf2bc0f0f04417404bb35f1005194b2)
+and its [author's report](https://gist.github.com/rodrigo-ceccato/6475e8a3aaa669661386203be38b9093)
+demonstrate GPU-written Linux io_uring submission entries with a kernel polling
+thread for printing. The described HSA/SVM path is a useful reuse candidate,
+and GPU-initiated ordinary kernel I/O is prior work. This is not a qualified
+NVIDIA TCP/model server; the author lists NVIDIA evaluation as future work.
+Do not equate a printing demo or a setup proposal with complete accept/recv/
+send, idle wakeup, disconnect and buffer-lifetime support.
+
+[Official liburing setup flags](https://github.com/axboe/liburing/blob/master/man/io_uring_setup_flags.7)
+describe SQPOLL and caller-provided ring memory via NO_MMAP.
+[The polling lifecycle](https://github.com/axboe/liburing/blob/master/man/io_uring_sqpoll.7)
+requires explicit wakeup when NEED_WAKEUP is set. The concrete kernel UAPI,
+memory registration and default idle behavior must be checked on the running
+kernel, rather than inferred from a version number or a flag name. NVIDIA's
+[550 release note](https://docs.nvidia.com/datacenter/tesla/tesla-release-notes-550-54-14/index.html)
+records removal of importing IO_URING buffers for Linux6.8 compatibility.
+That historical warning does not establish behavior of the current610 driver
+or caller-allocated ring memory. A bounded real NVIDIA/kernel-ring/TCP check
+is necessary before claiming the current module can be replaced; no such
+BPFusion integration or speedup is established here.
+
+[Tutti](https://arxiv.org/html/2605.03375v1#S3.SS2) uses a GPU SQ/CQ design for
+SSD-backed KV objects and integrates with vLLM. Its gio_uring mirrors the
+asynchronous queue idea over GPU/NVMe infrastructure; it is not evidence that
+stock Linux io_uring TCP operations work on this NVIDIA serving path. It also
+reinforces that removing per-I/O CPU control and reusing inference computation
+are existing ideas, rather than standalone novelty.
+
+[GPU-Initiated Discrete Simulated Bifurcation](https://arxiv.org/html/2610.06622v1#S5)
+(Oct5 submission) is a close mechanism comparison: resident receive/solve/reply
+via DOCA GPUNetIO, contrasted with socket-based servers using the same solver
+and client, including a persistent CPU proxy and load-dependent latency.
+Its custom-EtherType/ConnectX path and dSB workload differ from Linux TCP,
+eBPF parsing and reused LLM graphs. It rules out claiming resident GPU
+request execution, a matched-compute CPU-proxy comparison or removal of a
+dedicated userspace data-path core as first by themselves. The unresolved
+BPFusion claim must identify the Linux/eBPF integration and its demonstrated
+benefit or portability boundary; current null-inclusive transport results do
+not supply a speedup claim.
