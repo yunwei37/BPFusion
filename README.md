@@ -102,7 +102,11 @@ batch-dependent output differences remain documented. The vLLM adapter now
 uses packed prefill and FIFO prefix release by default,with explicit grouped/
 serial controls. Actual ordinary untraced single-client prompt-edge/gen1/64
 checks pass160 requests/5200 frozen-upstream tokens across both models/transports.
-Dynamic untraced timing and general eBPF superiority remain unqualified.
+The [complete ordinary untraced comparison](docs/findings/0035-default-untraced.md)
+now passes80 cells/5120 measured requests/166400 tokens against a pre-observation
+set of independently qualified complete outputs. All four primary transport
+intervals contain0. This is finite output-set/lifecycle fidelity,not current-batch
+replay,universal numerical correctness or general eBPF superiority.
 The existing HF graph interface now also accepts HF checkpoints/model directories.
 [Qwen and Llama qualification](docs/findings/0023-batch-execution-qualification.md#hf-graph-reuse-across-qwen-and-llama-architectures)
 passes both resident and host-control dispatch for Qwen2.5-0.5B and

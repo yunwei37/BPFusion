@@ -85,8 +85,8 @@ Use a separate temporary Python environment; retain the existing base runtime.
 The measured installation uses the official pinned wheels:
 
 ```sh
-python3 -m venv /tmp/bpfusion-vllm-env
-/tmp/bpfusion-vllm-env/bin/python -m pip install 'vllm==0.31.0' 'torch==2.13.0+cu129' 'transformers==5.17.0' --extra-index-url https://download.pytorch.org/whl/cu129
+python3 -m venv --without-pip /tmp/bpfusion-vllm-env
+python3 -m pip --python /tmp/bpfusion-vllm-env/bin/python install 'vllm==0.31.0' 'torch==2.13.0+cu129' 'transformers==5.17.0' --extra-index-url https://download.pytorch.org/whl/cu129
 export PATH=/tmp/bpfusion-vllm-env/bin:$PATH
 export VLLM_ENABLE_V1_MULTIPROCESSING=0
 make VLLM_PYTHON=/tmp/bpfusion-vllm-env/bin/python vllm-graph vllm-graph-user-network-wait vllm-graph-trace

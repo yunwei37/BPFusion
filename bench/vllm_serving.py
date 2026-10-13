@@ -11,7 +11,11 @@ from transformers import AutoConfig,AutoTokenizer
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--model",required=True);ap.add_argument("--output",required=True)
-    ap.add_argument("--correctness",action="store_true")
+    run_modes=ap.add_mutually_exclusive_group()
+    run_modes.add_argument("--correctness",action="store_true")
+    run_modes.add_argument("--preflight",action="store_true")
+    ap.add_argument("--untraced",action="store_true")
+    ap.add_argument("--reference-path",type=Path)
     comparisons=ap.add_mutually_exclusive_group()
     comparisons.add_argument("--packing-comparison",action="store_true")
     comparisons.add_argument("--release-comparison",action="store_true")
@@ -26,10 +30,20 @@ def main():
     prompts=[tok(text).input_ids for text in ("The capital of France is","What is 2 plus 2?","Write a short greeting.","Linux is")]
     modes=("serial-kernel","prefix-kernel","serial-userspace","prefix-userspace") if args.release_comparison else (("packed-kernel","packed-userspace") if args.correctness and args.packing_comparison else (
         ("grouped-kernel","packed-kernel","grouped-userspace","packed-userspace") if args.packing_comparison else ("kernel","userspace")))
-    matrix=((1,1),(64,1),(1,8),(64,8));repetitions=1 if args.correctness else 5
+    matrix=((1,1),(64,1),(1,8),(64,8));repetitions=1 if args.correctness or args.preflight else 5
+    requests_per_cell=8 if args.preflight else 64
+    reference_model=None;reference_pool={}
+    if args.untraced:
+        assert args.reference_path is not None,"Untraced qualification requires pre-observation frozen complete references"
+        asset=json.loads(args.reference_path.read_text())
+        reference_model=next(m for m in asset["models"].values() if m["model"]==args.model)
+        assert reference_model["vocab"]==config.vocab_size and asset["precision"]=="fp16"
+        reference_pool={(tuple(r["prompt"]),r["gen"]):{tuple(s) for s in r["sequences"]} for r in reference_model["references"]}
+        emit("frozen_complete_references",path=str(args.reference_path),source_commit=asset["source_commit"],model=reference_model,
+             scope=asset["scope"])
     emit("metadata",model=args.model,vocab=config.vocab_size,prompts=prompts,precision="fp16",
-         modes=modes,matrix=matrix,repetitions=repetitions,requests_per_cell=64,warmups_per_executor=8,
-         correctness=args.correctness,comparison="release" if args.release_comparison else ("packing" if args.packing_comparison else "transport"),trace_condition="both transports identically BF_TRACE",
+         modes=modes,matrix=matrix,repetitions=repetitions,requests_per_cell=requests_per_cell,warmups_per_executor=8,
+         correctness=args.correctness,preflight=args.preflight,untraced=args.untraced,comparison="release" if args.release_comparison else ("packing" if args.packing_comparison else "transport"),trace_condition="both ordinary transports untraced; fixed complete-output-set fidelity" if args.untraced else "both transports identically BF_TRACE",
          commit=subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip(),
          driver_source=Path(__file__).read_text(),client_source=(root/"bench/resident_dispatch.py").read_text(),
          backend_source=(root/"executor/vllm_graph.py").read_text(),native_source=(root/"executor/vllm_graph.cu").read_text(),
@@ -55,12 +69,12 @@ def main():
                 prefix=output.with_suffix("").with_name(output.stem+f"_p{pair}_{mode}")
                 trace=Path(str(prefix)+".gpu.jsonl");logpath=Path(str(prefix)+".stdout.txt")
                 nettrace=Path(str(prefix)+".network.txt")
-                budget=(3*10+sum(range(1,9))+8*32*2+8*4+6+4+2) if args.correctness else 264
+                budget=(3*10+sum(range(1,9))+8*32*2+8*4+6+4+2) if args.correctness else requests_per_cell*len(matrix)+8
                 binary=(("vllm_graph" if mode.startswith("prefix") else "vllm_graph_padded") if args.release_comparison
                         else ("vllm_graph_padded" if mode.startswith("packed") else "vllm_graph_grouped") if args.packing_comparison
-                        else "vllm_graph")+("" if kernel_mode else "_user_network_wait")+"_trace"
-                command=["./build/"+binary,
-                    args.model,"300","--trace-output",str(trace),"--trace-requests",str(budget)]
+                        else "vllm_graph")+("" if kernel_mode else "_user_network_wait")+("" if args.untraced else "_trace")
+                command=["./build/"+binary,args.model,"300"]
+                if not args.untraced:command+=["--trace-output",str(trace),"--trace-requests",str(budget)]
                 if args.correctness:command=["strace","-D","-f","-e","trace=network,write","-o",str(nettrace),*command]
                 try:
                     if kernel_mode:
@@ -163,7 +177,7 @@ def main():
                             def lane(i):
                                 with connect() as client:
                                     ready.wait(timeout=60);barrier.wait(timeout=60)
-                                    for index in range(i,64,concurrency):
+                                    for index in range(i,requests_per_cell,concurrency):
                                         ids=prompts[index%len(prompts)]
                                         row=dict(request(client,ids,None,gen=gen),input_ids=ids,gen=gen,bad=False,index=index,concurrency=concurrency)
                                         selected.append(row)
@@ -174,7 +188,7 @@ def main():
                             first=min(row["start_ns"] for row in selected);last=max(row["arrival_ns"][-1] for row in selected)
                             for row in selected:keep(row,"measured")
                             emit("cell",pair=pair,mode=mode,gen=gen,concurrency=concurrency,
-                                requests=64,tokens=64*gen,first_ns=first,last_ns=last,output_tokens_per_s=64*gen/((last-first)/1e9))
+                                requests=requests_per_cell,tokens=requests_per_cell*gen,first_ns=first,last_ns=last,output_tokens_per_s=requests_per_cell*gen/((last-first)/1e9))
                     if args.correctness:
                         tids=[int(t.name) for t in Path(f"/proc/{p.pid}/task").iterdir() if int(t.name)!=p.pid]
                         assert tids
@@ -184,33 +198,49 @@ def main():
                     code=p.wait();log=logpath.read_text()
                     emit("executor",pair=pair,mode=mode,exit_code=code,stdout=log)
                     assert code==0 and "graph_error=0" in log and "launches=1 " in log,log[-6000:]
-                    refs=[json.loads(line) for line in Path(str(trace)+".references.jsonl").open()]
-                    assert len(rows)==len(refs),(len(rows),len(refs))
-                    by_marker={row["client_ns"]:row for row in refs};assert len(by_marker)==len(refs)
-                    checked=0
-                    for row in rows:
-                        ref=by_marker.pop(row["client_ns"])
-                        assert ref["prompt"]==row["input_ids"] and ref["gen"]==row["gen"] and bool(ref["bad"])==row["bad"],(row,ref)
-                        assert ref["tokens"]==row["tokens"],(row,ref)
-                        checked+=len(row["tokens"])
-                    assert not by_marker
-                    if frozen:
-                        known=[row for row in rows if not row["bad"] and tuple(row["input_ids"]) in frozen]
-                        emit("unpadded_fidelity_diagnostic",pair=pair,mode=mode,sequences=len(known),
-                            equal_sequences=sum(row["tokens"]==frozen[tuple(row["input_ids"])][:row["gen"]] for row in known),
-                            first_token_equal=sum(row["tokens"][0]==frozen[tuple(row["input_ids"])][0] for row in known))
-                    events=[json.loads(line) for line in trace.open()]
-                    assert events[-1]["overflows"]==0
-                    if args.release_comparison:
-                        releases=[e for e in events if e["event"]=="release"]
-                        assert sum(e["batch"] for e in releases)==len(rows)
-                        actual_max=max(e["batch"] for e in releases)
-                        assert actual_max==1 if mode.startswith("serial") else actual_max>1
-                        emit("release_verified",pair=pair,mode=mode,rounds=len(releases),max_prefix=actual_max)
-                    batches=sorted({e["batch"] for e in events if e["event"]=="compute"})
-                    queries=sorted({e["query"] for e in events if e["event"]=="compute"})
-                    emit("verified",pair=pair,mode=mode,requests=len(rows),tokens=checked,
-                        rejections=sum(row["bad"] for row in rows),actual_batches=batches,actual_queries=queries,reference_path=str(trace)+".references.jsonl")
+                    if args.untraced:
+                        batches=None
+                        counters={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",log.split("resident vLLM stopped:",1)[1].splitlines()[0])}
+                        assert counters["admitted"]==counters["retired"]==len(rows)
+                        assert counters["graph_error"]==counters["trace_overflows"]==0
+                        checked=0
+                        for row in rows:
+                            if row["bad"]:assert row["tokens"]==[]
+                            else:
+                                assert len(row["tokens"])==row["gen"]
+                                assert tuple(row["tokens"]) in reference_pool[(tuple(row["input_ids"]),row["gen"])],("unqualified complete output sequence",row)
+                                checked+=len(row["tokens"])
+                        emit("verified",pair=pair,mode=mode,requests=len(rows),tokens=checked,
+                             rejections=sum(row["bad"] for row in rows),reference_scope="frozen complete-output-set membership; current batch trajectory unobserved",
+                             reference_path=str(args.reference_path),native_counters=counters)
+                    else:
+                        refs=[json.loads(line) for line in Path(str(trace)+".references.jsonl").open()]
+                        assert len(rows)==len(refs),(len(rows),len(refs))
+                        by_marker={row["client_ns"]:row for row in refs};assert len(by_marker)==len(refs)
+                        checked=0
+                        for row in rows:
+                            ref=by_marker.pop(row["client_ns"])
+                            assert ref["prompt"]==row["input_ids"] and ref["gen"]==row["gen"] and bool(ref["bad"])==row["bad"],(row,ref)
+                            assert ref["tokens"]==row["tokens"],(row,ref)
+                            checked+=len(row["tokens"])
+                        assert not by_marker
+                        if frozen:
+                            known=[row for row in rows if not row["bad"] and tuple(row["input_ids"]) in frozen]
+                            emit("unpadded_fidelity_diagnostic",pair=pair,mode=mode,sequences=len(known),
+                                equal_sequences=sum(row["tokens"]==frozen[tuple(row["input_ids"])][:row["gen"]] for row in known),
+                                first_token_equal=sum(row["tokens"][0]==frozen[tuple(row["input_ids"])][0] for row in known))
+                        events=[json.loads(line) for line in trace.open()]
+                        assert events[-1]["overflows"]==0
+                        if args.release_comparison:
+                            releases=[e for e in events if e["event"]=="release"]
+                            assert sum(e["batch"] for e in releases)==len(rows)
+                            actual_max=max(e["batch"] for e in releases)
+                            assert actual_max==1 if mode.startswith("serial") else actual_max>1
+                            emit("release_verified",pair=pair,mode=mode,rounds=len(releases),max_prefix=actual_max)
+                        batches=sorted({e["batch"] for e in events if e["event"]=="compute"})
+                        queries=sorted({e["query"] for e in events if e["event"]=="compute"})
+                        emit("verified",pair=pair,mode=mode,requests=len(rows),tokens=checked,
+                            rejections=sum(row["bad"] for row in rows),actual_batches=batches,actual_queries=queries,reference_path=str(trace)+".references.jsonl")
                     if args.correctness:
                         network=nettrace.read_text();assert "resident vLLM ready" in network
                         active=network.split("resident vLLM ready",1)[1]
@@ -222,6 +252,14 @@ def main():
                     if kernel_mode:
                         r=subprocess.run(["./build/bpfusion_load","stats"],capture_output=True,text=True)
                         emit("stats",pair=pair,mode=mode,code=r.returncode,stdout=r.stdout,stderr=r.stderr);assert r.returncode==0
+                        if args.untraced:
+                            assert f"llm_head={len(rows)}\n" in r.stdout and "llm_reserved=0x0" in r.stdout
+                            slots=re.findall(r"llm\[(\d+)\]: state=(\d+)",r.stdout)
+                            assert sorted(slots)==[(str(i),"0") for i in range(8)],slots
+                    elif args.untraced:
+                        native=re.search(r"userspace TCP stopped: accepted=(\d+) published=(\d+) completed=(\d+) rejected=(\d+)",log)
+                        assert native and int(native[2])==int(native[3])==len(rows)
+                        assert int(native[4])==sum(row["bad"] for row in rows)
                     assert not Path("/sys/module/bfusion_tx").exists()
                     print(f"PASS pair={pair} mode={mode} requests={len(rows)} tokens={checked} batches={batches}",flush=True)
                     success=True

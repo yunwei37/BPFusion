@@ -290,3 +290,25 @@ Run valid/complete,narrow observed prediction supported,role supporting,
 paper impact mechanism/workload boundary. Close the unchanged matrix; full
 retained acceptance remains open for broader dynamic-untraced/CPU/general
 backend/service evidence. Do not count build/archive/checks as new paper results.
+
+
+## Ordinary untraced comparison
+
+[Finding0035](findings/0035-default-untraced.md) and the
+[fresh combined review](../bench/results/default_untraced_result_review_20261012.md)
+close the current ordinary adapter comparison. All20 executors/80 cells pass5120
+measured requests/166400 tokens plus160 checked warmups; strict2488 requests/
+88896 tokens/1036 intended rejections complete. Initial ensurepip/log-variable
+failures remain separate,with fixed reference values and actual repaired source.
+Pre-observation complete sequence sets independently derive from finding0034.
+Every output passes exact prompt/gen whole-sequence membership. This qualifies
+finite output-set/lifecycle fidelity with unchanged production code,not current
+unobserved batching replay,task quality or batch invariance.
+
+All four primary untraced kernel transport TTFT1/c1 and TPS64/c8 nominal paired
+intervals include0. Qwen gains-0.022742ms[-0.066119,0.020636] and-3.079500tokens/s
+[-16.750507,10.591507];Smol values and every secondary are in the complete
+finding/raw/review. Run valid/complete;prediction inconclusive;role supporting;
+impact implementation/workload boundary. Earlier traced scheduler gains remain
+separate. Close this unchanged ordinary matrix; no general superiority,
+equivalence,total CPU/energy,physical-NIC or arbitrary-service claim follows.

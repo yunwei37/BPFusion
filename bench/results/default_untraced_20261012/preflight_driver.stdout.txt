@@ -1,0 +1,6 @@
+START pair=0 mode=kernel pid=176574
+Traceback (most recent call last):
+  File "/workspaces/repository/bench/vllm_serving.py", line 263, in main
+    print(f"PASS pair={pair} mode={mode} requests={len(rows)} tokens={checked} batches={batches}",flush=True)
+                                                                                        ^^^^^^^
+UnboundLocalError: cannot access local variable 'batches' where it is not associated with a value
