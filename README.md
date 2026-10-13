@@ -107,6 +107,12 @@ now passes80 cells/5120 measured requests/166400 tokens against a pre-observatio
 set of independently qualified complete outputs. All four primary transport
 intervals contain0. This is finite output-set/lifecycle fidelity,not current-batch
 replay,universal numerical correctness or general eBPF superiority.
+An opt-in chained device-dispatch candidate adds the existing dispatcher after
+the upstream model/head and tail-launches the next step. Its
+[strict qualification](docs/findings/0036-tail-chain.md) passes both models and
+transports; the matched untraced performance matrix is still running.
+Build with make vllm-graph-chained and use --dispatch-comparison in the existing
+serving benchmark. Ordinary defaults remain separate until measured benefit.
 The existing HF graph interface now also accepts HF checkpoints/model directories.
 [Qwen and Llama qualification](docs/findings/0023-batch-execution-qualification.md#hf-graph-reuse-across-qwen-and-llama-architectures)
 passes both resident and host-control dispatch for Qwen2.5-0.5B and

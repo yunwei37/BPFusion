@@ -31,7 +31,7 @@ struct Trace {
     unsigned requests[BF_LLM_SLOTS],tokens[BF_LLM_MAX_TOK];
 };
 struct Control {
-    unsigned seen,retired,reclaim,error,launches,max_active,batch,query,release_rounds,max_release;
+    unsigned seen,retired,reclaim,error,launches,device_launch_calls,max_active,batch,query,release_rounds,max_release;
     unsigned selected[BF_LLM_SLOTS];
     Request requests[BF_LLM_SLOTS];
     Trace* trace;
@@ -153,11 +153,18 @@ __global__ void dispatch(bf_page* p,Step* steps,Inputs in,unsigned vocab,Control
         in.starts[c->batch]=c->batch*length;c->query=query;
         if(c->batch>c->max_active)c->max_active=c->batch;
         __threadfence();
-        cudaError_t e=cudaGraphLaunch(steps[query*BF_LLM_SLOTS+c->batch-1].graph,cudaStreamGraphFireAndForget);
+        cudaError_t e=cudaGraphLaunch(steps[query*BF_LLM_SLOTS+c->batch-1].graph,
+#ifdef BF_CHAINED_DISPATCH
+            cudaStreamGraphTailLaunch);
+#else
+            cudaStreamGraphFireAndForget);
+#endif
         if(e) { c->error=e;return; }
-        c->launches++;
+        c->launches++;c->device_launch_calls++;
+#ifndef BF_CHAINED_DISPATCH
         e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
-        if(e)c->error=e;
+        if(e)c->error=e;else c->device_launch_calls++;
+#endif
         return;
     }
 }
@@ -171,16 +178,7 @@ extern "C" int serve(const unsigned long long* bodies,const unsigned long long* 
  unsigned seconds,unsigned trace_requests,const char* trace_path) {
     unsigned size=(BF_LLM_MAX_TOK+1)*BF_LLM_SLOTS;
     std::vector<Step> host(size);std::vector<cudaGraph_t> combined(size);
-    for(unsigned q=1;q<=BF_LLM_MAX_TOK;q++)for(unsigned b=1;b<=BF_LLM_SLOTS;b++) {
-        unsigned index=q*BF_LLM_SLOTS+b-1;cudaGraphNode_t body,head;
-        CUDA(cudaGraphCreate(&combined[index],0));
-        CUDA(cudaGraphAddChildGraphNode(&body,combined[index],nullptr,0,(cudaGraph_t)bodies[index]));
-        CUDA(cudaGraphAddChildGraphNode(&head,combined[index],&body,1,(cudaGraph_t)heads[index]));
-        CUDA(cudaGraphInstantiateWithFlags(&host[index].graph,combined[index],cudaGraphInstantiateFlagDeviceLaunch));
-        CUDA(cudaGraphUpload(host[index].graph,0));host[index].output=(long long*)outputs[index];
-    }
-    for(unsigned b=0;b<BF_LLM_SLOTS;b++)host[b]=host[BF_LLM_SLOTS+b];
-    Step* steps;CUDA(cudaMalloc(&steps,size*sizeof(Step)));CUDA(cudaMemcpy(steps,host.data(),size*sizeof(Step),cudaMemcpyHostToDevice));
+    Step* steps;CUDA(cudaMalloc(&steps,size*sizeof(Step)));
     Inputs in={};
     in.ids=(int*)pointers[0];in.positions=(long long*)pointers[1];in.lens=(int*)pointers[2];
     in.starts=(int*)pointers[3];in.padding=(bool*)pointers[4];in.slots=(long long*)pointers[5];
@@ -210,6 +208,22 @@ extern "C" int serve(const unsigned long long* bodies,const unsigned long long* 
     __atomic_store_n(&page->stop_ns,0,__ATOMIC_RELEASE);
     void* args[]={&device,&steps,&in,&vocab,&control};
     cudaKernelNodeParams params={};params.func=(void*)dispatch;params.gridDim=dim3(1);params.blockDim=dim3(32);params.kernelParams=args;
+    for(unsigned q=1;q<=BF_LLM_MAX_TOK;q++)for(unsigned b=1;b<=BF_LLM_SLOTS;b++) {
+        unsigned index=q*BF_LLM_SLOTS+b-1;cudaGraphNode_t body,head;
+        CUDA(cudaGraphCreate(&combined[index],0));
+        CUDA(cudaGraphAddChildGraphNode(&body,combined[index],nullptr,0,(cudaGraph_t)bodies[index]));
+        CUDA(cudaGraphAddChildGraphNode(&head,combined[index],&body,1,(cudaGraph_t)heads[index]));
+#ifdef BF_CHAINED_DISPATCH
+        // All body/head writes precede dispatch. Tail launch finishes this
+        // environment before the next step, including self-relaunch.
+        cudaGraphNode_t next;
+        CUDA(cudaGraphAddKernelNode(&next,combined[index],&head,1,&params));
+#endif
+        CUDA(cudaGraphInstantiateWithFlags(&host[index].graph,combined[index],cudaGraphInstantiateFlagDeviceLaunch));
+        CUDA(cudaGraphUpload(host[index].graph,0));host[index].output=(long long*)outputs[index];
+    }
+    for(unsigned b=0;b<BF_LLM_SLOTS;b++)host[b]=host[BF_LLM_SLOTS+b];
+    CUDA(cudaMemcpy(steps,host.data(),size*sizeof(Step),cudaMemcpyHostToDevice));
     cudaGraph_t parent_graph;cudaGraphNode_t node;cudaGraphExec_t parent;
     CUDA(cudaGraphCreate(&parent_graph,0));CUDA(cudaGraphAddKernelNode(&node,parent_graph,nullptr,0,&params));
     CUDA(cudaGraphInstantiateWithFlags(&parent,parent_graph,cudaGraphInstantiateFlagDeviceLaunch));CUDA(cudaGraphUpload(parent,0));CUDA(cudaDeviceSynchronize());
@@ -261,6 +275,6 @@ extern "C" int serve(const unsigned long long* bodies,const unsigned long long* 
     CUDA(cudaHostUnregister(page));munmap(page,BF_PAGE_MMAP_BYTES);
     CUDA(cudaGraphExecDestroy(parent));CUDA(cudaGraphDestroy(parent_graph));CUDA(cudaFree(steps));CUDA(cudaFree(control));
     for(unsigned index=BF_LLM_SLOTS;index<size;index++) { CUDA(cudaGraphExecDestroy(host[index].graph));CUDA(cudaGraphDestroy(combined[index])); }
-    printf("resident vLLM stopped: launches=1 device_graph_launches=%u graph_error=%u max_active=%u admitted=%u retired=%u trace_overflows=%u release_rounds=%u max_release=%u\n",result.launches,result.error,result.max_active,result.seen,result.retired,result.trace_overflows,result.release_rounds,result.max_release);fflush(stdout);
+    printf("resident vLLM stopped: launches=1 device_graph_launches=%u graph_error=%u max_active=%u admitted=%u retired=%u trace_overflows=%u release_rounds=%u max_release=%u device_launch_calls=%u\n",result.launches,result.error,result.max_active,result.seen,result.retired,result.trace_overflows,result.release_rounds,result.max_release,result.device_launch_calls);fflush(stdout);
     return result.error || result.trace_overflows;
 }

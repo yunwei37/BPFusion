@@ -111,6 +111,12 @@ def analyze(path):
                     print(json.dumps(dict(event="cell_release",pair=pair,mode=mode,gen=gen,concurrency=c,
                         release_rounds=len(selected),max_prefix=max(e["batch"] for e in selected),
                         multi_release_requests=sum(sum(rid in ids for rid in e["request_ids"]) for e in selected if e["batch"]>1))))
+        if meta.get("comparison")=="dispatch":
+            d=next(r for r in records if r["event"]=="dispatch_verified" and (r["pair"],r["mode"])==(pair,mode))
+            counters={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",executor["stdout"].split("resident vLLM stopped:",1)[1].splitlines()[0])}
+            assert d["model_steps"]==counters["device_graph_launches"]
+            assert d["device_launch_calls"]==counters["device_launch_calls"]==d["model_steps"]*(1 if mode.startswith("chained") else 2)
+            if not meta.get("untraced"):assert d["model_steps"]==len(computes)
         total_tokens+=sum(len(r["tokens"]) for r in requests);total_requests+=len(requests)
         all_batches.update(e["batch"] for e in computes)
         if meta["correctness"]:
@@ -158,6 +164,9 @@ def analyze(path):
                 completion_mean_ms=statistics.mean(r["latency_ms"] for r in selected),
                 tokens_per_s=statistics.mean(summaries[pair,mode,gen,c]["tokens_per_s"] for pair in range(meta["repetitions"])))))
         comparisons=[("userspace","kernel","kernel")] if len(meta["modes"])==2 else ([
+            ("separate-kernel","chained-kernel","dispatch"),
+            ("separate-userspace","chained-userspace","dispatch"),
+            ("chained-userspace","chained-kernel","kernel")] if meta.get("comparison")=="dispatch" else [
             ("serial-kernel","prefix-kernel","release"),
             ("serial-userspace","prefix-userspace","release"),
             ("prefix-userspace","prefix-kernel","kernel")] if meta.get("comparison")=="release" else [

@@ -1,0 +1,68 @@
+{
+  "build": [
+    "make",
+    "VLLM_PYTHON=/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "vllm-graph",
+    "vllm-graph-user-network-wait",
+    "vllm-graph-trace",
+    "vllm-graph-chained"
+  ],
+  "traced_preflight_driver": [
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "bench/vllm_serving.py",
+    "--dispatch-comparison",
+    "--model",
+    "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "--output",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/traced_preflight.jsonl",
+    "--preflight"
+  ],
+  "traced_preflight_analysis": [
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "bench/vllm_serving_analysis.py",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/traced_preflight.jsonl"
+  ],
+  "qwen_correctness_driver": [
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "bench/vllm_serving.py",
+    "--dispatch-comparison",
+    "--model",
+    "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "--output",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/qwen_correctness.jsonl",
+    "--correctness"
+  ],
+  "qwen_correctness_analysis": [
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "bench/vllm_serving_analysis.py",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/qwen_correctness.jsonl"
+  ],
+  "smol_correctness_driver": [
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "bench/vllm_serving.py",
+    "--dispatch-comparison",
+    "--model",
+    "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+    "--output",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/smol_correctness.jsonl",
+    "--correctness"
+  ],
+  "smol_correctness_analysis": [
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "bench/vllm_serving_analysis.py",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/smol_correctness.jsonl"
+  ],
+  "untraced_preflight_driver": [
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "bench/vllm_serving.py",
+    "--dispatch-comparison",
+    "--model",
+    "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "--output",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/untraced_preflight.jsonl",
+    "--untraced",
+    "--reference-path",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/frozen_references.json",
+    "--preflight"
+  ]
+}

@@ -1,0 +1,22 @@
+[
+  [
+    "python3",
+    "-m",
+    "venv",
+    "--without-pip",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv"
+  ],
+  [
+    "python3",
+    "-m",
+    "pip",
+    "--python",
+    "/tmp/bpfusion-tail-chain-cwekbdzh/venv/bin/python",
+    "install",
+    "vllm==0.31.0",
+    "torch==2.13.0+cu129",
+    "transformers==5.17.0",
+    "--extra-index-url",
+    "https://download.pytorch.org/whl/cu129"
+  ]
+]

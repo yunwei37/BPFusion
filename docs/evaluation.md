@@ -312,3 +312,15 @@ finding/raw/review. Run valid/complete;prediction inconclusive;role supporting;
 impact implementation/workload boundary. Earlier traced scheduler gains remain
 separate. Close this unchanged ordinary matrix; no general superiority,
 equivalence,total CPU/energy,physical-NIC or arbitrary-service claim follows.
+
+## Chained device-dispatch candidate
+
+[Finding0036](findings/0036-tail-chain.md) integrates an opt-in scheduling
+candidate that uses1 device launch/model-step instead of2 while reusing the
+same upstream computation and transports. Fresh plan review admits the causal
+A/B; eight strict executors finish4976 requests/177792 exact independently
+replayed tokens,2072 intended rejects and40000 empty connects,all batch sizes.
+Traced real preflight passes160 requests/4192 tokens. The full ordinary
+untraced four-condition matrix remains in progress; setup is dependency-only,
+no performance/default-adoption claim. Retain finite-set fidelity limits and
+the first baseline setup's global-OOM/NotReady window.

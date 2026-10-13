@@ -19,6 +19,7 @@ def main():
     comparisons=ap.add_mutually_exclusive_group()
     comparisons.add_argument("--packing-comparison",action="store_true")
     comparisons.add_argument("--release-comparison",action="store_true")
+    comparisons.add_argument("--dispatch-comparison",action="store_true")
     args=ap.parse_args()
     root=Path(__file__).resolve().parents[1];os.chdir(root)
     output=Path(args.output).resolve();output.parent.mkdir(parents=True,exist_ok=True)
@@ -28,7 +29,7 @@ def main():
         with lock:raw.write(json.dumps(dict(event=event,utc=time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),**kw))+"\n")
     tok=AutoTokenizer.from_pretrained(args.model);config=AutoConfig.from_pretrained(args.model)
     prompts=[tok(text).input_ids for text in ("The capital of France is","What is 2 plus 2?","Write a short greeting.","Linux is")]
-    modes=("serial-kernel","prefix-kernel","serial-userspace","prefix-userspace") if args.release_comparison else (("packed-kernel","packed-userspace") if args.correctness and args.packing_comparison else (
+    modes=("separate-kernel","chained-kernel","separate-userspace","chained-userspace") if args.dispatch_comparison else ("serial-kernel","prefix-kernel","serial-userspace","prefix-userspace") if args.release_comparison else (("packed-kernel","packed-userspace") if args.correctness and args.packing_comparison else (
         ("grouped-kernel","packed-kernel","grouped-userspace","packed-userspace") if args.packing_comparison else ("kernel","userspace")))
     matrix=((1,1),(64,1),(1,8),(64,8));repetitions=1 if args.correctness or args.preflight else 5
     requests_per_cell=8 if args.preflight else 64
@@ -43,7 +44,7 @@ def main():
              scope=asset["scope"])
     emit("metadata",model=args.model,vocab=config.vocab_size,prompts=prompts,precision="fp16",
          modes=modes,matrix=matrix,repetitions=repetitions,requests_per_cell=requests_per_cell,warmups_per_executor=8,
-         correctness=args.correctness,preflight=args.preflight,untraced=args.untraced,comparison="release" if args.release_comparison else ("packing" if args.packing_comparison else "transport"),trace_condition="both ordinary transports untraced; fixed complete-output-set fidelity" if args.untraced else "both transports identically BF_TRACE",
+         correctness=args.correctness,preflight=args.preflight,untraced=args.untraced,comparison="dispatch" if args.dispatch_comparison else "release" if args.release_comparison else ("packing" if args.packing_comparison else "transport"),trace_condition="both ordinary transports untraced; fixed complete-output-set fidelity" if args.untraced else "both transports identically BF_TRACE",
          commit=subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip(),
          driver_source=Path(__file__).read_text(),client_source=(root/"bench/resident_dispatch.py").read_text(),
          backend_source=(root/"executor/vllm_graph.py").read_text(),native_source=(root/"executor/vllm_graph.cu").read_text(),
@@ -70,7 +71,7 @@ def main():
                 trace=Path(str(prefix)+".gpu.jsonl");logpath=Path(str(prefix)+".stdout.txt")
                 nettrace=Path(str(prefix)+".network.txt")
                 budget=(3*10+sum(range(1,9))+8*32*2+8*4+6+4+2) if args.correctness else requests_per_cell*len(matrix)+8
-                binary=(("vllm_graph" if mode.startswith("prefix") else "vllm_graph_padded") if args.release_comparison
+                binary=(("vllm_graph_chained" if mode.startswith("chained") else "vllm_graph") if args.dispatch_comparison else ("vllm_graph" if mode.startswith("prefix") else "vllm_graph_padded") if args.release_comparison
                         else ("vllm_graph_padded" if mode.startswith("packed") else "vllm_graph_grouped") if args.packing_comparison
                         else "vllm_graph")+("" if kernel_mode else "_user_network_wait")+("" if args.untraced else "_trace")
                 command=["./build/"+binary,args.model,"300"]
@@ -198,6 +199,10 @@ def main():
                     code=p.wait();log=logpath.read_text()
                     emit("executor",pair=pair,mode=mode,exit_code=code,stdout=log)
                     assert code==0 and "graph_error=0" in log and "launches=1 " in log,log[-6000:]
+                    if args.dispatch_comparison:
+                        calls={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",log.split("resident vLLM stopped:",1)[1].splitlines()[0])}
+                        assert calls["device_launch_calls"]==calls["device_graph_launches"]*(1 if mode.startswith("chained") else 2),calls
+                        emit("dispatch_verified",pair=pair,mode=mode,device_launch_calls=calls["device_launch_calls"],model_steps=calls["device_graph_launches"])
                     if args.untraced:
                         batches=None
                         counters={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",log.split("resident vLLM stopped:",1)[1].splitlines()[0])}

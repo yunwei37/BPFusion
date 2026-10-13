@@ -1,0 +1,21 @@
+{"event": "cell_release", "pair": 0, "mode": "chained-kernel", "gen": 1, "concurrency": 1, "release_rounds": 8, "max_prefix": 1, "multi_release_requests": 0}
+{"event": "cell_release", "pair": 0, "mode": "chained-kernel", "gen": 64, "concurrency": 1, "release_rounds": 8, "max_prefix": 1, "multi_release_requests": 0}
+{"event": "cell_release", "pair": 0, "mode": "chained-kernel", "gen": 1, "concurrency": 8, "release_rounds": 2, "max_prefix": 7, "multi_release_requests": 7}
+{"event": "cell_release", "pair": 0, "mode": "chained-kernel", "gen": 64, "concurrency": 8, "release_rounds": 1, "max_prefix": 8, "multi_release_requests": 8}
+{"event": "verified_executor", "pair": 0, "mode": "chained-kernel", "requests": 40, "tokens": 1048, "rejections": 0, "actual_batches": [1, 2, 6, 7, 8], "graphs": 595, "prefill_graphs": 28, "decode_graphs": 567, "real_prompt_tokens": 200, "padded_query_tokens": 45, "release_rounds": 27, "max_release": 8}
+{"event": "cell_release", "pair": 0, "mode": "chained-userspace", "gen": 1, "concurrency": 1, "release_rounds": 8, "max_prefix": 1, "multi_release_requests": 0}
+{"event": "cell_release", "pair": 0, "mode": "chained-userspace", "gen": 64, "concurrency": 1, "release_rounds": 8, "max_prefix": 1, "multi_release_requests": 0}
+{"event": "cell_release", "pair": 0, "mode": "chained-userspace", "gen": 1, "concurrency": 8, "release_rounds": 2, "max_prefix": 4, "multi_release_requests": 8}
+{"event": "cell_release", "pair": 0, "mode": "chained-userspace", "gen": 64, "concurrency": 8, "release_rounds": 1, "max_prefix": 8, "multi_release_requests": 8}
+{"event": "verified_executor", "pair": 0, "mode": "chained-userspace", "requests": 40, "tokens": 1048, "rejections": 0, "actual_batches": [1, 4, 8], "graphs": 594, "prefill_graphs": 27, "decode_graphs": 567, "real_prompt_tokens": 200, "padded_query_tokens": 48, "release_rounds": 27, "max_release": 8}
+{"event": "cell_release", "pair": 0, "mode": "separate-kernel", "gen": 1, "concurrency": 1, "release_rounds": 8, "max_prefix": 1, "multi_release_requests": 0}
+{"event": "cell_release", "pair": 0, "mode": "separate-kernel", "gen": 64, "concurrency": 1, "release_rounds": 8, "max_prefix": 1, "multi_release_requests": 0}
+{"event": "cell_release", "pair": 0, "mode": "separate-kernel", "gen": 1, "concurrency": 8, "release_rounds": 2, "max_prefix": 6, "multi_release_requests": 8}
+{"event": "cell_release", "pair": 0, "mode": "separate-kernel", "gen": 64, "concurrency": 8, "release_rounds": 1, "max_prefix": 8, "multi_release_requests": 8}
+{"event": "verified_executor", "pair": 0, "mode": "separate-kernel", "requests": 40, "tokens": 1048, "rejections": 0, "actual_batches": [1, 2, 6, 7, 8], "graphs": 595, "prefill_graphs": 28, "decode_graphs": 567, "real_prompt_tokens": 200, "padded_query_tokens": 39, "release_rounds": 27, "max_release": 8}
+{"event": "cell_release", "pair": 0, "mode": "separate-userspace", "gen": 1, "concurrency": 1, "release_rounds": 8, "max_prefix": 1, "multi_release_requests": 0}
+{"event": "cell_release", "pair": 0, "mode": "separate-userspace", "gen": 64, "concurrency": 1, "release_rounds": 8, "max_prefix": 1, "multi_release_requests": 0}
+{"event": "cell_release", "pair": 0, "mode": "separate-userspace", "gen": 1, "concurrency": 8, "release_rounds": 2, "max_prefix": 7, "multi_release_requests": 7}
+{"event": "cell_release", "pair": 0, "mode": "separate-userspace", "gen": 64, "concurrency": 8, "release_rounds": 1, "max_prefix": 8, "multi_release_requests": 8}
+{"event": "verified_executor", "pair": 0, "mode": "separate-userspace", "requests": 40, "tokens": 1048, "rejections": 0, "actual_batches": [1, 7, 8], "graphs": 595, "prefill_graphs": 28, "decode_graphs": 567, "real_prompt_tokens": 200, "padded_query_tokens": 42, "release_rounds": 27, "max_release": 8}
+{"event": "coverage", "requests": 160, "tokens": 4192, "actual_batches": [1, 2, 4, 6, 7, 8]}

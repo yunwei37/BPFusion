@@ -1,0 +1,8 @@
+START pair=0 mode=separate-kernel pid=185980
+PASS pair=0 mode=separate-kernel requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=0 mode=chained-kernel pid=186269
+PASS pair=0 mode=chained-kernel requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=0 mode=separate-userspace pid=186550
+PASS pair=0 mode=separate-userspace requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=0 mode=chained-userspace pid=186835
+PASS pair=0 mode=chained-userspace requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]
