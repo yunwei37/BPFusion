@@ -1,0 +1,104 @@
+{
+  "model": "smol",
+  "oracle_frozen_at": "2026-10-13T01:33:17.937039+00:00",
+  "started": "2026-10-13T01:36:29.830182+00:00",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict, sockops and diagnostic io_uring recycle attached\n",
+    "stderr": ""
+  },
+  "native_pid": 200293,
+  "ready_time_ns": 1791855456069570779,
+  "client_tuple": [
+    "127.0.0.1",
+    44804
+  ],
+  "clean_eof": true,
+  "cmd": [
+    "strace",
+    "-f",
+    "-ttt",
+    "-o",
+    "/tmp/bpfusion-uring-sockmap-0z8xuijz/model/smol.strace",
+    "-e",
+    "trace=accept,accept4,recvfrom,recvmsg,sendto,sendmsg,io_uring_setup,io_uring_enter,io_uring_register,close",
+    "python3",
+    "/tmp/bpfusion-uring-sockmap-0z8xuijz/model/qwen_graph.py",
+    "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+    "180"
+  ],
+  "exit": 0,
+  "bpf_stats": {
+    "exit": 0,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\npublished      12\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 12\nsockhash linked 1\nsockhash failed 0\nparser calls   18\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=12\nllm_reserved=0x0\nllm[0]: state=0 prompt=2 gen=1 produced=1 client_ns=1008\nllm[1]: state=0 prompt=5 gen=1 produced=1 client_ns=1009\nllm[2]: state=0 prompt=8 gen=1 produced=1 client_ns=1010\nllm[3]: state=0 prompt=1 gen=1 produced=1 client_ns=1011\nllm[4]: state=0 prompt=16 gen=1 produced=1 client_ns=1004\nllm[5]: state=0 prompt=31 gen=1 produced=1 client_ns=1005\nllm[6]: state=0 prompt=63 gen=1 produced=1 client_ns=1006\nllm[7]: state=0 prompt=64 gen=1 produced=1 client_ns=1007\n",
+    "stderr": ""
+  },
+  "native_stats": {
+    "status": 0,
+    "accepted": 1,
+    "received": 12,
+    "sent": 12,
+    "bytes": 516,
+    "idle_observed": 9,
+    "closed": 1,
+    "eof": 1,
+    "sq_head": 28,
+    "sq_tail": 28,
+    "cq_head": 28,
+    "cq_tail": 28,
+    "dropped": 0,
+    "overflow": 0,
+    "head": 12,
+    "reserved": 0,
+    "last_res": 0,
+    "last_prompt": 1,
+    "last_token": 30
+  },
+  "pass": true,
+  "finished": "2026-10-13T01:38:01.467172+00:00",
+  "cleanup_pins": [
+    "bpfusion_ctl",
+    "bpfusion_stats",
+    "bpfusion_db",
+    "bpfusion_streams",
+    "bpfusion_stream_link",
+    "bpfusion_uring_link"
+  ],
+  "remaining_pins": []
+}
+/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+CAPABILITY host_native_atomic=0
+NET_READY pid=200293 port=39403 setup_flags=81922 features=262143
+resident Qwen ready: 30 layers h=576 vocab=49152; device-tail graphs, dispatch=resident
+RESULT {"status":0,"accepted":1,"received":12,"sent":12,"bytes":516,"idle_observed":9,"closed":1,"eof":1,"sq_head":28,"sq_tail":28,"cq_head":28,"cq_tail":28,"dropped":0,"overflow":0,"head":12,"reserved":0,"last_res":0,"last_prompt":1,"last_token":30}
+CLEANUP ring_closed GPU_accepted_peer_closed buffers_unregistered
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=12 graph_error=0 banks=8 max_active=1
+
+
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]
+Loading weights:  55%|█████▌    | 150/272 [00:00<00:00, 1491.66it/s]
+Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1481.20it/s]
+
+DIAGNOSIS_TERMINAL

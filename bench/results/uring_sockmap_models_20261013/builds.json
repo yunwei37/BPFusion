@@ -1,0 +1,65 @@
+[
+  {
+    "cmd": [
+      "clang",
+      "-O2",
+      "-g",
+      "-target",
+      "bpf",
+      "-mcpu=v3",
+      "-D__TARGET_ARCH_x86",
+      "-I/usr/include/x86_64-linux-gnu",
+      "-Ibpf/include",
+      "-Wall",
+      "-Werror",
+      "-Wno-missing-declarations",
+      "-Wno-unused-value",
+      "-c",
+      "/tmp/bpfusion-uring-sockmap-0z8xuijz/fusion.bpf.c",
+      "-o",
+      "/tmp/bpfusion-uring-sockmap-0z8xuijz/fusion.bpf.o"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "cmd": [
+      "cc",
+      "-O2",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unused-parameter",
+      "-Ibpf/include",
+      "/tmp/bpfusion-uring-sockmap-0z8xuijz/loader.c",
+      "-o",
+      "/tmp/bpfusion-uring-sockmap-0z8xuijz/loader",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "cmd": [
+      "/usr/local/cuda/bin/nvcc",
+      "-std=c++17",
+      "-arch=sm_120",
+      "-O2",
+      "-Ibpf/include",
+      "/tmp/bpfusion-uring-sockmap-0z8xuijz/probe.cu",
+      "-o",
+      "/tmp/bpfusion-uring-sockmap-0z8xuijz/probe",
+      "-lbpf",
+      "-lelf",
+      "-lz"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

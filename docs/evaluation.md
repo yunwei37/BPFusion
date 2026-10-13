@@ -344,3 +344,18 @@ compile failures remain archived. Root self-review reconstructs actual bytes,
 queue counters and syscall counts; no independent experiment review is claimed.
 Production eBPF/model/module source and defaults remain unchanged. Complete
 accept/FD/sockmap/HTTP/model integration and CPU/performance value remain open.
+
+## Finite io_uring/sockmap real-model integration
+
+[Finding0038](findings/0038-io-uring-sockmap-models.md) qualifies a temporary
+single-connection/gen1 integration with unchanged eBPF admission and HF
+computation. Qwen/Smol each deliver12 exact pre-observation oracle tokens via
+GPU-owned ACCEPT/RECV/SEND/CLOSE,without bfusion_tx. Kernel completion eBPF
+reclaims reservations,avoiding unsupported GPU/CPU map RMW. Fragmented binary/
+HTTP,prompt1..64,cold wake,reuse,EOF and terminal all-FREE/reserved0 pass.
+After-ready native all-thread network/wake calls are0. Initial compile and
+post-delivery reporting failures remain; Qwen is preserved rather than rerun.
+Root replay self-review passes; no independent experiment review or timing
+claim. Fixture completion tags/connections/output length are finite; broader
+streaming/concurrency/abort ownership and performance remain open. Production
+source/defaults are unchanged,and owned temporary runtime/pins are removed.

@@ -1,0 +1,17 @@
+name: io_uring_complete
+ID: 1417
+format:
+	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+	field:int common_pid;	offset:4;	size:4;	signed:1;
+
+	field:void * ctx;	offset:8;	size:8;	signed:0;
+	field:void * req;	offset:16;	size:8;	signed:0;
+	field:u64 user_data;	offset:24;	size:8;	signed:0;
+	field:int res;	offset:32;	size:4;	signed:1;
+	field:unsigned cflags;	offset:36;	size:4;	signed:0;
+	field:u64 extra1;	offset:40;	size:8;	signed:0;
+	field:u64 extra2;	offset:48;	size:8;	signed:0;
+
+print fmt: "ring %p, req %p, user_data 0x%llx, result %d, cflags 0x%x extra1 %llu extra2 %llu ", REC->ctx, REC->req, REC->user_data, REC->res, REC->cflags, (unsigned long long) REC->extra1, (unsigned long long) REC->extra2

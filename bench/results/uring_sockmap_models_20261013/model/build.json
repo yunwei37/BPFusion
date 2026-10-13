@@ -1,0 +1,1 @@
+{"cmd": ["/usr/local/cuda/bin/nvcc", "-O3", "-std=c++17", "-arch=sm_120", "-rdc=true", "-shared", "-Xcompiler=-fPIC", "-Ibpf/include", "/tmp/bpfusion-uring-sockmap-0z8xuijz/model/qwen_graph.cu", "-o", "/tmp/bpfusion-uring-sockmap-0z8xuijz/model/qwen_graph.so", "-lbpf", "-lelf", "-lz", "-lpthread"], "exit": 0}

@@ -1,0 +1,85 @@
+{
+  "utc": "2026-10-13T01:39:08.573525+00:00",
+  "scope": "Root self-review of finite single-connection integration; no independent review or performance inference.",
+  "cases": [
+    {
+      "name": "echo",
+      "requests": 12,
+      "exact_client_bytes": 516,
+      "model_tokens": 0,
+      "all_queue_positions": 28,
+      "post_ready_network_and_wake_calls": {
+        "accept": 0,
+        "accept4": 0,
+        "recvfrom": 0,
+        "recvmsg": 0,
+        "sendto": 0,
+        "sendmsg": 0,
+        "io_uring_enter": 0
+      },
+      "bootstrap_setup": 1,
+      "bootstrap_wake": 1,
+      "idle_flag_observations": 9,
+      "all_slots_free": true,
+      "reservation_zero": true,
+      "eof_and_gpu_close": true
+    },
+    {
+      "name": "qwen",
+      "requests": 12,
+      "exact_client_bytes": 516,
+      "model_tokens": 12,
+      "all_queue_positions": 28,
+      "post_ready_network_and_wake_calls": {
+        "accept": 0,
+        "accept4": 0,
+        "recvfrom": 0,
+        "recvmsg": 0,
+        "sendto": 0,
+        "sendmsg": 0,
+        "io_uring_enter": 0
+      },
+      "bootstrap_setup": 1,
+      "bootstrap_wake": 1,
+      "idle_flag_observations": 9,
+      "all_slots_free": true,
+      "reservation_zero": true,
+      "eof_and_gpu_close": true
+    },
+    {
+      "name": "smol",
+      "requests": 12,
+      "exact_client_bytes": 516,
+      "model_tokens": 12,
+      "all_queue_positions": 28,
+      "post_ready_network_and_wake_calls": {
+        "accept": 0,
+        "accept4": 0,
+        "recvfrom": 0,
+        "recvmsg": 0,
+        "sendto": 0,
+        "sendmsg": 0,
+        "io_uring_enter": 0
+      },
+      "bootstrap_setup": 1,
+      "bootstrap_wake": 1,
+      "idle_flag_observations": 9,
+      "all_slots_free": true,
+      "reservation_zero": true,
+      "eof_and_gpu_close": true
+    }
+  ],
+  "source_identity": {
+    "device_model_dispatch_identical": true,
+    "adapter_difference": "library lookup only",
+    "bpf_core_identical": true,
+    "queue_header_identical": true,
+    "oracle_frozen_at": "2026-10-13T01:33:17.937039+00:00"
+  },
+  "limitations": [
+    "finite 12-request tags and one connection per native process",
+    "gen1 only; no concurrent requests, streaming long generation or rejection/disconnect qualification",
+    "no latency/throughput/CPU cost measurement; fixture idle/fragmentation and tracing",
+    "global tracepoint with fixture-specific tags is not a production ring ownership design"
+  ]
+}
