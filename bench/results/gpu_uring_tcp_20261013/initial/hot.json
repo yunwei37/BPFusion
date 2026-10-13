@@ -1,0 +1,43 @@
+{
+  "mode": "hot",
+  "start": "2026-10-13T01:12:35.184108+00:00",
+  "end": "2026-10-13T01:12:37.551264+00:00",
+  "cmd": [
+    "/usr/bin/strace",
+    "-f",
+    "-ttt",
+    "-o",
+    "/tmp/bpfusion-gpu-uring-62ljwexf/hot.strace",
+    "-e",
+    "trace=accept,accept4,recvfrom,recvmsg,sendto,sendmsg,io_uring_setup,io_uring_enter,io_uring_register,shutdown",
+    "/tmp/bpfusion-gpu-uring-62ljwexf/probe",
+    "hot"
+  ],
+  "exit": 0,
+  "stdout": "PORT 40865\nREADY mode=hot setup_flags=81922 features=262143 sq=8 cq=16 idle_arg=0 host_device_alias=1\nRESULT {\"status\":1,\"submitted\":1,\"completed\":0,\"bytes\":0,\"flags_before\":1,\"flags_after\":1,\"sq_head\":0,\"sq_tail\":1,\"cq_head\":0,\"cq_tail\":0,\"dropped\":0,\"overflow\":0,\"last_res\":0,\"last_id\":0,\"cpu_wakes\":0,\"wake_result\":0,\"wake_errno\":0}\nCLEANUP ring_and_socket_closed buffers_unregistered_and_unmapped\n",
+  "stderr": "",
+  "client_error": null,
+  "client_bytes": 0,
+  "client_exact": false,
+  "client_hex": "",
+  "stats": {
+    "status": 1,
+    "submitted": 1,
+    "completed": 0,
+    "bytes": 0,
+    "flags_before": 1,
+    "flags_after": 1,
+    "sq_head": 0,
+    "sq_tail": 1,
+    "cq_head": 0,
+    "cq_tail": 0,
+    "dropped": 0,
+    "overflow": 0,
+    "last_res": 0,
+    "last_id": 0,
+    "cpu_wakes": 0,
+    "wake_result": 0,
+    "wake_errno": 0
+  },
+  "expected_outcome": false
+}

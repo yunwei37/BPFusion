@@ -1,0 +1,151 @@
+{
+  "time": "2026-10-13T01:17:26.407072+00:00",
+  "cases": [
+    {
+      "directory": "initial",
+      "mode": "hot",
+      "outcome": "idle GPU submission did not complete; client received zero bytes",
+      "client_bytes": 0,
+      "syscalls": {
+        "accept": 1,
+        "accept4": 0,
+        "recvfrom": 0,
+        "recvmsg": 0,
+        "sendto": 0,
+        "sendmsg": 0,
+        "io_uring_setup": 1,
+        "io_uring_enter": 0,
+        "shutdown": 1
+      },
+      "wrapper_expected_outcome": false
+    },
+    {
+      "directory": "initial",
+      "mode": "idle",
+      "outcome": "idle GPU submission did not complete; client received zero bytes",
+      "client_bytes": 0,
+      "syscalls": {
+        "accept": 1,
+        "accept4": 0,
+        "recvfrom": 0,
+        "recvmsg": 0,
+        "sendto": 0,
+        "sendmsg": 0,
+        "io_uring_setup": 1,
+        "io_uring_enter": 0,
+        "shutdown": 1
+      },
+      "wrapper_expected_outcome": true
+    },
+    {
+      "directory": "initial",
+      "mode": "idle-wake",
+      "outcome": "exact 4096 client bytes; all GPU send completions consumed",
+      "client_bytes": 4096,
+      "syscalls": {
+        "accept": 1,
+        "accept4": 0,
+        "recvfrom": 0,
+        "recvmsg": 0,
+        "sendto": 0,
+        "sendmsg": 0,
+        "io_uring_setup": 1,
+        "io_uring_enter": 1,
+        "shutdown": 1
+      },
+      "wrapper_expected_outcome": true
+    },
+    {
+      "directory": "",
+      "mode": "hot",
+      "outcome": "exact 4096 client bytes; all GPU send completions consumed",
+      "client_bytes": 4096,
+      "syscalls": {
+        "accept": 1,
+        "accept4": 0,
+        "recvfrom": 0,
+        "recvmsg": 0,
+        "sendto": 0,
+        "sendmsg": 0,
+        "io_uring_setup": 1,
+        "io_uring_enter": 1,
+        "shutdown": 1
+      },
+      "wrapper_expected_outcome": true
+    },
+    {
+      "directory": "",
+      "mode": "idle",
+      "outcome": "idle GPU submission did not complete; client received zero bytes",
+      "client_bytes": 0,
+      "syscalls": {
+        "accept": 1,
+        "accept4": 0,
+        "recvfrom": 0,
+        "recvmsg": 0,
+        "sendto": 0,
+        "sendmsg": 0,
+        "io_uring_setup": 1,
+        "io_uring_enter": 1,
+        "shutdown": 1
+      },
+      "wrapper_expected_outcome": true
+    },
+    {
+      "directory": "",
+      "mode": "idle-wake",
+      "outcome": "exact 4096 client bytes; all GPU send completions consumed",
+      "client_bytes": 4096,
+      "syscalls": {
+        "accept": 1,
+        "accept4": 0,
+        "recvfrom": 0,
+        "recvmsg": 0,
+        "sendto": 0,
+        "sendmsg": 0,
+        "io_uring_setup": 1,
+        "io_uring_enter": 2,
+        "shutdown": 1
+      },
+      "wrapper_expected_outcome": true
+    },
+    {
+      "directory": "receive_wake",
+      "mode": "idle-recv",
+      "outcome": "exact 4096 client bytes; all GPU send completions consumed",
+      "client_bytes": 4096,
+      "syscalls": {
+        "accept": 1,
+        "accept4": 0,
+        "recvfrom": 0,
+        "recvmsg": 0,
+        "sendto": 0,
+        "sendmsg": 0,
+        "io_uring_setup": 1,
+        "io_uring_enter": 1,
+        "shutdown": 1
+      },
+      "wrapper_expected_outcome": true
+    }
+  ],
+  "cycles": {
+    "exact_bytes": 32768,
+    "tx_completions": 256,
+    "receive_requests": 8,
+    "idle_flag_observations": 8,
+    "eof": true,
+    "syscalls": {
+      "accept": 1,
+      "accept4": 0,
+      "recvfrom": 0,
+      "recvmsg": 0,
+      "sendto": 0,
+      "sendmsg": 0,
+      "io_uring_setup": 1,
+      "io_uring_enter": 1,
+      "shutdown": 1
+    },
+    "all_queue_positions": 266
+  },
+  "scope": "Component diagnosis, one bootstrapped loopback TCP connection; no eBPF, HTTP, inference or performance claim. Root self-review, not an independent agent review."
+}

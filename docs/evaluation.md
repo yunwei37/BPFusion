@@ -331,3 +331,16 @@ first baseline setup's global-OOM/NotReady window stays archived. The [fresh com
 admits valid/complete supporting evidence with an inconclusive prediction.
 Owned runtime/build output is removed with final restoration receipt; no
 default-adoption/general speedup follows.
+
+## Stock io_uring TCP feasibility
+
+[Finding0037](findings/0037-stock-io-uring.md) closes a component diagnosis,
+not a paper performance experiment. The original RTX5090/Linux7.3rc3 supports
+GPU-written NO_MMAP SQPOLL SEND/RECV queues. Idle SEND alone stalls; a pending
+receive completion wakes the poller. Eight cold request/reply cycles deliver
+32768 exact client bytes,256 consumed send completions and GPU-observed EOF,
+with no runtime explicit userspace wake or network calls. Initial bootstrap/
+compile failures remain archived. Root self-review reconstructs actual bytes,
+queue counters and syscall counts; no independent experiment review is claimed.
+Production eBPF/model/module source and defaults remain unchanged. Complete
+accept/FD/sockmap/HTTP/model integration and CPU/performance value remain open.

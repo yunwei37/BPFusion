@@ -744,8 +744,11 @@ kernel, rather than inferred from a version number or a flag name. NVIDIA's
 records removal of importing IO_URING buffers for Linux6.8 compatibility.
 That historical warning does not establish behavior of the current610 driver
 or caller-allocated ring memory. A bounded real NVIDIA/kernel-ring/TCP check
-is necessary before claiming the current module can be replaced; no such
-BPFusion integration or speedup is established here.
+is necessary before claiming the current module can be replaced. The later
+[stock TCP diagnosis](findings/0037-stock-io-uring.md) establishes GPU queue
+submission and repeated receive-completion wakeup on the original RTX5090,
+with exact client bytes and EOF. Complete eBPF/model integration and a speedup
+remain unestablished; the current module remains the qualified path.
 
 [Tutti](https://arxiv.org/html/2605.03375v1#S3.SS2) uses a GPU SQ/CQ design for
 SSD-backed KV objects and integrates with vLLM. Its gio_uring mirrors the
