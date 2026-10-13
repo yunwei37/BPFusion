@@ -404,21 +404,43 @@ and original Workspace/base runtime/WIP remain unchanged. Temporary runtime
 retained for the following benchmark, with post-run no-process/module/pin
 evidence; complete resource removal remains pending that benchmark.
 
-## Matched optimized stock transport experiment in progress
+## Completed optimized stock transport comparison
 
-The [reviewed plan](../bench/results/vllm_uring_performance_20261013/plan.md)
-retains finding0035's local ordinary-serving question. Stock io_uring is
-compared with the efficient native mechanism and the module component control,
-with identical optimized computation. [Fresh plan review, two rounds](../bench/results/vllm_uring_performance_20261013/plan-review.md)
-admits the scoped comparison after executable repairs. Real Qwen preflight
-passes120 requests/3144 tokens across12 cells; six ordinary strict executors
-pass3732 requests/133344 valid tokens/1554 intended rejections/30000 empty
-connections, and final reconstruction passes. The fixed pre-performance
-complete-output sets remain Qwen17 keys/22 sequences,Smol17/19; they qualify
-finite-set fidelity, not current unobserved batch-history replay.
+[Finding0042](findings/0042-vllm-io-uring-performance.md) closes the reviewed
+local ordinary-serving comparison with unchanged optimized compute. Real
+preflight and six ordinary strict executors pass before frozen e709293 full
+collection. All36 executors/144 cells/9216 measured requests/299520 tokens plus
+288 checked excluded warmups complete without failed/excluded/retried timing
+cells. [Fresh independent result review](../bench/results/vllm_uring_performance_20261013/result-review.md)
+reconstructs raw schedules, output-set membership, arrival metrics, counter
+arithmetic, mechanism engagement and paired effects; both analyzer replays
+match archived stdout exactly.
 
-Benchmark/analysis now select three transports, six balanced process orders,
-rotated common cell order, measured known-worker CPU brackets and stock-ring
-checks. Historical finding0035 full analyses remain byte-identical. The full
-36-executor/144-cell timing matrix and fresh result review are pending. No
-speedup/CPU-saving or completed-experiment claim follows from this setup.
+Four nominal six-block primary effects favor stock when positive: Qwen TTFT
+-0.040512ms[-0.109705,0.028680], Smol +0.081197[-0.025390,0.187784]; Qwen
+TPS -155.453340[-289.449821,-21.456859], Smol -69.722741[-344.364089,204.918607].
+Qwen long throughput contradicts gain; other primaries are inconclusive, not
+equivalent. Report all four, with no familywide/SOTA claim.
+
+Secondary known-worker CPU64/c8 is stock14.212284/native0.442915ms per request
+for Qwen and12.040271/0.394414 for Smol. CPU brackets include process threads
+with actual SQPOLL once plus separate module TX where present, not all Linux
+networking or total service CPU. Stock cost rises approximately32/31 times;
+absence of userspace socket calls does not remove kernel CPU work. BF_TRACE
+model tracing is off, while stock's first128 network diagnostic records and
+aggregate counters remain measured implementation costs. Complete-output-set
+fidelity is weaker than replay of the current unobserved batch trajectory.
+
+Run valid/complete, hypothesis inconclusive overall with a negative Qwen
+throughput cell, research value supporting, impact mechanism/workload boundary
+and additional local evidence. The separate cross-node question is unchanged.
+Close this matrix and retain the module default/optional stock path. Removing
+repeated prefix copying is a specific next transport candidate; this run does
+not establish the cause of the throughput loss. No unchanged rerun or
+model-specific arithmetic campaign is justified by these results.
+
+[Final restoration](../bench/results/vllm_uring_performance_20261013/final_restoration.json)
+removes the test runtime and26 owned build outputs after review, with no own
+model process/module/pins/GPU app and original boot/base/Workspace/Coder/WIP
+retained. Actual raw, package/build/source/commands, frozen references,
+qualification, bounded journal and endpoints remain retrievable.

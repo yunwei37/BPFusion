@@ -1,0 +1,31 @@
+{
+  "utc": "2026-10-13T04:46:39.900074+00:00",
+  "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167",
+  "module": false,
+  "pins": [],
+  "base_packages": {
+    "torch": "2.14.1",
+    "transformers": "5.19.0"
+  },
+  "temporary_runtime_retained": true,
+  "pgrep -af bench/vllm_serving.py|build/vllm_graph|build/qwen_graph_uring": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "nvidia-smi --query-gpu=name,driver_version,memory.used,clocks.sm,clocks.mem,temperature.gpu,power.draw --format=csv,noheader": {
+    "exit": 0,
+    "stdout": "NVIDIA GeForce RTX 5090, 610.57.04, 15 MiB, 172 MHz, 405 MHz, 40, 11.47 W\n",
+    "stderr": ""
+  },
+  "ps -p 1,10909 -o pid,comm,args": {
+    "exit": 0,
+    "stdout": "    PID COMMAND         COMMAND\n      1 coder           ./coder agent\n  10909 coder           ./coder agent --no-reap\n",
+    "stderr": ""
+  }
+}

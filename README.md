@@ -34,7 +34,7 @@ remain open.
 | `vllm_graph_trace` | Upstream optimized graphs/head, GPU prefill and tensor-batched decode | Same eBPF/kernel transport | Qualified optimized adapter; matched traced comparison |
 | `qwen_graph_user_network_wait` | Identical resident GPU computation | Efficient native userspace timed epoll and nonblocking send | Matched alternative mechanism |
 | `qwen_graph_uring` | Same HF graphs and GPU-controlled model generation | GPU-owned stock io_uring TCP, eBPF admission/reclamation | Optional multi-connection/streaming path; qualified on the current Linux7.3rc3/RTX5090 setup |
-| `vllm_graph_uring` | Same upstream optimized graphs, packed prefill and FIFO prefix release | Shared GPU-owned stock io_uring TCP and eBPF queue integration | Optional optimized adapter; complete strict correctness qualified, performance unmeasured |
+| `vllm_graph_uring` | Same upstream optimized graphs, packed prefill and FIFO prefix release | Shared GPU-owned stock io_uring TCP and eBPF queue integration | Optional optimized adapter; strict correctness and local comparison complete, no reliable performance gain |
 | `qwen_graph_control` | Same graph banks, host resumes after requests | Same eBPF/kernel transport | Dispatch ablation |
 | `qwen.cu`, Python HF and synthetic MLP paths | Earlier implementations with different maturity | See their individual findings | Historical references and controls |
 
@@ -63,8 +63,11 @@ on the existing qualified module path.
 The [optimized io_uring adapter](docs/findings/0041-vllm-io-uring.md) reuses the same
 transport with the existing vLLM computation. Both models pass the complete
 622-request strict protocol and independent batch-history replay. Shared
-half-close/final-response-order fixes retain the initial failed run; matched
-latency, throughput and worker CPU measurements are the next step.
+half-close/final-response-order fixes retain the initial failed run. The
+[completed ordinary comparison](docs/findings/0042-vllm-io-uring-performance.md)
+finds no reliable stock advantage, lower Qwen long-output throughput and
+about31–32 times the native known-worker CPU cost in gen64/c8. This measures
+specific worker brackets, not total service CPU; the module remains default.
 
 ## Service and compute boundary
 

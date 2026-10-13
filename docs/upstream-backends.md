@@ -782,3 +782,9 @@ reuses the same transport header with the existing vLLM graph adapter. Both
 architectures pass complete strict independent batch-history replay and the
 shared-header HF lifecycle regressions. This expands the tested adapter
 integration, not arbitrary backend support or measured performance/CPU benefit.
+
+The following [matched optimized stock-TCP comparison](findings/0042-vllm-io-uring-performance.md)
+now completes the local latency/throughput/known-worker CPU measurement. It
+finds no reliable stock advantage, a negative Qwen long-throughput effect and
+substantially higher measured worker CPU. The module-free implementation is
+a qualified option, not evidence of CPU removal or broad serving superiority.

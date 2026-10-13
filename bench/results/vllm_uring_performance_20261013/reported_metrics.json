@@ -1,0 +1,1302 @@
+{
+  "qwen": [
+    {
+      "event": "coverage",
+      "requests": 4752,
+      "tokens": 149904,
+      "actual_batches": null
+    },
+    {
+      "event": "metric",
+      "mode": "uring",
+      "gen": 1,
+      "concurrency": 1,
+      "requests": 384,
+      "ttft_mean_ms": 1.4061847421875,
+      "ttft_p50_ms": 1.427117,
+      "ttft_p99_ms": 1.537549,
+      "tpot_mean_ms": null,
+      "completion_mean_ms": 1.4061847421875,
+      "tokens_per_s": 700.4669782455368,
+      "known_worker_cpu_s_per_request": 0.0014513172213541667,
+      "executor_cpu_s_per_request": 0.0014513172213541667,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "event": "metric",
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "requests": 384,
+      "ttft_mean_ms": 1.3656726067708334,
+      "ttft_p50_ms": 1.352723,
+      "ttft_p99_ms": 1.634627,
+      "tpot_mean_ms": null,
+      "completion_mean_ms": 1.3656726067708334,
+      "tokens_per_s": 725.4375004275954,
+      "known_worker_cpu_s_per_request": 4.641611979166667e-05,
+      "executor_cpu_s_per_request": 4.641611979166667e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "event": "metric",
+      "mode": "kernel",
+      "gen": 1,
+      "concurrency": 1,
+      "requests": 384,
+      "ttft_mean_ms": 1.3964908541666667,
+      "ttft_p50_ms": 1.399282,
+      "ttft_p99_ms": 1.67877,
+      "tpot_mean_ms": null,
+      "completion_mean_ms": 1.3964908541666667,
+      "tokens_per_s": 710.7026300512902,
+      "known_worker_cpu_s_per_request": 3.1064385416666666e-05,
+      "executor_cpu_s_per_request": 1.01583671875e-05,
+      "kernel_tx_cpu_s_per_request": 2.0906018229166667e-05
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "ttft_ms",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        0.048639109375000045,
+        -0.12119604687499996,
+        -0.041564843750000025,
+        0.0068113906250000245,
+        -0.025813828124999993,
+        -0.10994859374999999
+      ],
+      "mean": -0.04051213541666665,
+      "nominal_t95": [
+        -0.10970476943222697,
+        0.02868049859889367
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "completion_ms",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        0.048639109375000045,
+        -0.12119604687499996,
+        -0.041564843750000025,
+        0.0068113906250000245,
+        -0.025813828124999993,
+        -0.10994859374999999
+      ],
+      "mean": -0.04051213541666665,
+      "nominal_t95": [
+        -0.10970476943222697,
+        0.02868049859889367
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "tokens_per_s",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        25.099104309258564,
+        -67.86812979418005,
+        -26.512839430043414,
+        -0.9990694224093204,
+        -16.399889420632007,
+        -63.14230933434533
+      ],
+      "mean": -24.97052218205859,
+      "nominal_t95": [
+        -62.67644711272648,
+        12.7354027486093
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "known_worker_cpu_s_per_request",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        -0.0013395134062499999,
+        -0.00144511603125,
+        -0.001452613109375,
+        -0.0013078455625000001,
+        -0.0014496465624999999,
+        -0.0014346719375
+      ],
+      "mean": -0.0014049011015625,
+      "nominal_t95": [
+        -0.0014720608232886396,
+        -0.0013377413798363604
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "executor_cpu_s_per_request",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        -0.0013395134062499999,
+        -0.00144511603125,
+        -0.001452613109375,
+        -0.0013078455625000001,
+        -0.0014496465624999999,
+        -0.0014346719375
+      ],
+      "mean": -0.0014049011015625,
+      "nominal_t95": [
+        -0.0014720608232886396,
+        -0.0013377413798363604
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "kernel_tx_cpu_s_per_request",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "mean": 0.0,
+      "nominal_t95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "ttft_ms",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        0.042222062500000046,
+        -0.13049984375,
+        -0.017309281249999975,
+        0.1315740781250001,
+        0.017835296874999962,
+        -0.10198564062499993
+      ],
+      "mean": -0.0096938880208333,
+      "nominal_t95": [
+        -0.11098438192857583,
+        0.09159660588690922
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "completion_ms",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        0.042222062500000046,
+        -0.13049984375,
+        -0.017309281249999975,
+        0.1315740781250001,
+        0.017835296874999962,
+        -0.10198564062499993
+      ],
+      "mean": -0.0096938880208333,
+      "nominal_t95": [
+        -0.11098438192857583,
+        0.09159660588690922
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "tokens_per_s",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        21.790036651188075,
+        -75.4423992807574,
+        -15.641701732914498,
+        64.64936785873806,
+        3.7153206072913463,
+        -60.484534938065394
+      ],
+      "mean": -10.235651805753301,
+      "nominal_t95": [
+        -65.03616417433088,
+        44.56486056282428
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "known_worker_cpu_s_per_request",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        -0.001356757625,
+        -0.0014661540781249999,
+        -0.001467359109375,
+        -0.0013225406875000002,
+        -0.0014613164531249998,
+        -0.0014473890625
+      ],
+      "mean": -0.0014202528359375,
+      "nominal_t95": [
+        -0.001487166725764939,
+        -0.0013533389461100611
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "executor_cpu_s_per_request",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        -0.001376799453125,
+        -0.00148671471875,
+        -0.001487812515625,
+        -0.00134420078125,
+        -0.001485077984375,
+        -0.0014663476718749999
+      ],
+      "mean": -0.0014411588541666665,
+      "nominal_t95": [
+        -0.0015081228281827897,
+        -0.0013741948801505434
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "kernel_tx_cpu_s_per_request",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        2.0041828125e-05,
+        2.0560640625e-05,
+        2.045340625e-05,
+        2.166009375e-05,
+        2.376153125e-05,
+        1.8958609375e-05
+      ],
+      "mean": 2.0906018229166667e-05,
+      "nominal_t95": [
+        1.9176138657094647e-05,
+        2.2635897801238687e-05
+      ]
+    },
+    {
+      "event": "metric",
+      "mode": "uring",
+      "gen": 64,
+      "concurrency": 8,
+      "requests": 384,
+      "ttft_mean_ms": 2.195585028645833,
+      "ttft_p50_ms": 2.288057,
+      "ttft_p99_ms": 3.228096,
+      "tpot_mean_ms": 1.7493106255787036,
+      "completion_mean_ms": 112.40215444010417,
+      "tokens_per_s": 4547.287626148253,
+      "known_worker_cpu_s_per_request": 0.0142122841953125,
+      "executor_cpu_s_per_request": 0.0142122841953125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "event": "metric",
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "requests": 384,
+      "ttft_mean_ms": 2.2586051067708333,
+      "ttft_p50_ms": 2.393803,
+      "ttft_p99_ms": 3.259218,
+      "tpot_mean_ms": 1.691358208994709,
+      "completion_mean_ms": 108.8141722734375,
+      "tokens_per_s": 4702.740965973502,
+      "known_worker_cpu_s_per_request": 0.00044291525,
+      "executor_cpu_s_per_request": 0.00044291525,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "event": "metric",
+      "mode": "kernel",
+      "gen": 64,
+      "concurrency": 8,
+      "requests": 384,
+      "ttft_mean_ms": 2.293592596354167,
+      "ttft_p50_ms": 2.413715,
+      "ttft_p99_ms": 3.119928,
+      "tpot_mean_ms": 1.701140593915344,
+      "completion_mean_ms": 109.46545001302083,
+      "tokens_per_s": 4675.09229911335,
+      "known_worker_cpu_s_per_request": 0.00032913511979166664,
+      "executor_cpu_s_per_request": 0.00010105713802083333,
+      "kernel_tx_cpu_s_per_request": 0.00022807798177083334
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "ttft_ms",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        0.19681518749999993,
+        -0.14755657812499967,
+        0.10929348437499975,
+        0.17409839062499977,
+        0.08633921875000006,
+        -0.04086923437500012
+      ],
+      "mean": 0.06302007812499995,
+      "nominal_t95": [
+        -0.07625078672331444,
+        0.20229094297331435
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "completion_ms",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -1.9618743125000009,
+        -7.970430421875008,
+        -1.243776312499989,
+        -2.0825143281250007,
+        -1.0786545937500023,
+        -7.190643031249991
+      ],
+      "mean": -3.587982166666665,
+      "nominal_t95": [
+        -6.86946871438173,
+        -0.30649561895160016
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "tokens_per_s",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -104.54452497658713,
+        -336.1907522478723,
+        -54.00865815410998,
+        -88.28814630569286,
+        -50.93971347808565,
+        -298.7482437891431
+      ],
+      "mean": -155.4533398252485,
+      "nominal_t95": [
+        -289.44982087258467,
+        -21.456858777912316
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "tpot_ms",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.0342649126984127,
+        -0.12417260069444458,
+        -0.02147729836309531,
+        -0.03581924950396842,
+        -0.018491965277777744,
+        -0.11348847296626974
+      ],
+      "mean": -0.05795241658399475,
+      "nominal_t95": [
+        -0.10807964720920996,
+        -0.007825185958779547
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "known_worker_cpu_s_per_request",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.013448798593749998,
+        -0.014179055015625,
+        -0.0140086033125,
+        -0.013595337640625,
+        -0.01334417653125,
+        -0.014040242578125
+      ],
+      "mean": -0.013769368945312499,
+      "nominal_t95": [
+        -0.014136608183204417,
+        -0.013402129707420581
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "executor_cpu_s_per_request",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.013448798593749998,
+        -0.014179055015625,
+        -0.0140086033125,
+        -0.013595337640625,
+        -0.01334417653125,
+        -0.014040242578125
+      ],
+      "mean": -0.013769368945312499,
+      "nominal_t95": [
+        -0.014136608183204417,
+        -0.013402129707420581
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "kernel_tx_cpu_s_per_request",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "mean": 0.0,
+      "nominal_t95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "ttft_ms",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        0.2885648125000002,
+        -0.023531828124999876,
+        0.16925529687499985,
+        0.1976080312499997,
+        0.048806531249999896,
+        -0.09265743750000022
+      ],
+      "mean": 0.09800756770833326,
+      "nominal_t95": [
+        -0.053964530177823225,
+        0.24997966559448975
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "completion_ms",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -2.4002497656250057,
+        -7.805520843750003,
+        -1.2180509374999957,
+        2.335051890624996,
+        -1.3791308281249997,
+        -7.152326078125
+      ],
+      "mean": -2.9367044270833347,
+      "nominal_t95": [
+        -6.999412388285767,
+        1.1260035341190973
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "tokens_per_s",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -125.28272956209003,
+        -329.96611621076136,
+        -51.26777665519603,
+        99.15671681089316,
+        -61.96458907968827,
+        -297.5035430937414
+      ],
+      "mean": -127.80467296509732,
+      "nominal_t95": [
+        -297.91531017494117,
+        42.30596424474655
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "tpot_ms",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.04267959647817454,
+        -0.12352363516865084,
+        -0.02202073387896819,
+        0.033927680307539676,
+        -0.022665672371031675,
+        -0.11205823239087298
+      ],
+      "mean": -0.04817003166335976,
+      "nominal_t95": [
+        -0.1108983825529173,
+        0.014558319226197783
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "known_worker_cpu_s_per_request",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.0135973006875,
+        -0.014278484578125,
+        -0.01414429159375,
+        -0.013681154859375,
+        -0.01343078059375,
+        -0.014166882140625
+      ],
+      "mean": -0.013883149075520834,
+      "nominal_t95": [
+        -0.014256293396678424,
+        -0.013510004754363243
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "executor_cpu_s_per_request",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.013806296890625,
+        -0.014524773078125,
+        -0.014376070484375,
+        -0.013923799875,
+        -0.013664503609375,
+        -0.01437191840625
+      ],
+      "mean": -0.014111227057291667,
+      "nominal_t95": [
+        -0.014485743430177007,
+        -0.013736710684406326
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "kernel_tx_cpu_s_per_request",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        0.000208996203125,
+        0.0002462885,
+        0.000231778890625,
+        0.000242645015625,
+        0.000233723015625,
+        0.000205036265625
+      ],
+      "mean": 0.00022807798177083334,
+      "nominal_t95": [
+        0.0002099958704499624,
+        0.00024616009309170425
+      ]
+    }
+  ],
+  "smol": [
+    {
+      "event": "coverage",
+      "requests": 4752,
+      "tokens": 149904,
+      "actual_batches": null
+    },
+    {
+      "event": "metric",
+      "mode": "uring",
+      "gen": 1,
+      "concurrency": 1,
+      "requests": 384,
+      "ttft_mean_ms": 1.0850111875,
+      "ttft_p50_ms": 1.07391,
+      "ttft_p99_ms": 1.355643,
+      "tpot_mean_ms": null,
+      "completion_mean_ms": 1.0850111875,
+      "tokens_per_s": 913.4705940750833,
+      "known_worker_cpu_s_per_request": 0.001109788859375,
+      "executor_cpu_s_per_request": 0.001109788859375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "event": "metric",
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "requests": 384,
+      "ttft_mean_ms": 1.1662084192708333,
+      "ttft_p50_ms": 1.154667,
+      "ttft_p99_ms": 1.446561,
+      "tpot_mean_ms": null,
+      "completion_mean_ms": 1.1662084192708333,
+      "tokens_per_s": 849.7766221414815,
+      "known_worker_cpu_s_per_request": 3.890363802083333e-05,
+      "executor_cpu_s_per_request": 3.890363802083333e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "event": "metric",
+      "mode": "kernel",
+      "gen": 1,
+      "concurrency": 1,
+      "requests": 384,
+      "ttft_mean_ms": 1.1429839557291666,
+      "ttft_p50_ms": 1.130118,
+      "ttft_p99_ms": 1.425817,
+      "tpot_mean_ms": null,
+      "completion_mean_ms": 1.1429839557291666,
+      "tokens_per_s": 864.4221487488293,
+      "known_worker_cpu_s_per_request": 2.6127583333333334e-05,
+      "executor_cpu_s_per_request": 8.707453125e-06,
+      "kernel_tx_cpu_s_per_request": 1.7420130208333332e-05
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "ttft_ms",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        0.08563404687500009,
+        -0.11525253125000012,
+        0.1657532343749999,
+        0.12133429687499997,
+        0.1459961875000002,
+        0.08371815625000001
+      ],
+      "mean": 0.08119723177083334,
+      "nominal_t95": [
+        -0.025389639148173687,
+        0.18778410268984036
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "completion_ms",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        0.08563404687500009,
+        -0.11525253125000012,
+        0.1657532343749999,
+        0.12133429687499997,
+        0.1459961875000002,
+        0.08371815625000001
+      ],
+      "mean": 0.08119723177083334,
+      "nominal_t95": [
+        -0.025389639148173687,
+        0.18778410268984036
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "tokens_per_s",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        61.84235133524294,
+        -99.41943958373213,
+        136.92504223826768,
+        89.3184899756468,
+        114.81403890414208,
+        78.68334873204401
+      ],
+      "mean": 63.693971933601894,
+      "nominal_t95": [
+        -24.69164056757007,
+        152.07958443477386
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "known_worker_cpu_s_per_request",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        -0.00112607334375,
+        -0.001174621125,
+        -0.000997979,
+        -0.0010442591875,
+        -0.0010972657812499999,
+        -0.000985112890625
+      ],
+      "mean": -0.0010708852213541667,
+      "nominal_t95": [
+        -0.0011492548883651065,
+        -0.000992515554343227
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "executor_cpu_s_per_request",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        -0.00112607334375,
+        -0.001174621125,
+        -0.000997979,
+        -0.0010442591875,
+        -0.0010972657812499999,
+        -0.000985112890625
+      ],
+      "mean": -0.0010708852213541667,
+      "nominal_t95": [
+        -0.0011492548883651065,
+        -0.000992515554343227
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "kernel_tx_cpu_s_per_request",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "mean": 0.0,
+      "nominal_t95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "ttft_ms",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        0.09447626562500022,
+        -0.09998917187500012,
+        0.09020304687499991,
+        0.09287240624999993,
+        0.07232184375000017,
+        0.09795221874999993
+      ],
+      "mean": 0.05797276822916667,
+      "nominal_t95": [
+        -0.023782926283208182,
+        0.13972846274154152
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "completion_ms",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        0.09447626562500022,
+        -0.09998917187500012,
+        0.09020304687499991,
+        0.09287240624999993,
+        0.07232184375000017,
+        0.09795221874999993
+      ],
+      "mean": 0.05797276822916667,
+      "nominal_t95": [
+        -0.023782926283208182,
+        0.13972846274154152
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "tokens_per_s",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        72.48334889204057,
+        -83.61178903495409,
+        88.55377492863101,
+        68.3081400073562,
+        60.683070655463325,
+        87.87412650898784
+      ],
+      "mean": 49.048445326254146,
+      "nominal_t95": [
+        -20.122559522093788,
+        118.21945017460209
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "known_worker_cpu_s_per_request",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        -0.001141896453125,
+        -0.0011870094375000001,
+        -0.001012401875,
+        -0.0010586576875,
+        -0.0011029842812499998,
+        -0.000999017921875
+      ],
+      "mean": -0.0010836612760416666,
+      "nominal_t95": [
+        -0.0011612246317432705,
+        -0.0010060979203400627
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "executor_cpu_s_per_request",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        -0.0011543490625,
+        -0.0012046312812500001,
+        -0.00103096378125,
+        -0.001076637796875,
+        -0.0011230049062499999,
+        -0.0010169016093749999
+      ],
+      "mean": -0.00110108140625,
+      "nominal_t95": [
+        -0.0011776842694273054,
+        -0.0010244785430726948
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "kernel_tx_cpu_s_per_request",
+      "gen": 1,
+      "concurrency": 1,
+      "differences": [
+        1.2452609375e-05,
+        1.762184375e-05,
+        1.856190625e-05,
+        1.7980109375e-05,
+        2.0020625e-05,
+        1.78836875e-05
+      ],
+      "mean": 1.7420130208333332e-05,
+      "nominal_t95": [
+        1.4711380923331425e-05,
+        2.0128879493335237e-05
+      ]
+    },
+    {
+      "event": "metric",
+      "mode": "uring",
+      "gen": 64,
+      "concurrency": 8,
+      "requests": 384,
+      "ttft_mean_ms": 1.6930871197916666,
+      "ttft_p50_ms": 1.764367,
+      "ttft_p99_ms": 2.391303,
+      "tpot_mean_ms": 1.4798517808366403,
+      "completion_mean_ms": 94.92374931250001,
+      "tokens_per_s": 5374.508042714962,
+      "known_worker_cpu_s_per_request": 0.012040270703125,
+      "executor_cpu_s_per_request": 0.012040270703125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "event": "metric",
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "requests": 384,
+      "ttft_mean_ms": 1.8163514479166667,
+      "ttft_p50_ms": 1.88387,
+      "ttft_p99_ms": 2.819956,
+      "tpot_mean_ms": 1.4645858468915345,
+      "completion_mean_ms": 94.08525980208333,
+      "tokens_per_s": 5444.230784080185,
+      "known_worker_cpu_s_per_request": 0.00039441436979166663,
+      "executor_cpu_s_per_request": 0.00039441436979166663,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "event": "metric",
+      "mode": "kernel",
+      "gen": 64,
+      "concurrency": 8,
+      "requests": 384,
+      "ttft_mean_ms": 1.7815531588541667,
+      "ttft_p50_ms": 1.844087,
+      "ttft_p99_ms": 3.167533,
+      "tpot_mean_ms": 1.4663825517526454,
+      "completion_mean_ms": 94.16365391927083,
+      "tokens_per_s": 5438.512919280909,
+      "known_worker_cpu_s_per_request": 0.00029877840104166665,
+      "executor_cpu_s_per_request": 8.854523177083333e-05,
+      "kernel_tx_cpu_s_per_request": 0.00021023316927083334
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "ttft_ms",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        0.2425527812499999,
+        -0.059544749999999924,
+        0.29139254687500005,
+        0.25055004687499993,
+        0.03143457812500006,
+        -0.016799234375000083
+      ],
+      "mean": 0.12326432812499999,
+      "nominal_t95": [
+        -0.039427408882237475,
+        0.2859560651322375
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "completion_ms",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -1.5285817187500044,
+        -9.799784062499995,
+        3.841392875000011,
+        3.648052015624998,
+        -0.9599009218750041,
+        -0.23211525000000677
+      ],
+      "mean": -0.8384895104166669,
+      "nominal_t95": [
+        -6.047620202181337,
+        4.370641181348002
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "tokens_per_s",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -99.12338419687057,
+        -548.8708943302945,
+        167.10916732952683,
+        164.29639340908125,
+        -65.57604314730543,
+        -36.171687255470715
+      ],
+      "mean": -69.72274136522219,
+      "nominal_t95": [
+        -344.3640892623906,
+        204.91860653194624
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "tpot_ms",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.02811324603174592,
+        -0.15460697321428563,
+        0.05634921155753947,
+        0.05392860267857147,
+        -0.01573548412698411,
+        -0.0034177145337301873
+      ],
+      "mean": -0.015265933945105817,
+      "nominal_t95": [
+        -0.0960631995789039,
+        0.06553133168869225
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "known_worker_cpu_s_per_request",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.011354556046875,
+        -0.012421313312500001,
+        -0.011771395375,
+        -0.011745561703124999,
+        -0.011288482015625,
+        -0.011293829546875
+      ],
+      "mean": -0.011645856333333333,
+      "nominal_t95": [
+        -0.01210654061574312,
+        -0.011185172050923545
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "executor_cpu_s_per_request",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.011354556046875,
+        -0.012421313312500001,
+        -0.011771395375,
+        -0.011745561703124999,
+        -0.011288482015625,
+        -0.011293829546875
+      ],
+      "mean": -0.011645856333333333,
+      "nominal_t95": [
+        -0.01210654061574312,
+        -0.011185172050923545
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring",
+      "baseline": "userspace",
+      "candidate": "uring",
+      "metric": "kernel_tx_cpu_s_per_request",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "mean": 0.0,
+      "nominal_t95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "ttft_ms",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        0.13514879687500003,
+        -0.08907274999999992,
+        0.09878623437499989,
+        0.007035687499999943,
+        0.3714362656249999,
+        0.00746200000000008
+      ],
+      "mean": 0.08846603906249999,
+      "nominal_t95": [
+        -0.07883290489879267,
+        0.25576498302379264
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "completion_ms",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -1.4452922499999943,
+        -9.617131781249995,
+        -3.6678289062499942,
+        3.6843444843749893,
+        7.316754796874989,
+        -0.83141870312501
+      ],
+      "mean": -0.7600953932291693,
+      "nominal_t95": [
+        -6.921724185962272,
+        5.401533399503934
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "tokens_per_s",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -91.95183706111584,
+        -539.0406720804858,
+        -254.46302097142416,
+        168.34672901117665,
+        404.8223838035019,
+        -71.74284209733105
+      ],
+      "mean": -64.00487656594639,
+      "nominal_t95": [
+        -407.7845159334795,
+        279.7747628015867
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "tpot_ms",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.025086365823412615,
+        -0.15123903224206336,
+        -0.05978754191468272,
+        0.058369980902777785,
+        0.11024315128968243,
+        -0.013315566716269878
+      ],
+      "mean": -0.013469229083994727,
+      "nominal_t95": [
+        -0.10933793061522007,
+        0.08239947244723062
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "known_worker_cpu_s_per_request",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.01143478528125,
+        -0.012504912250000002,
+        -0.011891264703125,
+        -0.01185143184375,
+        -0.011361111890625,
+        -0.011405447843750001
+      ],
+      "mean": -0.011741492302083333,
+      "nominal_t95": [
+        -0.012203485487171897,
+        -0.01127949911699477
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "executor_cpu_s_per_request",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        -0.011637087109375,
+        -0.012724373953125001,
+        -0.01210375675,
+        -0.012065942296875,
+        -0.011582673703124999,
+        -0.011596519015625001
+      ],
+      "mean": -0.011951725471354167,
+      "nominal_t95": [
+        -0.01241975795481631,
+        -0.011483692987892025
+      ]
+    },
+    {
+      "event": "paired_difference_favoring_uring-vs-module",
+      "baseline": "kernel",
+      "candidate": "uring",
+      "metric": "kernel_tx_cpu_s_per_request",
+      "gen": 64,
+      "concurrency": 8,
+      "differences": [
+        0.000202301828125,
+        0.000219461703125,
+        0.000212492046875,
+        0.000214510453125,
+        0.0002215618125,
+        0.000191071171875
+      ],
+      "mean": 0.00021023316927083334,
+      "nominal_t95": [
+        0.00019811239210106935,
+        0.00022235394644059734
+      ]
+    }
+  ]
+}

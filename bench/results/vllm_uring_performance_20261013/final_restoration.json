@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-13T04:53:52.015209+00:00",
+  "removed_root": "/tmp/bpfusion-vllm-uring-q26fqorc",
+  "owner": {
+    "root": "/tmp/bpfusion-vllm-uring-q26fqorc",
+    "head": "0af41e4c5fb9de59ee857c7a3618875eac57839f",
+    "workspace": "yunwei356/bpfusion-dev"
+  },
+  "root_absent": true,
+  "removed_owned_build_outputs": [
+    "build/vllm_graph",
+    "build/vllm_graph.so",
+    "build/vllm_graph.so.o",
+    "build/vllm_graph.so.dlink.o",
+    "build/vllm_graph_user_network_wait",
+    "build/vllm_graph_user_network_wait.so",
+    "build/vllm_graph_user_network_wait.so.o",
+    "build/vllm_graph_user_network_wait.so.dlink.o",
+    "build/vllm_graph_trace",
+    "build/vllm_graph_trace.so",
+    "build/vllm_graph_trace.so.o",
+    "build/vllm_graph_trace.so.dlink.o",
+    "build/vllm_graph_user_network_wait_trace",
+    "build/vllm_graph_user_network_wait_trace.so",
+    "build/vllm_graph_user_network_wait_trace.so.o",
+    "build/vllm_graph_user_network_wait_trace.so.dlink.o",
+    "build/vllm_graph_uring",
+    "build/vllm_graph_uring.so",
+    "build/vllm_graph_uring.so.o",
+    "build/vllm_graph_uring.so.dlink.o",
+    "build/vllm_graph_uring_trace",
+    "build/vllm_graph_uring_trace.so",
+    "build/vllm_graph_uring_trace.so.o",
+    "build/vllm_graph_uring_trace.so.dlink.o",
+    "build/qwen_graph_uring",
+    "build/qwen_graph_uring.so"
+  ],
+  "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167",
+  "base_packages": {
+    "torch": "2.14.1",
+    "transformers": "5.19.0"
+  },
+  "module_absent": true,
+  "pins": [],
+  "pgrep -af bench/vllm_serving.py|build/vllm_graph|build/qwen_graph_uring": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "ps -p 1,10909 -o pid,comm,args": {
+    "exit": 0,
+    "stdout": "    PID COMMAND         COMMAND\n      1 coder           ./coder agent\n  10909 coder           ./coder agent --no-reap\n",
+    "stderr": ""
+  },
+  "git status --short --branch": {
+    "exit": 0,
+    "stdout": "## main...origin/main\n?? bench/results/vllm_uring_performance_20261013/Workspace_after_full.json\n?? bench/results/vllm_uring_performance_20261013/after_full_receipt.json\n?? bench/results/vllm_uring_performance_20261013/full_journal.json\n?? bench/results/vllm_uring_performance_20261013/output_agreement.json\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance.jsonl\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance.stderr\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance.stdout\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_analysis.stderr\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_analysis.stdout\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p0_kernel.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p0_uring.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p0_userspace.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p1_kernel.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p1_uring.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p1_userspace.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p2_kernel.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p2_uring.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p2_userspace.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p3_kernel.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p3_uring.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p3_userspace.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p4_kernel.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p4_uring.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p4_userspace.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p5_kernel.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p5_uring.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/qwen_transport_performance_p5_userspace.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/reported_metrics.json\n?? bench/results/vllm_uring_performance_20261013/result-review.md\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance.jsonl\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance.stderr\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance.stdout\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_analysis.stderr\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_analysis.stdout\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p0_kernel.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p0_uring.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p0_userspace.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p1_kernel.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p1_uring.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p1_userspace.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p2_kernel.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p2_uring.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p2_userspace.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p3_kernel.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p3_uring.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p3_userspace.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p4_kernel.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p4_uring.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p4_userspace.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p5_kernel.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p5_uring.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/smol_transport_performance_p5_userspace.stdout.txt\n?? bench/results/vllm_uring_performance_20261013/transport_full_source_commit.txt\n?? bench/results/vllm_uring_performance_20261013/transport_performance_commands.json\n?? bench/results/vllm_uring_performance_20261013/transport_performance_pipeline.py\n?? bench/results/vllm_uring_performance_20261013/transport_performance_pipeline.stderr\n?? bench/results/vllm_uring_performance_20261013/transport_performance_pipeline.stdout\n?? bench/results/vllm_uring_performance_20261013/transport_performance_status.json\n?? docs/findings/0042-vllm-io-uring-performance.md\n?? tools/setup_env.sh\n",
+    "stderr": ""
+  }
+}

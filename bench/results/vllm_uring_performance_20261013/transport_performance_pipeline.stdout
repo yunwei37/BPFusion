@@ -1,0 +1,5 @@
+START qwen_transport_performance 2026-10-13T04:26:46.190011+00:00
+{"name": "qwen_transport_performance", "cmd": ["/tmp/bpfusion-vllm-uring-q26fqorc/runtime/bin/python", "bench/vllm_serving.py", "--transport-comparison", "--untraced", "--reference-path", "/tmp/bpfusion-vllm-uring-q26fqorc/transport_frozen_references.json", "--model", "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775", "--output", "/tmp/bpfusion-vllm-uring-q26fqorc/qwen_transport_performance.jsonl"], "exit": 0, "analysis_exit": 0}
+START smol_transport_performance 2026-10-13T04:35:43.713221+00:00
+{"name": "smol_transport_performance", "cmd": ["/tmp/bpfusion-vllm-uring-q26fqorc/runtime/bin/python", "bench/vllm_serving.py", "--transport-comparison", "--untraced", "--reference-path", "/tmp/bpfusion-vllm-uring-q26fqorc/transport_frozen_references.json", "--model", "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "--output", "/tmp/bpfusion-vllm-uring-q26fqorc/smol_transport_performance.jsonl"], "exit": 0, "analysis_exit": 0}
+PERFORMANCE_PIPELINE_TERMINAL
