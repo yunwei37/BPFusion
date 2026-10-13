@@ -1,0 +1,32 @@
+[
+  {
+    "name": "qwen",
+    "cmd": [
+      "/tmp/bpfusion-vllm-uring-q26fqorc/runtime/bin/python",
+      "bench/vllm_serving.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--uring",
+      "--correctness",
+      "--output",
+      "/tmp/bpfusion-vllm-uring-q26fqorc/qwen_correctness_retry1.jsonl"
+    ],
+    "exit": 0,
+    "output": "/tmp/bpfusion-vllm-uring-q26fqorc/qwen_correctness_retry1.jsonl"
+  },
+  {
+    "name": "smol",
+    "cmd": [
+      "/tmp/bpfusion-vllm-uring-q26fqorc/runtime/bin/python",
+      "bench/vllm_serving.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--uring",
+      "--correctness",
+      "--output",
+      "/tmp/bpfusion-vllm-uring-q26fqorc/smol_correctness_retry1.jsonl"
+    ],
+    "exit": 0,
+    "output": "/tmp/bpfusion-vllm-uring-q26fqorc/smol_correctness_retry1.jsonl"
+  }
+]

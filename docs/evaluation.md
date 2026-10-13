@@ -386,3 +386,20 @@ separate. Source versions/initial failure remain. Root self-review and public
 build tests pass; default loader creates no new hooks/maps. No timing/CPU or
 independent-review claim. Optimized-backend integration and matched benefit,
 overload/backpressure/partial-send/device-error/extended operation remain open.
+
+## Optimized stock-TCP integration qualification
+
+[Finding0041](findings/0041-vllm-io-uring.md) connects the shared GPU-owned
+io_uring transport to unchanged upstream packed/prefix vLLM computation. Both
+models pass622 strict requests/22224 independently replayed valid tokens each,
+all batches1..8, wrap/mixed/pipeline-half-close/rejections and teardown. Final
+ring/BPF counters have no drops, pending work or reservations; all native
+serving network/wake syscall counts are0. Initial Qwen mixed-workload timeout
+at607 requests stays separate; no missing-request drop count was captured.
+Shared EOF/FIFO-final repairs also pass the unchanged two-model HF lifecycle
+driver. Root reconstruction passes; no fresh independent scientific review
+or performance/CPU/novelty claim. Role dependency-only, necessary setup for
+the next matched optimized transport comparison. The existing module default
+and original Workspace/base runtime/WIP remain unchanged. Temporary runtime
+retained for the following benchmark, with post-run no-process/module/pin
+evidence; complete resource removal remains pending that benchmark.

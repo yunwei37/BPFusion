@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/workspaces/repository/bench/vllm_serving.py", line 159, in main
+    concurrent(8,4,"mixed",mixed=True)
+  File "/workspaces/repository/bench/vllm_serving.py", line 155, in concurrent
+    for future in futures:future.result()
+                          ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/usr/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/repository/bench/vllm_serving.py", line 152, in lane
+    exchange(ids,gen,kind,client=client)
+  File "/workspaces/repository/bench/vllm_serving.py", line 132, in exchange
+    return keep(receive(client,ids,gen,marker,http,bad),kind)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/repository/bench/vllm_serving.py", line 110, in receive
+    chunk=client.recv(1);assert chunk,"short HTTP header";head+=chunk
+          ^^^^^^^^^^^^^^
+TimeoutError: timed out

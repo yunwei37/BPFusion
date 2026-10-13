@@ -776,3 +776,9 @@ dedicated userspace data-path core as first by themselves. The unresolved
 BPFusion claim must identify the Linux/eBPF integration and its demonstrated
 benefit or portability boundary; current null-inclusive transport results do
 not supply a speedup claim.
+
+The [optimized stock io_uring integration](findings/0041-vllm-io-uring.md) now
+reuses the same transport header with the existing vLLM graph adapter. Both
+architectures pass complete strict independent batch-history replay and the
+shared-header HF lifecycle regressions. This expands the tested adapter
+integration, not arbitrary backend support or measured performance/CPU benefit.

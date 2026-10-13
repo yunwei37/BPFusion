@@ -1,0 +1,25 @@
+{
+  "uname -r": {
+    "exit": 0,
+    "stdout": "7.3.0-070300rc3-generic\n",
+    "stderr": ""
+  },
+  "nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "ps -p 1,10909 -o pid,comm,args": {
+    "exit": 0,
+    "stdout": "    PID COMMAND         COMMAND\n      1 coder           ./coder agent\n  10909 coder           ./coder agent --no-reap\n",
+    "stderr": ""
+  },
+  "git status --short --branch": {
+    "exit": 0,
+    "stdout": "## main...origin/main\n M Makefile\n M bench/vllm_serving.py\n M executor/io_uring_tcp.h\n M executor/vllm_graph.cu\n?? bench/results/vllm_uring_qualification_20261013/\n?? tools/setup_env.sh\n",
+    "stderr": ""
+  },
+  "module_exists": false,
+  "pins": [],
+  "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167"
+}

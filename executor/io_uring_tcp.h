@@ -67,7 +67,7 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
     constexpr unsigned stride=4160,txstride=512;
     for(unsigned i=0;i<capacity;++i)conns[i]={-1,i+1<capacity?(int)i+1:-1,-1,-1,0,0,0,0,0};
     int free=0,active=-1,accepting=-1;
-    unsigned connections=0,seen=0;bool stopping=false,cancelled=false,cancel_done=false;
+    unsigned connections=0,seen=0,next_final=0;bool stopping=false,cancelled=false,cancel_done=false;
     IoRequest requests[BF_LLM_SLOTS]={};
     for(auto &r:requests){r.conn=-1;r.next=-1;}
     for(;;) {
@@ -88,18 +88,22 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
             }else if(kind==2) {
                 auto &c=conns[index];c.receiving=0;
                 if(e.res>0)out->received++;
-                else {c.eof=e.res==0;c.dead=1;}
+                else if(e.res==0)c.eof=1;
+                else c.dead=1;
             }else if(kind==3 || kind==7) {
                 unsigned i=index%BF_LLM_SLOTS;auto &r=requests[i];
                 if(!r.active || !r.busy || r.tag!=e.user_data){out->error=2;continue;}
                 r.busy=0;
                 if((e.user_data>>48)==BF_IO_ABORT_TAG) {
-                    if(e.res!=0)out->error=3;else io_retire(requests,conns,i,out,true);
+                    if(e.res!=0||r.seq!=next_final)out->error=3;else {io_retire(requests,conns,i,out,true);next_final++;}
                 }else if(e.res>0) {
                     r.sent+=e.res;r.bytes+=e.res;out->bytes+=e.res;r.sends++;out->sends++;
                     if(!r.final)r.early++;
                     unsigned expected=(e.user_data>>32)&0xffff;
-                    if(kind==7 && (unsigned)e.res==expected)io_retire(requests,conns,i,out,false);
+                    if(kind==7 && (unsigned)e.res==expected) {
+                        if(r.seq!=next_final)out->error=3;
+                        else {io_retire(requests,conns,i,out,false);next_final++;}
+                    }
                 }else {if(r.conn>=0)conns[r.conn].dead=1;}
             }else if(kind==4) {
                 auto &c=conns[index];c.fd=-1;c.closing=0;out->closed++;
@@ -142,6 +146,7 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
             auto *slot=&page->llm[i];unsigned state=io_load(&slot->state);
             bool gone=r.conn<0||conns[r.conn].dead||stopping;
             if(gone) {
+                if(r.seq!=next_final)continue;
                 if(state!=BF_DONE) {
                     if(!stopping||!io_load(&out->model_quiesced))continue;
                     __threadfence_system();io_store(&slot->state,BF_DONE);
@@ -154,7 +159,7 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
             unsigned short flags=__ldcg(&slot->pad);
             if(flags&BF_LLM_VALIDATING)continue;
             bool bad=flags&BF_LLM_REJECTED;
-            if(bad && state!=BF_DONE)continue;
+            if(bad && (state!=BF_DONE || r.seq!=next_final))continue;
             if(bad && (flags&BF_LLM_TRANSPORT_MASK)==1){c.dead=1;continue;}
             auto *tx=buffer+capacity*stride+i*txstride;
             if(!r.header_ready) {
@@ -171,8 +176,10 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
                 }
             }
             unsigned produced=bad?0:io_load(&slot->produced);
-            if(state!=BF_DONE&&produced==r.ng&&produced)produced--;
-            bool final=state==BF_DONE&&(bad||produced==r.ng);
+            // Publish final responses in admission order: physical-slot order
+            // can expose a later completion while the wrap target is reserved.
+            if((state!=BF_DONE || r.seq!=next_final)&&produced==r.ng&&produced)produced--;
+            bool final=state==BF_DONE&&r.seq==next_final&&(bad||produced==r.ng);
             if(!produced&&!bad)continue;
             unsigned total=r.header+produced*4;if(total<=r.sent)continue;
             for(unsigned j=0;j<produced;++j) {
@@ -197,10 +204,10 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
                 io_uring_sqe e{};e.opcode=IORING_OP_ASYNC_CANCEL;e.addr=io_id(2,i,c.generation);e.user_data=io_id(6,i,c.generation);
                 if(io_submit(ring,e,out))c.closing=2; // wait for receive CQE
             }
-            if(c.dead&&!c.receiving&&c.reply<0&&seen==io_load(&page->llm_head)&&c.closing!=1) {
+            if((c.dead||c.eof)&&!c.receiving&&c.reply<0&&seen==io_load(&page->llm_head)&&c.closing!=1) {
                 io_uring_sqe e{};e.opcode=IORING_OP_CLOSE;e.fd=c.fd;e.user_data=io_id(4,i,c.generation);
                 if(io_submit(ring,e,out))c.closing=1;
-            }else if(!c.dead&&!c.receiving&&!stopping) {
+            }else if(!c.dead&&!c.eof&&!c.receiving&&!stopping) {
                 io_uring_sqe e{};e.opcode=IORING_OP_RECV;e.fd=c.fd;e.addr=host_buffer+i*stride;e.len=4096;e.user_data=io_id(2,i,c.generation);
                 if(io_submit(ring,e,out))c.receiving=1;
             }

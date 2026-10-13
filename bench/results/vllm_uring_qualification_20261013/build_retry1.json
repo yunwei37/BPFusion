@@ -1,0 +1,10 @@
+{
+  "cmd": [
+    "make",
+    "vllm-graph-uring",
+    "VLLM_PYTHON=/tmp/bpfusion-vllm-uring-q26fqorc/runtime/bin/python"
+  ],
+  "exit": 0,
+  "stdout": "/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \\\n\t  -DBF_URING_NETWORK -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_uring.so.o\n/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_uring.so.o -o build/vllm_graph_uring.so.dlink.o\ng++ -shared -Wl,-z,defs build/vllm_graph_uring.so.o build/vllm_graph_uring.so.dlink.o /tmp/bpfusion-vllm-uring-q26fqorc/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-vllm-uring-q26fqorc/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_uring.so -lbpf -lelf -lz -lpthread\n/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \\\n\t -DBF_TRACE -DBF_URING_NETWORK -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_uring_trace.so.o\n/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_uring_trace.so.o -o build/vllm_graph_uring_trace.so.dlink.o\ng++ -shared -Wl,-z,defs build/vllm_graph_uring_trace.so.o build/vllm_graph_uring_trace.so.dlink.o /tmp/bpfusion-vllm-uring-q26fqorc/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-vllm-uring-q26fqorc/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_uring_trace.so -lbpf -lelf -lz -lpthread\n",
+  "stderr": ""
+}

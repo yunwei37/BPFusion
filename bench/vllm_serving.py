@@ -14,6 +14,7 @@ def main():
     run_modes=ap.add_mutually_exclusive_group()
     run_modes.add_argument("--correctness",action="store_true")
     run_modes.add_argument("--preflight",action="store_true")
+    ap.add_argument("--uring",action="store_true",help="Qualify only the stock io_uring transport")
     ap.add_argument("--untraced",action="store_true")
     ap.add_argument("--reference-path",type=Path)
     comparisons=ap.add_mutually_exclusive_group()
@@ -31,6 +32,9 @@ def main():
     prompts=[tok(text).input_ids for text in ("The capital of France is","What is 2 plus 2?","Write a short greeting.","Linux is")]
     modes=("separate-kernel","chained-kernel","separate-userspace","chained-userspace") if args.dispatch_comparison else ("serial-kernel","prefix-kernel","serial-userspace","prefix-userspace") if args.release_comparison else (("packed-kernel","packed-userspace") if args.correctness and args.packing_comparison else (
         ("grouped-kernel","packed-kernel","grouped-userspace","packed-userspace") if args.packing_comparison else ("kernel","userspace")))
+    if args.uring:
+        assert not (args.packing_comparison or args.release_comparison or args.dispatch_comparison)
+        modes=("uring",)
     matrix=((1,1),(64,1),(1,8),(64,8));repetitions=1 if args.correctness or args.preflight else 5
     requests_per_cell=8 if args.preflight else 64
     reference_model=None;reference_pool={}
@@ -63,7 +67,7 @@ def main():
         for pair in range(repetitions):
             order=modes if len(modes)==2 or (pair//2)%2==0 else modes[2:]+modes[:2]
             for mode in (order if pair%2==0 else order[::-1]):
-                kernel_mode=mode.endswith("kernel")
+                kernel_mode=mode.endswith("kernel") or mode=="uring"
                 assert not Path("/sys/module/bfusion_tx").exists()
                 assert not Path("/sys/fs/bpf/bpfusion_ctl").exists()
                 p=None;attached=False;rows=[];success=False
@@ -74,12 +78,13 @@ def main():
                 binary=(("vllm_graph_chained" if mode.startswith("chained") else "vllm_graph") if args.dispatch_comparison else ("vllm_graph" if mode.startswith("prefix") else "vllm_graph_padded") if args.release_comparison
                         else ("vllm_graph_padded" if mode.startswith("packed") else "vllm_graph_grouped") if args.packing_comparison
                         else "vllm_graph")+("" if kernel_mode else "_user_network_wait")+("" if args.untraced else "_trace")
+                if mode=="uring":binary="vllm_graph_uring"+("" if args.untraced else "_trace")
                 command=["./build/"+binary,args.model,"300"]
                 if not args.untraced:command+=["--trace-output",str(trace),"--trace-requests",str(budget)]
-                if args.correctness:command=["strace","-D","-f","-e","trace=network,write","-o",str(nettrace),*command]
+                if args.correctness:command=["strace","-D","-f","-e","trace=network,write,io_uring_enter","-o",str(nettrace),*command]
                 try:
                     if kernel_mode:
-                        r=subprocess.run(["./build/bpfusion_load","stream-attach"],capture_output=True,text=True)
+                        r=subprocess.run(["./build/bpfusion_load","stream-uring-attach" if mode=="uring" else "stream-attach"],capture_output=True,text=True)
                         emit("attach",pair=pair,mode=mode,code=r.returncode,stdout=r.stdout,stderr=r.stderr)
                         assert r.returncode==0;attached=True
                     with logpath.open("w") as log:p=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
@@ -121,6 +126,7 @@ def main():
                         if own:client=connect()
                         try:
                             marker,data=wire(ids,gen,http)
+                            emit("request_sent",pair=pair,mode=mode,kind=kind,client_ns=marker,input_ids=ids,gen=gen,bad=bad,http=http)
                             if split:
                                 for byte in data:client.sendall(bytes([byte]));time.sleep(.001)
                             else:client.sendall(data)
@@ -253,11 +259,22 @@ def main():
                         if kernel_mode:assert not re.search(calls,active),active
                         else:
                             for call in ("accept4","recvfrom","sendmsg"):assert re.search(r"\b"+call+r"\(",active),call
+                        if mode=="uring":
+                            serving=active.split("--- SIGTERM",1)[0]
+                            assert not re.search(r"\bio_uring_enter\(",serving),serving
                         emit("network_verified",pair=pair,mode=mode,trace_path=str(nettrace))
+                    if mode=="uring":
+                        counters=json.loads(next(line[7:] for line in log.splitlines() if line.startswith("RESULT ")))
+                        assert counters["completed"]==counters["head"]==len(rows)
+                        assert counters["error"]==counters["pending"]==counters["reserved"]==counters["dropped"]==counters["overflow"]==0
+                        assert counters["accepted"]==counters["closed"]
+                        assert counters["sqhead"]==counters["sqtail"]==counters["cqhead"]==counters["cqtail"]
+                        assert counters["trace_count"]==len(rows) and counters["trace_overflow"]==max(0,len(rows)-128)
+                        emit("uring_verified",pair=pair,mode=mode,counters=counters)
                     if kernel_mode:
                         r=subprocess.run(["./build/bpfusion_load","stats"],capture_output=True,text=True)
                         emit("stats",pair=pair,mode=mode,code=r.returncode,stdout=r.stdout,stderr=r.stderr);assert r.returncode==0
-                        if args.untraced:
+                        if args.untraced or mode=="uring":
                             assert f"llm_head={len(rows)}\n" in r.stdout and "llm_reserved=0x0" in r.stdout
                             slots=re.findall(r"llm\[(\d+)\]: state=(\d+)",r.stdout)
                             assert sorted(slots)==[(str(i),"0") for i in range(8)],slots
@@ -271,6 +288,8 @@ def main():
                 finally:
                     if p is not None and p.poll() is None:p.terminate();emit("cleanup_executor",pair=pair,mode=mode,exit_code=p.wait())
                     if attached:
+                        snapshot=subprocess.run(["./build/bpfusion_load","stats"],capture_output=True,text=True)
+                        emit("cleanup_stats",pair=pair,mode=mode,code=snapshot.returncode,stdout=snapshot.stdout,stderr=snapshot.stderr)
                         r=subprocess.run(["./build/bpfusion_load","stream-detach"],capture_output=True,text=True)
                         emit("detach",pair=pair,mode=mode,code=r.returncode,stdout=r.stdout,stderr=r.stderr)
                         for name in ("bpfusion_ctl","bpfusion_stats","bpfusion_db"):Path("/sys/fs/bpf",name).unlink(missing_ok=True)
