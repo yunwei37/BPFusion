@@ -444,3 +444,31 @@ removes the test runtime and26 owned build outputs after review, with no own
 model process/module/pins/GPU app and original boot/base/Workspace/Coder/WIP
 retained. Actual raw, package/build/source/commands, frozen references,
 qualification, bounded journal and endpoints remain retrievable.
+
+## Incremental stock output-copy investigation
+
+[Finding0043](findings/0043-uring-incremental-copy.md) tests whether skipping
+fully sent prefixes improves ordinary gen64/c8 stock throughput, retaining the
+local question and matched upstream compute. Native TCP is the main mechanism
+alternative; the former full-copy loop is an ablation. Role supporting, with
+setup/strict/lifecycle work dependency-only. Source intervention is small and
+not answered by0042; SQPOLL/wakeup and optimized cross-node serving remain
+higher-level open costs after this one comparison. Plan and fresh review are
+linked from the finding. Initial half-close control failure and subsequent
+passing diagnostics/stress are retained; cause unresolved. Qualification and
+full timing are incomplete, so no throughput effect or result verdict exists.
+
+A source-native HF idle reproduction subsequently captures genuine RECV
+EAGAIN wrongly treated as connection death. Both copy conditions now share
+EAGAIN/EINTR rearming, with all affected qualification rerunning. Final plan
+follow-up retains the hypothesis and matched repaired full-copy ablation;
+0042 historical means cannot measure this copy intervention. Repaired
+three-path preflight, all twelve traced/ordinary strict executors and both
+original HF lifecycle workloads pass. A later repeated-idle regression still
+stalls before admission. A read-only psock snapshot captures divergent receive
+cursors; a temporary same-socket ingress redirect passes both model idle
+regressions. All twelve traced/ordinary protocol executors then pass with
+the redirect candidate. The same redirect is adopted in production source;
+both model default module compatibility workloads and final copy preflight pass. Full copy timing remains incomplete, and none of this
+dependency work establishes a throughput effect. Raw failures, diagnostics
+and candidate passes are linked from finding0043.

@@ -1,0 +1,11 @@
+START smol_plain_traced_correctness 2026-10-13T05:49:05.058922+00:00
+{"name": "smol_plain_traced_correctness", "cmd": ["/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python", "bench/vllm_serving.py", "--copy-comparison", "--correctness", "--model", "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "--output", "/tmp/bpfusion-uring-copy-6wpl3780/smol_plain_traced_correctness.jsonl"], "exit": 0, "analysis_exit": 0}
+START qwen_plain_correctness 2026-10-13T05:51:40.578685+00:00
+{"name": "qwen_plain_correctness", "cmd": ["/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python", "bench/vllm_serving.py", "--copy-comparison", "--untraced", "--reference-path", "/tmp/bpfusion-uring-copy-6wpl3780/frozen_references.json", "--correctness", "--model", "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775", "--output", "/tmp/bpfusion-uring-copy-6wpl3780/qwen_plain_correctness.jsonl"], "exit": 0, "analysis_exit": 0}
+START smol_plain_correctness 2026-10-13T05:53:57.134442+00:00
+{"name": "smol_plain_correctness", "cmd": ["/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python", "bench/vllm_serving.py", "--copy-comparison", "--untraced", "--reference-path", "/tmp/bpfusion-uring-copy-6wpl3780/frozen_references.json", "--correctness", "--model", "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "--output", "/tmp/bpfusion-uring-copy-6wpl3780/smol_plain_correctness.jsonl"], "exit": 0, "analysis_exit": 0}
+START hf_build 2026-10-13T05:56:08.361929+00:00
+{"name": "hf_build", "cmd": ["make", "qwen-graph-uring"], "exit": 0}
+START hf_lifecycle 2026-10-13T05:56:09.779038+00:00
+{"name": "hf_lifecycle", "cmd": ["/usr/bin/python3", "/tmp/bpfusion-uring-copy-6wpl3780/hf_regression/pipeline.py"], "exit": 0, "lifecycle_verified": false}
+QUALIFICATION_CONTINUATION_TERMINAL

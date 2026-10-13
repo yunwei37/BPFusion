@@ -1,0 +1,13 @@
+{
+  "cmd": [
+    "/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python",
+    "bench/vllm_serving.py",
+    "--copy-comparison",
+    "--correctness",
+    "--model",
+    "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+    "--output",
+    "/tmp/bpfusion-uring-copy-6wpl3780/smol_diagnostic.jsonl"
+  ],
+  "exit": 0
+}

@@ -399,7 +399,11 @@ int stream_publish(struct __sk_buff *skb)
     slot->client_ns=h.client_ns; slot->ingress_ns=bpf_ktime_get_ns(); slot->gpu_done_ns=0;
     slot->state=BF_PENDING;
     bump(11);
-    return SK_PASS;
+    /* Keep ingress accounting on the sockmap redirect path when the accepted
+     * socket is drained after parsing; plain SK_PASS can desynchronize its
+     * TCP and psock receive cursors on the qualified kernel. */
+    struct bf_flow key={skb->local_ip4,skb->remote_ip4,skb->local_port,skb->remote_port};
+    return bpf_sk_redirect_hash(skb,&streams,&key,BPF_F_INGRESS);
 }
 
 char _license[] SEC("license") = "GPL";

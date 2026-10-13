@@ -89,7 +89,8 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
                 auto &c=conns[index];c.receiving=0;
                 if(e.res>0)out->received++;
                 else if(e.res==0)c.eof=1;
-                else c.dead=1;
+                // A transient socket read is not peer EOF or connection death.
+                else if(e.res!=-EAGAIN && e.res!=-EINTR)c.dead=1;
             }else if(kind==3 || kind==7) {
                 unsigned i=index%BF_LLM_SLOTS;auto &r=requests[i];
                 if(!r.active || !r.busy || r.tag!=e.user_data){out->error=2;continue;}
@@ -182,7 +183,13 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
             bool final=state==BF_DONE&&r.seq==next_final&&(bad||produced==r.ng);
             if(!produced&&!bad)continue;
             unsigned total=r.header+produced*4;if(total<=r.sent)continue;
-            for(unsigned j=0;j<produced;++j) {
+#ifdef BF_IO_FULL_COPY
+            unsigned first=0; // matched control for the former prefix-copy loop
+#else
+            // Keep a partially sent token, but skip every fully sent token.
+            unsigned first=r.sent>r.header?(r.sent-r.header)/4:0;
+#endif
+            for(unsigned j=first;j<produced;++j) {
                 unsigned token=io_load(&slot->tok_out[j]);
                 for(unsigned byte=0;byte<4;++byte)tx[r.header+j*4+byte]=(token>>(byte*8))&255;
             }

@@ -19,6 +19,7 @@ def main():
     ap.add_argument("--untraced",action="store_true")
     ap.add_argument("--reference-path",type=Path)
     comparisons=ap.add_mutually_exclusive_group()
+    comparisons.add_argument("--copy-comparison",action="store_true")
     comparisons.add_argument("--transport-comparison",action="store_true")
     comparisons.add_argument("--packing-comparison",action="store_true")
     comparisons.add_argument("--release-comparison",action="store_true")
@@ -35,11 +36,13 @@ def main():
     modes=("separate-kernel","chained-kernel","separate-userspace","chained-userspace") if args.dispatch_comparison else ("serial-kernel","prefix-kernel","serial-userspace","prefix-userspace") if args.release_comparison else (("packed-kernel","packed-userspace") if args.correctness and args.packing_comparison else (
         ("grouped-kernel","packed-kernel","grouped-userspace","packed-userspace") if args.packing_comparison else ("kernel","userspace")))
     if args.uring:
-        assert not (args.packing_comparison or args.release_comparison or args.dispatch_comparison or args.transport_comparison)
+        assert not (args.packing_comparison or args.release_comparison or args.dispatch_comparison or args.transport_comparison or args.copy_comparison)
         modes=("uring",)
     if args.transport_comparison:modes=("uring","userspace","kernel")
-    matrix=((1,1),(64,1),(1,8),(64,8));repetitions=1 if args.correctness or args.preflight else (6 if args.transport_comparison else 5)
-    requests_per_cell=8 if args.preflight else 64
+    if args.copy_comparison:modes=("uring","uring_full_copy","userspace")
+    matrix=((64,8),) if args.copy_comparison else ((1,1),(64,1),(1,8),(64,8))
+    repetitions=1 if args.correctness or args.preflight else (6 if args.transport_comparison or args.copy_comparison else 5)
+    requests_per_cell=8 if args.preflight else (256 if args.copy_comparison else 64)
     reference_model=None;reference_pool={}
     if args.untraced:
         assert args.reference_path is not None,"Untraced qualification requires pre-observation frozen complete references"
@@ -51,7 +54,7 @@ def main():
              scope=asset["scope"])
     emit("metadata",model=args.model,vocab=config.vocab_size,prompts=prompts,precision="fp16",
          modes=modes,matrix=matrix,repetitions=repetitions,requests_per_cell=requests_per_cell,warmups_per_executor=8,
-         correctness=args.correctness,preflight=args.preflight,untraced=args.untraced,comparison="stock-transport" if args.transport_comparison else "dispatch" if args.dispatch_comparison else "release" if args.release_comparison else ("packing" if args.packing_comparison else "transport"),trace_condition="ordinary paths untraced; fixed complete-output-set fidelity" if args.untraced else "both transports identically BF_TRACE",
+         correctness=args.correctness,preflight=args.preflight,untraced=args.untraced,comparison="stock-copy" if args.copy_comparison else "stock-transport" if args.transport_comparison else "dispatch" if args.dispatch_comparison else "release" if args.release_comparison else ("packing" if args.packing_comparison else "transport"),trace_condition="ordinary paths untraced; fixed complete-output-set fidelity" if args.untraced else "both transports identically BF_TRACE",
          commit=subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip(),
          driver_source=Path(__file__).read_text(),client_source=(root/"bench/resident_dispatch.py").read_text(),
          backend_source=(root/"executor/vllm_graph.py").read_text(),native_source=(root/"executor/vllm_graph.cu").read_text(),
@@ -69,9 +72,9 @@ def main():
     try:
         for pair in range(repetitions):
             order=modes if len(modes)==2 or (pair//2)%2==0 else modes[2:]+modes[:2]
-            if args.transport_comparison:order=tuple(permutations(modes))[pair%6]
-            for mode in (order if args.transport_comparison or pair%2==0 else order[::-1]):
-                kernel_mode=mode.endswith("kernel") or mode=="uring"
+            if args.transport_comparison or args.copy_comparison:order=tuple(permutations(modes))[pair%6]
+            for mode in (order if args.transport_comparison or args.copy_comparison or pair%2==0 else order[::-1]):
+                kernel_mode=mode.endswith("kernel") or mode.startswith("uring")
                 assert not Path("/sys/module/bfusion_tx").exists()
                 assert not Path("/sys/fs/bpf/bpfusion_ctl").exists()
                 p=None;attached=False;rows=[];success=False
@@ -82,13 +85,13 @@ def main():
                 binary=(("vllm_graph_chained" if mode.startswith("chained") else "vllm_graph") if args.dispatch_comparison else ("vllm_graph" if mode.startswith("prefix") else "vllm_graph_padded") if args.release_comparison
                         else ("vllm_graph_padded" if mode.startswith("packed") else "vllm_graph_grouped") if args.packing_comparison
                         else "vllm_graph")+("" if kernel_mode else "_user_network_wait")+("" if args.untraced else "_trace")
-                if mode=="uring":binary="vllm_graph_uring"+("" if args.untraced else "_trace")
+                if mode.startswith("uring"):binary="vllm_graph_"+mode+("" if args.untraced else "_trace")
                 command=["./build/"+binary,args.model,"300"]
                 if not args.untraced:command+=["--trace-output",str(trace),"--trace-requests",str(budget)]
                 if args.correctness:command=["strace","-D","-f","-e","trace=network,write,io_uring_enter","-o",str(nettrace),*command]
                 try:
                     if kernel_mode:
-                        r=subprocess.run(["./build/bpfusion_load","stream-uring-attach" if mode=="uring" else "stream-attach"],capture_output=True,text=True)
+                        r=subprocess.run(["./build/bpfusion_load","stream-uring-attach" if mode.startswith("uring") else "stream-attach"],capture_output=True,text=True)
                         emit("attach",pair=pair,mode=mode,code=r.returncode,stdout=r.stdout,stderr=r.stderr)
                         assert r.returncode==0;attached=True
                     with logpath.open("w") as log:p=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
@@ -98,9 +101,9 @@ def main():
                         if p.poll() is not None:raise RuntimeError(logpath.read_text()[-6000:])
                         time.sleep(.1)
                     emit("ready",pair=pair,mode=mode,pid=p.pid)
-                    if args.transport_comparison:
+                    if args.transport_comparison or args.copy_comparison:
                         tasks=[dict(tid=int(t.name),comm=(t/"comm").read_text().strip()) for t in Path(f"/proc/{p.pid}/task").iterdir()]
-                        if mode=="uring":assert any(t["comm"].startswith("iou-sqp") for t in tasks),tasks
+                        if mode.startswith("uring"):assert any(t["comm"].startswith("iou-sqp") for t in tasks),tasks
                         emit("worker_tasks",pair=pair,mode=mode,pid=p.pid,tasks=tasks)
                     def keep(row,kind):
                         row=dict(row,kind=kind);rows.append(row)
@@ -186,7 +189,7 @@ def main():
                             for i in range(8):
                                 ids=prompts[i%len(prompts)]
                                 keep(dict(request(client,ids,None,gen=1),input_ids=ids,gen=1,bad=False),"warmup")
-                        cell_order=matrix[pair%4:]+matrix[:pair%4] if args.transport_comparison else matrix
+                        cell_order=matrix[pair%4:]+matrix[:pair%4] if args.transport_comparison or args.copy_comparison else matrix
                         for gen,concurrency in cell_order:
                             barrier=threading.Barrier(concurrency+1);ready=threading.Barrier(concurrency+1)
                             selected=[]
@@ -200,10 +203,10 @@ def main():
                             with ThreadPoolExecutor(max_workers=concurrency) as pool:
                                 futures=[pool.submit(lane,i) for i in range(concurrency)]
                                 ready.wait(timeout=60)
-                                before=worker_cpu_snapshot(p.pid) if args.transport_comparison else None
+                                before=worker_cpu_snapshot(p.pid) if args.transport_comparison or args.copy_comparison else None
                                 barrier.wait(timeout=60)
                                 for future in futures:future.result()
-                            cpu=worker_cpu_delta(before,worker_cpu_snapshot(p.pid)) if args.transport_comparison else {}
+                            cpu=worker_cpu_delta(before,worker_cpu_snapshot(p.pid)) if args.transport_comparison or args.copy_comparison else {}
                             first=min(row["start_ns"] for row in selected);last=max(row["arrival_ns"][-1] for row in selected)
                             for row in selected:keep(row,"measured")
                             emit("cell",pair=pair,mode=mode,gen=gen,concurrency=concurrency,
@@ -271,11 +274,11 @@ def main():
                         if kernel_mode:assert not re.search(calls,active),active
                         else:
                             for call in ("accept4","recvfrom","sendmsg"):assert re.search(r"\b"+call+r"\(",active),call
-                        if mode=="uring":
+                        if mode.startswith("uring"):
                             serving=active.split("--- SIGTERM",1)[0]
                             assert not re.search(r"\bio_uring_enter\(",serving),serving
                         emit("network_verified",pair=pair,mode=mode,trace_path=str(nettrace))
-                    if mode=="uring":
+                    if mode.startswith("uring"):
                         counters=json.loads(next(line[7:] for line in log.splitlines() if line.startswith("RESULT ")))
                         assert counters["completed"]==counters["head"]==len(rows)
                         assert counters["error"]==counters["pending"]==counters["reserved"]==counters["dropped"]==counters["overflow"]==0
@@ -286,7 +289,7 @@ def main():
                     if kernel_mode:
                         r=subprocess.run(["./build/bpfusion_load","stats"],capture_output=True,text=True)
                         emit("stats",pair=pair,mode=mode,code=r.returncode,stdout=r.stdout,stderr=r.stderr);assert r.returncode==0
-                        if args.untraced or mode=="uring":
+                        if args.untraced or mode.startswith("uring"):
                             assert f"llm_head={len(rows)}\n" in r.stdout and "llm_reserved=0x0" in r.stdout
                             slots=re.findall(r"llm\[(\d+)\]: state=(\d+)",r.stdout)
                             assert sorted(slots)==[(str(i),"0") for i in range(8)],slots

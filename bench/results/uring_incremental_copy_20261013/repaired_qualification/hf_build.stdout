@@ -1,0 +1,2 @@
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_URING_NETWORK -rdc=true -shared -Xcompiler=-fPIC \
+	-Ibpf/include executor/qwen_graph.cu -o build/qwen_graph_uring.so -lbpf -lelf -lz -lpthread

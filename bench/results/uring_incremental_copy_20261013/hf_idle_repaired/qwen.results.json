@@ -1,0 +1,171 @@
+{
+  "model": "qwen",
+  "start": "2026-10-13T06:33:31.707088+00:00",
+  "oracle_frozen_at": "2026-10-13T01:50:59.810351+00:00",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "ready_time_ns": 1791873265812887528,
+  "native_pid": 235795,
+  "error": "TimeoutError('timed out')",
+  "pass": false,
+  "exit": 0,
+  "stdout": "capturing model=/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775 type=qwen2 fp16 eager\ncaptured bank 0 model graph 32/190\ncaptured bank 0 model graph 64/190\ncaptured bank 0 model graph 96/190\ncaptured bank 0 model graph 128/190\ncaptured bank 0 model graph 160/190\ncaptured bank 1 model graph 32/190\ncaptured bank 1 model graph 64/190\ncaptured bank 1 model graph 96/190\ncaptured bank 1 model graph 128/190\ncaptured bank 1 model graph 160/190\ncaptured bank 2 model graph 32/190\ncaptured bank 2 model graph 64/190\ncaptured bank 2 model graph 96/190\ncaptured bank 2 model graph 128/190\ncaptured bank 2 model graph 160/190\ncaptured bank 3 model graph 32/190\ncaptured bank 3 model graph 64/190\ncaptured bank 3 model graph 96/190\ncaptured bank 3 model graph 128/190\ncaptured bank 3 model graph 160/190\ncaptured bank 4 model graph 32/190\ncaptured bank 4 model graph 64/190\ncaptured bank 4 model graph 96/190\ncaptured bank 4 model graph 128/190\ncaptured bank 4 model graph 160/190\ncaptured bank 5 model graph 32/190\ncaptured bank 5 model graph 64/190\ncaptured bank 5 model graph 96/190\ncaptured bank 5 model graph 128/190\ncaptured bank 5 model graph 160/190\ncaptured bank 6 model graph 32/190\ncaptured bank 6 model graph 64/190\ncaptured bank 6 model graph 96/190\ncaptured bank 6 model graph 128/190\ncaptured bank 6 model graph 160/190\ncaptured bank 7 model graph 32/190\ncaptured bank 7 model graph 64/190\ncaptured bank 7 model graph 96/190\ncaptured bank 7 model graph 128/190\ncaptured bank 7 model graph 160/190\nNET_READY pid=235795 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384\nRESULT {\"accepted\":3,\"closed\":3,\"received\":8,\"sends\":134,\"bytes\":1179,\"completed\":8,\"aborted\":0,\"max_connections\":1,\"max_requests\":1,\"pending\":0,\"error\":0,\"head\":8,\"reserved\":0,\"dropped\":0,\"overflow\":0,\"sqhead\":155,\"sqtail\":155,\"cqhead\":155,\"cqtail\":155,\"trace_count\":8,\"trace_overflow\":0}\nREPLY {\"seq\":0,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":304640013970653}\nREPLY {\"seq\":1,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":304640016456853}\nREPLY {\"seq\":2,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":304640016624599}\nREPLY {\"seq\":3,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":304642344464644}\nREPLY {\"seq\":4,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":304642346799716}\nREPLY {\"seq\":5,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":304642346917037}\nREPLY {\"seq\":6,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":304644674834402}\nREPLY {\"seq\":7,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":304644677153671}\nCLEANUP ring_connections_buffers_released\nresident Qwen stopped: dispatch=resident launches=1 device_graph_launches=131 graph_error=0 banks=8 max_active=1\n",
+  "stderr": "\nLoading weights:   0%|          | 0/290 [00:00<?, ?it/s]\nLoading weights:  42%|\u2588\u2588\u2588\u2588\u258f     | 121/290 [00:00<00:00, 1204.34it/s]\nLoading weights:  89%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 257/290 [00:00<00:00, 1286.66it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 290/290 [00:00<00:00, 1304.73it/s]\n",
+  "rows": [
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 304640013970653,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000dd2cd187111501004d000000",
+      "peer": [
+        "127.0.0.1",
+        51232
+      ],
+      "gen": 1,
+      "prompt": [
+        77
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a1c010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 304640016456853,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000951cf7871115010080510200",
+      "peer": [
+        "127.0.0.1",
+        51232
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 304640016624599,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2033320d0a0d0a514d4c51020000004000000000000000d7abf987111501004e0000004f000000",
+      "peer": [
+        "127.0.0.1",
+        51232
+      ],
+      "gen": 64,
+      "prompt": [
+        78,
+        79
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 304642344464644,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c5101000000010000000000000004b1b912121501004d000000",
+      "peer": [
+        "127.0.0.1",
+        51248
+      ],
+      "gen": 1,
+      "prompt": [
+        77
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a1c010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 304642346799716,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c510100000001000000000000006452dd121215010080510200",
+      "peer": [
+        "127.0.0.1",
+        51248
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 304642346917037,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2033320d0a0d0a514d4c51020000004000000000000000ad1cdf12121501004e0000004f000000",
+      "peer": [
+        "127.0.0.1",
+        51248
+      ],
+      "gen": 64,
+      "prompt": [
+        78,
+        79
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 304644674834402,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000e24fa09d121501004d000000",
+      "peer": [
+        "127.0.0.1",
+        49896
+      ],
+      "gen": 1,
+      "prompt": [
+        77
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a1c010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 304644677153671,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c5101000000010000000000000087b3c39d1215010080510200",
+      "peer": [
+        "127.0.0.1",
+        49896
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ]
+    }
+  ],
+  "end": "2026-10-13T06:34:51.232814+00:00",
+  "remaining_pins": []
+}

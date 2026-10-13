@@ -1,0 +1,30 @@
+make: Nothing to be done for 'probes'.
+make: Nothing to be done for 'tools'.
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	  -DBF_URING_NETWORK  -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_uring.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_uring.so.o -o build/vllm_graph_uring.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_uring.so.o build/vllm_graph_uring.so.dlink.o /tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_uring.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	 -DBF_TRACE -DBF_URING_NETWORK  -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_uring_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_uring_trace.so.o -o build/vllm_graph_uring_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_uring_trace.so.o build/vllm_graph_uring_trace.so.dlink.o /tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_uring_trace.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	  -DBF_URING_NETWORK -DBF_IO_FULL_COPY -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_uring_full_copy.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_uring_full_copy.so.o -o build/vllm_graph_uring_full_copy.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_uring_full_copy.so.o build/vllm_graph_uring_full_copy.so.dlink.o /tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_uring_full_copy.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	 -DBF_TRACE -DBF_URING_NETWORK -DBF_IO_FULL_COPY -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_uring_full_copy_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_uring_full_copy_trace.so.o -o build/vllm_graph_uring_full_copy_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_uring_full_copy_trace.so.o build/vllm_graph_uring_full_copy_trace.so.dlink.o /tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_uring_full_copy_trace.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT    -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_user_network_wait.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_user_network_wait.so.o -o build/vllm_graph_user_network_wait.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_user_network_wait.so.o build/vllm_graph_user_network_wait.so.dlink.o /tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_user_network_wait.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	 -DBF_TRACE   -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_trace.so.o -o build/vllm_graph_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_trace.so.o build/vllm_graph_trace.so.dlink.o /tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_trace.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -DBF_TRACE   -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_user_network_wait_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_user_network_wait_trace.so.o -o build/vllm_graph_user_network_wait_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_user_network_wait_trace.so.o build/vllm_graph_user_network_wait_trace.so.dlink.o /tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_user_network_wait_trace.so -lbpf -lelf -lz -lpthread

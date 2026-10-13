@@ -1,0 +1,34 @@
+[
+  {
+    "name": "temporary_bpf_build",
+    "exit": 0,
+    "cmd": [
+      "clang",
+      "-O2",
+      "-g",
+      "-target",
+      "bpf",
+      "-mcpu=v3",
+      "-D__TARGET_ARCH_x86",
+      "-I/usr/include/x86_64-linux-gnu",
+      "-Ibpf/include",
+      "-Ibpf",
+      "-Wall",
+      "-Werror",
+      "-Wno-missing-declarations",
+      "-Wno-unused-value",
+      "-c",
+      "/tmp/bpfusion-uring-copy-6wpl3780/fusion_self_redirect.bpf.c",
+      "-o",
+      "build/fusion.bpf.o"
+    ]
+  },
+  {
+    "name": "strict_pipeline",
+    "exit": 0
+  },
+  {
+    "name": "production_bpf_restore",
+    "exit": 0
+  }
+]

@@ -1,0 +1,53 @@
+[
+  {
+    "name": "gpu_build",
+    "cmd": [
+      "make",
+      "vllm-graph-uring",
+      "vllm-graph-uring-full-copy",
+      "VLLM_PYTHON=/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "bpf_build",
+    "cmd": [
+      "clang",
+      "-O2",
+      "-g",
+      "-target",
+      "bpf",
+      "-mcpu=v3",
+      "-D__TARGET_ARCH_x86",
+      "-I/usr/include/x86_64-linux-gnu",
+      "-Ibpf/include",
+      "-Wall",
+      "-Werror",
+      "-Wno-missing-declarations",
+      "-Wno-unused-value",
+      "-c",
+      "/tmp/bpfusion-uring-copy-6wpl3780/fusion_kernel_diagnostic.bpf.c",
+      "-o",
+      "build/fusion.bpf.o"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "smol_kernel_diagnostic",
+    "cmd": [
+      "/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python",
+      "bench/vllm_serving.py",
+      "--copy-comparison",
+      "--correctness",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--output",
+      "/tmp/bpfusion-uring-copy-6wpl3780/smol_kernel_diagnostic.jsonl"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "bpf_restore",
+    "exit": 0
+  }
+]

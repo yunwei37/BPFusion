@@ -1,0 +1,28 @@
+[
+  {
+    "cmd": [
+      "python3",
+      "-m",
+      "venv",
+      "--without-pip",
+      "/tmp/bpfusion-uring-copy-6wpl3780/runtime"
+    ],
+    "exit": 0
+  },
+  {
+    "cmd": [
+      "python3",
+      "-m",
+      "pip",
+      "--python",
+      "/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python",
+      "install",
+      "vllm==0.31.0",
+      "torch==2.13.0+cu129",
+      "transformers==5.17.0",
+      "--extra-index-url",
+      "https://download.pytorch.org/whl/cu129"
+    ],
+    "exit": 0
+  }
+]

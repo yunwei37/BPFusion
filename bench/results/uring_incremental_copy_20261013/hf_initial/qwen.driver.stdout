@@ -1,0 +1,73 @@
+{
+  "model": "qwen",
+  "start": "2026-10-13T05:56:09.823726+00:00",
+  "oracle_frozen_at": "2026-10-13T01:50:59.810351+00:00",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "ready_time_ns": 1791871026903618624,
+  "native_pid": 228609,
+  "error": "TimeoutError('timed out')",
+  "pass": false,
+  "exit": 0,
+  "end": "2026-10-13T05:57:28.044967+00:00",
+  "remaining_pins": []
+}
+capturing model=/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775 type=qwen2 fp16 eager
+captured bank 0 model graph 32/190
+captured bank 0 model graph 64/190
+captured bank 0 model graph 96/190
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+NET_READY pid=228609 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384
+resident Qwen ready: 24 layers h=896 vocab=151936; device-tail graphs, dispatch=resident
+RESULT {"accepted":1,"closed":1,"received":2,"sends":2,"bytes":169,"completed":2,"aborted":0,"max_connections":1,"max_requests":1,"pending":0,"error":0,"head":2,"reserved":0,"dropped":0,"overflow":0,"sqhead":10,"sqtail":10,"cqhead":10,"cqtail":10,"trace_count":2,"trace_overflow":0}
+REPLY {"seq":0,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":302401104481174}
+REPLY {"seq":1,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":302401115842770}
+CLEANUP ring_connections_buffers_released
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=1 graph_error=0 banks=8 max_active=1
+
+
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loading weights:  47%|████▋     | 136/290 [00:00<00:00, 1321.37it/s]
+Loading weights:  98%|█████████▊| 283/290 [00:00<00:00, 1388.97it/s]
+Loading weights: 100%|██████████| 290/290 [00:00<00:00, 1407.39it/s]
+
+LIFECYCLE_DRIVER_TERMINAL

@@ -1,0 +1,74 @@
+{
+  "model": "qwen",
+  "start": "2026-10-13T06:33:31.707088+00:00",
+  "oracle_frozen_at": "2026-10-13T01:50:59.810351+00:00",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "ready_time_ns": 1791873265812887528,
+  "native_pid": 235795,
+  "error": "TimeoutError('timed out')",
+  "pass": false,
+  "exit": 0,
+  "end": "2026-10-13T06:34:51.232814+00:00",
+  "remaining_pins": []
+}
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+NET_READY pid=235795 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384
+RESULT {"accepted":3,"closed":3,"received":8,"sends":134,"bytes":1179,"completed":8,"aborted":0,"max_connections":1,"max_requests":1,"pending":0,"error":0,"head":8,"reserved":0,"dropped":0,"overflow":0,"sqhead":155,"sqtail":155,"cqhead":155,"cqtail":155,"trace_count":8,"trace_overflow":0}
+REPLY {"seq":0,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":304640013970653}
+REPLY {"seq":1,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":304640016456853}
+REPLY {"seq":2,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":304640016624599}
+REPLY {"seq":3,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":304642344464644}
+REPLY {"seq":4,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":304642346799716}
+REPLY {"seq":5,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":304642346917037}
+REPLY {"seq":6,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":304644674834402}
+REPLY {"seq":7,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":304644677153671}
+CLEANUP ring_connections_buffers_released
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=131 graph_error=0 banks=8 max_active=1
+
+
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loading weights:  42%|████▏     | 121/290 [00:00<00:00, 1204.34it/s]
+Loading weights:  89%|████████▊ | 257/290 [00:00<00:00, 1286.66it/s]
+Loading weights: 100%|██████████| 290/290 [00:00<00:00, 1304.73it/s]
+
+LIFECYCLE_DRIVER_TERMINAL

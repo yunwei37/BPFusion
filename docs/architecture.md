@@ -347,6 +347,7 @@ completion the responder is still reading.
 | `executor/qwen.cu` | real resident Qwen inference, bootstrap and shutdown only on the host |
 | `executor/qwen_graph.py` / `.cu` | bootstrap-only HF graph capture and native GPU request/model dispatch |
 | `executor/vllm_graph.py` / `.cu` | upstream optimized capture/head and GPU prefill/tensor-batched decode |
+| `executor/io_uring_tcp.h` | optional GPU-owned stock TCP accept/receive/send/close, with eBPF admission and final-CQ reclamation |
 | `module/bfusion_tx.c` | kernel connection ownership, completion polling and ordered TCP/HTTP TX |
 | `tools/llm_bench.py` | LLM TTFT/TPOT vs a direct in-process baseline |
 | `tools/llm_load.py` | LLM concurrency sweep (goodput / TTFT / TPOT) |
@@ -376,3 +377,24 @@ completion the responder is still reading.
 - GPU-completion notification to replace the current kernel worker's
   60–120us polling sweep. Current measurements do not qualify an interrupt-
   or event-driven completion path.
+
+The optional stock SEND loop preserves its buffer until CQ completion, then
+starts the next send at the completed byte offset and recopies only tokens
+containing unsent bytes. BF_IO_FULL_COPY restores the former copy loop for
+the matched ablation; it does not change the queue/model/transport policy.
+[Finding0043](findings/0043-uring-incremental-copy.md) retains an unexplained
+half-close failure and the limits of subsequent passing diagnostics.
+
+Stock receive completions EAGAIN/EINTR clear the outstanding receive reference
+and rearm it; they do not mean peer EOF. Zero marks read EOF, and other errors
+mark connection death. The captured transient-read failure and common repair
+are retained in finding0043.
+
+After request publication, the stream verdict redirects ingress to the same
+sockhash socket. On the qualified kernel this avoids the repeated-idle receive
+stall observed with plain SK_PASS and divergent TCP/psock cursors. The flow key
+reuses the existing passive-established sockhash insertion; no new network
+route, kernel module or userspace request worker is added. This affects the
+shared BPF ingress; both model default module compatibility workloads pass
+alongside stock protocol qualification. Finding0043 retains the failures and candidate
+evidence without claiming a general kernel fix.

@@ -1,0 +1,10 @@
+clang -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -Ibpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value -c bpf/fusion.bpf.c -o build/fusion.bpf.o
+make: Nothing to be done for 'tools'.
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	 -DBF_TRACE   -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_trace.so.o -o build/vllm_graph_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_trace.so.o build/vllm_graph_trace.so.dlink.o /tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_trace.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -DBF_TRACE   -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_user_network_wait_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_user_network_wait_trace.so.o -o build/vllm_graph_user_network_wait_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_user_network_wait_trace.so.o build/vllm_graph_user_network_wait_trace.so.dlink.o /tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-uring-copy-6wpl3780/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_user_network_wait_trace.so -lbpf -lelf -lz -lpthread

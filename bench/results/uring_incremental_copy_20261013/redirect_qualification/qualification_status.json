@@ -1,0 +1,68 @@
+[
+  {
+    "name": "qwen_traced_correctness",
+    "cmd": [
+      "/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python",
+      "bench/vllm_serving.py",
+      "--copy-comparison",
+      "--correctness",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--output",
+      "/tmp/bpfusion-uring-copy-6wpl3780/redirect_qualification/qwen_traced_correctness.jsonl"
+    ],
+    "exit": 0,
+    "analysis_exit": 0
+  },
+  {
+    "name": "smol_traced_correctness",
+    "cmd": [
+      "/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python",
+      "bench/vllm_serving.py",
+      "--copy-comparison",
+      "--correctness",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--output",
+      "/tmp/bpfusion-uring-copy-6wpl3780/redirect_qualification/smol_traced_correctness.jsonl"
+    ],
+    "exit": 0,
+    "analysis_exit": 0
+  },
+  {
+    "name": "qwen_correctness",
+    "cmd": [
+      "/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python",
+      "bench/vllm_serving.py",
+      "--copy-comparison",
+      "--untraced",
+      "--reference-path",
+      "/tmp/bpfusion-uring-copy-6wpl3780/frozen_references.json",
+      "--correctness",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--output",
+      "/tmp/bpfusion-uring-copy-6wpl3780/redirect_qualification/qwen_correctness.jsonl"
+    ],
+    "exit": 0,
+    "analysis_exit": 0
+  },
+  {
+    "name": "smol_correctness",
+    "cmd": [
+      "/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python",
+      "bench/vllm_serving.py",
+      "--copy-comparison",
+      "--untraced",
+      "--reference-path",
+      "/tmp/bpfusion-uring-copy-6wpl3780/frozen_references.json",
+      "--correctness",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--output",
+      "/tmp/bpfusion-uring-copy-6wpl3780/redirect_qualification/smol_correctness.jsonl"
+    ],
+    "exit": 0,
+    "analysis_exit": 0
+  }
+]

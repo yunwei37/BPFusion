@@ -1,0 +1,9 @@
+START build 2026-10-13T05:14:00.260072+00:00
+{"name": "build", "cmd": ["make", "probes", "tools", "vllm-graph-uring", "vllm-graph-uring-full-copy", "vllm-graph-user-network-wait", "vllm-graph-trace", "VLLM_PYTHON=/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python"], "exit": 0}
+START preflight 2026-10-13T05:14:00.265115+00:00
+{"name": "preflight", "cmd": ["/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python", "bench/vllm_serving.py", "--copy-comparison", "--untraced", "--reference-path", "/tmp/bpfusion-uring-copy-6wpl3780/frozen_references.json", "--preflight", "--model", "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775", "--output", "/tmp/bpfusion-uring-copy-6wpl3780/preflight.jsonl"], "exit": 0, "analysis_exit": 0}
+START qwen_traced_correctness 2026-10-13T05:16:11.546151+00:00
+{"name": "qwen_traced_correctness", "cmd": ["/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python", "bench/vllm_serving.py", "--copy-comparison", "--correctness", "--model", "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775", "--output", "/tmp/bpfusion-uring-copy-6wpl3780/qwen_traced_correctness.jsonl"], "exit": 0, "analysis_exit": 0}
+START smol_traced_correctness 2026-10-13T05:18:57.688419+00:00
+{"name": "smol_traced_correctness", "cmd": ["/tmp/bpfusion-uring-copy-6wpl3780/runtime/bin/python", "bench/vllm_serving.py", "--copy-comparison", "--correctness", "--model", "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "--output", "/tmp/bpfusion-uring-copy-6wpl3780/smol_traced_correctness.jsonl"], "exit": 1}
+QUALIFICATION_PIPELINE_TERMINAL

@@ -1,0 +1,36 @@
+{
+  "model": "smol",
+  "start": "2026-10-13T06:01:58.307201+00:00",
+  "oracle_frozen_at": "2026-10-13T01:50:59.810351+00:00",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "ready_time_ns": 1791871387586367330,
+  "native_pid": 229147,
+  "error": "RuntimeError('early header EOF')",
+  "pass": false,
+  "exit": 0,
+  "stdout": "capturing model=/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2 type=llama fp16 eager\ncaptured bank 0 model graph 32/190\ncaptured bank 0 model graph 64/190\ncaptured bank 0 model graph 96/190\ncaptured bank 0 model graph 128/190\ncaptured bank 0 model graph 160/190\ncaptured bank 1 model graph 32/190\ncaptured bank 1 model graph 64/190\ncaptured bank 1 model graph 96/190\ncaptured bank 1 model graph 128/190\ncaptured bank 1 model graph 160/190\ncaptured bank 2 model graph 32/190\ncaptured bank 2 model graph 64/190\ncaptured bank 2 model graph 96/190\ncaptured bank 2 model graph 128/190\ncaptured bank 2 model graph 160/190\ncaptured bank 3 model graph 32/190\ncaptured bank 3 model graph 64/190\ncaptured bank 3 model graph 96/190\ncaptured bank 3 model graph 128/190\ncaptured bank 3 model graph 160/190\ncaptured bank 4 model graph 32/190\ncaptured bank 4 model graph 64/190\ncaptured bank 4 model graph 96/190\ncaptured bank 4 model graph 128/190\ncaptured bank 4 model graph 160/190\ncaptured bank 5 model graph 32/190\ncaptured bank 5 model graph 64/190\ncaptured bank 5 model graph 96/190\ncaptured bank 5 model graph 128/190\ncaptured bank 5 model graph 160/190\ncaptured bank 6 model graph 32/190\ncaptured bank 6 model graph 64/190\ncaptured bank 6 model graph 96/190\ncaptured bank 6 model graph 128/190\ncaptured bank 6 model graph 160/190\ncaptured bank 7 model graph 32/190\ncaptured bank 7 model graph 64/190\ncaptured bank 7 model graph 96/190\ncaptured bank 7 model graph 128/190\ncaptured bank 7 model graph 160/190\nNET_READY pid=229147 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384\nresident Qwen ready: 30 layers h=576 vocab=49152; device-tail graphs, dispatch=resident\nIDLE_DIAG sqhead=6 sqtail=6 flags=0 pending=0 completed=0 sends=0\nRESULT {\"accepted\":1,\"closed\":1,\"received\":0,\"sends\":0,\"bytes\":0,\"completed\":1,\"aborted\":1,\"max_connections\":1,\"max_requests\":1,\"pending\":0,\"error\":0,\"head\":1,\"reserved\":0,\"dropped\":0,\"overflow\":0,\"sqhead\":7,\"sqtail\":7,\"cqhead\":7,\"cqtail\":7,\"trace_count\":1,\"trace_overflow\":0}\nREPLY {\"seq\":0,\"gen\":1,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":302761787600326}\nCLEANUP ring_connections_buffers_released\nresident Qwen stopped: dispatch=resident launches=1 device_graph_launches=1 graph_error=0 banks=8 max_active=1\n",
+  "stderr": "\nLoading weights:   0%|          | 0/272 [00:00<?, ?it/s]\nLoading weights:  46%|\u2588\u2588\u2588\u2588\u258c     | 125/272 [00:00<00:00, 1239.04it/s]\nLoading weights:  98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a| 266/272 [00:00<00:00, 1334.93it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 272/272 [00:00<00:00, 1339.16it/s]\n",
+  "rows": [
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 302761787600326,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000c62dcd385c1301004d000000",
+      "peer": [
+        "127.0.0.1",
+        36610
+      ],
+      "gen": 1,
+      "prompt": [
+        77
+      ]
+    }
+  ],
+  "end": "2026-10-13T06:03:15.064399+00:00",
+  "remaining_pins": []
+}

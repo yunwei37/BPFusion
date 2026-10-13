@@ -1,0 +1,6 @@
+START pair=0 mode=uring pid=224355
+PASS pair=0 mode=uring requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=0 mode=uring_full_copy pid=224621
+PASS pair=0 mode=uring_full_copy requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=0 mode=userspace pid=224893
+PASS pair=0 mode=userspace requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]

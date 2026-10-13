@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspaces/repository/bench/vllm_serving.py", line 177, in main
+    for ids,marker in sent:keep(receive(client,ids,64,marker),"pipeline_halfclose")
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/repository/bench/vllm_serving.py", line 121, in receive
+    chunk=client.recv(1);assert chunk,"short HTTP header";head+=chunk
+                                ^^^^^
+AssertionError: short HTTP header

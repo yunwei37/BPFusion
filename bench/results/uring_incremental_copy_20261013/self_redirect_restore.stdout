@@ -1,0 +1,3 @@
+mkdir -p build
+clang -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -Ibpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value -c bpf/fusion.bpf.c -o build/fusion.bpf.o
+clang -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -Ibpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value -c bpf/wake_probe.bpf.c -o build/wake_probe.bpf.o

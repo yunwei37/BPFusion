@@ -1,0 +1,63 @@
+capturing model=/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775 type=qwen2 fp16 eager
+captured bank 0 model graph 32/190
+captured bank 0 model graph 64/190
+captured bank 0 model graph 96/190
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+NET_READY pid=236965 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384
+resident Qwen ready: 24 layers h=896 vocab=151936; device-tail graphs, dispatch=resident
+RESULT {"accepted":6,"closed":6,"received":16,"sends":332,"bytes":2694,"completed":17,"aborted":0,"max_connections":1,"max_requests":1,"pending":0,"error":0,"head":17,"reserved":0,"dropped":0,"overflow":0,"sqhead":394,"sqtail":394,"cqhead":394,"cqtail":394,"trace_count":17,"trace_overflow":0}
+REPLY {"seq":0,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":306464456024866}
+REPLY {"seq":1,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":306464458721280}
+REPLY {"seq":2,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":306464458841514}
+REPLY {"seq":3,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":306466787036319}
+REPLY {"seq":4,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":306466789279165}
+REPLY {"seq":5,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":306466789574065}
+REPLY {"seq":6,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":306469101907438}
+REPLY {"seq":7,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":306469104267318}
+REPLY {"seq":8,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":306469104407585}
+REPLY {"seq":9,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":306471416719641}
+REPLY {"seq":10,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":306471418826468}
+REPLY {"seq":11,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":306471418944201}
+REPLY {"seq":12,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":306473731419211}
+REPLY {"seq":13,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":306473733500212}
+REPLY {"seq":14,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":306473733857901}
+REPLY {"seq":15,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":306476046403644}
+REPLY {"seq":16,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":306476048598130}
+CLEANUP ring_connections_buffers_released
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=326 graph_error=0 banks=8 max_active=1

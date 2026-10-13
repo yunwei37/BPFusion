@@ -1,0 +1,49 @@
+capturing model=/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775 type=qwen2 fp16 eager
+captured bank 0 model graph 32/190
+captured bank 0 model graph 64/190
+captured bank 0 model graph 96/190
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+NET_READY pid=230084 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384
+IDLE_DIAG sqhead=6 sqtail=6 flags=0 pending=0 completed=0 sends=0
+RESULT {"accepted":1,"closed":1,"received":0,"sends":0,"bytes":0,"completed":1,"aborted":1,"max_connections":1,"max_requests":1,"pending":0,"error":0,"head":1,"reserved":0,"dropped":0,"overflow":0,"sqhead":7,"sqtail":7,"cqhead":7,"cqtail":7,"trace_count":1,"trace_overflow":0}
+REPLY {"seq":0,"gen":1,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":303505552551922}
+CQ_DIAG exceptional_records=1
+CQ_RECORD seq=2 cached_res=-11 system_res=-11 cached_tag=144115192370823168 system_tag=144115192370823168
+CLEANUP ring_connections_buffers_released
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=1 graph_error=0 banks=8 max_active=1
