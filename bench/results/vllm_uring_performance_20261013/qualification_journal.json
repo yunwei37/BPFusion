@@ -1,0 +1,20 @@
+{
+  "utc": "2026-10-13 04:23:43 UTC",
+  "cmd": [
+    "journalctl",
+    "-k",
+    "--utc",
+    "--since",
+    "2026-10-13 04:19:00 UTC",
+    "--until",
+    "2026-10-13 04:23:43 UTC",
+    "--no-pager",
+    "-o",
+    "short-iso"
+  ],
+  "exit": 0,
+  "pattern": "Out of memory|oom-kill|NVRM|Xid|BUG:|segfault|I/O error|EXT4-fs error|hung task|soft lockup|Call Trace",
+  "lines_read": 362,
+  "matches": [],
+  "stderr": ""
+}

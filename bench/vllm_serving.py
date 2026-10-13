@@ -3,9 +3,10 @@
 """Real vLLM graph TCP correctness and matched serving-policy comparison."""
 import argparse,ctypes,json,math,os,re,signal,socket,statistics,struct,subprocess,sys,threading,time,traceback
 from concurrent.futures import ThreadPoolExecutor
+from itertools import permutations
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-from resident_dispatch import connect,request
+from resident_dispatch import connect,request,worker_cpu_snapshot,worker_cpu_delta
 from transformers import AutoConfig,AutoTokenizer
 
 def main():
@@ -18,6 +19,7 @@ def main():
     ap.add_argument("--untraced",action="store_true")
     ap.add_argument("--reference-path",type=Path)
     comparisons=ap.add_mutually_exclusive_group()
+    comparisons.add_argument("--transport-comparison",action="store_true")
     comparisons.add_argument("--packing-comparison",action="store_true")
     comparisons.add_argument("--release-comparison",action="store_true")
     comparisons.add_argument("--dispatch-comparison",action="store_true")
@@ -33,9 +35,10 @@ def main():
     modes=("separate-kernel","chained-kernel","separate-userspace","chained-userspace") if args.dispatch_comparison else ("serial-kernel","prefix-kernel","serial-userspace","prefix-userspace") if args.release_comparison else (("packed-kernel","packed-userspace") if args.correctness and args.packing_comparison else (
         ("grouped-kernel","packed-kernel","grouped-userspace","packed-userspace") if args.packing_comparison else ("kernel","userspace")))
     if args.uring:
-        assert not (args.packing_comparison or args.release_comparison or args.dispatch_comparison)
+        assert not (args.packing_comparison or args.release_comparison or args.dispatch_comparison or args.transport_comparison)
         modes=("uring",)
-    matrix=((1,1),(64,1),(1,8),(64,8));repetitions=1 if args.correctness or args.preflight else 5
+    if args.transport_comparison:modes=("uring","userspace","kernel")
+    matrix=((1,1),(64,1),(1,8),(64,8));repetitions=1 if args.correctness or args.preflight else (6 if args.transport_comparison else 5)
     requests_per_cell=8 if args.preflight else 64
     reference_model=None;reference_pool={}
     if args.untraced:
@@ -48,7 +51,7 @@ def main():
              scope=asset["scope"])
     emit("metadata",model=args.model,vocab=config.vocab_size,prompts=prompts,precision="fp16",
          modes=modes,matrix=matrix,repetitions=repetitions,requests_per_cell=requests_per_cell,warmups_per_executor=8,
-         correctness=args.correctness,preflight=args.preflight,untraced=args.untraced,comparison="dispatch" if args.dispatch_comparison else "release" if args.release_comparison else ("packing" if args.packing_comparison else "transport"),trace_condition="both ordinary transports untraced; fixed complete-output-set fidelity" if args.untraced else "both transports identically BF_TRACE",
+         correctness=args.correctness,preflight=args.preflight,untraced=args.untraced,comparison="stock-transport" if args.transport_comparison else "dispatch" if args.dispatch_comparison else "release" if args.release_comparison else ("packing" if args.packing_comparison else "transport"),trace_condition="ordinary paths untraced; fixed complete-output-set fidelity" if args.untraced else "both transports identically BF_TRACE",
          commit=subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip(),
          driver_source=Path(__file__).read_text(),client_source=(root/"bench/resident_dispatch.py").read_text(),
          backend_source=(root/"executor/vllm_graph.py").read_text(),native_source=(root/"executor/vllm_graph.cu").read_text(),
@@ -66,7 +69,8 @@ def main():
     try:
         for pair in range(repetitions):
             order=modes if len(modes)==2 or (pair//2)%2==0 else modes[2:]+modes[:2]
-            for mode in (order if pair%2==0 else order[::-1]):
+            if args.transport_comparison:order=tuple(permutations(modes))[pair%6]
+            for mode in (order if args.transport_comparison or pair%2==0 else order[::-1]):
                 kernel_mode=mode.endswith("kernel") or mode=="uring"
                 assert not Path("/sys/module/bfusion_tx").exists()
                 assert not Path("/sys/fs/bpf/bpfusion_ctl").exists()
@@ -94,6 +98,10 @@ def main():
                         if p.poll() is not None:raise RuntimeError(logpath.read_text()[-6000:])
                         time.sleep(.1)
                     emit("ready",pair=pair,mode=mode,pid=p.pid)
+                    if args.transport_comparison:
+                        tasks=[dict(tid=int(t.name),comm=(t/"comm").read_text().strip()) for t in Path(f"/proc/{p.pid}/task").iterdir()]
+                        if mode=="uring":assert any(t["comm"].startswith("iou-sqp") for t in tasks),tasks
+                        emit("worker_tasks",pair=pair,mode=mode,pid=p.pid,tasks=tasks)
                     def keep(row,kind):
                         row=dict(row,kind=kind);rows.append(row)
                         emit("request",pair=pair,mode=mode,**row)
@@ -178,7 +186,8 @@ def main():
                             for i in range(8):
                                 ids=prompts[i%len(prompts)]
                                 keep(dict(request(client,ids,None,gen=1),input_ids=ids,gen=1,bad=False),"warmup")
-                        for gen,concurrency in matrix:
+                        cell_order=matrix[pair%4:]+matrix[:pair%4] if args.transport_comparison else matrix
+                        for gen,concurrency in cell_order:
                             barrier=threading.Barrier(concurrency+1);ready=threading.Barrier(concurrency+1)
                             selected=[]
                             def lane(i):
@@ -190,12 +199,15 @@ def main():
                                         selected.append(row)
                             with ThreadPoolExecutor(max_workers=concurrency) as pool:
                                 futures=[pool.submit(lane,i) for i in range(concurrency)]
-                                ready.wait(timeout=60);barrier.wait(timeout=60)
+                                ready.wait(timeout=60)
+                                before=worker_cpu_snapshot(p.pid) if args.transport_comparison else None
+                                barrier.wait(timeout=60)
                                 for future in futures:future.result()
+                            cpu=worker_cpu_delta(before,worker_cpu_snapshot(p.pid)) if args.transport_comparison else {}
                             first=min(row["start_ns"] for row in selected);last=max(row["arrival_ns"][-1] for row in selected)
                             for row in selected:keep(row,"measured")
                             emit("cell",pair=pair,mode=mode,gen=gen,concurrency=concurrency,
-                                requests=requests_per_cell,tokens=requests_per_cell*gen,first_ns=first,last_ns=last,output_tokens_per_s=requests_per_cell*gen/((last-first)/1e9))
+                                requests=requests_per_cell,tokens=requests_per_cell*gen,first_ns=first,last_ns=last,output_tokens_per_s=requests_per_cell*gen/((last-first)/1e9),**cpu)
                     if args.correctness:
                         tids=[int(t.name) for t in Path(f"/proc/{p.pid}/task").iterdir() if int(t.name)!=p.pid]
                         assert tids

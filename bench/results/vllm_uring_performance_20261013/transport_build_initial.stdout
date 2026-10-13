@@ -1,0 +1,11 @@
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	   -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph.so.o -o build/vllm_graph.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph.so.o build/vllm_graph.so.dlink.o /tmp/bpfusion-vllm-uring-q26fqorc/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-vllm-uring-q26fqorc/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT   -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_user_network_wait.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_user_network_wait.so.o -o build/vllm_graph_user_network_wait.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_user_network_wait.so.o build/vllm_graph_user_network_wait.so.dlink.o /tmp/bpfusion-vllm-uring-q26fqorc/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-vllm-uring-q26fqorc/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_user_network_wait.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_user_network_wait
+make: Nothing to be done for 'vllm-graph-uring'.

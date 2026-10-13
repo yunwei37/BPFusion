@@ -403,3 +403,22 @@ the next matched optimized transport comparison. The existing module default
 and original Workspace/base runtime/WIP remain unchanged. Temporary runtime
 retained for the following benchmark, with post-run no-process/module/pin
 evidence; complete resource removal remains pending that benchmark.
+
+## Matched optimized stock transport experiment in progress
+
+The [reviewed plan](../bench/results/vllm_uring_performance_20261013/plan.md)
+retains finding0035's local ordinary-serving question. Stock io_uring is
+compared with the efficient native mechanism and the module component control,
+with identical optimized computation. [Fresh plan review, two rounds](../bench/results/vllm_uring_performance_20261013/plan-review.md)
+admits the scoped comparison after executable repairs. Real Qwen preflight
+passes120 requests/3144 tokens across12 cells; six ordinary strict executors
+pass3732 requests/133344 valid tokens/1554 intended rejections/30000 empty
+connections, and final reconstruction passes. The fixed pre-performance
+complete-output sets remain Qwen17 keys/22 sequences,Smol17/19; they qualify
+finite-set fidelity, not current unobserved batch-history replay.
+
+Benchmark/analysis now select three transports, six balanced process orders,
+rotated common cell order, measured known-worker CPU brackets and stock-ring
+checks. Historical finding0035 full analyses remain byte-identical. The full
+36-executor/144-cell timing matrix and fresh result review are pending. No
+speedup/CPU-saving or completed-experiment claim follows from this setup.

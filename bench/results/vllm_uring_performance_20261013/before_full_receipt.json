@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-13T04:26:12.515945+00:00",
+  "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167",
+  "Workspace_UID": "3e8994f8-77ba-4a73-a3a5-35ed69a0a8a2",
+  "Workspace_Ready_verified": "2026-10-13T04:23:07Z",
+  "base_packages": {
+    "torch": "2.14.1",
+    "transformers": "5.19.0"
+  },
+  "module": false,
+  "pins": [],
+  "git status --short --branch": {
+    "exit": 0,
+    "stdout": "## main...origin/main\n M bench/vllm_serving.py\n M bench/vllm_serving_analysis.py\n?? bench/results/vllm_uring_performance_20261013/\n?? tools/setup_env.sh\n",
+    "stderr": ""
+  },
+  "nvidia-smi --query-gpu=name,driver_version,memory.used --format=csv,noheader": {
+    "exit": 0,
+    "stdout": "NVIDIA GeForce RTX 5090, 610.57.04, 15 MiB\n",
+    "stderr": ""
+  },
+  "nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "ps -p 1,10909 -o pid,comm,args": {
+    "exit": 0,
+    "stdout": "    PID COMMAND         COMMAND\n      1 coder           ./coder agent\n  10909 coder           ./coder agent --no-reap\n",
+    "stderr": ""
+  }
+}

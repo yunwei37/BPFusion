@@ -3,6 +3,7 @@
 """Recompute complete traced vLLM serving evidence and paired client metrics."""
 import argparse,json,math,re,statistics
 from collections import Counter
+from itertools import permutations
 from pathlib import Path
 
 def analyze(path):
@@ -15,6 +16,14 @@ def analyze(path):
     verified=[r for r in records if r["event"]=="verified"]
     assert {(r["pair"],r["mode"]) for r in executors}==expected and len(executors)==len(expected)
     assert len(verified)==len(expected)
+    if meta.get("comparison")=="stock-transport":
+        for pair in range(meta["repetitions"]):
+            starts=[r["mode"] for r in records if r["event"]=="start" and r["pair"]==pair]
+            assert starts==list(tuple(permutations(meta["modes"]))[pair%6])
+            if not meta["correctness"]:
+                shift=pair%4;order=meta["matrix"][shift:]+meta["matrix"][:shift]
+                for mode in meta["modes"]:
+                    assert [[r["gen"],r["concurrency"]] for r in records if r["event"]=="cell" and (r["pair"],r["mode"])==(pair,mode)]==order
     total_tokens=0;total_requests=0;all_batches=set()
     frozen_pool={}
     if meta.get("untraced"):
@@ -41,7 +50,7 @@ def analyze(path):
             assert counters["graph_error"]==counters["trace_overflows"]==0
             v=next(r for r in verified if (r["pair"],r["mode"])==(pair,mode))
             assert v["native_counters"]==counters and v["tokens"]==sum(len(r["tokens"]) for r in requests)
-            if mode.endswith("kernel"):
+            if mode.endswith("kernel") or mode=="uring":
                 stats=next(r for r in records if r["event"]=="stats" and (r["pair"],r["mode"])==(pair,mode))
                 assert stats["code"]==0 and "llm_reserved=0x0" in stats["stdout"]
                 assert f"llm_head={len(requests)}\n" in stats["stdout"]
@@ -117,6 +126,15 @@ def analyze(path):
             assert d["model_steps"]==counters["device_graph_launches"]
             assert d["device_launch_calls"]==counters["device_launch_calls"]==d["model_steps"]*(1 if mode.startswith("chained") else 2)
             if not meta.get("untraced"):assert d["model_steps"]==len(computes)
+        if mode=="uring":
+            ring=json.loads(next(line[7:] for line in executor["stdout"].splitlines() if line.startswith("RESULT ")))
+            assert ring["head"]==ring["completed"]==len(requests)
+            assert ring["accepted"]==ring["closed"]
+            assert all(ring[k]==0 for k in ("pending","error","reserved","dropped","overflow"))
+            assert ring["sqhead"]==ring["sqtail"]==ring["cqhead"]==ring["cqtail"]
+            assert ring["trace_count"]==len(requests) and ring["trace_overflow"]==max(0,len(requests)-128)
+            recorded=next(r for r in records if r["event"]=="uring_verified" and (r["pair"],r["mode"])==(pair,mode))
+            assert recorded["counters"]==ring
         total_tokens+=sum(len(r["tokens"]) for r in requests);total_requests+=len(requests)
         all_batches.update(e["batch"] for e in computes)
         if meta["correctness"]:
@@ -132,7 +150,7 @@ def analyze(path):
             real_prompt_tokens=sum(len(a["input_ids"]) for a in admissions if not a["bad"]) if not meta.get("untraced") else None,
             padded_query_tokens=(sum(e["query"]*e["batch"] for e in computes if e["query"])-sum(len(a["input_ids"]) for a in admissions if not a["bad"])) if not meta.get("untraced") else None,**release_summary)))
     print(json.dumps(dict(event="coverage",requests=total_requests,tokens=total_tokens,actual_batches=sorted(all_batches) if not meta.get("untraced") else None)))
-    if meta["correctness"] or meta.get("preflight"):return
+    if meta["correctness"] or (meta.get("preflight") and meta.get("comparison")!="stock-transport"):return
     count=meta.get("requests_per_cell",64)
     samples=[r for r in records if r["event"]=="request" and r["kind"]=="measured"]
     warmups=[r for r in records if r["event"]=="request" and r["kind"]=="warmup"]
@@ -149,9 +167,23 @@ def analyze(path):
             first=min(r["start_ns"] for r in selected);last=max(r["arrival_ns"][-1] for r in selected)
             assert cell["first_ns"]==first and cell["last_ns"]==last and cell["requests"]==count and cell["tokens"]==count*gen
             tps=count*gen/((last-first)/1e9);assert tps==cell["output_tokens_per_s"]
+            cpu={}
+            if meta.get("comparison")=="stock-transport":
+                before,after=cell["worker_cpu_before"],cell["worker_cpu_after"]
+                assert before["sample_begin_ns"]<=before["sample_end_ns"]<=first<=last<=after["sample_begin_ns"]<=after["sample_end_ns"]
+                process=after["executor_cpu_ns"]-before["executor_cpu_ns"]
+                tx=after["kernel_tx_cpu_ns"]-before["kernel_tx_cpu_ns"]
+                assert process>=0 and tx>=0
+                assert cell["executor_clock_cpu_ns"]==process and cell["kernel_tx_cpu_ns"]==tx and cell["known_worker_cpu_ns"]==process+tx
+                tasks=next(r for r in records if r["event"]=="worker_tasks" and (r["pair"],r["mode"])==(pair,mode))
+                if mode=="uring":assert any(t["comm"].startswith("iou-sqp") for t in tasks["tasks"])
+                if mode!="kernel":assert tx==0
+                cpu=dict(known_worker_cpu_s_per_request=(process+tx)/1e9/count,
+                         executor_cpu_s_per_request=process/1e9/count,kernel_tx_cpu_s_per_request=tx/1e9/count)
             summaries[pair,mode,gen,c]=dict(ttft_ms=statistics.mean(r["ttft_ms"] for r in selected),
                 completion_ms=statistics.mean(r["latency_ms"] for r in selected),tokens_per_s=tps,
-                tpot_ms=statistics.mean(r["tpot_ms"] for r in selected) if gen>1 else None)
+                tpot_ms=statistics.mean(r["tpot_ms"] for r in selected) if gen>1 else None,**cpu)
+    if meta.get("preflight"):return
     for gen,c in meta["matrix"]:
         for mode in meta["modes"]:
             selected=[r for r in samples if (r["mode"],r["gen"],r["concurrency"])==(mode,gen,c)]
@@ -162,8 +194,10 @@ def analyze(path):
                 ttft_p99_ms=quantile([r["ttft_ms"] for r in selected],.99),
                 tpot_mean_ms=statistics.mean(r["tpot_ms"] for r in selected) if gen>1 else None,
                 completion_mean_ms=statistics.mean(r["latency_ms"] for r in selected),
-                tokens_per_s=statistics.mean(summaries[pair,mode,gen,c]["tokens_per_s"] for pair in range(meta["repetitions"])))))
-        comparisons=[("userspace","kernel","kernel")] if len(meta["modes"])==2 else ([
+                tokens_per_s=statistics.mean(summaries[pair,mode,gen,c]["tokens_per_s"] for pair in range(meta["repetitions"])),
+                **({key:statistics.mean(summaries[pair,mode,gen,c][key] for pair in range(meta["repetitions"]))
+                    for key in ("known_worker_cpu_s_per_request","executor_cpu_s_per_request","kernel_tx_cpu_s_per_request")} if meta.get("comparison")=="stock-transport" else {}))))
+        comparisons=[("userspace","uring","uring"),("kernel","uring","uring-vs-module")] if meta.get("comparison")=="stock-transport" else [("userspace","kernel","kernel")] if len(meta["modes"])==2 else ([
             ("separate-kernel","chained-kernel","dispatch"),
             ("separate-userspace","chained-userspace","dispatch"),
             ("chained-userspace","chained-kernel","kernel")] if meta.get("comparison")=="dispatch" else [
@@ -174,12 +208,12 @@ def analyze(path):
             ("grouped-userspace","packed-userspace","packing"),
             ("packed-userspace","packed-kernel","kernel")])
         for baseline,candidate,favors in comparisons:
-            for metric in ("ttft_ms","completion_ms","tokens_per_s")+(("tpot_ms",) if gen>1 else ()):
+            for metric in ("ttft_ms","completion_ms","tokens_per_s")+(("tpot_ms",) if gen>1 else ())+(("known_worker_cpu_s_per_request","executor_cpu_s_per_request","kernel_tx_cpu_s_per_request") if meta.get("comparison")=="stock-transport" else ()):
                 sign=1 if metric=="tokens_per_s" else -1
                 differences=[sign*(summaries[pair,candidate,gen,c][metric]-summaries[pair,baseline,gen,c][metric])
                              for pair in range(meta["repetitions"])]
-                mean=statistics.mean(differences);assert len(differences)==5
-                margin=2.776445105*statistics.stdev(differences)/math.sqrt(5)
+                mean=statistics.mean(differences);n=len(differences);assert n==(6 if meta.get("comparison")=="stock-transport" else 5)
+                margin=(2.570581835636305 if n==6 else 2.776445105)*statistics.stdev(differences)/math.sqrt(n)
                 print(json.dumps(dict(event="paired_difference_favoring_"+favors,baseline=baseline,candidate=candidate,
                     metric=metric,gen=gen,concurrency=c,differences=differences,mean=mean,nominal_t95=[mean-margin,mean+margin])))
 if __name__=="__main__":
