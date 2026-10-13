@@ -1,0 +1,124 @@
+{
+  "time": "2026-10-13T02:00:11.577973+00:00",
+  "scope": "Root self-review of finite streaming integration, not performance or independent review.",
+  "models": [
+    {
+      "name": "qwen",
+      "requests": 12,
+      "exact_tokens": 390,
+      "exact_wire_bytes": 2036,
+      "gen64_requests": 6,
+      "successful_sends_from_pre_DONE_observation": 378,
+      "final_send_completions": 12,
+      "sends": 390,
+      "queue_positions": 406,
+      "reservation_zero": true,
+      "all_slots_free": true,
+      "client_long_output_chunks": [
+        {
+          "sequence": 1,
+          "chunks": 64,
+          "first_before_last": true
+        },
+        {
+          "sequence": 3,
+          "chunks": 64,
+          "first_before_last": true
+        },
+        {
+          "sequence": 4,
+          "chunks": 64,
+          "first_before_last": true
+        },
+        {
+          "sequence": 6,
+          "chunks": 64,
+          "first_before_last": true
+        },
+        {
+          "sequence": 7,
+          "chunks": 64,
+          "first_before_last": true
+        },
+        {
+          "sequence": 11,
+          "chunks": 42,
+          "first_before_last": true
+        }
+      ],
+      "after_ready_syscalls": {
+        "accept": 0,
+        "accept4": 0,
+        "recvfrom": 0,
+        "recvmsg": 0,
+        "sendto": 0,
+        "sendmsg": 0,
+        "io_uring_enter": 0
+      },
+      "start": "2026-10-13T01:52:30.559111+00:00",
+      "end": "2026-10-13T01:53:48.645475+00:00"
+    },
+    {
+      "name": "smol",
+      "requests": 12,
+      "exact_tokens": 390,
+      "exact_wire_bytes": 2036,
+      "gen64_requests": 6,
+      "successful_sends_from_pre_DONE_observation": 378,
+      "final_send_completions": 12,
+      "sends": 390,
+      "queue_positions": 406,
+      "reservation_zero": true,
+      "all_slots_free": true,
+      "client_long_output_chunks": [
+        {
+          "sequence": 1,
+          "chunks": 64,
+          "first_before_last": true
+        },
+        {
+          "sequence": 3,
+          "chunks": 64,
+          "first_before_last": true
+        },
+        {
+          "sequence": 4,
+          "chunks": 64,
+          "first_before_last": true
+        },
+        {
+          "sequence": 6,
+          "chunks": 64,
+          "first_before_last": true
+        },
+        {
+          "sequence": 7,
+          "chunks": 64,
+          "first_before_last": true
+        },
+        {
+          "sequence": 11,
+          "chunks": 43,
+          "first_before_last": true
+        }
+      ],
+      "after_ready_syscalls": {
+        "accept": 0,
+        "accept4": 0,
+        "recvfrom": 0,
+        "recvmsg": 0,
+        "sendto": 0,
+        "sendmsg": 0,
+        "io_uring_enter": 0
+      },
+      "start": "2026-10-13T01:53:48.676202+00:00",
+      "end": "2026-10-13T01:55:19.285864+00:00"
+    }
+  ],
+  "oracle_frozen_at": "2026-10-13T01:50:59.810351+00:00",
+  "limitations": [
+    "finite tags/one connection; no concurrency/backpressure/abort qualification",
+    "no timing/CPU benefit comparison; synthetic cold/fragmented workload and strace",
+    "only the existing HF backend, not optimized vLLM integration"
+  ]
+}

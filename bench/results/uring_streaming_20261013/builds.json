@@ -1,0 +1,69 @@
+[
+  {
+    "cmd": [
+      "clang",
+      "-O2",
+      "-g",
+      "-target",
+      "bpf",
+      "-mcpu=v3",
+      "-D__TARGET_ARCH_x86",
+      "-I/usr/include/x86_64-linux-gnu",
+      "-Ibpf/include",
+      "-Wall",
+      "-Werror",
+      "-Wno-missing-declarations",
+      "-Wno-unused-value",
+      "-c",
+      "/tmp/bpfusion-uring-streaming-oon88dds/fusion.bpf.c",
+      "-o",
+      "/tmp/bpfusion-uring-streaming-oon88dds/fusion.bpf.o"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "cmd": [
+      "cc",
+      "-O2",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unused-parameter",
+      "-Ibpf/include",
+      "/tmp/bpfusion-uring-streaming-oon88dds/loader.c",
+      "-o",
+      "/tmp/bpfusion-uring-streaming-oon88dds/loader",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "cmd": [
+      "/usr/local/cuda/bin/nvcc",
+      "-O3",
+      "-std=c++17",
+      "-arch=sm_120",
+      "-rdc=true",
+      "-shared",
+      "-Xcompiler=-fPIC",
+      "-Ibpf/include",
+      "/tmp/bpfusion-uring-streaming-oon88dds/model/qwen_graph.cu",
+      "-o",
+      "/tmp/bpfusion-uring-streaming-oon88dds/model/qwen_graph.so",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

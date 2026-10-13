@@ -359,3 +359,16 @@ Root replay self-review passes; no independent experiment review or timing
 claim. Fixture completion tags/connections/output length are finite; broader
 streaming/concurrency/abort ownership and performance remain open. Production
 source/defaults are unchanged,and owned temporary runtime/pins are removed.
+
+## Finite io_uring real-model streaming
+
+[Finding0039](findings/0039-io-uring-streaming.md) extends the same temporary
+path to exact1/64-token outputs,Qwen/Smol12requests390tokens each. Full greedy
+HF sequences freeze before observation; all780 served tokens match. Each long
+request records63 intermediate sends and one tagged final send; actual clients
+receive42–64 body chunks. BPF recycles only final complete sends,with all
+slots FREE,reserved0 and normal GPU EOF/CLOSE. Native after-ready networking/
+wake calls are0. Root replay self-review and both drivers/pipeline pass0; no
+independent result review or latency/throughput/CPU benefit follows. Production
+source/defaults remain unchanged. Concurrent/general ring ownership,abort/
+backpressure/rejection and optimized-backend integration remain open.

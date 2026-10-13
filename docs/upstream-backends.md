@@ -750,8 +750,10 @@ submission and repeated receive-completion wakeup on the original RTX5090,
 with exact client bytes and EOF. The later [finite real-model integration](findings/0038-io-uring-sockmap-models.md)
 connects unchanged eBPF admission and HF computation for both checkpoints,
 with GPU-owned accept/receive/send/close and kernel-side eBPF reclamation.
-Concurrent/long-output/general ring ownership and a speedup remain
-unestablished; the current module remains the production-qualified path.
+The [streaming extension](findings/0039-io-uring-streaming.md) additionally
+qualifies exact1/64-token outputs for both checkpoints and final-only release.
+Concurrent/general ring ownership and a speedup remain unestablished;
+the current module remains the production-qualified path.
 
 [Tutti](https://arxiv.org/html/2605.03375v1#S3.SS2) uses a GPU SQ/CQ design for
 SSD-backed KV objects and integrates with vLLM. Its gio_uring mirrors the

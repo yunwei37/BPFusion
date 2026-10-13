@@ -1,0 +1,59 @@
+capturing model=/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775 type=qwen2 fp16 eager
+captured bank 0 model graph 32/190
+captured bank 0 model graph 64/190
+captured bank 0 model graph 96/190
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+CAPABILITY host_native_atomic=0
+NET_READY pid=201203 port=39403 setup_flags=81922 features=262143
+resident Qwen ready: 24 layers h=896 vocab=151936; device-tail graphs, dispatch=resident
+RESULT {"status":0,"accepted":1,"received":12,"sent":390,"bytes":2036,"idle_observed":9,"closed":1,"eof":1,"sq_head":406,"sq_tail":406,"cq_head":406,"cq_tail":406,"dropped":0,"overflow":0,"head":12,"reserved":0,"last_res":0,"last_prompt":1,"last_token":15}
+STREAM {"sequence":0,"gen":1,"sends":1,"early":0,"finals":1,"bytes":4,"first_produced":1,"last_produced":1}
+STREAM {"sequence":1,"gen":64,"sends":64,"early":63,"finals":1,"bytes":336,"first_produced":1,"last_produced":64}
+STREAM {"sequence":2,"gen":1,"sends":1,"early":0,"finals":1,"bytes":4,"first_produced":1,"last_produced":1}
+STREAM {"sequence":3,"gen":64,"sends":64,"early":63,"finals":1,"bytes":336,"first_produced":1,"last_produced":64}
+STREAM {"sequence":4,"gen":64,"sends":64,"early":63,"finals":1,"bytes":256,"first_produced":1,"last_produced":64}
+STREAM {"sequence":5,"gen":1,"sends":1,"early":0,"finals":1,"bytes":82,"first_produced":1,"last_produced":1}
+STREAM {"sequence":6,"gen":64,"sends":64,"early":63,"finals":1,"bytes":256,"first_produced":1,"last_produced":64}
+STREAM {"sequence":7,"gen":64,"sends":64,"early":63,"finals":1,"bytes":336,"first_produced":1,"last_produced":64}
+STREAM {"sequence":8,"gen":1,"sends":1,"early":0,"finals":1,"bytes":4,"first_produced":1,"last_produced":1}
+STREAM {"sequence":9,"gen":1,"sends":1,"early":0,"finals":1,"bytes":82,"first_produced":1,"last_produced":1}
+STREAM {"sequence":10,"gen":1,"sends":1,"early":0,"finals":1,"bytes":4,"first_produced":1,"last_produced":1}
+STREAM {"sequence":11,"gen":64,"sends":64,"early":63,"finals":1,"bytes":336,"first_produced":1,"last_produced":64}
+CLEANUP ring_closed GPU_accepted_peer_closed buffers_unregistered
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=390 graph_error=0 banks=8 max_active=1

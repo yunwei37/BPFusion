@@ -1,0 +1,2052 @@
+{
+  "model": "qwen",
+  "oracle_frozen_at": "2026-10-13T01:50:59.810351+00:00",
+  "started": "2026-10-13T01:52:30.559111+00:00",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict, sockops and diagnostic io_uring recycle attached\n",
+    "stderr": ""
+  },
+  "native_pid": 201203,
+  "ready_time_ns": 1791856404408093902,
+  "client_tuple": [
+    "127.0.0.1",
+    42722
+  ],
+  "clean_eof": true,
+  "cmd": [
+    "strace",
+    "-f",
+    "-ttt",
+    "-o",
+    "/tmp/bpfusion-uring-streaming-oon88dds/model/qwen.strace",
+    "-e",
+    "trace=accept,accept4,recvfrom,recvmsg,sendto,sendmsg,io_uring_setup,io_uring_enter,io_uring_register,close",
+    "python3",
+    "/tmp/bpfusion-uring-streaming-oon88dds/model/qwen_graph.py",
+    "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "180"
+  ],
+  "exit": 0,
+  "stdout": "capturing model=/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775 type=qwen2 fp16 eager\ncaptured bank 0 model graph 32/190\ncaptured bank 0 model graph 64/190\ncaptured bank 0 model graph 96/190\ncaptured bank 0 model graph 128/190\ncaptured bank 0 model graph 160/190\ncaptured bank 1 model graph 32/190\ncaptured bank 1 model graph 64/190\ncaptured bank 1 model graph 96/190\ncaptured bank 1 model graph 128/190\ncaptured bank 1 model graph 160/190\ncaptured bank 2 model graph 32/190\ncaptured bank 2 model graph 64/190\ncaptured bank 2 model graph 96/190\ncaptured bank 2 model graph 128/190\ncaptured bank 2 model graph 160/190\ncaptured bank 3 model graph 32/190\ncaptured bank 3 model graph 64/190\ncaptured bank 3 model graph 96/190\ncaptured bank 3 model graph 128/190\ncaptured bank 3 model graph 160/190\ncaptured bank 4 model graph 32/190\ncaptured bank 4 model graph 64/190\ncaptured bank 4 model graph 96/190\ncaptured bank 4 model graph 128/190\ncaptured bank 4 model graph 160/190\ncaptured bank 5 model graph 32/190\ncaptured bank 5 model graph 64/190\ncaptured bank 5 model graph 96/190\ncaptured bank 5 model graph 128/190\ncaptured bank 5 model graph 160/190\ncaptured bank 6 model graph 32/190\ncaptured bank 6 model graph 64/190\ncaptured bank 6 model graph 96/190\ncaptured bank 6 model graph 128/190\ncaptured bank 6 model graph 160/190\ncaptured bank 7 model graph 32/190\ncaptured bank 7 model graph 64/190\ncaptured bank 7 model graph 96/190\ncaptured bank 7 model graph 128/190\ncaptured bank 7 model graph 160/190\nCAPABILITY host_native_atomic=0\nNET_READY pid=201203 port=39403 setup_flags=81922 features=262143\nresident Qwen ready: 24 layers h=896 vocab=151936; device-tail graphs, dispatch=resident\nRESULT {\"status\":0,\"accepted\":1,\"received\":12,\"sent\":390,\"bytes\":2036,\"idle_observed\":9,\"closed\":1,\"eof\":1,\"sq_head\":406,\"sq_tail\":406,\"cq_head\":406,\"cq_tail\":406,\"dropped\":0,\"overflow\":0,\"head\":12,\"reserved\":0,\"last_res\":0,\"last_prompt\":1,\"last_token\":15}\nSTREAM {\"sequence\":0,\"gen\":1,\"sends\":1,\"early\":0,\"finals\":1,\"bytes\":4,\"first_produced\":1,\"last_produced\":1}\nSTREAM {\"sequence\":1,\"gen\":64,\"sends\":64,\"early\":63,\"finals\":1,\"bytes\":336,\"first_produced\":1,\"last_produced\":64}\nSTREAM {\"sequence\":2,\"gen\":1,\"sends\":1,\"early\":0,\"finals\":1,\"bytes\":4,\"first_produced\":1,\"last_produced\":1}\nSTREAM {\"sequence\":3,\"gen\":64,\"sends\":64,\"early\":63,\"finals\":1,\"bytes\":336,\"first_produced\":1,\"last_produced\":64}\nSTREAM {\"sequence\":4,\"gen\":64,\"sends\":64,\"early\":63,\"finals\":1,\"bytes\":256,\"first_produced\":1,\"last_produced\":64}\nSTREAM {\"sequence\":5,\"gen\":1,\"sends\":1,\"early\":0,\"finals\":1,\"bytes\":82,\"first_produced\":1,\"last_produced\":1}\nSTREAM {\"sequence\":6,\"gen\":64,\"sends\":64,\"early\":63,\"finals\":1,\"bytes\":256,\"first_produced\":1,\"last_produced\":64}\nSTREAM {\"sequence\":7,\"gen\":64,\"sends\":64,\"early\":63,\"finals\":1,\"bytes\":336,\"first_produced\":1,\"last_produced\":64}\nSTREAM {\"sequence\":8,\"gen\":1,\"sends\":1,\"early\":0,\"finals\":1,\"bytes\":4,\"first_produced\":1,\"last_produced\":1}\nSTREAM {\"sequence\":9,\"gen\":1,\"sends\":1,\"early\":0,\"finals\":1,\"bytes\":82,\"first_produced\":1,\"last_produced\":1}\nSTREAM {\"sequence\":10,\"gen\":1,\"sends\":1,\"early\":0,\"finals\":1,\"bytes\":4,\"first_produced\":1,\"last_produced\":1}\nSTREAM {\"sequence\":11,\"gen\":64,\"sends\":64,\"early\":63,\"finals\":1,\"bytes\":336,\"first_produced\":1,\"last_produced\":64}\nCLEANUP ring_closed GPU_accepted_peer_closed buffers_unregistered\nresident Qwen stopped: dispatch=resident launches=1 device_graph_launches=390 graph_error=0 banks=8 max_active=1\n",
+  "stderr": "\nLoading weights:   0%|          | 0/290 [00:00<?, ?it/s]\nLoading weights:  39%|\u2588\u2588\u2588\u2589      | 113/290 [00:00<00:00, 1111.95it/s]\nLoading weights:  86%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c | 250/290 [00:00<00:00, 1234.01it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 290/290 [00:00<00:00, 1258.43it/s]\n",
+  "rows": [
+    {
+      "cycle": 0,
+      "prompt": [
+        77
+      ],
+      "protocol": "binary",
+      "gen": 1,
+      "chunks": [
+        {
+          "arrived_ns": 287780812312587,
+          "bytes": 4
+        }
+      ],
+      "split": 1,
+      "sent_ns": 1791856408809736400,
+      "request_hex": "514d4c51010000000100000000000000e8030000000000004d000000",
+      "reply_hex": "1c010000",
+      "expected_hex": "1c010000",
+      "exact": true
+    },
+    {
+      "cycle": 1,
+      "prompt": [
+        78,
+        79
+      ],
+      "protocol": "http",
+      "gen": 64,
+      "chunks": [
+        {
+          "arrived_ns": 287783055289669,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783056828638,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783058548085,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783060151556,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783061995613,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783063577082,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783065291492,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783067149057,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783068882316,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783070555160,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783072204323,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783073925566,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783075659036,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783077395044,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783079260870,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783081016777,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783082704433,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783084327276,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783086056273,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783087788322,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783089622857,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783091371546,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783093131745,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783094861359,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783096581031,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783098295390,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783100086585,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783101764106,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783103427664,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783105270255,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783106999659,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783108746745,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783110486276,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783112230758,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783113988391,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783115755416,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783117491685,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783119247280,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783120974626,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783123085666,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783124376683,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783126145335,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783127987090,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783129722091,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783131414087,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783133178933,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783134920116,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783136654304,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783138348640,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783140194627,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783141844122,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783143527900,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783145275707,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783147076565,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783148868526,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783150597251,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783152381577,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783154107513,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783155877239,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783157603591,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783159426518,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783161148153,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783162885592,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287783164616494,
+          "bytes": 4
+        }
+      ],
+      "split": 94,
+      "sent_ns": 1791856411012840117,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a2033320d0a0d0a514d4c51020000004000000000000000e9030000000000004e0000004f000000",
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "expected_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "exact": true
+    },
+    {
+      "cycle": 2,
+      "prompt": [
+        79,
+        80,
+        81,
+        82,
+        83
+      ],
+      "protocol": "binary",
+      "gen": 1,
+      "chunks": [
+        {
+          "arrived_ns": 287785407088464,
+          "bytes": 4
+        }
+      ],
+      "split": 1,
+      "sent_ns": 1791856413365265651,
+      "request_hex": "514d4c51050000000100000000000000ea030000000000004f00000050000000510000005200000053000000",
+      "reply_hex": "c6000000",
+      "expected_hex": "c6000000",
+      "exact": true
+    },
+    {
+      "cycle": 3,
+      "prompt": [
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87
+      ],
+      "protocol": "http",
+      "gen": 64,
+      "chunks": [
+        {
+          "arrived_ns": 287787650179979,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787651841701,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787653574691,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787655361506,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787657097873,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787658766768,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787660551668,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787662269418,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787663978057,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787665686888,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787667469365,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787669177859,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787670885359,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787672637814,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787674377698,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787676141092,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787677854586,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787679621336,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787681339633,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787683148167,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787684854955,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787686564146,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787688315340,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787690142100,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787691787414,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787693617863,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787695294066,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787697026429,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787698832925,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787700553867,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787702284123,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787704025681,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787705786207,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787707489898,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787709237043,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787710986728,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787712729648,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787714490834,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787716224816,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787717956037,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787719701245,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787721446338,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787723185109,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787724951848,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787726697889,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787728482908,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787730198115,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787731939832,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787733691857,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787735386917,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787737210369,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787738943690,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787740696255,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787742432690,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787744222023,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787745930746,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787747755081,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787749483486,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787751237331,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787752994126,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787754738031,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787756480371,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787758145033,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287787759963869,
+          "bytes": 4
+        }
+      ],
+      "split": 94,
+      "sent_ns": 1791856415607659217,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a2035360d0a0d0a514d4c51080000004000000000000000eb030000000000005000000051000000520000005300000054000000550000005600000057000000",
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000b502000008340000c6000000100000000b0000000f0000001100000013000000c6000000d7160000cf630000dc000000110000000b0000000f0000000f0000000f000000f90c00007002000010000000dc0000001000000010000000c60000004f170100c60000005d00000010000000110000004a000000e3040000c32100000f01000026380000565b000040010000100000000f000000b4020000dc000000100000000f000000190a000037010000562f0000ad01000017010000e20200003b010000a6020000900100004d000000030000000c00000053000000a36e00003b010000b4640000c0010000900100004d00000003000000ac300000",
+      "expected_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000b502000008340000c6000000100000000b0000000f0000001100000013000000c6000000d7160000cf630000dc000000110000000b0000000f0000000f0000000f000000f90c00007002000010000000dc0000001000000010000000c60000004f170100c60000005d00000010000000110000004a000000e3040000c32100000f01000026380000565b000040010000100000000f000000b4020000dc000000100000000f000000190a000037010000562f0000ad01000017010000e20200003b010000a6020000900100004d000000030000000c00000053000000a36e00003b010000b4640000c0010000900100004d00000003000000ac300000",
+      "exact": true
+    },
+    {
+      "cycle": 4,
+      "prompt": [
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96
+      ],
+      "protocol": "binary",
+      "gen": 64,
+      "chunks": [
+        {
+          "arrived_ns": 287790003284799,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790004915346,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790006673575,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790008379979,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790010118007,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790011836803,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790013596314,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790015329662,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790017087230,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790018820712,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790020540039,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790022318032,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790024031033,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790025758455,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790027494659,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790029292041,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790030936087,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790032759533,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790034472579,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790036241499,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790037946390,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790039700580,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790041452464,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790043221260,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790044948293,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790046743384,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790048463355,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790050240774,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790051934425,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790053691808,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790055424523,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790057224791,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790058906072,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790060636935,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790062378185,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790064207515,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790065896726,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790067614037,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790069386715,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790071141062,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790072902527,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790074600724,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790076310504,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790078049277,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790079807564,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790081549374,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790083312629,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790085066971,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790086811598,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790088553529,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790090301421,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790092058492,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790093813867,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790095558781,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790097325357,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790099085564,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790100829861,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790102596678,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790104337149,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790106084854,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790107818811,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790109565396,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790111304759,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287790113062072,
+          "bytes": 4
+        }
+      ],
+      "split": 1,
+      "sent_ns": 1791856417960626675,
+      "request_hex": "514d4c51100000004000000000000000ec030000000000005100000052000000530000005400000055000000560000005700000058000000590000005a0000005b0000005c0000005d0000005e0000005f00000060000000",
+      "reply_hex": "5d0000003b00000026050000b13300005a000000200000005c0000005d0000003b00000026050000b13300005a000000210000005c0000005d0000003b00000026050000b13300005a000000220000005c0000005d0000003b00000026050000b13300005a000000230000005c0000005d0000003b00000026050000b13300005a000000240000005c0000005d0000003b00000026050000b13300005a000000250000005c0000005d0000003b00000026050000b13300005a000000260000005c0000005d0000003b00000026050000b13300005a000000270000005c0000005d0000003b00000026050000b13300005a000000280000005c0000005d000000",
+      "expected_hex": "5d0000003b00000026050000b13300005a000000200000005c0000005d0000003b00000026050000b13300005a000000210000005c0000005d0000003b00000026050000b13300005a000000220000005c0000005d0000003b00000026050000b13300005a000000230000005c0000005d0000003b00000026050000b13300005a000000240000005c0000005d0000003b00000026050000b13300005a000000250000005c0000005d0000003b00000026050000b13300005a000000260000005c0000005d0000003b00000026050000b13300005a000000270000005c0000005d0000003b00000026050000b13300005a000000280000005c0000005d000000",
+      "exact": true
+    },
+    {
+      "cycle": 5,
+      "prompt": [
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112
+      ],
+      "protocol": "http",
+      "gen": 1,
+      "chunks": [
+        {
+          "arrived_ns": 287792356225629,
+          "bytes": 4
+        }
+      ],
+      "split": 95,
+      "sent_ns": 1791856420313718155,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203134380d0a0d0a514d4c511f0000000100000000000000ed0300000000000052000000530000005400000055000000560000005700000058000000590000005a0000005b0000005c0000005d0000005e0000005f000000600000006100000062000000630000006400000065000000660000006700000068000000690000006a0000006b0000006c0000006d0000006e0000006f00000070000000",
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a13db0000",
+      "expected_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a13db0000",
+      "exact": true
+    },
+    {
+      "cycle": 6,
+      "prompt": [
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145
+      ],
+      "protocol": "binary",
+      "gen": 64,
+      "chunks": [
+        {
+          "arrived_ns": 287794599279944,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794600964779,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794602718389,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794604505054,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794606286608,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794608026962,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794609701638,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794611511143,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794613263134,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794615019195,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794616767880,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794618421394,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794620272656,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794621907285,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794623642747,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794625509046,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794627156106,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794628884716,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794630618422,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794632372003,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794634121750,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794635857839,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794637597669,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794639352616,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794641107193,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794642886565,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794644620006,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794646370515,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794648117285,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794649861417,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794651619339,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794653370486,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794655127907,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794656872244,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794658621506,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794660371405,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794662124800,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794663873278,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794665627709,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794667382884,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794669148448,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794670903436,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794672667461,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794674418913,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794676180282,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794677933767,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794679688298,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794681439519,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794683205720,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794684957849,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794686702837,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794688454408,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794690210401,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794691963998,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794693725229,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794695478579,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794697244881,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794698997330,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794700753351,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794702548677,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794704317968,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794706091968,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794707848039,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287794709637744,
+          "bytes": 4
+        }
+      ],
+      "split": 1,
+      "sent_ns": 1791856422556870465,
+      "request_hex": "514d4c513f0000004000000000000000ee03000000000000530000005400000055000000560000005700000058000000590000005a0000005b0000005c0000005d0000005e0000005f000000600000006100000062000000630000006400000065000000660000006700000068000000690000006a0000006b0000006c0000006d0000006e0000006f000000700000007100000072000000730000007400000075000000760000007700000078000000790000007a0000007b0000007c0000007d0000007e0000007f000000800000008100000082000000830000008400000085000000860000008700000088000000890000008a0000008b0000008c0000008d0000008e0000008f0000009000000091000000",
+      "reply_hex": "e50000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000",
+      "expected_hex": "e50000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000e10000007e000000",
+      "exact": true
+    },
+    {
+      "cycle": 7,
+      "prompt": [
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147
+      ],
+      "protocol": "http",
+      "gen": 64,
+      "chunks": [
+        {
+          "arrived_ns": 287796952357121,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796953962979,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796955714939,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796957372975,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796959118747,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796960874301,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796962703758,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796964467761,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796966273362,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796967995263,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796969780361,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796971404779,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796973147553,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796974895268,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796976633018,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796978386312,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796980145637,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796981872138,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796983611928,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796985364071,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796987202419,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796988935379,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796990694068,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796992456481,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796994229611,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796995934766,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796997697947,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287796999456631,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797001234842,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797002878206,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797004727044,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797006480801,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797008302758,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797010007479,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797011800308,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797013470037,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797015292131,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797017065289,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797018780803,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797020440124,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797022173086,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797023928717,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797025686866,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797027452461,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797029205649,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797030958319,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797032716770,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797034483406,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797036242275,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797038190574,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797039816248,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797041650543,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797043423036,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797045016693,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797046776670,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797048540734,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797050299881,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797052063910,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797053842394,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797055610856,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797057389898,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797059351795,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797061030003,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797062859589,
+          "bytes": 4
+        }
+      ],
+      "split": 95,
+      "sent_ns": 1791856424910258524,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203238300d0a0d0a514d4c51400000004000000000000000ef030000000000005400000055000000560000005700000058000000590000005a0000005b0000005c0000005d0000005e0000005f000000600000006100000062000000630000006400000065000000660000006700000068000000690000006a0000006b0000006c0000006d0000006e0000006f000000700000007100000072000000730000007400000075000000760000007700000078000000790000007a0000007b0000007c0000007d0000007e0000007f000000800000008100000082000000830000008400000085000000860000008700000088000000890000008a0000008b0000008c0000008d0000008e0000008f00000090000000910000009200000093000000",
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0adf0000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000",
+      "expected_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0adf0000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000e00000007e000000",
+      "exact": true
+    },
+    {
+      "cycle": 8,
+      "prompt": [
+        85,
+        86
+      ],
+      "protocol": "binary",
+      "gen": 1,
+      "chunks": [
+        {
+          "arrived_ns": 287797105275604,
+          "bytes": 4
+        }
+      ],
+      "split": 1,
+      "sent_ns": 1791856425063337975,
+      "request_hex": "514d4c51020000000100000000000000f0030000000000005500000056000000",
+      "reply_hex": "e6010000",
+      "expected_hex": "e6010000",
+      "exact": true
+    },
+    {
+      "cycle": 9,
+      "prompt": [
+        86,
+        87,
+        88,
+        89,
+        90
+      ],
+      "protocol": "http",
+      "gen": 1,
+      "chunks": [
+        {
+          "arrived_ns": 287797148377654,
+          "bytes": 4
+        }
+      ],
+      "split": 94,
+      "sent_ns": 1791856425105745276,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000000100000000000000f103000000000000560000005700000058000000590000005a000000",
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a10000000",
+      "expected_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a10000000",
+      "exact": true
+    },
+    {
+      "cycle": 10,
+      "prompt": [
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94
+      ],
+      "protocol": "binary",
+      "gen": 1,
+      "chunks": [
+        {
+          "arrived_ns": 287797191161397,
+          "bytes": 4
+        }
+      ],
+      "split": 1,
+      "sent_ns": 1791856425148828459,
+      "request_hex": "514d4c51080000000100000000000000f2030000000000005700000058000000590000005a0000005b0000005c0000005d0000005e000000",
+      "reply_hex": "5d000000",
+      "expected_hex": "5d000000",
+      "exact": true
+    },
+    {
+      "cycle": 11,
+      "prompt": [
+        88
+      ],
+      "protocol": "http",
+      "gen": 64,
+      "chunks": [
+        {
+          "arrived_ns": 287797233910111,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797275150109,
+          "bytes": 92
+        },
+        {
+          "arrived_ns": 287797275163082,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797277032049,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797278770119,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797280460139,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797282229788,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797283931158,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797285707532,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797287454484,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797289231861,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797290965146,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797292684418,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797294425677,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797296109907,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797297948818,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797299689170,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797301432844,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797303191184,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797304901164,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797306565775,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797308299336,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797310045933,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797311878318,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797313640227,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797315394431,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797317165813,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797318873947,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797320630136,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797322261984,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797324134676,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797325854737,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797327608739,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797329319612,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797331154728,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797332896957,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797335337316,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797336299435,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797338018486,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797339781128,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797341535083,
+          "bytes": 4
+        },
+        {
+          "arrived_ns": 287797343280938,
+          "bytes": 4
+        }
+      ],
+      "split": 94,
+      "sent_ns": 1791856425191620300,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000004000000000000000f30300000000000058000000",
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a1c010000dc000000100000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f000000",
+      "expected_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a1c010000dc000000100000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f0000000f000000",
+      "exact": true
+    }
+  ],
+  "bpf_stats": {
+    "exit": 0,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\npublished      12\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 12\nsockhash linked 1\nsockhash failed 0\nparser calls   18\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=12\nllm_reserved=0x0\nllm[0]: state=0 prompt=2 gen=1 produced=1 client_ns=1008\nllm[1]: state=0 prompt=5 gen=1 produced=1 client_ns=1009\nllm[2]: state=0 prompt=8 gen=1 produced=1 client_ns=1010\nllm[3]: state=0 prompt=1 gen=64 produced=64 client_ns=1011\nllm[4]: state=0 prompt=16 gen=64 produced=64 client_ns=1004\nllm[5]: state=0 prompt=31 gen=1 produced=1 client_ns=1005\nllm[6]: state=0 prompt=63 gen=64 produced=64 client_ns=1006\nllm[7]: state=0 prompt=64 gen=64 produced=64 client_ns=1007\n",
+    "stderr": ""
+  },
+  "native_stats": {
+    "status": 0,
+    "accepted": 1,
+    "received": 12,
+    "sent": 390,
+    "bytes": 2036,
+    "idle_observed": 9,
+    "closed": 1,
+    "eof": 1,
+    "sq_head": 406,
+    "sq_tail": 406,
+    "cq_head": 406,
+    "cq_tail": 406,
+    "dropped": 0,
+    "overflow": 0,
+    "head": 12,
+    "reserved": 0,
+    "last_res": 0,
+    "last_prompt": 1,
+    "last_token": 15
+  },
+  "stream_records": [
+    {
+      "sequence": 0,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "finals": 1,
+      "bytes": 4,
+      "first_produced": 1,
+      "last_produced": 1
+    },
+    {
+      "sequence": 1,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "finals": 1,
+      "bytes": 336,
+      "first_produced": 1,
+      "last_produced": 64
+    },
+    {
+      "sequence": 2,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "finals": 1,
+      "bytes": 4,
+      "first_produced": 1,
+      "last_produced": 1
+    },
+    {
+      "sequence": 3,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "finals": 1,
+      "bytes": 336,
+      "first_produced": 1,
+      "last_produced": 64
+    },
+    {
+      "sequence": 4,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "finals": 1,
+      "bytes": 256,
+      "first_produced": 1,
+      "last_produced": 64
+    },
+    {
+      "sequence": 5,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "finals": 1,
+      "bytes": 82,
+      "first_produced": 1,
+      "last_produced": 1
+    },
+    {
+      "sequence": 6,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "finals": 1,
+      "bytes": 256,
+      "first_produced": 1,
+      "last_produced": 64
+    },
+    {
+      "sequence": 7,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "finals": 1,
+      "bytes": 336,
+      "first_produced": 1,
+      "last_produced": 64
+    },
+    {
+      "sequence": 8,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "finals": 1,
+      "bytes": 4,
+      "first_produced": 1,
+      "last_produced": 1
+    },
+    {
+      "sequence": 9,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "finals": 1,
+      "bytes": 82,
+      "first_produced": 1,
+      "last_produced": 1
+    },
+    {
+      "sequence": 10,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "finals": 1,
+      "bytes": 4,
+      "first_produced": 1,
+      "last_produced": 1
+    },
+    {
+      "sequence": 11,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "finals": 1,
+      "bytes": 336,
+      "first_produced": 1,
+      "last_produced": 64
+    }
+  ],
+  "pass": true,
+  "finished": "2026-10-13T01:53:48.645475+00:00",
+  "cleanup_pins": [
+    "bpfusion_ctl",
+    "bpfusion_stats",
+    "bpfusion_db",
+    "bpfusion_streams",
+    "bpfusion_stream_link",
+    "bpfusion_uring_link"
+  ],
+  "remaining_pins": []
+}
