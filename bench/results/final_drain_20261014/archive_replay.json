@@ -1,0 +1,41 @@
+{
+  "utc": "2026-10-14T15:45:49.175879+00:00",
+  "checks": [
+    {
+      "label": "full",
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/final_drain_20261014/analysis.py",
+        "/workspaces/repository/bench/results/final_drain_20261014",
+        "full"
+      ],
+      "exit": 0,
+      "byte_equal_stdout": true,
+      "comparison": "stdout byte equal"
+    },
+    {
+      "label": "protocol",
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import sys,pathlib;sys.path.insert(0,sys.argv[1]);import analysis;[analysis.analyze(pathlib.Path(sys.argv[1])/n) for n in [\"qualification_vllm_smol.jsonl\",\"qualification_vllm_qwen.jsonl\"]]",
+        "/workspaces/repository/bench/results/final_drain_20261014"
+      ],
+      "exit": 0,
+      "byte_equal_stdout": true,
+      "comparison": "stdout byte equal"
+    },
+    {
+      "label": "lifecycle",
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/final_drain_20261014/analysis_lifecycle.py",
+        "/workspaces/repository/bench/results/final_drain_20261014"
+      ],
+      "exit": 0,
+      "byte_equal_stdout": false,
+      "comparison": "models equal excluding fresh replay UTC"
+    }
+  ],
+  "credential_patterns_found_paths": []
+}

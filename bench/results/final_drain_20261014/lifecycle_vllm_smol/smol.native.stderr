@@ -1,0 +1,76 @@
+<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.65s/it]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.66s/it]
+
+2026-10-14 15:13:41,855 - INFO - autotuner.py:3691 - flashinfer.jit: [Autotuner]: Loaded 0 configs from /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/90b12f24124ea812861e80e5144bfd064429de7dd1b156425bfda6ebd10460fc/autotune_configs.json
+2026-10-14 15:13:41,855 - INFO - autotuner.py:1046 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+2026-10-14 15:13:41,941 - INFO - autotuner.py:1069 - flashinfer.jit: [Autotuner]: Autotuning process ends
+2026-10-14 15:13:41,942 - INFO - autotuner.py:3554 - flashinfer.jit: [Autotuner]: Saved 0 configs to /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/90b12f24124ea812861e80e5144bfd064429de7dd1b156425bfda6ebd10460fc/autotune_configs.json (0 new, 0 from previous config)
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]Capturing CUDA graphs (PIECEWISE):   6%|▌         | 3/51 [00:00<00:01, 29.92it/s]Capturing CUDA graphs (PIECEWISE):  12%|█▏        | 6/51 [00:00<00:01, 29.41it/s]Capturing CUDA graphs (PIECEWISE):  20%|█▉        | 10/51 [00:00<00:01, 30.51it/s]Capturing CUDA graphs (PIECEWISE):  27%|██▋       | 14/51 [00:00<00:01, 30.35it/s]Capturing CUDA graphs (PIECEWISE):  35%|███▌      | 18/51 [00:00<00:01, 29.87it/s]Capturing CUDA graphs (PIECEWISE):  41%|████      | 21/51 [00:00<00:01, 29.58it/s]Capturing CUDA graphs (PIECEWISE):  47%|████▋     | 24/51 [00:00<00:00, 28.44it/s]Capturing CUDA graphs (PIECEWISE):  53%|█████▎    | 27/51 [00:00<00:00, 28.51it/s]Capturing CUDA graphs (PIECEWISE):  59%|█████▉    | 30/51 [00:01<00:00, 28.74it/s]Capturing CUDA graphs (PIECEWISE):  67%|██████▋   | 34/51 [00:01<00:00, 29.43it/s]Capturing CUDA graphs (PIECEWISE):  75%|███████▍  | 38/51 [00:01<00:00, 29.90it/s]Capturing CUDA graphs (PIECEWISE):  82%|████████▏ | 42/51 [00:01<00:00, 30.44it/s]Capturing CUDA graphs (PIECEWISE):  90%|█████████ | 46/51 [00:01<00:00, 30.61it/s]Capturing CUDA graphs (PIECEWISE):  98%|█████████▊| 50/51 [00:01<00:00, 30.90it/s]Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:01<00:00, 30.07it/s]
+Capturing CUDA graphs (FULL):   0%|          | 0/35 [00:00<?, ?it/s]Capturing CUDA graphs (FULL):  11%|█▏        | 4/35 [00:00<00:00, 33.69it/s]Capturing CUDA graphs (FULL):  23%|██▎       | 8/35 [00:00<00:00, 35.27it/s]Capturing CUDA graphs (FULL):  34%|███▍      | 12/35 [00:00<00:00, 35.94it/s]Capturing CUDA graphs (FULL):  49%|████▊     | 17/35 [00:00<00:00, 38.11it/s]Capturing CUDA graphs (FULL):  63%|██████▎   | 22/35 [00:00<00:00, 39.20it/s]Capturing CUDA graphs (FULL):  77%|███████▋  | 27/35 [00:00<00:00, 41.16it/s]Capturing CUDA graphs (FULL):  91%|█████████▏| 32/35 [00:00<00:00, 43.76it/s]Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:00<00:00, 41.28it/s]
+Prefill query=1 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=1 (FULL): 100%|██████████| 8/8 [00:00<00:00, 73.44it/s]Prefill query=1 (FULL): 100%|██████████| 8/8 [00:00<00:00, 73.14it/s]
+Prefill query=2 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=2 (FULL): 100%|██████████| 8/8 [00:00<00:00, 85.72it/s]
+Prefill query=3 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=3 (FULL): 100%|██████████| 8/8 [00:00<00:00, 82.73it/s]
+Prefill query=4 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=4 (FULL): 100%|██████████| 8/8 [00:00<00:00, 83.36it/s]
+Prefill query=5 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=5 (FULL): 100%|██████████| 8/8 [00:00<00:00, 84.12it/s]
+Prefill query=6 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=6 (FULL): 100%|██████████| 8/8 [00:00<00:00, 84.11it/s]
+Prefill query=7 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=7 (FULL): 100%|██████████| 8/8 [00:00<00:00, 81.92it/s]
+Prefill query=8 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=8 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.75it/s]Prefill query=8 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.58it/s]
+Prefill query=9 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=9 (FULL): 100%|██████████| 8/8 [00:00<00:00, 80.53it/s]
+Prefill query=10 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=10 (FULL): 100%|██████████| 8/8 [00:00<00:00, 82.49it/s]
+Prefill query=11 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=11 (FULL): 100%|██████████| 8/8 [00:00<00:00, 82.64it/s]
+Prefill query=12 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=12 (FULL): 100%|██████████| 8/8 [00:00<00:00, 81.29it/s]
+Prefill query=13 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=13 (FULL): 100%|██████████| 8/8 [00:00<00:00, 82.49it/s]
+Prefill query=14 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=14 (FULL): 100%|██████████| 8/8 [00:00<00:00, 83.77it/s]
+Prefill query=15 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=15 (FULL): 100%|██████████| 8/8 [00:00<00:00, 84.06it/s]
+Prefill query=16 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=16 (FULL): 100%|██████████| 8/8 [00:00<00:00, 83.77it/s]
+Prefill query=17 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=17 (FULL): 100%|██████████| 8/8 [00:00<00:00, 83.20it/s]
+Prefill query=18 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=18 (FULL): 100%|██████████| 8/8 [00:00<00:00, 81.53it/s]
+Prefill query=19 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=19 (FULL): 100%|██████████| 8/8 [00:00<00:00, 81.50it/s]
+Prefill query=20 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=20 (FULL): 100%|██████████| 8/8 [00:00<00:00, 81.08it/s]
+Prefill query=21 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=21 (FULL): 100%|██████████| 8/8 [00:00<00:00, 82.26it/s]
+Prefill query=22 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=22 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.63it/s]Prefill query=22 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.49it/s]
+Prefill query=23 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=23 (FULL): 100%|██████████| 8/8 [00:00<00:00, 80.31it/s]
+Prefill query=24 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=24 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.77it/s]Prefill query=24 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.77it/s]
+Prefill query=25 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=25 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.51it/s]Prefill query=25 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.35it/s]
+Prefill query=26 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=26 (FULL): 100%|██████████| 8/8 [00:00<00:00, 80.12it/s]
+Prefill query=27 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=27 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.32it/s]Prefill query=27 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.17it/s]
+Prefill query=28 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=28 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.90it/s]
+Prefill query=29 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=29 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.69it/s]Prefill query=29 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.34it/s]
+Prefill query=30 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=30 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.91it/s]Prefill query=30 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.76it/s]
+Prefill query=31 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=31 (FULL): 100%|██████████| 8/8 [00:00<00:00, 76.67it/s]Prefill query=31 (FULL): 100%|██████████| 8/8 [00:00<00:00, 76.15it/s]
+Prefill query=32 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=32 (FULL): 100%|██████████| 8/8 [00:00<00:00, 76.89it/s]Prefill query=32 (FULL): 100%|██████████| 8/8 [00:00<00:00, 76.73it/s]
+Prefill query=33 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=33 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.62it/s]Prefill query=33 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.48it/s]
+Prefill query=34 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=34 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.94it/s]
+Prefill query=35 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=35 (FULL): 100%|██████████| 8/8 [00:00<00:00, 81.17it/s]
+Prefill query=36 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=36 (FULL): 100%|██████████| 8/8 [00:00<00:00, 82.12it/s]
+Prefill query=37 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=37 (FULL): 100%|██████████| 8/8 [00:00<00:00, 80.60it/s]
+Prefill query=38 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=38 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.39it/s]Prefill query=38 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.23it/s]
+Prefill query=39 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=39 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.67it/s]Prefill query=39 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.53it/s]
+Prefill query=40 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=40 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.87it/s]Prefill query=40 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.73it/s]
+Prefill query=41 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=41 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.22it/s]Prefill query=41 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.06it/s]
+Prefill query=42 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=42 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.41it/s]Prefill query=42 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.25it/s]
+Prefill query=43 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=43 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.82it/s]Prefill query=43 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.45it/s]
+Prefill query=44 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=44 (FULL): 100%|██████████| 8/8 [00:00<00:00, 76.58it/s]Prefill query=44 (FULL): 100%|██████████| 8/8 [00:00<00:00, 76.17it/s]
+Prefill query=45 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=45 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.47it/s]Prefill query=45 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.33it/s]
+Prefill query=46 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=46 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.49it/s]Prefill query=46 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.33it/s]
+Prefill query=47 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=47 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.50it/s]Prefill query=47 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.22it/s]
+Prefill query=48 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=48 (FULL): 100%|██████████| 8/8 [00:00<00:00, 80.06it/s]
+Prefill query=49 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=49 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.95it/s]Prefill query=49 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.81it/s]
+Prefill query=50 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=50 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.91it/s]Prefill query=50 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.75it/s]
+Prefill query=51 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=51 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.67it/s]Prefill query=51 (FULL): 100%|██████████| 8/8 [00:00<00:00, 79.53it/s]
+Prefill query=52 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=52 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.68it/s]Prefill query=52 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.52it/s]
+Prefill query=53 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=53 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.63it/s]Prefill query=53 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.43it/s]
+Prefill query=54 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=54 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.27it/s]Prefill query=54 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.13it/s]
+Prefill query=55 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=55 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.56it/s]Prefill query=55 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.40it/s]
+Prefill query=56 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=56 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.99it/s]Prefill query=56 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.82it/s]
+Prefill query=57 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=57 (FULL): 100%|██████████| 8/8 [00:00<00:00, 75.41it/s]Prefill query=57 (FULL): 100%|██████████| 8/8 [00:00<00:00, 75.26it/s]
+Prefill query=58 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=58 (FULL): 100%|██████████| 8/8 [00:00<00:00, 74.63it/s]Prefill query=58 (FULL): 100%|██████████| 8/8 [00:00<00:00, 74.51it/s]
+Prefill query=59 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=59 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.32it/s]Prefill query=59 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.16it/s]
+Prefill query=60 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=60 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.25it/s]Prefill query=60 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.12it/s]
+Prefill query=61 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=61 (FULL): 100%|██████████| 8/8 [00:00<00:00, 76.60it/s]Prefill query=61 (FULL): 100%|██████████| 8/8 [00:00<00:00, 76.47it/s]
+Prefill query=62 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=62 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.99it/s]Prefill query=62 (FULL): 100%|██████████| 8/8 [00:00<00:00, 77.84it/s]
+Prefill query=63 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=63 (FULL): 100%|██████████| 8/8 [00:00<00:00, 74.31it/s]Prefill query=63 (FULL): 100%|██████████| 8/8 [00:00<00:00, 74.17it/s]
+Prefill query=64 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=64 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.49it/s]Prefill query=64 (FULL): 100%|██████████| 8/8 [00:00<00:00, 78.27it/s]

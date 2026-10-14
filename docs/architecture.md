@@ -485,3 +485,22 @@ two-hook candidate regresses AMK; selected main restores the AMK prior policy
 and retains only the vLLM hook. Frozen collected sources and that post-result
 selection are separately recorded. Noncoalesced/default targets keep their
 existing policy; trace sensitivity prevents full-matrix batching mediation.
+
+## Completed-response drain in coalesced vLLM admission
+
+[Finding0053](findings/0053-final-response-drain-before-admission.md) extends
+only the existing vLLM experimental coalesced admission hook. After
+io_progress, when Control.retired equals Control.seen, fresh admission waits
+until IoState.next_final equals that retired model prefix and SQ head equals
+tail. next_final counts consumed final SEND/abort completions; this is not a
+TCP-ACK or all-network-idle condition. Already unfinished model work retains
+the preceding admission behavior.
+
+This postpones fresh model launches while the completed response prefix
+progresses. Stop remains checked before the gate and uses the existing
+model-quiescence/shutdown worker sequence. No I/O/BPF/ABI, timer, worker or
+model arithmetic change is introduced. The global final-send frontier and
+per-peer reply chain remain ordered; an earlier backpressured final send may
+stall fresh admission on other peers. The finite comparison supports local
+latency recovery and fewer aggregate model rounds, not arbitrary-peer
+fairness, causal mediation or generic portability.

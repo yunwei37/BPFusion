@@ -1,0 +1,39 @@
+{
+  "exit": 0,
+  "commands": [
+    {
+      "command": [
+        "/tmp/bpfusion-final-drain-woo07fic/runtime/bin/python",
+        "/tmp/bpfusion-final-drain-woo07fic/qualification.py",
+        "--backend",
+        "vllm",
+        "--loop-comparison",
+        "--correctness",
+        "--reference-path",
+        "/tmp/bpfusion-final-drain-woo07fic/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-final-drain-woo07fic/qualification_vllm_smol.jsonl"
+      ],
+      "name": "vllm_smol"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-final-drain-woo07fic/runtime/bin/python",
+        "/tmp/bpfusion-final-drain-woo07fic/qualification.py",
+        "--backend",
+        "vllm",
+        "--loop-comparison",
+        "--correctness",
+        "--reference-path",
+        "/tmp/bpfusion-final-drain-woo07fic/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+        "--output",
+        "/tmp/bpfusion-final-drain-woo07fic/qualification_vllm_qwen.jsonl"
+      ],
+      "name": "vllm_qwen"
+    }
+  ]
+}

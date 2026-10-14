@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/usr/bin/python3",
+    "-c",
+    "import sys,pathlib;sys.path.insert(0,sys.argv[1]);import analysis;[analysis.analyze(pathlib.Path(sys.argv[1])/n) for n in sys.argv[2:]]",
+    "/tmp/bpfusion-final-drain-woo07fic",
+    "full_short_smol_b0.jsonl",
+    "full_short_qwen_b0.jsonl",
+    "full_transfer_smol_b0.jsonl",
+    "full_transfer_qwen_b0.jsonl"
+  ],
+  "exit": 0,
+  "utc": "2026-10-14T15:23:31.924545+00:00"
+}

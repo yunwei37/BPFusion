@@ -1,0 +1,24 @@
+[
+  {
+    "command": [
+      "/tmp/bpfusion-final-drain-woo07fic/runtime/bin/python",
+      "/tmp/bpfusion-final-drain-woo07fic/lifecycle.py",
+      "loop",
+      "smol",
+      "vllm"
+    ],
+    "exit": 0,
+    "pass_checks": true
+  },
+  {
+    "command": [
+      "/tmp/bpfusion-final-drain-woo07fic/runtime/bin/python",
+      "/tmp/bpfusion-final-drain-woo07fic/lifecycle.py",
+      "loop",
+      "qwen",
+      "vllm"
+    ],
+    "exit": 0,
+    "pass_checks": true
+  }
+]

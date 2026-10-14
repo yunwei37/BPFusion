@@ -244,6 +244,18 @@ the archived two-hook experiment is distinct from this selected main source.
 Defaults, model arithmetic and the absence of a steady userspace request worker
 remain. Full data, trace sensitivity, numerical limits and review are retained.
 
+The [completed-response-drain comparison](docs/findings/0053-final-response-drain-before-admission.md)
+extends that experimental vLLM policy: while the model is idle, advance the
+ordered final-response completion frontier as well as published SQ work before
+fresh admission. Matched gen1/c8 TTFT falls5.21/6.37→2.19/2.55ms for
+Smol/Qwen, with fewer model rounds in the actual ordinary timing processes.
+Native means are2.14/2.64ms; the paired differences cross0, establishing
+neither superiority nor equivalence. Smol gen64/c8 throughput improves about
+1.35% versus the old policy but remains below native; Qwen transfer is
+inconclusive, and single-request native latency losses remain. Model math and
+default/noncoalesced targets are unchanged. Global final-send backpressure
+and finite token-ID/model/kernel coverage remain experimental boundaries.
+
 ## Repository layout
 
 ```

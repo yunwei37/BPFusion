@@ -1,0 +1,172 @@
+{
+  "utc": "2026-10-14T16:03:35.995152+00:00",
+  "temp": "/tmp/bpfusion-final-drain-woo07fic",
+  "temp_removed": true,
+  "removed_builds": [
+    {
+      "path": "/workspaces/repository/build/vllm_graph_user_network_wait",
+      "size": 45,
+      "symlink": true
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_user_network_wait.so",
+      "size": 120456,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_user_network_wait.so.o",
+      "size": 63128,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_user_network_wait.so.dlink.o",
+      "size": 50952,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced",
+      "size": 45,
+      "symlink": true
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced.so",
+      "size": 263232,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced.so.o",
+      "size": 116616,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced.so.dlink.o",
+      "size": 141016,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_trace",
+      "size": 45,
+      "symlink": true
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_trace.so",
+      "size": 271624,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_trace.so.o",
+      "size": 124992,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_trace.so.dlink.o",
+      "size": 145880,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_original",
+      "size": 45,
+      "symlink": true
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_original.so",
+      "size": 263232,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_original.so.o",
+      "size": 116552,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_original.so.dlink.o",
+      "size": 140984,
+      "symlink": false
+    }
+  ],
+  "preserved_paths": {
+    "tools/setup_env.sh": {
+      "inode": 262652,
+      "size": 2012,
+      "mtime_ns": 1791579025166604645,
+      "symlink": null
+    },
+    "build/qwen_graph.so": {
+      "inode": 262875,
+      "size": 1032248,
+      "mtime_ns": 1791861786400049402,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace.so": {
+      "inode": 265534,
+      "size": 205648,
+      "mtime_ns": 1791966223520416941,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace.so.o": {
+      "inode": 265532,
+      "size": 90360,
+      "mtime_ns": 1791966223401484801,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace.so.dlink.o": {
+      "inode": 265533,
+      "size": 112664,
+      "mtime_ns": 1791966223473486635,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace": {
+      "inode": 265536,
+      "size": 45,
+      "mtime_ns": 1791966223522487883,
+      "symlink": "/workspaces/repository/executor/vllm_graph.py"
+    }
+  },
+  "base_packages": "2.14.1+cu130 5.19.0 2.5.3",
+  "coder_pids": [
+    1,
+    10909
+  ],
+  "module_absent": true,
+  "maps_absent": true,
+  "source_byte_equal_collected_candidate": true,
+  "amk_unchanged": true,
+  "unrelated_wip_preserved": true,
+  "post_cleanup_archive_replays": [
+    {
+      "label": "full",
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/final_drain_20261014/analysis.py",
+        "/workspaces/repository/bench/results/final_drain_20261014",
+        "full"
+      ],
+      "exit": 0,
+      "stdout_byte_equal": true,
+      "substantive_fields_equal": true
+    },
+    {
+      "label": "protocol",
+      "command": [
+        "/usr/bin/python3",
+        "-c",
+        "import sys,pathlib;sys.path.insert(0,sys.argv[1]);import analysis;[analysis.analyze(pathlib.Path(sys.argv[1])/n) for n in [\"qualification_vllm_smol.jsonl\",\"qualification_vllm_qwen.jsonl\"]]",
+        "/workspaces/repository/bench/results/final_drain_20261014"
+      ],
+      "exit": 0,
+      "stdout_byte_equal": true,
+      "substantive_fields_equal": true
+    },
+    {
+      "label": "lifecycle",
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/final_drain_20261014/analysis_lifecycle.py",
+        "/workspaces/repository/bench/results/final_drain_20261014"
+      ],
+      "exit": 0,
+      "stdout_byte_equal": false,
+      "substantive_fields_equal": true
+    }
+  ]
+}

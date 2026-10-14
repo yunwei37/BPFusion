@@ -1,0 +1,10 @@
+{
+  "command": [
+    "/usr/bin/python3",
+    "-c",
+    "import sys,pathlib;sys.path.insert(0,sys.argv[1]);import analysis;[analysis.analyze(pathlib.Path(sys.argv[1])/n) for n in [\"qualification_vllm_smol.jsonl\",\"qualification_vllm_qwen.jsonl\"]]",
+    "/tmp/bpfusion-final-drain-woo07fic"
+  ],
+  "exit": 0,
+  "utc": "2026-10-14T15:13:24.864865+00:00"
+}

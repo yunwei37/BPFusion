@@ -1,0 +1,17 @@
+diff --git a/executor/vllm_graph.cu b/executor/vllm_graph.cu
+index 4681e4c..f9cad77 100644
+--- a/executor/vllm_graph.cu
++++ b/executor/vllm_graph.cu
+@@ -102,9 +102,10 @@ __global__ void dispatch(bf_page* p,Step* steps,Inputs in,unsigned vocab,Control
+         // Advance I/O after result publication and before model admission.
+         // This CTA returns while model children execute.
+         io_progress(io_state);
+-        // Let the kernel consume published I/O before admitting fresh model work.
++        // Drain completed responses and published I/O before fresh model work.
+         if(c->retired==c->seen &&
+-           io_load(io_state->ring.head)!=io_load(io_state->ring.tail))continue;
++           (io_state->next_final!=c->retired ||
++            io_load(io_state->ring.head)!=io_load(io_state->ring.tail)))continue;
+ #endif
+         while(queue_load(&p->llm_head)!=c->seen) {
+             i=c->seen%BF_LLM_SLOTS;bf_llm_slot* slot=&p->llm[i];

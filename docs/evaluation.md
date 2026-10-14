@@ -872,3 +872,46 @@ combination is not the originally collected two-hook candidate.
 retain the experiment and owned-resource cleanup. Close the unchanged matrix;
 further work needs a distinct discriminator for the remaining native gap.
 The full retained serving/performance objective remains active.
+
+## Completed final-response-drain comparison
+
+[Finding0053](findings/0053-final-response-drain-before-admission.md) tests
+whether finishing the ordered response frontier while model-idle resolves
+the remaining concurrent-short-output gap after0052. This is supporting
+evidence within the retained serving-path latency/TPS question; model math
+is reused, without inventing a new formal RQ. Positive and adverse baseline
+results affect the local policy decision rather than prove a universal thesis.
+
+Run status is valid/completed: all20 drivers/60 ordinary executors/120 cells
+complete3840 measured requests124800 output tokens plus480 warmups, with no
+failed/excluded/restarted/replaced serving cell or oracle/metric/timeout change.
+Short-only process contexts independently authenticate model rounds minus
+eight sequential warmups, avoiding separate BF_TRACE timing observations.
+
+Gen1/c8 TTFT improves5.21→2.19ms Smol and6.37→2.55ms Qwen versus the matched
+SQ-only component control; both paired nominal t95 intervals are negative.
+Same-process mean rounds fall16.8→5.6 and17.2→6.0. The native competitor's
+primary TTFT contrasts cross0, which is not superiority/equivalence.
+Smol gen64/c8 gains70.946 token/s versus old but loses274.989 versus native;
+Qwen transfer is inconclusive. Gen1/c1 native latency losses and every signed
+secondary row are retained. Known-worker CPU is partial attribution, not
+total CPU/energy; aggregate rounds do not identify batch membership or
+exclusive latency mediation.
+
+Two real-model protocol qualifications and32-action lifecycle checks pass;
+the finding specifies finite frozen-pool/reused-graph replay and complete-or-
+prefix shutdown scope. Raw physical slots/bitmap/recycle/queues are independently
+checked, including admitted32/retired31 at intentional stop. Sparse host
+brackets retain33 older NVRM warnings without a continuous-isolation claim.
+
+[Independent result review](../bench/results/final_drain_20261014/result-review.md)
+recomputes all24 means/72 metric effects/30 short counters/4 round effects.
+It finds the local latency/aggregate-round hypothesis supported, primary
+native superiority inconclusive, supporting value and mechanism/workload
+boundary. Selected main keeps the exact collected vLLM condition in existing
+experimental targets; AMK and default/noncoalesced targets are unchanged.
+[Raw archive and replay](../bench/results/final_drain_20261014/) and
+[restoration](../bench/results/final_drain_20261014/final_restoration.json)
+retain the evidence. Close the unchanged matrix; further performance work
+requires a distinct discriminator for the remaining native long-output and
+single-request boundaries. The full retained objective remains active.
