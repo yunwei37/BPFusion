@@ -1,0 +1,45 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "bpfusion-optimized-cross-node-client-20261014",
+    "namespace": "coder",
+    "annotations": {
+      "admission.yunwei37.com/approval-ref": "https://github.com/yunwei37/BPFusion/blob/main/bench/results/optimized_cross_node_20261014/plan.md",
+      "admission.yunwei37.com/user-words": "\u6027\u80fd\u80fd\u4e0d\u80fd\u60f3\u529e\u6cd5\u6539\u8fdb\u4e00\u4e0b. \u5c24\u5176\u662f tp / lantency, \u7406\u8bba\u4e0a\u5e94\u8be5\u53ef\u4ee5\u505a\u5230\u5f88\u5feb, \u4f60\u60f3\u60f3, \u5f80\u8fd9\u4e2a\u76ee\u6807\u7ee7\u7eed\u505a"
+    }
+  },
+  "spec": {
+    "template": {
+      "spec": {
+        "restartPolicy": "Never",
+        "affinity": {
+          "podAntiAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": [
+              {
+                "labelSelector": {
+                  "matchLabels": {
+                    "com.coder.workspace.id": "eb48d962-76f4-4ff7-bac5-7bc62ec2ada3"
+                  }
+                },
+                "topologyKey": "kubernetes.io/hostname"
+              }
+            ]
+          }
+        },
+        "containers": [
+          {
+            "name": "client",
+            "image": "python:3.12.12-slim-bookworm",
+            "command": [
+              "python3",
+              "-u",
+              "-c",
+              "import signal; signal.pause()"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -601,3 +601,20 @@ removes owned runtime and32 named builds while preserving original boot/base,
 default library, Coder processes and unrelated WIP. Close unchanged timing;
 do not promote snapshot ordering as a proven optimization. Optimized matched
 cross-node/service acceptance and the full retained goal remain open.
+
+## Optimized module-free cross-node comparison in progress
+
+Retain finding0029's matched cross-node delivery question. The admitted
+[plan](../bench/results/optimized_cross_node_20261014/plan.md) and
+[fresh plan review](../bench/results/optimized_cross_node_20261014/plan-review.md)
+compare the current ordinary packed/prefix vLLM loop with efficient native
+TCP using identical model computation. Old HF cross-node and optimized local
+measurements cannot supply this changed-backend/topology result.
+Role supporting; no new formal paper thesis, total CPU or performance claim.
+
+Dependency setup/builds are in progress. Actual cross-node preflight precedes
+the five-block two-model full comparison; four primary effects are gen1/c1
+TTFT and gen64/c8 TPS. Both client functions and pre-observation finite whole
+output sets are reused. Current unobserved batch/KV replay remains outside
+the numerical claim. No model math, timer, host kernel or persistent service
+change. Full run, fresh result review and restoration remain pending.
