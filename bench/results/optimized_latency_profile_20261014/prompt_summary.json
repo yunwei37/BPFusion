@@ -1,0 +1,88 @@
+{
+  "qwen": {
+    "2": {
+      "requests": 20,
+      "kernel_counts": [
+        271
+      ],
+      "ttft_ms": 1.4849908,
+      "model_kernel_span_ms": 1.30658276875,
+      "kernel_union_ms": 1.1672886352539062,
+      "span_minus_union_ms": 0.13929413349609376
+    },
+    "5": {
+      "requests": 40,
+      "kernel_counts": [
+        271
+      ],
+      "ttft_ms": 1.45743795,
+      "model_kernel_span_ms": 1.262447525,
+      "kernel_union_ms": 1.122447784423828,
+      "span_minus_union_ms": 0.13999974057617187
+    },
+    "8": {
+      "requests": 20,
+      "kernel_counts": [
+        271
+      ],
+      "ttft_ms": 1.4485695,
+      "model_kernel_span_ms": 1.2668563499999999,
+      "kernel_union_ms": 1.12728095703125,
+      "span_minus_union_ms": 0.13957539296875
+    }
+  },
+  "smol": {
+    "2": {
+      "requests": 20,
+      "kernel_counts": [
+        307
+      ],
+      "ttft_ms": 1.35083765,
+      "model_kernel_span_ms": 1.1586769625,
+      "kernel_union_ms": 1.0002214599609376,
+      "span_minus_union_ms": 0.15845550253906251
+    },
+    "5": {
+      "requests": 40,
+      "kernel_counts": [
+        337
+      ],
+      "ttft_ms": 1.2043897000000001,
+      "model_kernel_span_ms": 1.010915903125,
+      "kernel_union_ms": 0.8373017395019531,
+      "span_minus_union_ms": 0.17361416362304688
+    },
+    "8": {
+      "requests": 20,
+      "kernel_counts": [
+        337
+      ],
+      "ttft_ms": 1.21852325,
+      "model_kernel_span_ms": 0.9950303875,
+      "kernel_union_ms": 0.8215132446289063,
+      "span_minus_union_ms": 0.17351714287109374
+    }
+  },
+  "host": {
+    "brackets": 40,
+    "first_utc": "2026-10-14T06:28:30.725094+00:00",
+    "last_utc": "2026-10-14T06:42:48.884191+00:00",
+    "distinct_selected_lines": [
+      "Oct 14 06:22:53 lab kernel: NVRM: GPU0 refcntRequestReference_IMPL: Failed to enter state 1 (current state: 0, status: 0x00000056)",
+      "Oct 14 06:30:12 lab kernel: NVRM: GPU0 refcntRequestReference_IMPL: Failed to enter state 1 (current state: 0, status: 0x00000056)",
+      "Oct 14 06:30:52 lab kernel: NVRM: GPU0 refcntRequestReference_IMPL: Failed to enter state 1 (current state: 0, status: 0x00000056)",
+      "Oct 14 06:32:57 lab kernel: NVRM: GPU0 refcntRequestReference_IMPL: Failed to enter state 1 (current state: 0, status: 0x00000056)",
+      "Oct 14 06:33:37 lab kernel: NVRM: GPU0 refcntRequestReference_IMPL: Failed to enter state 1 (current state: 0, status: 0x00000056)",
+      "Oct 14 06:35:38 lab kernel: NVRM: GPU0 refcntRequestReference_IMPL: Failed to enter state 1 (current state: 0, status: 0x00000056)",
+      "Oct 14 06:36:59 lab kernel: NVRM: GPU0 refcntRequestReference_IMPL: Failed to enter state 1 (current state: 0, status: 0x00000056)",
+      "Oct 14 06:37:39 lab kernel: NVRM: GPU0 refcntRequestReference_IMPL: Failed to enter state 1 (current state: 0, status: 0x00000056)",
+      "Oct 14 06:39:40 lab kernel: NVRM: GPU0 refcntRequestReference_IMPL: Failed to enter state 1 (current state: 0, status: 0x00000056)",
+      "Oct 14 06:40:21 lab kernel: NVRM: GPU0 refcntRequestReference_IMPL: Failed to enter state 1 (current state: 0, status: 0x00000056)",
+      "Oct 14 06:42:21 lab kernel: NVRM: GPU0 refcntRequestReference_IMPL: Failed to enter state 1 (current state: 0, status: 0x00000056)"
+    ],
+    "boot_ids": [
+      "04dc0087-5ccc-4c46-9997-b9a92f0e5167"
+    ],
+    "minimum_available_kb": 112034280
+  }
+}

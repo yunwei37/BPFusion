@@ -9,6 +9,7 @@ def union(events):
   else:total+=right-left;left,right=a,b
  return total+right-left
 for path in sorted(root.glob(stage+'_*.jsonl')):
+ if path.name.endswith('.timeline.jsonl'):continue
  records=[json.loads(l) for l in path.open()]
  meta=records[0];assert meta['event']=='metadata'
  assert records[-1]['event']=='terminal' and records[-1]['exit']==0
@@ -32,6 +33,8 @@ for path in sorted(root.glob(stage+'_*.jsonl')):
   catalogue=json.loads(next(l.split(' ',1)[1] for l in log.splitlines() if l.startswith('GRAPH_CATALOGUE ')))['graphs']
   counts={r['input_tokens']:r['body_node_types'].get('0',0)+r['head_node_types'].get('0',0) for r in catalogue}
   tracepath=pathlib.Path(next(r for r in records if r['event']=='trace')['path'])
+  archived_trace=path.parent/path.stem/tracepath.name
+  if archived_trace.exists():tracepath=archived_trace
   trace=json.load(gzip.open(tracepath,'rt'));events=trace['traceEvents']
   model_events=sorted((e for e in events if e.get('cat')=='kernel' and not e.get('name','').startswith(('dispatch(','io_network('))),key=lambda e:e['ts'])
   assert len(model_events)==sum(counts[r['input_tokens']] for r in rows),(path,len(model_events),counts)

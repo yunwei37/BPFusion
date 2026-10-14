@@ -1,0 +1,59 @@
+{
+  "utc": "2026-10-14T06:52:26.266707+00:00",
+  "removed_temp": "/tmp/bpfusion-optimized-latency-profile-bk8ztoin",
+  "temp_absent": true,
+  "removed_build_names": [
+    "uring_loop.bpf.o",
+    "vllm_graph_uring_loop",
+    "vllm_graph_uring_loop.so",
+    "vllm_graph_uring_loop.so.o",
+    "vllm_graph_uring_loop.so.dlink.o",
+    "vllm_graph_uring_loop_trace",
+    "vllm_graph_uring_loop_trace.so",
+    "vllm_graph_uring_loop_trace.so.o",
+    "vllm_graph_uring_loop_trace.so.dlink.o"
+  ],
+  "builds_absent": true,
+  "default_before": {
+    "size": 1032248,
+    "inode": 262875,
+    "mtime_ns": 1791861786400049402
+  },
+  "default_after": {
+    "size": 1032248,
+    "inode": 262875,
+    "mtime_ns": 1791861786400049402
+  },
+  "wip_unchanged": true,
+  "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167",
+  "base_packages": {
+    "torch": "2.14.1",
+    "transformers": "5.19.0"
+  },
+  "mount": "TARGET      SOURCE                                                 FSTYPE OPTIONS\n/workspaces /dev/longhorn/pvc-5d1b0ce5-fbee-43ef-93f1-d433037bb5e4 ext4   rw,relatime\n",
+  "coder_processes": {
+    "1": "./coder agent ",
+    "10909": "./coder agent --no-reap "
+  },
+  "gpu_apps": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "original_pod": {
+    "uid": "3e8994f8-77ba-4a73-a3a5-35ed69a0a8a2",
+    "node": "lab",
+    "phase": "Running",
+    "containers": {
+      "name": "dev",
+      "ready": true,
+      "restartCount": 0,
+      "containerID": "containerd://a83771de83c8751ca3851fb01f648f254b33bee02efedf85f1d50713ebbf644d"
+    }
+  },
+  "post_cleanup_replay": {
+    "exit": 0,
+    "stdout_byte_identical": true
+  },
+  "scope": "Final endpoint; not continuous isolation or full other-service recovery"
+}

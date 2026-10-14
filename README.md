@@ -46,8 +46,8 @@ uses a Raspberry Pi client and lab RTX 5090 server over the existing
 flannel/Tailscale/Ethernet path. Its primary latency and throughput intervals
 contain zero for both models; reliable superiority remains unproven.
 [Evaluation status](docs/evaluation.md) links the plans, raw data and reviews.
-The [short-input diagnosis](docs/findings/0030-short-input-latency.md) finds
-that the existing captured model region occupies about 95%/92% of profiled
+The [older HF short-input diagnosis](docs/findings/0030-short-input-latency.md) finds
+that its captured model region occupies about 95%/92% of profiled
 local TTFT for Smol/Qwen; even 2-token inputs traverse 1460/808 GPU kernels.
 This guides backend reuse, without establishing an eBPF speedup.
 The [official optimized-serving comparison](docs/findings/0031-optimized-serving.md)
@@ -110,6 +110,13 @@ zero. A real host OOM/filesystem fault during Smol collection materially
 qualifies the performance interpretation; the full record preserves all
 observations and failures, with no clean stable-host or speedup claim.
 Owned temporary resources are removed after independent review.
+
+The [current optimized short-input localization](docs/findings/0047-optimized-short-input-latency.md)
+completes both models' ordinary/profiling paired workload with unchanged
+computation. Ordinary local TTFT is1.470ms Qwen/1.189ms Smol; profiled model
+kernel spans are1.275/1.044ms. Profiling effect remains uncertain, and kernel
+gaps/remaining stages are not assigned a pure cause. This supports bounded
+latency localization, not an eBPF speedup or model-specific tuning mandate.
 
 ## Service and compute boundary
 

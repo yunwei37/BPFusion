@@ -642,24 +642,38 @@ Close unchanged timing; resolve a useful causal uncertainty after actual
 host/storage validation. Full text/backend portability and performance
 acceptance remain open; the retained objective is not marked complete.
 
-## Current optimized short-input localization in progress
+## Completed current optimized short-input localization
 
-The admitted [plan](../bench/results/optimized_latency_profile_20261014/plan.md)
-and [fresh plan review](../bench/results/optimized_latency_profile_20261014/plan-review.md)
-test finding0030's short-input question on the current optimized module-free
-loop rather than old HF computation. Current traces have logical batches/
-outputs but no kernel durations, so existing data cannot localize this budget.
-Role supporting diagnostic evidence, not a serving speedup or new paper metric.
+[Finding0047](findings/0047-optimized-short-input-latency.md) retains0030's
+question on the current optimized module-free backend. The admitted plan and
+fresh plan review use ordinary serving as a same-library instrumentation
+ablation, with unchanged model computation and pre-observation complete outputs.
+Both models/five paired blocks complete20 executors/400 checked gen1 replies,
+320 measured plus80 excluded checked warmups; actual children exit0 and
+all queue/resource checks pass. All10 standard traces cover60050 model kernels
+and200 graph memcpy records, exactly matching recursive actual catalogues.
 
-Temporary CUPTI HES/device-graph profiling wraps the unchanged ordinary
-native library, with an ordinary same-library instrumentation ablation.
-Actual recursive body/head activity coverage and request grouping must pass
-real preflight before interpreting model spans. Five paired blocks/two models
-remain planned; graph gaps and clock-compatible residuals are not attributed
-to a pure cause. Known prior host OOM remains recorded; per-executor actual
-host checks and owned cleanup are required. Real ordinary/profiled Qwen preflight passes16 checked gen1 requests with
-normal exits/drain and complete2168 kernel/8 memcpy activity coverage.
-[Preflight qualification](../bench/results/optimized_latency_profile_20261014/preflight-report.md)
-retains one NVRM unsupported-reference warning during profiled bootstrap;
-read-only endpoint diagnosis finds no Xid/recovery action or new OOM/storage
-fault. Full matrix remains pending; no completed localization claim.
+Ordinary client TTFT Qwen/Smol1.469674/1.188709ms; profiled1.462109/1.244535.
+Profiled model-kernel spans1.274584/1.043885ms, kernel unions1.134866/0.874085,
+gaps0.139717/0.169800. These are supporting current-backend localization,
+not arithmetic-specific cause, utilization or exact ordinary-stage fractions.
+Ordinary-minus-profiled paired effects+0.007565[-0.018504,0.033634] and
+-0.055826[-0.130579,0.018926]ms cross zero; no zero-overhead/equivalence claim.
+Smol pair4 negative0.153720ms remains. Even query2 retains millisecond spans.
+
+All40 actual host brackets retain11 NVRM unsupported-reference warnings
+correlated with profiled bootstraps; purpose/cause/influence remain unproved.
+No new selected Xid/OOM/storage/BUG or recovery action is observed. Older OOM
+is outside this matrix; discrete observations do not prove clean isolation.
+Initial observer construction and archive replay failures are retained and
+repaired without a model/cell restart or metric/oracle change. Full archive
+analysis replays byte-identically after trace relocation/derived-file discovery.
+
+[Fresh result review](../bench/results/optimized_latency_profile_20261014/result-review.md)
+judges the run valid, profiled-region ranking supported, ordinary transfer
+inconclusive, value supporting and impact a mechanism/workload boundary.
+[Final restoration](../bench/results/optimized_latency_profile_20261014/final_restoration.json)
+removes TEMP/9 builds, preserving original Workspace/PVC/boot/default library/
+base/Coder/WIP. Post-removal full replay is byte-identical. Close this finite
+diagnosis; full text/backend portability,performance/SLO/full CPU acceptance
+remain open and the retained objective stays active.
