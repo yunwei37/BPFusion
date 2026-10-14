@@ -517,3 +517,20 @@ not introduced into current serving. Shared page/control ABI, model math,
 timer cadence, workers and current defaults remain as before this experiment.
 Its finite shutdown/protocol success does not establish arbitrary-backend
 or AMK acceptance, physical PCIe mediation or universal performance benefit.
+
+## Current standalone and coalesced I/O tradeoff
+
+[Finding0055](findings/0055-current-gpu-io-arrangements.md) qualifies and compares
+the existing current standalone GPU I/O constructor against current coalesced
+and efficient native TCP, using identical reused vLLM model computation.
+Standalone runs independent resident network progression on a nonblocking CUDA
+stream; coalesced advances I/O inside the model dispatcher and has batched
+publication/completed-response admission. Current shared durable state and
+per-constructor policy differences form a bundle, not a pure overlap ablation.
+
+Smol long-output throughput recovery over coalesced is supported, while native
+still wins; Qwen recovery is inconclusive and concurrent-short-output latency
+worsens. More standalone model rounds accompany the Smol recovery, so aggregate
+round count alone does not explain the constructor difference. Existing targets
+and defaults are unchanged, with zero production-code growth. Finite protocol/
+lifecycle qualification does not establish arbitrary backend acceptance.

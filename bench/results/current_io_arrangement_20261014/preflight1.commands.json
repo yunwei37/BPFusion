@@ -1,0 +1,98 @@
+[
+  {
+    "command": [
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/runtime/bin/python",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/short_serving.py",
+      "--backend",
+      "vllm",
+      "--block",
+      "0",
+      "--loop-comparison",
+      "--untraced",
+      "--reference-path",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/frozen_references.json",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--output",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/preflight1_short_smol_b0.jsonl",
+      "--preflight"
+    ],
+    "model": "smol",
+    "backend": "vllm",
+    "block": 0,
+    "subset": "short",
+    "output": "preflight1_short_smol_b0.jsonl"
+  },
+  {
+    "command": [
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/runtime/bin/python",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/short_serving.py",
+      "--backend",
+      "vllm",
+      "--block",
+      "0",
+      "--loop-comparison",
+      "--untraced",
+      "--reference-path",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/frozen_references.json",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--output",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/preflight1_short_qwen_b0.jsonl",
+      "--preflight"
+    ],
+    "model": "qwen",
+    "backend": "vllm",
+    "block": 0,
+    "subset": "short",
+    "output": "preflight1_short_qwen_b0.jsonl"
+  },
+  {
+    "command": [
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/runtime/bin/python",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/transfer_serving.py",
+      "--backend",
+      "vllm",
+      "--block",
+      "0",
+      "--loop-comparison",
+      "--untraced",
+      "--reference-path",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/frozen_references.json",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--output",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/preflight1_transfer_smol_b0.jsonl",
+      "--preflight"
+    ],
+    "model": "smol",
+    "backend": "vllm",
+    "block": 0,
+    "subset": "transfer",
+    "output": "preflight1_transfer_smol_b0.jsonl"
+  },
+  {
+    "command": [
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/runtime/bin/python",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/transfer_serving.py",
+      "--backend",
+      "vllm",
+      "--block",
+      "0",
+      "--loop-comparison",
+      "--untraced",
+      "--reference-path",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/frozen_references.json",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--output",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/preflight1_transfer_qwen_b0.jsonl",
+      "--preflight"
+    ],
+    "model": "qwen",
+    "backend": "vllm",
+    "block": 0,
+    "subset": "transfer",
+    "output": "preflight1_transfer_qwen_b0.jsonl"
+  }
+]

@@ -965,3 +965,35 @@ retain candidate/source selection and preservation evidence. Close this
 unchanged matrix; a new run needs a distinct causal discriminator and should
 reuse prior valid comparisons before collecting more data. The full objective
 remains active.
+
+## Completed current GPU I/O arrangement comparison
+
+[Finding0055](findings/0055-current-gpu-io-arrangements.md) addresses the retained
+serving-path latency/TPS question using the strongest already-existing current
+arrangement before adding another optimization. Finding0050's original-loop
+numbers cannot substitute for the later durable-state and publication/admission
+implementation. This source-neutral experiment is supporting evidence, with
+fixed gen64/c8 TPS primary and efficient native TCP as the main competitor.
+
+All20 drivers /60 executors /120 cells complete3840 measured requests and124800
+output tokens plus480 warmups. The fixed analyses, two candidate protocol
+suites and two lifecycle suites pass without failed/excluded/replaced serving
+cells or changed oracle/metric/timeout. Source, commands and original state
+are frozen and preserved.
+
+Standalone/coalesced/native TPS is5566.112/5175.049/5619.008 for Smol and
+4688.845/4613.723/4810.983 for Qwen. Smol standalone-minus-coalesced nominal
+paired t95 [102.619,679.506] supports recovery, but its native interval
+[-90.472,-15.319] retains a loss. Qwen contrasts cross zero. Its short-output
+TTFT worsens against coalesced by0.174813ms [0.015763,0.333864]; signed secondary
+CPU/latency/round effects remain linked. More aggregate standalone rounds
+accompany the Smol recovery; exact GPU/network mediation is unmeasured.
+
+The [fresh result review](../bench/results/current_io_arrangement_20261014/result-review.md)
+independently audits completion, source/baseline fairness, raw bytes, metrics
+and uncertainty. [Archive/replay](../bench/results/current_io_arrangement_20261014/)
+and [restoration](../bench/results/current_io_arrangement_20261014/final_restoration.json)
+retain the evidence. Prefer the existing standalone route only for the measured
+Smol long-output scope; retain Qwen's short-output boundary. No source/default
+change or universal constructor promotion follows. Close this unchanged matrix.
+Impact is a workload/constructor boundary; the full objective remains active.

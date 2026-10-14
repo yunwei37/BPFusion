@@ -266,6 +266,16 @@ retained. Main keeps the existing host bookkeeping; the candidate allocation,
 control split and full results are archived rather than promoted as a proven
 optimization. This does not add a model/backend acceptance or new mode.
 
+The [current I/O arrangement comparison](docs/findings/0055-current-gpu-io-arrangements.md)
+reuses identical vLLM computation across existing standalone GPU I/O,
+coalesced GPU I/O and efficient native TCP. Smol gen64/c8 reaches5566 token/s
+with standalone versus5175 coalesced and5619 native: recovery over coalesced
+is supported, while native remains faster. Qwen throughput recovery is
+inconclusive and standalone gen1/c8 TTFT worsens2.591→2.766ms versus coalesced.
+The result favors an existing route for the measured Smol long-output scope,
+without a universal backend policy or default change. This compares whole I/O
+constructors; isolated overlap, GPU-time mediation and generic models remain open.
+
 ## Repository layout
 
 ```

@@ -1,0 +1,24 @@
+[
+  {
+    "command": [
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/runtime/bin/python",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/lifecycle.py",
+      "loop",
+      "smol",
+      "vllm"
+    ],
+    "exit": 0,
+    "pass_checks": true
+  },
+  {
+    "command": [
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/runtime/bin/python",
+      "/tmp/bpfusion-current-io-placement-6xw2vxa6/lifecycle.py",
+      "loop",
+      "qwen",
+      "vllm"
+    ],
+    "exit": 0,
+    "pass_checks": true
+  }
+]

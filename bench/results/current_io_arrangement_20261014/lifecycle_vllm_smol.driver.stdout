@@ -1,0 +1,103 @@
+{
+  "model": "smol",
+  "start": "2026-10-14T18:44:00.211561+00:00",
+  "oracle_frozen_at": "pre-observation0045: 8323c32e19a1fcdf326beba405a411a6276aa8dc",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "ready_time_ns": 1792003469244772428,
+  "native_pid": 432692,
+  "exit": 0,
+  "native_stats": {
+    "accepted": 13,
+    "closed": 13,
+    "received": 32,
+    "sends": 661,
+    "bytes": 4973,
+    "completed": 32,
+    "aborted": 3,
+    "max_connections": 2,
+    "max_requests": 2,
+    "pending": 0,
+    "error": 0,
+    "head": 32,
+    "reserved": 0,
+    "dropped": 0,
+    "overflow": 0,
+    "sqhead": 740,
+    "sqtail": 740,
+    "cqhead": 315976,
+    "cqtail": 315976,
+    "trace_count": 32,
+    "trace_overflow": 0
+  },
+  "bpf_stats": {
+    "exit": 0,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 32\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 32\nsockhash linked 13\nsockhash failed 0\nparser calls   32\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=32\nllm_reserved=0x0\nllm[0]: state=0 prompt=5 gen=1 produced=1 client_ns=434861432925722\nllm[1]: state=0 prompt=1 gen=1 produced=0 client_ns=434861434205083\nllm[2]: state=0 prompt=5 gen=64 produced=64 client_ns=434861434564365\nllm[3]: state=0 prompt=1 gen=1 produced=0 client_ns=434861480877465\nllm[4]: state=0 prompt=8 gen=1 produced=1 client_ns=434861481078630\nllm[5]: state=0 prompt=5 gen=64 produced=64 client_ns=434861482181761\nllm[6]: state=0 prompt=8 gen=64 produced=64 client_ns=434861483274644\nllm[7]: state=0 prompt=5 gen=64 produced=2 client_ns=434861555541866\n",
+    "stderr": ""
+  },
+  "model_errors": [
+    0
+  ],
+  "pass": true,
+  "end": "2026-10-14T18:44:52.718188+00:00",
+  "remaining_pins": []
+}
+aborted":0,"client_ns":434847943726846}
+REPLY {"seq":8,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":434847943887394}
+REPLY {"seq":9,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":434850190663519}
+REPLY {"seq":10,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":434850191881171}
+REPLY {"seq":11,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":434850192227004}
+REPLY {"seq":12,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":434852438966211}
+REPLY {"seq":13,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":434852440733263}
+REPLY {"seq":14,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":434852440948023}
+REPLY {"seq":15,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":434854687822515}
+REPLY {"seq":16,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":434854688934718}
+REPLY {"seq":17,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":434854689104277}
+REPLY {"seq":18,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":434856935698174}
+REPLY {"seq":19,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":434856936810329}
+REPLY {"seq":20,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":434856936980995}
+REPLY {"seq":21,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":434859183940249}
+REPLY {"seq":22,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":434859186096581}
+REPLY {"seq":23,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":434859186288729}
+REPLY {"seq":24,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":434861432925722}
+REPLY {"seq":25,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":434861434205083}
+REPLY {"seq":26,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":434861434564365}
+REPLY {"seq":27,"gen":1,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":434861480877465}
+REPLY {"seq":28,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":434861481078630}
+REPLY {"seq":29,"gen":64,"sends":1,"early":1,"bytes":4,"aborted":1,"client_ns":434861482181761}
+REPLY {"seq":30,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":434861483274644}
+REPLY {"seq":31,"gen":64,"sends":1,"early":1,"bytes":84,"aborted":1,"client_ns":434861555541866}
+CLEANUP ring_connections_buffers_released
+resident vLLM stopped: launches=1 device_graph_launches=654 graph_error=0 max_active=2 admitted=32 retired=31 trace_overflows=0 release_rounds=31 max_release=1 device_launch_calls=1308
+
+56 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]
+Prefill query=56 (FULL): 100%|██████████| 8/8 [00:00<00:00, 84.26it/s]
+
+Prefill query=57 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]
+Prefill query=57 (FULL): 100%|██████████| 8/8 [00:00<00:00, 83.21it/s]
+
+Prefill query=58 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]
+Prefill query=58 (FULL): 100%|██████████| 8/8 [00:00<00:00, 82.43it/s]
+
+Prefill query=59 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]
+Prefill query=59 (FULL): 100%|██████████| 8/8 [00:00<00:00, 80.31it/s]
+
+Prefill query=60 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]
+Prefill query=60 (FULL): 100%|██████████| 8/8 [00:00<00:00, 80.49it/s]
+
+Prefill query=61 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]
+Prefill query=61 (FULL): 100%|██████████| 8/8 [00:00<00:00, 82.07it/s]
+
+Prefill query=62 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]
+Prefill query=62 (FULL): 100%|██████████| 8/8 [00:00<00:00, 82.94it/s]
+
+Prefill query=63 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]
+Prefill query=63 (FULL): 100%|██████████| 8/8 [00:00<00:00, 81.58it/s]
+
+Prefill query=64 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]
+Prefill query=64 (FULL): 100%|██████████| 8/8 [00:00<00:00, 82.11it/s]
+
+LIFECYCLE_DRIVER_TERMINAL

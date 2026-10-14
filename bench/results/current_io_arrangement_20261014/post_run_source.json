@@ -1,0 +1,79 @@
+{
+  "utc": "2026-10-14T20:36:18.420987+00:00",
+  "branch": "main",
+  "head": "048c204ed78e006f1e31cfa8a7fb4699b7429d06",
+  "source_byte_equal": {
+    "Makefile": true,
+    "executor/vllm_graph.cu": true,
+    "executor/io_uring_tcp.h": true,
+    "executor/vllm_graph.py": true,
+    "executor/qwen_graph.cu": true,
+    "executor/amk_graph.py": true,
+    "executor/amk_graph.cu": true,
+    "executor/userspace_tcp.h": true,
+    "bpf/fusion.bpf.c": true,
+    "bpf/uring_loop.bpf.c": true,
+    "bpf/include/bpfusion_queue.h": true,
+    "bench/resident_dispatch.py": true
+  },
+  "preserved_equal": {
+    "tools/setup_env.sh": true,
+    "build/qwen_graph.so": true,
+    "build/vllm_graph_uring_loop_trace.so": true,
+    "build/vllm_graph_uring_loop_trace.so.o": true,
+    "build/vllm_graph_uring_loop_trace.so.dlink.o": true,
+    "build/vllm_graph_uring_loop_trace": true,
+    "build/bpfusion_load": true,
+    "build/uring_loop.bpf.o": true
+  },
+  "preserved_current": {
+    "tools/setup_env.sh": {
+      "inode": 262652,
+      "size": 2012,
+      "mtime_ns": 1791579025166604645,
+      "symlink": null
+    },
+    "build/qwen_graph.so": {
+      "inode": 262875,
+      "size": 1032248,
+      "mtime_ns": 1791861786400049402,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace.so": {
+      "inode": 265534,
+      "size": 205648,
+      "mtime_ns": 1791966223520416941,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace.so.o": {
+      "inode": 265532,
+      "size": 90360,
+      "mtime_ns": 1791966223401484801,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace.so.dlink.o": {
+      "inode": 265533,
+      "size": 112664,
+      "mtime_ns": 1791966223473486635,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace": {
+      "inode": 265536,
+      "size": 45,
+      "mtime_ns": 1791966223522487883,
+      "symlink": "/workspaces/repository/executor/vllm_graph.py"
+    },
+    "build/bpfusion_load": {
+      "inode": 262174,
+      "size": 51152,
+      "mtime_ns": 1791944193272715359,
+      "symlink": null
+    },
+    "build/uring_loop.bpf.o": {
+      "inode": 265845,
+      "size": 10680,
+      "mtime_ns": 1791984245025511169,
+      "symlink": null
+    }
+  }
+}
