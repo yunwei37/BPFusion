@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/tmp/bpfusion-amk-residency-tkdf_2wx/residency_serving.py", line 115, in main
+    if p.poll() is not None:raise RuntimeError(logpath.read_text()[-6000:])
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: CUPTI_SETUP {"library": "/tmp/bpfusion-amk-residency-tkdf_2wx/runtime/lib/python3.12/site-packages/nvidia/cuda_cupti/lib/libcupti.so.12", "device_graph_status": 0, "driver_status": 0, "hardware_trace_status": 0}
+
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 272/272 [00:00<00:00, 7131.61it/s]
+ninja: no work to do.
+ninja: no work to do.
+ninja: no work to do.
+Traceback (most recent call last):
+  File "/tmp/bpfusion-amk-residency-tkdf_2wx/preflight2_p0_amk_uring_loop_profiled/amk_graph_case", line 145, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/tmp/bpfusion-amk-residency-tkdf_2wx/preflight2_p0_amk_uring_loop_profiled/amk_graph_case", line 122, in main
+    if profile_enabled:catalogue.append(catalogue_graph(handle,bank,index,start,length,dict(grid=la[13],block=la[14],dynamic_shared=la[15])))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/bpfusion-amk-residency-tkdf_2wx/preflight2_p0_amk_uring_loop_profiled/amk_graph_case", line 38, in catalogue_graph
+    assert result==0,(bank,index,node,result,count.value)
+           ^^^^^^^^^
+AssertionError: (0, 1, 267648216, 1, 0)
+

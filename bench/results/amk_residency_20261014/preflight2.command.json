@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/tmp/bpfusion-amk-residency-tkdf_2wx/runtime/bin/python",
+    "/tmp/bpfusion-amk-residency-tkdf_2wx/residency_serving.py",
+    "--loop-comparison",
+    "--untraced",
+    "--reference-path",
+    "/tmp/bpfusion-amk-residency-tkdf_2wx/frozen_references.json",
+    "--model",
+    "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+    "--output",
+    "/tmp/bpfusion-amk-residency-tkdf_2wx/preflight2.jsonl",
+    "--preflight"
+  ],
+  "cwd": "/workspaces/repository",
+  "env_overrides": {
+    "PATH": "/tmp/bpfusion-amk-residency-tkdf_2wx/runtime/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "PYTHONPATH": "/tmp/bpfusion-amk-residency-tkdf_2wx/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34",
+    "TORCH_EXTENSIONS_DIR": "/tmp/bpfusion-amk-residency-tkdf_2wx/cuda_extensions",
+    "CUDA_HOME": "/usr/local/cuda",
+    "LD_LIBRARY_PATH": "/tmp/bpfusion-amk-residency-tkdf_2wx/libbpf_install/usr/lib64",
+    "BF_BIND": "127.0.0.1",
+    "PYTHONUNBUFFERED": "1"
+  },
+  "source": "ea23b08c3fe512ee08acd6eca3b31e12276a9d6f"
+}

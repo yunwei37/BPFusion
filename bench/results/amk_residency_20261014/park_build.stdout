@@ -1,0 +1,1 @@
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC -Iexecutor -Ibpf/include /tmp/bpfusion-amk-residency-tkdf_2wx/qwen_graph_park.cu -o build/amk_graph_user_network_park.so -lbpf -lelf -lz -lpthread

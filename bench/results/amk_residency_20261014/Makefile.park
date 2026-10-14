@@ -1,0 +1,6 @@
+include /workspaces/repository/Makefile
+
+park: $(BUILD)/amk_graph_user_network_park.so
+
+$(BUILD)/amk_graph_user_network_park.so: /tmp/bpfusion-amk-residency-tkdf_2wx/qwen_graph_park.cu
+	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC -Iexecutor -Ibpf/include $< -o $@ $(LDLIBS)
