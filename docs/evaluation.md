@@ -915,3 +915,16 @@ experimental targets; AMK and default/noncoalesced targets are unchanged.
 retain the evidence. Close the unchanged matrix; further performance work
 requires a distinct discriminator for the remaining native long-output and
 single-request boundaries. The full retained objective remains active.
+
+## Post-hoc long-output discriminator
+
+[Existing-data analysis](../bench/results/final_drain_20261014/posthoc_long_rounds.md)
+authenticates2088 serial/warmup model rounds in each ordinary transfer process
+and derives gen64/c8 aggregate rounds. Selected drain uses260.6/259.4 mean
+rounds versus native261.8/260.8, so additional rounds do not explain the
+remaining mean throughput gap. Whole-transfer excess multishot CQ traffic is
+large, but supplies neither per-cell GPU time nor a winning heartbeat cadence.
+This is explicitly post-hoc descriptive evidence, outside the original
+predeclared primary result/review. Reuse it before a new run. Source inspection
+selects GPU-only I/O bookkeeping placement as the next distinct candidate;
+its performance and split-control shutdown correctness remain untested.

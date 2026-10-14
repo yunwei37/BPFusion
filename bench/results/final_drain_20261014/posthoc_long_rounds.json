@@ -1,0 +1,501 @@
+{
+  "scope": "post-hoc descriptive analysis of existing transfer processes; not predeclared primary evidence or isolated GPU time",
+  "rows": [
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 0,
+      "mode": "uring_loop_coalesced_original",
+      "total_model_rounds": 2353,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 265,
+      "tokens_per_s": 4632.9909589963945,
+      "whole_transfer_sq": 4277,
+      "whole_transfer_cq": 54047,
+      "whole_transfer_extra_multishot_cq": 49770,
+      "whole_transfer_extra_cq_fraction": 0.9208651729050641
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 0,
+      "mode": "userspace",
+      "total_model_rounds": 2348,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 260,
+      "tokens_per_s": 4642.724287136946
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 0,
+      "mode": "uring_loop_coalesced",
+      "total_model_rounds": 2348,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 260,
+      "tokens_per_s": 4715.144741233259,
+      "whole_transfer_sq": 4277,
+      "whole_transfer_cq": 53522,
+      "whole_transfer_extra_multishot_cq": 49245,
+      "whole_transfer_extra_cq_fraction": 0.9200889353910542
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 1,
+      "mode": "uring_loop_coalesced_original",
+      "total_model_rounds": 2354,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 266,
+      "tokens_per_s": 4531.026390155678,
+      "whole_transfer_sq": 4277,
+      "whole_transfer_cq": 54315,
+      "whole_transfer_extra_multishot_cq": 50038,
+      "whole_transfer_extra_cq_fraction": 0.921255638405597
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 1,
+      "mode": "uring_loop_coalesced",
+      "total_model_rounds": 2348,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 260,
+      "tokens_per_s": 4445.437895624165,
+      "whole_transfer_sq": 4277,
+      "whole_transfer_cq": 54643,
+      "whole_transfer_extra_multishot_cq": 50366,
+      "whole_transfer_extra_cq_fraction": 0.9217283092070347
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 1,
+      "mode": "userspace",
+      "total_model_rounds": 2349,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 261,
+      "tokens_per_s": 4639.797783475712
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 2,
+      "mode": "userspace",
+      "total_model_rounds": 2349,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 261,
+      "tokens_per_s": 4919.906930062949
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 2,
+      "mode": "uring_loop_coalesced_original",
+      "total_model_rounds": 2355,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 267,
+      "tokens_per_s": 4623.070038689408,
+      "whole_transfer_sq": 4277,
+      "whole_transfer_cq": 55019,
+      "whole_transfer_extra_multishot_cq": 50742,
+      "whole_transfer_extra_cq_fraction": 0.9222632181609989
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 2,
+      "mode": "uring_loop_coalesced",
+      "total_model_rounds": 2347,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 259,
+      "tokens_per_s": 4735.77053859805,
+      "whole_transfer_sq": 4277,
+      "whole_transfer_cq": 53653,
+      "whole_transfer_extra_multishot_cq": 49376,
+      "whole_transfer_extra_cq_fraction": 0.9202840474903546
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 3,
+      "mode": "userspace",
+      "total_model_rounds": 2349,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 261,
+      "tokens_per_s": 4632.099374780125
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 3,
+      "mode": "uring_loop_coalesced",
+      "total_model_rounds": 2347,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 259,
+      "tokens_per_s": 4450.224685607977,
+      "whole_transfer_sq": 4278,
+      "whole_transfer_cq": 54845,
+      "whole_transfer_extra_multishot_cq": 50567,
+      "whole_transfer_extra_cq_fraction": 0.9219983590117604
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 3,
+      "mode": "uring_loop_coalesced_original",
+      "total_model_rounds": 2354,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 266,
+      "tokens_per_s": 4372.300070014444,
+      "whole_transfer_sq": 4277,
+      "whole_transfer_cq": 55048,
+      "whole_transfer_extra_multishot_cq": 50771,
+      "whole_transfer_extra_cq_fraction": 0.9223041709053916
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 4,
+      "mode": "uring_loop_coalesced",
+      "total_model_rounds": 2347,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 259,
+      "tokens_per_s": 4737.665020095969,
+      "whole_transfer_sq": 4277,
+      "whole_transfer_cq": 53378,
+      "whole_transfer_extra_multishot_cq": 49101,
+      "whole_transfer_extra_cq_fraction": 0.9198733560642961
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 4,
+      "mode": "uring_loop_coalesced_original",
+      "total_model_rounds": 2354,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 266,
+      "tokens_per_s": 4643.851761576234,
+      "whole_transfer_sq": 4278,
+      "whole_transfer_cq": 54887,
+      "whole_transfer_extra_multishot_cq": 50609,
+      "whole_transfer_extra_cq_fraction": 0.9220580465319657
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "block": 4,
+      "mode": "userspace",
+      "total_model_rounds": 2349,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 261,
+      "tokens_per_s": 4915.253635247667
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 0,
+      "mode": "uring_loop_coalesced_original",
+      "total_model_rounds": 2355,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 267,
+      "tokens_per_s": 5430.834721365059,
+      "whole_transfer_sq": 4277,
+      "whole_transfer_cq": 36006,
+      "whole_transfer_extra_multishot_cq": 31729,
+      "whole_transfer_extra_cq_fraction": 0.8812142420707659
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 0,
+      "mode": "userspace",
+      "total_model_rounds": 2351,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 263,
+      "tokens_per_s": 5786.381819891277
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 0,
+      "mode": "uring_loop_coalesced",
+      "total_model_rounds": 2349,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 261,
+      "tokens_per_s": 5492.1599631064155,
+      "whole_transfer_sq": 4276,
+      "whole_transfer_cq": 36904,
+      "whole_transfer_extra_multishot_cq": 32628,
+      "whole_transfer_extra_cq_fraction": 0.8841318014307392
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 1,
+      "mode": "uring_loop_coalesced_original",
+      "total_model_rounds": 2354,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 266,
+      "tokens_per_s": 5041.361888073131,
+      "whole_transfer_sq": 4277,
+      "whole_transfer_cq": 36772,
+      "whole_transfer_extra_multishot_cq": 32495,
+      "whole_transfer_extra_cq_fraction": 0.8836886761666486
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 1,
+      "mode": "uring_loop_coalesced",
+      "total_model_rounds": 2349,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 261,
+      "tokens_per_s": 5084.46028359749,
+      "whole_transfer_sq": 4274,
+      "whole_transfer_cq": 36833,
+      "whole_transfer_extra_multishot_cq": 32559,
+      "whole_transfer_extra_cq_fraction": 0.8839627507941248
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 1,
+      "mode": "userspace",
+      "total_model_rounds": 2350,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 262,
+      "tokens_per_s": 5337.472292902466
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 2,
+      "mode": "userspace",
+      "total_model_rounds": 2349,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 261,
+      "tokens_per_s": 5815.155162082571
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 2,
+      "mode": "uring_loop_coalesced_original",
+      "total_model_rounds": 2354,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 266,
+      "tokens_per_s": 5436.955575875764,
+      "whole_transfer_sq": 4274,
+      "whole_transfer_cq": 36741,
+      "whole_transfer_extra_multishot_cq": 32467,
+      "whole_transfer_extra_cq_fraction": 0.8836721918292916
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 2,
+      "mode": "uring_loop_coalesced",
+      "total_model_rounds": 2347,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 259,
+      "tokens_per_s": 5551.6827959723205,
+      "whole_transfer_sq": 4276,
+      "whole_transfer_cq": 37109,
+      "whole_transfer_extra_multishot_cq": 32833,
+      "whole_transfer_extra_cq_fraction": 0.8847718882211862
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 3,
+      "mode": "userspace",
+      "total_model_rounds": 2349,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 261,
+      "tokens_per_s": 5336.540274401722
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 3,
+      "mode": "uring_loop_coalesced",
+      "total_model_rounds": 2349,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 261,
+      "tokens_per_s": 5067.668744052881,
+      "whole_transfer_sq": 4275,
+      "whole_transfer_cq": 36180,
+      "whole_transfer_extra_multishot_cq": 31905,
+      "whole_transfer_extra_cq_fraction": 0.8818407960199005
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 3,
+      "mode": "uring_loop_coalesced_original",
+      "total_model_rounds": 2356,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 268,
+      "tokens_per_s": 5015.365655102189,
+      "whole_transfer_sq": 4272,
+      "whole_transfer_cq": 36978,
+      "whole_transfer_extra_multishot_cq": 32706,
+      "whole_transfer_extra_cq_fraction": 0.8844718481259127
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 4,
+      "mode": "uring_loop_coalesced",
+      "total_model_rounds": 2349,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 261,
+      "tokens_per_s": 5521.768262381033,
+      "whole_transfer_sq": 4273,
+      "whole_transfer_cq": 35841,
+      "whole_transfer_extra_multishot_cq": 31568,
+      "whole_transfer_extra_cq_fraction": 0.88077899612176
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 4,
+      "mode": "uring_loop_coalesced_original",
+      "total_model_rounds": 2355,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 267,
+      "tokens_per_s": 5438.490556293506,
+      "whole_transfer_sq": 4277,
+      "whole_transfer_cq": 35792,
+      "whole_transfer_extra_multishot_cq": 31515,
+      "whole_transfer_extra_cq_fraction": 0.880504023245418
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "block": 4,
+      "mode": "userspace",
+      "total_model_rounds": 2350,
+      "deducted_serial_rounds": 2088,
+      "long_c8_model_rounds": 262,
+      "tokens_per_s": 5817.136931486458
+    }
+  ],
+  "summaries": [
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_coalesced_original",
+      "rounds": [
+        267,
+        266,
+        266,
+        268,
+        267
+      ],
+      "mean_rounds": 266.8,
+      "mean_tokens_per_s": 5272.601679341929
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "userspace",
+      "rounds": [
+        263,
+        262,
+        261,
+        261,
+        262
+      ],
+      "mean_rounds": 261.8,
+      "mean_tokens_per_s": 5618.537296152898
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_coalesced",
+      "rounds": [
+        261,
+        261,
+        259,
+        261,
+        261
+      ],
+      "mean_rounds": 260.6,
+      "mean_tokens_per_s": 5343.548009822028
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "uring_loop_coalesced_original",
+      "rounds": [
+        265,
+        266,
+        267,
+        266,
+        266
+      ],
+      "mean_rounds": 266,
+      "mean_tokens_per_s": 4560.6478438864315
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "userspace",
+      "rounds": [
+        260,
+        261,
+        261,
+        261,
+        261
+      ],
+      "mean_rounds": 260.8,
+      "mean_tokens_per_s": 4749.9564021406795
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "uring_loop_coalesced",
+      "rounds": [
+        260,
+        260,
+        259,
+        259,
+        259
+      ],
+      "mean_rounds": 259.4,
+      "mean_tokens_per_s": 4616.848576231884
+    }
+  ],
+  "round_effects": [
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "candidate_minus": "uring_loop_coalesced_original",
+      "round_differences": [
+        -6,
+        -5,
+        -7,
+        -7,
+        -6
+      ],
+      "mean": -6.2,
+      "t95": [
+        -7.238850633609561,
+        -5.16114936639044
+      ]
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "candidate_minus": "userspace",
+      "round_differences": [
+        -2,
+        -1,
+        -2,
+        0,
+        -1
+      ],
+      "mean": -1.2,
+      "t95": [
+        -2.23885063360956,
+        -0.16114936639043975
+      ]
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "candidate_minus": "uring_loop_coalesced_original",
+      "round_differences": [
+        -5,
+        -6,
+        -8,
+        -7,
+        -7
+      ],
+      "mean": -6.6,
+      "t95": [
+        -8.015714776881417,
+        -5.184285223118582
+      ]
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "candidate_minus": "userspace",
+      "round_differences": [
+        0,
+        -1,
+        -2,
+        -2,
+        -2
+      ],
+      "mean": -1.4,
+      "t95": [
+        -2.5105780419999997,
+        -0.28942195800000015
+      ]
+    }
+  ]
+}
