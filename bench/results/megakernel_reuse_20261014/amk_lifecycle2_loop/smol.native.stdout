@@ -1,0 +1,50 @@
+ninja: no work to do.
+ninja: no work to do.
+ninja: no work to do.
+AMK_BANK 0 graphs 190 grid 170 sms 170
+AMK_BANK 1 graphs 190 grid 170 sms 170
+AMK_BANK 2 graphs 190 grid 170 sms 170
+AMK_BANK 3 graphs 190 grid 170 sms 170
+AMK_BANK 4 graphs 190 grid 170 sms 170
+AMK_BANK 5 graphs 190 grid 170 sms 170
+AMK_BANK 6 graphs 190 grid 170 sms 170
+AMK_BANK 7 graphs 190 grid 170 sms 170
+{"event": "amk_bootstrap", "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "precision": "FP16", "banks": 8, "graphs_per_bank": 190, "context": 128, "actual_sms": 170, "program_sms": 170, "knobs": {"cpasync": 0}, "protocol": "unchanged binary token HTTP", "compute": "upstream AMK persistent kernel; GPU graph prefill/decode"}
+NET_READY pid=312285 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384
+resident Qwen ready: 30 layers h=576 vocab=49152; device-tail graphs, dispatch=resident
+RESULT {"accepted":13,"closed":13,"received":32,"sends":661,"bytes":4973,"completed":32,"aborted":3,"max_connections":2,"max_requests":2,"pending":0,"error":0,"head":32,"reserved":0,"dropped":0,"overflow":0,"sqhead":740,"sqtail":740,"cqhead":391513,"cqtail":391513,"trace_count":32,"trace_overflow":0}
+REPLY {"seq":0,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":398327905392365}
+REPLY {"seq":1,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":398327923753869}
+REPLY {"seq":2,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":398327924025014}
+REPLY {"seq":3,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":398330514079010}
+REPLY {"seq":4,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":398330532314639}
+REPLY {"seq":5,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":398330532517333}
+REPLY {"seq":6,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":398333122128249}
+REPLY {"seq":7,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":398333140433665}
+REPLY {"seq":8,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":398333140611705}
+REPLY {"seq":9,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":398335730540755}
+REPLY {"seq":10,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":398335748976546}
+REPLY {"seq":11,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":398335749277364}
+REPLY {"seq":12,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":398338339340028}
+REPLY {"seq":13,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":398338357798882}
+REPLY {"seq":14,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":398338357964255}
+REPLY {"seq":15,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":398340947958841}
+REPLY {"seq":16,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":398340966391065}
+REPLY {"seq":17,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":398340966536726}
+REPLY {"seq":18,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":398343556048116}
+REPLY {"seq":19,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":398343574418107}
+REPLY {"seq":20,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":398343574692321}
+REPLY {"seq":21,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":398346165594452}
+REPLY {"seq":22,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":398346183988044}
+REPLY {"seq":23,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":398346184307993}
+REPLY {"seq":24,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":398348773577647}
+REPLY {"seq":25,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":398348791972796}
+REPLY {"seq":26,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":398348792131543}
+REPLY {"seq":27,"gen":1,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":398349181812112}
+REPLY {"seq":28,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":398349182134664}
+REPLY {"seq":29,"gen":64,"sends":1,"early":1,"bytes":4,"aborted":1,"client_ns":398349212209595}
+REPLY {"seq":30,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":398349230567305}
+REPLY {"seq":31,"gen":64,"sends":1,"early":1,"bytes":84,"aborted":1,"client_ns":398350027925194}
+CLEANUP ring_connections_buffers_released
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=716 graph_error=0 banks=8 max_active=2
+{"event": "amk_graph_errors", "errors": [0, 0, 0, 0, 0, 0, 0, 0]}

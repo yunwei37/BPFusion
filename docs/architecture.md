@@ -434,6 +434,8 @@ the unmodified AMK persistent cubin. Eight private banks feed the existing
 qwen_graph.cu dispatcher and either existing TCP transport. Model arithmetic,
 per-token publication, final-CQ ownership and queue ABI stay in their existing
 components. The current finite checks qualify SmolLM2-135M FP16 at c1/c8;
-arbitrary models, full protocol coverage and performance remain unqualified.
+the selected protocol and idle/reset/stop checks pass frozen whole-output
+pools in a common runtime. Stronger eager-HF exact equality, arbitrary models
+and performance remain unqualified.
 See [finding0048](findings/0048-reused-amk-dispatch.md) for actual commands,
 raw results, dependency compatibility and the ongoing experiment boundary.

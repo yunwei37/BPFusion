@@ -1,0 +1,17 @@
+{
+  "command": [
+    "make",
+    "vllm-graph-uring-loop",
+    "VLLM_PYTHON=/tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/bin/python"
+  ],
+  "exit": 0,
+  "env_overrides": {
+    "PATH": "/tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "LD_LIBRARY_PATH": "/tmp/bpfusion-megakernel-reuse-oxfus39y/libbpf_install/usr/lib64",
+    "VLLM_ENABLE_V1_MULTIPROCESSING": "0",
+    "PYTHONPATH": "/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34",
+    "TORCH_EXTENSIONS_DIR": "/tmp/bpfusion-megakernel-reuse-oxfus39y/common_cuda_extensions",
+    "CUDA_HOME": "/usr/local/cuda"
+  },
+  "utc": "2026-10-14T08:23:43.524517+00:00"
+}

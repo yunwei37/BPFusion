@@ -1,0 +1,52 @@
+{
+  "model": "smol",
+  "start": "2026-10-14T08:32:15.768675+00:00",
+  "oracle_frozen_at": "pre-observation0045: 8323c32e19a1fcdf326beba405a411a6276aa8dc",
+  "ready_time_ns": 1791966757154168874,
+  "native_pid": 311842,
+  "exit": 0,
+  "amk_errors": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "native_stats": {
+    "accepted": 13,
+    "published": 32,
+    "completed": 31,
+    "rejected": 10
+  },
+  "pass": false,
+  "end": "2026-10-14T08:33:02.053505+00:00",
+  "remaining_pins": []
+}
+ninja: no work to do.
+ninja: no work to do.
+ninja: no work to do.
+AMK_BANK 0 graphs 190 grid 170 sms 170
+AMK_BANK 1 graphs 190 grid 170 sms 170
+AMK_BANK 2 graphs 190 grid 170 sms 170
+AMK_BANK 3 graphs 190 grid 170 sms 170
+AMK_BANK 4 graphs 190 grid 170 sms 170
+AMK_BANK 5 graphs 190 grid 170 sms 170
+AMK_BANK 6 graphs 190 grid 170 sms 170
+AMK_BANK 7 graphs 190 grid 170 sms 170
+{"event": "amk_bootstrap", "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "precision": "FP16", "banks": 8, "graphs_per_bank": 190, "context": 128, "actual_sms": 170, "program_sms": 170, "knobs": {"cpasync": 0}, "protocol": "unchanged binary token HTTP", "compute": "upstream AMK persistent kernel; GPU graph prefill/decode"}
+network=userspace epoll; same resident GPU graph dispatch
+resident Qwen ready: 30 layers h=576 vocab=49152; device-tail graphs, dispatch=resident
+userspace TCP stopped: accepted=13 published=32 completed=31 rejected=10
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=716 graph_error=0 banks=8 max_active=2
+{"event": "amk_graph_errors", "errors": [0, 0, 0, 0, 0, 0, 0, 0]}
+
+
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]
+Loading weights:  33%|███▎      | 90/272 [00:00<00:00, 897.81it/s]
+Loading weights:  68%|██████▊   | 185/272 [00:00<00:00, 913.68it/s]
+Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1201.16it/s]
+
+LIFECYCLE_DRIVER_TERMINAL

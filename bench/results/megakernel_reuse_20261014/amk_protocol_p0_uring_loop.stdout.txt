@@ -1,0 +1,199 @@
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:  37%|███▋      | 100/272 [00:00<00:00, 998.57it/s]Loading weights:  74%|███████▎  | 200/272 [00:00<00:00, 909.74it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1190.53it/s]
+[1/5] /usr/local/cuda/bin/nvcc -MD -MF sync.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120_cpasync0 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cu -o sync.cuda.o 
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[2/5] /usr/local/cuda/bin/nvcc -MD -MF pages.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120_cpasync0 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/pages.cu -o pages.cuda.o 
+[3/5] /usr/local/cuda/bin/nvcc -MD -MF scheduler.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120_cpasync0 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/scheduler.cu -o scheduler.cuda.o 
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[4/5] c++ -MMD -MF vm_ext.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120_cpasync0 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -fPIC -std=c++20 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/vm_ext.cpp -o vm_ext.o 
+[5/5] c++ scheduler.cuda.o sync.cuda.o pages.cuda.o vm_ext.o -shared -L/tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/local/cuda/lib64 -lcudart -o amk_vm_ext_sm120_cpasync0.so
+[1/5] /usr/local/cuda/bin/nvcc -MD -MF sync.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -DAMK_GEMV_CPASYNC=1 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cu -o sync.cuda.o 
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[2/5] /usr/local/cuda/bin/nvcc -MD -MF pages.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -DAMK_GEMV_CPASYNC=1 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/pages.cu -o pages.cuda.o 
+[3/5] /usr/local/cuda/bin/nvcc -MD -MF scheduler.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -DAMK_GEMV_CPASYNC=1 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/scheduler.cu -o scheduler.cuda.o 
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/ops.cuh(1816): warning #177-D: variable "pat" was declared but never referenced
+      const int pat = (inst.params.flags >> 16) & 0xFFFF;
+                ^
+
+[4/5] c++ -MMD -MF vm_ext.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -fPIC -std=c++20 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/vm_ext.cpp -o vm_ext.o 
+[5/5] c++ scheduler.cuda.o sync.cuda.o pages.cuda.o vm_ext.o -shared -L/tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/local/cuda/lib64 -lcudart -o amk_vm_ext_sm120.so
+[1/5] /usr/local/cuda/bin/nvcc -MD -MF sync.cuda.o.d -DTORCH_EXTENSION_NAME=amk_persist_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cu -o sync.cuda.o 
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[2/5] /usr/local/cuda/bin/nvcc -MD -MF pages.cuda.o.d -DTORCH_EXTENSION_NAME=amk_persist_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/pages.cu -o pages.cuda.o 
+[3/5] /usr/local/cuda/bin/nvcc -MD -MF scheduler_persist.cuda.o.d -DTORCH_EXTENSION_NAME=amk_persist_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/scheduler_persist.cu -o scheduler_persist.cuda.o 
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[4/5] c++ -MMD -MF vm_ext_persist.o.d -DTORCH_EXTENSION_NAME=amk_persist_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -fPIC -std=c++20 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/vm_ext_persist.cpp -o vm_ext_persist.o 
+[5/5] c++ scheduler_persist.cuda.o vm_ext_persist.o sync.cuda.o pages.cuda.o -shared -L/tmp/bpfusion-megakernel-reuse-oxfus39y/common_runtime/lib/python3.12/site-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/local/cuda/lib64 -lcudart -o amk_persist_ext_sm120.so
+AMK_BANK 0 graphs 190 grid 170 sms 170
+AMK_BANK 1 graphs 190 grid 170 sms 170
+AMK_BANK 2 graphs 190 grid 170 sms 170
+AMK_BANK 3 graphs 190 grid 170 sms 170
+AMK_BANK 4 graphs 190 grid 170 sms 170
+AMK_BANK 5 graphs 190 grid 170 sms 170
+AMK_BANK 6 graphs 190 grid 170 sms 170
+AMK_BANK 7 graphs 190 grid 170 sms 170
+{"event": "amk_bootstrap", "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "precision": "FP16", "banks": 8, "graphs_per_bank": 190, "context": 128, "actual_sms": 170, "program_sms": 170, "knobs": {"cpasync": 0}, "protocol": "unchanged binary token HTTP", "compute": "upstream AMK persistent kernel; GPU graph prefill/decode"}
+NET_READY pid=311015 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384
+resident Qwen ready: 30 layers h=576 vocab=49152; device-tail graphs, dispatch=resident
+RESULT {"accepted":5086,"closed":5086,"received":613,"sends":22105,"bytes":138670,"completed":622,"aborted":1,"max_connections":13,"max_requests":8,"pending":0,"error":0,"head":622,"reserved":0,"dropped":0,"overflow":0,"sqhead":38081,"sqtail":38081,"cqhead":2884034,"cqtail":2884034,"trace_count":622,"trace_overflow":494}
+REPLY {"seq":0,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397689096359022}
+REPLY {"seq":1,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397689709261097}
+REPLY {"seq":2,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397690191067613}
+REPLY {"seq":3,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397690649256510}
+REPLY {"seq":4,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397691048649957}
+REPLY {"seq":5,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397691435158232}
+REPLY {"seq":6,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397691997434945}
+REPLY {"seq":7,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397692585149989}
+REPLY {"seq":8,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397693181458657}
+REPLY {"seq":9,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397693983672805}
+REPLY {"seq":10,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397695292978566}
+REPLY {"seq":11,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397695800066335}
+REPLY {"seq":12,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397696342920509}
+REPLY {"seq":13,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397696847610368}
+REPLY {"seq":14,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397697323984797}
+REPLY {"seq":15,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397697791869508}
+REPLY {"seq":16,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397698422469943}
+REPLY {"seq":17,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397699069343506}
+REPLY {"seq":18,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397699728147818}
+REPLY {"seq":19,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397700596246776}
+REPLY {"seq":20,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397701961571245}
+REPLY {"seq":21,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397702419237338}
+REPLY {"seq":22,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397702902836309}
+REPLY {"seq":23,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397703361448184}
+REPLY {"seq":24,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397703761961315}
+REPLY {"seq":25,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397704149584589}
+REPLY {"seq":26,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397704728312394}
+REPLY {"seq":27,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397705315719928}
+REPLY {"seq":28,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397705911430034}
+REPLY {"seq":29,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":397706713925524}
+REPLY {"seq":30,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397708012701910}
+REPLY {"seq":31,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397708404363529}
+REPLY {"seq":32,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397708404487533}
+REPLY {"seq":33,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397709223873908}
+REPLY {"seq":34,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397709223919628}
+REPLY {"seq":35,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397709224037497}
+REPLY {"seq":36,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397710451867556}
+REPLY {"seq":37,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397710451917394}
+REPLY {"seq":38,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397710451932847}
+REPLY {"seq":39,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397710451947373}
+REPLY {"seq":40,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397712064486867}
+REPLY {"seq":41,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397712064547557}
+REPLY {"seq":42,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397712064531260}
+REPLY {"seq":43,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397712064565061}
+REPLY {"seq":44,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397712064722228}
+REPLY {"seq":45,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397714057947189}
+REPLY {"seq":46,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397714057992367}
+REPLY {"seq":47,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397714058028089}
+REPLY {"seq":48,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397714058053585}
+REPLY {"seq":49,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397714058804744}
+REPLY {"seq":50,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397714058091674}
+REPLY {"seq":51,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397716546235757}
+REPLY {"seq":52,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397716546282595}
+REPLY {"seq":53,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397716546298981}
+REPLY {"seq":54,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397716546314380}
+REPLY {"seq":55,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397716546410152}
+REPLY {"seq":56,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397716546449988}
+REPLY {"seq":57,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397716546821938}
+REPLY {"seq":58,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397719539846679}
+REPLY {"seq":59,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397719539887756}
+REPLY {"seq":60,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397719539904737}
+REPLY {"seq":61,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397719540025293}
+REPLY {"seq":62,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397719539921425}
+REPLY {"seq":63,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397719540440373}
+REPLY {"seq":64,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397719540862511}
+REPLY {"seq":65,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397719540891078}
+REPLY {"seq":66,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397723056072328}
+REPLY {"seq":67,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397723056121861}
+REPLY {"seq":68,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397723056193071}
+REPLY {"seq":69,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397723056147231}
+REPLY {"seq":70,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397723056523936}
+REPLY {"seq":71,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397723056643509}
+REPLY {"seq":72,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397723056668559}
+REPLY {"seq":73,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397723056169210}
+REPLY {"seq":74,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397723057804299}
+REPLY {"seq":75,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397723056824736}
+REPLY {"seq":76,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397723058779953}
+REPLY {"seq":77,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397723059848361}
+REPLY {"seq":78,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397723059937146}
+REPLY {"seq":79,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397723060099646}
+REPLY {"seq":80,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397723060164939}
+REPLY {"seq":81,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397723060230714}
+REPLY {"seq":82,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397726501993592}
+REPLY {"seq":83,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397726562477895}
+REPLY {"seq":84,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397726563240562}
+REPLY {"seq":85,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397726563472355}
+REPLY {"seq":86,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397726563389926}
+REPLY {"seq":87,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397726563622418}
+REPLY {"seq":88,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397726562401244}
+REPLY {"seq":89,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397726564698638}
+REPLY {"seq":90,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397726564812924}
+REPLY {"seq":91,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397726564399526}
+REPLY {"seq":92,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397726565240017}
+REPLY {"seq":93,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397726565312504}
+REPLY {"seq":94,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397728302132112}
+REPLY {"seq":95,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397728328943017}
+REPLY {"seq":96,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397728327941299}
+REPLY {"seq":97,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397728329813755}
+REPLY {"seq":98,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397728329472526}
+REPLY {"seq":99,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397728329995417}
+REPLY {"seq":100,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397728330175690}
+REPLY {"seq":101,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397728330378064}
+REPLY {"seq":102,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397728330414039}
+REPLY {"seq":103,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397730752270371}
+REPLY {"seq":104,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397730788245180}
+REPLY {"seq":105,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397730788573705}
+REPLY {"seq":106,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397730788738830}
+REPLY {"seq":107,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397730788895259}
+REPLY {"seq":108,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397730792126772}
+REPLY {"seq":109,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397730792300975}
+REPLY {"seq":110,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397730792426995}
+REPLY {"seq":111,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397730792522514}
+REPLY {"seq":112,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397730792632724}
+REPLY {"seq":113,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397730792812264}
+REPLY {"seq":114,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397730792884966}
+REPLY {"seq":115,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397730792960664}
+REPLY {"seq":116,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397735078818848}
+REPLY {"seq":117,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397735143042172}
+REPLY {"seq":118,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397735142900863}
+REPLY {"seq":119,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397735143447271}
+REPLY {"seq":120,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397735143555990}
+REPLY {"seq":121,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397735143402036}
+REPLY {"seq":122,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397735144008239}
+REPLY {"seq":123,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":397735143928785}
+REPLY {"seq":124,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397735147158414}
+REPLY {"seq":125,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397735147341688}
+REPLY {"seq":126,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397735147559570}
+REPLY {"seq":127,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":397735147517307}
+CLEANUP ring_connections_buffers_released
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=22224 graph_error=0 banks=8 max_active=8
+{"event": "amk_graph_errors", "errors": [0, 0, 0, 0, 0, 0, 0, 0]}

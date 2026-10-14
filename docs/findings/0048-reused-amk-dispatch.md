@@ -106,3 +106,46 @@ refcnt warnings and observes no new selected Xid/OOM/storage/BUG, no remaining
 compute app and unchanged boot. No own experiment process or BPF pin remains.
 The original default HF library inode/size, Coder sessions and unrelated WIP
 are preserved. Owned temporary dependencies remain for the ongoing experiment.
+
+## Common-runtime protocol and lifecycle qualification
+
+A later temporary common environment uses Torch2.13.0+cu129, vLLM0.31.0 and
+Transformers5.17.0. Its complete resolved package list equals the earlier0047
+list; installed base packages are preserved. AMK still uses existing nvcc13
+for native upstream JIT and bridge compilation, while vLLM's bridge links
+the same earlier CUDA12.9 runtime. Backend-specific compiler/runtime differences
+remain recorded; only the AMK transport contrast holds GPU computation fixed.
+
+The unchanged admitted0045 frozen whole-output pools and source-native
+bench/vllm_serving.py protocol cases now pass both AMK transports:
+622 requests/22224 checked tokens and259 rejections per condition. Actual
+all-thread traces qualify no steady userspace TCP request handling on the
+loop path and the expected native TCP control. Fragmentation, 1..8 client
+concurrency, 256 valid/rejected wrap pairs, mixed lengths, pipelines and
+half-close all complete. GPU graphs/model errors are zero, queue and
+transport counters agree and raw-record analysis terminates0. This is
+finite set membership, not stronger eager-HF exact equality or current
+batch/KV replay. The earlier failed diagnostic stays failed.
+
+The adapted existing hf_loop lifecycle actions pass both transports after
+eight long idle periods, HTTP/binary rejection, reset after the first real
+token, a later whole reply and stop during generation/receive/accept. Each
+condition executes32 actions with652 checked tokens/prefix tokens. The
+loop drains32 requests/13 connections with3 intended aborts and independently
+empty SQ/CQ. Native reports32 published/31 completed because the final
+request is intentionally stopped after one token. The first native predicate
+wrongly required32 completions; its failed receipt is retained and the
+source-backed correction is rerun. Actual post-model synchronization and
+all eight AMK error vectors are zero; owned pins disappear.
+
+The complete three-path metric preflight exits0:120 checked requests/3144
+tokens, including24 excludedgen1 warmups. Every path runs allfour cells
+(gen1/64,c1/8) with8 requests/cell. The analyzer independently reconstructs
+replies, arrivals, worker brackets, graph/transport counters and the entire
+preflight coverage. Setup/preflight measurements are not paper results.
+The source-native full driver/analyzer and commands are now frozen before
+the planned15-executor/3840-measured-request comparison.
+
+Actual host brackets retain the same11 historical profiler warnings with
+no new selected Xid/OOM/storage/BUG at observed endpoints. Journal absence
+and endpoint snapshots do not prove continuous hardware isolation.

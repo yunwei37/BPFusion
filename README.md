@@ -198,9 +198,11 @@ four32-token sequences matching HF; it is not a qualified replacement.
 The optional [AMK adapter](docs/findings/0048-reused-amk-dispatch.md) now reuses
 pinned upstream SmolLM2-135M FP16 computation with the existing resident GPU
 dispatcher. Both userspace TCP and the module-free eBPF/io_uring loop pass
-finite c1/c8 streaming and slot-reuse checks. A stronger eager-HF exact check
-fails on one long output; strict qualification and the full matched performance
-comparison remain open. No speedup is established.
+finite c1/c8 streaming, full selected protocol and reset/idle/stop checks
+against pre-observation whole-output pools in a common runtime. A stronger
+eager-HF exact check fails on one long output and is independently reproduced
+by upstream AMK. The full matched performance comparison remains open; no
+speedup is established.
 
 ## Repository layout
 

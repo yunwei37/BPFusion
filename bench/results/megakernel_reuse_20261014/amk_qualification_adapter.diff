@@ -1,0 +1,90 @@
+--- /workspaces/repository/bench/vllm_serving.py	2026-10-14 03:51:31.723565166 +0000
++++ /tmp/bpfusion-megakernel-reuse-oxfus39y/amk_serving_qualification.py	2026-10-14 08:23:14.198644566 +0000
+@@ -5,7 +5,7 @@
+ from concurrent.futures import ThreadPoolExecutor
+ from itertools import permutations
+ from pathlib import Path
+-sys.path.insert(0,str(Path(__file__).resolve().parent))
++sys.path.insert(0,"/workspaces/repository/bench")
+ from resident_dispatch import connect,request,worker_cpu_snapshot,worker_cpu_delta
+ from transformers import AutoConfig,AutoTokenizer
+ 
+@@ -27,7 +27,7 @@
+     comparisons.add_argument("--release-comparison",action="store_true")
+     comparisons.add_argument("--dispatch-comparison",action="store_true")
+     args=ap.parse_args()
+-    root=Path(__file__).resolve().parents[1];os.chdir(root)
++    root=Path("/workspaces/repository");os.chdir(root)
+     output=Path(args.output).resolve();output.parent.mkdir(parents=True,exist_ok=True)
+     assert not output.exists(),output
+     raw=output.open("w",buffering=1);lock=threading.Lock()
+@@ -44,6 +44,7 @@
+     if args.copy_comparison:modes=("uring","uring_full_copy","userspace")
+     if args.loop_comparison:modes=("uring_loop","userspace","uring")
+     if args.loop_progress_comparison:modes=("uring_loop","userspace","uring_loop_after")
++    modes=("uring_loop","userspace")
+     matrix=((64,8),) if args.copy_comparison else ((1,1),(64,1),(1,8),(64,8))
+     repetitions=1 if args.correctness or args.preflight else (6 if args.transport_comparison or args.copy_comparison or args.loop_comparison or args.loop_progress_comparison else 5)
+     requests_per_cell=8 if args.preflight else (256 if args.copy_comparison else 64)
+@@ -61,7 +62,7 @@
+          correctness=args.correctness,preflight=args.preflight,untraced=args.untraced,comparison="kernel-loop-progress" if args.loop_progress_comparison else "kernel-loop" if args.loop_comparison else "stock-copy" if args.copy_comparison else "stock-transport" if args.transport_comparison else "dispatch" if args.dispatch_comparison else "release" if args.release_comparison else ("packing" if args.packing_comparison else "transport"),trace_condition="ordinary paths untraced; fixed complete-output-set fidelity" if args.untraced else "both transports identically BF_TRACE",
+          commit=subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip(),
+          driver_source=Path(__file__).read_text(),client_source=(root/"bench/resident_dispatch.py").read_text(),
+-         backend_source=(root/"executor/vllm_graph.py").read_text(),native_source=(root/"executor/vllm_graph.cu").read_text(),
++         backend_source=(root/"executor/amk_graph.py").read_text(),native_source=(root/"executor/qwen_graph.cu").read_text(),
+          python=sys.version,torch=subprocess.check_output(["python3","-c","import torch;print(torch.__version__)"],text=True).strip())
+     frozen={}
+     if args.packing_comparison or args.release_comparison:
+@@ -88,8 +89,8 @@
+                 budget=(3*10+sum(range(1,9))+8*32*2+8*4+6+4+2) if args.correctness else requests_per_cell*len(matrix)+8
+                 binary=(("vllm_graph_chained" if mode.startswith("chained") else "vllm_graph") if args.dispatch_comparison else ("vllm_graph" if mode.startswith("prefix") else "vllm_graph_padded") if args.release_comparison
+                         else ("vllm_graph_padded" if mode.startswith("packed") else "vllm_graph_grouped") if args.packing_comparison
+-                        else "vllm_graph")+("" if kernel_mode else "_user_network_wait")+("" if args.untraced else "_trace")
+-                if mode.startswith("uring"):binary="vllm_graph_"+mode+("" if args.untraced else "_trace")
++                        else "amk_graph")+("" if kernel_mode else "_user_network_wait")+("" if args.untraced else "_trace")
++                if mode.startswith("uring"):binary="amk_graph_"+mode+("" if args.untraced else "_trace")
+                 command=["./build/"+binary,args.model,"300"]
+                 if not args.untraced:command+=["--trace-output",str(trace),"--trace-requests",str(budget)]
+                 if args.correctness:command=["strace","-D","-f","-e","trace=network,write,io_uring_enter","-o",str(nettrace),*command]
+@@ -101,7 +102,7 @@
+                     with logpath.open("w") as log:p=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+                     emit("start",pair=pair,mode=mode,pid=p.pid,command=command,trace=str(trace))
+                     print(f"START pair={pair} mode={mode} pid={p.pid}",flush=True)
+-                    while "resident vLLM ready" not in logpath.read_text():
++                    while "resident Qwen ready" not in logpath.read_text():
+                         if p.poll() is not None:raise RuntimeError(logpath.read_text()[-6000:])
+                         time.sleep(.1)
+                     emit("ready",pair=pair,mode=mode,pid=p.pid)
+@@ -226,14 +227,17 @@
+                     emit("executor",pair=pair,mode=mode,exit_code=code,stdout=log)
+                     assert code==0 and "graph_error=0" in log and "launches=1 " in log,log[-6000:]
+                     if args.dispatch_comparison:
+-                        calls={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",log.split("resident vLLM stopped:",1)[1].splitlines()[0])}
++                        calls={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",log.split("resident Qwen stopped:",1)[1].splitlines()[0])}
+                         assert calls["device_launch_calls"]==calls["device_graph_launches"]*(1 if mode.startswith("chained") else 2),calls
+                         emit("dispatch_verified",pair=pair,mode=mode,device_launch_calls=calls["device_launch_calls"],model_steps=calls["device_graph_launches"])
+                     if args.untraced:
+                         batches=None
+-                        counters={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",log.split("resident vLLM stopped:",1)[1].splitlines()[0])}
+-                        assert counters["admitted"]==counters["retired"]==len(rows)
+-                        assert counters["graph_error"]==counters["trace_overflows"]==0
++                        counters={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",log.split("resident Qwen stopped:",1)[1].splitlines()[0])}
++                        assert counters["device_graph_launches"]==sum(row["gen"] for row in rows if not row["bad"])
++                        assert counters["graph_error"]==0 and counters["banks"]==8
++                        assert counters["max_active"]==8
++                        amk_errors=json.loads(next(line for line in log.splitlines() if '"event": "amk_graph_errors"' in line))["errors"]
++                        assert amk_errors==[0]*8
+                         checked=0
+                         for row in rows:
+                             if row["bad"]:assert row["tokens"]==[]
+@@ -273,8 +277,8 @@
+                         emit("verified",pair=pair,mode=mode,requests=len(rows),tokens=checked,
+                             rejections=sum(row["bad"] for row in rows),actual_batches=batches,actual_queries=queries,reference_path=str(trace)+".references.jsonl")
+                     if args.correctness:
+-                        network=nettrace.read_text();assert "resident vLLM ready" in network
+-                        active=network.split("resident vLLM ready",1)[1]
++                        network=nettrace.read_text();assert "resident Qwen ready" in network
++                        active=network.split("resident Qwen ready",1)[1]
+                         calls=r"\b(?:accept4?|recvfrom|recvmsg|recvmmsg|sendto|sendmsg|sendmmsg)\("
+                         if kernel_mode:assert not re.search(calls,active),active
+                         else:

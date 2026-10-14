@@ -1,0 +1,49 @@
+--- /workspaces/repository/bench/results/uring_cq_progress_20261014/hf_loop/driver.py	2026-10-14 02:43:41.686934178 +0000
++++ /tmp/bpfusion-megakernel-reuse-oxfus39y/amk_lifecycle.py	2026-10-14 08:28:39.005085191 +0000
+@@ -1,8 +1,12 @@
+ import datetime,json,os,re,signal,socket,struct,subprocess,sys,time
+ os.chdir("/workspaces/repository")
+-root=os.path.dirname(os.path.abspath(__file__));base=os.path.dirname(root);modeldir=base+"/model"
+-name=sys.argv[1];oracle_doc=json.load(open(modeldir+"/oracle.json"));oracle=oracle_doc["models"][name]
+-paths=json.load(open(modeldir+"/model_paths.json"));vocab=json.load(open(paths[name]+"/config.json"))["vocab_size"]
++root=os.path.join(os.path.dirname(os.path.abspath(__file__)),"amk_lifecycle");base=os.path.dirname(root)
++os.makedirs(root,exist_ok=False)
++name="smol";cfg=json.load(open(base+"/smol_frozen.json"));asset=json.load(open(base+"/frozen_references.json"))
++oracle_doc={"frozen_at":"pre-observation0045: "+asset["source_commit"]};paths={name:cfg["model"]};vocab=cfg["frozen_model"]["vocab"]
++reference_pool={(tuple(r["prompt"]),r["gen"]):{tuple(s) for s in r["sequences"]} for r in cfg["frozen_model"]["references"]}
++cases=[(0,1),(0,64),(1,1),(1,64),(2,64),(3,64),(0,64),(2,64)]
++oracle={"rows":[dict(prompt=cfg["prompts"][case],gen=gen,tokens=list(sorted(reference_pool[tuple(cfg["prompts"][case]),gen])[0])) for case,gen in cases]}
+ pins=["bpfusion_ctl","bpfusion_stats","bpfusion_db","bpfusion_streams","bpfusion_stream_link",
+       "bpfusion_uring_link","bpfusion_uring_owner","bpfusion_uring_bind_link"]
+ assert not any(os.path.exists("/sys/fs/bpf/"+n) for n in pins)
+@@ -13,7 +17,7 @@
+     result["attach"]={"exit":a.returncode,"stdout":a.stdout,"stderr":a.stderr}
+     cmd=["strace","-f","-ttt","-o",root+"/"+name+".strace","-e",
+          "trace=accept,accept4,recvfrom,recvmsg,sendto,sendmsg,io_uring_setup,io_uring_enter,io_uring_register",
+-         "build/qwen_graph_uring_loop",paths[name],"180"]
++         "build/amk_graph_uring_loop",paths[name],"180"]
+     err=open(root+"/"+name+".native.stderr","w");log=open(root+"/"+name+".native.stdout","w")
+     p=subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=err,text=True);lines=[]
+     while True:
+@@ -45,8 +49,9 @@
+             part=c.recv(4*count-len(data))
+             if not part:raise RuntimeError("early token EOF")
+             data.extend(part)
+-        expected=struct.pack("<"+"I"*count,*ref["tokens"][:count])
+-        assert data==expected,(row,data.hex(),expected.hex())
++        actual=tuple(struct.unpack("<"+"I"*count,data))
++        allowed=reference_pool[tuple(ref["prompt"]),ref["gen"]]
++        assert any(actual==sequence[:count] for sequence in allowed),(row,data.hex(),allowed)
+         row.update({"reply_hex":(prefix+data).hex(),"checked_tokens":count,"partial":partial,"exact":True})
+     for idle_repeat in range(8):
+         time.sleep(2.2)
+@@ -96,7 +101,8 @@
+     result["replies"]=[json.loads(l[6:]) for l in result["stdout"].splitlines() if l.startswith("REPLY ")]
+     b=subprocess.run(["build/bpfusion_load","stats"],text=True,capture_output=True)
+     result["bpf_stats"]={"exit":b.returncode,"stdout":b.stdout,"stderr":b.stderr}
+-    result["pass"]=bool(p.returncode==0 and s["error"]==s["pending"]==s["reserved"]==s["dropped"]==s["overflow"]==s["trace_overflow"]==0
++    result["amk_errors"]=json.loads(next(l for l in result["stdout"].splitlines() if '"event": "amk_graph_errors"' in l))["errors"]
++    result["pass"]=bool(result["amk_errors"]==[0]*8 and p.returncode==0 and s["error"]==s["pending"]==s["reserved"]==s["dropped"]==s["overflow"]==s["trace_overflow"]==0
+          and s["accepted"]==s["closed"]==13 and s["head"]==s["completed"]==32 and s["aborted"]==3
+          and s["sqhead"]==s["sqtail"] and s["cqhead"]==s["cqtail"]
+          and len(rows)==32 and all(r["exact"] for r in rows)
