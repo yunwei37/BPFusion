@@ -657,5 +657,9 @@ Actual recursive body/head activity coverage and request grouping must pass
 real preflight before interpreting model spans. Five paired blocks/two models
 remain planned; graph gaps and clock-compatible residuals are not attributed
 to a pure cause. Known prior host OOM remains recorded; per-executor actual
-host checks and owned cleanup are required. Setup is in progress and no
-new model serving or profiling result is claimed.
+host checks and owned cleanup are required. Real ordinary/profiled Qwen preflight passes16 checked gen1 requests with
+normal exits/drain and complete2168 kernel/8 memcpy activity coverage.
+[Preflight qualification](../bench/results/optimized_latency_profile_20261014/preflight-report.md)
+retains one NVRM unsupported-reference warning during profiled bootstrap;
+read-only endpoint diagnosis finds no Xid/recovery action or new OOM/storage
+fault. Full matrix remains pending; no completed localization claim.
