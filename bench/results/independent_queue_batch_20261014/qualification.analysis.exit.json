@@ -1,0 +1,10 @@
+{
+  "command": [
+    "python3",
+    "-c",
+    "import sys,pathlib,json;sys.path.insert(0,sys.argv[1]);import analysis;print(json.dumps([analysis.analyze(pathlib.Path(sys.argv[1])/n) for n in [\"qualification_vllm_smol.jsonl\",\"qualification_vllm_qwen.jsonl\"]],indent=2))",
+    "/tmp/bpfusion-independent-batch-a3l3l2uo"
+  ],
+  "exit": 0,
+  "utc": "2026-10-14T21:17:39.636466+00:00"
+}

@@ -534,3 +534,13 @@ worsens. More standalone model rounds accompany the Smol recovery, so aggregate
 round count alone does not explain the constructor difference. Existing targets
 and defaults are unchanged, with zero production-code growth. Finite protocol/
 lifecycle qualification does not establish arbitrary backend acceptance.
+
+## Independent-worker publication experiment
+
+[Finding0056](findings/0056-independent-gpu-queue-publication.md) extends seven
+existing coalesced publication conditions to independent BPF-loop builds while
+leaving residency/start/shutdown conditions unchanged. It qualifies the finite
+protocol/lifecycle but demonstrates no primary throughput gain for either model.
+Selected source restores original per-entry independent publication. Captured
+candidate sources remain reproducible; no default, timer, ABI or compute change
+is retained. The tested bundle does not isolate dynamic PCIe or GPU-time costs.

@@ -276,6 +276,16 @@ The result favors an existing route for the measured Smol long-output scope,
 without a universal backend policy or default change. This compares whole I/O
 constructors; isolated overlap, GPU-time mediation and generic models remain open.
 
+## Independent GPU I/O publication result
+
+[Finding0056](docs/findings/0056-independent-gpu-queue-publication.md) completes
+the missing independent-worker/batched-publication comparison with identical
+reused model computation. Both models' primary throughput intervals cross zero;
+selected source retains original publication, with zero production-code growth.
+Efficient native TCP remains the competitor. The
+[literature/novelty map](docs/background-related-work.md) records prior GPU I/O
+and compute mechanisms and the incomplete generic-driver evidence.
+
 ## Repository layout
 
 ```

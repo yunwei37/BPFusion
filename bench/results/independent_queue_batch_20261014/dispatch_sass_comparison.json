@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-14T21:07:04.708166+00:00",
+  "rows": [
+    {
+      "mode": "original",
+      "command": [
+        "/usr/local/cuda/bin/cuobjdump",
+        "--dump-sass",
+        "/tmp/bpfusion-independent-batch-a3l3l2uo/control-build/vllm_graph_uring_loop.so"
+      ],
+      "exit": 0,
+      "instructions": 1864,
+      "stderr": ""
+    },
+    {
+      "mode": "candidate",
+      "command": [
+        "/usr/local/cuda/bin/cuobjdump",
+        "--dump-sass",
+        "/tmp/bpfusion-independent-batch-a3l3l2uo/build/vllm_graph_uring_loop.so"
+      ],
+      "exit": 0,
+      "instructions": 1864,
+      "stderr": ""
+    },
+    {
+      "mode": "native",
+      "command": [
+        "/usr/local/cuda/bin/cuobjdump",
+        "--dump-sass",
+        "/tmp/bpfusion-independent-batch-a3l3l2uo/build/vllm_graph_user_network_wait.so"
+      ],
+      "exit": 0,
+      "instructions": 1864,
+      "stderr": ""
+    }
+  ],
+  "normalized_dispatch_equal": true,
+  "scope": "static normalized ordinary model-dispatch SASS only; not equal whole serving binaries, dynamic GPU work or mediation"
+}

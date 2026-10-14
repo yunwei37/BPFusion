@@ -1,0 +1,24 @@
+[
+  {
+    "command": [
+      "/tmp/bpfusion-independent-batch-a3l3l2uo/runtime/bin/python",
+      "/tmp/bpfusion-independent-batch-a3l3l2uo/lifecycle.py",
+      "loop",
+      "smol",
+      "vllm"
+    ],
+    "exit": 0,
+    "pass_checks": true
+  },
+  {
+    "command": [
+      "/tmp/bpfusion-independent-batch-a3l3l2uo/runtime/bin/python",
+      "/tmp/bpfusion-independent-batch-a3l3l2uo/lifecycle.py",
+      "loop",
+      "qwen",
+      "vllm"
+    ],
+    "exit": 0,
+    "pass_checks": true
+  }
+]

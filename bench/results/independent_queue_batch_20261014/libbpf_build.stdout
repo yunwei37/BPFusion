@@ -1,0 +1,53 @@
+make: Entering directory '/tmp/bpfusion-independent-batch-a3l3l2uo/libbpf-1.6.3/src'
+  MKDIR    staticobjs
+  CC       staticobjs/bpf.o
+  CC       staticobjs/btf.o
+  CC       staticobjs/libbpf.o
+  CC       staticobjs/libbpf_errno.o
+  CC       staticobjs/netlink.o
+  CC       staticobjs/nlattr.o
+  CC       staticobjs/str_error.o
+  CC       staticobjs/libbpf_probes.o
+  CC       staticobjs/bpf_prog_linfo.o
+  CC       staticobjs/btf_dump.o
+  CC       staticobjs/hashmap.o
+  CC       staticobjs/ringbuf.o
+  CC       staticobjs/strset.o
+  CC       staticobjs/linker.o
+  CC       staticobjs/gen_loader.o
+  CC       staticobjs/relo_core.o
+  CC       staticobjs/usdt.o
+  CC       staticobjs/zip.o
+  CC       staticobjs/elf.o
+  CC       staticobjs/features.o
+  CC       staticobjs/btf_iter.o
+  CC       staticobjs/btf_relocate.o
+  AR       libbpf.a
+  MKDIR    sharedobjs
+  CC       sharedobjs/bpf.o
+  CC       sharedobjs/btf.o
+  CC       sharedobjs/libbpf.o
+  CC       sharedobjs/libbpf_errno.o
+  CC       sharedobjs/netlink.o
+  CC       sharedobjs/nlattr.o
+  CC       sharedobjs/str_error.o
+  CC       sharedobjs/libbpf_probes.o
+  CC       sharedobjs/bpf_prog_linfo.o
+  CC       sharedobjs/btf_dump.o
+  CC       sharedobjs/hashmap.o
+  CC       sharedobjs/ringbuf.o
+  CC       sharedobjs/strset.o
+  CC       sharedobjs/linker.o
+  CC       sharedobjs/gen_loader.o
+  CC       sharedobjs/relo_core.o
+  CC       sharedobjs/usdt.o
+  CC       sharedobjs/zip.o
+  CC       sharedobjs/elf.o
+  CC       sharedobjs/features.o
+  CC       sharedobjs/btf_iter.o
+  CC       sharedobjs/btf_relocate.o
+  CC       libbpf.so.1.6.3
+  INSTALL  bpf.h libbpf.h btf.h libbpf_common.h libbpf_legacy.h bpf_helpers.h bpf_helper_defs.h bpf_tracing.h bpf_endian.h bpf_core_read.h skel_internal.h libbpf_version.h usdt.bpf.h
+  INSTALL  ./libbpf.pc
+  INSTALL  ./libbpf.a ./libbpf.so ./libbpf.so.1 ./libbpf.so.1.6.3
+make: Leaving directory '/tmp/bpfusion-independent-batch-a3l3l2uo/libbpf-1.6.3/src'

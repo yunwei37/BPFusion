@@ -1,0 +1,28 @@
+{
+  "exit": 0,
+  "status": [
+    {
+      "command": [
+        "/tmp/bpfusion-independent-batch-a3l3l2uo/runtime/bin/python",
+        "/tmp/bpfusion-independent-batch-a3l3l2uo/lifecycle.py",
+        "loop",
+        "smol",
+        "vllm"
+      ],
+      "exit": 0,
+      "pass_checks": true
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-independent-batch-a3l3l2uo/runtime/bin/python",
+        "/tmp/bpfusion-independent-batch-a3l3l2uo/lifecycle.py",
+        "loop",
+        "qwen",
+        "vllm"
+      ],
+      "exit": 0,
+      "pass_checks": true
+    }
+  ],
+  "utc": "2026-10-14T21:19:56.344872+00:00"
+}

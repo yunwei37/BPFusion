@@ -1,0 +1,132 @@
+{
+  "utc": "2026-10-14T21:21:36.610853+00:00",
+  "models": [
+    {
+      "model": "smol",
+      "checked_complete_or_prefix_tokens": 652,
+      "physical_model_slots": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "0"
+        ],
+        [
+          "2",
+          "0"
+        ],
+        [
+          "3",
+          "0"
+        ],
+        [
+          "4",
+          "0"
+        ],
+        [
+          "5",
+          "0"
+        ],
+        [
+          "6",
+          "0"
+        ],
+        [
+          "7",
+          "0"
+        ]
+      ],
+      "admission_bitmap": "0x0",
+      "native_stats": {
+        "accepted": 13,
+        "closed": 13,
+        "received": 31,
+        "sends": 644,
+        "bytes": 4973,
+        "completed": 32,
+        "aborted": 3,
+        "max_connections": 2,
+        "max_requests": 2,
+        "pending": 0,
+        "error": 0,
+        "head": 32,
+        "reserved": 0,
+        "dropped": 0,
+        "overflow": 0,
+        "sqhead": 726,
+        "sqtail": 726,
+        "cqhead": 289831,
+        "cqtail": 289831,
+        "trace_count": 32,
+        "trace_overflow": 0
+      },
+      "model_counters": "resident vLLM stopped: launches=1 device_graph_launches=654 graph_error=0 max_active=2 admitted=32 retired=31 trace_overflows=0 release_rounds=31 max_release=1 device_launch_calls=1308"
+    },
+    {
+      "model": "qwen",
+      "checked_complete_or_prefix_tokens": 652,
+      "physical_model_slots": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "0"
+        ],
+        [
+          "2",
+          "0"
+        ],
+        [
+          "3",
+          "0"
+        ],
+        [
+          "4",
+          "0"
+        ],
+        [
+          "5",
+          "0"
+        ],
+        [
+          "6",
+          "0"
+        ],
+        [
+          "7",
+          "0"
+        ]
+      ],
+      "admission_bitmap": "0x0",
+      "native_stats": {
+        "accepted": 13,
+        "closed": 13,
+        "received": 32,
+        "sends": 656,
+        "bytes": 4973,
+        "completed": 32,
+        "aborted": 3,
+        "max_connections": 2,
+        "max_requests": 2,
+        "pending": 0,
+        "error": 0,
+        "head": 32,
+        "reserved": 0,
+        "dropped": 0,
+        "overflow": 0,
+        "sqhead": 737,
+        "sqtail": 737,
+        "cqhead": 293630,
+        "cqtail": 293630,
+        "trace_count": 32,
+        "trace_overflow": 0
+      },
+      "model_counters": "resident vLLM stopped: launches=1 device_graph_launches=654 graph_error=0 max_active=2 admitted=32 retired=31 trace_overflows=0 release_rounds=31 max_release=1 device_launch_calls=1308"
+    }
+  ],
+  "quiescence_evidence": "Successful shutdown and retained standalone-worker source sharing model_quiesced/finished; no direct live sampling after I/O state was freed."
+}

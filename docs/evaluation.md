@@ -997,3 +997,22 @@ retain the evidence. Prefer the existing standalone route only for the measured
 Smol long-output scope; retain Qwen's short-output boundary. No source/default
 change or universal constructor promotion follows. Close this unchanged matrix.
 Impact is a workload/constructor boundary; the full objective remains active.
+
+## Completed independent-worker publication comparison
+
+[Finding0056](findings/0056-independent-gpu-queue-publication.md) closes the
+missing independent-plus-batched combination after0051/0055. All20 drivers,
+60 executors and120 cells complete3840 measured requests124800 output tokens
+plus480 warmups. Fixed protocol/lifecycle/ordinary analyses pass.
+
+Candidate-original gen64/c8 TPS contrasts are+125.231 [-103.273,353.734] Smol
+and-26.515 [-270.340,217.311] Qwen, nominal paired t95df4. Both cross zero.
+Smol loses to native by140.585 [-267.251,-13.919]; Qwen/native is inconclusive.
+All signed latency/CPU/counter rows and outliers remain. Independent review,
+[archive/replay](../bench/results/independent_queue_batch_20261014/) and
+[restoration](../bench/results/independent_queue_batch_20261014/final_restoration.json)
+retain evidence and source selection. Restore original publication with no
+production-code growth. This supporting experiment does not establish generic
+backend acceptance, fresh eager-HF parity, total CPU elimination or causal
+PCIe/GPU-time mediation. The unchanged matrix is closed; full objective remains
+active and future work needs a distinct discriminator or stronger service evidence.

@@ -1,0 +1,38 @@
+{
+  "utc": "2026-10-14T21:19:18.891231+00:00",
+  "runtime_linkage": [
+    {
+      "mode": "original",
+      "command": [
+        "ldd",
+        "/tmp/bpfusion-independent-batch-a3l3l2uo/control-build/vllm_graph_uring_loop.so"
+      ],
+      "exit": 0,
+      "stdout": "\tlinux-vdso.so.1 (0x0000757abea3a000)\n\tlibcudart.so.12 => /tmp/bpfusion-independent-batch-a3l3l2uo/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 (0x0000757abe600000)\n\tlibbpf.so.1 => /tmp/bpfusion-independent-batch-a3l3l2uo/libbpf_install/usr/lib64/libbpf.so.1 (0x0000757abe997000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x0000757abe382000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x0000757abe963000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x0000757abe16f000)\n\t/lib64/ld-linux-x86-64.so.2 (0x0000757abea3d000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x0000757abe95c000)\n\tlibpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x0000757abe957000)\n\tlibrt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x0000757abe952000)\n\tlibelf.so.1 => /lib/x86_64-linux-gnu/libelf.so.1 (0x0000757abe933000)\n\tlibz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x0000757abe917000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x0000757abe086000)\n\tlibzstd.so.1 => /lib/x86_64-linux-gnu/libzstd.so.1 (0x0000757abdfcc000)\n",
+      "stderr": ""
+    },
+    {
+      "mode": "candidate",
+      "command": [
+        "ldd",
+        "/tmp/bpfusion-independent-batch-a3l3l2uo/build/vllm_graph_uring_loop.so"
+      ],
+      "exit": 0,
+      "stdout": "\tlinux-vdso.so.1 (0x0000707c8c813000)\n\tlibcudart.so.12 => /tmp/bpfusion-independent-batch-a3l3l2uo/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 (0x0000707c8c400000)\n\tlibbpf.so.1 => /tmp/bpfusion-independent-batch-a3l3l2uo/libbpf_install/usr/lib64/libbpf.so.1 (0x0000707c8c770000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x0000707c8c182000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x0000707c8c73c000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x0000707c8bf6f000)\n\t/lib64/ld-linux-x86-64.so.2 (0x0000707c8c816000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x0000707c8c735000)\n\tlibpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x0000707c8c730000)\n\tlibrt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x0000707c8c72b000)\n\tlibelf.so.1 => /lib/x86_64-linux-gnu/libelf.so.1 (0x0000707c8c70c000)\n\tlibz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x0000707c8c6f0000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x0000707c8be86000)\n\tlibzstd.so.1 => /lib/x86_64-linux-gnu/libzstd.so.1 (0x0000707c8bdcc000)\n",
+      "stderr": ""
+    },
+    {
+      "mode": "native",
+      "command": [
+        "ldd",
+        "/tmp/bpfusion-independent-batch-a3l3l2uo/build/vllm_graph_user_network_wait.so"
+      ],
+      "exit": 0,
+      "stdout": "\tlinux-vdso.so.1 (0x000073126b5ba000)\n\tlibcudart.so.12 => /tmp/bpfusion-independent-batch-a3l3l2uo/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 (0x000073126b200000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x000073126af82000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x000073126b562000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x000073126ad6f000)\n\t/lib64/ld-linux-x86-64.so.2 (0x000073126b5bd000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x000073126b55d000)\n\tlibpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x000073126b556000)\n\tlibrt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x000073126b551000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x000073126ac86000)\n",
+      "stderr": ""
+    }
+  ],
+  "compile_header_path": "/usr/include/bpf/libbpf_version.h",
+  "compile_header": "/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */\n/* Copyright (C) 2021 Facebook */\n#ifndef __LIBBPF_VERSION_H\n#define __LIBBPF_VERSION_H\n\n#define LIBBPF_MAJOR_VERSION 1\n#define LIBBPF_MINOR_VERSION 3\n\n#endif /* __LIBBPF_VERSION_H */\n",
+  "scope": "actual selected private runtime linkage and existing system compile headers; no new linker/header setting"
+}
