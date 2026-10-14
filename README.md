@@ -35,6 +35,7 @@ remain open.
 | `qwen_graph_user_network_wait` | Identical resident GPU computation | Efficient native userspace timed epoll and nonblocking send | Matched alternative mechanism |
 | `qwen_graph_uring` | Same HF graphs and GPU-controlled model generation | GPU-owned stock io_uring TCP, eBPF admission/reclamation | Optional multi-connection/streaming path; qualified on the current Linux7.3rc3/RTX5090 setup |
 | `vllm_graph_uring` | Same upstream optimized graphs, packed prefill and FIFO prefix release | Shared GPU-owned stock io_uring TCP and eBPF queue integration | Optional optimized adapter; strict correctness and local comparison complete, no reliable performance gain |
+| `qwen_graph_uring_loop` / `vllm_graph_uring_loop` | Same reused HF/vLLM computation | Upstream sleepable eBPF/io_uring loop, GPU-owned TCP, periodic kernel timeout | Optional qualified path; lower CPU than SQPOLL, mixed delivery against native |
 | `qwen_graph_control` | Same graph banks, host resumes after requests | Same eBPF/kernel transport | Dispatch ablation |
 | `qwen.cu`, Python HF and synthetic MLP paths | Earlier implementations with different maturity | See their individual findings | Historical references and controls |
 
@@ -83,8 +84,12 @@ The [sleepable eBPF/io_uring loop candidate](docs/findings/0044-uring-bpf-loop.m
 replaces stock SQPOLL with upstream kernel-loop coordination and a standard
 multishot timer, while reusing the same model computation. Its three-path
 preflight and full protocol/idle/lifecycle checks pass for both tested models;
-the matched CPU/latency/throughput experiment remains pending. It requires the qualified recent kernel
-interfaces and libbpf1.6.3. No performance benefit is established yet.
+the complete matched experiment lowers known-worker CPU against SQPOLL, but
+does not establish a latency advantage over efficient native TCP. Qwen
+long-output throughput is lower than native; Smol throughput is inconclusive.
+It requires the qualified recent kernel interfaces and libbpf1.6.3. Independent
+result review admits the complete comparison; owned temporary runtime/build
+outputs are removed and restoration is recorded.
 
 ## Service and compute boundary
 

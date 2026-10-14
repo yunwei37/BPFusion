@@ -485,7 +485,7 @@ instead of repeating unchanged copy cells or tuning model arithmetic. General
 reliability, total CPU/energy, external SOTA and arbitrary-model claims remain
 unproven. The late endpoint observation is separately dated from actual timing.
 
-## Sleepable eBPF io_uring loop comparison in progress
+## Completed sleepable eBPF io_uring loop comparison
 
 [Finding0044](findings/0044-uring-bpf-loop.md) follows the high known-worker
 CPU observed in finding0043 with an admitted supporting transport intervention.
@@ -509,8 +509,33 @@ All12 vLLM strict executors pass7464 requests/266688 valid tokens,
 qualification passes32 requests/652 complete/prefix tokens per model after
 repairing an omitted launcher mapping that selected the default library
 before requests. Failed initial records and successful affected retry remain.
-Full qualification is complete;36-executor/144-cell timing remains pending. These checks have dependency value only; no new speed
-or CPU claim follows.
-Next decision depends on full matched effects and fresh result review;
-backend arithmetic, reference sets and the retained project objective stay
-unchanged.
+Full qualification is complete and retains dependency value only.
+
+Frozen ddc444c full timing completes36 executors/144 cells,9216 measured
+requests/299520 output tokens plus288 excluded checked warmups. Both native
+analyses pass, with no failed/excluded/replaced/retried timing cells. All six
+predeclared primary effects and raw/reconstruction links are in finding0044.
+Known-worker CPU falls against SQPOLL in both models. Native gen1/c1 TTFT
+contrasts remain inconclusive; Qwen gen64/c8 throughput loses to native,
+while Smol throughput remains inconclusive. Native also has lower measured
+known-worker CPU in the secondary gen64/c8 contrasts. No equivalence,
+total-CPU/energy,exclusive eBPF cause or external-SOTA claim follows.
+
+The completed comparison supports the bounded coordination CPU hypothesis
+and bounds delivery, rather than establishing serving superiority. The [fresh result review](../bench/results/uring_bpf_loop_20261014/result-review.md)
+admits valid/complete supporting evidence with a local mechanism/workload
+impact. Preserve all negative estimates and larger Smol block2/3
+throughput differences. The actual timing-window kernel journal is empty;
+the separate after-run no-own-resource endpoint does not prove continuous
+isolation. Both performance and all four strict analyses replay byte-identically, and
+all six primaries reconstruct directly from raw data. Secondary gen64/c1
+throughput and gen1/c8 TTFT/throughput also favor native for both models.
+[Final restoration](../bench/results/uring_bpf_loop_20261014/final_restoration.json)
+removes the owned temporary environment and31 named build outputs,with no
+own process/module/pins/GPU app and original boot/base/Coder/model-cache/WIP
+preserved. This is a separately observed endpoint,not continuous isolation.
+Close this completed comparison with supported scoped CPU benefit and mixed
+native delivery. Optimized cross-node deployment and broader backend/service
+acceptance remain under the full retained goal.
+Backend arithmetic,references and the full retained goal stay unchanged;
+do not repeat unchanged timing or begin a model-specific arithmetic campaign.

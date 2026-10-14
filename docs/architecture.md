@@ -41,13 +41,22 @@ contexts return EOPNOTSUPP. Send is registered for sleepable syscall/LSM
 contexts. These interfaces do not supply this prototype's asynchronous TCP
 server response and connection lifecycle.
 
-The prototype consequently uses `module/bfusion_tx.c` for kernel accept/receive
+The default transport consequently uses `module/bfusion_tx.c` for kernel accept/receive
 draining, completion polling, ordered TCP sends and socket/slot lifetime.
 That is a current implementation and upstream-API boundary, not an old-kernel
 bug or proof that a module-free design is impossible. Future upstream APIs
 should be evaluated against TCP support, completion context and connection
 ownership before replacing this adapter. No host kernel was changed during
 the matched comparison.
+
+Later qualification on2026-10-14 adds a
+[module-free optional transport](findings/0044-uring-bpf-loop.md) on the same
+tested host. GPU-owned io_uring handles TCP operations; an upstream sleepable
+BPF loop submits published SQEs and waits for completion/timer CQ progress.
+It reuses both HF and vLLM computation adapters without a steady userspace
+request worker. Current BPF/io_uring interfaces,BTF/UAPI and libbpf remain
+dependencies. The default module stays available; qualified CPU savings
+against SQPOLL do not establish delivery superiority over efficient native.
 
 ## Data path
 
@@ -414,5 +423,5 @@ execution stops, and reentry drains cancellation, timer removal and closes
 before report/queue memory is freed. Multishot SQ/CQ totals differ; each queue
 must be empty independently. The request page ABI is unchanged. The
 [finding](findings/0044-uring-bpf-loop.md) records current upstream dependencies,
-failed setup/exit attempts and incomplete performance qualification. This
+failed setup/exit attempts and the completed measured CPU/delivery tradeoffs. This
 does not replace the existing module default or qualify interrupt notification.

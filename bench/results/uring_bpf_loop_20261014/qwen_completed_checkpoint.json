@@ -1,0 +1,53 @@
+{
+  "utc": "2026-10-14T03:18:43.817838+00:00",
+  "coverage": {
+    "cells": 72,
+    "measured_requests": 4608,
+    "measured_tokens": 149760,
+    "warmups": 144,
+    "executors": 18,
+    "commit": "ddc444c393a38be2ffbabf372d22e139e4aa4bc3"
+  },
+  "commands": {
+    "model": "qwen",
+    "cmd": [
+      "/tmp/bpfusion-uring-loop-frmz3lrm/runtime/bin/python",
+      "bench/vllm_serving.py",
+      "--loop-comparison",
+      "--untraced",
+      "--reference-path",
+      "/tmp/bpfusion-uring-loop-frmz3lrm/frozen_references.json",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--output",
+      "/tmp/bpfusion-uring-loop-frmz3lrm/qwen_performance.jsonl"
+    ],
+    "exit": 0,
+    "analysis_exit": 0
+  },
+  "files": [
+    "qwen_performance_p5_uring_loop.stdout.txt",
+    "qwen_performance_p3_uring.stdout.txt",
+    "qwen_performance_p4_userspace.stdout.txt",
+    "qwen_performance.stderr",
+    "qwen_performance_p1_userspace.stdout.txt",
+    "qwen_performance_p1_uring_loop.stdout.txt",
+    "qwen_performance_analysis.stdout",
+    "qwen_performance_p4_uring_loop.stdout.txt",
+    "qwen_performance_p0_userspace.stdout.txt",
+    "qwen_performance_p3_uring_loop.stdout.txt",
+    "qwen_performance.jsonl",
+    "qwen_performance_p4_uring.stdout.txt",
+    "qwen_performance_p0_uring.stdout.txt",
+    "qwen_performance.stdout",
+    "qwen_performance_p5_uring.stdout.txt",
+    "qwen_performance_p2_uring_loop.stdout.txt",
+    "qwen_performance_p5_userspace.stdout.txt",
+    "qwen_performance_p1_uring.stdout.txt",
+    "qwen_performance_analysis.stderr",
+    "qwen_performance_p2_userspace.stdout.txt",
+    "qwen_performance_p2_uring.stdout.txt",
+    "qwen_performance_p3_userspace.stdout.txt",
+    "qwen_performance_p0_uring_loop.stdout.txt"
+  ]
+}

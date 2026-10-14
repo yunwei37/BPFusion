@@ -1,0 +1,33 @@
+{
+  "observed_utc": "2026-10-14T03:29:13.296050+00:00",
+  "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167",
+  "cmd": [
+    "journalctl",
+    "-k",
+    "--utc",
+    "--since",
+    "2026-10-14 03:08:41",
+    "--until",
+    "2026-10-14 03:27:44",
+    "--no-pager",
+    "-o",
+    "short-iso-precise"
+  ],
+  "exit": 0,
+  "lines": 1,
+  "listed_patterns": [
+    "Out of memory",
+    "oom-kill",
+    "Killed process",
+    "NVRM: Xid",
+    "BUG:",
+    "Oops:",
+    "general protection fault",
+    "CUDA",
+    "GPU has fallen"
+  ],
+  "matching_lines": [],
+  "stdout": "-- No entries --\n",
+  "stderr": "",
+  "scope": "Actual selected timing interval kernel journal; pattern absence does not prove isolation or no other faults"
+}

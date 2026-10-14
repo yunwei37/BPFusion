@@ -4,8 +4,11 @@ This optional transport keeps the reused model computation and GPU-owned
 TCP submission/completion handling, while replacing SQPOLL with an upstream
 sleepable io_uring BPF loop. Userspace initializes the ring and enters the
 kernel loop once during steady serving. The candidate does not use bfusion_tx.
-The existing module remains the default; broader kernel support and any
-CPU, latency or throughput benefit remain unestablished.
+The completed comparison reduces known-worker CPU against SQPOLL,without
+a reliable latency gain over efficient native TCP; Qwen long-output throughput
+is lower than native and Smol throughput is inconclusive. The existing module
+remains the default; broader kernel/model support and general serving
+superiority remain unestablished.
 
 ## Implementation and dependencies
 
@@ -66,7 +69,7 @@ complete/prefix tokens per model,13 closed connections and3 expected aborts.
 Actual traces show one steady loop entry with no userspace socket calls,then
 one cleanup entry after SIGTERM. Full planned qualification is complete.
 The failed original wrapper record remains archived alongside the successful
-affected retry. Performance collection and fresh result review remain pending.
+affected retry. Performance collection and fresh result review are complete below; final restoration is recorded below.
 These checks are dependency evidence, not a performance result.
 
 The admitted ordinary comparison is two models, all six permutations of
@@ -88,3 +91,91 @@ With qualified current headers, libbpf runtime and pinned vLLM environment:
 
 The shared HF graph transport builds with make qwen-graph-uring-loop.
 Exact dependency and runtime bindings are in the linked experiment archive.
+
+## Completed ordinary comparison
+
+Frozen main ddc444c393a38be2ffbabf372d22e139e4aa4bc3 completes the full matrix
+on2026-10-14:36 executors/144 cells,9216 measured requests/299520 measured
+output tokens and288 excluded checked warmups. Each model completes all six
+transport permutations,18 normal executors and72 cells. Both source-native
+analyses pass. There are no failed,excluded,replaced or retried timing cells.
+Every complete reply matches the unchanged pre-observation output set; this
+does not replay the unobserved current ordinary batch/KV history or establish
+task quality.
+
+| Model | Loop / native / SQPOLL gen1,c1 TTFT ms | Loop / native / SQPOLL gen64,c8 tokens/s |
+|---|---|---|
+| Qwen2.5-0.5B | 1.378481 / 1.368795 / 1.337637 | 4605.364822 / 4681.213707 / 4536.448200 |
+| SmolLM2-135M | 1.104221 / 1.136882 / 1.111258 | 5471.373930 / 5450.017739 / 5348.630357 |
+
+All six predeclared primary effects favor loop when positive. CPU is converted
+from seconds/request to milliseconds/request; intervals are nominal paired
+t95,df5 over the six process blocks.
+
+| Model | Primary effect | Mean | Nominal paired t95 |
+|---|---|---:|---|
+| Qwen | native-minus-loop TTFT1,c1 ms | -0.009686 | [-0.071448,0.052076] |
+| Smol | native-minus-loop TTFT1,c1 ms | +0.032660 | [-0.042745,0.108066] |
+| Qwen | loop-minus-native TPS64,c8 | -75.848884 | [-119.599452,-32.098316] |
+| Smol | loop-minus-native TPS64,c8 | +21.356192 | [-108.669300,151.381683] |
+| Qwen | SQPOLL-minus-loop CPU64,c8 ms/request | +13.649411 | [13.218863,14.079960] |
+| Smol | SQPOLL-minus-loop CPU64,c8 ms/request | +11.580469 | [11.071859,12.089079] |
+
+The intended reduction in known-worker CPU against SQPOLL is supported for both
+models. Neither native latency contrast establishes a reliable improvement.
+Qwen long-output throughput loses to native by75.85tokens/s,about1.62% of the
+native mean; every paired Qwen throughput difference is negative. Smol
+throughput is inconclusive. Crossing-zero intervals do not establish
+equivalence, and the CPU result cannot be counted as a latency or throughput
+win. Retain all blocks,including the larger positive Smol throughput estimates
+in blocks2/3; no unverified cause or exclusion is assigned.
+
+| Model | Loop CPU ms/request | SQPOLL CPU ms/request | Native CPU ms/request |
+|---|---:|---:|---:|
+| Qwen | 0.572526 | 14.221937 | 0.491585 |
+| Smol | 0.482410 | 12.062879 | 0.426647 |
+
+The loop mean is about96% below SQPOLL in this gen64/c8 comparison.
+Native known-worker CPU remains lower than loop for both checkpoints,including
+the nominal secondary paired contrasts. The all-thread process clock counts
+the creator's kernel loop and actual SQPOLL once; RX/softirq/BPF/TCP elsewhere,
+clients and energy remain excluded. These are not total service CPU or
+exclusive timer/polling/BPF cost estimates. Changed timer/task-work/dispatch
+coordination and ordinary arrival/batching histories prevent a sole-cause
+explanation of the Qwen throughput loss.
+
+[Qwen raw](../../bench/results/uring_bpf_loop_20261014/qwen_performance.jsonl),
+[Qwen reconstruction](../../bench/results/uring_bpf_loop_20261014/qwen_performance_analysis.stdout),
+[Smol raw](../../bench/results/uring_bpf_loop_20261014/smol_performance.jsonl) and
+[Smol reconstruction](../../bench/results/uring_bpf_loop_20261014/smol_performance_analysis.stdout)
+retain all outputs,arrivals,clocks,worker identities,commands and counters.
+The selected timing-window
+[kernel journal receipt](../../bench/results/uring_bpf_loop_20261014/performance_kernel_journal.json)
+returns exit0 with '-- No entries --'; it is not proof of continuous isolation
+or absence of unlogged faults/interference. The separately observed
+[performance endpoint](../../bench/results/uring_bpf_loop_20261014/performance_end.json)
+finds the original boot/base and no own module,pins or GPU application.
+Owned temporary runtime/build outputs are removed after result review,as
+recorded in the final restoration below.
+
+This complete intervention demonstrates a lower-cost stock coordination
+alternative within the qualified workload,without a reliable delivery
+advantage over efficient native TCP. It is supporting mechanism/workload
+evidence,not external SOTA,arbitrary-model support or an eBPF-only cause.
+Keep the module default and the loop optional; do not repeat unchanged timing
+or start model-specific arithmetic tuning. The [fresh independent result review](../../bench/results/uring_bpf_loop_20261014/result-review.md)
+admits valid/complete supporting evidence and reconstructs all six primary
+intervals directly from raw data. Both performance and all four strict
+analyses replay byte-identically. Secondary native comparisons also favor
+native for both models' gen64/c1 throughput and gen1/c8 TTFT/throughput;
+retain these negative effects rather than describing delivery as uniformly
+unchanged. No new physical-network,task-quality or broad-backend result
+follows. [Final restoration](../../bench/results/uring_bpf_loop_20261014/final_restoration.json)
+removes the owned temporary runtime and31 named build entries after review.
+Launcher links are unlinked without deleting their source targets. Original
+boot/base,Coder processes,model/global caches,default HF library and unrelated
+tools/setup_env.sh are retained; no own process,module,pins or GPU application
+remains. This separately observed endpoint is not continuous isolation.
+Close this completed comparison with its supported scoped CPU benefit and
+mixed native delivery results. Optimized cross-node deployment and broader
+backend/service acceptance remain under the full retained project goal.
