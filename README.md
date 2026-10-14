@@ -227,10 +227,12 @@ The measurements above precede the current experimental queue-publication
 batching change. Existing coalesced targets now snapshot ring cursors and
 publish prepared SQEs/consumed CQEs once per progression round. Ordinary
 noncoalesced targets retain their policy. The
-[queue-batching plan](bench/results/queue_batch_20261014/plan.md) passes allnine
-real preflight paths, selected protocol qualification and three32-action
-lifecycle checks. The full matched performance comparison is pending;
-no speedup or latency recovery is established by those checks.
+[completed queue-batching comparison](docs/findings/0051-batched-ring-publication.md)
+passes the selected protocol/lifecycle checks and all45 ordinary executors.
+AMK c8 long-output throughput improves293→301 token/s, still below native304;
+Qwen improves3.8% versus prior coalescing. vLLM c8 single-token latency remains
+7.16/8.59ms versus native1.97/2.63ms. This is a mixed result, without universal
+latency recovery or native-parity proof.
 
 ## Repository layout
 

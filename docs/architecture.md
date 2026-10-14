@@ -463,6 +463,8 @@ ordered before one release tail publication, including the early cancel-return
 path. Ring-full work can defer to the next round. Timer, FIFO/final ownership,
 model quiescence, queue ABI and model arithmetic remain unchanged. Other builds
 retain existing per-entry publication. The
-[experiment](../bench/results/queue_batch_20261014/plan.md) qualifies the selected
-protocol/lifecycle; full performance collection is pending. Finding0050's
-numbers describe the earlier coalescing implementation.
+[completed experiment](findings/0051-batched-ring-publication.md) qualifies the
+selected protocol/lifecycle and records partial AMK/Qwen throughput gains,
+remaining native gaps and unresolved vLLM c8 short-output latency. Finding0050's
+numbers describe the earlier coalescing implementation. No dynamic system-access
+or model-overlap cause is established.

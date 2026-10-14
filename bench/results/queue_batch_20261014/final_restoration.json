@@ -1,0 +1,171 @@
+{
+  "utc": "2026-10-14T12:51:26.994377+00:00",
+  "temp": "/tmp/bpfusion-queue-batch-2su5dvmy",
+  "temp_removed": true,
+  "removed_builds": [
+    {
+      "path": "/workspaces/repository/build/amk_graph_builder.so",
+      "size": 1003880,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/uring_loop.bpf.o",
+      "size": 10680,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_user_network_wait",
+      "size": 44,
+      "symlink": true
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_user_network_wait.so",
+      "size": 1048312,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_uring_loop_coalesced_original",
+      "size": 44,
+      "symlink": true
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_uring_loop_coalesced_original.so",
+      "size": 1190416,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_uring_loop_coalesced",
+      "size": 44,
+      "symlink": true
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_uring_loop_coalesced.so",
+      "size": 1186368,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_user_network_wait",
+      "size": 45,
+      "symlink": true
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_user_network_wait.so",
+      "size": 120456,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_user_network_wait.so.o",
+      "size": 63128,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_user_network_wait.so.dlink.o",
+      "size": 50952,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_original",
+      "size": 45,
+      "symlink": true
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_original.so",
+      "size": 267280,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_original.so.o",
+      "size": 115472,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_original.so.dlink.o",
+      "size": 144632,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced",
+      "size": 45,
+      "symlink": true
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced.so",
+      "size": 263232,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced.so.o",
+      "size": 116456,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced.so.dlink.o",
+      "size": 140648,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_trace",
+      "size": 45,
+      "symlink": true
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_trace.so",
+      "size": 271624,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_trace.so.o",
+      "size": 124704,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop_coalesced_trace.so.dlink.o",
+      "size": 145464,
+      "symlink": false
+    }
+  ],
+  "preserved_unowned_trace_builds": {
+    "vllm_graph_uring_loop_trace.so": {
+      "inode": 265534,
+      "size": 205648,
+      "symlink": false
+    },
+    "vllm_graph_uring_loop_trace.so.dlink.o": {
+      "inode": 265533,
+      "size": 112664,
+      "symlink": false
+    },
+    "vllm_graph_uring_loop_trace.so.o": {
+      "inode": 265532,
+      "size": 90360,
+      "symlink": false
+    },
+    "vllm_graph_uring_loop_trace": {
+      "inode": 265536,
+      "size": 45,
+      "symlink": true
+    }
+  },
+  "base_packages": "2.14.1+cu130 5.19.0 2.5.3",
+  "default_library": {
+    "inode": 262875,
+    "size": 1032248
+  },
+  "coder_pids": [
+    1,
+    10909
+  ],
+  "module_absent": true,
+  "maps_absent": true,
+  "replay": {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/queue_batch_20261014/analysis.py",
+      "/workspaces/repository/bench/results/queue_batch_20261014",
+      "full"
+    ],
+    "exit": 0,
+    "byte_identical_stdout": true
+  },
+  "unrelated_wip_present": true
+}

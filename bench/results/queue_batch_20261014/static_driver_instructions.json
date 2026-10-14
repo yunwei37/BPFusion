@@ -1,0 +1,39 @@
+{
+  "utc": "2026-10-14T12:23:01.190031+00:00",
+  "source": "2a2d21d5a8da35dc37d4d6bb842bb1f014d5576c",
+  "scope": "static compiled instruction counts and comparison; initialization offsets also change with internal ring layout; not dynamic access counts or timing mediation",
+  "amk_graph": {
+    "old": {
+      "_Z8dispatchP7bf_pageP4StepPPxjjP7Controlb": 2328,
+      "_Z10io_networkP7IoState": 1432,
+      "_Z13io_initializeP7IoState": 56
+    },
+    "new": {
+      "_Z8dispatchP7bf_pageP4StepPPxjjP7Controlb": 2216,
+      "_Z10io_networkP7IoState": 1384,
+      "_Z13io_initializeP7IoState": 56
+    },
+    "same_functions": {
+      "_Z10io_networkP7IoState": false,
+      "_Z8dispatchP7bf_pageP4StepPPxjjP7Controlb": false,
+      "_Z13io_initializeP7IoState": false
+    }
+  },
+  "vllm_graph": {
+    "old": {
+      "_Z8dispatchP7bf_pageP4Step6InputsjP7Control": 3536,
+      "_Z10io_networkP7IoState": 1432,
+      "_Z13io_initializeP7IoState": 56
+    },
+    "new": {
+      "_Z8dispatchP7bf_pageP4Step6InputsjP7Control": 3432,
+      "_Z10io_networkP7IoState": 1384,
+      "_Z13io_initializeP7IoState": 56
+    },
+    "same_functions": {
+      "_Z8dispatchP7bf_pageP4Step6InputsjP7Control": false,
+      "_Z10io_networkP7IoState": false,
+      "_Z13io_initializeP7IoState": false
+    }
+  }
+}

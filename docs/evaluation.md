@@ -795,19 +795,34 @@ vLLM paths; coalescing is an experimental AMK recovery with measured costs,
 not a universal speedup. Full generic text/backend/SLO/performance goal remains
 active; close this unchanged experiment.
 
-## Coalesced queue-publication batching in progress
+## Completed coalesced queue-publication batching
 
-The [plan and review](../bench/results/queue_batch_20261014/plan.md) admit a new
-source-backed driver intervention after0050: reduce repeated host-mapped
-cursor access/publication per network round without changing model arithmetic.
-Current main keeps default/noncoalesced policy. Old07ba7e0 coalesced sources are
-captured and reconstructed with equal normalized GPU SASS.
+[Finding0051](findings/0051-batched-ring-publication.md) completes all45 ordinary
+executors/180 cells,5760 measured requests187200 tokens plus360 checked excluded
+warmups, using frozen2a2d21d candidate and captured07ba7e0 coalesced controls.
+All actual exits, finite output-pool and independent queue/ownership checks pass.
 
-Allnine preflight paths/36 cells complete288 measured requests9360 tokens plus
-72 checked excluded warmups. Three selected protocol runs each pass622 requests,
-22224 tokens/259 rejects plus5000 empty connections. vLLM actual batch/KV
-history replay and unchanged whole-output pools pass. Allthree32-action
-lifecycle checks pass. The stronger AMK eager-HF failure remains failed.
-Full45-executor/180-cell paired latency/throughput comparison is pending;
-qualification is dependency evidence, not a performance result. Full generic
+Primary gen1/c8 candidate-minus-before TTFT is−3.163ms for AMK
+[−5.556,−0.770],+0.833 for vLLMSmol [−0.203,1.870] and+0.283 for Qwen
+[−0.237,0.803]. Both vLLM native gaps remain+5.189/+5.958ms with intervals
+strictly positive. The vLLM latency-recovery prediction is unsupported.
+Primary gen64/c8 TPS improves AMK+8.021 [6.970,9.072] and Qwen+164.200
+[142.069,186.331] versus prior coalescing; Smol+123.015 [−116.175,362.205]
+is unresolved, with its negative block2 retained. AMK still loses2.872TPS
+versus native; no native parity follows from any crossing-zero interval.
+All36 means/108 effects and known-worker CPU/secondary tradeoffs are archived.
+
+Selected protocol and three32-action lifecycle checks pass. Static instruction
+counts fall, but internal layout and finite-drain timing also change; no isolated
+PCIe-access or overlap-mediation claim. Old strict AMK eager-HF equality remains
+failed; ordinary batch trajectories and all-input parity remain unproved.
+Before/during/mid/after host observations retain33 prior NVRM warnings and no
+new selected fault, without continuous-isolation/harmlessness claims.
+
+[Independent result review](../bench/results/queue_batch_20261014/result-review.md)
+and [restoration](../bench/results/queue_batch_20261014/final_restoration.json)
+retain the full evidence/owned-resource cleanup. Keep batching as a limited
+experimental improvement and keep existing defaults. Close the unchanged
+matrix; next diagnosis should distinguish progression/admission availability
+and actual batching rather than assume a compute or PCIe cause. Full retained
 serving/performance goal remains active.
