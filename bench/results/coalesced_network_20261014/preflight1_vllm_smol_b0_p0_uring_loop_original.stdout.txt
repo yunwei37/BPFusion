@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspaces/repository/./build/vllm_graph_uring_loop_original", line 183, in <module>
+    if __name__=="__main__":main()
+                            ^^^^^^
+  File "/workspaces/repository/./build/vllm_graph_uring_loop_original", line 30, in main
+    assert os.environ.get("VLLM_ENABLE_V1_MULTIPROCESSING")=="0","in-process bootstrap required for graph ownership"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: in-process bootstrap required for graph ownership

@@ -770,3 +770,23 @@ intervention rather than a model optimization sweep.
 removes owned TEMP/7 builds, preserving default/base/Coder/WIP; archived
 analysis after removal replays byte-identically. No new persistent runtime
 feature or infrastructure is retained.
+
+## Coalesced GPU network progression in progress
+
+The [plan and fresh review](../bench/results/coalesced_network_20261014/plan.md)
+retain the same performance/reuse question and introduce a source-backed
+driver intervention after0049. Durable network state is advanced by existing
+model dispatchers; the standalone GPU network worker is used only after model
+quiescence for shutdown draining. Model/BPF/protocol/timer/reference policies
+are unchanged; source/state/parent work changes collectively.
+
+Actual preflight completes9 executors/36 cells/288 measured requests9360 tokens
+plus72 checked excluded warmups. Candidate selected protocol completes622
+requests22224 tokens/259 rejects per workload plus5000 empty connections each;
+vLLM traces replay actual batch/KV history and fixed pools also match.
+Allthree32-action idle/reset/inflight-stop lifecycle checks pass. Two standard
+observations place the standalone network kernel only after model-region
+activities; this is no authenticated bank/overlap-mediator claim. Original
+baseline snapshot rebuilds match normalized GPU SASS. Full45-executor ordinary
+comparison is pending; neither qualification nor baseline packaging is a
+performance result. Full goal remains active.

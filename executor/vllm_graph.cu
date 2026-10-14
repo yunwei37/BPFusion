@@ -98,6 +98,11 @@ __global__ void dispatch(bf_page* p,Step* steps,Inputs in,unsigned vocab,Control
                 for(unsigned row=0;row<released;row++)event->requests[row]=release_begin+row;
             }
         }
+#ifdef BF_IO_COALESCED
+        // Advance I/O after result publication and before model admission.
+        // This CTA returns while model children execute.
+        io_progress(io_state);
+#endif
         while(queue_load(&p->llm_head)!=c->seen) {
             i=c->seen%BF_LLM_SLOTS;bf_llm_slot* slot=&p->llm[i];
             if(c->requests[i].phase || queue_load(&slot->state)!=BF_PENDING)break;

@@ -1,0 +1,18 @@
+include /workspaces/repository/Makefile
+
+.PHONY: original-baselines
+original-baselines: $(BUILD)/amk_graph_uring_loop_original.so $(BUILD)/vllm_graph_uring_loop_original.so $(BUILD)/amk_graph_uring_loop_original $(BUILD)/vllm_graph_uring_loop_original
+
+$(BUILD)/amk_graph_uring_loop_original.so: /tmp/bpfusion-coalesced-network-0pls_22b/original/executor/qwen_graph.cu /tmp/bpfusion-coalesced-network-0pls_22b/original/executor/io_uring_tcp.h | $(BUILD)
+	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -rdc=true -shared -Xcompiler=-fPIC -I$(KERNEL_UAPI) -Ibpf/include $< -o $@ $(LDLIBS)
+
+$(BUILD)/vllm_graph_uring_loop_original.so: /tmp/bpfusion-coalesced-network-0pls_22b/original/executor/vllm_graph.cu /tmp/bpfusion-coalesced-network-0pls_22b/original/executor/io_uring_tcp.h | $(BUILD)
+	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -I$(KERNEL_UAPI) -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE $< -o $@.o
+	$(NVCC) -arch=$(SM_ARCH) -dlink -Xcompiler=-fPIC $@.o -o $@.dlink.o
+	$(CXX) -shared -Wl,-z,defs $@.o $@.dlink.o $(VLLM_CUDART) -Wl,-rpath,$(dir $(VLLM_CUDART)) -o $@ $(LDLIBS)
+
+$(BUILD)/amk_graph_uring_loop_original: executor/amk_graph.py
+	ln -sf $(abspath executor/amk_graph.py) $@
+
+$(BUILD)/vllm_graph_uring_loop_original: executor/vllm_graph.py
+	ln -sf $(abspath executor/vllm_graph.py) $@

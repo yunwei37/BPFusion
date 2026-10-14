@@ -1,0 +1,39 @@
+{
+  "exit": 0,
+  "status": [
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/lifecycle.py",
+        "loop",
+        "smol",
+        "amk"
+      ],
+      "exit": 0,
+      "pass_checks": true
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/lifecycle.py",
+        "loop",
+        "smol",
+        "vllm"
+      ],
+      "exit": 0,
+      "pass_checks": true
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/lifecycle.py",
+        "loop",
+        "qwen",
+        "vllm"
+      ],
+      "exit": 0,
+      "pass_checks": true
+    }
+  ],
+  "utc": "2026-10-14T10:49:28.039730+00:00"
+}

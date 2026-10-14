@@ -1,0 +1,6 @@
+clang -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -Ibpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value -c bpf/uring_loop.bpf.c -o build/uring_loop.bpf.o
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -rdc=true -shared -Xcompiler=-fPIC -I/tmp/bpfusion-coalesced-network-0pls_22b/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm executor/amk_graph.cu -lcuda -o build/amk_graph_builder.so
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -rdc=true -shared -Xcompiler=-fPIC -I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi -Ibpf/include executor/qwen_graph.cu -o build/amk_graph_uring_loop.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/amk_graph.py build/amk_graph_uring_loop
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC -Ibpf/include executor/qwen_graph.cu -o build/amk_graph_user_network_wait.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/amk_graph.py build/amk_graph_user_network_wait

@@ -212,6 +212,14 @@ also reproduces the c8 throughput loss. This directs the next driver
 investigation; model-overlap causality and generic performance gains remain
 unproved.
 
+The experimental amk-graph-uring-coalesced and vllm-graph-uring-coalesced
+targets advance network work inside the existing GPU dispatcher between model
+rounds, leaving no separate steady network kernel. The
+[coalesced-network experiment](bench/results/coalesced_network_20261014/plan.md)
+passes selected real protocol/lifecycle checks for AMK Smol and vLLM Smol/Qwen;
+the full matched performance comparison is pending. Model arithmetic is
+unchanged; AMK numerical limits and the existing defaults remain explicit.
+
 ## Repository layout
 
 ```

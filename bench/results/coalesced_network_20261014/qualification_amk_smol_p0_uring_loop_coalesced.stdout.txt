@@ -1,0 +1,148 @@
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:  29%|██▉       | 80/272 [00:00<00:00, 793.16it/s]Loading weights:  67%|██████▋   | 183/272 [00:00<00:00, 920.05it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1106.44it/s]
+ninja: no work to do.
+ninja: no work to do.
+ninja: no work to do.
+AMK_BANK 0 graphs 190 grid 170 sms 170
+AMK_BANK 1 graphs 190 grid 170 sms 170
+AMK_BANK 2 graphs 190 grid 170 sms 170
+AMK_BANK 3 graphs 190 grid 170 sms 170
+AMK_BANK 4 graphs 190 grid 170 sms 170
+AMK_BANK 5 graphs 190 grid 170 sms 170
+AMK_BANK 6 graphs 190 grid 170 sms 170
+AMK_BANK 7 graphs 190 grid 170 sms 170
+{"event": "amk_bootstrap", "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "precision": "FP16", "banks": 8, "graphs_per_bank": 190, "context": 128, "actual_sms": 170, "program_sms": 170, "knobs": {"cpasync": 0}, "protocol": "unchanged binary token HTTP", "compute": "upstream AMK persistent kernel; GPU graph prefill/decode"}
+network=coalesced GPU dispatcher; shutdown-only network worker
+NET_READY pid=331981 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384
+resident Qwen ready: 30 layers h=576 vocab=49152; device-tail graphs, dispatch=resident
+RESULT {"accepted":5086,"closed":5086,"received":614,"sends":22106,"bytes":138670,"completed":622,"aborted":1,"max_connections":74,"max_requests":8,"pending":0,"error":0,"head":622,"reserved":0,"dropped":0,"overflow":0,"sqhead":38262,"sqtail":38262,"cqhead":1886213,"cqtail":1886213,"trace_count":622,"trace_overflow":494}
+REPLY {"seq":0,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405754825843443}
+REPLY {"seq":1,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405755430851697}
+REPLY {"seq":2,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405755925389059}
+REPLY {"seq":3,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405756394844129}
+REPLY {"seq":4,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405756806417680}
+REPLY {"seq":5,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405757205213191}
+REPLY {"seq":6,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405757794924248}
+REPLY {"seq":7,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405758395493396}
+REPLY {"seq":8,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405759004433501}
+REPLY {"seq":9,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405759824623355}
+REPLY {"seq":10,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405761151893718}
+REPLY {"seq":11,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405761671689245}
+REPLY {"seq":12,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405762228612683}
+REPLY {"seq":13,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405762744891289}
+REPLY {"seq":14,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405763232713394}
+REPLY {"seq":15,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405763712730894}
+REPLY {"seq":16,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405764360812839}
+REPLY {"seq":17,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405765022095302}
+REPLY {"seq":18,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405765705371981}
+REPLY {"seq":19,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405766595409885}
+REPLY {"seq":20,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405767991920893}
+REPLY {"seq":21,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405768460729109}
+REPLY {"seq":22,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405768954822622}
+REPLY {"seq":23,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405769421305942}
+REPLY {"seq":24,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405769831571082}
+REPLY {"seq":25,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405770230101818}
+REPLY {"seq":26,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405770816210057}
+REPLY {"seq":27,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405771416440430}
+REPLY {"seq":28,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405772026482643}
+REPLY {"seq":29,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":405772846340989}
+REPLY {"seq":30,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405774176112371}
+REPLY {"seq":31,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405774578996012}
+REPLY {"seq":32,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405774579118380}
+REPLY {"seq":33,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405775053516734}
+REPLY {"seq":34,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405775053653333}
+REPLY {"seq":35,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405775054030542}
+REPLY {"seq":36,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405775909164230}
+REPLY {"seq":37,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405775909211727}
+REPLY {"seq":38,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405775909228916}
+REPLY {"seq":39,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405775909340885}
+REPLY {"seq":40,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405776783494252}
+REPLY {"seq":41,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405776783511276}
+REPLY {"seq":42,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405776783443287}
+REPLY {"seq":43,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405776783550347}
+REPLY {"seq":44,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405776784557641}
+REPLY {"seq":45,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405778000064807}
+REPLY {"seq":46,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405778000139365}
+REPLY {"seq":47,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405778000154610}
+REPLY {"seq":48,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405778000120392}
+REPLY {"seq":49,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405778000194594}
+REPLY {"seq":50,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405778000414096}
+REPLY {"seq":51,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405779365760753}
+REPLY {"seq":52,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405779365809060}
+REPLY {"seq":53,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405779365840084}
+REPLY {"seq":54,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405779366114615}
+REPLY {"seq":55,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405779366178870}
+REPLY {"seq":56,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405779365951670}
+REPLY {"seq":57,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405779365909991}
+REPLY {"seq":58,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405781114050578}
+REPLY {"seq":59,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405781114094501}
+REPLY {"seq":60,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405781114111583}
+REPLY {"seq":61,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405781114128520}
+REPLY {"seq":62,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405781114146850}
+REPLY {"seq":63,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405781114163657}
+REPLY {"seq":64,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405781114178417}
+REPLY {"seq":65,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405781114450388}
+REPLY {"seq":66,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405782998576452}
+REPLY {"seq":67,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405782998630543}
+REPLY {"seq":68,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405782998660699}
+REPLY {"seq":69,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405782999311625}
+REPLY {"seq":70,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405782998878170}
+REPLY {"seq":71,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405782998938833}
+REPLY {"seq":72,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405782998971132}
+REPLY {"seq":73,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405782998909076}
+REPLY {"seq":74,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405783003281527}
+REPLY {"seq":75,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405783003461407}
+REPLY {"seq":76,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405783003733279}
+REPLY {"seq":77,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405783003808281}
+REPLY {"seq":78,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405783004083127}
+REPLY {"seq":79,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405783004186086}
+REPLY {"seq":80,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405783004276872}
+REPLY {"seq":81,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405783004340201}
+REPLY {"seq":82,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405784860855992}
+REPLY {"seq":83,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405784895283018}
+REPLY {"seq":84,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405784895886833}
+REPLY {"seq":85,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405784896207835}
+REPLY {"seq":86,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405784896580101}
+REPLY {"seq":87,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405784896983148}
+REPLY {"seq":88,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405784897874268}
+REPLY {"seq":89,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405784895824987}
+REPLY {"seq":90,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405784898139926}
+REPLY {"seq":91,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405784898048389}
+REPLY {"seq":92,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405784899442945}
+REPLY {"seq":93,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405784900216075}
+REPLY {"seq":94,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405784900289495}
+REPLY {"seq":95,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405784900496710}
+REPLY {"seq":96,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405784900565181}
+REPLY {"seq":97,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405784900643367}
+REPLY {"seq":98,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405786920351234}
+REPLY {"seq":99,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405786947205576}
+REPLY {"seq":100,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405786947326634}
+REPLY {"seq":101,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405786947528036}
+REPLY {"seq":102,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405786947598065}
+REPLY {"seq":103,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405786947763076}
+REPLY {"seq":104,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405786947850921}
+REPLY {"seq":105,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405786948359622}
+REPLY {"seq":106,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405786948738271}
+REPLY {"seq":107,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405786949810685}
+REPLY {"seq":108,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405786949908887}
+REPLY {"seq":109,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405786950029442}
+REPLY {"seq":110,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405786950107874}
+REPLY {"seq":111,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405788938976366}
+REPLY {"seq":112,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405788959346608}
+REPLY {"seq":113,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405788959730926}
+REPLY {"seq":114,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405788959993265}
+REPLY {"seq":115,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405788960369411}
+REPLY {"seq":116,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405788960863890}
+REPLY {"seq":117,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405788960952265}
+REPLY {"seq":118,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405788961294029}
+REPLY {"seq":119,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405788961475474}
+REPLY {"seq":120,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405789863213847}
+REPLY {"seq":121,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405789880335725}
+REPLY {"seq":122,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405789880970866}
+REPLY {"seq":123,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405789882038827}
+REPLY {"seq":124,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405789881711375}
+REPLY {"seq":125,"gen":64,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":405789882515802}
+REPLY {"seq":126,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405789883006551}
+REPLY {"seq":127,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":405789883882087}
+CLEANUP ring_connections_buffers_released
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=22224 graph_error=0 banks=8 max_active=8
+{"event": "amk_graph_errors", "errors": [0, 0, 0, 0, 0, 0, 0, 0]}

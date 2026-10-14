@@ -67,19 +67,34 @@ __device__ void io_retire(IoRequest *requests,IoConn *conns,unsigned i,IoStats *
     out->completed++;if(aborted)out->aborted++;
     r.active=0;
 }
-__global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capacity,
-                          unsigned char *buffer,unsigned long long host_buffer,IoStats *out,int listener) {
-    if(threadIdx.x||blockIdx.x)return;
-    constexpr unsigned stride=4160,txstride=512;
-    for(unsigned i=0;i<capacity;++i)conns[i]={-1,i+1<capacity?(int)i+1:-1,-1,-1,0,0,0,0,0};
-    int free=0,active=-1,accepting=-1;
-    unsigned connections=0,seen=0,next_final=0;bool stopping=false,cancelled=false,cancel_done=false;
+struct IoState {
+    IoRing ring;bf_page *page;IoConn *conns;unsigned capacity;
+    unsigned char *buffer;unsigned long long host_buffer;IoStats *out;int listener;
+    int free=0,active=-1,accepting=-1;unsigned connections=0,seen=0,next_final=0;
+    bool stopping=false,cancelled=false,cancel_done=false;
 #ifdef BF_URING_BPF_LOOP
     bool timeout_active=true,timeout_removing=false;
 #endif
     IoRequest requests[BF_LLM_SLOTS]={};
-    for(auto &r:requests){r.conn=-1;r.next=-1;}
-    for(;;) {
+};
+#ifdef BF_IO_COALESCED
+__device__ IoState *io_state;
+#endif
+__global__ void io_initialize(IoState *s) {
+    if(threadIdx.x||blockIdx.x)return;
+    for(unsigned i=0;i<s->capacity;i++)s->conns[i]={-1,i+1<s->capacity?(int)i+1:-1,-1,-1,0,0,0,0,0};
+    for(auto &r:s->requests){r.conn=-1;r.next=-1;}
+}
+__device__ bool io_progress(IoState *s) {
+    auto ring=s->ring;auto *page=s->page;auto *conns=s->conns;unsigned capacity=s->capacity;
+    auto *buffer=s->buffer;auto host_buffer=s->host_buffer;auto *out=s->out;int listener=s->listener;
+    auto &free=s->free;auto &active=s->active;auto &accepting=s->accepting;
+    auto &connections=s->connections;auto &seen=s->seen;auto &next_final=s->next_final;
+    auto &stopping=s->stopping;auto &cancelled=s->cancelled;auto &cancel_done=s->cancel_done;
+#ifdef BF_URING_BPF_LOOP
+    auto &timeout_active=s->timeout_active;auto &timeout_removing=s->timeout_removing;
+#endif
+    auto *requests=s->requests;constexpr unsigned stride=4160,txstride=512;
         if(io_load64((unsigned long long*)&page->stop_ns))stopping=true;
         // Drain completions before publishing new work or reusing any buffer.
         unsigned ch=io_load(ring.cqhead);
@@ -142,7 +157,7 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
             e.user_data=io_id(5,0);
             if(io_submit(ring,e,out))cancelled=true;
         }
-        if(stopping&&!cancel_done){__nanosleep(1000);continue;}
+        if(stopping&&!cancel_done){__nanosleep(1000);return true;}
 #ifdef BF_URING_BPF_LOOP
         if(stopping && cancel_done && timeout_active && !timeout_removing) {
             io_uring_sqe e{};e.opcode=IORING_OP_TIMEOUT_REMOVE;
@@ -258,9 +273,7 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
             e.off=host_buffer+i*stride+4112;e.user_data=io_id(1,i,c.generation+1);
             if(io_submit(ring,e,out)){free=next;accepting=i;c={-1,-1,-1,-1,0,0,0,0,c.generation+1};}
         }
-        if(stopping&&cancelled&&!out->pending&&active<0&&!active_requests)break;
-        __nanosleep(1000);
-    }
+        if(stopping&&cancelled&&!out->pending&&active<0&&!active_requests) {
     out->head=io_load(&page->llm_head);out->reserved=io_load(&page->llm_reserved);
     out->sqhead=io_load(ring.head);out->sqtail=io_load(ring.tail);
     out->cqhead=io_load(ring.cqhead);out->cqtail=io_load(ring.cqtail);
@@ -269,6 +282,14 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
 #ifdef BF_URING_BPF_LOOP
     io_store(&out->loop.finished,1);
 #endif
+        return false;
+        }
+
+    __nanosleep(1000);return true;
+}
+__global__ void io_network(IoState *s) {
+    if(threadIdx.x||blockIdx.x)return;
+    while(io_progress(s)){}
 }
 static void io_check(cudaError_t status,const char *what) {
     if(status){fprintf(stderr,"%s: %s\n",what,cudaGetErrorString(status));exit(10);}
@@ -283,7 +304,7 @@ static void *io_device(void *p) {
     void *d;io_check(cudaHostGetDevicePointer(&d,p,0),"io device pointer");return d;
 }
 struct UringNetwork {
-    void *sq,*rings,*buffer;IoStats *report;IoConn *conns;int ringfd;
+    void *sq,*rings,*buffer;IoStats *report;IoConn *conns;IoState *state;int ringfd;
     size_t sq_bytes,ring_bytes,buffer_bytes;cudaStream_t stream;
 #ifdef BF_URING_BPF_LOOP
     bpf_object *loop_object;bpf_link *loop_link;
@@ -416,13 +437,31 @@ static int uring_start(bf_page *page,bf_page *device,int listener,UringNetwork *
     if(uring_attach_loop(net))return 9;
 #endif
     io_check(cudaStreamCreateWithFlags(&net->stream,cudaStreamNonBlocking),"io stream");
-    io_network<<<1,1,0,net->stream>>>(ring,device,net->conns,capacity,dbuffer,(uint64_t)net->buffer,dreport,listener);
+    IoState initial{};
+    initial.ring=ring;initial.page=device;initial.conns=net->conns;initial.capacity=capacity;
+    initial.buffer=dbuffer;initial.host_buffer=(uint64_t)net->buffer;initial.out=dreport;initial.listener=listener;
+    io_check(cudaMalloc(&net->state,sizeof(IoState)),"io state");
+    io_check(cudaMemcpy(net->state,&initial,sizeof(initial),cudaMemcpyHostToDevice),"io state upload");
+    io_initialize<<<1,1>>>(net->state);io_check(cudaGetLastError(),"io initialize");
+    io_check(cudaStreamSynchronize(0),"io initialized");
+#ifdef BF_IO_COALESCED
+    io_check(cudaMemcpyToSymbol(io_state,&net->state,sizeof(net->state)),"io dispatcher state");
+    puts("network=coalesced GPU dispatcher; shutdown-only network worker");
+#else
+    io_network<<<1,1,0,net->stream>>>(net->state);
     io_check(cudaGetLastError(),"io launch");
+#endif
     printf("NET_READY pid=%d port=%u ring_bound=1 capacity=%u sq=%u cq=%u\n",getpid(),BF_LLM_TCP_PORT,capacity,p.sq_entries,p.cq_entries);fflush(stdout);
     return 0;
 }
 static void uring_quiesce(UringNetwork *net) {
     __atomic_store_n(&net->report->loop.model_quiesced,1,__ATOMIC_RELEASE);
+#ifdef BF_IO_COALESCED
+    // Model root and all children have quiesced; the host kernel loop drains
+    // cancellation/CQ work while this shutdown-only worker retains I/O state.
+    io_network<<<1,1,0,net->stream>>>(net->state);
+    io_check(cudaGetLastError(),"io shutdown launch");
+#endif
 #ifndef BF_URING_BPF_LOOP
     syscall(__NR_io_uring_enter,net->ringfd,0,0,IORING_ENTER_SQ_WAKEUP,nullptr,0);
 #endif
@@ -447,6 +486,7 @@ static int uring_finish(UringNetwork *net) {
     bpf_link__destroy(net->loop_link);bpf_object__close(net->loop_object);
 #endif
     close(net->ringfd);io_check(cudaFree(net->conns),"io connections free");
+    io_check(cudaFree(net->state),"io state free");
     for(auto pair:{std::pair<void*,size_t>{net->sq,net->sq_bytes},{net->rings,net->ring_bytes},{net->buffer,net->buffer_bytes},{net->report,65536}}) {
         io_check(cudaHostUnregister(pair.first),"io unregister");munmap(pair.first,pair.second);
     }

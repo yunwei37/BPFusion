@@ -1,0 +1,356 @@
+{
+  "wrapper": [
+    "/usr/bin/python3",
+    "/tmp/bpfusion-coalesced-network-0pls_22b/run.py",
+    "full"
+  ],
+  "cwd": "/workspaces/repository",
+  "env_overrides": {
+    "PATH": "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "PYTHONPATH": "/tmp/bpfusion-coalesced-network-0pls_22b/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34",
+    "TORCH_EXTENSIONS_DIR": "/tmp/bpfusion-coalesced-network-0pls_22b/cuda_extensions",
+    "CUDA_HOME": "/usr/local/cuda",
+    "LD_LIBRARY_PATH": "/tmp/bpfusion-coalesced-network-0pls_22b/libbpf_install/usr/lib64",
+    "BF_BIND": "127.0.0.1",
+    "PYTHONUNBUFFERED": "1",
+    "VLLM_ENABLE_V1_MULTIPROCESSING": "0"
+  },
+  "expanded_commands": [
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "amk",
+        "--block",
+        "0",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_amk_smol_b0.jsonl"
+      ],
+      "model": "amk_smol",
+      "backend": "amk",
+      "block": 0,
+      "output": "full_amk_smol_b0.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "0",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_vllm_smol_b0.jsonl"
+      ],
+      "model": "vllm_smol",
+      "backend": "vllm",
+      "block": 0,
+      "output": "full_vllm_smol_b0.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "0",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_vllm_qwen_b0.jsonl"
+      ],
+      "model": "vllm_qwen",
+      "backend": "vllm",
+      "block": 0,
+      "output": "full_vllm_qwen_b0.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "1",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_vllm_qwen_b1.jsonl"
+      ],
+      "model": "vllm_qwen",
+      "backend": "vllm",
+      "block": 1,
+      "output": "full_vllm_qwen_b1.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "1",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_vllm_smol_b1.jsonl"
+      ],
+      "model": "vllm_smol",
+      "backend": "vllm",
+      "block": 1,
+      "output": "full_vllm_smol_b1.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "amk",
+        "--block",
+        "1",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_amk_smol_b1.jsonl"
+      ],
+      "model": "amk_smol",
+      "backend": "amk",
+      "block": 1,
+      "output": "full_amk_smol_b1.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "amk",
+        "--block",
+        "2",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_amk_smol_b2.jsonl"
+      ],
+      "model": "amk_smol",
+      "backend": "amk",
+      "block": 2,
+      "output": "full_amk_smol_b2.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "2",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_vllm_smol_b2.jsonl"
+      ],
+      "model": "vllm_smol",
+      "backend": "vllm",
+      "block": 2,
+      "output": "full_vllm_smol_b2.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "2",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_vllm_qwen_b2.jsonl"
+      ],
+      "model": "vllm_qwen",
+      "backend": "vllm",
+      "block": 2,
+      "output": "full_vllm_qwen_b2.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "3",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_vllm_qwen_b3.jsonl"
+      ],
+      "model": "vllm_qwen",
+      "backend": "vllm",
+      "block": 3,
+      "output": "full_vllm_qwen_b3.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "3",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_vllm_smol_b3.jsonl"
+      ],
+      "model": "vllm_smol",
+      "backend": "vllm",
+      "block": 3,
+      "output": "full_vllm_smol_b3.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "amk",
+        "--block",
+        "3",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_amk_smol_b3.jsonl"
+      ],
+      "model": "amk_smol",
+      "backend": "amk",
+      "block": 3,
+      "output": "full_amk_smol_b3.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "amk",
+        "--block",
+        "4",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_amk_smol_b4.jsonl"
+      ],
+      "model": "amk_smol",
+      "backend": "amk",
+      "block": 4,
+      "output": "full_amk_smol_b4.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "4",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_vllm_smol_b4.jsonl"
+      ],
+      "model": "vllm_smol",
+      "backend": "vllm",
+      "block": 4,
+      "output": "full_vllm_smol_b4.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/matched_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "4",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/full_vllm_qwen_b4.jsonl"
+      ],
+      "model": "vllm_qwen",
+      "backend": "vllm",
+      "block": 4,
+      "output": "full_vllm_qwen_b4.jsonl"
+    }
+  ],
+  "analysis": [
+    "/usr/bin/python3",
+    "/tmp/bpfusion-coalesced-network-0pls_22b/analysis.py",
+    "/tmp/bpfusion-coalesced-network-0pls_22b",
+    "full"
+  ]
+}

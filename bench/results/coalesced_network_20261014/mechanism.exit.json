@@ -1,0 +1,232 @@
+{
+  "exit": 0,
+  "status": [
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/observed_serving.py",
+        "--backend",
+        "amk",
+        "--loop-comparison",
+        "--preflight",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/mechanism_amk.jsonl"
+      ],
+      "exit": 0,
+      "network_kernel": {
+        "ph": "X",
+        "cat": "kernel",
+        "name": "io_network(IoState*)",
+        "pid": 0,
+        "tid": 1534,
+        "ts": 1118010914354.969,
+        "dur": 32.608,
+        "args": {
+          "queued": 0,
+          "device": 0,
+          "context": 1,
+          "stream": 1534,
+          "correlation": 3635,
+          "registers per thread": 56,
+          "shared memory": 0,
+          "blocks per SM": 0.005882,
+          "warps per SM": 0.000184,
+          "grid": [
+            1,
+            1,
+            1
+          ],
+          "block": [
+            1,
+            1,
+            1
+          ],
+          "est. achieved occupancy %": 0,
+          "occupancy": {
+            "activeBlocksPerMultiprocessor": 24,
+            "limitingFactors": "BLOCKS",
+            "blockLimitRegs": 36,
+            "blockLimitSharedMem": 100,
+            "blockLimitWarps": 48,
+            "blockLimitBlocks": 24,
+            "blockLimitBarriers": 2147483647,
+            "allocatedRegistersPerBlock": 1792,
+            "allocatedSharedMemPerBlock": 1024
+          },
+          "graph id": 0,
+          "graph node id": 0,
+          "channel": 3,
+          "channel_type": 1
+        }
+      },
+      "initialize_kernel": {
+        "ph": "X",
+        "cat": "kernel",
+        "name": "io_initialize(IoState*)",
+        "pid": 0,
+        "tid": 7,
+        "ts": 1118005506509.41,
+        "dur": 211.393,
+        "args": {
+          "queued": 0,
+          "device": 0,
+          "context": 1,
+          "stream": 7,
+          "correlation": 3627,
+          "registers per thread": 18,
+          "shared memory": 0,
+          "blocks per SM": 0.005882,
+          "warps per SM": 0.000184,
+          "grid": [
+            1,
+            1,
+            1
+          ],
+          "block": [
+            1,
+            1,
+            1
+          ],
+          "est. achieved occupancy %": 0,
+          "occupancy": {
+            "activeBlocksPerMultiprocessor": 24,
+            "limitingFactors": "BLOCKS",
+            "blockLimitRegs": 84,
+            "blockLimitSharedMem": 100,
+            "blockLimitWarps": 48,
+            "blockLimitBlocks": 24,
+            "blockLimitBarriers": 2147483647,
+            "allocatedRegistersPerBlock": 768,
+            "allocatedSharedMemPerBlock": 1024
+          },
+          "graph id": 0,
+          "graph node id": 0,
+          "channel": 0,
+          "channel_type": 1
+        }
+      },
+      "model_activity_records": 3464,
+      "network_after_model_region": true,
+      "scope": "independent network worker absence during observed model execution; no graph identity/overlap mediator claim"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/observed_serving.py",
+        "--backend",
+        "vllm",
+        "--loop-comparison",
+        "--preflight",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/mechanism_vllm.jsonl"
+      ],
+      "exit": 0,
+      "network_kernel": {
+        "ph": "X",
+        "cat": "kernel",
+        "name": "io_network(IoState*)",
+        "pid": 0,
+        "tid": 654,
+        "ts": 1118038664286.77,
+        "dur": 29.696,
+        "args": {
+          "queued": 0,
+          "device": 0,
+          "context": 1,
+          "stream": 654,
+          "correlation": 2590,
+          "registers per thread": 56,
+          "shared memory": 0,
+          "blocks per SM": 0.005882,
+          "warps per SM": 0.000184,
+          "grid": [
+            1,
+            1,
+            1
+          ],
+          "block": [
+            1,
+            1,
+            1
+          ],
+          "est. achieved occupancy %": 0,
+          "occupancy": {
+            "activeBlocksPerMultiprocessor": 24,
+            "limitingFactors": "BLOCKS",
+            "blockLimitRegs": 36,
+            "blockLimitSharedMem": 100,
+            "blockLimitWarps": 48,
+            "blockLimitBlocks": 24,
+            "blockLimitBarriers": 2147483647,
+            "allocatedRegistersPerBlock": 1792,
+            "allocatedSharedMemPerBlock": 1024
+          },
+          "graph id": 0,
+          "graph node id": 0,
+          "channel": 1,
+          "channel_type": 1
+        }
+      },
+      "initialize_kernel": {
+        "ph": "X",
+        "cat": "kernel",
+        "name": "io_initialize(IoState*)",
+        "pid": 0,
+        "tid": 7,
+        "ts": 1118038086831.525,
+        "dur": 210.816,
+        "args": {
+          "queued": 0,
+          "device": 0,
+          "context": 1,
+          "stream": 7,
+          "correlation": 2584,
+          "registers per thread": 18,
+          "shared memory": 0,
+          "blocks per SM": 0.005882,
+          "warps per SM": 0.000184,
+          "grid": [
+            1,
+            1,
+            1
+          ],
+          "block": [
+            1,
+            1,
+            1
+          ],
+          "est. achieved occupancy %": 0,
+          "occupancy": {
+            "activeBlocksPerMultiprocessor": 24,
+            "limitingFactors": "BLOCKS",
+            "blockLimitRegs": 84,
+            "blockLimitSharedMem": 100,
+            "blockLimitWarps": 48,
+            "blockLimitBlocks": 24,
+            "blockLimitBarriers": 2147483647,
+            "allocatedRegistersPerBlock": 768,
+            "allocatedSharedMemPerBlock": 1024
+          },
+          "graph id": 0,
+          "graph node id": 0,
+          "channel": 0,
+          "channel_type": 1
+        }
+      },
+      "model_activity_records": 190885,
+      "network_after_model_region": true,
+      "scope": "independent network worker absence during observed model execution; no graph identity/overlap mediator claim"
+    }
+  ],
+  "utc": "2026-10-14T10:51:13.843434+00:00"
+}

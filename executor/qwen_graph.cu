@@ -61,6 +61,11 @@ __global__ void dispatch(bf_page *p,Step *steps,long long **inputs,unsigned coun
         }
         // Admission remains sequential; computation uses each physical slot's
         // private KV/input/output bank. No producer or page ABI change.
+#ifdef BF_IO_COALESCED
+        // Advance I/O after result publication and before model admission.
+        // This CTA returns while model children execute.
+        io_progress(io_state);
+#endif
         while(queue_load(&p->llm_head)!=c->seen) {
             idx=c->seen%BF_LLM_SLOTS;
             bf_llm_slot *slot=&p->llm[idx];
