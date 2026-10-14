@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-14T05:06:21.492707+00:00",
+  "kind": "test adapter omitted source-native post-detach pin cleanup",
+  "failed_native_wrapper": {
+    "preflight_qwen_p0_userspace.wrapper.stderr": "Traceback (most recent call last):\n  File \"/tmp/bpfusion-optimized-cross-node-nk49zfoa/start_server.py\", line 10, in <module>\n    assert not pathlib.Path('/sys/fs/bpf/bpfusion_ctl').exists()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+    "preflight_qwen_p0_userspace.wrapper.json": "{\"cmd\": [\"/usr/bin/python3\", \"/tmp/bpfusion-optimized-cross-node-nk49zfoa/start_server.py\", \"qwen\", \"0\", \"userspace\", \"preflight\"], \"pid\": 292167}",
+    "preflight_qwen_p0_userspace.wrapper.stdout": ""
+  },
+  "server_launched": false,
+  "model_samples": false,
+  "source_native_cleanup": "bench/vllm_serving.py finally deletes bpfusion_ctl/stats/db after stream-detach",
+  "repair": "same three owned pin deletions added; no production/timing/oracle change",
+  "preserved_candidate_valid_preflight": true
+}

@@ -612,8 +612,10 @@ TCP using identical model computation. Old HF cross-node and optimized local
 measurements cannot supply this changed-backend/topology result.
 Role supporting; no new formal paper thesis, total CPU or performance claim.
 
-Dependency setup/builds are in progress. Actual cross-node preflight precedes
-the five-block two-model full comparison; four primary effects are gen1/c1
+Dependency setup/builds and actual cross-node preflight complete. Both Qwen
+paths return80 requests/2096 checked tokens and normal clients/servers; the
+runner pin-cleanup omission is repaired and retained before any native sample.
+The five-block two-model full comparison remains pending; four primary effects are gen1/c1
 TTFT and gen64/c8 TPS. Both client functions and pre-observation finite whole
 output sets are reused. Current unobserved batch/KV replay remains outside
 the numerical claim. No model math, timer, host kernel or persistent service

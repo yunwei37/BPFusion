@@ -1,0 +1,30 @@
+[
+  {
+    "cmd": [
+      "/usr/bin/python3",
+      "-m",
+      "venv",
+      "--without-pip",
+      "/tmp/bpfusion-optimized-cross-node-nk49zfoa/runtime"
+    ],
+    "exit": 0,
+    "utc": "2026-10-14T04:56:19.926204+00:00"
+  },
+  {
+    "cmd": [
+      "/usr/bin/python3",
+      "-m",
+      "pip",
+      "--python",
+      "/tmp/bpfusion-optimized-cross-node-nk49zfoa/runtime/bin/python",
+      "install",
+      "vllm==0.31.0",
+      "torch==2.13.0+cu129",
+      "transformers==5.17.0",
+      "--extra-index-url",
+      "https://download.pytorch.org/whl/cu129"
+    ],
+    "exit": 0,
+    "utc": "2026-10-14T04:59:15.065554+00:00"
+  }
+]

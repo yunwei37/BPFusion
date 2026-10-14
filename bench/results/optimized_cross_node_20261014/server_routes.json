@@ -1,0 +1,32 @@
+[
+  {
+    "cmd": [
+      "hostname"
+    ],
+    "exit": 0,
+    "stdout": "lab\n",
+    "stderr": ""
+  },
+  {
+    "cmd": [
+      "ip",
+      "route",
+      "get",
+      "10.42.6.216"
+    ],
+    "exit": 0,
+    "stdout": "10.42.6.216 via 10.42.6.0 dev flannel.1 src 10.42.1.0 uid 0 \n    cache \n",
+    "stderr": ""
+  },
+  {
+    "cmd": [
+      "ip",
+      "route",
+      "get",
+      "100.122.181.82"
+    ],
+    "exit": 0,
+    "stdout": "100.122.181.82 dev tailscale0 table 52 src 100.79.109.31 uid 0 \n    cache \n",
+    "stderr": ""
+  }
+]

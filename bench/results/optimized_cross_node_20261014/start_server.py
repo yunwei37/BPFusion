@@ -30,5 +30,6 @@ finally:
   cmd=['./build/bpfusion_load','stream-detach']
   r=subprocess.run(cmd,env=env,capture_output=True,text=True)
   receipt['detach']=dict(cmd=cmd,exit=r.returncode,stdout=r.stdout,stderr=r.stderr)
+  for name in ('bpfusion_ctl','bpfusion_stats','bpfusion_db'):pathlib.Path('/sys/fs/bpf',name).unlink(missing_ok=True)
  receipt['finished_utc']=datetime.datetime.now(datetime.timezone.utc).isoformat()
  pathlib.Path(str(prefix)+'.server_terminal.json').write_text(json.dumps(receipt,indent=2))

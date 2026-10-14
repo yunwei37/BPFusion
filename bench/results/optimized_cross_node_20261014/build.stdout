@@ -1,0 +1,16 @@
+clang -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -Ibpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value -c bpf/uring_loop.bpf.c -o build/uring_loop.bpf.o
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	  -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi   -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_uring_loop.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_uring_loop.so.o -o build/vllm_graph_uring_loop.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_uring_loop.so.o build/vllm_graph_uring_loop.so.dlink.o /tmp/bpfusion-optimized-cross-node-nk49zfoa/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-optimized-cross-node-nk49zfoa/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_uring_loop.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	 -DBF_TRACE -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi   -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_uring_loop_trace.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_uring_loop_trace.so.o -o build/vllm_graph_uring_loop_trace.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_uring_loop_trace.so.o build/vllm_graph_uring_loop_trace.so.dlink.o /tmp/bpfusion-optimized-cross-node-nk49zfoa/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-optimized-cross-node-nk49zfoa/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_uring_loop_trace.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_uring_loop
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_uring_loop_trace
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT      -DBF_PAD_PREFILL -DBF_PREFIX_RELEASE  executor/vllm_graph.cu -o build/vllm_graph_user_network_wait.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC build/vllm_graph_user_network_wait.so.o -o build/vllm_graph_user_network_wait.so.dlink.o
+g++ -shared -Wl,-z,defs build/vllm_graph_user_network_wait.so.o build/vllm_graph_user_network_wait.so.dlink.o /tmp/bpfusion-optimized-cross-node-nk49zfoa/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/bpfusion-optimized-cross-node-nk49zfoa/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o build/vllm_graph_user_network_wait.so -lbpf -lelf -lz -lpthread
+ln -sf /workspaces/repository/executor/vllm_graph.py build/vllm_graph_user_network_wait

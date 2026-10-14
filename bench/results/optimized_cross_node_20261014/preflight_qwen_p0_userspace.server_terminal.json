@@ -1,0 +1,23 @@
+{
+  "model": "qwen",
+  "pair": 0,
+  "mode": "userspace",
+  "stage": "preflight",
+  "source": "46a5f8cee4f2bdaa77cea7a4da2cbf0dd29e4eec",
+  "utc": "2026-10-14T05:06:21.519214+00:00",
+  "cmd": [
+    "strace",
+    "-D",
+    "-f",
+    "-e",
+    "trace=network,write,io_uring_enter",
+    "-o",
+    "/tmp/bpfusion-optimized-cross-node-nk49zfoa/preflight_qwen_p0_userspace.network.txt",
+    "./build/vllm_graph_user_network_wait",
+    "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "300"
+  ],
+  "pid": 292204,
+  "exit": 0,
+  "finished_utc": "2026-10-14T05:08:24.247270+00:00"
+}
