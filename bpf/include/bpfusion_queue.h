@@ -61,6 +61,12 @@ struct bf_uring_context {
     __u32 pid, pad;
     __u64 ring, nsdev, nsino;
 };
+/* io_uring registered-memory prefix used by its model-agnostic BPF loop. */
+struct bf_uring_loop_control {
+    __u32 sq_head, sq_tail, cq_tail;
+    __u32 model_quiesced, finished, stop_requested;
+    __u64 deadline_ns;
+};
 #define BF_IO_SEND_TAG 0xbff0ULL
 #define BF_IO_ABORT_TAG 0xbff1ULL
 

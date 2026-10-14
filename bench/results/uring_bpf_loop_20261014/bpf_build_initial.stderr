@@ -1,0 +1,41 @@
+bpf/uring_loop.bpf.c:12:47: error: redefinition of parameter 'ctx'
+   12 | int BPF_PROG(uring_loop_step, struct iou_ctx *ctx, struct iou_loop_params *lp)
+      |                                               ^
+bpf/uring_loop.bpf.c:12:5: note: previous declaration is here
+   12 | int BPF_PROG(uring_loop_step, struct iou_ctx *ctx, struct iou_loop_params *lp)
+      |     ^
+/usr/include/bpf/bpf_tracing.h:668:32: note: expanded from macro 'BPF_PROG'
+  668 | ____##name(unsigned long long *ctx, ##args);                                \
+      |                                ^
+bpf/uring_loop.bpf.c:12:47: error: redefinition of parameter 'ctx'
+   12 | int BPF_PROG(uring_loop_step, struct iou_ctx *ctx, struct iou_loop_params *lp)
+      |                                               ^
+bpf/uring_loop.bpf.c:12:5: note: previous declaration is here
+   12 | int BPF_PROG(uring_loop_step, struct iou_ctx *ctx, struct iou_loop_params *lp)
+      |     ^
+/usr/include/bpf/bpf_tracing.h:677:32: note: expanded from macro 'BPF_PROG'
+  677 | ____##name(unsigned long long *ctx, ##args)
+      |                                ^
+bpf/uring_loop.bpf.c:12:47: error: omitting the parameter name in a function definition is a C23 extension [-Werror,-Wc23-extensions]
+   12 | int BPF_PROG(uring_loop_step, struct iou_ctx *ctx, struct iou_loop_params *lp)
+      |                                               ^
+bpf/uring_loop.bpf.c:15:41: error: incompatible pointer types passing 'unsigned long long *' to parameter of type 'struct iou_ctx *' [-Werror,-Wincompatible-pointer-types]
+   15 |         (void *)bpf_io_uring_get_region(ctx, IOU_REGION_MEM, sizeof(*control));
+      |                                         ^~~
+bpf/uring_loop.bpf.c:8:54: note: passing argument to parameter here
+    8 | extern __u8 *bpf_io_uring_get_region(struct iou_ctx *, __u32, const size_t) __ksym;
+      |                                                      ^
+bpf/uring_loop.bpf.c:16:43: error: incompatible pointer types passing 'unsigned long long *' to parameter of type 'struct iou_ctx *' [-Werror,-Wincompatible-pointer-types]
+   16 |     __u8 *rings = bpf_io_uring_get_region(ctx, IOU_REGION_CQ, 4096);
+      |                                           ^~~
+bpf/uring_loop.bpf.c:8:54: note: passing argument to parameter here
+    8 | extern __u8 *bpf_io_uring_get_region(struct iou_ctx *, __u32, const size_t) __ksym;
+      |                                                      ^
+bpf/uring_loop.bpf.c:27:48: error: incompatible pointer types passing 'unsigned long long *' to parameter of type 'struct iou_ctx *' [-Werror,-Wincompatible-pointer-types]
+   27 |     if (tail!=head && bpf_io_uring_submit_sqes(ctx,tail-head)<0)
+      |                                                ^~~
+bpf/uring_loop.bpf.c:9:53: note: passing argument to parameter here
+    9 | extern int bpf_io_uring_submit_sqes(struct iou_ctx *, __u32) __ksym;
+      |                                                     ^
+6 errors generated.
+make: *** [Makefile:39: build/uring_loop.bpf.o] Error 1

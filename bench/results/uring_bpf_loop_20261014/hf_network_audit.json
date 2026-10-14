@@ -1,0 +1,32 @@
+[
+  {
+    "model": "qwen",
+    "pass_": true,
+    "exit": 0,
+    "requests": 32,
+    "checked_tokens": 652,
+    "ring_flags": "IORING_SETUP_SINGLE_ISSUER|IORING_SETUP_DEFER_TASKRUN|IORING_SETUP_NO_MMAP|IORING_SETUP_NO_SQARRAY",
+    "steady_loop_entries": 1,
+    "steady_userspace_socket_calls": [],
+    "entries": [
+      "266507 1791947055.704184 io_uring_enter(43, 0, 0, 0, NULL, 0 <unfinished ...>",
+      "266507 1791947076.717902 io_uring_enter(43, 0, 0, 0, NULL, 0) = 0"
+    ],
+    "scope": "Steady interval starts at zero-submission loop entry and ends at first SIGTERM; startup entries excluded"
+  },
+  {
+    "model": "smol",
+    "pass_": true,
+    "exit": 0,
+    "requests": 32,
+    "checked_tokens": 652,
+    "ring_flags": "IORING_SETUP_SINGLE_ISSUER|IORING_SETUP_DEFER_TASKRUN|IORING_SETUP_NO_MMAP|IORING_SETUP_NO_SQARRAY",
+    "steady_loop_entries": 1,
+    "steady_userspace_socket_calls": [],
+    "entries": [
+      "266744 1791947146.997823 io_uring_enter(40, 0, 0, 0, NULL, 0) = -1 EINTR (Interrupted system call)",
+      "266744 1791947168.164327 io_uring_enter(40, 0, 0, 0, NULL, 0) = 0"
+    ],
+    "scope": "Steady interval starts at zero-submission loop entry and ends at first SIGTERM; startup entries excluded"
+  }
+]

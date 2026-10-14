@@ -1,0 +1,18 @@
+{
+  "attempt": 3,
+  "cmd": [
+    "/tmp/bpfusion-uring-loop-frmz3lrm/runtime/bin/python",
+    "bench/vllm_serving.py",
+    "--loop-comparison",
+    "--untraced",
+    "--reference-path",
+    "/tmp/bpfusion-uring-loop-frmz3lrm/frozen_references.json",
+    "--preflight",
+    "--model",
+    "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "--output",
+    "/tmp/bpfusion-uring-loop-frmz3lrm/preflight_retry2.jsonl"
+  ],
+  "exit": 0,
+  "analysis_exit": 0
+}

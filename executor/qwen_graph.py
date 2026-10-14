@@ -65,7 +65,7 @@ def main():
     if len(sys.argv)<2:raise SystemExit('usage: qwen_graph.py WEIGHTS.bin|HF_MODEL [seconds]')
     seconds=int(sys.argv[2]) if len(sys.argv)>2 else 60
     entry=Path(sys.argv[0])
-    library=entry.with_suffix('.so') if entry.name in ('qwen_graph','qwen_graph_host_launch','qwen_graph_user_network','qwen_graph_user_network_wait','qwen_graph_uring') else Path(__file__).resolve().parents[1]/'build/qwen_graph.so'
+    library=entry.with_suffix('.so') if entry.name in ('qwen_graph','qwen_graph_host_launch','qwen_graph_user_network','qwen_graph_user_network_wait','qwen_graph_uring','qwen_graph_uring_loop') else Path(__file__).resolve().parents[1]/'build/qwen_graph.so'
     lib=ctypes.CDLL(str(library))
     lib.max_tokens.restype=ctypes.c_uint
     lib.max_requests.restype=ctypes.c_uint

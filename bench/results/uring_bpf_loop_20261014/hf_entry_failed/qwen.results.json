@@ -1,0 +1,25 @@
+{
+  "model": "qwen",
+  "start": "2026-10-14T02:59:23.647916+00:00",
+  "oracle_frozen_at": "2026-10-13T01:50:59.810351+00:00",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "error": "RuntimeError('failed before READY')",
+  "pass": false,
+  "failure_page": {
+    "exit": 0,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 0\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 0\nsockhash linked 0\nsockhash failed 0\nparser calls   0\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=0\nllm_reserved=0x0\nllm[0]: state=0 prompt=0 gen=0 produced=0 client_ns=0\nllm[1]: state=0 prompt=0 gen=0 produced=0 client_ns=0\nllm[2]: state=0 prompt=0 gen=0 produced=0 client_ns=0\nllm[3]: state=0 prompt=0 gen=0 produced=0 client_ns=0\nllm[4]: state=0 prompt=0 gen=0 produced=0 client_ns=0\nllm[5]: state=0 prompt=0 gen=0 produced=0 client_ns=0\nllm[6]: state=0 prompt=0 gen=0 produced=0 client_ns=0\nllm[7]: state=0 prompt=0 gen=0 produced=0 client_ns=0\n",
+    "stderr": ""
+  },
+  "failure_tcp": [],
+  "failure_fdinfo": {},
+  "exit": 0,
+  "stdout": "capturing model=/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775 type=qwen2 fp16 eager\ncaptured bank 0 model graph 32/190\ncaptured bank 0 model graph 64/190\ncaptured bank 0 model graph 96/190\ncaptured bank 0 model graph 128/190\ncaptured bank 0 model graph 160/190\ncaptured bank 1 model graph 32/190\ncaptured bank 1 model graph 64/190\ncaptured bank 1 model graph 96/190\ncaptured bank 1 model graph 128/190\ncaptured bank 1 model graph 160/190\ncaptured bank 2 model graph 32/190\ncaptured bank 2 model graph 64/190\ncaptured bank 2 model graph 96/190\ncaptured bank 2 model graph 128/190\ncaptured bank 2 model graph 160/190\ncaptured bank 3 model graph 32/190\ncaptured bank 3 model graph 64/190\ncaptured bank 3 model graph 96/190\ncaptured bank 3 model graph 128/190\ncaptured bank 3 model graph 160/190\ncaptured bank 4 model graph 32/190\ncaptured bank 4 model graph 64/190\ncaptured bank 4 model graph 96/190\ncaptured bank 4 model graph 128/190\ncaptured bank 4 model graph 160/190\ncaptured bank 5 model graph 32/190\ncaptured bank 5 model graph 64/190\ncaptured bank 5 model graph 96/190\ncaptured bank 5 model graph 128/190\ncaptured bank 5 model graph 160/190\ncaptured bank 6 model graph 32/190\ncaptured bank 6 model graph 64/190\ncaptured bank 6 model graph 96/190\ncaptured bank 6 model graph 128/190\ncaptured bank 6 model graph 160/190\ncaptured bank 7 model graph 32/190\ncaptured bank 7 model graph 64/190\ncaptured bank 7 model graph 96/190\ncaptured bank 7 model graph 128/190\ncaptured bank 7 model graph 160/190\nresident Qwen ready: 24 layers h=896 vocab=151936; device-tail graphs, dispatch=resident\nresident Qwen stopped: dispatch=resident launches=1 device_graph_launches=0 graph_error=0 banks=8 max_active=0\n",
+  "stderr": "\nLoading weights:   0%|          | 0/290 [00:00<?, ?it/s]\nLoading weights:  40%|\u2588\u2588\u2588\u2588      | 117/290 [00:00<00:00, 1167.72it/s]\nLoading weights:  84%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d | 243/290 [00:00<00:00, 1217.49it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 290/290 [00:00<00:00, 1228.16it/s]\n",
+  "rows": [],
+  "end": "2026-10-14T03:02:46.123452+00:00",
+  "remaining_pins": []
+}

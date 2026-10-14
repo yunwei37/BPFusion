@@ -7,6 +7,11 @@
 #include "bpfusion_queue.h"
 #include <linux/io_uring.h>
 #include <bpf/bpf.h>
+#ifdef BF_URING_BPF_LOOP
+#include <bpf/libbpf.h>
+#include <bpf/btf.h>
+#include <time.h>
+#endif
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/syscall.h>
@@ -28,9 +33,10 @@ struct IoRequest {
 };
 struct IoRecord {unsigned seq,gen,sends,early,bytes,aborted;unsigned long long client_ns;};
 struct IoStats {
+    bf_uring_loop_control loop;
     unsigned accepted,closed,received,sends,bytes,completed,aborted,max_connections,max_requests;
     unsigned pending,error,head,reserved,dropped,overflow,sqhead,sqtail,cqhead,cqtail;
-    unsigned model_quiesced,trace_count,trace_overflow;IoRecord records[128];
+    unsigned trace_count,trace_overflow;IoRecord records[128];
 };
 __device__ unsigned io_load(const unsigned *p) {
     unsigned v;asm volatile("ld.acquire.sys.global.u32 %0,[%1];":"=r"(v):"l"(p):"memory");return v;
@@ -68,6 +74,9 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
     for(unsigned i=0;i<capacity;++i)conns[i]={-1,i+1<capacity?(int)i+1:-1,-1,-1,0,0,0,0,0};
     int free=0,active=-1,accepting=-1;
     unsigned connections=0,seen=0,next_final=0;bool stopping=false,cancelled=false,cancel_done=false;
+#ifdef BF_URING_BPF_LOOP
+    bool timeout_active=true,timeout_removing=false;
+#endif
     IoRequest requests[BF_LLM_SLOTS]={};
     for(auto &r:requests){r.conn=-1;r.next=-1;}
     for(;;) {
@@ -75,8 +84,13 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
         // Drain completions before publishing new work or reusing any buffer.
         unsigned ch=io_load(ring.cqhead);
         while(ch!=io_load(ring.cqtail)) {
-            auto e=ring.cqes[ch&ring.cqmask];io_store(ring.cqhead,++ch);out->pending--;
+            auto e=ring.cqes[ch&ring.cqmask];io_store(ring.cqhead,++ch);
             unsigned kind=e.user_data>>56,index=(unsigned)e.user_data;
+#ifdef BF_URING_BPF_LOOP
+            // A multishot timeout owns one pending operation until its final CQE.
+            if(kind==8 && (e.flags&IORING_CQE_F_MORE))continue;
+#endif
+            out->pending--;
             if((e.user_data>>48)==BF_IO_SEND_TAG || (e.user_data>>48)==BF_IO_ABORT_TAG)kind=7;
             if(kind==1) {
                 accepting=-1;auto &c=conns[index];
@@ -112,6 +126,15 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
             }else if(kind==5 || kind==6) {
                 if(kind==5)cancel_done=true;
                 // Cancellation completion; the target operation has its own CQE.
+#ifdef BF_URING_BPF_LOOP
+            }else if(kind==8) {
+                timeout_active=false;
+                if(e.res!=-ECANCELED)out->error=5;
+            }else if(kind==9) {
+                // A timeout may be in deferred task work when cancel-all runs.
+                if(e.res==-ENOENT)timeout_removing=false;
+                else if(e.res<0)out->error=6;
+#endif
             }else out->error=4;
         }
         if(stopping&&!cancelled) {
@@ -120,6 +143,14 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
             if(io_submit(ring,e,out))cancelled=true;
         }
         if(stopping&&!cancel_done){__nanosleep(1000);continue;}
+#ifdef BF_URING_BPF_LOOP
+        if(stopping && cancel_done && timeout_active && !timeout_removing) {
+            io_uring_sqe e{};e.opcode=IORING_OP_TIMEOUT_REMOVE;
+            e.addr=8ULL<<56;e.user_data=io_id(9,0);
+            if(io_submit(ring,e,out))timeout_removing=true;
+        }
+#endif
+
         // Claim eBPF slots in original admission order. Match by actual peer.
         while(seen!=io_load(&page->llm_head)) {
             unsigned i=seen%BF_LLM_SLOTS;auto &r=requests[i];auto *slot=&page->llm[i];
@@ -149,7 +180,7 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
             if(gone) {
                 if(r.seq!=next_final)continue;
                 if(state!=BF_DONE) {
-                    if(!stopping||!io_load(&out->model_quiesced))continue;
+                    if(!stopping||!io_load(&out->loop.model_quiesced))continue;
                     __threadfence_system();io_store(&slot->state,BF_DONE);
                 }
                 io_uring_sqe e{};e.opcode=IORING_OP_NOP;e.user_data=(BF_IO_ABORT_TAG<<48)|r.seq;
@@ -235,6 +266,9 @@ __global__ void io_network(IoRing ring,bf_page *page,IoConn *conns,unsigned capa
     out->cqhead=io_load(ring.cqhead);out->cqtail=io_load(ring.cqtail);
     out->dropped=io_load(ring.dropped);out->overflow=io_load(ring.overflow);
     __threadfence_system();
+#ifdef BF_URING_BPF_LOOP
+    io_store(&out->loop.finished,1);
+#endif
 }
 static void io_check(cudaError_t status,const char *what) {
     if(status){fprintf(stderr,"%s: %s\n",what,cudaGetErrorString(status));exit(10);}
@@ -251,7 +285,66 @@ static void *io_device(void *p) {
 struct UringNetwork {
     void *sq,*rings,*buffer;IoStats *report;IoConn *conns;int ringfd;
     size_t sq_bytes,ring_bytes,buffer_bytes;cudaStream_t stream;
+#ifdef BF_URING_BPF_LOOP
+    bpf_object *loop_object;bpf_link *loop_link;
+#endif
 };
+#ifdef BF_URING_BPF_LOOP
+static bf_uring_loop_control *io_signal_control=nullptr;
+static void uring_interrupt() {
+    if(io_signal_control)__atomic_store_n(&io_signal_control->stop_requested,1,__ATOMIC_RELEASE);
+}
+static int uring_attach_loop(UringNetwork *net) {
+    io_uring_region_desc region{};
+    region.user_addr=(uint64_t)net->report;region.size=65536;region.flags=IORING_MEM_REGION_TYPE_USER;
+    io_uring_mem_region_reg reg{};reg.region_uptr=(uint64_t)&region;
+    if(syscall(__NR_io_uring_register,net->ringfd,IORING_REGISTER_MEM_REGION,&reg,1)<0){perror("io loop memory");return 1;}
+    net->loop_object=bpf_object__open_file("build/uring_loop.bpf.o",nullptr);
+    if(!net->loop_object || libbpf_get_error(net->loop_object)){fprintf(stderr,"io loop open failed\n");return 1;}
+    auto *map=bpf_object__find_map_by_name(net->loop_object,"io_loop");
+    if(!map)return 1;
+    size_t size;auto *value=(char*)bpf_map__initial_value(map,&size);
+    auto *btf=bpf_object__btf(net->loop_object);
+    int type_id=btf__find_by_name_kind(btf,"io_uring_bpf_ops",BTF_KIND_STRUCT);
+    auto *type=type_id>0 ? btf__type_by_id(btf,type_id) : nullptr;
+    bool assigned=false;
+    if(type && value)for(unsigned i=0;i<btf_vlen(type);++i) {
+        auto *member=btf_members(type)+i;
+        if(!strcmp(btf__name_by_offset(btf,member->name_off),"ring_fd")) {
+            unsigned offset=btf_member_bit_offset(type,i)/8;
+            if(offset+sizeof(unsigned)>size)return 1;
+            memcpy(value+offset,&net->ringfd,sizeof(unsigned));assigned=true;break;
+        }
+    }
+    if(!assigned || bpf_object__load(net->loop_object)){fprintf(stderr,"io loop load failed\n");return 1;}
+    net->loop_link=bpf_map__attach_struct_ops(map);
+    if(!net->loop_link || libbpf_get_error(net->loop_link)){fprintf(stderr,"io loop attach failed\n");return 1;}
+    io_signal_control=&net->report->loop;
+    return 0;
+}
+static int uring_enter_loop(UringNetwork *net) {
+    int result=syscall(__NR_io_uring_enter,net->ringfd,0,0,0,nullptr,0);
+    if(result<0 && errno!=EINTR){perror("io kernel loop");return 1;}
+    return 0;
+}
+static int uring_wait(UringNetwork *net,unsigned seconds,volatile sig_atomic_t *stopped) {
+    timespec now{};clock_gettime(CLOCK_MONOTONIC,&now);
+    unsigned long long deadline=(unsigned long long)now.tv_sec*1000000000+now.tv_nsec+(unsigned long long)seconds*1000000000;
+    __atomic_store_n(&net->report->loop.deadline_ns,deadline,__ATOMIC_RELEASE);
+    while(!*stopped) {
+        if(uring_enter_loop(net))return 1;
+        clock_gettime(CLOCK_MONOTONIC,&now);
+        if((unsigned long long)now.tv_sec*1000000000+now.tv_nsec>=deadline)break;
+        if(__atomic_load_n(&net->report->loop.stop_requested,__ATOMIC_ACQUIRE))break;
+    }
+    return 0;
+}
+static int uring_drain(UringNetwork *net) {
+    while(!__atomic_load_n(&net->report->loop.finished,__ATOMIC_ACQUIRE))
+        if(uring_enter_loop(net))return 1;
+    return 0;
+}
+#endif
 static int uring_start(bf_page *page,bf_page *device,int listener,UringNetwork *net) {
     int streams=bpf_obj_get("/sys/fs/bpf/bpfusion_streams");
     bpf_map_info info{};unsigned size=sizeof(info);
@@ -260,7 +353,11 @@ static int uring_start(bf_page *page,bf_page *device,int listener,UringNetwork *
     while(entries<capacity+BF_LLM_SLOTS+2)entries*=2;
     net->sq_bytes=io_align(entries*sizeof(io_uring_sqe));
     net->ring_bytes=io_align(4096+entries*2*sizeof(io_uring_cqe));
-    net->buffer_bytes=io_align((size_t)capacity*4160+BF_LLM_SLOTS*512);
+    net->buffer_bytes=io_align((size_t)capacity*4160+BF_LLM_SLOTS*512
+#ifdef BF_URING_BPF_LOOP
+        +sizeof(__kernel_timespec)
+#endif
+    );
     net->sq=io_memory(net->sq_bytes);net->rings=io_memory(net->ring_bytes);net->buffer=io_memory(net->buffer_bytes);
     net->report=(IoStats*)io_memory(65536);
     io_check(cudaMalloc(&net->conns,capacity*sizeof(IoConn)),"io connections");
@@ -271,7 +368,12 @@ static int uring_start(bf_page *page,bf_page *device,int listener,UringNetwork *
     if(stat("/proc/self/ns/pid",&namespace_info)){perror("io PID namespace");return 2;}
     UringIdentity owner{(unsigned)getpid(),0,0,(unsigned long long)namespace_info.st_dev,(unsigned long long)namespace_info.st_ino};
     if(identity<0||bpf_map_update_elem(identity,&key,&owner,BPF_ANY)){perror("io identity");return 2;}
-    io_uring_params p{};p.flags=IORING_SETUP_SQPOLL|IORING_SETUP_NO_MMAP|IORING_SETUP_NO_SQARRAY;
+    io_uring_params p{};p.flags=IORING_SETUP_NO_MMAP|IORING_SETUP_NO_SQARRAY;
+#ifdef BF_URING_BPF_LOOP
+    p.flags|=IORING_SETUP_SINGLE_ISSUER|IORING_SETUP_DEFER_TASKRUN;
+#else
+    p.flags|=IORING_SETUP_SQPOLL;
+#endif
     p.sq_off.user_addr=(uint64_t)net->sq;p.cq_off.user_addr=(uint64_t)net->rings;
     net->ringfd=syscall(__NR_io_uring_setup,entries,&p);
     if(net->ringfd<0){perror("io setup");return 3;}
@@ -289,11 +391,26 @@ static int uring_start(bf_page *page,bf_page *device,int listener,UringNetwork *
     // A bootstrap NOP starts an observed active SQPOLL epoch.
     auto *sqe=(io_uring_sqe*)net->sq;sqe[0].opcode=IORING_OP_NOP;sqe[0].user_data=0xb007;
     __atomic_store_n((unsigned*)((char*)net->rings+p.sq_off.tail),1,__ATOMIC_RELEASE);
+#ifdef BF_URING_BPF_LOOP
+    if(syscall(__NR_io_uring_enter,net->ringfd,1,1,IORING_ENTER_GETEVENTS,nullptr,0)<0)return 6;
+#else
     if(syscall(__NR_io_uring_enter,net->ringfd,0,0,IORING_ENTER_SQ_WAKEUP,nullptr,0)<0)return 6;
+#endif
     while(!__atomic_load_n((unsigned*)((char*)net->rings+p.cq_off.tail),__ATOMIC_ACQUIRE))usleep(1000);
     auto *cqe=(io_uring_cqe*)((char*)net->rings+p.cq_off.cqes);
     if(cqe[0].user_data!=0xb007||cqe[0].res)return 7;
     __atomic_store_n((unsigned*)((char*)net->rings+p.cq_off.head),1,__ATOMIC_RELEASE);
+#ifdef BF_URING_BPF_LOOP
+    net->report->loop.sq_head=p.sq_off.head;net->report->loop.sq_tail=p.sq_off.tail;net->report->loop.cq_tail=p.cq_off.tail;
+    auto *tick=(__kernel_timespec*)((char*)net->buffer+capacity*4160+BF_LLM_SLOTS*512);
+    tick->tv_sec=0;tick->tv_nsec=60000;
+    sqe[1]={};sqe[1].opcode=IORING_OP_TIMEOUT;sqe[1].addr=(uint64_t)tick;sqe[1].len=1;
+    sqe[1].timeout_flags=IORING_TIMEOUT_MULTISHOT;sqe[1].user_data=8ULL<<56;
+    net->report->pending=1;
+    __atomic_store_n((unsigned*)((char*)net->rings+p.sq_off.tail),2,__ATOMIC_RELEASE);
+    if(syscall(__NR_io_uring_enter,net->ringfd,1,0,0,nullptr,0)<0)return 8;
+    if(uring_attach_loop(net))return 9;
+#endif
     io_check(cudaStreamCreateWithFlags(&net->stream,cudaStreamNonBlocking),"io stream");
     io_network<<<1,1,0,net->stream>>>(ring,device,net->conns,capacity,dbuffer,(uint64_t)net->buffer,dreport,listener);
     io_check(cudaGetLastError(),"io launch");
@@ -301,8 +418,10 @@ static int uring_start(bf_page *page,bf_page *device,int listener,UringNetwork *
     return 0;
 }
 static void uring_quiesce(UringNetwork *net) {
-    __atomic_store_n(&net->report->model_quiesced,1,__ATOMIC_RELEASE);
+    __atomic_store_n(&net->report->loop.model_quiesced,1,__ATOMIC_RELEASE);
+#ifndef BF_URING_BPF_LOOP
     syscall(__NR_io_uring_enter,net->ringfd,0,0,IORING_ENTER_SQ_WAKEUP,nullptr,0);
+#endif
 }
 static int uring_finish(UringNetwork *net) {
     io_check(cudaStreamSynchronize(net->stream),"io finish");
@@ -319,6 +438,10 @@ static int uring_finish(UringNetwork *net) {
                v.seq,v.gen,v.sends,v.early,v.bytes,v.aborted,v.client_ns);
     }
     unsigned error=r.error;
+#ifdef BF_URING_BPF_LOOP
+    io_signal_control=nullptr;
+    bpf_link__destroy(net->loop_link);bpf_object__close(net->loop_object);
+#endif
     close(net->ringfd);io_check(cudaFree(net->conns),"io connections free");
     for(auto pair:{std::pair<void*,size_t>{net->sq,net->sq_bytes},{net->rings,net->ring_bytes},{net->buffer,net->buffer_bytes},{net->report,65536}}) {
         io_check(cudaHostUnregister(pair.first),"io unregister");munmap(pair.first,pair.second);

@@ -398,3 +398,21 @@ route, kernel module or userspace request worker is added. This affects the
 shared BPF ingress; both model default module compatibility workloads pass
 alongside stock protocol qualification. Finding0043 retains the failures and candidate
 evidence without claiming a general kernel fix.
+
+## Optional upstream io_uring BPF loop
+
+The optional qwen-graph-uring-loop and vllm-graph-uring-loop targets use the
+same shared TCP transport and model computation with SINGLE_ISSUER/
+DEFER_TASKRUN instead of SQPOLL. The creator enters a sleepable struct_ops
+loop; BPF submits GPU-published SQEs and waits on CQ progress. A standard
+60000ns multishot timeout supplies periodic wakeups. No steady userspace
+request worker or custom TX module is used, but kernel/timer CPU work remains.
+
+A separate report-region control prefix carries actual ring offsets and
+stop/quiesce/finished state. Signal/deadline leaves steady serving, model
+execution stops, and reentry drains cancellation, timer removal and closes
+before report/queue memory is freed. Multishot SQ/CQ totals differ; each queue
+must be empty independently. The request page ABI is unchanged. The
+[finding](findings/0044-uring-bpf-loop.md) records current upstream dependencies,
+failed setup/exit attempts and incomplete performance qualification. This
+does not replace the existing module default or qualify interrupt notification.

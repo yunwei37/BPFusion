@@ -79,6 +79,13 @@ ingress redirect passes both idle regressions, full stock protocols and default
 module compatibility. Initial failures remain archived; general reliability
 is not established by these finite workloads.
 
+The [sleepable eBPF/io_uring loop candidate](docs/findings/0044-uring-bpf-loop.md)
+replaces stock SQPOLL with upstream kernel-loop coordination and a standard
+multishot timer, while reusing the same model computation. Its three-path
+preflight and full protocol/idle/lifecycle checks pass for both tested models;
+the matched CPU/latency/throughput experiment remains pending. It requires the qualified recent kernel
+interfaces and libbpf1.6.3. No performance benefit is established yet.
+
 ## Service and compute boundary
 
 The intended open-source boundary is a reusable serving path around existing

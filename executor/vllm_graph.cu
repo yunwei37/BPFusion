@@ -174,7 +174,12 @@ __global__ void dispatch(bf_page* p,Step* steps,Inputs in,unsigned vocab,Control
 extern "C" unsigned max_tokens() { return BF_LLM_MAX_TOK; }
 extern "C" unsigned max_requests() { return BF_LLM_SLOTS; }
 static volatile sig_atomic_t stopped=0;
-static void stop_signal(int) { stopped=1; }
+static void stop_signal(int) {
+    stopped=1;
+#ifdef BF_URING_BPF_LOOP
+    uring_interrupt();
+#endif
+}
 extern "C" int serve(const unsigned long long* bodies,const unsigned long long* heads,
  const unsigned long long* outputs,const unsigned long long* pointers,unsigned stride,
  unsigned block_size,unsigned pages_per_request,unsigned vocab,unsigned layers,unsigned h,
@@ -246,6 +251,8 @@ extern "C" int serve(const unsigned long long* bodies,const unsigned long long* 
         printf("resident vLLM ready: %u layers h=%u vocab=%u; tensor batches1..%u, GPU prefill/decode\n",layers,h,vocab,BF_LLM_SLOTS);fflush(stdout);
 #ifdef BF_USER_NETWORK
         launched=user_network(page,listener,seconds,&stopped) ? cudaErrorUnknown : cudaSuccess;
+#elif defined(BF_URING_BPF_LOOP)
+        launched=uring_wait(&network,seconds,&stopped) ? cudaErrorUnknown : cudaSuccess;
 #else
         while(seconds-- && !stopped)sleep(1);
 #endif
@@ -254,6 +261,9 @@ extern "C" int serve(const unsigned long long* bodies,const unsigned long long* 
 #ifdef BF_URING_NETWORK
     cudaError_t finished=cudaStreamSynchronize(0);CUDA(finished);
     uring_quiesce(&network);
+#ifdef BF_URING_BPF_LOOP
+    if(uring_drain(&network))return 1;
+#endif
     finished=cudaDeviceSynchronize();
     if(uring_finish(&network))return 1;
 #else

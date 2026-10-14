@@ -1,0 +1,80 @@
+{
+  "model": "qwen",
+  "start": "2026-10-14T03:03:18.499928+00:00",
+  "oracle_frozen_at": "2026-10-13T01:50:59.810351+00:00",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "ready_time_ns": 1791947055704297497,
+  "native_pid": 266507,
+  "exit": 0,
+  "native_stats": {
+    "accepted": 13,
+    "closed": 13,
+    "received": 32,
+    "sends": 661,
+    "bytes": 4973,
+    "completed": 32,
+    "aborted": 3,
+    "max_connections": 2,
+    "max_requests": 2,
+    "pending": 0,
+    "error": 0,
+    "head": 32,
+    "reserved": 0,
+    "dropped": 0,
+    "overflow": 0,
+    "sqhead": 740,
+    "sqtail": 740,
+    "cqhead": 333538,
+    "cqtail": 333538,
+    "trace_count": 32,
+    "trace_overflow": 0
+  },
+  "bpf_stats": {
+    "exit": 0,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 32\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 32\nsockhash linked 13\nsockhash failed 0\nparser calls   32\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=32\nllm_reserved=0x0\nllm[0]: state=0 prompt=1 gen=1 produced=1 client_ns=378448439325944\nllm[1]: state=0 prompt=1 gen=1 produced=0 client_ns=378448441171360\nllm[2]: state=0 prompt=2 gen=64 produced=64 client_ns=378448441327127\nllm[3]: state=0 prompt=1 gen=1 produced=0 client_ns=378448553447216\nllm[4]: state=0 prompt=5 gen=1 produced=1 client_ns=378448553869500\nllm[5]: state=0 prompt=64 gen=64 produced=64 client_ns=378448556382293\nllm[6]: state=0 prompt=8 gen=64 produced=64 client_ns=378448558578133\nllm[7]: state=0 prompt=64 gen=64 produced=1 client_ns=378448713612693\n",
+    "stderr": ""
+  },
+  "pass": true,
+  "end": "2026-10-14T03:04:40.371981+00:00",
+  "remaining_pins": []
+}
+378434550724053}
+REPLY {"seq":7,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":378434552690791}
+REPLY {"seq":8,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":378434552977012}
+REPLY {"seq":9,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":378436865592338}
+REPLY {"seq":10,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":378436867480109}
+REPLY {"seq":11,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":378436867632275}
+REPLY {"seq":12,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":378439180144187}
+REPLY {"seq":13,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":378439182039172}
+REPLY {"seq":14,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":378439182202435}
+REPLY {"seq":15,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":378441494629637}
+REPLY {"seq":16,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":378441496591695}
+REPLY {"seq":17,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":378441496881429}
+REPLY {"seq":18,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":378443809361011}
+REPLY {"seq":19,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":378443811400317}
+REPLY {"seq":20,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":378443811688069}
+REPLY {"seq":21,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":378446124504133}
+REPLY {"seq":22,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":378446126448857}
+REPLY {"seq":23,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":378446126605146}
+REPLY {"seq":24,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":378448439325944}
+REPLY {"seq":25,"gen":1,"sends":1,"early":0,"bytes":87,"aborted":0,"client_ns":378448441171360}
+REPLY {"seq":26,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":378448441327127}
+REPLY {"seq":27,"gen":1,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":378448553447216}
+REPLY {"seq":28,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":378448553869500}
+REPLY {"seq":29,"gen":64,"sends":1,"early":1,"bytes":4,"aborted":1,"client_ns":378448556382293}
+REPLY {"seq":30,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":378448558578133}
+REPLY {"seq":31,"gen":64,"sends":1,"early":1,"bytes":84,"aborted":1,"client_ns":378448713612693}
+CLEANUP ring_connections_buffers_released
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=716 graph_error=0 banks=8 max_active=2
+
+
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loading weights:  39%|███▉      | 114/290 [00:00<00:00, 1118.01it/s]
+Loading weights:  80%|████████  | 233/290 [00:00<00:00, 1141.94it/s]
+Loading weights: 100%|██████████| 290/290 [00:00<00:00, 1160.49it/s]
+
+LIFECYCLE_DRIVER_TERMINAL

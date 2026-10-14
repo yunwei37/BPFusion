@@ -484,3 +484,33 @@ prioritize measured polling/wakeup costs or optimized cross-node delivery
 instead of repeating unchanged copy cells or tuning model arithmetic. General
 reliability, total CPU/energy, external SOTA and arbitrary-model claims remain
 unproven. The late endpoint observation is separately dated from actual timing.
+
+## Sleepable eBPF io_uring loop comparison in progress
+
+[Finding0044](findings/0044-uring-bpf-loop.md) follows the high known-worker
+CPU observed in finding0043 with an admitted supporting transport intervention.
+The [plan](../bench/results/uring_bpf_loop_20261014/plan.md) and
+[fresh plan review](../bench/results/uring_bpf_loop_20261014/plan-review.md)
+retain the ordinary packed/prefix adapter's local question and compare the
+same upstream model computation against efficient native TCP, with current
+SQPOLL as a component control. No formal paper RQ is introduced.
+
+The candidate uses upstream sleepable struct_ops, DEFER_TASKRUN and a standard
+multishot timer; these change together, precluding exclusive eBPF/syscall/
+polling attribution. Three primary paired effects/model cover gen1/c1 TTFT
+against native,gen64/c8 TPS against native and gen64/c8 known-worker CPU
+against stock. All six intervals will be reported; the latter excludes Linux
+network work outside the process and is not total CPU or energy.
+
+Third/final real preflight passes120 requests/3144 checked tokens across
+three paths,with normal exit/analysis0. Two failed preflights are retained.
+All12 vLLM strict executors pass7464 requests/266688 valid tokens,
+3108 expected rejects and60000 empty connections. HF idle/lifecycle
+qualification passes32 requests/652 complete/prefix tokens per model after
+repairing an omitted launcher mapping that selected the default library
+before requests. Failed initial records and successful affected retry remain.
+Full qualification is complete;36-executor/144-cell timing remains pending. These checks have dependency value only; no new speed
+or CPU claim follows.
+Next decision depends on full matched effects and fresh result review;
+backend arithmetic, reference sets and the retained project objective stay
+unchanged.

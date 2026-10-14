@@ -99,7 +99,12 @@ __global__ void dispatch(bf_page *p,Step *steps,long long **inputs,unsigned coun
 extern "C" unsigned max_tokens() { return BF_LLM_MAX_TOK; }
 extern "C" unsigned max_requests() { return BF_LLM_SLOTS; }
 static volatile sig_atomic_t stopped=0;
-static void stop_signal(int) { stopped=1; }
+static void stop_signal(int) {
+    stopped=1;
+#ifdef BF_URING_BPF_LOOP
+    uring_interrupt();
+#endif
+}
 extern "C" int serve(const unsigned long long *graphs,const unsigned long long *outputs,unsigned count,const unsigned long long *input_ptrs,unsigned vocab,unsigned layers,unsigned h,unsigned seconds) {
     unsigned banks=max_requests(),size=count*banks;
     std::vector<Step> host(size);
@@ -158,6 +163,8 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
         printf("resident Qwen ready: %u layers h=%u vocab=%u; device-tail graphs, dispatch=%s\n",layers,h,vocab,mode);fflush(stdout);
 #ifdef BF_USER_NETWORK
         launched=user_network(page,listener,seconds,&stopped) ? cudaErrorUnknown : cudaSuccess;
+#elif defined(BF_URING_BPF_LOOP)
+        launched=uring_wait(&network,seconds,&stopped) ? cudaErrorUnknown : cudaSuccess;
 #else
         if(once) {
             signal(SIGALRM,stop_signal);alarm(seconds);unsigned retired=0;
@@ -177,6 +184,9 @@ extern "C" int serve(const unsigned long long *graphs,const unsigned long long *
 #ifdef BF_URING_NETWORK
     cudaError_t finished=cudaStreamSynchronize(0);CUDA(finished);
     uring_quiesce(&network);
+#ifdef BF_URING_BPF_LOOP
+    if(uring_drain(&network))return 1;
+#endif
     finished=cudaDeviceSynchronize();
     if(uring_finish(&network))return 1;
 #else

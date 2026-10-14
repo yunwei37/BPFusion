@@ -1,0 +1,6 @@
+START pair=0 mode=uring_loop pid=263462
+PASS pair=0 mode=uring_loop requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=0 mode=userspace pid=263723
+PASS pair=0 mode=userspace requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=0 mode=uring pid=263998
+PASS pair=0 mode=uring requests=622 tokens=22224 batches=[1, 2, 3, 4, 5, 6, 7, 8]
