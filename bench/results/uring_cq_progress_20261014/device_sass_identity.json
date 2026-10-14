@@ -1,0 +1,18 @@
+{
+  "utc": "2026-10-14T03:57:59.651901+00:00",
+  "candidate": "vllm_graph_uring_loop",
+  "control": "vllm_graph_uring_loop_after",
+  "functions": {
+    "dispatch": {
+      "byte_identical": true,
+      "candidate_chars": 428852,
+      "control_chars": 428852
+    },
+    "io_network": {
+      "byte_identical": true,
+      "candidate_chars": 461984,
+      "control_chars": 461984
+    }
+  },
+  "scope": "Only BPF snapshot/control object selection changes; arrival/batch histories can differ"
+}

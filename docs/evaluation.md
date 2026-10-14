@@ -539,3 +539,32 @@ native delivery. Optimized cross-node deployment and broader backend/service
 acceptance remain under the full retained goal.
 Backend arithmetic,references and the full retained goal stay unchanged;
 do not repeat unchanged timing or begin a model-specific arithmetic campaign.
+
+## CQ progress before submission in progress
+
+[Finding0045](findings/0045-uring-cq-progress.md) tests a source-backed local
+completion-order intervention after0044. The current loop observes CQ tail
+after SQ submission; the candidate snapshots before, recognizing progress
+produced by submission. This is not an established cause of old delivery loss.
+The [plan](../bench/results/uring_cq_progress_20261014/plan.md) and
+[fresh plan review](../bench/results/uring_cq_progress_20261014/plan-review.md)
+admit supporting work within the retained ordinary-serving question.
+
+Efficient native TCP is the main same-compute baseline; the former loop is a
+component control restoring post-submit CQ observation. Model/GPU-network
+computation,timer,wire and numerical references remain unchanged. Four primary
+native contrasts cover gen1/c8 TTFT and gen64/c8 TPS across both models; CPU
+and former-loop effects remain secondary tradeoffs/component evidence.
+A component gain alone cannot establish native superiority. No new formal
+paper RQ,total-CPU or arbitrary-model claim is introduced.
+
+Common temporary dependencies and builds complete. Both model and GPU-network
+controller SASS are byte-identical for candidate/control. First real preflight
+passes120 requests/3144 checked tokens across3 paths,exit/analysis0. All12
+vLLM strict executors pass7464 requests/266688 valid tokens,3108 intended
+rejects and60000 empty connections. Both unchanged HF workloads pass32
+requests/652 complete/prefix tokens per model with13 closes/3 expected aborts.
+Full qualification is complete; timing remains pending. No dependency activity is an independent research result.
+Continue through the planned real path and fresh result review,retain failures
+and negative estimates,then remove owned apparatus and publish honest main
+evidence. The full retained goal and closed0044 comparison remain unchanged.

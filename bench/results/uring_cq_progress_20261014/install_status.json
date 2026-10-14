@@ -1,0 +1,28 @@
+[
+  {
+    "cmd": [
+      "/usr/bin/python3",
+      "-m",
+      "venv",
+      "--without-pip",
+      "/tmp/bpfusion-uring-cq-progress-jf93e9xn/runtime"
+    ],
+    "exit": 0
+  },
+  {
+    "cmd": [
+      "/usr/bin/python3",
+      "-m",
+      "pip",
+      "--python",
+      "/tmp/bpfusion-uring-cq-progress-jf93e9xn/runtime/bin/python",
+      "install",
+      "vllm==0.31.0",
+      "torch==2.13.0+cu129",
+      "transformers==5.17.0",
+      "--extra-index-url",
+      "https://download.pytorch.org/whl/cu129"
+    ],
+    "exit": 0
+  }
+]

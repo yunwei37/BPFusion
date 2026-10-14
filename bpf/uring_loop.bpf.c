@@ -22,12 +22,19 @@ int BPF_PROG(uring_loop_step, struct iou_ctx *loop_ctx, struct iou_loop_params *
         return IOU_LOOP_STOP;
     __u32 sh=control->sq_head, st=control->sq_tail, ct=control->cq_tail;
     if (sh>4092 || st>4092 || ct>4092 || ((sh|st|ct)&3)) return IOU_LOOP_STOP;
+#ifndef BF_IO_CQ_AFTER_SUBMIT
+    __u32 wait=*(volatile __u32 *)(rings+ct)+1;
+#endif
     __u32 head=*(volatile __u32 *)(rings+sh);
     __u32 tail=*(volatile __u32 *)(rings+st);
     if (tail!=head && bpf_io_uring_submit_sqes(loop_ctx,tail-head)<0)
         return IOU_LOOP_STOP;
     /* Kernel timeout CQEs wake steady service; cleanup drains until GPU done. */
+#ifdef BF_IO_CQ_AFTER_SUBMIT
     lp->cq_wait_idx=*(volatile __u32 *)(rings+ct)+!control->model_quiesced;
+#else
+    lp->cq_wait_idx=control->model_quiesced ? *(volatile __u32 *)(rings+ct) : wait;
+#endif
     return IOU_LOOP_CONTINUE;
 }
 

@@ -299,7 +299,11 @@ static int uring_attach_loop(UringNetwork *net) {
     region.user_addr=(uint64_t)net->report;region.size=65536;region.flags=IORING_MEM_REGION_TYPE_USER;
     io_uring_mem_region_reg reg{};reg.region_uptr=(uint64_t)&region;
     if(syscall(__NR_io_uring_register,net->ringfd,IORING_REGISTER_MEM_REGION,&reg,1)<0){perror("io loop memory");return 1;}
+#ifdef BF_IO_CQ_AFTER_SUBMIT
+    net->loop_object=bpf_object__open_file("build/uring_loop_after.bpf.o",nullptr);
+#else
     net->loop_object=bpf_object__open_file("build/uring_loop.bpf.o",nullptr);
+#endif
     if(!net->loop_object || libbpf_get_error(net->loop_object)){fprintf(stderr,"io loop open failed\n");return 1;}
     auto *map=bpf_object__find_map_by_name(net->loop_object,"io_loop");
     if(!map)return 1;

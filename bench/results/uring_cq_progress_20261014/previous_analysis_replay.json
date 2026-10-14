@@ -1,0 +1,24 @@
+[
+  {
+    "model": "qwen",
+    "cmd": [
+      "/usr/bin/python3",
+      "bench/vllm_serving_analysis.py",
+      "bench/results/uring_bpf_loop_20261014/qwen_performance.jsonl"
+    ],
+    "exit": 0,
+    "byte_identical": true,
+    "stderr": ""
+  },
+  {
+    "model": "smol",
+    "cmd": [
+      "/usr/bin/python3",
+      "bench/vllm_serving_analysis.py",
+      "bench/results/uring_bpf_loop_20261014/smol_performance.jsonl"
+    ],
+    "exit": 0,
+    "byte_identical": true,
+    "stderr": ""
+  }
+]

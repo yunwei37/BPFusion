@@ -1,0 +1,1107 @@
+{
+  "model": "qwen",
+  "start": "2026-10-14T04:10:44.908764+00:00",
+  "oracle_frozen_at": "2026-10-13T01:50:59.810351+00:00",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "ready_time_ns": 1791951103834254447,
+  "native_pid": 281564,
+  "cmd": [
+    "strace",
+    "-f",
+    "-ttt",
+    "-o",
+    "/tmp/bpfusion-uring-cq-progress-jf93e9xn/hf_loop/qwen.strace",
+    "-e",
+    "trace=accept,accept4,recvfrom,recvmsg,sendto,sendmsg,io_uring_setup,io_uring_enter,io_uring_register",
+    "build/qwen_graph_uring_loop",
+    "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "180"
+  ],
+  "exit": 0,
+  "stdout": "capturing model=/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775 type=qwen2 fp16 eager\ncaptured bank 0 model graph 32/190\ncaptured bank 0 model graph 64/190\ncaptured bank 0 model graph 96/190\ncaptured bank 0 model graph 128/190\ncaptured bank 0 model graph 160/190\ncaptured bank 1 model graph 32/190\ncaptured bank 1 model graph 64/190\ncaptured bank 1 model graph 96/190\ncaptured bank 1 model graph 128/190\ncaptured bank 1 model graph 160/190\ncaptured bank 2 model graph 32/190\ncaptured bank 2 model graph 64/190\ncaptured bank 2 model graph 96/190\ncaptured bank 2 model graph 128/190\ncaptured bank 2 model graph 160/190\ncaptured bank 3 model graph 32/190\ncaptured bank 3 model graph 64/190\ncaptured bank 3 model graph 96/190\ncaptured bank 3 model graph 128/190\ncaptured bank 3 model graph 160/190\ncaptured bank 4 model graph 32/190\ncaptured bank 4 model graph 64/190\ncaptured bank 4 model graph 96/190\ncaptured bank 4 model graph 128/190\ncaptured bank 4 model graph 160/190\ncaptured bank 5 model graph 32/190\ncaptured bank 5 model graph 64/190\ncaptured bank 5 model graph 96/190\ncaptured bank 5 model graph 128/190\ncaptured bank 5 model graph 160/190\ncaptured bank 6 model graph 32/190\ncaptured bank 6 model graph 64/190\ncaptured bank 6 model graph 96/190\ncaptured bank 6 model graph 128/190\ncaptured bank 6 model graph 160/190\ncaptured bank 7 model graph 32/190\ncaptured bank 7 model graph 64/190\ncaptured bank 7 model graph 96/190\ncaptured bank 7 model graph 128/190\ncaptured bank 7 model graph 160/190\nNET_READY pid=281564 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384\nresident Qwen ready: 24 layers h=896 vocab=151936; device-tail graphs, dispatch=resident\nRESULT {\"accepted\":13,\"closed\":13,\"received\":32,\"sends\":661,\"bytes\":4973,\"completed\":32,\"aborted\":3,\"max_connections\":2,\"max_requests\":2,\"pending\":0,\"error\":0,\"head\":32,\"reserved\":0,\"dropped\":0,\"overflow\":0,\"sqhead\":740,\"sqtail\":740,\"cqhead\":332804,\"cqtail\":332804,\"trace_count\":32,\"trace_overflow\":0}\nREPLY {\"seq\":0,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":382478035363928}\nREPLY {\"seq\":1,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":382478037606201}\nREPLY {\"seq\":2,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":382478037883083}\nREPLY {\"seq\":3,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":382480365924143}\nREPLY {\"seq\":4,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":382480368215960}\nREPLY {\"seq\":5,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":382480368399875}\nREPLY {\"seq\":6,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":382482696358369}\nREPLY {\"seq\":7,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":382482698296768}\nREPLY {\"seq\":8,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":382482698594990}\nREPLY {\"seq\":9,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":382485010820976}\nREPLY {\"seq\":10,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":382485012799716}\nREPLY {\"seq\":11,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":382485013152084}\nREPLY {\"seq\":12,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":382487325584623}\nREPLY {\"seq\":13,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":382487327587344}\nREPLY {\"seq\":14,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":382487327738660}\nREPLY {\"seq\":15,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":382489640048028}\nREPLY {\"seq\":16,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":382489641963822}\nREPLY {\"seq\":17,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":382489642125586}\nREPLY {\"seq\":18,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":382491954524795}\nREPLY {\"seq\":19,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":382491956457437}\nREPLY {\"seq\":20,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":382491956643451}\nREPLY {\"seq\":21,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":382494269058580}\nREPLY {\"seq\":22,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":382494271007962}\nREPLY {\"seq\":23,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":382494271291937}\nREPLY {\"seq\":24,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":382496583785404}\nREPLY {\"seq\":25,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":382496585757267}\nREPLY {\"seq\":26,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":382496585932635}\nREPLY {\"seq\":27,\"gen\":1,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":382496697804464}\nREPLY {\"seq\":28,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":4,\"aborted\":0,\"client_ns\":382496698078648}\nREPLY {\"seq\":29,\"gen\":64,\"sends\":1,\"early\":1,\"bytes\":4,\"aborted\":1,\"client_ns\":382496700287693}\nREPLY {\"seq\":30,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":382496702517064}\nREPLY {\"seq\":31,\"gen\":64,\"sends\":1,\"early\":1,\"bytes\":84,\"aborted\":1,\"client_ns\":382496857211513}\nCLEANUP ring_connections_buffers_released\nresident Qwen stopped: dispatch=resident launches=1 device_graph_launches=716 graph_error=0 banks=8 max_active=2\n",
+  "stderr": "\nLoading weights:   0%|          | 0/290 [00:00<?, ?it/s]\nLoading weights:  38%|\u2588\u2588\u2588\u258a      | 111/290 [00:00<00:00, 1084.19it/s]\nLoading weights:  79%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589  | 229/290 [00:00<00:00, 1125.22it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 290/290 [00:00<00:00, 1144.94it/s]\n",
+  "rows": [
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382478035363928,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c5101000000010000000000000058a86e9bdc5b01004d000000",
+      "peer": [
+        "127.0.0.1",
+        59144
+      ],
+      "gen": 1,
+      "prompt": [
+        77
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a1c010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 382478037606201,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c5101000000010000000000000039df909bdc5b010080510200",
+      "peer": [
+        "127.0.0.1",
+        59144
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382478037883083,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2033320d0a0d0a514d4c51020000004000000000000000cb18959bdc5b01004e0000004f000000",
+      "peer": [
+        "127.0.0.1",
+        59144
+      ],
+      "gen": 64,
+      "prompt": [
+        78,
+        79
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382480365924143,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c510100000001000000000000002f2f5826dd5b01004d000000",
+      "peer": [
+        "127.0.0.1",
+        59148
+      ],
+      "gen": 1,
+      "prompt": [
+        77
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a1c010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 382480368215960,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c5101000000010000000000000098277b26dd5b010080510200",
+      "peer": [
+        "127.0.0.1",
+        59148
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382480368399875,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2033320d0a0d0a514d4c5102000000400000000000000003f67d26dd5b01004e0000004f000000",
+      "peer": [
+        "127.0.0.1",
+        59148
+      ],
+      "gen": 64,
+      "prompt": [
+        78,
+        79
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382482696358369,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000e1c93fb1dd5b01004d000000",
+      "peer": [
+        "127.0.0.1",
+        59152
+      ],
+      "gen": 1,
+      "prompt": [
+        77
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a1c010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 382482698296768,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000c05d5db1dd5b010080510200",
+      "peer": [
+        "127.0.0.1",
+        59152
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382482698594990,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2033320d0a0d0a514d4c51020000004000000000000000aeea61b1dd5b01004e0000004f000000",
+      "peer": [
+        "127.0.0.1",
+        59152
+      ],
+      "gen": 64,
+      "prompt": [
+        78,
+        79
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382485010820976,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c5101000000010000000000000070af333bde5b01004d000000",
+      "peer": [
+        "127.0.0.1",
+        50024
+      ],
+      "gen": 1,
+      "prompt": [
+        77
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a1c010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 382485012799716,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000e4e0513bde5b010080510200",
+      "peer": [
+        "127.0.0.1",
+        50024
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382485013152084,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2033320d0a0d0a514d4c510200000040000000000000005441573bde5b01004e0000004f000000",
+      "peer": [
+        "127.0.0.1",
+        50024
+      ],
+      "gen": 64,
+      "prompt": [
+        78,
+        79
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382487325584623,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000ef2c2cc5de5b01004d000000",
+      "peer": [
+        "127.0.0.1",
+        50036
+      ],
+      "gen": 1,
+      "prompt": [
+        77
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a1c010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 382487327587344,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c5101000000010000000000000010bc4ac5de5b010080510200",
+      "peer": [
+        "127.0.0.1",
+        50036
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382487327738660,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2033320d0a0d0a514d4c51020000004000000000000000240b4dc5de5b01004e0000004f000000",
+      "peer": [
+        "127.0.0.1",
+        50036
+      ],
+      "gen": 64,
+      "prompt": [
+        78,
+        79
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382489640048028,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c510100000001000000000000009c15204fdf5b01004d000000",
+      "peer": [
+        "127.0.0.1",
+        50052
+      ],
+      "gen": 1,
+      "prompt": [
+        77
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a1c010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 382489641963822,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c510100000001000000000000002e513d4fdf5b010080510200",
+      "peer": [
+        "127.0.0.1",
+        50052
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382489642125586,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2033320d0a0d0a514d4c5102000000400000000000000012c93f4fdf5b01004e0000004f000000",
+      "peer": [
+        "127.0.0.1",
+        50052
+      ],
+      "gen": 64,
+      "prompt": [
+        78,
+        79
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382491954524795,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c510100000001000000000000007b3214d9df5b01004d000000",
+      "peer": [
+        "127.0.0.1",
+        50054
+      ],
+      "gen": 1,
+      "prompt": [
+        77
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a1c010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 382491956457437,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000ddaf31d9df5b010080510200",
+      "peer": [
+        "127.0.0.1",
+        50054
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382491956643451,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2033320d0a0d0a514d4c510200000040000000000000007b8634d9df5b01004e0000004f000000",
+      "peer": [
+        "127.0.0.1",
+        50054
+      ],
+      "gen": 64,
+      "prompt": [
+        78,
+        79
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382494269058580,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000142e0963e05b01004d000000",
+      "peer": [
+        "127.0.0.1",
+        53626
+      ],
+      "gen": 1,
+      "prompt": [
+        77
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a1c010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 382494271007962,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000daec2663e05b010080510200",
+      "peer": [
+        "127.0.0.1",
+        53626
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382494271291937,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2033320d0a0d0a514d4c5102000000400000000000000021422b63e05b01004e0000004f000000",
+      "peer": [
+        "127.0.0.1",
+        53626
+      ],
+      "gen": 64,
+      "prompt": [
+        78,
+        79
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382496583785404,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000bc1b01ede05b01004d000000",
+      "peer": [
+        "127.0.0.1",
+        53640
+      ],
+      "gen": 1,
+      "prompt": [
+        77
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a1c010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 382496585757267,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c5101000000010000000000000053321fede05b010080510200",
+      "peer": [
+        "127.0.0.1",
+        53640
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382496585932635,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2033320d0a0d0a514d4c510200000040000000000000005bdf21ede05b01004e0000004f000000",
+      "peer": [
+        "127.0.0.1",
+        53640
+      ],
+      "gen": 64,
+      "prompt": [
+        78,
+        79
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a508600004a3e0000fd0e0000a78601001fac000060b7000021a401009a2400003796010076b701009a240000a7630000641601009c870100f759000060b700009f220000fd0e0000018e01001fac00000fe7000095b500003b690000f5af010021a401004a3e00000f0100003d4800008a130000854c00004a3e0000fd0e0000589a0100a59000003f000000423300001100000061b500003f00000024800000378e00001fac000060b7000021a401009a2400003796010076b701009a240000a76300009c870100f759000060b700009f220000ed060000c8560100158e0100514d0000f366000014b40000fd0e000045a90100a7860100fc8d0100689a0100",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "binary",
+      "invalid": true,
+      "client_ns": 382496697804464,
+      "request_hex": "514d4c51010000000100000000000000b0e6ccf3e05b010080510200",
+      "peer": [
+        "127.0.0.1",
+        53640
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "",
+      "status": "EOF",
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 2,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 382496698078648,
+      "request_hex": "514d4c51050000000100000000000000b815d1f3e05b01004f00000050000000510000005200000053000000",
+      "peer": [
+        "127.0.0.1",
+        53650
+      ],
+      "gen": 1,
+      "prompt": [
+        79,
+        80,
+        81,
+        82,
+        83
+      ],
+      "reply_hex": "c6000000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 382496700287693,
+      "request_hex": "514d4c51400000004000000000000000cdcaf2f3e05b01005400000055000000560000005700000058000000590000005a0000005b0000005c0000005d0000005e0000005f000000600000006100000062000000630000006400000065000000660000006700000068000000690000006a0000006b0000006c0000006d0000006e0000006f000000700000007100000072000000730000007400000075000000760000007700000078000000790000007a0000007b0000007c0000007d0000007e0000007f000000800000008100000082000000830000008400000085000000860000008700000088000000890000008a0000008b0000008c0000008d0000008e0000008f00000090000000910000009200000093000000",
+      "peer": [
+        "127.0.0.1",
+        53654
+      ],
+      "gen": 64,
+      "prompt": [
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147
+      ],
+      "reply_hex": "df000000",
+      "checked_tokens": 1,
+      "partial": true,
+      "exact": true,
+      "action": "RST"
+    },
+    {
+      "case": 3,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382496702517064,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2035360d0a0d0a514d4c5108000000400000000000000048cf14f4e05b01005000000051000000520000005300000054000000550000005600000057000000",
+      "peer": [
+        "127.0.0.1",
+        53656
+      ],
+      "gen": 64,
+      "prompt": [
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000b502000008340000c6000000100000000b0000000f0000001100000013000000c6000000d7160000cf630000dc000000110000000b0000000f0000000f0000000f000000f90c00007002000010000000dc0000001000000010000000c60000004f170100c60000005d00000010000000110000004a000000e3040000c32100000f01000026380000565b000040010000100000000f000000b4020000dc000000100000000f000000190a000037010000562f0000ad01000017010000e20200003b010000a6020000900100004d000000030000000c00000053000000a36e00003b010000b4640000c0010000900100004d00000003000000ac300000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 382496857211513,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a203238300d0a0d0a514d4c5140000000400000000000000079424dfde05b01005400000055000000560000005700000058000000590000005a0000005b0000005c0000005d0000005e0000005f000000600000006100000062000000630000006400000065000000660000006700000068000000690000006a0000006b0000006c0000006d0000006e0000006f000000700000007100000072000000730000007400000075000000760000007700000078000000790000007a0000007b0000007c0000007d0000007e0000007f000000800000008100000082000000830000008400000085000000860000008700000088000000890000008a0000008b0000008c0000008d0000008e0000008f00000090000000910000009200000093000000",
+      "peer": [
+        "127.0.0.1",
+        53660
+      ],
+      "gen": 64,
+      "prompt": [
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0adf000000",
+      "checked_tokens": 1,
+      "partial": true,
+      "exact": true,
+      "action": "SIGTERM",
+      "post_stop_extra_hex": ""
+    }
+  ],
+  "native_stats": {
+    "accepted": 13,
+    "closed": 13,
+    "received": 32,
+    "sends": 661,
+    "bytes": 4973,
+    "completed": 32,
+    "aborted": 3,
+    "max_connections": 2,
+    "max_requests": 2,
+    "pending": 0,
+    "error": 0,
+    "head": 32,
+    "reserved": 0,
+    "dropped": 0,
+    "overflow": 0,
+    "sqhead": 740,
+    "sqtail": 740,
+    "cqhead": 332804,
+    "cqtail": 332804,
+    "trace_count": 32,
+    "trace_overflow": 0
+  },
+  "replies": [
+    {
+      "seq": 0,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 382478035363928
+    },
+    {
+      "seq": 1,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 382478037606201
+    },
+    {
+      "seq": 2,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 382478037883083
+    },
+    {
+      "seq": 3,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 382480365924143
+    },
+    {
+      "seq": 4,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 382480368215960
+    },
+    {
+      "seq": 5,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 382480368399875
+    },
+    {
+      "seq": 6,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 382482696358369
+    },
+    {
+      "seq": 7,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 382482698296768
+    },
+    {
+      "seq": 8,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 382482698594990
+    },
+    {
+      "seq": 9,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 382485010820976
+    },
+    {
+      "seq": 10,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 382485012799716
+    },
+    {
+      "seq": 11,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 382485013152084
+    },
+    {
+      "seq": 12,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 382487325584623
+    },
+    {
+      "seq": 13,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 382487327587344
+    },
+    {
+      "seq": 14,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 382487327738660
+    },
+    {
+      "seq": 15,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 382489640048028
+    },
+    {
+      "seq": 16,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 382489641963822
+    },
+    {
+      "seq": 17,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 382489642125586
+    },
+    {
+      "seq": 18,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 382491954524795
+    },
+    {
+      "seq": 19,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 382491956457437
+    },
+    {
+      "seq": 20,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 382491956643451
+    },
+    {
+      "seq": 21,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 382494269058580
+    },
+    {
+      "seq": 22,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 382494271007962
+    },
+    {
+      "seq": 23,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 382494271291937
+    },
+    {
+      "seq": 24,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 382496583785404
+    },
+    {
+      "seq": 25,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 382496585757267
+    },
+    {
+      "seq": 26,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 382496585932635
+    },
+    {
+      "seq": 27,
+      "gen": 1,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 382496697804464
+    },
+    {
+      "seq": 28,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 4,
+      "aborted": 0,
+      "client_ns": 382496698078648
+    },
+    {
+      "seq": 29,
+      "gen": 64,
+      "sends": 1,
+      "early": 1,
+      "bytes": 4,
+      "aborted": 1,
+      "client_ns": 382496700287693
+    },
+    {
+      "seq": 30,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 382496702517064
+    },
+    {
+      "seq": 31,
+      "gen": 64,
+      "sends": 1,
+      "early": 1,
+      "bytes": 84,
+      "aborted": 1,
+      "client_ns": 382496857211513
+    }
+  ],
+  "bpf_stats": {
+    "exit": 0,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 32\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 32\nsockhash linked 13\nsockhash failed 0\nparser calls   32\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=32\nllm_reserved=0x0\nllm[0]: state=0 prompt=1 gen=1 produced=1 client_ns=382496583785404\nllm[1]: state=0 prompt=1 gen=1 produced=0 client_ns=382496585757267\nllm[2]: state=0 prompt=2 gen=64 produced=64 client_ns=382496585932635\nllm[3]: state=0 prompt=1 gen=1 produced=0 client_ns=382496697804464\nllm[4]: state=0 prompt=5 gen=1 produced=1 client_ns=382496698078648\nllm[5]: state=0 prompt=64 gen=64 produced=64 client_ns=382496700287693\nllm[6]: state=0 prompt=8 gen=64 produced=64 client_ns=382496702517064\nllm[7]: state=0 prompt=64 gen=64 produced=1 client_ns=382496857211513\n",
+    "stderr": ""
+  },
+  "pass": true,
+  "end": "2026-10-14T04:12:08.792829+00:00",
+  "remaining_pins": []
+}

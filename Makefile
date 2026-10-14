@@ -139,7 +139,8 @@ VLLM_CHAINED_NAMES := vllm_graph_chained vllm_graph_chained_user_network_wait vl
 VLLM_URING_NAMES := vllm_graph_uring vllm_graph_uring_trace
 VLLM_URING_CONTROL_NAMES := vllm_graph_uring_full_copy vllm_graph_uring_full_copy_trace
 VLLM_URING_LOOP_NAMES := vllm_graph_uring_loop vllm_graph_uring_loop_trace
-VLLM_NAMES := $(VLLM_DEFAULT_NAMES) $(VLLM_PADDED_NAMES) $(VLLM_GROUPED_NAMES) $(VLLM_CHAINED_NAMES) $(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES)
+VLLM_URING_LOOP_AFTER_NAMES := vllm_graph_uring_loop_after vllm_graph_uring_loop_after_trace
+VLLM_NAMES := $(VLLM_DEFAULT_NAMES) $(VLLM_PADDED_NAMES) $(VLLM_GROUPED_NAMES) $(VLLM_CHAINED_NAMES) $(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES) $(VLLM_URING_LOOP_AFTER_NAMES)
 
 .PHONY: vllm-graph vllm-graph-user-network-wait vllm-graph-trace vllm-graph-padded vllm-graph-grouped vllm-graph-release
 .PHONY: vllm-graph-uring
@@ -148,6 +149,12 @@ vllm-graph-uring: $(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_URING_NAMES))) $(
 .PHONY: vllm-graph-uring-loop qwen-graph-uring-loop
 vllm-graph-uring-loop: $(BUILD)/uring_loop.bpf.o $(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_URING_LOOP_NAMES))) $(addprefix $(BUILD)/,$(VLLM_URING_LOOP_NAMES))
 qwen-graph-uring-loop: $(BUILD)/uring_loop.bpf.o $(BUILD)/qwen_graph_uring_loop.so $(BUILD)/qwen_graph_uring_loop
+
+.PHONY: vllm-graph-uring-loop-after
+vllm-graph-uring-loop-after: $(BUILD)/uring_loop_after.bpf.o $(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_URING_LOOP_AFTER_NAMES))) $(addprefix $(BUILD)/,$(VLLM_URING_LOOP_AFTER_NAMES))
+
+$(BUILD)/uring_loop_after.bpf.o: bpf/uring_loop.bpf.c bpf/include/bpfusion_queue.h | $(BUILD)
+	clang $(BPF_CFLAGS) -DBF_IO_CQ_AFTER_SUBMIT -c $< -o $@
 
 $(BUILD)/qwen_graph_uring_loop.so: executor/qwen_graph.cu executor/io_uring_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
 	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -rdc=true -shared -Xcompiler=-fPIC \
@@ -173,6 +180,6 @@ $(addprefix $(BUILD)/,$(VLLM_NAMES)): executor/vllm_graph.py | $(BUILD)
 
 $(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_NAMES))): $(BUILD)/%.so: executor/vllm_graph.cu executor/userspace_tcp.h executor/io_uring_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
 	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
-		$(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT) $(if $(findstring trace,$*),-DBF_TRACE) $(if $(filter $*,$(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES)),-DBF_URING_NETWORK) $(if $(filter $*,$(VLLM_URING_LOOP_NAMES)),-DBF_URING_BPF_LOOP -I$(KERNEL_UAPI)) $(if $(findstring full_copy,$*),-DBF_IO_FULL_COPY) $(if $(filter $*,$(VLLM_DEFAULT_NAMES) $(VLLM_PADDED_NAMES) $(VLLM_CHAINED_NAMES) $(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES)),-DBF_PAD_PREFILL) $(if $(filter $*,$(VLLM_DEFAULT_NAMES) $(VLLM_CHAINED_NAMES) $(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES)),-DBF_PREFIX_RELEASE) $(if $(filter $*,$(VLLM_CHAINED_NAMES)),-DBF_CHAINED_DISPATCH) $< -o $@.o
+		$(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT) $(if $(findstring trace,$*),-DBF_TRACE) $(if $(filter $*,$(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES) $(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_URING_NETWORK) $(if $(filter $*,$(VLLM_URING_LOOP_NAMES) $(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_URING_BPF_LOOP -I$(KERNEL_UAPI)) $(if $(filter $*,$(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_IO_CQ_AFTER_SUBMIT) $(if $(findstring full_copy,$*),-DBF_IO_FULL_COPY) $(if $(filter $*,$(VLLM_DEFAULT_NAMES) $(VLLM_PADDED_NAMES) $(VLLM_CHAINED_NAMES) $(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES) $(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_PAD_PREFILL) $(if $(filter $*,$(VLLM_DEFAULT_NAMES) $(VLLM_CHAINED_NAMES) $(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES) $(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_PREFIX_RELEASE) $(if $(filter $*,$(VLLM_CHAINED_NAMES)),-DBF_CHAINED_DISPATCH) $< -o $@.o
 	$(NVCC) -arch=$(SM_ARCH) -dlink -Xcompiler=-fPIC $@.o -o $@.dlink.o
 	$(CXX) -shared -Wl,-z,defs $@.o $@.dlink.o $(VLLM_CUDART) -Wl,-rpath,$(dir $(VLLM_CUDART)) -o $@ $(LDLIBS)

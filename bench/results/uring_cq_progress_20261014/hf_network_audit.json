@@ -1,0 +1,28 @@
+[
+  {
+    "model": "qwen",
+    "requests": 32,
+    "checked_tokens": 652,
+    "pass_": true,
+    "steady_loop_entries": 1,
+    "steady_userspace_socket_calls": [],
+    "entries": [
+      "281564 1791951103.834178 io_uring_enter(43, 0, 0, 0, NULL, 0 <unfinished ...>",
+      "281564 1791951124.861480 io_uring_enter(43, 0, 0, 0, NULL, 0) = 0"
+    ],
+    "scope": "Zero-submit kernel-loop entry through first SIGTERM; startup excluded"
+  },
+  {
+    "model": "smol",
+    "requests": 32,
+    "checked_tokens": 652,
+    "pass_": true,
+    "steady_loop_entries": 1,
+    "steady_userspace_socket_calls": [],
+    "entries": [
+      "281797 1791951197.797061 io_uring_enter(40, 0, 0, 0, NULL, 0) = -1 EINTR (Interrupted system call)",
+      "281797 1791951218.959549 io_uring_enter(40, 0, 0, 0, NULL, 0) = 0"
+    ],
+    "scope": "Zero-submit kernel-loop entry through first SIGTERM; startup excluded"
+  }
+]

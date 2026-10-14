@@ -91,6 +91,14 @@ It requires the qualified recent kernel interfaces and libbpf1.6.3. Independent
 result review admits the complete comparison; owned temporary runtime/build
 outputs are removed and restoration is recorded.
 
+The [CQ progress candidate](docs/findings/0045-uring-cq-progress.md) moves the
+loop's CQ snapshot before SQ submission. Its model and GPU network-controller
+instructions match the former loop, and full vLLM/HF protocol/lifecycle
+qualification passes. The former post-submit loop remains available through
+make vllm-graph-uring-loop-after; finding0044's measured CPU/delivery results
+belong to that former snapshot semantics. New candidate timing is pending;
+the unchanged timer and reused model computation do not imply a speedup.
+
 ## Service and compute boundary
 
 The intended open-source boundary is a reusable serving path around existing
