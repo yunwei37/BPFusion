@@ -206,6 +206,12 @@ for AMK loop, versus18.246ms/303 tokens/s for same-AMK native TCP and
 1.158ms/5353 tokens/s for current vLLM loop on the tested Smol workload.
 The faster measured backend remains vLLM; AMK is experimental.
 
+A [residency counterfactual](docs/findings/0049-amk-residency-counterfactual.md)
+finds that adding a non-network resident GPU control to same-AMK native TCP
+also reproduces the c8 throughput loss. This directs the next driver
+investigation; model-overlap causality and generic performance gains remain
+unproved.
+
 ## Repository layout
 
 ```

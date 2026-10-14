@@ -730,3 +730,43 @@ removes owned TEMP/10 builds and preserves base/default/Coder/PVC/WIP. Archive
 replay after removal is byte-identical. No installed AMK service is implied.
 Full generic text/backend/SLO/performance acceptance remains open; full goal
 stays active.
+
+## Completed AMK residency counterfactual
+
+[Finding0049](findings/0049-amk-residency-counterfactual.md) adds the missing
+resource control to finding0048 while retaining the same question, upstream
+model computation and frozen outputs. The complete five-block matrix has30
+ordinary/profiled executors,60 cells,480 measured requests/30720 tokens plus
+240 checked excluded warmups. All actual children exit0 and720 complete
+outputs pass the unchanged finite whole-output pools.
+
+Ordinary native TCP, native plus a non-network resident GPU control and
+eBPF/io_uring output throughput atgen64/c8 is309.140757,157.765344 and
+157.769889 token/s. The primary control-minus-native difference is−151.375413,
+nominal pairedt95df4[−152.840219,−149.910607], negative in all five blocks.
+This specific additional resident control is sufficient to reproduce a
+similar loss without network work. It is supporting evidence for a
+driver/backend resource boundary, not model arithmetic optimization,
+identical-resource equivalence or pure SM occupancy.
+
+The graph-node identity needed for per-bank/position and model-overlap
+attribution remains unsupported: all15 traces have1128 model activities each
+and matching grid/block geometry, but zero catalogue identity matches.
+The declared timeline fallback preserves the primary ordinary counterfactual;
+the full overlap-suppression hypothesis remains inconclusive. Profile overhead
+and15 new NVRM status0x56 bootstrap warnings are retained, without
+harmlessness or continuous-isolation claims. The old eager-HF discrepancy
+stays failed. Full text/backend/SLO/performance acceptance remains open;
+the full objective is active.
+
+[Fresh independent review](../bench/results/amk_residency_20261014/result-review.md)
+confirms the ordinary finite counterfactual valid and its sufficiency component
+supported; the full overlap hypothesis remains inconclusive. It verifies
+unchanged upstream source/dispatch SASS and retains the control register
+discrepancy. Close this unchanged matrix and select a source-backed driver
+intervention rather than a model optimization sweep.
+
+[Restoration](../bench/results/amk_residency_20261014/final_restoration.json)
+removes owned TEMP/7 builds, preserving default/base/Coder/WIP; archived
+analysis after removal replays byte-identically. No new persistent runtime
+feature or infrastructure is retained.

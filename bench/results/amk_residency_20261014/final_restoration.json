@@ -1,0 +1,64 @@
+{
+  "utc": "2026-10-14T10:11:01.643996+00:00",
+  "temp": "/tmp/bpfusion-amk-residency-tkdf_2wx",
+  "temp_removed": true,
+  "removed_builds": [
+    {
+      "path": "/workspaces/repository/build/amk_graph_builder.so",
+      "size": 1003880,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_uring_loop.so",
+      "size": 1120520,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_user_network_wait.so",
+      "size": 1048312,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_uring_loop",
+      "size": 44,
+      "symlink": true
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_user_network_wait",
+      "size": 44,
+      "symlink": true
+    },
+    {
+      "path": "/workspaces/repository/build/uring_loop.bpf.o",
+      "size": 10680,
+      "symlink": false
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_user_network_park.so",
+      "size": 1052984,
+      "symlink": false
+    }
+  ],
+  "base_packages": "2.14.1+cu130 5.19.0 2.5.3",
+  "default_library": {
+    "inode": 262875,
+    "size": 1032248
+  },
+  "coder_pids": [
+    1,
+    10909
+  ],
+  "module_absent": true,
+  "maps_absent": true,
+  "replay": {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/amk_residency_20261014/analysis.py",
+      "/workspaces/repository/bench/results/amk_residency_20261014",
+      "full"
+    ],
+    "exit": 0,
+    "byte_identical_stdout": true
+  },
+  "unrelated_wip_present": true
+}
