@@ -928,3 +928,40 @@ This is explicitly post-hoc descriptive evidence, outside the original
 predeclared primary result/review. Reuse it before a new run. Source inspection
 selects GPU-only I/O bookkeeping placement as the next distinct candidate;
 its performance and split-control shutdown correctness remain untested.
+
+## Completed GPU-local I/O bookkeeping comparison
+
+[Finding0054](findings/0054-gpu-local-io-bookkeeping.md) tests whether regular
+mapped-host I/O accounting explains the remaining long-output native gap.
+This is a supporting discriminator within the retained serving-path question,
+with unchanged reused model math and no new formal RQ. Existing round-count
+analysis could not settle this placement intervention; the fixed primary is
+gen64/c8 output TPS against current host bookkeeping and efficient native TCP.
+
+All 20 drivers / 60 executors / 120 cells complete: 3840 measured requests,
+124800 output tokens plus 480 one-token warmups. Fixed analyses and candidate
+protocol/lifecycle checks pass, with no serving failure, exclusion, replacement
+or changed oracle/metric/timeout. Source and expanded commands are frozen.
+
+Candidate TPS is 5408.677 versus host 5362.059 and native 5616.194 for Smol;
+Qwen is 4628.036 versus 4601.193 and 4757.707. Signed candidate-minus-host
+nominal paired t95 intervals [-0.127400,93.363776] and [-4.781485,58.467539]
+cross zero. Smol loses to native; Qwen's native contrast is inconclusive.
+Secondary latency/CPU/round results, including adverse native boundaries,
+remain linked rather than substituting for primary throughput.
+
+The [fresh independent result review](../bench/results/device_stats_20261014/result-review.md)
+recomputes all 24 means / 72 contrasts and ordinary short/long counters, judging
+the run valid/completed, bookkeeping TPS inconclusive and research value
+supporting. Impact is a constructor/workload boundary, not a direct thesis
+challenge. Finite frozen-pool/reused-graph scope, partial CPU accounting,
+sparse host observations and unmeasured GPU-time/PCIe mediation remain.
+
+Selected main keeps host bookkeeping; the uncommitted candidate is restored
+byte-for-byte and archived, with no retained allocation/control complexity
+or production-code growth. [Raw archive/replay](../bench/results/device_stats_20261014/)
+and [restoration](../bench/results/device_stats_20261014/final_restoration.json)
+retain candidate/source selection and preservation evidence. Close this
+unchanged matrix; a new run needs a distinct causal discriminator and should
+reuse prior valid comparisons before collecting more data. The full objective
+remains active.

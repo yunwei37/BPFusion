@@ -1,0 +1,1 @@
+Initial remote seed command had an unmatched closing parenthesis in its final print and failed at parse time before any file or state mutation. The corrected seed created this single TEMP. Production source is unchanged; no candidate implementation or GPU execution occurred during preparation.

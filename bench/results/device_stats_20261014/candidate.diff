@@ -1,0 +1,98 @@
+diff --git a/executor/io_uring_tcp.h b/executor/io_uring_tcp.h
+index 70a66a8..6f8a570 100644
+--- a/executor/io_uring_tcp.h
++++ b/executor/io_uring_tcp.h
+@@ -4,6 +4,7 @@
+ #define BPFUSION_IO_URING_TCP_H
+ #include <cuda_runtime.h>
+ #include <utility>
++#include <cstddef>
+ #include "bpfusion_queue.h"
+ #include <linux/io_uring.h>
+ #include <bpf/bpf.h>
+@@ -89,6 +90,9 @@ struct IoState {
+     bool stopping=false,cancelled=false,cancel_done=false;
+ #ifdef BF_URING_BPF_LOOP
+     bool timeout_active=true,timeout_removing=false;
++#endif
++#ifdef BF_IO_COALESCED
++    bf_uring_loop_control *control=nullptr;
+ #endif
+     IoRequest requests[BF_LLM_SLOTS]={};
+ };
+@@ -107,6 +111,11 @@ __device__ bool io_progress(IoState *s) {
+ #endif
+     auto *page=s->page;auto *conns=s->conns;unsigned capacity=s->capacity;
+     auto *buffer=s->buffer;auto host_buffer=s->host_buffer;auto *out=s->out;int listener=s->listener;
++#ifdef BF_IO_COALESCED
++    auto *control=s->control;
++#else
++    auto *control=&out->loop;
++#endif
+     auto &free=s->free;auto &active=s->active;auto &accepting=s->accepting;
+     auto &connections=s->connections;auto &seen=s->seen;auto &next_final=s->next_final;
+     auto &stopping=s->stopping;auto &cancelled=s->cancelled;auto &cancel_done=s->cancel_done;
+@@ -228,7 +237,7 @@ __device__ bool io_progress(IoState *s) {
+             if(gone) {
+                 if(r.seq!=next_final)continue;
+                 if(state!=BF_DONE) {
+-                    if(!stopping||!io_load(&out->loop.model_quiesced))continue;
++                    if(!stopping||!io_load(&control->model_quiesced))continue;
+                     __threadfence_system();io_store(&slot->state,BF_DONE);
+                 }
+                 io_uring_sqe e{};e.opcode=IORING_OP_NOP;e.user_data=(BF_IO_ABORT_TAG<<48)|r.seq;
+@@ -316,7 +325,7 @@ __device__ bool io_progress(IoState *s) {
+     out->dropped=io_load(ring.dropped);out->overflow=io_load(ring.overflow);
+     __threadfence_system();
+ #ifdef BF_URING_BPF_LOOP
+-    io_store(&out->loop.finished,1);
++    io_store(&control->finished,1);
+ #endif
+         return false;
+         }
+@@ -342,6 +351,9 @@ static void *io_device(void *p) {
+ struct UringNetwork {
+     void *sq,*rings,*buffer;IoStats *report;IoConn *conns;IoState *state;int ringfd;
+     size_t sq_bytes,ring_bytes,buffer_bytes;cudaStream_t stream;
++#ifdef BF_IO_COALESCED
++    IoStats *stats;
++#endif
+ #ifdef BF_URING_BPF_LOOP
+     bpf_object *loop_object;bpf_link *loop_link;
+ #endif
+@@ -476,6 +488,12 @@ static int uring_start(bf_page *page,bf_page *device,int listener,UringNetwork *
+     IoState initial{};
+     initial.ring=ring;initial.page=device;initial.conns=net->conns;initial.capacity=capacity;
+     initial.buffer=dbuffer;initial.host_buffer=(uint64_t)net->buffer;initial.out=dreport;initial.listener=listener;
++#ifdef BF_IO_COALESCED
++    // Only loop control is shared during service; bookkeeping stays GPU-local.
++    io_check(cudaMalloc(&net->stats,sizeof(IoStats)),"io stats allocation");
++    io_check(cudaMemcpy(net->stats,net->report,sizeof(IoStats),cudaMemcpyHostToDevice),"io stats upload");
++    initial.out=net->stats;initial.control=&dreport->loop;
++#endif
+     io_check(cudaMalloc(&net->state,sizeof(IoState)),"io state");
+     io_check(cudaMemcpy(net->state,&initial,sizeof(initial),cudaMemcpyHostToDevice),"io state upload");
+     io_initialize<<<1,1>>>(net->state);io_check(cudaGetLastError(),"io initialize");
+@@ -504,6 +522,12 @@ static void uring_quiesce(UringNetwork *net) {
+ }
+ static int uring_finish(UringNetwork *net) {
+     io_check(cudaStreamSynchronize(net->stream),"io finish");
++#ifdef BF_IO_COALESCED
++    // Preserve live host/BPF control flags; download only the finished report.
++    constexpr size_t offset=offsetof(IoStats,accepted);
++    io_check(cudaMemcpy((char*)net->report+offset,(char*)net->stats+offset,
++                        sizeof(IoStats)-offset,cudaMemcpyDeviceToHost),"io stats download");
++#endif
+     auto &r=*net->report;
+     printf("RESULT {\"accepted\":%u,\"closed\":%u,\"received\":%u,\"sends\":%u,\"bytes\":%u,"
+            "\"completed\":%u,\"aborted\":%u,\"max_connections\":%u,\"max_requests\":%u,\"pending\":%u,"
+@@ -523,6 +547,9 @@ static int uring_finish(UringNetwork *net) {
+ #endif
+     close(net->ringfd);io_check(cudaFree(net->conns),"io connections free");
+     io_check(cudaFree(net->state),"io state free");
++#ifdef BF_IO_COALESCED
++    io_check(cudaFree(net->stats),"io stats free");
++#endif
+     for(auto pair:{std::pair<void*,size_t>{net->sq,net->sq_bytes},{net->rings,net->ring_bytes},{net->buffer,net->buffer_bytes},{net->report,65536}}) {
+         io_check(cudaHostUnregister(pair.first),"io unregister");munmap(pair.first,pair.second);
+     }

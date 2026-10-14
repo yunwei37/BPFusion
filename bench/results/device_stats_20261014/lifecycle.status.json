@@ -1,0 +1,24 @@
+[
+  {
+    "command": [
+      "/tmp/bpfusion-device-stats-o8xxqd_q/runtime/bin/python",
+      "/tmp/bpfusion-device-stats-o8xxqd_q/lifecycle.py",
+      "loop",
+      "smol",
+      "vllm"
+    ],
+    "exit": 0,
+    "pass_checks": true
+  },
+  {
+    "command": [
+      "/tmp/bpfusion-device-stats-o8xxqd_q/runtime/bin/python",
+      "/tmp/bpfusion-device-stats-o8xxqd_q/lifecycle.py",
+      "loop",
+      "qwen",
+      "vllm"
+    ],
+    "exit": 0,
+    "pass_checks": true
+  }
+]

@@ -256,6 +256,16 @@ inconclusive, and single-request native latency losses remain. Model math and
 default/noncoalesced targets are unchanged. Global final-send backpressure
 and finite token-ID/model/kernel coverage remain experimental boundaries.
 
+The [GPU-local bookkeeping experiment](docs/findings/0054-gpu-local-io-bookkeeping.md)
+tests a separate source of long-output cost with the same model computation.
+Five paired blocks find mean gen64/c8 gains of 0.87% Smol and 0.58% Qwen
+versus current host bookkeeping, but both primary intervals cross zero.
+Smol remains below native; Qwen's native contrast is inconclusive. Protocol
+and split-control shutdown checks pass, with all adverse secondary results
+retained. Main keeps the existing host bookkeeping; the candidate allocation,
+control split and full results are archived rather than promoted as a proven
+optimization. This does not add a model/backend acceptance or new mode.
+
 ## Repository layout
 
 ```

@@ -504,3 +504,16 @@ per-peer reply chain remain ordered; an earlier backpressured final send may
 stall fresh admission on other peers. The finite comparison supports local
 latency recovery and fewer aggregate model rounds, not arbitrary-peer
 fairness, causal mediation or generic portability.
+
+## Bookkeeping-placement experiment boundary
+
+[Finding0054](findings/0054-gpu-local-io-bookkeeping.md) records a completed
+candidate that kept loop-control flags host/BPF-shared while placing regular
+I/O accounting in device memory and copying only the finished report suffix.
+Both models' predeclared long-output TPS contrasts against host bookkeeping
+are inconclusive, so selected main retains the existing mapped host report.
+The experimental split-control allocation is preserved in the archive,
+not introduced into current serving. Shared page/control ABI, model math,
+timer cadence, workers and current defaults remain as before this experiment.
+Its finite shutdown/protocol success does not establish arbitrary-backend
+or AMK acceptance, physical PCIe mediation or universal performance benefit.

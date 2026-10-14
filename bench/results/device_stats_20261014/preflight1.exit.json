@@ -1,0 +1,102 @@
+{
+  "exit": 0,
+  "commands": [
+    {
+      "command": [
+        "/tmp/bpfusion-device-stats-o8xxqd_q/runtime/bin/python",
+        "/tmp/bpfusion-device-stats-o8xxqd_q/short_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "0",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-device-stats-o8xxqd_q/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-device-stats-o8xxqd_q/preflight1_short_smol_b0.jsonl",
+        "--preflight"
+      ],
+      "model": "smol",
+      "backend": "vllm",
+      "block": 0,
+      "subset": "short",
+      "output": "preflight1_short_smol_b0.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-device-stats-o8xxqd_q/runtime/bin/python",
+        "/tmp/bpfusion-device-stats-o8xxqd_q/short_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "0",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-device-stats-o8xxqd_q/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+        "--output",
+        "/tmp/bpfusion-device-stats-o8xxqd_q/preflight1_short_qwen_b0.jsonl",
+        "--preflight"
+      ],
+      "model": "qwen",
+      "backend": "vllm",
+      "block": 0,
+      "subset": "short",
+      "output": "preflight1_short_qwen_b0.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-device-stats-o8xxqd_q/runtime/bin/python",
+        "/tmp/bpfusion-device-stats-o8xxqd_q/transfer_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "0",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-device-stats-o8xxqd_q/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-device-stats-o8xxqd_q/preflight1_transfer_smol_b0.jsonl",
+        "--preflight"
+      ],
+      "model": "smol",
+      "backend": "vllm",
+      "block": 0,
+      "subset": "transfer",
+      "output": "preflight1_transfer_smol_b0.jsonl"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-device-stats-o8xxqd_q/runtime/bin/python",
+        "/tmp/bpfusion-device-stats-o8xxqd_q/transfer_serving.py",
+        "--backend",
+        "vllm",
+        "--block",
+        "0",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-device-stats-o8xxqd_q/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+        "--output",
+        "/tmp/bpfusion-device-stats-o8xxqd_q/preflight1_transfer_qwen_b0.jsonl",
+        "--preflight"
+      ],
+      "model": "qwen",
+      "backend": "vllm",
+      "block": 0,
+      "subset": "transfer",
+      "output": "preflight1_transfer_qwen_b0.jsonl"
+    }
+  ],
+  "utc": "2026-10-14T17:13:55.345591+00:00"
+}
