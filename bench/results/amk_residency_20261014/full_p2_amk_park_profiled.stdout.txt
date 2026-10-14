@@ -1,0 +1,23 @@
+CUPTI_SETUP {"library": "/tmp/bpfusion-amk-residency-tkdf_2wx/runtime/lib/python3.12/site-packages/nvidia/cuda_cupti/lib/libcupti.so.12", "device_graph_status": 0, "driver_status": 0, "hardware_trace_status": 0}
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 7779.31it/s]
+ninja: no work to do.
+ninja: no work to do.
+ninja: no work to do.
+AMK_BANK 0 graphs 190 grid 170 sms 170
+AMK_BANK 1 graphs 190 grid 170 sms 170
+AMK_BANK 2 graphs 190 grid 170 sms 170
+AMK_BANK 3 graphs 190 grid 170 sms 170
+AMK_BANK 4 graphs 190 grid 170 sms 170
+AMK_BANK 5 graphs 190 grid 170 sms 170
+AMK_BANK 6 graphs 190 grid 170 sms 170
+AMK_BANK 7 graphs 190 grid 170 sms 170
+{"event": "amk_bootstrap", "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "precision": "FP16", "banks": 8, "graphs_per_bank": 190, "context": 128, "actual_sms": 170, "program_sms": 170, "knobs": {"cpasync": 0}, "protocol": "unchanged binary token HTTP", "compute": "upstream AMK persistent kernel; GPU graph prefill/decode"}
+USDT:2026-10-14 09:55:01 324212:324212 SyncActivityProfilerHandler.cpp:52] profiler_start
+network=userspace epoll; same resident GPU graph dispatch
+RESIDENCY_CONTROL grid=1 block=1 stream=nonblocking priority=default nanosleep=1000 stop=existing_page\nresident Qwen ready: 30 layers h=576 vocab=49152; device-tail graphs, dispatch=resident
+userspace completion wait=epoll_pwait2 timeout_ns=60000
+userspace TCP stopped: accepted=10 published=24 completed=24 rejected=0
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=1032 graph_error=0 banks=8 max_active=8
+USDT:2026-10-14 09:55:08 324212:324212 SyncActivityProfilerHandler.cpp:59] profiler_stop
+TRACE_EXPORTED /tmp/bpfusion-amk-residency-tkdf_2wx/full_p2_amk_park_profiled/trace.json.gz
+{"event": "amk_graph_errors", "errors": [0, 0, 0, 0, 0, 0, 0, 0]}

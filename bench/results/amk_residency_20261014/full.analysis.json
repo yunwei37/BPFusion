@@ -1,0 +1,766 @@
+{
+  "source": "eb92fffe67daf588f711979e60cfe851b5a3e353",
+  "executors": 30,
+  "measured_requests": 480,
+  "cases": [
+    {
+      "pair": 0,
+      "mode": "amk_uring_loop_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.3624062637144,
+          "ttft_ms": 18.3602585,
+          "completion_ms": 389.350319625
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.85320329197762,
+          "ttft_ms": 142.912922125,
+          "completion_ms": 3235.7047752500002
+        }
+      ]
+    },
+    {
+      "pair": 0,
+      "mode": "amk_uring_loop_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.011935627778,
+          "ttft_ms": 18.38305175,
+          "completion_ms": 390.1809285
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.13820157726494,
+          "ttft_ms": 136.16804175,
+          "completion_ms": 3251.4577935
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "io_network(IoRing, bf_page*, IoConn*, unsigned int, unsigned char*, unsigned long long, IoStats*, int)": 1,
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    },
+    {
+      "pair": 0,
+      "mode": "amk_userspace_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 165.1231583783508,
+          "ttft_ms": 18.245038875,
+          "completion_ms": 387.553843625
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 309.31537749189704,
+          "ttft_ms": 70.514042,
+          "completion_ms": 1651.741928375
+        }
+      ]
+    },
+    {
+      "pair": 0,
+      "mode": "amk_userspace_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.874036192876,
+          "ttft_ms": 18.269462125,
+          "completion_ms": 388.139282625
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 309.33540889659315,
+          "ttft_ms": 76.306034,
+          "completion_ms": 1651.8992605
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    },
+    {
+      "pair": 0,
+      "mode": "amk_park_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.2930132480755,
+          "ttft_ms": 18.359126125,
+          "completion_ms": 389.5131665
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.69611369132855,
+          "ttft_ms": 136.36893125,
+          "completion_ms": 3239.656620375
+        }
+      ]
+    },
+    {
+      "pair": 0,
+      "mode": "amk_park_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.13695842351373,
+          "ttft_ms": 18.3755415,
+          "completion_ms": 389.88336400000003
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.4350997762364,
+          "ttft_ms": 123.712594625,
+          "completion_ms": 3246.295809
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "resident_control(bf_page*)": 1,
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    },
+    {
+      "pair": 1,
+      "mode": "amk_uring_loop_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.30249748287355,
+          "ttft_ms": 142.58209825,
+          "completion_ms": 3246.819586
+        },
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.04347769244276,
+          "ttft_ms": 18.374216375,
+          "completion_ms": 390.10469725
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "io_network(IoRing, bf_page*, IoConn*, unsigned int, unsigned char*, unsigned long long, IoStats*, int)": 1,
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    },
+    {
+      "pair": 1,
+      "mode": "amk_uring_loop_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.88137653635542,
+          "ttft_ms": 143.2272405,
+          "completion_ms": 3234.844427875
+        },
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.3579460076546,
+          "ttft_ms": 18.299370875,
+          "completion_ms": 389.358594625
+        }
+      ]
+    },
+    {
+      "pair": 1,
+      "mode": "amk_park_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.58185153157723,
+          "ttft_ms": 143.367784625,
+          "completion_ms": 3241.3890345
+        },
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.0571330542348,
+          "ttft_ms": 18.376222124999998,
+          "completion_ms": 390.071695125
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "resident_control(bf_page*)": 1,
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    },
+    {
+      "pair": 1,
+      "mode": "amk_park_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.78444083049524,
+          "ttft_ms": 135.037957375,
+          "completion_ms": 3238.275758375
+        },
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.28047770110044,
+          "ttft_ms": 18.358890375,
+          "completion_ms": 389.53923525
+        }
+      ]
+    },
+    {
+      "pair": 1,
+      "mode": "amk_userspace_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 8,
+          "tokens_per_s": 311.9123083985285,
+          "ttft_ms": 78.995201125,
+          "completion_ms": 1641.2301097499999
+        },
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.8131835064667,
+          "ttft_ms": 18.3343915,
+          "completion_ms": 388.281621625
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 585
+        }
+      }
+    },
+    {
+      "pair": 1,
+      "mode": "amk_userspace_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 8,
+          "tokens_per_s": 308.91234306792165,
+          "ttft_ms": 79.99027137499999,
+          "completion_ms": 1652.93274225
+        },
+        {
+          "concurrency": 1,
+          "tokens_per_s": 165.03421818029256,
+          "ttft_ms": 18.293992125,
+          "completion_ms": 387.760830125
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "mode": "amk_userspace_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.98774827888462,
+          "ttft_ms": 18.268411375,
+          "completion_ms": 387.869689
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 308.96076318753944,
+          "ttft_ms": 76.264522625,
+          "completion_ms": 1653.0353275
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "mode": "amk_userspace_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.91803829087692,
+          "ttft_ms": 18.2540125,
+          "completion_ms": 388.033243875
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 309.18470043447945,
+          "ttft_ms": 63.61289875,
+          "completion_ms": 1652.37680875
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    },
+    {
+      "pair": 2,
+      "mode": "amk_uring_loop_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.33199221053005,
+          "ttft_ms": 18.3357795,
+          "completion_ms": 389.420006625
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.73930288745473,
+          "ttft_ms": 142.77475775,
+          "completion_ms": 3237.864720375
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "mode": "amk_uring_loop_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.12733328437787,
+          "ttft_ms": 18.393365375,
+          "completion_ms": 389.90636862499997
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.54269909774453,
+          "ttft_ms": 132.010213375,
+          "completion_ms": 3243.051138625
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "io_network(IoRing, bf_page*, IoConn*, unsigned int, unsigned char*, unsigned long long, IoStats*, int)": 1,
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    },
+    {
+      "pair": 2,
+      "mode": "amk_park_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.32773143777118,
+          "ttft_ms": 18.3269885,
+          "completion_ms": 389.428825375
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.79129679641915,
+          "ttft_ms": 143.003484375,
+          "completion_ms": 3236.9944191249997
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "mode": "amk_park_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.08614602145354,
+          "ttft_ms": 18.3747165,
+          "completion_ms": 390.003027125
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.53538058266915,
+          "ttft_ms": 144.660127,
+          "completion_ms": 3248.86627175
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "resident_control(bf_page*)": 1,
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    },
+    {
+      "pair": 3,
+      "mode": "amk_userspace_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 8,
+          "tokens_per_s": 310.3177557268607,
+          "ttft_ms": 74.749113875,
+          "completion_ms": 1645.491989625
+        },
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.83435302809886,
+          "ttft_ms": 18.234116375,
+          "completion_ms": 388.227858
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    },
+    {
+      "pair": 3,
+      "mode": "amk_userspace_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 8,
+          "tokens_per_s": 310.8418092083185,
+          "ttft_ms": 66.5900445,
+          "completion_ms": 1645.5622887499999
+        },
+        {
+          "concurrency": 1,
+          "tokens_per_s": 165.09758683287103,
+          "ttft_ms": 18.238847875,
+          "completion_ms": 387.61339775
+        }
+      ]
+    },
+    {
+      "pair": 3,
+      "mode": "amk_park_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.60804583015903,
+          "ttft_ms": 129.77993025,
+          "completion_ms": 3241.71967775
+        },
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.14140721961294,
+          "ttft_ms": 18.40641625,
+          "completion_ms": 389.8703645
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "resident_control(bf_page*)": 1,
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    },
+    {
+      "pair": 3,
+      "mode": "amk_park_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.7212007672721,
+          "ttft_ms": 132.366698375,
+          "completion_ms": 3241.337442
+        },
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.34275541153676,
+          "ttft_ms": 18.37421875,
+          "completion_ms": 389.394821125
+        }
+      ]
+    },
+    {
+      "pair": 3,
+      "mode": "amk_uring_loop_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.48660086159592,
+          "ttft_ms": 142.972955375,
+          "completion_ms": 3243.177839625
+        },
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.13751813399796,
+          "ttft_ms": 18.333737625,
+          "completion_ms": 389.88021887499997
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "io_network(IoRing, bf_page*, IoConn*, unsigned int, unsigned char*, unsigned long long, IoStats*, int)": 1,
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    },
+    {
+      "pair": 3,
+      "mode": "amk_uring_loop_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.7029905938242,
+          "ttft_ms": 142.63909025,
+          "completion_ms": 3238.6604595
+        },
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.29545486539604,
+          "ttft_ms": 18.356156875,
+          "completion_ms": 389.506543875
+        }
+      ]
+    },
+    {
+      "pair": 4,
+      "mode": "amk_park_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.34917493842886,
+          "ttft_ms": 18.321264375,
+          "completion_ms": 389.37938125
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.83366926267192,
+          "ttft_ms": 127.043491875,
+          "completion_ms": 3238.31859975
+        }
+      ]
+    },
+    {
+      "pair": 4,
+      "mode": "amk_park_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.13646349045112,
+          "ttft_ms": 18.423140375,
+          "completion_ms": 389.882532125
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.44586375039944,
+          "ttft_ms": 134.1899215,
+          "completion_ms": 3245.09853775
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "resident_control(bf_page*)": 1,
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    },
+    {
+      "pair": 4,
+      "mode": "amk_uring_loop_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.36091317085854,
+          "ttft_ms": 18.29378,
+          "completion_ms": 389.3529305
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.67257229778934,
+          "ttft_ms": 143.1845555,
+          "completion_ms": 3239.49375325
+        }
+      ]
+    },
+    {
+      "pair": 4,
+      "mode": "amk_uring_loop_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.03906253097009,
+          "ttft_ms": 18.378182,
+          "completion_ms": 390.112966125
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 157.49107106987168,
+          "ttft_ms": 130.723740625,
+          "completion_ms": 3243.6890355
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "io_network(IoRing, bf_page*, IoConn*, unsigned int, unsigned char*, unsigned long long, IoStats*, int)": 1,
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    },
+    {
+      "pair": 4,
+      "mode": "amk_userspace_ordinary",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 165.1755314372066,
+          "ttft_ms": 18.200964,
+          "completion_ms": 387.431090375
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 307.67349245978414,
+          "ttft_ms": 90.45681975000001,
+          "completion_ms": 1659.551919875
+        }
+      ]
+    },
+    {
+      "pair": 4,
+      "mode": "amk_userspace_profiled",
+      "requests": 24,
+      "cells": [
+        {
+          "concurrency": 1,
+          "tokens_per_s": 164.96411643027503,
+          "ttft_ms": 18.251143,
+          "completion_ms": 387.922447625
+        },
+        {
+          "concurrency": 8,
+          "tokens_per_s": 308.7578723020787,
+          "ttft_ms": 78.88113799999999,
+          "completion_ms": 1653.746831375
+        }
+      ],
+      "timeline_status": "unsupported source-to-instantiated node identity; no per-bank/position/cell overlap attribution",
+      "catalogue_id_matches": 0,
+      "trace": {
+        "model_calls": 1128,
+        "catalogued_model_nodes": 17648,
+        "helper_kernel_counts": {
+          "prepare(CUgraphDeviceUpdatableNode_st*, long long const*, unsigned int, int*)": 1128,
+          "selected(int const*, long long*)": 1032,
+          "dispatch(bf_page*, Step*, long long**, unsigned int, unsigned int, Control*, bool)": 586
+        }
+      }
+    }
+  ],
+  "primary_park_minus_native_c8_tps": {
+    "blocks": [
+      -151.6192638005685,
+      -151.1279022374264,
+      -151.1694663911203,
+      -153.12060844104641,
+      -149.83982319711222
+    ],
+    "mean": -151.37541281345477,
+    "t95": [
+      -152.8402187786577,
+      -149.91060684825186
+    ]
+  }
+}
