@@ -201,8 +201,10 @@ dispatcher. Both userspace TCP and the module-free eBPF/io_uring loop pass
 finite c1/c8 streaming, full selected protocol and reset/idle/stop checks
 against pre-observation whole-output pools in a common runtime. A stronger
 eager-HF exact check fails on one long output and is independently reproduced
-by upstream AMK. The full matched performance comparison remains open; no
-speedup is established.
+by upstream AMK. The complete five-block comparison finds18.360ms TTFT and158 tokens/s
+for AMK loop, versus18.246ms/303 tokens/s for same-AMK native TCP and
+1.158ms/5353 tokens/s for current vLLM loop on the tested Smol workload.
+The faster measured backend remains vLLM; AMK is experimental.
 
 ## Repository layout
 

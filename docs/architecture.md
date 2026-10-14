@@ -435,7 +435,8 @@ qwen_graph.cu dispatcher and either existing TCP transport. Model arithmetic,
 per-token publication, final-CQ ownership and queue ABI stay in their existing
 components. The current finite checks qualify SmolLM2-135M FP16 at c1/c8;
 the selected protocol and idle/reset/stop checks pass frozen whole-output
-pools in a common runtime. Stronger eager-HF exact equality, arbitrary models
-and performance remain unqualified.
+pools in a common runtime. Stronger eager-HF exact equality and arbitrary models remain unqualified.
+The complete selected comparison is negative for AMK against both its native
+TCP control and current vLLM; broader performance acceptance remains open.
 See [finding0048](findings/0048-reused-amk-dispatch.md) for actual commands,
 raw results, dependency compatibility and the ongoing experiment boundary.

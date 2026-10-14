@@ -4,10 +4,12 @@ The optional AMK adapter now runs the pinned upstream SmolLM2-135M FP16
 persistent kernel under the existing GPU request dispatcher. Model arithmetic
 and upstream VM sources are unchanged. Both efficient userspace TCP and the
 module-free eBPF/io_uring loop pass finite real-network checks with the same
-backend. This is implementation and correctness progress; the admitted
-performance matrix remains incomplete.
+backend. The complete admitted performance matrix is negative for this AMK
+integration against both its native TCP control and current optimized vLLM.
+The stronger eager-HF exact diagnostic remains failed; the current result
+and restoration are recorded in the final section below.
 
-## Boundary and actual checks
+## Initial integration boundary and actual checks
 
 [The plan and review](../../bench/results/megakernel_reuse_20261014/plan.md)
 retain the same-backend transport control and current optimized vLLM comparison.
@@ -62,15 +64,16 @@ The kernel loop uses the existing stream-uring-attach lifecycle; the native
 control requires no TX module or attached maps. Exact environment overrides,
 drivers, raw replies, executor logs and terminal receipts are archived under
 [megakernel_reuse_20261014](../../bench/results/megakernel_reuse_20261014/).
-Temporary dependency/build directories remain owned while this experiment
-continues; they are not installed as a persistent service.
+During collection, temporary dependencies/builds remained owned by this
+experiment. Final restoration below removes them; no persistent service
+is installed.
 
-The current AMK checks use Torch2.14.1+cu130/Transformers5.19.0. The qualified
-vLLM0.31 runtime uses Torch2.13.0+cu129/Transformers5.17. A common runtime or an
-explicitly justified comparison is needed before the full three-path timing
-matrix. Current setup timings are not a performance result. Strict fragmented,
-rejection, pipeline, reset/idle/stop coverage and full repeated measurements
-remain open. The first strict-test launcher failure (missing executable bit)
+The initial AMK checks use Torch2.14.1+cu130/Transformers5.19.0. The qualified
+vLLM0.31 runtime uses Torch2.13.0+cu129/Transformers5.17. At initial publication, a common runtime and full three-path
+comparison were still needed. Subsequent common-runtime qualification and
+full results are recorded below. Setup timings are not performance results.
+Fragmentation/rejection/pipeline/reset/idle/stop coverage and repeated
+measurements were incomplete at that initial stage. The first strict-test launcher failure (missing executable bit)
 is retained; executable script mode has been corrected without changing its
 protocol checks or independent eager-HF oracle.
 
@@ -149,3 +152,80 @@ the planned15-executor/3840-measured-request comparison.
 Actual host brackets retain the same11 historical profiler warnings with
 no new selected Xid/OOM/storage/BUG at observed endpoints. Journal absence
 and endpoint snapshots do not prove continuous hardware isolation.
+
+## Complete matched serving result
+
+Frozen source1b84139575541d989588aa5b99ac078a0f3f397e completes all15
+executors/60 cells:3840 measured requests/124800 tokens plus120 excluded
+checkedgen1 warmups. All outputs meet the original independent whole-output
+pools; all actual children exit0, graph/update errors remain0 and serving
+resources drain. The stronger eager-HF exact diagnostic remains failed.
+
+The [fresh result review](../../bench/results/megakernel_reuse_20261014/result-review.md)
+independently checks source/runtime/frozen oracle,3960 complete replies and
+arrival metrics,60 CPU brackets, all aggregate metrics and52 paired contrasts.
+It judges the run valid within this fixed-pool scope, the tested performance
+hypothesis contradicted, value supporting, impact a mechanism/workload
+boundary. It does not validate generic exact numerical semantics or the whole
+project's performance/SLO objective.
+
+SmolLM2-135M FP16, localhost, five process blocks, pre-opened connections:
+
+| Path | gen1/c1 TTFT ms | gen64/c8 tokens/s | gen64/c8 completion ms | gen64/c8 TPOT ms |
+|---|---:|---:|---:|---:|
+| AMK eBPF/io_uring loop |18.359762|158.094137|3227.807292|49.509141|
+| Same AMK efficient native TCP |18.245999|303.376970|1681.171440|25.667830|
+| Current optimized vLLM loop |1.157729|5352.502809|95.613233|1.488971|
+
+Nominal paired95% t intervals across five process differences (df4), losses
+for AMK loop:
+
+| Primary contrast | Mean loss | Nominal95% interval |
+|---|---:|---|
+| TTFT versus same-AMK native, ms |0.113762|[0.082157,0.145368]|
+| Throughput versus same-AMK native, tokens/s |145.282833|[144.512548,146.053118]|
+| TTFT versus current vLLM loop, ms |17.202033|[17.129829,17.274236]|
+| Throughput versus current vLLM loop, tokens/s |5194.408672|[4919.608412,5469.208932]|
+
+All four primary candidate losses have the same sign in every block. No
+warmups/failures enter performance samples; no favorable rerun or exclusion
+follows. The full [analysis](../../bench/results/megakernel_reuse_20261014/full.analysis.stdout)
+retains other cells, per-process differences, p50/p99, completion/TPOT and
+known-worker CPU. Native AMK also has lower measured known-worker CPU;
+these brackets do not attribute total TCP/kernel/softirq CPU or energy.
+
+The same-AMK control shares the model cubin/program and private-bank policy
+but differs in compiled transport glue, shared queue mapping, GPU network
+work and CPU/kernel progress. Its loss belongs to that implemented serving
+alternative collectively, not eBPF instruction cost or TCP alone. The
+vLLM contrast additionally changes computation/batching/memory and runtime
+linkage; it is not a pure fusion ablation. K1 model graphs preserve safe
+per-token publication but do not realize upstream whole-request K-token
+single-launch generation. All-request client outputs are present; finite
+reply diagnostics clip after128/executor and record overflow136, with no
+SQ/CQ overflow. They do not provide complete per-request kernel-event traces.
+
+Observed host brackets retain the same11 earlier NVRM warnings and no newly
+selected Xid/OOM/storage/BUG. The second mid-run GPU process maps to the
+original Workspace and actual executor; the earlier sampled process is gone
+before ownership can be checked. No continuous isolation or harmless-warning
+claim follows. Resource inspection and the c8 scaling contrast make GPU
+co-residency/scheduling an open competing explanation, not a proved cause.
+
+Keep vLLM as the measured faster backend and AMK as an optional experimental
+finite-set integration. Close this unchanged matrix. Any next experiment
+should discriminate the driver/network concurrency loss without editing model
+arithmetic, and requires a distinct admitted hypothesis rather than another
+timer sweep or favorable repeat. Full generic text/models/SLO/total CPU and
+reliable performance acceptance remain open under the retained objective.
+
+[Final restoration](../../bench/results/megakernel_reuse_20261014/final_restoration.json)
+removes the owned TEMP and10 named builds, preserves baseTorch2.14.1+cu130/
+Transformers5.19.0, original default library inode/size, Coder/PVC and unrelated
+WIP, and leaves no own module/pins/GPU app at the observed endpoint. Replay
+from the archive after TEMP removal exits0 with byte-identical stdout:
+
+    python3 bench/results/megakernel_reuse_20261014/matched_analysis.py bench/results/megakernel_reuse_20261014/full.jsonl
+
+Historical setup commands recreate the recorded temporary runtime/upstream
+source; cleanup does not leave an installed AMK service.

@@ -697,10 +697,36 @@ all exact complete frozenHFsequences and identical between modes,normal exit0.
 The persistent mode's register/coalesced cpasync0variant is explicit in both
 conditions. No numerical reference expansion, arithmetic patch or timing claim.
 
-This enables actual device-graph/backend integration; it is not completed
-resident network service, generic model support or a paper contribution by
-itself. The installedCUDA13headers expose device-updatable kernel arguments,
-but actual graph/dispatcher co-residency,input/prefill/output lifetimes and
-safe streaming still need implementation and validation. Existing qualified
-backends/default library/WIP remain. Owned TEMP is retained for continuing
-integration; no benchmark/service process is left running. Full goal active.
+Actual integration and the complete [finding0048](findings/0048-reused-amk-dispatch.md)
+now add GPU request-time prefill/decode, safe streaming and selected protocol/
+idle/reset/stop evidence under a common runtime. Both transports pass622
+protocol requests/22224 tokens and their32-action lifecycle. The stronger
+eager-HF diagnostic remains failed; original170-SM upstream per-step and
+persistent controls reproduce that same divergent sequence. Fixed-pool
+qualification does not repair exact equivalence or establish arbitrary models.
+
+The frozen five-block three-path matrix completes15 executors/60 cells,
+3840 measured requests/124800 tokens plus120 excluded checked warmups.
+AMK loop/native/vLLM loop TTFTgen1/c1 are18.359762/18.245999/1.157729ms;
+TPSgen64/c8 are158.094137/303.376970/5352.502809. Allfour primary candidate
+contrasts lose in every block, with nominal pairedt95df4 excluding0. Other
+latency/throughput/CPU tradeoffs are retained in the full analysis. Same-AMK
+model computation is held fixed; complete serving GPU/CPU work differs.
+Cross-backend compute/batching/memory/runtime linkage differs and is not a
+pure fusion or eBPF comparison. Reply diagnostics truncate beyond128 events,
+while every complete client output/arrival remains. No SLO/total CPU claim.
+
+[Independent result review](../bench/results/megakernel_reuse_20261014/result-review.md)
+judges the finite shared-host run valid, hypothesis contradicted locally,
+value supporting and paper impact a mechanism/workload boundary. Full source,
+frozen reference, arrival metrics, CPU brackets and52 paired contrasts are
+independently checked. Four actual host brackets retain11 historical warnings
+and no new selected fault; continuous isolation and the c8 concurrency cause
+remain unproved. Keep the faster measured vLLM backend, close this unchanged
+matrix and consider a distinct driver/network concurrency discriminator.
+
+[Restoration](../bench/results/megakernel_reuse_20261014/final_restoration.json)
+removes owned TEMP/10 builds and preserves base/default/Coder/PVC/WIP. Archive
+replay after removal is byte-identical. No installed AMK service is implied.
+Full generic text/backend/SLO/performance acceptance remains open; full goal
+stays active.

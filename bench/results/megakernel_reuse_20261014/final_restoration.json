@@ -1,0 +1,79 @@
+{
+  "utc": "2026-10-14T09:12:51.421506+00:00",
+  "removed_temp": "/tmp/bpfusion-megakernel-reuse-oxfus39y",
+  "temp_absent": true,
+  "removed_builds": [
+    {
+      "path": "/workspaces/repository/build/amk_graph_builder.so",
+      "symlink": false,
+      "size": 1003880
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_uring_loop.so",
+      "symlink": false,
+      "size": 1120520
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_user_network_wait.so",
+      "symlink": false,
+      "size": 1048312
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_uring_loop",
+      "symlink": true,
+      "size": 44
+    },
+    {
+      "path": "/workspaces/repository/build/amk_graph_user_network_wait",
+      "symlink": true,
+      "size": 44
+    },
+    {
+      "path": "/workspaces/repository/build/uring_loop.bpf.o",
+      "symlink": false,
+      "size": 10680
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop.so",
+      "symlink": false,
+      "size": 197248
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop.so.o",
+      "symlink": false,
+      "size": 82288
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop.so.dlink.o",
+      "symlink": false,
+      "size": 108088
+    },
+    {
+      "path": "/workspaces/repository/build/vllm_graph_uring_loop",
+      "symlink": true,
+      "size": 45
+    }
+  ],
+  "base": "2.14.1+cu130 5.19.0",
+  "default_library": {
+    "size": 1032248,
+    "inode": 262875
+  },
+  "coder_pids": [
+    1,
+    10909
+  ],
+  "unrelated_wip_preserved": true,
+  "process_snapshot": "    PID COMMAND\n      1 ./coder agent\n  10909 ./coder agent --no-reap\n 317188 python3 -\n 317220 ps -eo pid,args\n",
+  "pins": [],
+  "module_absent": true,
+  "post_removal_archive_replay": {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/megakernel_reuse_20261014/matched_analysis.py",
+      "/workspaces/repository/bench/results/megakernel_reuse_20261014/full.jsonl"
+    ],
+    "exit": 0,
+    "same_stdout": true
+  }
+}
