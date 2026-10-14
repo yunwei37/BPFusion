@@ -1,0 +1,112 @@
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 8162.52it/s]
+[1/5] /usr/local/cuda/bin/nvcc -MD -MF sync.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120_cpasync0 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cu -o sync.cuda.o 
+/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[2/5] /usr/local/cuda/bin/nvcc -MD -MF pages.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120_cpasync0 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/pages.cu -o pages.cuda.o 
+[3/5] /usr/local/cuda/bin/nvcc -MD -MF scheduler.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120_cpasync0 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/scheduler.cu -o scheduler.cuda.o 
+/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[4/5] c++ -MMD -MF vm_ext.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120_cpasync0 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -fPIC -std=c++20 -c /tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/vm_ext.cpp -o vm_ext.o 
+[5/5] c++ scheduler.cuda.o sync.cuda.o pages.cuda.o vm_ext.o -shared -L/tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/local/cuda/lib64 -lcudart -o amk_vm_ext_sm120_cpasync0.so
+[1/5] /usr/local/cuda/bin/nvcc -MD -MF sync.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -DAMK_GEMV_CPASYNC=1 -c /tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cu -o sync.cuda.o 
+/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[2/5] /usr/local/cuda/bin/nvcc -MD -MF pages.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -DAMK_GEMV_CPASYNC=1 -c /tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/pages.cu -o pages.cuda.o 
+[3/5] /usr/local/cuda/bin/nvcc -MD -MF scheduler.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -DAMK_GEMV_CPASYNC=1 -c /tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/scheduler.cu -o scheduler.cuda.o 
+/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/ops.cuh(1816): warning #177-D: variable "pat" was declared but never referenced
+      const int pat = (inst.params.flags >> 16) & 0xFFFF;
+                ^
+
+[4/5] c++ -MMD -MF vm_ext.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -fPIC -std=c++20 -c /tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/vm_ext.cpp -o vm_ext.o 
+[5/5] c++ scheduler.cuda.o sync.cuda.o pages.cuda.o vm_ext.o -shared -L/tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/local/cuda/lib64 -lcudart -o amk_vm_ext_sm120.so
+[1/5] /usr/local/cuda/bin/nvcc -MD -MF sync.cuda.o.d -DTORCH_EXTENSION_NAME=amk_persist_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cu -o sync.cuda.o 
+/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[2/5] /usr/local/cuda/bin/nvcc -MD -MF pages.cuda.o.d -DTORCH_EXTENSION_NAME=amk_persist_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/pages.cu -o pages.cuda.o 
+[3/5] /usr/local/cuda/bin/nvcc -MD -MF scheduler_persist.cuda.o.d -DTORCH_EXTENSION_NAME=amk_persist_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/scheduler_persist.cu -o scheduler_persist.cuda.o 
+/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[4/5] c++ -MMD -MF vm_ext_persist.o.d -DTORCH_EXTENSION_NAME=amk_persist_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include -isystem /tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -fPIC -std=c++20 -c /tmp/bpfusion-queue-batch-2su5dvmy/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/vm_ext_persist.cpp -o vm_ext_persist.o 
+[5/5] c++ scheduler_persist.cuda.o vm_ext_persist.o sync.cuda.o pages.cuda.o -shared -L/tmp/bpfusion-queue-batch-2su5dvmy/runtime/lib/python3.12/site-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/local/cuda/lib64 -lcudart -o amk_persist_ext_sm120.so
+AMK_BANK 0 graphs 190 grid 170 sms 170
+AMK_BANK 1 graphs 190 grid 170 sms 170
+AMK_BANK 2 graphs 190 grid 170 sms 170
+AMK_BANK 3 graphs 190 grid 170 sms 170
+AMK_BANK 4 graphs 190 grid 170 sms 170
+AMK_BANK 5 graphs 190 grid 170 sms 170
+AMK_BANK 6 graphs 190 grid 170 sms 170
+AMK_BANK 7 graphs 190 grid 170 sms 170
+{"event": "amk_bootstrap", "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "precision": "FP16", "banks": 8, "graphs_per_bank": 190, "context": 128, "actual_sms": 170, "program_sms": 170, "knobs": {"cpasync": 0}, "protocol": "unchanged binary token HTTP", "compute": "upstream AMK persistent kernel; GPU graph prefill/decode"}
+network=coalesced GPU dispatcher; shutdown-only network worker
+NET_READY pid=348596 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384
+resident Qwen ready: 30 layers h=576 vocab=49152; device-tail graphs, dispatch=resident
+RESULT {"accepted":19,"closed":19,"received":40,"sends":1048,"bytes":7344,"completed":40,"aborted":0,"max_connections":8,"max_requests":8,"pending":0,"error":0,"head":40,"reserved":0,"dropped":0,"overflow":0,"sqhead":1157,"sqtail":1157,"cqhead":87206,"cqtail":87206,"trace_count":40,"trace_overflow":0}
+REPLY {"seq":0,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737132114070}
+REPLY {"seq":1,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737151765833}
+REPLY {"seq":2,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737182520778}
+REPLY {"seq":3,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737201331922}
+REPLY {"seq":4,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737208933204}
+REPLY {"seq":5,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737227741398}
+REPLY {"seq":6,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737258343746}
+REPLY {"seq":7,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737277186292}
+REPLY {"seq":8,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737285424203}
+REPLY {"seq":9,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737304228582}
+REPLY {"seq":10,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737334841692}
+REPLY {"seq":11,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737353618038}
+REPLY {"seq":12,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737361066209}
+REPLY {"seq":13,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737379824905}
+REPLY {"seq":14,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737410489289}
+REPLY {"seq":15,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410737429195804}
+REPLY {"seq":16,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410737438147899}
+REPLY {"seq":17,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410737840666479}
+REPLY {"seq":18,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410738268301516}
+REPLY {"seq":19,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410738670389320}
+REPLY {"seq":20,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410739048351959}
+REPLY {"seq":21,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410739450796150}
+REPLY {"seq":22,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410739878268013}
+REPLY {"seq":23,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410740280217873}
+REPLY {"seq":24,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410740661681756}
+REPLY {"seq":25,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410740661712953}
+REPLY {"seq":26,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410740661735698}
+REPLY {"seq":27,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410740661800731}
+REPLY {"seq":28,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410740661852979}
+REPLY {"seq":29,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410740662193645}
+REPLY {"seq":30,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410740661825041}
+REPLY {"seq":31,"gen":1,"sends":1,"early":0,"bytes":82,"aborted":0,"client_ns":410740662321506}
+REPLY {"seq":32,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410740755920745}
+REPLY {"seq":33,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410740755905089}
+REPLY {"seq":34,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410740755946925}
+REPLY {"seq":35,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410740755993174}
+REPLY {"seq":36,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410740756079980}
+REPLY {"seq":37,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410740756100645}
+REPLY {"seq":38,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410740756168380}
+REPLY {"seq":39,"gen":64,"sends":64,"early":63,"bytes":336,"aborted":0,"client_ns":410740756245657}
+CLEANUP ring_connections_buffers_released
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=1048 graph_error=0 banks=8 max_active=8
+{"event": "amk_graph_errors", "errors": [0, 0, 0, 0, 0, 0, 0, 0]}

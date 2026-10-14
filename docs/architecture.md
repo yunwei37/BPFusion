@@ -453,3 +453,16 @@ and pass bounded legacy compatibility. The original captured loop remains the
 performance component control. [Finding0050](findings/0050-coalesced-gpu-network.md)
 reports AMK partial recovery, remaining native gap/latency cost and vLLM
 throughput regressions. Defaults remain unchanged.
+
+## Queue publication in coalesced builds
+
+Current BF_IO_COALESCED rounds acquire a finite CQ tail snapshot, consume that
+batch and release-publish its head after reads. SQ reservations use a
+conservative round-local head/tail snapshot; buffer/SQE writes are system
+ordered before one release tail publication, including the early cancel-return
+path. Ring-full work can defer to the next round. Timer, FIFO/final ownership,
+model quiescence, queue ABI and model arithmetic remain unchanged. Other builds
+retain existing per-entry publication. The
+[experiment](../bench/results/queue_batch_20261014/plan.md) qualifies the selected
+protocol/lifecycle; full performance collection is pending. Finding0050's
+numbers describe the earlier coalescing implementation.

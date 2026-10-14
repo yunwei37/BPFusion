@@ -794,3 +794,20 @@ retain the full evidence and owned-resource cleanup. Keep defaults and faster
 vLLM paths; coalescing is an experimental AMK recovery with measured costs,
 not a universal speedup. Full generic text/backend/SLO/performance goal remains
 active; close this unchanged experiment.
+
+## Coalesced queue-publication batching in progress
+
+The [plan and review](../bench/results/queue_batch_20261014/plan.md) admit a new
+source-backed driver intervention after0050: reduce repeated host-mapped
+cursor access/publication per network round without changing model arithmetic.
+Current main keeps default/noncoalesced policy. Old07ba7e0 coalesced sources are
+captured and reconstructed with equal normalized GPU SASS.
+
+Allnine preflight paths/36 cells complete288 measured requests9360 tokens plus
+72 checked excluded warmups. Three selected protocol runs each pass622 requests,
+22224 tokens/259 rejects plus5000 empty connections. vLLM actual batch/KV
+history replay and unchanged whole-output pools pass. Allthree32-action
+lifecycle checks pass. The stronger AMK eager-HF failure remains failed.
+Full45-executor/180-cell paired latency/throughput comparison is pending;
+qualification is dependency evidence, not a performance result. Full generic
+serving/performance goal remains active.

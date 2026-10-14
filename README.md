@@ -223,6 +223,15 @@ c8 single-token TTFT increases from2.04/2.64 to6.75/8.25ms.
 See [finding0050](docs/findings/0050-coalesced-gpu-network.md). Model arithmetic
 is unchanged; AMK numerical limits and existing defaults remain explicit.
 
+The measurements above precede the current experimental queue-publication
+batching change. Existing coalesced targets now snapshot ring cursors and
+publish prepared SQEs/consumed CQEs once per progression round. Ordinary
+noncoalesced targets retain their policy. The
+[queue-batching plan](bench/results/queue_batch_20261014/plan.md) passes allnine
+real preflight paths, selected protocol qualification and three32-action
+lifecycle checks. The full matched performance comparison is pending;
+no speedup or latency recovery is established by those checks.
+
 ## Repository layout
 
 ```

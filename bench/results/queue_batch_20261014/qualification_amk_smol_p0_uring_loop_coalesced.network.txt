@@ -1,0 +1,765 @@
+351227 write(1, "326 libs found in cache `/etc/ld"..., 4096) = 4096
+351227 write(1, "5 (libc6,x86-64) => /lib/x86_64-"..., 4096) = 4096
+351227 write(1, "-linux-gnu/libnvidia-gpucomp.so."..., 4096) = 4096
+351227 write(1, "ts/x86_64-linux/lib/libnppicc.so"..., 4096) = 4096
+351227 write(1, " => /lib/x86_64-linux-gnu/libgpg"..., 4096) = 4096
+351227 write(1, "ebugger.so.1 (libc6,x86-64) => /"..., 4096) = 4096
+351227 write(1, "lib/x86_64-linux-gnu/ld-linux-x8"..., 130) = 130
+351227 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351227, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351199 write(3, "blat", 4)              = 4
+351199 write(8, "cuda00001400006", 15)  = 15
+351199 write(3, "\1\0\0\0\0\0\0\0", 8)  = 8
+351199 socket(AF_UNIX, SOCK_SEQPACKET|SOCK_CLOEXEC, 0) = 8
+351199 setsockopt(8, SOL_SOCKET, SO_PASSCRED, [1], 4) = 0
+351199 connect(8, {sa_family=AF_UNIX, sun_path="/tmp/nvidia-mps/control"}, 26) = -1 ENOENT (No such file or directory)
+351199 socket(AF_UNIX, SOCK_SEQPACKET|SOCK_CLOEXEC, 0) = 15
+351199 bind(15, {sa_family=AF_UNIX, sun_path=@"cuda-uvmfd-4026534627-351199\0"}, 32) = 0
+351199 listen(15, 128)                  = 0
+351199 write(3, "\1\0\0\0\0\0\0\0", 8)  = 8
+351199 write(16, "\1\0\0\0\0\0\0\0\200\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 32) = 32
+351199 write(2, "\rLoading weights:   0%|         "..., 57) = 57
+351199 write(2, "\rLoading weights:  33%|\342\226\210\342\226\210\342\226\210"..., 75) = 75
+351199 write(2, "\rLoading weights:  72%|\342\226\210\342\226\210\342\226\210"..., 84) = 84
+351199 write(2, "", 0)                  = 0
+351199 write(2, "\rLoading weights: 100%|\342\226\210\342\226\210\342\226\210"..., 89) = 89
+351199 write(2, "\n", 1)                = 1
+351232 +++ exited with 0 +++
+351315 +++ exited with 0 +++
+351294 +++ exited with 0 +++
+351311 +++ exited with 0 +++
+351279 +++ exited with 0 +++
+351297 +++ exited with 0 +++
+351272 +++ exited with 0 +++
+351266 +++ exited with 0 +++
+351256 +++ exited with 0 +++
+351260 +++ exited with 0 +++
+351305 +++ exited with 0 +++
+351268 +++ exited with 0 +++
+351254 +++ exited with 0 +++
+351252 +++ exited with 0 +++
+351250 +++ exited with 0 +++
+351326 +++ exited with 0 +++
+351231 +++ exited with 0 +++
+351248 +++ exited with 0 +++
+351247 +++ exited with 0 +++
+351246 +++ exited with 0 +++
+351245 +++ exited with 0 +++
+351244 +++ exited with 0 +++
+351243 +++ exited with 0 +++
+351242 +++ exited with 0 +++
+351240 +++ exited with 0 +++
+351241 +++ exited with 0 +++
+351238 +++ exited with 0 +++
+351239 +++ exited with 0 +++
+351237 +++ exited with 0 +++
+351236 +++ exited with 0 +++
+351235 +++ exited with 0 +++
+351233 +++ exited with 0 +++
+351230 +++ exited with 0 +++
+351313 +++ exited with 0 +++
+351308 +++ exited with 0 +++
+351303 +++ exited with 0 +++
+351291 +++ exited with 0 +++
+351288 +++ exited with 0 +++
+351282 +++ exited with 0 +++
+351274 +++ exited with 0 +++
+351262 +++ exited with 0 +++
+351264 +++ exited with 0 +++
+351270 +++ exited with 0 +++
+351309 +++ exited with 0 +++
+351299 +++ exited with 0 +++
+351276 +++ exited with 0 +++
+351255 +++ exited with 0 +++
+351304 +++ exited with 0 +++
+351306 +++ exited with 0 +++
+351301 +++ exited with 0 +++
+351298 +++ exited with 0 +++
+351292 +++ exited with 0 +++
+351295 +++ exited with 0 +++
+351290 +++ exited with 0 +++
+351286 +++ exited with 0 +++
+351283 +++ exited with 0 +++
+351277 +++ exited with 0 +++
+351280 +++ exited with 0 +++
+351275 +++ exited with 0 +++
+351273 +++ exited with 0 +++
+351269 +++ exited with 0 +++
+351271 +++ exited with 0 +++
+351267 +++ exited with 0 +++
+351234 +++ exited with 0 +++
+351284 +++ exited with 0 +++
+351263 +++ exited with 0 +++
+351265 +++ exited with 0 +++
+351261 +++ exited with 0 +++
+351259 +++ exited with 0 +++
+351258 +++ exited with 0 +++
+351257 +++ exited with 0 +++
+351253 +++ exited with 0 +++
+351324 +++ exited with 0 +++
+351325 +++ exited with 0 +++
+351323 +++ exited with 0 +++
+351322 +++ exited with 0 +++
+351321 +++ exited with 0 +++
+351320 +++ exited with 0 +++
+351319 +++ exited with 0 +++
+351317 +++ exited with 0 +++
+351318 +++ exited with 0 +++
+351314 +++ exited with 0 +++
+351316 +++ exited with 0 +++
+351312 +++ exited with 0 +++
+351310 +++ exited with 0 +++
+351307 +++ exited with 0 +++
+351300 +++ exited with 0 +++
+351293 +++ exited with 0 +++
+351296 +++ exited with 0 +++
+351289 +++ exited with 0 +++
+351287 +++ exited with 0 +++
+351285 +++ exited with 0 +++
+351281 +++ exited with 0 +++
+351278 +++ exited with 0 +++
+351251 +++ exited with 0 +++
+351249 +++ exited with 0 +++
+351350 write(1, "1.13.2.git.kitware.jobserver-pip"..., 36) = 36
+351350 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351350, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351351 write(1, "13.3.0\n", 7)          = 7
+351351 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351351, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351352 write(1, "ninja: no work to do.\n", 22) = 22
+351352 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351352, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351199 write(16, "\1\0\0\0\0\0\0\0", 8) = 8
+351199 write(16, "\1\0\0\0\0\0\0\0", 8) = 8
+351199 write(16, "\1\0\0\0\0\0\0\0", 8) = 8
+351199 write(16, "\1\0\0\0\0\0\0\0", 8) = 8
+351199 write(16, "\1\0\0\0\0\0\0\0", 8) = 8
+351199 write(16, "\1\0\0\0\0\0\0\0", 8) = 8
+351199 write(16, "\1\0\0\0\0\0\0\0", 8) = 8
+351199 write(16, "\1\0\0\0\0\0\0\0", 8) = 8
+351199 write(32, "cuda-EvtHandlr", 14)  = 14
+351199 write(34, "\1\0\0\0\0\0\0\0", 8) = 8
+351199 write(16, "\1\0\0\0\0\0\0\0", 8) = 8
+351356 write(1, "1.13.2.git.kitware.jobserver-pip"..., 36) = 36
+351356 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351356, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351357 write(1, "13.3.0\n", 7)          = 7
+351357 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351357, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351358 write(1, "ninja: no work to do.\n", 22) = 22
+351358 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351358, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351359 write(1, "1.13.2.git.kitware.jobserver-pip"..., 36) = 36
+351359 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351359, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351360 write(1, "13.3.0\n", 7)          = 7
+351360 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351360, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351361 write(1, "ninja: no work to do.\n", 22) = 22
+351361 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351361, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351199 write(16, "\1\0\0\0\0\0\0\0", 8) = 8
+351362 write(1, "Extracting ELF file    1: amk_pe"..., 63) = 63
+351362 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 303104) = 303104
+351362 write(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2568) = 2568
+351362 write(1, "Extracting ELF file    2: amk_pe"..., 63) = 63
+351362 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351362 write(1, "Extracting ELF file    3: amk_pe"..., 63) = 63
+351362 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351362 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351362, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351363 write(1, "\nsymbols:", 9)        = 9
+351363 write(1, "\n", 1)                = 1
+351363 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351363 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351363 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 63) = 63
+351363 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351363, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351364 write(1, "\nsymbols:", 9)        = 9
+351364 write(1, "\n", 1)                = 1
+351364 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351364 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351364 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 62) = 62
+351364 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351364, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351365 write(1, "\nsymbols:", 9)        = 9
+351365 write(1, "\n", 1)                = 1
+351365 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351365 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351365 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 64) = 64
+351365 write(1, "STT_FUNC         STB_WEAK   STV_"..., 78) = 78
+351365 write(1, "STT_FUNC         STB_WEAK   STV_"..., 90) = 90
+351365 write(1, "STT_FUNC         STB_WEAK   STV_"..., 96) = 96
+351365 write(1, "STT_FUNC         STB_GLOBAL STO_"..., 66) = 66
+351365 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351365, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351199 write(1, "AMK_BANK", 8)          = 8
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "0", 1)                 = 1
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "graphs", 6)            = 6
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "190", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "grid", 4)              = 4
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "sms", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, "\n", 1)                = 1
+351366 write(1, "Extracting ELF file    1: amk_pe"..., 63) = 63
+351366 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 303104) = 303104
+351366 write(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2568) = 2568
+351366 write(1, "Extracting ELF file    2: amk_pe"..., 63) = 63
+351366 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351366 write(1, "Extracting ELF file    3: amk_pe"..., 63) = 63
+351366 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351366 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351366, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351367 write(1, "\nsymbols:", 9)        = 9
+351367 write(1, "\n", 1)                = 1
+351367 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351367 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351367 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 63) = 63
+351367 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351367, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351368 write(1, "\nsymbols:", 9)        = 9
+351368 write(1, "\n", 1)                = 1
+351368 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351368 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351368 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 62) = 62
+351368 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351368, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351369 write(1, "\nsymbols:", 9)        = 9
+351369 write(1, "\n", 1)                = 1
+351369 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351369 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351369 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 64) = 64
+351369 write(1, "STT_FUNC         STB_WEAK   STV_"..., 78) = 78
+351369 write(1, "STT_FUNC         STB_WEAK   STV_"..., 90) = 90
+351369 write(1, "STT_FUNC         STB_WEAK   STV_"..., 96) = 96
+351369 write(1, "STT_FUNC         STB_GLOBAL STO_"..., 66) = 66
+351369 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351369, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351199 write(1, "AMK_BANK", 8)          = 8
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "1", 1)                 = 1
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "graphs", 6)            = 6
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "190", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "grid", 4)              = 4
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "sms", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, "\n", 1)                = 1
+351370 write(1, "Extracting ELF file    1: amk_pe"..., 63) = 63
+351370 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 303104) = 303104
+351370 write(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2568) = 2568
+351370 write(1, "Extracting ELF file    2: amk_pe"..., 63) = 63
+351370 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351370 write(1, "Extracting ELF file    3: amk_pe"..., 63) = 63
+351370 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351370 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351370, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351371 write(1, "\nsymbols:", 9)        = 9
+351371 write(1, "\n", 1)                = 1
+351371 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351371 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351371 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 63) = 63
+351371 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351371, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351372 write(1, "\nsymbols:", 9)        = 9
+351372 write(1, "\n", 1)                = 1
+351372 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351372 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351372 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 62) = 62
+351372 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351372, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351373 write(1, "\nsymbols:", 9)        = 9
+351373 write(1, "\n", 1)                = 1
+351373 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351373 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351373 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 64) = 64
+351373 write(1, "STT_FUNC         STB_WEAK   STV_"..., 78) = 78
+351373 write(1, "STT_FUNC         STB_WEAK   STV_"..., 90) = 90
+351373 write(1, "STT_FUNC         STB_WEAK   STV_"..., 96) = 96
+351373 write(1, "STT_FUNC         STB_GLOBAL STO_"..., 66) = 66
+351373 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351373, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351199 write(1, "AMK_BANK", 8)          = 8
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "2", 1)                 = 1
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "graphs", 6)            = 6
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "190", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "grid", 4)              = 4
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "sms", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, "\n", 1)                = 1
+351374 write(1, "Extracting ELF file    1: amk_pe"..., 63) = 63
+351374 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 303104) = 303104
+351374 write(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2568) = 2568
+351374 write(1, "Extracting ELF file    2: amk_pe"..., 63) = 63
+351374 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351374 write(1, "Extracting ELF file    3: amk_pe"..., 63) = 63
+351374 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351374 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351374, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351375 write(1, "\nsymbols:", 9)        = 9
+351375 write(1, "\n", 1)                = 1
+351375 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351375 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351375 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 63) = 63
+351375 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351375, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351376 write(1, "\nsymbols:", 9)        = 9
+351376 write(1, "\n", 1)                = 1
+351376 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351376 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351376 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 62) = 62
+351376 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351376, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351377 write(1, "\nsymbols:", 9)        = 9
+351377 write(1, "\n", 1)                = 1
+351377 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351377 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351377 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 64) = 64
+351377 write(1, "STT_FUNC         STB_WEAK   STV_"..., 78) = 78
+351377 write(1, "STT_FUNC         STB_WEAK   STV_"..., 90) = 90
+351377 write(1, "STT_FUNC         STB_WEAK   STV_"..., 96) = 96
+351377 write(1, "STT_FUNC         STB_GLOBAL STO_"..., 66) = 66
+351377 +++ exited with 0 +++
+351204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351377, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351199 write(1, "AMK_BANK", 8)          = 8
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "3", 1)                 = 1
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "graphs", 6)            = 6
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "190", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "grid", 4)              = 4
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "sms", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, "\n", 1)                = 1
+351394 write(1, "Extracting ELF file    1: amk_pe"..., 63) = 63
+351394 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 303104) = 303104
+351394 write(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2568) = 2568
+351394 write(1, "Extracting ELF file    2: amk_pe"..., 63) = 63
+351394 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351394 write(1, "Extracting ELF file    3: amk_pe"..., 63) = 63
+351394 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351394 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351394, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351395 write(1, "\nsymbols:", 9)        = 9
+351395 write(1, "\n", 1)                = 1
+351395 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351395 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351395 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 63) = 63
+351395 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351395, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351396 write(1, "\nsymbols:", 9)        = 9
+351396 write(1, "\n", 1)                = 1
+351396 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351396 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351396 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 62) = 62
+351396 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351396, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351397 write(1, "\nsymbols:", 9)        = 9
+351397 write(1, "\n", 1)                = 1
+351397 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351397 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351397 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 64) = 64
+351397 write(1, "STT_FUNC         STB_WEAK   STV_"..., 78) = 78
+351397 write(1, "STT_FUNC         STB_WEAK   STV_"..., 90) = 90
+351397 write(1, "STT_FUNC         STB_WEAK   STV_"..., 96) = 96
+351397 write(1, "STT_FUNC         STB_GLOBAL STO_"..., 66) = 66
+351397 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351397, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351199 write(1, "AMK_BANK", 8)          = 8
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "4", 1)                 = 1
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "graphs", 6)            = 6
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "190", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "grid", 4)              = 4
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "sms", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, "\n", 1)                = 1
+351398 write(1, "Extracting ELF file    1: amk_pe"..., 63) = 63
+351398 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 303104) = 303104
+351398 write(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2568) = 2568
+351398 write(1, "Extracting ELF file    2: amk_pe"..., 63) = 63
+351398 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351398 write(1, "Extracting ELF file    3: amk_pe"..., 63) = 63
+351398 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351398 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351398, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351399 write(1, "\nsymbols:", 9)        = 9
+351399 write(1, "\n", 1)                = 1
+351399 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351399 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351399 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 63) = 63
+351399 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351399, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351400 write(1, "\nsymbols:", 9)        = 9
+351400 write(1, "\n", 1)                = 1
+351400 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351400 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351400 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 62) = 62
+351400 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351400, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351401 write(1, "\nsymbols:", 9)        = 9
+351401 write(1, "\n", 1)                = 1
+351401 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351401 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351401 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 64) = 64
+351401 write(1, "STT_FUNC         STB_WEAK   STV_"..., 78) = 78
+351401 write(1, "STT_FUNC         STB_WEAK   STV_"..., 90) = 90
+351401 write(1, "STT_FUNC         STB_WEAK   STV_"..., 96) = 96
+351401 write(1, "STT_FUNC         STB_GLOBAL STO_"..., 66) = 66
+351401 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351401, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351199 write(1, "AMK_BANK", 8)          = 8
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "5", 1)                 = 1
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "graphs", 6)            = 6
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "190", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "grid", 4)              = 4
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "sms", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, "\n", 1)                = 1
+351402 write(1, "Extracting ELF file    1: amk_pe"..., 63) = 63
+351402 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 303104) = 303104
+351402 write(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2568) = 2568
+351402 write(1, "Extracting ELF file    2: amk_pe"..., 63) = 63
+351402 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351402 write(1, "Extracting ELF file    3: amk_pe"..., 63) = 63
+351402 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351402 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351402, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351403 write(1, "\nsymbols:", 9)        = 9
+351403 write(1, "\n", 1)                = 1
+351403 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351403 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351403 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 63) = 63
+351403 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351403, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351404 write(1, "\nsymbols:", 9)        = 9
+351404 write(1, "\n", 1)                = 1
+351404 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351404 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351404 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 62) = 62
+351404 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351404, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351405 write(1, "\nsymbols:", 9)        = 9
+351405 write(1, "\n", 1)                = 1
+351405 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351405 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351405 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 64) = 64
+351405 write(1, "STT_FUNC         STB_WEAK   STV_"..., 78) = 78
+351405 write(1, "STT_FUNC         STB_WEAK   STV_"..., 90) = 90
+351405 write(1, "STT_FUNC         STB_WEAK   STV_"..., 96) = 96
+351405 write(1, "STT_FUNC         STB_GLOBAL STO_"..., 66) = 66
+351405 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351405, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351199 write(1, "AMK_BANK", 8)          = 8
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "6", 1)                 = 1
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "graphs", 6)            = 6
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "190", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "grid", 4)              = 4
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "sms", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, "\n", 1)                = 1
+351406 write(1, "Extracting ELF file    1: amk_pe"..., 63) = 63
+351406 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 303104) = 303104
+351406 write(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2568) = 2568
+351406 write(1, "Extracting ELF file    2: amk_pe"..., 63) = 63
+351406 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351406 write(1, "Extracting ELF file    3: amk_pe"..., 63) = 63
+351406 write(3, "\177ELF\2\1\1A\10\0\0\0\0\0\0\0\2\0\276\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 3080) = 3080
+351406 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351406, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351407 write(1, "\nsymbols:", 9)        = 9
+351407 write(1, "\n", 1)                = 1
+351407 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351407 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351407 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 63) = 63
+351407 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351407, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351408 write(1, "\nsymbols:", 9)        = 9
+351408 write(1, "\n", 1)                = 1
+351408 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351408 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351408 write(1, "STT_OBJECT       STB_LOCAL  STV_"..., 62) = 62
+351408 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351408, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351409 write(1, "\nsymbols:", 9)        = 9
+351409 write(1, "\n", 1)                = 1
+351409 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 68) = 68
+351409 write(1, "STT_?            STB_WEAK   STO_"..., 83) = 83
+351409 write(1, "STT_OBJECT       STB_WEAK   STV_"..., 64) = 64
+351409 write(1, "STT_FUNC         STB_WEAK   STV_"..., 78) = 78
+351409 write(1, "STT_FUNC         STB_WEAK   STV_"..., 90) = 90
+351409 write(1, "STT_FUNC         STB_WEAK   STV_"..., 96) = 96
+351409 write(1, "STT_FUNC         STB_GLOBAL STO_"..., 66) = 66
+351409 +++ exited with 0 +++
+351199 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=351409, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+351199 write(1, "AMK_BANK", 8)          = 8
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "7", 1)                 = 1
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "graphs", 6)            = 6
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "190", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "grid", 4)              = 4
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "sms", 3)               = 3
+351199 write(1, " ", 1)                 = 1
+351199 write(1, "170", 3)               = 3
+351199 write(1, "\n", 1)                = 1
+351199 write(1, "{\"event\": \"amk_bootstrap\", \"mode"..., 411) = 411
+351199 write(1, "\n", 1)                = 1
+351199 socket(AF_INET, SOCK_STREAM, IPPROTO_IP) = 38
+351199 setsockopt(38, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+351199 bind(38, {sa_family=AF_INET, sin_port=htons(39403), sin_addr=inet_addr("127.0.0.1")}, 16) = 0
+351199 listen(38, 4096)                 = 0
+351199 io_uring_enter(40, 1, 1, IORING_ENTER_GETEVENTS, NULL, 0) = 1
+351199 io_uring_enter(40, 1, 0, 0, NULL, 0) = 1
+351199 write(1, "network=coalesced GPU dispatcher"..., 62) = 62
+351199 write(1, "\n", 1)                = 1
+351199 write(1, "NET_READY pid=351199 port=39403 "..., 76) = 76
+351199 write(1, "resident Qwen ready: 30 layers h"..., 88) = 88
+351199 io_uring_enter(40, 0, 0, 0, NULL, 0 <unfinished ...>
+351204 --- SIGTERM {si_signo=SIGTERM, si_code=SI_TKILL, si_pid=351123, si_uid=0} ---
+351199 <... io_uring_enter resumed>)    = 0
+351199 io_uring_enter(40, 0, 0, 0, NULL, 0) = 0
+351199 write(1, "RESULT {\"accepted\":5086,\"closed\""..., 128) = 128
+351199 write(1, "23,\"max_requests\":8,\"pending\":0,"..., 128) = 128
+351199 write(1, "\":1865821,\"cqtail\":1865821,\"trac"..., 67) = 67
+351199 write(1, "REPLY {\"seq\":0,\"gen\":64,\"sends\":"..., 99) = 99
+351199 write(1, "REPLY {\"seq\":1,\"gen\":64,\"sends\":"..., 99) = 99
+351199 write(1, "REPLY {\"seq\":2,\"gen\":64,\"sends\":"..., 99) = 99
+351199 write(1, "REPLY {\"seq\":3,\"gen\":64,\"sends\":"..., 99) = 99
+351199 write(1, "REPLY {\"seq\":4,\"gen\":64,\"sends\":"..., 99) = 99
+351199 write(1, "REPLY {\"seq\":5,\"gen\":64,\"sends\":"..., 99) = 99
+351199 write(1, "REPLY {\"seq\":6,\"gen\":64,\"sends\":"..., 99) = 99
+351199 write(1, "REPLY {\"seq\":7,\"gen\":64,\"sends\":"..., 99) = 99
+351199 write(1, "REPLY {\"seq\":8,\"gen\":64,\"sends\":"..., 99) = 99
+351199 write(1, "REPLY {\"seq\":9,\"gen\":64,\"sends\":"..., 99) = 99
+351199 write(1, "REPLY {\"seq\":10,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":11,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":12,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":13,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":14,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":15,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":16,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":17,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":18,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":19,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":20,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":21,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":22,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":23,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":24,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":25,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":26,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":27,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":28,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":29,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":30,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":31,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":32,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":33,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":34,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":35,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":36,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":37,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":38,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":39,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":40,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":41,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":42,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":43,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":44,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":45,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":46,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":47,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":48,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":49,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":50,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":51,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":52,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":53,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":54,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":55,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":56,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":57,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":58,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":59,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":60,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":61,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":62,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":63,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":64,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":65,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":66,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":67,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":68,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":69,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":70,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":71,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":72,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":73,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":74,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":75,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":76,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":77,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":78,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":79,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":80,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":81,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":82,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":83,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":84,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":85,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":86,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":87,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":88,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":89,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":90,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":91,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":92,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":93,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":94,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":95,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":96,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":97,\"gen\":64,\"sends\""..., 100) = 100
+351199 write(1, "REPLY {\"seq\":98,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":99,\"gen\":64,\"sends\""..., 97) = 97
+351199 write(1, "REPLY {\"seq\":100,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":101,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":102,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":103,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":104,\"gen\":64,\"sends"..., 101) = 101
+351199 write(1, "REPLY {\"seq\":105,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":106,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":107,\"gen\":64,\"sends"..., 101) = 101
+351199 write(1, "REPLY {\"seq\":108,\"gen\":64,\"sends"..., 101) = 101
+351199 write(1, "REPLY {\"seq\":109,\"gen\":64,\"sends"..., 101) = 101
+351199 write(1, "REPLY {\"seq\":110,\"gen\":64,\"sends"..., 101) = 101
+351199 write(1, "REPLY {\"seq\":111,\"gen\":64,\"sends"..., 101) = 101
+351199 write(1, "REPLY {\"seq\":112,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":113,\"gen\":64,\"sends"..., 101) = 101
+351199 write(1, "REPLY {\"seq\":114,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":115,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":116,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":117,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":118,\"gen\":64,\"sends"..., 101) = 101
+351199 write(1, "REPLY {\"seq\":119,\"gen\":64,\"sends"..., 101) = 101
+351199 write(1, "REPLY {\"seq\":120,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":121,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":122,\"gen\":64,\"sends"..., 101) = 101
+351199 write(1, "REPLY {\"seq\":123,\"gen\":64,\"sends"..., 101) = 101
+351199 write(1, "REPLY {\"seq\":124,\"gen\":64,\"sends"..., 101) = 101
+351199 write(1, "REPLY {\"seq\":125,\"gen\":64,\"sends"..., 101) = 101
+351199 write(1, "REPLY {\"seq\":126,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "REPLY {\"seq\":127,\"gen\":64,\"sends"..., 98) = 98
+351199 write(1, "CLEANUP ring_connections_buffers"..., 41) = 41
+351199 write(1, "\n", 1)                = 1
+351199 write(1, "resident Qwen stopped: dispatch="..., 115) = 115
+351199 write(1, "{\"event\": \"amk_graph_errors\", \"e"..., 65) = 65
+351199 write(1, "\n", 1)                = 1
+351302 +++ exited with 0 +++
+351205 +++ exited with 0 +++
+351207 +++ exited with 0 +++
+351208 +++ exited with 0 +++
+351206 +++ exited with 0 +++
+351209 +++ exited with 0 +++
+351204 +++ exited with 0 +++
+351210 +++ exited with 0 +++
+351211 +++ exited with 0 +++
+351212 +++ exited with 0 +++
+351213 +++ exited with 0 +++
+351214 +++ exited with 0 +++
+351215 +++ exited with 0 +++
+351216 +++ exited with 0 +++
+351217 +++ exited with 0 +++
+351218 +++ exited with 0 +++
+351219 +++ exited with 0 +++
+351220 +++ exited with 0 +++
+351221 +++ exited with 0 +++
+351222 +++ exited with 0 +++
+351223 +++ exited with 0 +++
+351224 +++ exited with 0 +++
+351225 +++ exited with 0 +++
+351226 +++ exited with 0 +++
+351355 +++ exited with 0 +++
+351354 +++ exited with 0 +++
+351347 +++ exited with 0 +++
+351346 +++ exited with 0 +++
+351345 +++ exited with 0 +++
+351343 +++ exited with 0 +++
+351339 +++ exited with 0 +++
+351335 +++ exited with 0 +++
+351334 +++ exited with 0 +++
+351332 +++ exited with 0 +++
+351330 +++ exited with 0 +++
+351329 +++ exited with 0 +++
+351328 +++ exited with 0 +++
+351327 +++ exited with 0 +++
+351228 +++ exited with 0 +++
+351342 +++ exited with 0 +++
+351348 +++ exited with 0 +++
+351341 +++ exited with 0 +++
+351340 +++ exited with 0 +++
+351336 +++ exited with 0 +++
+351331 +++ exited with 0 +++
+351353 +++ exited with 0 +++
+351349 +++ exited with 0 +++
+351337 +++ exited with 0 +++
+351333 +++ exited with 0 +++
+351338 +++ exited with 0 +++
+351344 +++ exited with 0 +++
+351199 +++ exited with 0 +++

@@ -1,0 +1,57 @@
+{
+  "exit": 0,
+  "commands": [
+    {
+      "command": [
+        "/tmp/bpfusion-queue-batch-2su5dvmy/runtime/bin/python",
+        "/tmp/bpfusion-queue-batch-2su5dvmy/qualification.py",
+        "--backend",
+        "amk",
+        "--loop-comparison",
+        "--correctness",
+        "--reference-path",
+        "/tmp/bpfusion-queue-batch-2su5dvmy/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-queue-batch-2su5dvmy/qualification_amk_smol.jsonl",
+        "--untraced"
+      ],
+      "name": "amk_smol"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-queue-batch-2su5dvmy/runtime/bin/python",
+        "/tmp/bpfusion-queue-batch-2su5dvmy/qualification.py",
+        "--backend",
+        "vllm",
+        "--loop-comparison",
+        "--correctness",
+        "--reference-path",
+        "/tmp/bpfusion-queue-batch-2su5dvmy/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-queue-batch-2su5dvmy/qualification_vllm_smol.jsonl"
+      ],
+      "name": "vllm_smol"
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-queue-batch-2su5dvmy/runtime/bin/python",
+        "/tmp/bpfusion-queue-batch-2su5dvmy/qualification.py",
+        "--backend",
+        "vllm",
+        "--loop-comparison",
+        "--correctness",
+        "--reference-path",
+        "/tmp/bpfusion-queue-batch-2su5dvmy/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+        "--output",
+        "/tmp/bpfusion-queue-batch-2su5dvmy/qualification_vllm_qwen.jsonl"
+      ],
+      "name": "vllm_qwen"
+    }
+  ]
+}

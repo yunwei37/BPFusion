@@ -1,0 +1,30 @@
+[
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-m",
+      "venv",
+      "--without-pip",
+      "/tmp/bpfusion-queue-batch-2su5dvmy/runtime"
+    ],
+    "exit": 0,
+    "utc": "2026-10-14T11:56:47.119344+00:00"
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-m",
+      "pip",
+      "--python",
+      "/tmp/bpfusion-queue-batch-2su5dvmy/runtime/bin/python",
+      "install",
+      "vllm==0.31.0",
+      "torch==2.13.0+cu129",
+      "transformers==5.17.0",
+      "--extra-index-url",
+      "https://download.pytorch.org/whl/cu129"
+    ],
+    "exit": 0,
+    "utc": "2026-10-14T11:59:43.714014+00:00"
+  }
+]

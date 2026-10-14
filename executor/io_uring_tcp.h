@@ -25,6 +25,9 @@ using UringIdentity=bf_uring_context;
 struct IoRing {
     unsigned *head,*tail,*cqhead,*cqtail,*flags,*dropped,*overflow;
     io_uring_sqe *sqes;io_uring_cqe *cqes;unsigned mask,cqmask;
+#ifdef BF_IO_COALESCED
+    unsigned sq_head,sq_tail,sq_published;
+#endif
 };
 struct IoConn { int fd,next,reply,last;unsigned receiving,closing,dead,eof,generation; };
 struct IoRequest {
@@ -47,12 +50,24 @@ __device__ unsigned long long io_load64(const unsigned long long *p) {
 __device__ void io_store(unsigned *p,unsigned v) {
     asm volatile("st.release.sys.global.u32 [%0],%1;"::"l"(p),"r"(v):"memory");
 }
+#ifdef BF_IO_COALESCED
+__device__ bool io_submit(IoRing &ring,io_uring_sqe entry,IoStats *stats) {
+    if(ring.sq_tail-ring.sq_head>ring.mask)return false;
+    ring.sqes[ring.sq_tail++&ring.mask]=entry;stats->pending++;return true;
+}
+__device__ void io_publish(IoRing &ring) {
+    if(ring.sq_tail==ring.sq_published)return;
+    __threadfence_system();io_store(ring.tail,ring.sq_tail);
+    ring.sq_published=ring.sq_tail;
+}
+#else
 __device__ bool io_submit(IoRing ring,io_uring_sqe entry,IoStats *stats) {
     unsigned tail=io_load(ring.tail);
     if(tail-io_load(ring.head)>ring.mask)return false;
     ring.sqes[tail&ring.mask]=entry;__threadfence_system();io_store(ring.tail,tail+1);stats->pending++;
     return true;
 }
+#endif
 __device__ unsigned long long io_id(unsigned kind,unsigned value,unsigned generation=0) {
     return ((unsigned long long)kind<<56)|((unsigned long long)(generation&0xffffff)<<32)|value;
 }
@@ -86,7 +101,11 @@ __global__ void io_initialize(IoState *s) {
     for(auto &r:s->requests){r.conn=-1;r.next=-1;}
 }
 __device__ bool io_progress(IoState *s) {
-    auto ring=s->ring;auto *page=s->page;auto *conns=s->conns;unsigned capacity=s->capacity;
+    auto ring=s->ring;
+#ifdef BF_IO_COALESCED
+    ring.sq_head=io_load(ring.head);ring.sq_tail=ring.sq_published=io_load(ring.tail);
+#endif
+    auto *page=s->page;auto *conns=s->conns;unsigned capacity=s->capacity;
     auto *buffer=s->buffer;auto host_buffer=s->host_buffer;auto *out=s->out;int listener=s->listener;
     auto &free=s->free;auto &active=s->active;auto &accepting=s->accepting;
     auto &connections=s->connections;auto &seen=s->seen;auto &next_final=s->next_final;
@@ -98,8 +117,14 @@ __device__ bool io_progress(IoState *s) {
         if(io_load64((unsigned long long*)&page->stop_ns))stopping=true;
         // Drain completions before publishing new work or reusing any buffer.
         unsigned ch=io_load(ring.cqhead);
+#ifdef BF_IO_COALESCED
+        unsigned begin=ch,end=io_load(ring.cqtail);
+        while(ch!=end) {
+            auto e=ring.cqes[ch++&ring.cqmask];
+#else
         while(ch!=io_load(ring.cqtail)) {
             auto e=ring.cqes[ch&ring.cqmask];io_store(ring.cqhead,++ch);
+#endif
             unsigned kind=e.user_data>>56,index=(unsigned)e.user_data;
 #ifdef BF_URING_BPF_LOOP
             // A multishot timeout owns one pending operation until its final CQE.
@@ -152,12 +177,20 @@ __device__ bool io_progress(IoState *s) {
 #endif
             }else out->error=4;
         }
+#ifdef BF_IO_COALESCED
+        if(ch!=begin)io_store(ring.cqhead,ch);
+#endif
         if(stopping&&!cancelled) {
             io_uring_sqe e{};e.opcode=IORING_OP_ASYNC_CANCEL;e.cancel_flags=IORING_ASYNC_CANCEL_ALL|IORING_ASYNC_CANCEL_ANY;
             e.user_data=io_id(5,0);
             if(io_submit(ring,e,out))cancelled=true;
         }
-        if(stopping&&!cancel_done){__nanosleep(1000);return true;}
+        if(stopping&&!cancel_done) {
+#ifdef BF_IO_COALESCED
+            io_publish(ring);
+#endif
+            __nanosleep(1000);return true;
+        }
 #ifdef BF_URING_BPF_LOOP
         if(stopping && cancel_done && timeout_active && !timeout_removing) {
             io_uring_sqe e{};e.opcode=IORING_OP_TIMEOUT_REMOVE;
@@ -273,6 +306,9 @@ __device__ bool io_progress(IoState *s) {
             e.off=host_buffer+i*stride+4112;e.user_data=io_id(1,i,c.generation+1);
             if(io_submit(ring,e,out)){free=next;accepting=i;c={-1,-1,-1,-1,0,0,0,0,c.generation+1};}
         }
+#ifdef BF_IO_COALESCED
+        io_publish(ring);
+#endif
         if(stopping&&cancelled&&!out->pending&&active<0&&!active_requests) {
     out->head=io_load(&page->llm_head);out->reserved=io_load(&page->llm_reserved);
     out->sqhead=io_load(ring.head);out->sqtail=io_load(ring.tail);
