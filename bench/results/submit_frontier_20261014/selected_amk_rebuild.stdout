@@ -1,0 +1,1 @@
+/usr/local/cuda/bin/nvcc -O3 -std=c++17 -arch=sm_120 -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -DBF_IO_COALESCED -rdc=true -shared -Xcompiler=-fPIC -I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi -Ibpf/include executor/qwen_graph.cu -o build/amk_graph_uring_loop_coalesced.so -lbpf -lelf -lz -lpthread

@@ -826,3 +826,49 @@ experimental improvement and keep existing defaults. Close the unchanged
 matrix; next diagnosis should distinguish progression/admission availability
 and actual batching rather than assume a compute or PCIe cause. Full retained
 serving/performance goal remains active.
+
+## Completed model-admission/SQ-consumption comparison
+
+[Finding0052](findings/0052-model-admission-after-sq-consumption.md) admits a
+distinct ordering intervention after0051: keep progressing published I/O
+while model-idle before fresh admission. The question remains serving-path
+latency/TPS with reused computation; model arithmetic is unchanged.
+All45 ordinary executors/180 cells,5760 measured requests187200 tokens and
+360 excluded warmups complete0 with unchanged finite output-pool/ownership
+checks. Source/environment/all15 commands were frozen before collection.
+
+Primary vLLM gen1/c8 candidate-minus-prior TTFT is−1.900622ms for Smol
+[−3.042158,−0.759086] and−1.725574 for Qwen [−3.130448,−0.320700].
+Native gaps remain+3.122832/+4.363857ms with strictly positive intervals.
+AMK regresses+1.351507ms [0.387822,2.315192] versus prior. All three
+gen64/c8 candidate-vs-prior TPS intervals cross0, so gains/non-regression
+are unestablished. Qwen/native TPS loses252.384880
+[−374.090134,−130.679627]; AMK also loses, Smol remains inconclusive.
+All36 means/108 signed effects and adverse secondary evidence remain.
+
+Twelve gen1/c8 observations associate actual IDs/batches and independently
+replay selected trace histories. Ordinary measured rounds old/native/candidate
+are26/8/9 Smol and26/8/21 Qwen, but traced candidate counts become19/14.
+One process/condition and that sensitivity prevent trace-neutrality or causal
+mediation claims for the ordinary full matrix. Initial analyzer file selection
+failed and is transparently corrected on unchanged raw data; no serving rerun.
+
+Three selected protocol and three32-action lifecycle workloads pass.
+Trace-history replay reconstructs and reruns reused vLLM graphs; it is not a
+fresh independent eager-HF arithmetic oracle. Stronger old AMK eager-HF
+equality remains failed. Host before/during/mid/after retains33 historical
+warnings/no new selected fault, without continuous-isolation/clean-journal
+or harmlessness claims.
+
+[Independent review](../bench/results/submit_frontier_20261014/result-review.md)
+judges the finite run valid/completed, vLLM latency locally supported,
+transfer/native-superiority interpretations contradicted and full-matrix
+mediation inconclusive; supporting value, mechanism/workload boundary.
+Post-result selected main keeps only the vLLM experimental hook and restores
+AMK to its tested prior source with equal rebuilt SASS. This selected
+combination is not the originally collected two-hook candidate.
+[Raw archive and replay](../bench/results/submit_frontier_20261014/) and
+[restoration](../bench/results/submit_frontier_20261014/final_restoration.json)
+retain the experiment and owned-resource cleanup. Close the unchanged matrix;
+further work needs a distinct discriminator for the remaining native gap.
+The full retained serving/performance objective remains active.

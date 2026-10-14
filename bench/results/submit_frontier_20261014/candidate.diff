@@ -1,0 +1,28 @@
+diff --git a/executor/qwen_graph.cu b/executor/qwen_graph.cu
+index b0088ae..4d7aeb3 100644
+--- a/executor/qwen_graph.cu
++++ b/executor/qwen_graph.cu
+@@ -65,6 +65,9 @@ __global__ void dispatch(bf_page *p,Step *steps,long long **inputs,unsigned coun
+         // Advance I/O after result publication and before model admission.
+         // This CTA returns while model children execute.
+         io_progress(io_state);
++        // Let the kernel consume published I/O before admitting fresh model work.
++        if(c->retired==c->seen &&
++           io_load(io_state->ring.head)!=io_load(io_state->ring.tail))continue;
+ #endif
+         while(queue_load(&p->llm_head)!=c->seen) {
+             idx=c->seen%BF_LLM_SLOTS;
+diff --git a/executor/vllm_graph.cu b/executor/vllm_graph.cu
+index 1644396..4681e4c 100644
+--- a/executor/vllm_graph.cu
++++ b/executor/vllm_graph.cu
+@@ -102,6 +102,9 @@ __global__ void dispatch(bf_page* p,Step* steps,Inputs in,unsigned vocab,Control
+         // Advance I/O after result publication and before model admission.
+         // This CTA returns while model children execute.
+         io_progress(io_state);
++        // Let the kernel consume published I/O before admitting fresh model work.
++        if(c->retired==c->seen &&
++           io_load(io_state->ring.head)!=io_load(io_state->ring.tail))continue;
+ #endif
+         while(queue_load(&p->llm_head)!=c->seen) {
+             i=c->seen%BF_LLM_SLOTS;bf_llm_slot* slot=&p->llm[i];

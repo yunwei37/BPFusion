@@ -1,0 +1,6 @@
+START pair=0 mode=uring_loop_coalesced_original pid=372753
+PASS pair=0 mode=uring_loop_coalesced_original requests=40 tokens=40 batches=[1, 2, 8]
+START pair=0 mode=userspace pid=372992
+PASS pair=0 mode=userspace requests=40 tokens=40 batches=[1, 2, 6]
+START pair=0 mode=uring_loop_coalesced pid=373224
+PASS pair=0 mode=uring_loop_coalesced requests=40 tokens=40 batches=[1, 2, 4, 7]

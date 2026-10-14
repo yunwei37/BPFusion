@@ -468,3 +468,20 @@ selected protocol/lifecycle and records partial AMK/Qwen throughput gains,
 remaining native gaps and unresolved vLLM c8 short-output latency. Finding0050's
 numbers describe the earlier coalescing implementation. No dynamic system-access
 or model-overlap cause is established.
+
+## Idle model admission in coalesced vLLM builds
+
+After io_progress, the vLLM dispatcher checks whether all admitted model work
+has retired and the mapped SQ head still differs from its published tail.
+It then keeps progressing I/O before fresh model admission. Existing unfinished
+admitted computation remains eligible. SQ consumption is separate from CQ/TCP
+completion and buffer ownership; stop is revisited each iteration. A stalled
+issuer can defer fresh admission, and arbitrary fairness/backpressure bounds
+are unproved. No timer, ABI, worker or model math change is added.
+
+[Finding0052](findings/0052-model-admission-after-sq-consumption.md) measures
+vLLM local short-output latency recovery with remaining native losses. Its
+two-hook candidate regresses AMK; selected main restores the AMK prior policy
+and retains only the vLLM hook. Frozen collected sources and that post-result
+selection are separately recorded. Noncoalesced/default targets keep their
+existing policy; trace sensitivity prevents full-matrix batching mediation.

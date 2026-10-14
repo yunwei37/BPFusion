@@ -1,0 +1,1 @@
+The first observation analysis selected probe_*.jsonl, inadvertently including per-executor trace/reference JSONLs. It failed before reading a result. Select the four declared source-native driver files literally. Preserve initial source, stdout, stderr and exit1; serving raw data, metric formula, association and oracle checks remain unchanged. No executor rerun.

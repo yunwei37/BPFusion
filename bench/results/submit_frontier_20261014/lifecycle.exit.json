@@ -1,0 +1,39 @@
+{
+  "exit": 0,
+  "status": [
+    {
+      "command": [
+        "/tmp/bpfusion-submit-frontier-5wrgv_1e/runtime/bin/python",
+        "/tmp/bpfusion-submit-frontier-5wrgv_1e/lifecycle.py",
+        "loop",
+        "smol",
+        "amk"
+      ],
+      "exit": 0,
+      "pass_checks": true
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-submit-frontier-5wrgv_1e/runtime/bin/python",
+        "/tmp/bpfusion-submit-frontier-5wrgv_1e/lifecycle.py",
+        "loop",
+        "smol",
+        "vllm"
+      ],
+      "exit": 0,
+      "pass_checks": true
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-submit-frontier-5wrgv_1e/runtime/bin/python",
+        "/tmp/bpfusion-submit-frontier-5wrgv_1e/lifecycle.py",
+        "loop",
+        "qwen",
+        "vllm"
+      ],
+      "exit": 0,
+      "pass_checks": true
+    }
+  ],
+  "utc": "2026-10-14T13:35:31.781482+00:00"
+}

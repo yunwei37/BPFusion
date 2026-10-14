@@ -102,6 +102,9 @@ __global__ void dispatch(bf_page* p,Step* steps,Inputs in,unsigned vocab,Control
         // Advance I/O after result publication and before model admission.
         // This CTA returns while model children execute.
         io_progress(io_state);
+        // Let the kernel consume published I/O before admitting fresh model work.
+        if(c->retired==c->seen &&
+           io_load(io_state->ring.head)!=io_load(io_state->ring.tail))continue;
 #endif
         while(queue_load(&p->llm_head)!=c->seen) {
             i=c->seen%BF_LLM_SLOTS;bf_llm_slot* slot=&p->llm[i];

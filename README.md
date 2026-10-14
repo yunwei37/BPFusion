@@ -223,7 +223,7 @@ c8 single-token TTFT increases from2.04/2.64 to6.75/8.25ms.
 See [finding0050](docs/findings/0050-coalesced-gpu-network.md). Model arithmetic
 is unchanged; AMK numerical limits and existing defaults remain explicit.
 
-The measurements above precede the current experimental queue-publication
+Finding0050 precedes the experimental queue-publication
 batching change. Existing coalesced targets now snapshot ring cursors and
 publish prepared SQEs/consumed CQEs once per progression round. Ordinary
 noncoalesced targets retain their policy. The
@@ -233,6 +233,16 @@ AMK c8 long-output throughput improves293→301 token/s, still below native304;
 Qwen improves3.8% versus prior coalescing. vLLM c8 single-token latency remains
 7.16/8.59ms versus native1.97/2.63ms. This is a mixed result, without universal
 latency recovery or native-parity proof.
+
+The [model-admission comparison](docs/findings/0052-model-admission-after-sq-consumption.md)
+adds a measured scheduling improvement in experimental vLLM coalesced builds:
+after model completion, published SQ work is consumed before fresh admission.
+Smol/Qwen gen1/c8 TTFT falls6.99/8.60→5.09/6.88ms versus the matched old driver,
+still above native1.97/2.51ms. Long-output throughput gains are unestablished.
+The tested AMK hook regressed latency and is restored to its prior policy;
+the archived two-hook experiment is distinct from this selected main source.
+Defaults, model arithmetic and the absence of a steady userspace request worker
+remain. Full data, trace sensitivity, numerical limits and review are retained.
 
 ## Repository layout
 
