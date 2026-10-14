@@ -96,8 +96,12 @@ loop's CQ snapshot before SQ submission. Its model and GPU network-controller
 instructions match the former loop, and full vLLM/HF protocol/lifecycle
 qualification passes. The former post-submit loop remains available through
 make vllm-graph-uring-loop-after; finding0044's measured CPU/delivery results
-belong to that former snapshot semantics. New candidate timing is pending;
-the unchanged timer and reused model computation do not imply a speedup.
+belong to that former snapshot semantics. The completed36-executor comparison
+and fresh independent review establish no reliable primary latency/throughput
+gain over efficient native TCP; all four primary intervals include zero.
+Negative secondary results and higher long-output process CPU versus native
+are retained. Owned temporary resources are removed; neither unchanged
+computation nor module-free serving establishes a speedup.
 
 ## Service and compute boundary
 

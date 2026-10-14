@@ -1,0 +1,13 @@
+{
+  "observed_utc": "2026-10-14T04:34:46.201081+00:00",
+  "local_exec_session": 48829,
+  "local_observation_exit": 1,
+  "local_observation_output": "client_loop: send disconnect: Unknown error",
+  "reconnected": true,
+  "remote_pipeline_pid": 282080,
+  "remote_model_driver_pid": 286552,
+  "remote_pipeline_cmd": "/usr/bin/python3 /tmp/bpfusion-uring-cq-progress-jf93e9xn/performance_pipeline.py ",
+  "remote_model_driver_cmd": "/tmp/bpfusion-uring-cq-progress-jf93e9xn/runtime/bin/python bench/vllm_serving.py --loop-progress-comparison --untraced --reference-path /tmp/bpfusion-uring-cq-progress-jf93e9xn/frozen_references.json --model /workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2 --output /tmp/bpfusion-uring-cq-progress-jf93e9xn/smol_performance.jsonl ",
+  "action": "No restart/replacement; monitor same authoritative remote processes and files",
+  "scope": "Observation SSH channel; cause unknown; benchmark clients are local to original Workspace"
+}

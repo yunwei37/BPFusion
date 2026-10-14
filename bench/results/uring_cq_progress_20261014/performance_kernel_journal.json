@@ -1,0 +1,33 @@
+{
+  "observed_utc": "2026-10-14T04:41:26.494859+00:00",
+  "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167",
+  "cmd": [
+    "journalctl",
+    "-k",
+    "--utc",
+    "--since",
+    "2026-10-14 04:20:06",
+    "--until",
+    "2026-10-14 04:39:40",
+    "--no-pager",
+    "-o",
+    "short-iso-precise"
+  ],
+  "exit": 0,
+  "lines": 1,
+  "listed_patterns": [
+    "Out of memory",
+    "oom-kill",
+    "Killed process",
+    "NVRM: Xid",
+    "BUG:",
+    "Oops:",
+    "general protection fault",
+    "CUDA",
+    "GPU has fallen"
+  ],
+  "matching_lines": [],
+  "stdout": "-- No entries --\n",
+  "stderr": "",
+  "scope": "Selected actual timing bracket kernel journal; no continuous isolation or unlogged-fault claim"
+}

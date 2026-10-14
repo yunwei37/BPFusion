@@ -540,10 +540,10 @@ acceptance remain under the full retained goal.
 Backend arithmetic,references and the full retained goal stay unchanged;
 do not repeat unchanged timing or begin a model-specific arithmetic campaign.
 
-## CQ progress before submission in progress
+## Completed CQ progress before submission comparison
 
 [Finding0045](findings/0045-uring-cq-progress.md) tests a source-backed local
-completion-order intervention after0044. The current loop observes CQ tail
+completion-order intervention after0044. The former loop observes CQ tail
 after SQ submission; the candidate snapshots before, recognizing progress
 produced by submission. This is not an established cause of old delivery loss.
 The [plan](../bench/results/uring_cq_progress_20261014/plan.md) and
@@ -564,7 +564,40 @@ passes120 requests/3144 checked tokens across3 paths,exit/analysis0. All12
 vLLM strict executors pass7464 requests/266688 valid tokens,3108 intended
 rejects and60000 empty connections. Both unchanged HF workloads pass32
 requests/652 complete/prefix tokens per model with13 closes/3 expected aborts.
-Full qualification is complete; timing remains pending. No dependency activity is an independent research result.
-Continue through the planned real path and fresh result review,retain failures
-and negative estimates,then remove owned apparatus and publish honest main
-evidence. The full retained goal and closed0044 comparison remain unchanged.
+Full timing completes36 executors/144 cells,9216 measured requests/299520
+tokens plus288 excluded checked warmups at frozen d45b82f. Both actual model
+children and analyzers exit0; all executor terminal records are normal.
+[Fresh independent result review](../bench/results/uring_cq_progress_20261014/result-review.md)
+judges the run valid, hypothesis inconclusive and research role supporting.
+Both timing and four strict analyzers replay byte-identically; independent
+arrival/CPU/paired-interval reconstruction matches.
+
+Four primary native effects, positive favoring candidate, have nominal paired
+t95 over six process blocks: Qwen TTFT1/c8 -0.073754ms[-0.192306,0.044798],
+Smol +0.050052[-0.116828,0.216932]; Qwen TPS64/c8 -116.887239
+[-261.334558,27.560079], Smol +78.800847[-129.197723,286.799418].
+All cross zero: no reliable delivery improvement, equivalence or zero-effect
+claim. All four matching before/after component intervals also cross zero.
+
+Retain secondary negatives: Qwen TPS1/c8 is lower than native by167.590019
+[74.234413,260.945626] token/s; Qwen TTFT64/c8 is slower than former-loop
+by0.106719[0.031336,0.182103]ms. Smol TTFT64/c1 improves versus native
+by0.058104[0.024078,0.092130]ms, but its component interval crosses zero.
+Both models' long-output process CPU is higher than native. At64/c8
+candidate/native/former costs are Qwen0.550996/0.490435/0.557682 and
+Smol0.489155/0.435193/0.500387ms/request. These executor clock brackets
+exclude client and networking work elsewhere, total CPU and energy.
+
+The observation SSH connection fails during Smol; reconnect verifies the same
+original pipeline/driver advancing. No cell/executor is restarted or excluded.
+Actual benchmark children and raw terminal events complete normally, but the
+remote wrapper exit remains unobserved. Interference is not ruled out.
+Empty selected kernel journal and endpoint checks do not prove continuous
+isolation. Ordinary output-set fidelity does not replay current unobserved
+batch/KV histories or establish task quality.
+
+[Final restoration](../bench/results/uring_cq_progress_20261014/final_restoration.json)
+removes owned runtime and32 named builds while preserving original boot/base,
+default library, Coder processes and unrelated WIP. Close unchanged timing;
+do not promote snapshot ordering as a proven optimization. Optimized matched
+cross-node/service acceptance and the full retained goal remain open.

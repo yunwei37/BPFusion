@@ -1,0 +1,36 @@
+[
+  {
+    "model": "qwen",
+    "cmd": [
+      "/tmp/bpfusion-uring-cq-progress-jf93e9xn/runtime/bin/python",
+      "bench/vllm_serving.py",
+      "--loop-progress-comparison",
+      "--untraced",
+      "--reference-path",
+      "/tmp/bpfusion-uring-cq-progress-jf93e9xn/frozen_references.json",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--output",
+      "/tmp/bpfusion-uring-cq-progress-jf93e9xn/qwen_performance.jsonl"
+    ],
+    "exit": 0,
+    "analysis_exit": 0
+  },
+  {
+    "model": "smol",
+    "cmd": [
+      "/tmp/bpfusion-uring-cq-progress-jf93e9xn/runtime/bin/python",
+      "bench/vllm_serving.py",
+      "--loop-progress-comparison",
+      "--untraced",
+      "--reference-path",
+      "/tmp/bpfusion-uring-cq-progress-jf93e9xn/frozen_references.json",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--output",
+      "/tmp/bpfusion-uring-cq-progress-jf93e9xn/smol_performance.jsonl"
+    ],
+    "exit": 0,
+    "analysis_exit": 0
+  }
+]
