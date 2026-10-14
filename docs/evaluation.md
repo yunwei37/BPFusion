@@ -455,8 +455,8 @@ setup/strict/lifecycle work dependency-only. Source intervention is small and
 not answered by0042; SQPOLL/wakeup and optimized cross-node serving remain
 higher-level open costs after this one comparison. Plan and fresh review are
 linked from the finding. Initial half-close control failure and subsequent
-passing diagnostics/stress are retained; cause unresolved. Qualification and
-full timing are incomplete, so no throughput effect or result verdict exists.
+passing diagnostics/stress are retained; cause unresolved. At that point qualification and timing were incomplete; the completed
+comparison and verdict are recorded below.
 
 A source-native HF idle reproduction subsequently captures genuine RECV
 EAGAIN wrongly treated as connection death. Both copy conditions now share
@@ -469,6 +469,18 @@ stalls before admission. A read-only psock snapshot captures divergent receive
 cursors; a temporary same-socket ingress redirect passes both model idle
 regressions. All twelve traced/ordinary protocol executors then pass with
 the redirect candidate. The same redirect is adopted in production source;
-both model default module compatibility workloads and final copy preflight pass. Full copy timing remains incomplete, and none of this
-dependency work establishes a throughput effect. Raw failures, diagnostics
+both model default module compatibility workloads and final copy preflight pass. The subsequent completed matrix is reported below; none of this
+dependency work itself establishes a throughput effect. Raw failures, diagnostics
 and candidate passes are linked from finding0043.
+
+The complete copy matrix now finishes36 executors/36 cells,9216 measured
+requests/589824 tokens plus288 excluded checked warmups. All four primary TPS
+intervals include zero for candidate/native and candidate/full-copy across
+both models:tested hypothesis inconclusive, research value supporting, paper
+impact local mechanism/workload boundary. Known-worker stock CPU remains
+roughly27/30 times native. Exact values, all blocks, fidelity limits, commands
+and fresh independent review are linked from finding0043. Close this comparison;
+prioritize measured polling/wakeup costs or optimized cross-node delivery
+instead of repeating unchanged copy cells or tuning model arithmetic. General
+reliability, total CPU/energy, external SOTA and arbitrary-model claims remain
+unproven. The late endpoint observation is separately dated from actual timing.

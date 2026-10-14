@@ -1,0 +1,103 @@
+{
+  "observed_utc": "2026-10-14T01:47:50.862946+00:00",
+  "scope": "Late closure after independent result review; not an immediate timing endpoint",
+  "removed_build_paths": [
+    "build/vllm_graph_uring",
+    "build/vllm_graph_uring.so",
+    "build/vllm_graph_uring.so.o",
+    "build/vllm_graph_uring.so.dlink.o",
+    "build/vllm_graph_uring_trace",
+    "build/vllm_graph_uring_trace.so",
+    "build/vllm_graph_uring_trace.so.o",
+    "build/vllm_graph_uring_trace.so.dlink.o",
+    "build/vllm_graph_uring_full_copy",
+    "build/vllm_graph_uring_full_copy.so",
+    "build/vllm_graph_uring_full_copy.so.o",
+    "build/vllm_graph_uring_full_copy.so.dlink.o",
+    "build/vllm_graph_uring_full_copy_trace",
+    "build/vllm_graph_uring_full_copy_trace.so",
+    "build/vllm_graph_uring_full_copy_trace.so.o",
+    "build/vllm_graph_uring_full_copy_trace.so.dlink.o",
+    "build/vllm_graph_user_network_wait",
+    "build/vllm_graph_user_network_wait.so",
+    "build/vllm_graph_user_network_wait.so.o",
+    "build/vllm_graph_user_network_wait.so.dlink.o",
+    "build/vllm_graph_user_network_wait_trace",
+    "build/vllm_graph_user_network_wait_trace.so",
+    "build/vllm_graph_user_network_wait_trace.so.o",
+    "build/vllm_graph_user_network_wait_trace.so.dlink.o",
+    "build/vllm_graph_trace",
+    "build/vllm_graph_trace.so",
+    "build/vllm_graph_trace.so.o",
+    "build/vllm_graph_trace.so.dlink.o",
+    "build/qwen_graph_uring",
+    "build/qwen_graph_uring.so"
+  ],
+  "removed_launcher_symlinks": [
+    {
+      "path": "build/vllm_graph_uring",
+      "target": "/workspaces/repository/executor/vllm_graph.py"
+    },
+    {
+      "path": "build/vllm_graph_uring_trace",
+      "target": "/workspaces/repository/executor/vllm_graph.py"
+    },
+    {
+      "path": "build/vllm_graph_uring_full_copy",
+      "target": "/workspaces/repository/executor/vllm_graph.py"
+    },
+    {
+      "path": "build/vllm_graph_uring_full_copy_trace",
+      "target": "/workspaces/repository/executor/vllm_graph.py"
+    },
+    {
+      "path": "build/vllm_graph_user_network_wait",
+      "target": "/workspaces/repository/executor/vllm_graph.py"
+    },
+    {
+      "path": "build/vllm_graph_user_network_wait_trace",
+      "target": "/workspaces/repository/executor/vllm_graph.py"
+    },
+    {
+      "path": "build/vllm_graph_trace",
+      "target": "/workspaces/repository/executor/vllm_graph.py"
+    },
+    {
+      "path": "build/qwen_graph_uring",
+      "target": "/workspaces/repository/executor/qwen_graph.py"
+    }
+  ],
+  "cleanup_note": "Initial resolved-parent check stopped before removal on launcher symlinks; after inspecting their existing source targets, only the named build links were unlinked. Source targets are preserved.",
+  "removed_temp_root": "/tmp/bpfusion-uring-copy-6wpl3780",
+  "temp_root_absent": true,
+  "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167",
+  "kernel": "7.3.0-070300rc3-generic",
+  "base_packages": {
+    "torch": "2.14.1",
+    "transformers": "5.19.0"
+  },
+  "setup_env_bytes_preserved": true,
+  "vllm_python_source_bytes_preserved": true,
+  "module_loaded": false,
+  "pins": [],
+  "gpu_query_exit": 0,
+  "gpu_compute_apps": "",
+  "process_check_exit": 1,
+  "model_sources_unchanged": true,
+  "post_cleanup_observed_utc": "2026-10-14T01:49:08.130662+00:00",
+  "post_cleanup_gpu_query_exit": 0,
+  "post_cleanup_gpu_compute_apps": "",
+  "post_cleanup_process_check_exit": 1,
+  "post_cleanup_processes": "",
+  "coder_process_comm": {
+    "1": "coder",
+    "10909": "coder"
+  },
+  "workspace_late_endpoint": {
+    "uid": "3e8994f8-77ba-4a73-a3a5-35ed69a0a8a2",
+    "phase": "Running",
+    "ready": true,
+    "restarts": 0,
+    "observation_utc": "2026-10-14T01:49:55.748912+00:00"
+  }
+}

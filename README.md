@@ -69,16 +69,15 @@ finds no reliable stock advantage, lower Qwen long-output throughput and
 about31–32 times the native known-worker CPU cost in gen64/c8. This measures
 specific worker brackets, not total service CPU; the module remains default.
 
-The [incremental stock copy experiment](docs/findings/0043-uring-incremental-copy.md)
-adds the full-copy build target and --copy-comparison to isolate repeated
-output-prefix copying with unchanged model computation. Performance is pending;
-an initial half-close failure remains unexplained despite later diagnostic and
-stress passes. A separately captured transient RECV error was incorrectly
-treated as connection death; the shared path now rearms EAGAIN/EINTR.
-A further idle receive stall motivates same-socket ingress redirect: both
-model idle regressions and all traced/ordinary protocol checks pass, with
-both default module compatibility workloads and final copy preflight passing.
-Performance and general transport reliability remain unproven.
+The [incremental stock copy comparison](docs/findings/0043-uring-incremental-copy.md)
+completes36 executors/9216 measured requests with unchanged upstream computation.
+All four primary throughput intervals include zero against the full-copy
+ablation and efficient native TCP; a reliable benefit remains unproven.
+Stock still uses about27–30 times the native known-worker CPU in this run.
+The captured transient receive error now rearms EAGAIN/EINTR; same-socket
+ingress redirect passes both idle regressions, full stock protocols and default
+module compatibility. Initial failures remain archived; general reliability
+is not established by these finite workloads.
 
 ## Service and compute boundary
 

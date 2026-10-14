@@ -230,3 +230,17 @@ and build receipts are in final_qualification/. Original boot/base/Coder/WIP
 remain; endpoint checks find no own BPF pins, loaded module or GPU application.
 This completes integration dependencies only. Full copy timing has not started;
 all conditions will use one published source revision and unchanged references.
+
+## Recorded completed comparison and closure
+
+The frozen0330145710dc66de66dbb0864f4133ee345b86d8 comparison completes both
+models,36 executors/cells,9216 measured requests/589824 tokens plus288 excluded
+checked warmups. The final raw timestamp is2026-10-13T08:20:05Z. Both model
+exit/analysis receipts are zero; no failed/excluded/replaced/retried timing cell.
+Fresh independent result review declares valid/complete within fixed whole-
+sequence fidelity, hypothesis inconclusive, supporting value and a local
+mechanism/workload boundary. All four primary TPS intervals contain zero.
+See finding0043 and result-review.md for numbers and interpretation. Late
+closure observations are separately dated; final_restoration.json removes only
+the owned temporary root and30 build entries, preserving boot/base/models,
+launcher source targets and unrelated WIP. The initial failures remain archived.
