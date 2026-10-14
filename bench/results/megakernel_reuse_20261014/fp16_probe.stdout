@@ -1,0 +1,69 @@
+metadata   
+start 0 1 official_per_step
+[1/5] /usr/local/cuda/bin/nvcc -MD -MF sync.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120_cpasync0 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cu -o sync.cuda.o 
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[2/5] /usr/local/cuda/bin/nvcc -MD -MF pages.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120_cpasync0 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/pages.cu -o pages.cuda.o 
+[3/5] /usr/local/cuda/bin/nvcc -MD -MF scheduler.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120_cpasync0 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/scheduler.cu -o scheduler.cuda.o 
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[4/5] c++ -MMD -MF vm_ext.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120_cpasync0 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -fPIC -std=c++20 -std=c++20 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/vm_ext.cpp -o vm_ext.o 
+[5/5] c++ scheduler.cuda.o sync.cuda.o pages.cuda.o vm_ext.o -shared -L/usr/local/lib/python3.12/dist-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/local/cuda/lib64 -lcudart -o amk_vm_ext_sm120_cpasync0.so
+output 0 1 official_per_step
+start 0 1 official_persistent
+ninja: no work to do.
+[1/5] /usr/local/cuda/bin/nvcc -MD -MF sync.cuda.o.d -DTORCH_EXTENSION_NAME=amk_persist_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cu -o sync.cuda.o 
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[2/5] /usr/local/cuda/bin/nvcc -MD -MF pages.cuda.o.d -DTORCH_EXTENSION_NAME=amk_persist_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/pages.cu -o pages.cuda.o 
+[3/5] /usr/local/cuda/bin/nvcc -MD -MF scheduler_persist.cuda.o.d -DTORCH_EXTENSION_NAME=amk_persist_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/scheduler_persist.cu -o scheduler_persist.cuda.o 
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[4/5] c++ -MMD -MF vm_ext_persist.o.d -DTORCH_EXTENSION_NAME=amk_persist_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -fPIC -std=c++20 -std=c++20 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/vm_ext_persist.cpp -o vm_ext_persist.o 
+[5/5] c++ scheduler_persist.cuda.o vm_ext_persist.o sync.cuda.o pages.cuda.o -shared -L/usr/local/lib/python3.12/dist-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/local/cuda/lib64 -lcudart -o amk_persist_ext_sm120.so
+output 0 1 official_persistent
+start 1 1 official_per_step
+output 1 1 official_per_step
+start 1 1 official_persistent
+output 1 1 official_persistent
+start 2 1 official_per_step
+output 2 1 official_per_step
+start 2 1 official_persistent
+output 2 1 official_persistent
+start 3 1 official_per_step
+output 3 1 official_per_step
+start 3 1 official_persistent
+output 3 1 official_persistent
+start 0 64 official_per_step
+output 0 64 official_per_step
+start 0 64 official_persistent
+output 0 64 official_persistent
+start 1 64 official_per_step
+output 1 64 official_per_step
+start 1 64 official_persistent
+output 1 64 official_persistent
+start 2 64 official_per_step
+output 2 64 official_per_step
+start 2 64 official_persistent
+output 2 64 official_persistent
+start 3 64 official_per_step
+output 3 64 official_per_step
+start 3 64 official_persistent
+output 3 64 official_persistent
+terminal   

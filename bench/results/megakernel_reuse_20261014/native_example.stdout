@@ -1,0 +1,278 @@
+Loading checkpoint '/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2' (real trained weights + tokenizer)...
+Imported into AMK graph: ModelGraph(layers=30, hidden=576, heads=9/3kv x64, inter=1536, vocab=49152, nodes=513, weights=272)
+  tied_embeddings=True rope_theta=100000.0
+
+Prompt: 'The capital of France is'  ->  5 tokens [504, 3575, 282, 4649, 314]
+Generating 16 tokens via AMK (cuda VM) and HF greedy...
+
+[1/5] /usr/local/cuda/bin/nvcc -MD -MF sync.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -DAMK_GEMV_CPASYNC=1 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cu -o sync.cuda.o 
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[2/5] /usr/local/cuda/bin/nvcc -MD -MF pages.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -DAMK_GEMV_CPASYNC=1 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/pages.cu -o pages.cuda.o 
+[3/5] /usr/local/cuda/bin/nvcc -MD -MF scheduler.cuda.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options '-fPIC' -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120 --extended-lambda -std=c++17 -DAMK_GEMV_CPASYNC=1 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/scheduler.cu -o scheduler.cuda.o 
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/sync.cuh(72): warning #550-D: variable "s_ready" was set but never used
+                int s_ready;
+                    ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/ops.cuh(1816): warning #177-D: variable "pat" was declared but never referenced
+      const int pat = (inst.params.flags >> 16) & 0xFFFF;
+                ^
+
+[4/5] c++ -MMD -MF vm_ext.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -fPIC -std=c++20 -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/vm_ext.cpp -o vm_ext.o 
+FAILED: [code=1] vm_ext.o 
+c++ -MMD -MF vm_ext.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -fPIC -std=c++20 -std=c++17 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/vm_ext.cpp -o vm_ext.o 
+In file included from /usr/local/lib/python3.12/dist-packages/torch/include/torch/extension.h:6,
+                 from /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/vm_ext.cpp:20:
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include/torch/all.h:5:2: error: #error C++20 or later compatible compiler is required to use PyTorch.
+    5 | #error C++20 or later compatible compiler is required to use PyTorch.
+      |  ^~~~~
+In file included from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include/torch/types.h:4,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include/torch/data/dataloader_options.h:5,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/base.h:4,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/stateful.h:5,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include/torch/data/dataloader.h:4,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include/torch/data.h:4,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include/torch/all.h:10:
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/ATen.h:5:2: error: #error C++20 or later compatible compiler is required to use ATen.
+    5 | #error C++20 or later compatible compiler is required to use ATen.
+      |  ^~~~~
+In file included from /usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymNodeImpl.h:8,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymBool.h:5,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/c10/core/Scalar.h:11,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBody.h:17,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/Tensor.h:4,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/ATen/Tensor.h:4,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/autograd/function_hook.h:4,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/autograd/cpp_hook.h:3,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/autograd/variable.h:7,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/autograd/autograd.h:4,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include/torch/autograd.h:4,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include/torch/all.h:8:
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/util/intrusive_ptr.h:775:27: error: ‘strong_ordering’ in namespace ‘std’ does not name a type
+  775 | [[nodiscard]] inline std::strong_ordering operator<=>(
+      |                           ^~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/util/intrusive_ptr.h:775:22: note: ‘std::strong_ordering’ is only available from C++20 onwards
+  775 | [[nodiscard]] inline std::strong_ordering operator<=>(
+      |                      ^~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/util/intrusive_ptr.h:1104:15: error: ‘strong_ordering’ in namespace ‘std’ does not name a type
+ 1104 |   friend std::strong_ordering operator<=>(
+      |               ^~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/util/intrusive_ptr.h:1104:10: note: ‘std::strong_ordering’ is only available from C++20 onwards
+ 1104 |   friend std::strong_ordering operator<=>(
+      |          ^~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/util/intrusive_ptr.h:1124:27: error: ‘strong_ordering’ in namespace ‘std’ does not name a type
+ 1124 | [[nodiscard]] inline std::strong_ordering operator<=>(
+      |                           ^~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/util/intrusive_ptr.h:1124:22: note: ‘std::strong_ordering’ is only available from C++20 onwards
+ 1124 | [[nodiscard]] inline std::strong_ordering operator<=>(
+      |                      ^~~
+In file included from /usr/local/lib/python3.12/dist-packages/torch/include/c10/util/typeid.h:20,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/c10/core/ScalarTypeToTypeMeta.h:6,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBody.h:19:
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/util/TypeIndex.h: In function ‘constexpr c10::c10_string_view c10::util::detail::fully_qualified_type_name_impl()’:
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/util/TypeIndex.h:56:25: error: ‘const std::string_view’ {aka ‘const class std::basic_string_view<char>’} has no member named ‘starts_with’
+   56 |   static_assert(fun_sig.starts_with(prefix));
+      |                         ^~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/util/TypeIndex.h:57:25: error: ‘const std::string_view’ {aka ‘const class std::basic_string_view<char>’} has no member named ‘ends_with’
+   57 |   static_assert(fun_sig.ends_with(suffix));
+      |                         ^~~~~~~~~
+In file included from /usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBody.h:39:
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h: At global scope:
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1031:5: error: ‘requires’ does not name a type
+ 1031 |     requires std::is_same_v<T, c10::SymInt>
+      |     ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1031:5: note: ‘requires’ only available with ‘-std=c++20’ or ‘-fconcepts’
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1034:5: error: ‘requires’ does not name a type
+ 1034 |     requires std::is_same_v<T, int64_t>
+      |     ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1034:5: note: ‘requires’ only available with ‘-std=c++20’ or ‘-fconcepts’
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1038:5: error: ‘requires’ does not name a type
+ 1038 |     requires std::is_same_v<T, c10::SymInt>
+      |     ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1038:5: note: ‘requires’ only available with ‘-std=c++20’ or ‘-fconcepts’
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1041:5: error: ‘requires’ does not name a type
+ 1041 |     requires std::is_same_v<T, int64_t>
+      |     ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1041:5: note: ‘requires’ only available with ‘-std=c++20’ or ‘-fconcepts’
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1045:5: error: ‘requires’ does not name a type
+ 1045 |     requires std::is_same_v<T, c10::SymInt>
+      |     ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1045:5: note: ‘requires’ only available with ‘-std=c++20’ or ‘-fconcepts’
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1048:5: error: ‘requires’ does not name a type
+ 1048 |     requires std::is_same_v<T, int64_t>
+      |     ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1048:5: note: ‘requires’ only available with ‘-std=c++20’ or ‘-fconcepts’
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1052:5: error: ‘requires’ does not name a type
+ 1052 |     requires std::is_same_v<T, c10::SymInt>
+      |     ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1052:5: note: ‘requires’ only available with ‘-std=c++20’ or ‘-fconcepts’
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1055:5: error: ‘requires’ does not name a type
+ 1055 |     requires std::is_same_v<T, int64_t>
+      |     ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBase.h:1055:5: note: ‘requires’ only available with ‘-std=c++20’ or ‘-fconcepts’
+In file included from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/autograd/variable.h:8:
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/autograd/edge.h: In member function ‘bool torch::autograd::Edge::is_valid() const’:
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/autograd/edge.h:23:21: error: no match for ‘operator!=’ (operand types are ‘const c10::intrusive_ptr<torch::autograd::Node>’ and ‘std::nullptr_t’)
+   23 |     return function != nullptr;
+      |            ~~~~~~~~~^~~~~~~~~~
+In file included from /usr/local/lib/python3.12/dist-packages/torch/include/c10/util/complex.h:8,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/c10/core/ScalarType.h:14,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/c10/core/Scalar.h:10:
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/headeronly/util/complex.h:501:16: note: candidate: ‘template<class T> constexpr bool c10::operator!=(const complex<U>&, const complex<U>&)’
+  501 | constexpr bool operator!=(const complex<T>& lhs, const complex<T>& rhs) {
+      |                ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/headeronly/util/complex.h:501:16: note:   template argument deduction/substitution failed:
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/autograd/edge.h:23:24: note:   ‘const c10::intrusive_ptr<torch::autograd::Node>’ is not derived from ‘const c10::complex<U>’
+   23 |     return function != nullptr;
+      |                        ^~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/headeronly/util/complex.h:506:16: note: candidate: ‘template<class T> constexpr bool c10::operator!=(const complex<U>&, const T&)’
+  506 | constexpr bool operator!=(const complex<T>& lhs, const T& rhs) {
+      |                ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/headeronly/util/complex.h:506:16: note:   template argument deduction/substitution failed:
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/autograd/edge.h:23:24: note:   ‘const c10::intrusive_ptr<torch::autograd::Node>’ is not derived from ‘const c10::complex<U>’
+   23 |     return function != nullptr;
+      |                        ^~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/headeronly/util/complex.h:511:16: note: candidate: ‘template<class T> constexpr bool c10::operator!=(const T&, const complex<U>&)’
+  511 | constexpr bool operator!=(const T& lhs, const complex<T>& rhs) {
+      |                ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/headeronly/util/complex.h:511:16: note:   template argument deduction/substitution failed:
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/autograd/edge.h:23:24: note:   mismatched types ‘const c10::complex<U>’ and ‘std::nullptr_t’
+   23 |     return function != nullptr;
+      |                        ^~~~~~~
+In file included from /usr/local/lib/python3.12/dist-packages/torch/include/c10/core/Allocator.h:18,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/c10/core/Storage.h:4,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/ATen/core/TensorBody.h:20:
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/util/UniqueVoidPtr.h:138:27: note: candidate: ‘bool c10::detail::operator!=(const UniqueVoidPtr&, std::nullptr_t)’
+  138 | [[nodiscard]] inline bool operator!=(
+      |                           ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/util/UniqueVoidPtr.h:139:26: note:   no known conversion for argument 1 from ‘const c10::intrusive_ptr<torch::autograd::Node>’ to ‘const c10::detail::UniqueVoidPtr&’
+  139 |     const UniqueVoidPtr& sp,
+      |     ~~~~~~~~~~~~~~~~~~~~~^~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/util/UniqueVoidPtr.h:143:27: note: candidate: ‘bool c10::detail::operator!=(std::nullptr_t, const UniqueVoidPtr&)’
+  143 | [[nodiscard]] inline bool operator!=(
+      |                           ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/util/UniqueVoidPtr.h:144:5: note:   no known conversion for argument 1 from ‘const c10::intrusive_ptr<torch::autograd::Node>’ to ‘std::nullptr_t’
+  144 |     std::nullptr_t,
+      |     ^~~~~~~~~~~~~~
+In file included from /usr/local/lib/python3.12/dist-packages/torch/include/c10/util/Float4_e2m1fn_x2.h:2,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/c10/core/ScalarType.h:6:
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/headeronly/util/Float4_e2m1fn_x2.h:35:29: note: candidate: ‘bool c10::operator!=(const Float4_e2m1fn_x2&, const Float4_e2m1fn_x2&)’
+   35 | inline C10_HOST_DEVICE bool operator!=(
+      |                             ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/torch/headeronly/util/Float4_e2m1fn_x2.h:36:29: note:   no known conversion for argument 1 from ‘const c10::intrusive_ptr<torch::autograd::Node>’ to ‘const c10::Float4_e2m1fn_x2&’
+   36 |     const Float4_e2m1fn_x2& a,
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~^
+In file included from /usr/local/lib/python3.12/dist-packages/torch/include/c10/core/Scalar.h:13:
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:488:1: note: candidate: ‘bool c10::operator!=(const SymInt&, int64_t)’
+  488 | DECLARE_SYMINT_OP(int64_t, SymInt)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:488:1: note:   no known conversion for argument 1 from ‘const c10::intrusive_ptr<torch::autograd::Node>’ to ‘const c10::SymInt&’
+  488 | DECLARE_SYMINT_OP(int64_t, SymInt)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:488:1: note: candidate: ‘bool c10::operator!=(int64_t, const SymInt&)’
+  488 | DECLARE_SYMINT_OP(int64_t, SymInt)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:488:1: note:   no known conversion for argument 2 from ‘std::nullptr_t’ to ‘const c10::SymInt&’
+  488 | DECLARE_SYMINT_OP(int64_t, SymInt)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:489:1: note: candidate: ‘bool c10::operator!=(const SymInt&, int32_t)’
+  489 | DECLARE_SYMINT_OP(int32_t, SymInt) // make sure constants work
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:489:1: note:   no known conversion for argument 1 from ‘const c10::intrusive_ptr<torch::autograd::Node>’ to ‘const c10::SymInt&’
+  489 | DECLARE_SYMINT_OP(int32_t, SymInt) // make sure constants work
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:489:1: note: candidate: ‘bool c10::operator!=(int32_t, const SymInt&)’
+  489 | DECLARE_SYMINT_OP(int32_t, SymInt) // make sure constants work
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:489:1: note:   no known conversion for argument 2 from ‘std::nullptr_t’ to ‘const c10::SymInt&’
+  489 | DECLARE_SYMINT_OP(int32_t, SymInt) // make sure constants work
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:490:1: note: candidate: ‘bool c10::operator!=(const SymInt&, uint64_t)’
+  490 | DECLARE_SYMINT_OP(uint64_t, SymInt)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:490:1: note:   no known conversion for argument 1 from ‘const c10::intrusive_ptr<torch::autograd::Node>’ to ‘const c10::SymInt&’
+  490 | DECLARE_SYMINT_OP(uint64_t, SymInt)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:490:1: note: candidate: ‘bool c10::operator!=(uint64_t, const SymInt&)’
+  490 | DECLARE_SYMINT_OP(uint64_t, SymInt)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:490:1: note:   no known conversion for argument 2 from ‘std::nullptr_t’ to ‘const c10::SymInt&’
+  490 | DECLARE_SYMINT_OP(uint64_t, SymInt)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:491:1: note: candidate: ‘bool c10::operator!=(const SymInt&, uint32_t)’
+  491 | DECLARE_SYMINT_OP(uint32_t, SymInt)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:491:1: note:   no known conversion for argument 1 from ‘const c10::intrusive_ptr<torch::autograd::Node>’ to ‘const c10::SymInt&’
+  491 | DECLARE_SYMINT_OP(uint32_t, SymInt)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:491:1: note: candidate: ‘bool c10::operator!=(uint32_t, const SymInt&)’
+  491 | DECLARE_SYMINT_OP(uint32_t, SymInt)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:491:1: note:   no known conversion for argument 2 from ‘std::nullptr_t’ to ‘const c10::SymInt&’
+  491 | DECLARE_SYMINT_OP(uint32_t, SymInt)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:492:1: note: candidate: ‘bool c10::operator!=(const SymInt&, double)’
+  492 | DECLARE_SYMINT_OP(double, SymFloat)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:492:1: note:   no known conversion for argument 1 from ‘const c10::intrusive_ptr<torch::autograd::Node>’ to ‘const c10::SymInt&’
+  492 | DECLARE_SYMINT_OP(double, SymFloat)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:492:1: note: candidate: ‘bool c10::operator!=(double, const SymInt&)’
+  492 | DECLARE_SYMINT_OP(double, SymFloat)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:492:1: note:   no known conversion for argument 2 from ‘std::nullptr_t’ to ‘const c10::SymInt&’
+  492 | DECLARE_SYMINT_OP(double, SymFloat)
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:493:1: note: candidate: ‘bool c10::operator!=(const SymInt&, float)’
+  493 | DECLARE_SYMINT_OP(float, SymFloat) // just for completeness
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:493:1: note:   no known conversion for argument 1 from ‘const c10::intrusive_ptr<torch::autograd::Node>’ to ‘const c10::SymInt&’
+  493 | DECLARE_SYMINT_OP(float, SymFloat) // just for completeness
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:493:1: note: candidate: ‘bool c10::operator!=(float, const SymInt&)’
+  493 | DECLARE_SYMINT_OP(float, SymFloat) // just for completeness
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/SymInt.h:493:1: note:   no known conversion for argument 2 from ‘std::nullptr_t’ to ‘const c10::SymInt&’
+  493 | DECLARE_SYMINT_OP(float, SymFloat) // just for completeness
+      | ^~~~~~~~~~~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/ScalarTypeToTypeMeta.h:50:13: note: candidate: ‘bool c10::operator!=(ScalarType, caffe2::TypeMeta)’
+   50 | inline bool operator!=(ScalarType t, caffe2::TypeMeta m) {
+      |             ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/ScalarTypeToTypeMeta.h:50:35: note:   no known conversion for argument 1 from ‘const c10::intrusive_ptr<torch::autograd::Node>’ to ‘c10::ScalarType’
+   50 | inline bool operator!=(ScalarType t, caffe2::TypeMeta m) {
+      |                        ~~~~~~~~~~~^
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/ScalarTypeToTypeMeta.h:54:13: note: candidate: ‘bool c10::operator!=(caffe2::TypeMeta, ScalarType)’
+   54 | inline bool operator!=(caffe2::TypeMeta m, ScalarType t) {
+      |             ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/ScalarTypeToTypeMeta.h:54:41: note:   no known conversion for argument 1 from ‘const c10::intrusive_ptr<torch::autograd::Node>’ to ‘caffe2::TypeMeta’
+   54 | inline bool operator!=(caffe2::TypeMeta m, ScalarType t) {
+      |                        ~~~~~~~~~~~~~~~~~^
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/Allocator.h:152:13: note: candidate: ‘bool c10::operator!=(const DataPtr&, std::nullptr_t)’
+  152 | inline bool operator!=(const DataPtr& dp, std::nullptr_t) noexcept {
+      |             ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/Allocator.h:152:39: note:   no known conversion for argument 1 from ‘const c10::intrusive_ptr<torch::autograd::Node>’ to ‘const c10::DataPtr&’
+  152 | inline bool operator!=(const DataPtr& dp, std::nullptr_t) noexcept {
+      |                        ~~~~~~~~~~~~~~~^~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/Allocator.h:155:13: note: candidate: ‘bool c10::operator!=(std::nullptr_t, const DataPtr&)’
+  155 | inline bool operator!=(std::nullptr_t, const DataPtr& dp) noexcept {
+      |             ^~~~~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/c10/core/Allocator.h:155:24: note:   no known conversion for argument 1 from ‘const c10::intrusive_ptr<torch::autograd::Node>’ to ‘std::nullptr_t’
+  155 | inline bool operator!=(std::nullptr_t, const DataPtr& dp) noexcept {
+      |                        ^~~~~~~~~~~~~~
+In file included from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/autograd/input_metadata.h:4,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/autograd/node.h:8,
+                 from /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/autograd/variable.h:11:
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/ExpandUtils.h: In function ‘at::Tensor at::_sum_to(Tensor, c10::ArrayRef<T>, bool)’:
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/ExpandUtils.h:470:28: error: ‘sizes’ is not a member of ‘at::symint’
+  470 |   auto sizes = at::symint::sizes<T>(tensor);
+      |                            ^~~~~
+/usr/local/lib/python3.12/dist-packages/torch/include/ATen/ExpandUtils.h:470:35: error: expected primary-expression before ‘>’ token
+  470 |   auto sizes = at::symint::sizes<T>(tensor);
+      |                                   ^
+ninja: build stopped: subcommand failed.

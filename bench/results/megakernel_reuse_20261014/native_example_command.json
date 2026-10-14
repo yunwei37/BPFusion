@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/usr/bin/python3",
+    "/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/examples/run_hf_model.py",
+    "--model",
+    "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+    "--vm",
+    "cuda",
+    "--prompt",
+    "The capital of France is",
+    "--tokens",
+    "16"
+  ],
+  "cwd": "/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34",
+  "env_overrides": {
+    "PATH": "/tmp/bpfusion-megakernel-reuse-oxfus39y/dependencies/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "PYTHONPATH": "/tmp/bpfusion-megakernel-reuse-oxfus39y/dependencies",
+    "TORCH_EXTENSIONS_DIR": "/tmp/bpfusion-megakernel-reuse-oxfus39y/cuda_extensions",
+    "CUDA_HOME": "/usr/local/cuda",
+    "PYTHONUNBUFFERED": "1"
+  },
+  "precision": "F32 upstream official example; native dependency only",
+  "utc": "2026-10-14T07:09:52.502406+00:00"
+}

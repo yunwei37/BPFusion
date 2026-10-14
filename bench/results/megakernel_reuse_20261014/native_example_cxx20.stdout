@@ -1,0 +1,18 @@
+Loading checkpoint '/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2' (real trained weights + tokenizer)...
+Imported into AMK graph: ModelGraph(layers=30, hidden=576, heads=9/3kv x64, inter=1536, vocab=49152, nodes=513, weights=272)
+  tied_embeddings=True rope_theta=100000.0
+
+Prompt: 'The capital of France is'  ->  5 tokens [504, 3575, 282, 4649, 314]
+Generating 16 tokens via AMK (cuda VM) and HF greedy...
+
+COMPAT_HOST_CXX17_TO_CXX20; CUDA flags/source unchanged
+[1/2] c++ -MMD -MF vm_ext.o.d -DTORCH_EXTENSION_NAME=amk_vm_ext_sm120 -DTORCH_API_INCLUDE_EXTENSION_H -I/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm -isystem /usr/local/lib/python3.12/dist-packages/torch/include -isystem /usr/local/lib/python3.12/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.12 -fPIC -std=c++20 -std=c++20 -c /tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34/vm/vm_ext.cpp -o vm_ext.o 
+[2/2] c++ scheduler.cuda.o sync.cuda.o pages.cuda.o vm_ext.o -shared -L/usr/local/lib/python3.12/dist-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/local/cuda/lib64 -lcudart -o amk_vm_ext_sm120.so
+==============================================================================
+AMK  ids : [260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282]
+HF   ids : [260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282]
+AMK  text: 'The capital of France is' + ' the capital of the country.\n\nThe capital of France is the capital of'
+HF   text: 'The capital of France is' + ' the capital of the country.\n\nThe capital of France is the capital of'
+------------------------------------------------------------------------------
+token-by-token match: 16/16  ->  EXACT MATCH
+==============================================================================

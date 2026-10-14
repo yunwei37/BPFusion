@@ -677,3 +677,30 @@ removes TEMP/9 builds, preserving original Workspace/PVC/boot/default library/
 base/Coder/WIP. Post-removal full replay is byte-identical. Close this finite
 diagnosis; full text/backend portability,performance/SLO/full CPU acceptance
 remain open and the retained objective stays active.
+
+## Reused megakernel integration in progress
+
+The [admitted plan](../bench/results/megakernel_reuse_20261014/plan.md) and
+[fresh plan review](../bench/results/megakernel_reuse_20261014/plan-review.md)
+test whether an existing whole-model backend can improve the retained serving
+objective while preserving native computation and independent model semantics.
+Upstream AMK884534c4 is untried locally before this phase; unchanged numerically
+rejected candidates are not rerun. This is supporting integration/comparison,
+with native probes dependency-only.
+
+The original officialF32SmolCUDA example fails atC++17 versus installedTorch's
+C++20requirement. A temporary host-build wrapper repairs only that flag; CUDA/
+VM/model/oracle sources remain untouched. The actual example then exits0 and
+matches16 independentHFtokens. The separateFP16probe completes4prompts×gen1/64
+under both per-step and experimental persistent modes:16 outputs/520tokens,
+all exact complete frozenHFsequences and identical between modes,normal exit0.
+The persistent mode's register/coalesced cpasync0variant is explicit in both
+conditions. No numerical reference expansion, arithmetic patch or timing claim.
+
+This enables actual device-graph/backend integration; it is not completed
+resident network service, generic model support or a paper contribution by
+itself. The installedCUDA13headers expose device-updatable kernel arguments,
+but actual graph/dispatcher co-residency,input/prefill/output lifetimes and
+safe streaming still need implementation and validation. Existing qualified
+backends/default library/WIP remain. Owned TEMP is retained for continuing
+integration; no benchmark/service process is left running. Full goal active.

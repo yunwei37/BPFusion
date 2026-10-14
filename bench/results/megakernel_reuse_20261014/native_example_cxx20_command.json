@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/usr/bin/python3",
+    "/tmp/bpfusion-megakernel-reuse-oxfus39y/native_example_cxx20.py"
+  ],
+  "cwd": "/tmp/bpfusion-megakernel-reuse-oxfus39y/AutoMegaKernel-884534c4d2dbed4381576f81a79ae97feca53c34",
+  "env_overrides": {
+    "PATH": "/tmp/bpfusion-megakernel-reuse-oxfus39y/dependencies/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "PYTHONPATH": "/tmp/bpfusion-megakernel-reuse-oxfus39y/dependencies",
+    "TORCH_EXTENSIONS_DIR": "/tmp/bpfusion-megakernel-reuse-oxfus39y/cuda_extensions",
+    "CUDA_HOME": "/usr/local/cuda",
+    "PYTHONUNBUFFERED": "1"
+  },
+  "precision": "F32 upstream official example; native dependency only",
+  "utc": "2026-10-14T07:11:54.551540+00:00",
+  "compatibility": "Only host extra_cflags C++17->C++20 needed by installedTorch; upstream/CUDA/precision/oracle unchanged"
+}
