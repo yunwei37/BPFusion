@@ -771,22 +771,26 @@ removes owned TEMP/7 builds, preserving default/base/Coder/WIP; archived
 analysis after removal replays byte-identically. No new persistent runtime
 feature or infrastructure is retained.
 
-## Coalesced GPU network progression in progress
+## Completed coalesced GPU network comparison
 
-The [plan and fresh review](../bench/results/coalesced_network_20261014/plan.md)
-retain the same performance/reuse question and introduce a source-backed
-driver intervention after0049. Durable network state is advanced by existing
-model dispatchers; the standalone GPU network worker is used only after model
-quiescence for shutdown draining. Model/BPF/protocol/timer/reference policies
-are unchanged; source/state/parent work changes collectively.
+[Finding0050](findings/0050-coalesced-gpu-network.md) completes all45 executors,
+180 cells/5760 measured requests187200 tokens plus360 checked warmups.
+AMK gen64/c8 throughput recovers158.208→292.745 token/s, but native reaches
+304.387. The paired recovery is+134.537 [133.700,135.375]; remaining native
+gap−11.642 [−12.943,−10.341]. AMK gen1/c1 TTFT increases0.622ms versus native.
+Both vLLM workloads regress throughput8–9% versus original; Qwen latency also
+loses versus native. Short-output c8 vLLM TTFT also grows2.04/2.64→6.75/8.25ms
+versus original. Full effects and negative outcomes remain archived.
 
-Actual preflight completes9 executors/36 cells/288 measured requests9360 tokens
-plus72 checked excluded warmups. Candidate selected protocol completes622
-requests22224 tokens/259 rejects per workload plus5000 empty connections each;
-vLLM traces replay actual batch/KV history and fixed pools also match.
-Allthree32-action idle/reset/inflight-stop lifecycle checks pass. Two standard
-observations place the standalone network kernel only after model-region
-activities; this is no authenticated bank/overlap-mediator claim. Original
-baseline snapshot rebuilds match normalized GPU SASS. Full45-executor ordinary
-comparison is pending; neither qualification nor baseline packaging is a
-performance result. Full goal remains active.
+Selected protocol/lifecycle and bounded legacy compatibility pass; model math
+is unchanged, stronger AMK HF equality remains failed. Ordinary pool checks
+and two mechanism traces establish their declared scope, not all-input parity
+or model-overlap mediation. There is no in-run host health snapshot; endpoint
+observations retain33 NVRM warnings without isolation/harmlessness claims.
+
+[Fresh result review](../bench/results/coalesced_network_20261014/result-review.md)
+and [restoration](../bench/results/coalesced_network_20261014/final_restoration.json)
+retain the full evidence and owned-resource cleanup. Keep defaults and faster
+vLLM paths; coalescing is an experimental AMK recovery with measured costs,
+not a universal speedup. Full generic text/backend/SLO/performance goal remains
+active; close this unchanged experiment.

@@ -440,3 +440,16 @@ The complete selected comparison is negative for AMK against both its native
 TCP control and current vLLM; broader performance acceptance remains open.
 See [finding0048](findings/0048-reused-amk-dispatch.md) for actual commands,
 raw results, dependency compatibility and the ongoing experiment boundary.
+
+## Optional coalesced GPU network progression
+
+The amk-graph-uring-coalesced and vllm-graph-uring-coalesced targets store
+network queue/connection/request state durably on the GPU and advance it once
+inside existing model dispatchers between rounds. The standalone network
+kernel runs after model quiescence only to drain shutdown. Shared queue ABI,
+BPF/protocol and model arithmetic stay unchanged; parent/state/launch work
+changes collectively. Current ordinary loop builds share the state refactor
+and pass bounded legacy compatibility. The original captured loop remains the
+performance component control. [Finding0050](findings/0050-coalesced-gpu-network.md)
+reports AMK partial recovery, remaining native gap/latency cost and vLLM
+throughput regressions. Defaults remain unchanged.

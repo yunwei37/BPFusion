@@ -216,9 +216,12 @@ The experimental amk-graph-uring-coalesced and vllm-graph-uring-coalesced
 targets advance network work inside the existing GPU dispatcher between model
 rounds, leaving no separate steady network kernel. The
 [coalesced-network experiment](bench/results/coalesced_network_20261014/plan.md)
-passes selected real protocol/lifecycle checks for AMK Smol and vLLM Smol/Qwen;
-the full matched performance comparison is pending. Model arithmetic is
-unchanged; AMK numerical limits and the existing defaults remain explicit.
+completes the matched 45-executor comparison: AMK c8 throughput rises from
+158 to293 token/s, remains below native304, and adds0.62ms gen1/c1 TTFT versus
+native. Both vLLM workloads lose8–9% long-output throughput versus their original loop;
+c8 single-token TTFT increases from2.04/2.64 to6.75/8.25ms.
+See [finding0050](docs/findings/0050-coalesced-gpu-network.md). Model arithmetic
+is unchanged; AMK numerical limits and existing defaults remain explicit.
 
 ## Repository layout
 

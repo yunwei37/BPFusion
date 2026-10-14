@@ -1,0 +1,5288 @@
+{
+  "kind": "full",
+  "driver_files": 15,
+  "executors": 45,
+  "measured_requests": 5760,
+  "measured_tokens": 187200,
+  "excluded_warmups": 360,
+  "cells": [
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 0,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.8772246875,
+      "completion_ms": 18.8772246875,
+      "tokens_per_s": 52.890088563180626,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.0004197174375,
+      "executor_cpu_s_per_request": 0.0004197174375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 0,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.85404140625,
+      "completion_ms": 401.47699053125,
+      "tokens_per_s": 159.39566489762495,
+      "tpot_ms": 6.07338014484127,
+      "known_worker_cpu_s_per_request": 0.0094658255,
+      "executor_cpu_s_per_request": 0.0094658255,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 0,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 135.71688203125,
+      "completion_ms": 135.71688203125,
+      "tokens_per_s": 58.790952523627176,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.0004192561875,
+      "executor_cpu_s_per_request": 0.0004192561875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 0,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 67.57312596875,
+      "completion_ms": 1731.9868325,
+      "tokens_per_s": 293.343583392187,
+      "tpot_ms": 26.419265183035716,
+      "known_worker_cpu_s_per_request": 0.0052062475,
+      "executor_cpu_s_per_request": 0.0052062475,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 0,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.389227125,
+      "completion_ms": 18.389227125,
+      "tokens_per_s": 54.29048904212561,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.0004728041875,
+      "executor_cpu_s_per_request": 0.0004728041875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 0,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.3552939375,
+      "completion_ms": 389.4826088125,
+      "tokens_per_s": 164.30444753133742,
+      "tpot_ms": 5.890909759920635,
+      "known_worker_cpu_s_per_request": 0.0102356125,
+      "executor_cpu_s_per_request": 0.0102356125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 0,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 147.76063278125,
+      "completion_ms": 147.76063278125,
+      "tokens_per_s": 53.8909074336412,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00048033659375,
+      "executor_cpu_s_per_request": 0.00048033659375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 0,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 108.47808425,
+      "completion_ms": 3216.31207584375,
+      "tokens_per_s": 158.12545354561948,
+      "tpot_ms": 49.330698279265874,
+      "known_worker_cpu_s_per_request": 0.010388449125,
+      "executor_cpu_s_per_request": 0.010388449125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 0,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.24086865625,
+      "completion_ms": 18.24086865625,
+      "tokens_per_s": 54.73696303794031,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00033075540625,
+      "executor_cpu_s_per_request": 0.00033075540625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 0,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.2467535,
+      "completion_ms": 387.6937405625,
+      "tokens_per_s": 165.0614758244865,
+      "tpot_ms": 5.864237889880952,
+      "known_worker_cpu_s_per_request": 0.007393582375,
+      "executor_cpu_s_per_request": 0.007393582375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 0,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 129.3756413125,
+      "completion_ms": 129.3756413125,
+      "tokens_per_s": 61.51742861131658,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00030568884375,
+      "executor_cpu_s_per_request": 0.00030568884375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 0,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 65.2688974375,
+      "completion_ms": 1670.7507545,
+      "tokens_per_s": 304.11426230481885,
+      "tpot_ms": 25.483839000992063,
+      "known_worker_cpu_s_per_request": 0.00453435646875,
+      "executor_cpu_s_per_request": 0.00453435646875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 1,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.866694125,
+      "completion_ms": 18.866694125,
+      "tokens_per_s": 52.89076710687691,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00042428134375,
+      "executor_cpu_s_per_request": 0.00042428134375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 1,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.8190496875,
+      "completion_ms": 400.92961806249997,
+      "tokens_per_s": 159.6132751529052,
+      "tpot_ms": 6.065247117063492,
+      "known_worker_cpu_s_per_request": 0.00976098640625,
+      "executor_cpu_s_per_request": 0.00976098640625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 1,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 133.46178915625,
+      "completion_ms": 133.46178915625,
+      "tokens_per_s": 59.557143355614876,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00039884353125,
+      "executor_cpu_s_per_request": 0.00039884353125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 1,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 66.8164795625,
+      "completion_ms": 1731.63874090625,
+      "tokens_per_s": 293.41113872373535,
+      "tpot_ms": 26.425750180059524,
+      "known_worker_cpu_s_per_request": 0.0055686654375,
+      "executor_cpu_s_per_request": 0.0055686654375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 1,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.36105928125,
+      "completion_ms": 18.36105928125,
+      "tokens_per_s": 54.36200646435267,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.000504077375,
+      "executor_cpu_s_per_request": 0.000504077375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 1,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.33837296875,
+      "completion_ms": 388.83868165625,
+      "tokens_per_s": 164.57571546023684,
+      "tpot_ms": 5.880957280753968,
+      "known_worker_cpu_s_per_request": 0.010361392375,
+      "executor_cpu_s_per_request": 0.010361392375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 1,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 148.01665021875,
+      "completion_ms": 148.01665021875,
+      "tokens_per_s": 53.910429021687506,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00049799834375,
+      "executor_cpu_s_per_request": 0.00049799834375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 1,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 107.516359,
+      "completion_ms": 3210.2829033125,
+      "tokens_per_s": 158.4225285515422,
+      "tpot_ms": 49.25026260813492,
+      "known_worker_cpu_s_per_request": 0.0106034838125,
+      "executor_cpu_s_per_request": 0.0106034838125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 1,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.21910140625,
+      "completion_ms": 18.21910140625,
+      "tokens_per_s": 54.784742034349016,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.0004055429375,
+      "executor_cpu_s_per_request": 0.0004055429375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 1,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.2342515,
+      "completion_ms": 387.11078184375,
+      "tokens_per_s": 165.3099747665616,
+      "tpot_ms": 5.855183021329365,
+      "known_worker_cpu_s_per_request": 0.008157598375,
+      "executor_cpu_s_per_request": 0.008157598375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 1,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 131.17099171875,
+      "completion_ms": 131.17099171875,
+      "tokens_per_s": 60.48175330615141,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00037401678125,
+      "executor_cpu_s_per_request": 0.00037401678125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 1,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 64.00428478125,
+      "completion_ms": 1661.5621389375,
+      "tokens_per_s": 305.8091712957094,
+      "tpot_ms": 25.358061177083332,
+      "known_worker_cpu_s_per_request": 0.0046301843125,
+      "executor_cpu_s_per_request": 0.0046301843125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 2,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.81784559375,
+      "completion_ms": 18.81784559375,
+      "tokens_per_s": 53.013240799074936,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.000496040875,
+      "executor_cpu_s_per_request": 0.000496040875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 2,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.8241224375,
+      "completion_ms": 400.91590275,
+      "tokens_per_s": 159.61769989638083,
+      "tpot_ms": 6.064948893849206,
+      "known_worker_cpu_s_per_request": 0.009686279375,
+      "executor_cpu_s_per_request": 0.009686279375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 2,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 132.73579728125,
+      "completion_ms": 132.73579728125,
+      "tokens_per_s": 60.09874490476033,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00040877109375,
+      "executor_cpu_s_per_request": 0.00040877109375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 2,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 67.0331819375,
+      "completion_ms": 1738.49018,
+      "tokens_per_s": 292.2726257818753,
+      "tpot_ms": 26.53106346130952,
+      "known_worker_cpu_s_per_request": 0.0055949231875,
+      "executor_cpu_s_per_request": 0.0055949231875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 2,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.36218940625,
+      "completion_ms": 18.36218940625,
+      "tokens_per_s": 54.348544026792524,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.0005007060625,
+      "executor_cpu_s_per_request": 0.0005007060625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 2,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.3459129375,
+      "completion_ms": 388.7743044375,
+      "tokens_per_s": 164.60293345090852,
+      "tpot_ms": 5.879815738095238,
+      "known_worker_cpu_s_per_request": 0.010524400875,
+      "executor_cpu_s_per_request": 0.010524400875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 2,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 147.18928575,
+      "completion_ms": 147.18928575,
+      "tokens_per_s": 53.937315299459385,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00050524953125,
+      "executor_cpu_s_per_request": 0.00050524953125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 2,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 108.719710375,
+      "completion_ms": 3213.37454590625,
+      "tokens_per_s": 158.29033765917856,
+      "tpot_ms": 49.28023548462302,
+      "known_worker_cpu_s_per_request": 0.0106610686875,
+      "executor_cpu_s_per_request": 0.0106610686875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 2,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.21013684375,
+      "completion_ms": 18.21013684375,
+      "tokens_per_s": 54.793761691875744,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00041643734375,
+      "executor_cpu_s_per_request": 0.00041643734375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 2,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.23866146875,
+      "completion_ms": 387.05272840625,
+      "tokens_per_s": 165.33519333229975,
+      "tpot_ms": 5.854191538690476,
+      "known_worker_cpu_s_per_request": 0.00832471875,
+      "executor_cpu_s_per_request": 0.00832471875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 2,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 128.8212759375,
+      "completion_ms": 128.8212759375,
+      "tokens_per_s": 61.76360722812855,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.0003595219375,
+      "executor_cpu_s_per_request": 0.0003595219375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 2,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 64.68389628125,
+      "completion_ms": 1671.4018755625,
+      "tokens_per_s": 303.997270966624,
+      "tpot_ms": 25.50345998859127,
+      "known_worker_cpu_s_per_request": 0.004754508625,
+      "executor_cpu_s_per_request": 0.004754508625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 3,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.85179315625,
+      "completion_ms": 18.85179315625,
+      "tokens_per_s": 52.96648472353641,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.0003785225625,
+      "executor_cpu_s_per_request": 0.0003785225625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 3,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.8465136875,
+      "completion_ms": 401.6790013125,
+      "tokens_per_s": 159.3165111200901,
+      "tpot_ms": 6.076706152777778,
+      "known_worker_cpu_s_per_request": 0.0088955191875,
+      "executor_cpu_s_per_request": 0.0088955191875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 3,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 134.2612789375,
+      "completion_ms": 134.2612789375,
+      "tokens_per_s": 59.4317099407612,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00038000021875,
+      "executor_cpu_s_per_request": 0.00038000021875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 3,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 71.6183424375,
+      "completion_ms": 1741.34691590625,
+      "tokens_per_s": 291.7851302541459,
+      "tpot_ms": 26.50362815029762,
+      "known_worker_cpu_s_per_request": 0.00483841575,
+      "executor_cpu_s_per_request": 0.00483841575,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 3,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.3599093125,
+      "completion_ms": 18.3599093125,
+      "tokens_per_s": 54.3905684089241,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00047141803125,
+      "executor_cpu_s_per_request": 0.00047141803125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 3,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.34326834375,
+      "completion_ms": 389.41462574999997,
+      "tokens_per_s": 164.33383848742176,
+      "tpot_ms": 5.890021546130952,
+      "known_worker_cpu_s_per_request": 0.0094844895,
+      "executor_cpu_s_per_request": 0.0094844895,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 3,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 148.596726875,
+      "completion_ms": 148.596726875,
+      "tokens_per_s": 53.58493972093657,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.0004636625,
+      "executor_cpu_s_per_request": 0.0004636625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 3,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 106.60887878125,
+      "completion_ms": 3216.3310819375,
+      "tokens_per_s": 158.11796011610772,
+      "tpot_ms": 49.36066989136905,
+      "known_worker_cpu_s_per_request": 0.00985367615625,
+      "executor_cpu_s_per_request": 0.00985367615625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 3,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.27012853125,
+      "completion_ms": 18.27012853125,
+      "tokens_per_s": 54.64285574629308,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.000314286125,
+      "executor_cpu_s_per_request": 0.000314286125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 3,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.26481753125,
+      "completion_ms": 387.60693521875,
+      "tokens_per_s": 165.09949458034487,
+      "tpot_ms": 5.862573296626984,
+      "known_worker_cpu_s_per_request": 0.006605864,
+      "executor_cpu_s_per_request": 0.006605864,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 3,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 130.44512228125,
+      "completion_ms": 130.44512228125,
+      "tokens_per_s": 61.168035678030684,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00033590590625,
+      "executor_cpu_s_per_request": 0.00033590590625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 3,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 62.875268,
+      "completion_ms": 1667.7360745,
+      "tokens_per_s": 304.6790890409973,
+      "tpot_ms": 25.473981055555555,
+      "known_worker_cpu_s_per_request": 0.004187888375,
+      "executor_cpu_s_per_request": 0.004187888375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 4,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.86195528125,
+      "completion_ms": 18.86195528125,
+      "tokens_per_s": 52.92709993433517,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00040839865625,
+      "executor_cpu_s_per_request": 0.00040839865625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 4,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.82343778125,
+      "completion_ms": 401.4391999375,
+      "tokens_per_s": 159.41124634424477,
+      "tpot_ms": 6.073266065972222,
+      "known_worker_cpu_s_per_request": 0.0087496469375,
+      "executor_cpu_s_per_request": 0.0087496469375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 4,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 132.79984121875,
+      "completion_ms": 132.79984121875,
+      "tokens_per_s": 59.93653713416388,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.000376901125,
+      "executor_cpu_s_per_request": 0.000376901125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 4,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 66.25232728125,
+      "completion_ms": 1734.4457741875,
+      "tokens_per_s": 292.9145139017207,
+      "tpot_ms": 26.479261062003967,
+      "known_worker_cpu_s_per_request": 0.00498639103125,
+      "executor_cpu_s_per_request": 0.00498639103125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 4,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.36983390625,
+      "completion_ms": 18.36983390625,
+      "tokens_per_s": 54.353455288219216,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.0004828128125,
+      "executor_cpu_s_per_request": 0.0004828128125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 4,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.35147746875,
+      "completion_ms": 389.416498625,
+      "tokens_per_s": 164.332633463195,
+      "tpot_ms": 5.889920970734127,
+      "known_worker_cpu_s_per_request": 0.0096285314375,
+      "executor_cpu_s_per_request": 0.0096285314375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 4,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 147.8911934375,
+      "completion_ms": 147.8911934375,
+      "tokens_per_s": 53.674608481387224,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.0004801975625,
+      "executor_cpu_s_per_request": 0.0004801975625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 4,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 103.3054915625,
+      "completion_ms": 3217.1148745625,
+      "tokens_per_s": 158.08371762257778,
+      "tpot_ms": 49.425545761904765,
+      "known_worker_cpu_s_per_request": 0.01013754115625,
+      "executor_cpu_s_per_request": 0.01013754115625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 4,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.22572053125,
+      "completion_ms": 18.22572053125,
+      "tokens_per_s": 54.77491638027031,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.00031201571875,
+      "executor_cpu_s_per_request": 0.00031201571875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 4,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.25233134375,
+      "completion_ms": 387.50876815624997,
+      "tokens_per_s": 165.14049447310285,
+      "tpot_ms": 5.861213282738095,
+      "known_worker_cpu_s_per_request": 0.00695039978125,
+      "executor_cpu_s_per_request": 0.00695039978125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 4,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 129.82078465625,
+      "completion_ms": 129.82078465625,
+      "tokens_per_s": 61.26318120658644,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 0.0003113828125,
+      "executor_cpu_s_per_request": 0.0003113828125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "amk",
+      "pair": 4,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 62.608294125,
+      "completion_ms": 1675.04372896875,
+      "tokens_per_s": 303.3373877460913,
+      "tpot_ms": 25.594213251488096,
+      "known_worker_cpu_s_per_request": 0.004332169875,
+      "executor_cpu_s_per_request": 0.004332169875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.523799125,
+      "completion_ms": 1.523799125,
+      "tokens_per_s": 645.1949549303097,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.915765625e-05,
+      "executor_cpu_s_per_request": 4.915765625e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.39113028125,
+      "completion_ms": 81.6838953125,
+      "tokens_per_s": 783.2056628431098,
+      "tpot_ms": 1.274488333829365,
+      "known_worker_cpu_s_per_request": 0.00259606021875,
+      "executor_cpu_s_per_request": 0.00259606021875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 8.602401,
+      "completion_ms": 8.602401,
+      "tokens_per_s": 908.4804463636978,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 5.12061875e-05,
+      "executor_cpu_s_per_request": 5.12061875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.48561978125,
+      "completion_ms": 114.13217065625,
+      "tokens_per_s": 4479.149062458987,
+      "tpot_ms": 1.7721674742063491,
+      "known_worker_cpu_s_per_request": 0.0005326108125,
+      "executor_cpu_s_per_request": 0.0005326108125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.47096096875,
+      "completion_ms": 1.47096096875,
+      "tokens_per_s": 670.9820879654162,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 6.186240625e-05,
+      "executor_cpu_s_per_request": 6.186240625e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.32603934375,
+      "completion_ms": 78.19450871875,
+      "tokens_per_s": 818.1045700885991,
+      "tpot_ms": 1.2201344345238094,
+      "known_worker_cpu_s_per_request": 0.00273349509375,
+      "executor_cpu_s_per_request": 0.00273349509375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.54535,
+      "completion_ms": 2.54535,
+      "tokens_per_s": 2967.2682493951875,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.243946875e-05,
+      "executor_cpu_s_per_request": 2.243946875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.34517590625,
+      "completion_ms": 104.99493765625,
+      "tokens_per_s": 4869.363802045858,
+      "tpot_ms": 1.6293612976190477,
+      "known_worker_cpu_s_per_request": 0.0005229951875,
+      "executor_cpu_s_per_request": 0.0005229951875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.4220246875,
+      "completion_ms": 1.4220246875,
+      "tokens_per_s": 694.5485815136649,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 3.511971875e-05,
+      "executor_cpu_s_per_request": 3.511971875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.29761075,
+      "completion_ms": 77.993162375,
+      "tokens_per_s": 820.2283553949322,
+      "tpot_ms": 1.2173897083333334,
+      "known_worker_cpu_s_per_request": 0.00222392221875,
+      "executor_cpu_s_per_request": 0.00222392221875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.57030496875,
+      "completion_ms": 2.57030496875,
+      "tokens_per_s": 2917.292213127159,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.905140625e-05,
+      "executor_cpu_s_per_request": 2.905140625e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.18484290625,
+      "completion_ms": 104.30666603125,
+      "tokens_per_s": 4898.590236438016,
+      "tpot_ms": 1.6209813194444445,
+      "known_worker_cpu_s_per_request": 0.0004783944375,
+      "executor_cpu_s_per_request": 0.0004783944375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.38961021875,
+      "completion_ms": 1.38961021875,
+      "tokens_per_s": 711.0588719859826,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 5.26754375e-05,
+      "executor_cpu_s_per_request": 5.26754375e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.39490525,
+      "completion_ms": 81.726216875,
+      "tokens_per_s": 782.758578565245,
+      "tpot_ms": 1.2751001845238095,
+      "known_worker_cpu_s_per_request": 0.00259521090625,
+      "executor_cpu_s_per_request": 0.00259521090625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 7.7363008125,
+      "completion_ms": 7.7363008125,
+      "tokens_per_s": 1018.9163410777875,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.319178125e-05,
+      "executor_cpu_s_per_request": 4.319178125e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.47311996875,
+      "completion_ms": 121.39483262499999,
+      "tokens_per_s": 4212.50178339698,
+      "tpot_ms": 1.8876462326388888,
+      "known_worker_cpu_s_per_request": 0.000565811125,
+      "executor_cpu_s_per_request": 0.000565811125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.28265278125,
+      "completion_ms": 1.28265278125,
+      "tokens_per_s": 775.0804279160913,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 5.01904375e-05,
+      "executor_cpu_s_per_request": 5.01904375e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.31739646875,
+      "completion_ms": 78.1310895625,
+      "tokens_per_s": 818.821068278721,
+      "tpot_ms": 1.2192649697420634,
+      "known_worker_cpu_s_per_request": 0.0026314055,
+      "executor_cpu_s_per_request": 0.0026314055,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.81387184375,
+      "completion_ms": 2.81387184375,
+      "tokens_per_s": 2519.6519069394913,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.5328125e-05,
+      "executor_cpu_s_per_request": 2.5328125e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.4066446875,
+      "completion_ms": 111.09835246875,
+      "tokens_per_s": 4597.299246969342,
+      "tpot_ms": 1.7252652028769841,
+      "known_worker_cpu_s_per_request": 0.00054095615625,
+      "executor_cpu_s_per_request": 0.00054095615625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.2604855625,
+      "completion_ms": 1.2604855625,
+      "tokens_per_s": 788.7765380785078,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.29051875e-05,
+      "executor_cpu_s_per_request": 4.29051875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.31258290625,
+      "completion_ms": 77.9836101875,
+      "tokens_per_s": 820.3921929503248,
+      "tpot_ms": 1.2170004330357143,
+      "known_worker_cpu_s_per_request": 0.00218786996875,
+      "executor_cpu_s_per_request": 0.00218786996875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.610502875,
+      "completion_ms": 2.610502875,
+      "tokens_per_s": 2788.4819661028646,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.548378125e-05,
+      "executor_cpu_s_per_request": 2.548378125e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.27263809375,
+      "completion_ms": 110.22464571875,
+      "tokens_per_s": 4635.798527625569,
+      "tpot_ms": 1.7135239305555556,
+      "known_worker_cpu_s_per_request": 0.00048135471875,
+      "executor_cpu_s_per_request": 0.00048135471875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.50670121875,
+      "completion_ms": 1.50670121875,
+      "tokens_per_s": 654.5548518704529,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 5.3831375e-05,
+      "executor_cpu_s_per_request": 5.3831375e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.402457,
+      "completion_ms": 81.6810560625,
+      "tokens_per_s": 783.1729755053535,
+      "tpot_ms": 1.2742634771825396,
+      "known_worker_cpu_s_per_request": 0.0025727116875,
+      "executor_cpu_s_per_request": 0.0025727116875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 8.32262675,
+      "completion_ms": 8.32262675,
+      "tokens_per_s": 948.4463958992496,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.637090625e-05,
+      "executor_cpu_s_per_request": 4.637090625e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.44187265625,
+      "completion_ms": 114.6954843125,
+      "tokens_per_s": 4454.769271305222,
+      "tpot_ms": 1.7818033596230158,
+      "known_worker_cpu_s_per_request": 0.000543746625,
+      "executor_cpu_s_per_request": 0.000543746625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.4194235625,
+      "completion_ms": 1.4194235625,
+      "tokens_per_s": 698.0275464792003,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 5.69088125e-05,
+      "executor_cpu_s_per_request": 5.69088125e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.3844848125,
+      "completion_ms": 78.26373890625,
+      "tokens_per_s": 817.3607147618942,
+      "tpot_ms": 1.2203056205357143,
+      "known_worker_cpu_s_per_request": 0.00261025321875,
+      "executor_cpu_s_per_request": 0.00261025321875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.59389,
+      "completion_ms": 2.59389,
+      "tokens_per_s": 2933.744497624675,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.211925e-05,
+      "executor_cpu_s_per_request": 2.211925e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.20217140625,
+      "completion_ms": 104.43655678125,
+      "tokens_per_s": 4861.903529573648,
+      "tpot_ms": 1.6227680218253968,
+      "known_worker_cpu_s_per_request": 0.00051326715625,
+      "executor_cpu_s_per_request": 0.00051326715625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.41445459375,
+      "completion_ms": 1.41445459375,
+      "tokens_per_s": 701.1258174442338,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.62931875e-05,
+      "executor_cpu_s_per_request": 4.62931875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.31805103125,
+      "completion_ms": 78.0278406875,
+      "tokens_per_s": 819.8556913951152,
+      "tpot_ms": 1.217615708829365,
+      "known_worker_cpu_s_per_request": 0.00209369471875,
+      "executor_cpu_s_per_request": 0.00209369471875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.55041915625,
+      "completion_ms": 2.55041915625,
+      "tokens_per_s": 2960.2335180210694,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.931321875e-05,
+      "executor_cpu_s_per_request": 2.931321875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.304495875,
+      "completion_ms": 103.4859908125,
+      "tokens_per_s": 4937.798077817918,
+      "tpot_ms": 1.6060554751984126,
+      "known_worker_cpu_s_per_request": 0.0004803095625,
+      "executor_cpu_s_per_request": 0.0004803095625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.3562490624999999,
+      "completion_ms": 1.3562490624999999,
+      "tokens_per_s": 731.7416230390496,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.639834375e-05,
+      "executor_cpu_s_per_request": 4.639834375e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.40858371875,
+      "completion_ms": 81.74743359375,
+      "tokens_per_s": 782.554328959428,
+      "tpot_ms": 1.2752198392857144,
+      "known_worker_cpu_s_per_request": 0.00253212390625,
+      "executor_cpu_s_per_request": 0.00253212390625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 8.918801406250001,
+      "completion_ms": 8.918801406250001,
+      "tokens_per_s": 882.1400762356482,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.895771875e-05,
+      "executor_cpu_s_per_request": 4.895771875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.6661964375,
+      "completion_ms": 121.29980353125,
+      "tokens_per_s": 4216.4167383929325,
+      "tpot_ms": 1.8830731284722222,
+      "known_worker_cpu_s_per_request": 0.0005528214375,
+      "executor_cpu_s_per_request": 0.0005528214375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.36814828125,
+      "completion_ms": 1.36814828125,
+      "tokens_per_s": 721.0132182452035,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 5.603534375e-05,
+      "executor_cpu_s_per_request": 5.603534375e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.35102484375,
+      "completion_ms": 78.23358640625,
+      "tokens_per_s": 817.6855936216604,
+      "tpot_ms": 1.2203581200396825,
+      "known_worker_cpu_s_per_request": 0.00262306159375,
+      "executor_cpu_s_per_request": 0.00262306159375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.73086946875,
+      "completion_ms": 2.73086946875,
+      "tokens_per_s": 2713.4253161903644,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.6415375e-05,
+      "executor_cpu_s_per_request": 2.6415375e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.433002375,
+      "completion_ms": 110.7169350625,
+      "tokens_per_s": 4609.785422906824,
+      "tpot_ms": 1.7187925823412697,
+      "known_worker_cpu_s_per_request": 0.0005562019375,
+      "executor_cpu_s_per_request": 0.0005562019375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.35156978125,
+      "completion_ms": 1.35156978125,
+      "tokens_per_s": 725.077899990413,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 3.82825e-05,
+      "executor_cpu_s_per_request": 3.82825e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.3264216875,
+      "completion_ms": 77.95485965625,
+      "tokens_per_s": 820.584722934128,
+      "tpot_ms": 1.2163244122023809,
+      "known_worker_cpu_s_per_request": 0.00231403690625,
+      "executor_cpu_s_per_request": 0.00231403690625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.71609415625,
+      "completion_ms": 2.71609415625,
+      "tokens_per_s": 2776.306961685142,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.1273625e-05,
+      "executor_cpu_s_per_request": 2.1273625e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.411113125,
+      "completion_ms": 109.74579903125,
+      "tokens_per_s": 4654.718959194658,
+      "tpot_ms": 1.7037251731150793,
+      "known_worker_cpu_s_per_request": 0.0004725744375,
+      "executor_cpu_s_per_request": 0.0004725744375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.56427475,
+      "completion_ms": 1.56427475,
+      "tokens_per_s": 628.8425843708761,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 5.1991875e-05,
+      "executor_cpu_s_per_request": 5.1991875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.41928859375,
+      "completion_ms": 81.69973378125,
+      "tokens_per_s": 783.0228278548649,
+      "tpot_ms": 1.2742927807539683,
+      "known_worker_cpu_s_per_request": 0.00254827103125,
+      "executor_cpu_s_per_request": 0.00254827103125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 7.67252584375,
+      "completion_ms": 7.67252584375,
+      "tokens_per_s": 1023.917889976567,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 3.7117875e-05,
+      "executor_cpu_s_per_request": 3.7117875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.360289125,
+      "completion_ms": 113.38852275,
+      "tokens_per_s": 4502.701209590439,
+      "tpot_ms": 1.7623529146825396,
+      "known_worker_cpu_s_per_request": 0.000520029125,
+      "executor_cpu_s_per_request": 0.000520029125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.40108690625,
+      "completion_ms": 1.40108690625,
+      "tokens_per_s": 706.1143011050557,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.4738875e-05,
+      "executor_cpu_s_per_request": 4.4738875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.3469893125,
+      "completion_ms": 78.24485896875,
+      "tokens_per_s": 817.5973143486768,
+      "tpot_ms": 1.2206011056547619,
+      "known_worker_cpu_s_per_request": 0.0025037635,
+      "executor_cpu_s_per_request": 0.0025037635,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.49106365625,
+      "completion_ms": 2.49106365625,
+      "tokens_per_s": 2959.9071329137046,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.4240875e-05,
+      "executor_cpu_s_per_request": 2.4240875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.4274873125,
+      "completion_ms": 104.50960768750001,
+      "tokens_per_s": 4852.402336257342,
+      "tpot_ms": 1.620351117063492,
+      "known_worker_cpu_s_per_request": 0.0004781886875,
+      "executor_cpu_s_per_request": 0.0004781886875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.4374364375,
+      "completion_ms": 1.4374364375,
+      "tokens_per_s": 684.8700122067378,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.322240625e-05,
+      "executor_cpu_s_per_request": 4.322240625e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.30542628125,
+      "completion_ms": 78.01593996875,
+      "tokens_per_s": 819.9894139767041,
+      "tpot_ms": 1.217627201388889,
+      "known_worker_cpu_s_per_request": 0.00213912315625,
+      "executor_cpu_s_per_request": 0.00213912315625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.57519690625,
+      "completion_ms": 2.57519690625,
+      "tokens_per_s": 2904.80684713808,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.066909375e-05,
+      "executor_cpu_s_per_request": 2.066909375e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.240540875,
+      "completion_ms": 104.11188725,
+      "tokens_per_s": 4906.170460163742,
+      "tpot_ms": 1.617005498015873,
+      "known_worker_cpu_s_per_request": 0.00040501221875,
+      "executor_cpu_s_per_request": 0.00040501221875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.22855840625,
+      "completion_ms": 1.22855840625,
+      "tokens_per_s": 806.5576158761794,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.607534375e-05,
+      "executor_cpu_s_per_request": 4.607534375e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.149372,
+      "completion_ms": 48.67742490625,
+      "tokens_per_s": 1313.9616556694202,
+      "tpot_ms": 0.7544135381944445,
+      "known_worker_cpu_s_per_request": 0.00158931678125,
+      "executor_cpu_s_per_request": 0.00158931678125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 6.9421160625,
+      "completion_ms": 6.9421160625,
+      "tokens_per_s": 1121.011982356953,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 3.8142e-05,
+      "executor_cpu_s_per_request": 3.8142e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 1.944233125,
+      "completion_ms": 97.2499480625,
+      "tokens_per_s": 5246.636759812402,
+      "tpot_ms": 1.5127891259920636,
+      "known_worker_cpu_s_per_request": 0.0004819609375,
+      "executor_cpu_s_per_request": 0.0004819609375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.177499125,
+      "completion_ms": 1.177499125,
+      "tokens_per_s": 839.1098177631787,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 5.147584375e-05,
+      "executor_cpu_s_per_request": 5.147584375e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.1191914375,
+      "completion_ms": 46.39922234375,
+      "tokens_per_s": 1378.3687707973418,
+      "tpot_ms": 0.7187306493055555,
+      "known_worker_cpu_s_per_request": 0.00162654221875,
+      "executor_cpu_s_per_request": 0.00162654221875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.02391359375,
+      "completion_ms": 2.02391359375,
+      "tokens_per_s": 3601.7155421341627,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 1.95171875e-05,
+      "executor_cpu_s_per_request": 1.95171875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 1.7546940625,
+      "completion_ms": 88.4522865625,
+      "tokens_per_s": 5755.354245679021,
+      "tpot_ms": 1.376152261904762,
+      "known_worker_cpu_s_per_request": 0.0004595895,
+      "executor_cpu_s_per_request": 0.0004595895,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.22256065625,
+      "completion_ms": 1.22256065625,
+      "tokens_per_s": 805.6800645974134,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 5.1087875e-05,
+      "executor_cpu_s_per_request": 5.1087875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.1159599375,
+      "completion_ms": 45.8114438125,
+      "tokens_per_s": 1396.1634166930767,
+      "tpot_ms": 0.709452125,
+      "known_worker_cpu_s_per_request": 0.00127136775,
+      "executor_cpu_s_per_request": 0.00127136775,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.04721759375,
+      "completion_ms": 2.04721759375,
+      "tokens_per_s": 3154.0688720507605,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.809478125e-05,
+      "executor_cpu_s_per_request": 2.809478125e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 0,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 1.636449625,
+      "completion_ms": 87.74914109375,
+      "tokens_per_s": 5823.503921724691,
+      "tpot_ms": 1.3668681185515872,
+      "known_worker_cpu_s_per_request": 0.0004228264375,
+      "executor_cpu_s_per_request": 0.0004228264375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.12790859375,
+      "completion_ms": 1.12790859375,
+      "tokens_per_s": 876.9784016114917,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.444703125e-05,
+      "executor_cpu_s_per_request": 4.444703125e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.15269325,
+      "completion_ms": 48.6955425,
+      "tokens_per_s": 1313.5090205693768,
+      "tpot_ms": 0.7546484007936508,
+      "known_worker_cpu_s_per_request": 0.001566055,
+      "executor_cpu_s_per_request": 0.001566055,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 6.25604609375,
+      "completion_ms": 6.25604609375,
+      "tokens_per_s": 1252.138809604155,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 3.798465625e-05,
+      "executor_cpu_s_per_request": 3.798465625e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.15110553125,
+      "completion_ms": 105.90732090625,
+      "tokens_per_s": 4823.8935095923725,
+      "tpot_ms": 1.6469240535714287,
+      "known_worker_cpu_s_per_request": 0.0005430555,
+      "executor_cpu_s_per_request": 0.0005430555,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.1369575,
+      "completion_ms": 1.1369575,
+      "tokens_per_s": 873.791208846721,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.33605625e-05,
+      "executor_cpu_s_per_request": 4.33605625e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.1982629375,
+      "completion_ms": 49.144083875,
+      "tokens_per_s": 1301.593344921196,
+      "tpot_ms": 0.7610447767857142,
+      "known_worker_cpu_s_per_request": 0.00168334184375,
+      "executor_cpu_s_per_request": 0.00168334184375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.339678,
+      "completion_ms": 2.339678,
+      "tokens_per_s": 3191.8913192924692,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.2979e-05,
+      "executor_cpu_s_per_request": 2.2979e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 1.9209140625,
+      "completion_ms": 95.96270621875,
+      "tokens_per_s": 5323.686176248731,
+      "tpot_ms": 1.4927268596230159,
+      "known_worker_cpu_s_per_request": 0.000490891875,
+      "executor_cpu_s_per_request": 0.000490891875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.12296046875,
+      "completion_ms": 1.12296046875,
+      "tokens_per_s": 877.3516657426143,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.0605375e-05,
+      "executor_cpu_s_per_request": 4.0605375e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.11997575,
+      "completion_ms": 45.99781190625,
+      "tokens_per_s": 1390.5159640049,
+      "tpot_ms": 0.7123466056547619,
+      "known_worker_cpu_s_per_request": 0.001295472625,
+      "executor_cpu_s_per_request": 0.001295472625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.07310678125,
+      "completion_ms": 2.07310678125,
+      "tokens_per_s": 3589.026014606439,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.398665625e-05,
+      "executor_cpu_s_per_request": 2.398665625e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 1,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.0162018437500002,
+      "completion_ms": 95.90606921875,
+      "tokens_per_s": 5327.903963323958,
+      "tpot_ms": 1.49031535515873,
+      "known_worker_cpu_s_per_request": 0.00042589521875,
+      "executor_cpu_s_per_request": 0.00042589521875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.2980130625,
+      "completion_ms": 1.2980130625,
+      "tokens_per_s": 756.896700819738,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.437728125e-05,
+      "executor_cpu_s_per_request": 4.437728125e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.14612125,
+      "completion_ms": 48.601762875,
+      "tokens_per_s": 1315.9382015527267,
+      "tpot_ms": 0.7532641527777778,
+      "known_worker_cpu_s_per_request": 0.00156838678125,
+      "executor_cpu_s_per_request": 0.00156838678125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 6.42813253125,
+      "completion_ms": 6.42813253125,
+      "tokens_per_s": 1221.740054873691,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 3.7664375e-05,
+      "executor_cpu_s_per_request": 3.7664375e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 1.88104790625,
+      "completion_ms": 97.76231784375,
+      "tokens_per_s": 5223.748356798918,
+      "tpot_ms": 1.521924919642857,
+      "known_worker_cpu_s_per_request": 0.00049359396875,
+      "executor_cpu_s_per_request": 0.00049359396875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.25680521875,
+      "completion_ms": 1.25680521875,
+      "tokens_per_s": 785.9465101015371,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 5.3744875e-05,
+      "executor_cpu_s_per_request": 5.3744875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.1067198125,
+      "completion_ms": 46.19403853125,
+      "tokens_per_s": 1384.533909287902,
+      "tpot_ms": 0.7156717256944445,
+      "known_worker_cpu_s_per_request": 0.001603853125,
+      "executor_cpu_s_per_request": 0.001603853125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 1.86866696875,
+      "completion_ms": 1.86866696875,
+      "tokens_per_s": 3785.7779679079604,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 1.995971875e-05,
+      "executor_cpu_s_per_request": 1.995971875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 1.74757534375,
+      "completion_ms": 88.13848846875,
+      "tokens_per_s": 5794.979838393631,
+      "tpot_ms": 1.3712843353174602,
+      "known_worker_cpu_s_per_request": 0.0004559350625,
+      "executor_cpu_s_per_request": 0.0004559350625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.1584668437499999,
+      "completion_ms": 1.1584668437499999,
+      "tokens_per_s": 855.3940803201142,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.87983125e-05,
+      "executor_cpu_s_per_request": 4.87983125e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.152002375,
+      "completion_ms": 46.10128125,
+      "tokens_per_s": 1387.247019723309,
+      "tpot_ms": 0.7134806170634921,
+      "known_worker_cpu_s_per_request": 0.00138524921875,
+      "executor_cpu_s_per_request": 0.00138524921875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 1.83460309375,
+      "completion_ms": 1.83460309375,
+      "tokens_per_s": 4062.788362752153,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.56113125e-05,
+      "executor_cpu_s_per_request": 2.56113125e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 2,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 1.8730863125,
+      "completion_ms": 88.1907461875,
+      "tokens_per_s": 5792.000806264612,
+      "tpot_ms": 1.3701215853174604,
+      "known_worker_cpu_s_per_request": 0.00043904871875,
+      "executor_cpu_s_per_request": 0.00043904871875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.18707478125,
+      "completion_ms": 1.18707478125,
+      "tokens_per_s": 823.1844762842481,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 3.901296875e-05,
+      "executor_cpu_s_per_request": 3.901296875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.1699371875,
+      "completion_ms": 48.518494875,
+      "tokens_per_s": 1318.4526399303174,
+      "tpot_ms": 0.7515644077380952,
+      "known_worker_cpu_s_per_request": 0.00140443796875,
+      "executor_cpu_s_per_request": 0.00140443796875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 7.16582903125,
+      "completion_ms": 7.16582903125,
+      "tokens_per_s": 1089.082007330611,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 3.140440625e-05,
+      "executor_cpu_s_per_request": 3.140440625e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.16225828125,
+      "completion_ms": 105.59187581249999,
+      "tokens_per_s": 4840.5106457943875,
+      "tpot_ms": 1.6417399608134922,
+      "known_worker_cpu_s_per_request": 0.00046554509375,
+      "executor_cpu_s_per_request": 0.00046554509375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.0675606875,
+      "completion_ms": 1.0675606875,
+      "tokens_per_s": 927.121795005143,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.230015625e-05,
+      "executor_cpu_s_per_request": 4.230015625e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.117504,
+      "completion_ms": 46.20596171875,
+      "tokens_per_s": 1384.2297349045616,
+      "tpot_ms": 0.7156898050595238,
+      "known_worker_cpu_s_per_request": 0.00158088321875,
+      "executor_cpu_s_per_request": 0.00158088321875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 1.91296684375,
+      "completion_ms": 1.91296684375,
+      "tokens_per_s": 3832.084752302424,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 1.501484375e-05,
+      "executor_cpu_s_per_request": 1.501484375e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 1.8748604375,
+      "completion_ms": 95.95741925,
+      "tokens_per_s": 5315.939385852534,
+      "tpot_ms": 1.493373949404762,
+      "known_worker_cpu_s_per_request": 0.00046841575,
+      "executor_cpu_s_per_request": 0.00046841575,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.10736178125,
+      "completion_ms": 1.10736178125,
+      "tokens_per_s": 891.5656413671078,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 3.9981125e-05,
+      "executor_cpu_s_per_request": 3.9981125e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.11537496875,
+      "completion_ms": 46.05992584375,
+      "tokens_per_s": 1388.7341433930346,
+      "tpot_ms": 0.7134055694444444,
+      "known_worker_cpu_s_per_request": 0.00127298125,
+      "executor_cpu_s_per_request": 0.00127298125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.0188581875,
+      "completion_ms": 2.0188581875,
+      "tokens_per_s": 3642.1745603212394,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.599603125e-05,
+      "executor_cpu_s_per_request": 2.599603125e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 3,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 1.94465078125,
+      "completion_ms": 95.485416875,
+      "tokens_per_s": 5350.8370639963305,
+      "tpot_ms": 1.4847740649801588,
+      "known_worker_cpu_s_per_request": 0.00040939746875,
+      "executor_cpu_s_per_request": 0.00040939746875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.2792025625,
+      "completion_ms": 1.2792025625,
+      "tokens_per_s": 768.4244776814713,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.3277625e-05,
+      "executor_cpu_s_per_request": 4.3277625e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.1667285625,
+      "completion_ms": 48.6519975625,
+      "tokens_per_s": 1314.6369644112758,
+      "tpot_ms": 0.7537344285714286,
+      "known_worker_cpu_s_per_request": 0.00154526215625,
+      "executor_cpu_s_per_request": 0.00154526215625,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 6.93863753125,
+      "completion_ms": 6.93863753125,
+      "tokens_per_s": 1128.9054837995009,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.057565625e-05,
+      "executor_cpu_s_per_request": 4.057565625e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.066082625,
+      "completion_ms": 97.76076965625,
+      "tokens_per_s": 5219.499421869079,
+      "tpot_ms": 1.5189632862103175,
+      "known_worker_cpu_s_per_request": 0.00047990778125,
+      "executor_cpu_s_per_request": 0.00047990778125,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.19427025,
+      "completion_ms": 1.19427025,
+      "tokens_per_s": 825.4459181376908,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.51896875e-05,
+      "executor_cpu_s_per_request": 4.51896875e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.09501075,
+      "completion_ms": 46.51310440625,
+      "tokens_per_s": 1375.2184586226513,
+      "tpot_ms": 0.7209221215277778,
+      "known_worker_cpu_s_per_request": 0.00150439075,
+      "executor_cpu_s_per_request": 0.00150439075,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.04080934375,
+      "completion_ms": 2.04080934375,
+      "tokens_per_s": 3640.233452721615,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.3101e-05,
+      "executor_cpu_s_per_request": 2.3101e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 1.74981778125,
+      "completion_ms": 88.2133343125,
+      "tokens_per_s": 5770.716933668694,
+      "tpot_ms": 1.3724367703373017,
+      "known_worker_cpu_s_per_request": 0.00045858775,
+      "executor_cpu_s_per_request": 0.00045858775,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.2334960625,
+      "completion_ms": 1.2334960625,
+      "tokens_per_s": 801.4692935824601,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 4.3149e-05,
+      "executor_cpu_s_per_request": 4.3149e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.13277846875,
+      "completion_ms": 46.0263375625,
+      "tokens_per_s": 1389.5908793741244,
+      "tpot_ms": 0.7125961760912698,
+      "known_worker_cpu_s_per_request": 0.00129784375,
+      "executor_cpu_s_per_request": 0.00129784375,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 1.94356584375,
+      "completion_ms": 1.94356584375,
+      "tokens_per_s": 3577.2179953292707,
+      "tpot_ms": null,
+      "known_worker_cpu_s_per_request": 2.469153125e-05,
+      "executor_cpu_s_per_request": 2.469153125e-05,
+      "kernel_tx_cpu_s_per_request": 0.0
+    },
+    {
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "backend": "vllm",
+      "pair": 4,
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 1.67019359375,
+      "completion_ms": 87.20238975,
+      "tokens_per_s": 5858.025829906563,
+      "tpot_ms": 1.3576539072420635,
+      "known_worker_cpu_s_per_request": 0.0003612686875,
+      "executor_cpu_s_per_request": 0.0003612686875,
+      "kernel_tx_cpu_s_per_request": 0.0
+    }
+  ],
+  "means": [
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.36844380625,
+      "completion_ms": 18.36844380625,
+      "tokens_per_s": 54.34901264608283,
+      "known_worker_cpu_s_per_request": 0.00048636369375
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.23319119375,
+      "completion_ms": 18.23319119375,
+      "tokens_per_s": 54.74664777814569,
+      "known_worker_cpu_s_per_request": 0.00035580750625
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 18.85510256875,
+      "completion_ms": 18.85510256875,
+      "tokens_per_s": 52.93753622540081,
+      "known_worker_cpu_s_per_request": 0.000425392175
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.346865131250002,
+      "completion_ms": 389.18534385625,
+      "tokens_per_s": 164.4299136786199,
+      "known_worker_cpu_s_per_request": 0.0100468853375,
+      "tpot_ms": 5.886325059126984
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.24736306875,
+      "completion_ms": 387.3945908375,
+      "tokens_per_s": 165.18932659535912,
+      "known_worker_cpu_s_per_request": 0.00748643265625,
+      "tpot_ms": 5.859479805853175
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 18.833433,
+      "completion_ms": 401.28814251875,
+      "tokens_per_s": 159.47087948224916,
+      "known_worker_cpu_s_per_request": 0.00931165148125,
+      "tpot_ms": 6.070709674900794
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 147.8908978125,
+      "completion_ms": 147.8908978125,
+      "tokens_per_s": 53.799639991422374,
+      "known_worker_cpu_s_per_request": 0.00048548890624999997
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 129.92676318125,
+      "completion_ms": 129.92676318125,
+      "tokens_per_s": 61.23880120604273,
+      "known_worker_cpu_s_per_request": 0.00033730325625
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 133.795117725,
+      "completion_ms": 133.795117725,
+      "tokens_per_s": 59.563017571785494,
+      "known_worker_cpu_s_per_request": 0.00039675443125
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 106.92570479375,
+      "completion_ms": 3214.6830963125,
+      "tokens_per_s": 158.20799949900515,
+      "known_worker_cpu_s_per_request": 0.0103288437875,
+      "tpot_ms": 49.32948240505952
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 63.888128125,
+      "completion_ms": 1669.29891449375,
+      "tokens_per_s": 304.3874362708482,
+      "known_worker_cpu_s_per_request": 0.00448782153125,
+      "tpot_ms": 25.482710894742063
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 67.8586914375,
+      "completion_ms": 1735.5816887,
+      "tokens_per_s": 292.74539841073283,
+      "known_worker_cpu_s_per_request": 0.00523892858125,
+      "tpot_ms": 26.47179360734127
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.16661855625,
+      "completion_ms": 1.16661855625,
+      "tokens_per_s": 850.2830499708541,
+      "known_worker_cpu_s_per_request": 4.7214225e-05
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.1689691625,
+      "completion_ms": 1.1689691625,
+      "tokens_per_s": 846.292149121942,
+      "known_worker_cpu_s_per_request": 4.47243375e-05
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.22415148125,
+      "completion_ms": 1.22415148125,
+      "tokens_per_s": 806.4083344546257,
+      "known_worker_cpu_s_per_request": 4.3438049999999997e-05
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.1273377875,
+      "completion_ms": 46.891282175,
+      "tokens_per_s": 1364.7888437067304,
+      "known_worker_cpu_s_per_request": 0.00159980223125,
+      "tpot_ms": 0.7264118156746032
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.1272183,
+      "completion_ms": 45.999360075,
+      "tokens_per_s": 1390.450284637689,
+      "known_worker_cpu_s_per_request": 0.00130458291875,
+      "tpot_ms": 0.7122562186507937
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.15697045,
+      "completion_ms": 48.62904454375,
+      "tokens_per_s": 1315.2996964266233,
+      "known_worker_cpu_s_per_request": 0.0015346917375,
+      "tpot_ms": 0.7535249856150794
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.03720695,
+      "completion_ms": 2.03720695,
+      "tokens_per_s": 3610.3406068717263,
+      "known_worker_cpu_s_per_request": 2.011435e-05
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 1.9834703,
+      "completion_ms": 1.9834703,
+      "tokens_per_s": 3605.0551610119724,
+      "known_worker_cpu_s_per_request": 2.56760625e-05
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 6.746152250000001,
+      "completion_ms": 6.746152250000001,
+      "tokens_per_s": 1162.5756675929822,
+      "known_worker_cpu_s_per_request": 3.7154218750000004e-05
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 1.8095723375,
+      "completion_ms": 91.3448469625,
+      "tokens_per_s": 5592.135315968522,
+      "known_worker_cpu_s_per_request": 0.0004666839875,
+      "tpot_ms": 1.4211948353174604
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 1.82811643125,
+      "completion_ms": 90.906752625,
+      "tokens_per_s": 5630.454317043231,
+      "known_worker_cpu_s_per_request": 0.00041168730625,
+      "tpot_ms": 1.41394660625
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.04094549375,
+      "completion_ms": 100.85444645625,
+      "tokens_per_s": 5070.857738773432,
+      "known_worker_cpu_s_per_request": 0.00049281265625,
+      "tpot_ms": 1.5684682692460319
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.3884545,
+      "completion_ms": 1.3884545,
+      "tokens_per_s": 714.2435163421934,
+      "known_worker_cpu_s_per_request": 5.3947174999999996e-05
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.3771942125,
+      "completion_ms": 1.3771942125,
+      "tokens_per_s": 718.8797698467115,
+      "known_worker_cpu_s_per_request": 4.11646e-05
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 1,
+      "ttft_ms": 1.468126875,
+      "completion_ms": 1.468126875,
+      "tokens_per_s": 674.2785772393341,
+      "known_worker_cpu_s_per_request": 5.08109375e-05
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.34518695625,
+      "completion_ms": 78.21355651249999,
+      "tokens_per_s": 817.9138522199103,
+      "known_worker_cpu_s_per_request": 0.00262039578125,
+      "tpot_ms": 1.2201328500992064
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.31201853125,
+      "completion_ms": 77.995082575,
+      "tokens_per_s": 820.2100753302409,
+      "known_worker_cpu_s_per_request": 0.00219172939375,
+      "tpot_ms": 1.2171914927579366
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 1,
+      "ttft_ms": 1.40327296875,
+      "completion_ms": 81.707667125,
+      "tokens_per_s": 782.9428747456002,
+      "known_worker_cpu_s_per_request": 0.00256887555,
+      "tpot_ms": 1.2746729231150793
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "uring_loop_original",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.63500899375,
+      "completion_ms": 2.63500899375,
+      "tokens_per_s": 2818.7994206126846,
+      "known_worker_cpu_s_per_request": 2.410861875e-05
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "userspace",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 2.6045036125,
+      "completion_ms": 2.6045036125,
+      "tokens_per_s": 2869.424301214863,
+      "known_worker_cpu_s_per_request": 2.5158225e-05
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "uring_loop_coalesced",
+      "gen": 1,
+      "concurrency": 8,
+      "ttft_ms": 8.2505311625,
+      "completion_ms": 8.2505311625,
+      "tokens_per_s": 956.3802299105901,
+      "known_worker_cpu_s_per_request": 4.536889375e-05
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "uring_loop_original",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.3628963375,
+      "completion_ms": 107.15127793125001,
+      "tokens_per_s": 4758.150867550603,
+      "known_worker_cpu_s_per_request": 0.000522321825,
+      "tpot_ms": 1.6633076443452381
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "userspace",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.282726175,
+      "completion_ms": 106.37499776875,
+      "tokens_per_s": 4806.615252247981,
+      "known_worker_cpu_s_per_request": 0.000463529075,
+      "tpot_ms": 1.652258279265873
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "mode": "uring_loop_coalesced",
+      "gen": 64,
+      "concurrency": 8,
+      "ttft_ms": 2.48541959375,
+      "completion_ms": 116.982162775,
+      "tokens_per_s": 4373.107613028912,
+      "known_worker_cpu_s_per_request": 0.000543003825,
+      "tpot_ms": 1.817408621924603
+    }
+  ],
+  "effects": [
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.4879975624999986,
+        0.5056348437499985,
+        0.4556561875000007,
+        0.49188384374999927,
+        0.49212137499999997
+      ],
+      "mean": 0.4866587624999994,
+      "t95": [
+        0.46359432890756025,
+        0.5097231960924385
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "completion_ms",
+      "blocks": [
+        0.4879975624999986,
+        0.5056348437499985,
+        0.4556561875000007,
+        0.49188384374999927,
+        0.49212137499999997
+      ],
+      "mean": 0.4866587624999994,
+      "t95": [
+        0.46359432890756025,
+        0.5097231960924385
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -1.4004004789449809,
+        -1.4712393574757598,
+        -1.3353032277175885,
+        -1.4240836853876928,
+        -1.4263553538840483
+      ],
+      "mean": -1.411476420682014,
+      "t95": [
+        -1.4731765219969424,
+        -1.3497763193670858
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        -5.3086750000000025e-05,
+        -7.979603125000002e-05,
+        -4.665187500000061e-06,
+        -9.289546875000004e-05,
+        -7.441415625e-05
+      ],
+      "mean": -6.0971518750000024e-05,
+      "t95": [
+        -0.00010392473918660917,
+        -1.801829831339088e-05
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.6363560312499992,
+        0.6475927187499977,
+        0.6077087500000005,
+        0.5816646250000019,
+        0.6362347499999998
+      ],
+      "mean": 0.6219113749999998,
+      "t95": [
+        0.5885082246898101,
+        0.6553145253101895
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "completion_ms",
+      "blocks": [
+        0.6363560312499992,
+        0.6475927187499977,
+        0.6077087500000005,
+        0.5816646250000019,
+        0.6362347499999998
+      ],
+      "mean": 0.6219113749999998,
+      "t95": [
+        0.5885082246898101,
+        0.6553145253101895
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -1.8468744747596872,
+        -1.893974927472108,
+        -1.7805208928008085,
+        -1.676371022756669,
+        -1.8478164459351447
+      ],
+      "mean": -1.8091115527448836,
+      "t95": [
+        -1.9140365201750784,
+        -1.7041865853146887
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        8.896203124999998e-05,
+        1.8738406250000026e-05,
+        7.960353124999997e-05,
+        6.42364375e-05,
+        9.63829375e-05
+      ],
+      "mean": 6.958466874999999e-05,
+      "t95": [
+        3.127398687736524e-05,
+        0.00010789535062263474
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.4987474687500004,
+        0.48067671875000073,
+        0.47820950000000195,
+        0.5032453437499989,
+        0.4719603124999985
+      ],
+      "mean": 0.4865678687500001,
+      "t95": [
+        0.4696289423068444,
+        0.5035067951931558
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "completion_ms",
+      "blocks": [
+        11.994381718749992,
+        12.090936406249966,
+        12.14159831249998,
+        12.26437556250005,
+        12.022701312500033
+      ],
+      "mean": 12.102798662500003,
+      "t95": [
+        11.969756465827741,
+        12.235840859172265
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -4.9087826337124625,
+        -4.962440307331633,
+        -4.985233554527696,
+        -5.01732736733166,
+        -4.921387118950236
+      ],
+      "mean": -4.959034196370737,
+      "t95": [
+        -5.014696982894662,
+        -4.903371409846812
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        -0.0007697869999999992,
+        -0.0006004059687500004,
+        -0.0008381214999999987,
+        -0.000588970312500001,
+        -0.0008788845000000014
+      ],
+      "mean": -0.0007352338562500001,
+      "t95": [
+        -0.0009018053815373634,
+        -0.0005686623309626368
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tpot_ms",
+      "blocks": [
+        0.18247038492063528,
+        0.18428983630952356,
+        0.18513315575396838,
+        0.18668460664682573,
+        0.18334509523809484
+      ],
+      "mean": 0.18438461577380955,
+      "t95": [
+        0.1823629389279286,
+        0.1864062926196905
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.6072879062500007,
+        0.5847981875000023,
+        0.5854609687500023,
+        0.5816961562500005,
+        0.5711064374999992
+      ],
+      "mean": 0.5860699312500011,
+      "t95": [
+        0.5697003598121015,
+        0.6024395026879006
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "completion_ms",
+      "blocks": [
+        13.783249968749999,
+        13.818836218749993,
+        13.86317434374996,
+        14.072066093750038,
+        13.930431781250036
+      ],
+      "mean": 13.893551681250006,
+      "t95": [
+        13.752117501910629,
+        14.034985860589384
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -5.665810926861553,
+        -5.696699613656392,
+        -5.717493435918925,
+        -5.782983460254769,
+        -5.7292481288580746
+      ],
+      "mean": -5.718447113109943,
+      "t95": [
+        -5.7723059739414255,
+        -5.6645882522784605
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        0.0020722431250000005,
+        0.0016033880312499998,
+        0.001361560625000001,
+        0.002289655187499999,
+        0.0017992471562499994
+      ],
+      "mean": 0.001825218825,
+      "t95": [
+        0.0013683335047016288,
+        0.002282104145298371
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "tpot_ms",
+      "blocks": [
+        0.2091422549603177,
+        0.21006409573412643,
+        0.21075735515873006,
+        0.21413285615079403,
+        0.21205278323412635
+      ],
+      "mean": 0.21122986904761892,
+      "t95": [
+        0.20882179694883377,
+        0.21363794114640408
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "ttft_ms",
+      "blocks": [
+        -12.043750749999987,
+        -14.554861062499981,
+        -14.45348846875001,
+        -14.335447937499993,
+        -15.09135221874999
+      ],
+      "mean": -14.095780087499993,
+      "t95": [
+        -15.564692682052168,
+        -12.626867492947817
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "completion_ms",
+      "blocks": [
+        -12.043750749999987,
+        -14.554861062499981,
+        -14.45348846875001,
+        -14.335447937499993,
+        -15.09135221874999
+      ],
+      "mean": -14.095780087499993,
+      "t95": [
+        -15.564692682052168,
+        -12.626867492947817
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tokens_per_s",
+      "blocks": [
+        4.900045089985973,
+        5.64671433392737,
+        6.161429605300945,
+        5.846770219824634,
+        6.261928652776653
+      ],
+      "mean": 5.763377580363115,
+      "t95": [
+        5.091011589504248,
+        6.435743571221982
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        -6.108040624999998e-05,
+        -9.915481249999996e-05,
+        -9.647843749999998e-05,
+        -8.366228124999999e-05,
+        -0.0001032964375
+      ],
+      "mean": -8.873447499999998e-05,
+      "t95": [
+        -0.00010997997561617483,
+        -6.748897438382513e-05
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "ttft_ms",
+      "blocks": [
+        6.341240718750015,
+        2.2907974375000038,
+        3.9145213437500104,
+        3.8161566562500013,
+        2.9790565625000056
+      ],
+      "mean": 3.8683545437500073,
+      "t95": [
+        1.9649642928405677,
+        5.771744794659447
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "completion_ms",
+      "blocks": [
+        6.341240718750015,
+        2.2907974375000038,
+        3.9145213437500104,
+        3.8161566562500013,
+        2.9790565625000056
+      ],
+      "mean": 3.8683545437500073,
+      "t95": [
+        1.9649642928405677,
+        5.771744794659447
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -2.726476087689406,
+        -0.924609950536535,
+        -1.6648623233682187,
+        -1.7363257372694818,
+        -1.3266440724225603
+      ],
+      "mean": -1.6757836342572403,
+      "t95": [
+        -2.507304513308802,
+        -0.8442627552056785
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        0.00011356734375,
+        2.482675000000002e-05,
+        4.924915624999999e-05,
+        4.40943125e-05,
+        6.551831250000003e-05
+      ],
+      "mean": 5.945117500000001e-05,
+      "t95": [
+        1.7785368037476044e-05,
+        0.00010111698196252397
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "ttft_ms",
+      "blocks": [
+        -40.90495828124999,
+        -40.69987943749999,
+        -41.6865284375,
+        -34.990536343749994,
+        -37.05316428124999
+      ],
+      "mean": -39.067013356249994,
+      "t95": [
+        -42.66459446490673,
+        -35.46943224759326
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "completion_ms",
+      "blocks": [
+        -1484.32524334375,
+        -1478.64416240625,
+        -1474.8843659062502,
+        -1474.9841660312502,
+        -1482.669100375
+      ],
+      "mean": -1479.1014076125,
+      "t95": [
+        -1484.4765753470754,
+        -1473.7262398779246
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tokens_per_s",
+      "blocks": [
+        135.2181298465675,
+        134.98861017219315,
+        133.98228812269676,
+        133.66717013803816,
+        134.8307962791429
+      ],
+      "mean": 134.5373989117277,
+      "t95": [
+        133.70019267091658,
+        135.37460515253883
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        -0.005182201624999999,
+        -0.005034818375,
+        -0.005066145500000001,
+        -0.0050152604062499995,
+        -0.005151150125000001
+      ],
+      "mean": -0.00508991520625,
+      "t95": [
+        -0.0051808209909952295,
+        -0.004999009421504771
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tpot_ms",
+      "blocks": [
+        -22.91143309623016,
+        -22.824512428075394,
+        -22.7491720233135,
+        -22.85704174107143,
+        -22.946284699900797
+      ],
+      "mean": -22.857688797718257,
+      "t95": [
+        -22.953092445154844,
+        -22.76228515028167
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "ttft_ms",
+      "blocks": [
+        2.304228531250004,
+        2.8121947812499997,
+        2.3492856562500037,
+        8.743074437500006,
+        3.6440331562500035
+      ],
+      "mean": 3.9705633125000035,
+      "t95": [
+        0.5911314660674325,
+        7.3499951589325745
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "completion_ms",
+      "blocks": [
+        61.23607799999991,
+        70.07660196874986,
+        67.08830443750003,
+        73.61084140624985,
+        59.40204521875012
+      ],
+      "mean": 66.28277420624995,
+      "t95": [
+        58.8962782243701,
+        73.6692701881298
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -10.770678912631865,
+        -12.398032571974056,
+        -11.724645184748681,
+        -12.893958786851442,
+        -10.4228738443706
+      ],
+      "mean": -11.642037860115328,
+      "t95": [
+        -12.943015762616866,
+        -10.34105995761379
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        0.00067189103125,
+        0.0009384811250000005,
+        0.0008404145625,
+        0.0006505273750000004,
+        0.0006542211562499999
+      ],
+      "mean": 0.0007511070500000001,
+      "t95": [
+        0.0005881895654451319,
+        0.0009140245345548683
+      ]
+    },
+    {
+      "backend": "amk",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "tpot_ms",
+      "blocks": [
+        0.9354261820436527,
+        1.0676890029761914,
+        1.0276034727182513,
+        1.0296470947420637,
+        0.8850478105158714
+      ],
+      "mean": 0.9890827125992061,
+      "t95": [
+        0.8949072845007084,
+        1.0832581406977038
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.05105928124999992,
+        -0.0090489062500001,
+        0.04120784374999986,
+        0.11951409374999988,
+        0.0849323125000001
+      ],
+      "mean": 0.057532924999999936,
+      "t95": [
+        -0.002447120248078735,
+        0.11751297024807861
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "completion_ms",
+      "blocks": [
+        0.05105928124999992,
+        -0.0090489062500001,
+        0.04120784374999986,
+        0.11951409374999988,
+        0.0849323125000001
+      ],
+      "mean": 0.057532924999999936,
+      "t95": [
+        -0.002447120248078735,
+        0.11751297024807861
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -32.55220188699934,
+        3.187192764770657,
+        -29.04980928179907,
+        -103.93731872089484,
+        -57.021440456219466
+      ],
+      "mean": -43.87471551622841,
+      "t95": [
+        -93.32020591188777,
+        5.570774879430935
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        -5.400500000000004e-06,
+        1.08646875e-06,
+        -9.36759375e-06,
+        -3.2871875000000004e-06,
+        -1.912062499999999e-06
+      ],
+      "mean": -3.7761750000000003e-06,
+      "t95": [
+        -8.635418917297482e-06,
+        1.0830689172974827e-06
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.005997749999999913,
+        0.004948124999999859,
+        0.13954621875000006,
+        0.07971299999999992,
+        0.045706500000000094
+      ],
+      "mean": 0.05518231874999997,
+      "t95": [
+        -0.014923357540650856,
+        0.1252879950406508
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "completion_ms",
+      "blocks": [
+        0.005997749999999913,
+        0.004948124999999859,
+        0.13954621875000006,
+        0.07971299999999992,
+        0.045706500000000094
+      ],
+      "mean": 0.05518231874999997,
+      "t95": [
+        -0.014923357540650856,
+        0.1252879950406508
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "tokens_per_s",
+      "blocks": [
+        0.8775512787659636,
+        -0.37326413112259615,
+        -98.49737950037616,
+        -68.38116508285964,
+        -33.04481590098874
+      ],
+      "mean": -39.88381466731623,
+      "t95": [
+        -93.71031928067882,
+        13.942689946046364
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        -5.012531250000004e-06,
+        3.8416562499999995e-06,
+        -4.421031250000001e-06,
+        -9.681562500000006e-07,
+        1.2862499999999913e-07
+      ],
+      "mean": -1.2862875000000013e-06,
+      "t95": [
+        -5.767924998356411e-06,
+        3.1953499983564078e-06
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.030180562500000008,
+        -0.04556968750000001,
+        0.039401437500000025,
+        0.05243318749999992,
+        0.07171781249999998
+      ],
+      "mean": 0.029632662499999983,
+      "t95": [
+        -0.026042318898016267,
+        0.08530764389801623
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "completion_ms",
+      "blocks": [
+        2.278202562500006,
+        -0.4485413749999978,
+        2.4077243437499973,
+        2.312533156250005,
+        2.138893156249999
+      ],
+      "mean": 1.737762368750002,
+      "t95": [
+        0.2155060976521168,
+        3.260018639847887
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -64.40711512792154,
+        11.915675648180923,
+        -68.59570773517521,
+        -65.77709497424416,
+        -60.58149421137546
+      ],
+      "mean": -49.48914728010709,
+      "t95": [
+        -92.2612555362893,
+        -6.717039023924876
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        -3.722543750000009e-05,
+        -0.00011728684375000007,
+        -3.546634375000009e-05,
+        -0.00017644524999999999,
+        4.087140625000005e-05
+      ],
+      "mean": -6.511049375000004e-05,
+      "t95": [
+        -0.00016900727054418676,
+        3.8786283044186685e-05
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tpot_ms",
+      "blocks": [
+        0.03568288888888893,
+        -0.006396375992063441,
+        0.037592427083333324,
+        0.03587460267857134,
+        0.03281230704365079
+      ],
+      "mean": 0.02711316994047619,
+      "t95": [
+        0.0037564548363495757,
+        0.0504698850446028
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.03341206250000006,
+        0.032717499999999955,
+        -0.0058811249999999315,
+        0.05456221874999989,
+        0.03395009374999991
+      ],
+      "mean": 0.029752149999999977,
+      "t95": [
+        0.002512684999035491,
+        0.05699161500096446
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "completion_ms",
+      "blocks": [
+        2.865981093750001,
+        2.697730593750002,
+        2.500481624999999,
+        2.4585690312500006,
+        2.6256600000000034
+      ],
+      "mean": 2.629684468750001,
+      "t95": [
+        2.4271215010940494,
+        2.832247436405953
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -82.20176102365645,
+        -77.00694343552323,
+        -71.3088181705823,
+        -70.28150346271718,
+        -74.95391496284856
+      ],
+      "mean": -75.15058821106554,
+      "t95": [
+        -81.09474114492546,
+        -69.20643527720561
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        0.00031794903124999986,
+        0.0002705823749999999,
+        0.00018313756250000002,
+        0.00013145671875000012,
+        0.0002474184062500001
+      ],
+      "mean": 0.00023010881875,
+      "t95": [
+        0.00013888206284916278,
+        0.00032133557465083724
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "tpot_ms",
+      "blocks": [
+        0.044961413194444466,
+        0.042301795138888876,
+        0.03978353571428572,
+        0.03815883829365074,
+        0.04113825248015879
+      ],
+      "mean": 0.04126876696428572,
+      "t95": [
+        0.03806697162342714,
+        0.0444705623051443
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "ttft_ms",
+      "blocks": [
+        4.91820246875,
+        3.91636809375,
+        4.5594655625,
+        5.2528621875,
+        4.8978281875
+      ],
+      "mean": 4.7089453,
+      "t95": [
+        4.0801452376242935,
+        5.337745362375706
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "completion_ms",
+      "blocks": [
+        4.91820246875,
+        3.91636809375,
+        4.5594655625,
+        5.2528621875,
+        4.8978281875
+      ],
+      "mean": 4.7089453,
+      "t95": [
+        4.0801452376242935,
+        5.337745362375706
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -2480.7035597772096,
+        -1939.7525096883141,
+        -2564.0379130342694,
+        -2743.0027449718127,
+        -2511.327968922114
+      ],
+      "mean": -2447.764939278744,
+      "t95": [
+        -2822.2695153580785,
+        -2073.2603631994093
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        1.8624812500000003e-05,
+        1.500565625e-05,
+        1.7704656250000002e-05,
+        1.6389562500000004e-05,
+        1.7474656249999996e-05
+      ],
+      "mean": 1.7039868750000002e-05,
+      "t95": [
+        1.5316688277107258e-05,
+        1.8763049222892746e-05
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "ttft_ms",
+      "blocks": [
+        4.89489846875,
+        4.1829393125,
+        4.5935294375,
+        5.146970843750001,
+        4.9950716875
+      ],
+      "mean": 4.76268195,
+      "t95": [
+        4.288292259654022,
+        5.237071640345978
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "completion_ms",
+      "blocks": [
+        4.89489846875,
+        4.1829393125,
+        4.5935294375,
+        5.146970843750001,
+        4.9950716875
+      ],
+      "mean": 4.76268195,
+      "t95": [
+        4.288292259654022,
+        5.237071640345978
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -2033.0568896938075,
+        -2336.8872050022837,
+        -2841.048307878462,
+        -2553.092552990628,
+        -2448.31251152977
+      ],
+      "mean": -2442.4794934189904,
+      "t95": [
+        -2809.717743625876,
+        -2075.2412432121046
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        1.004721875e-05,
+        1.3998e-05,
+        1.2053062500000002e-05,
+        5.408375000000002e-06,
+        1.5884124999999998e-05
+      ],
+      "mean": 1.147815625e-05,
+      "t95": [
+        6.473521841252807e-06,
+        1.6482790658747193e-05
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.18953906249999997,
+        0.23019146874999974,
+        0.13347256250000017,
+        0.2873978437500002,
+        0.31626484374999997
+      ],
+      "mean": 0.23137315625000002,
+      "t95": [
+        0.13995814090973427,
+        0.32278817159026574
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "completion_ms",
+      "blocks": [
+        8.79766149999999,
+        9.944614687500007,
+        9.623829375,
+        9.634456562499992,
+        9.54743534375001
+      ],
+      "mean": 9.509599493749999,
+      "t95": [
+        8.980556191392294,
+        10.038642796107704
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -508.7174858666194,
+        -499.79266665635805,
+        -571.2314815947129,
+        -475.4287400581461,
+        -551.2175117996148
+      ],
+      "mean": -521.2775771950903,
+      "t95": [
+        -569.8188006493209,
+        -472.7363537408597
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        2.237143750000002e-05,
+        5.216362500000003e-05,
+        3.7658906249999995e-05,
+        -2.8706562500000117e-06,
+        2.1320031250000003e-05
+      ],
+      "mean": 2.612866875000001e-05,
+      "t95": [
+        6.143168505761697e-07,
+        5.164302064942385e-05
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tpot_ms",
+      "blocks": [
+        0.1366368640873017,
+        0.1541971939484128,
+        0.15064058432539684,
+        0.14836601140873018,
+        0.1465265158730158
+      ],
+      "mean": 0.14727343392857145,
+      "t95": [
+        0.1390802299302214,
+        0.1554666379269215
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.3077835,
+        0.1349036874999996,
+        0.007961593750000162,
+        0.21760750000000018,
+        0.39588903124999986
+      ],
+      "mean": 0.21282906249999994,
+      "t95": [
+        0.025966701108148194,
+        0.3996914238918517
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "completion_ms",
+      "blocks": [
+        9.500806968749998,
+        10.001251687500002,
+        9.57157165625,
+        10.106458937499994,
+        10.55837990625001
+      ],
+      "mean": 9.947693831250001,
+      "t95": [
+        9.41284497653924,
+        10.482542685960762
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -576.8671619122897,
+        -504.0104537315856,
+        -568.2524494656936,
+        -510.32641820194294,
+        -638.5264080374836
+      ],
+      "mean": -559.5965782697991,
+      "t95": [
+        -627.9458706682506,
+        -491.24728587134763
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        5.913450000000003e-05,
+        0.00011716028125000001,
+        5.4545250000000004e-05,
+        5.6147624999999986e-05,
+        0.00011863909374999998
+      ],
+      "mean": 8.112535e-05,
+      "t95": [
+        3.9387228933970584e-05,
+        0.0001228634710660294
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "tpot_ms",
+      "blocks": [
+        0.14592100744047642,
+        0.15660869841269864,
+        0.1518033343253966,
+        0.1569658958333333,
+        0.16130937896825404
+      ],
+      "mean": 0.15452166299603182,
+      "t95": [
+        0.14723478599848108,
+        0.16180853999358255
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.05283815624999999,
+        0.10695743749999997,
+        0.08727765624999995,
+        -0.011899218750000218,
+        0.16318784375000006
+      ],
+      "mean": 0.07967237499999995,
+      "t95": [
+        -0.0009941796917840862,
+        0.16033892969178398
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "completion_ms",
+      "blocks": [
+        0.05283815624999999,
+        0.10695743749999997,
+        0.08727765624999995,
+        -0.011899218750000218,
+        0.16318784375000006
+      ],
+      "mean": 0.07967237499999995,
+      "t95": [
+        -0.0009941796917840862,
+        0.16033892969178398
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -25.787133035106535,
+        -64.02155593010866,
+        -43.47269460874736,
+        10.728404793846153,
+        -77.27171673417956
+      ],
+      "mean": -39.96493910285919,
+      "t95": [
+        -82.7692507426824,
+        2.839372536964021
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        -1.2704750000000004e-05,
+        2.4850000000000008e-06,
+        -3.077437499999998e-06,
+        -9.636999999999996e-06,
+        7.253e-06
+      ],
+      "mean": -3.1362374999999994e-06,
+      "t95": [
+        -1.3400721048751962e-05,
+        7.128246048751962e-06
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.10177443750000004,
+        0.12912465624999991,
+        0.09224662500000003,
+        0.004679281249999834,
+        0.1268383125000001
+      ],
+      "mean": 0.09093266249999998,
+      "t95": [
+        0.027904421865917878,
+        0.1539609031340821
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "completion_ms",
+      "blocks": [
+        0.10177443750000004,
+        0.12912465624999991,
+        0.09224662500000003,
+        0.004679281249999834,
+        0.1268383125000001
+      ],
+      "mean": 0.09093266249999998,
+      "t95": [
+        0.027904421865917878,
+        0.1539609031340821
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -49.35362658335521,
+        -77.71766609252518,
+        -46.57096557378088,
+        6.663723048636598,
+        -56.02742783586166
+      ],
+      "mean": -44.601192607377264,
+      "t95": [
+        -83.28165128726525,
+        -5.92073392748928
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        1.4037937499999996e-05,
+        9.77025e-06,
+        7.5381874999999975e-06,
+        8.115843750000003e-06,
+        8.76946875e-06
+      ],
+      "mean": 9.646337499999999e-06,
+      "t95": [
+        6.4289472447240804e-06,
+        1.2863727755275917e-05
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.06509093749999995,
+        0.07750878125000016,
+        0.01797218750000007,
+        0.05755887500000001,
+        0.07229928124999985
+      ],
+      "mean": 0.058086012500000006,
+      "t95": [
+        0.028717792764759824,
+        0.08745423223524018
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "completion_ms",
+      "blocks": [
+        3.489386593749998,
+        3.5951273125000114,
+        3.4173171562500073,
+        3.513847187500005,
+        3.454874812500009
+      ],
+      "mean": 3.4941106125000063,
+      "t95": [
+        3.4106949418309607,
+        3.577526283169052
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -34.89890724548923,
+        -36.062489713476,
+        -34.18773925654068,
+        -35.13126466223241,
+        -34.574486493811946
+      ],
+      "mean": -34.970977474310054,
+      "t95": [
+        -35.8474181851662,
+        -34.09453676345391
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        -0.00013743487499999962,
+        -3.619459374999993e-05,
+        -3.754153125000003e-05,
+        -9.093768750000021e-05,
+        4.4507531249999774e-05
+      ],
+      "mean": -5.1520231250000006e-05,
+      "t95": [
+        -0.00013616008686229885,
+        3.311962436229882e-05
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tpot_ms",
+      "blocks": [
+        0.054353899305555675,
+        0.05583521478174602,
+        0.053957856646825286,
+        0.05486171924603189,
+        0.05369167509920647
+      ],
+      "mean": 0.05454007301587307,
+      "t95": [
+        0.053487535883826896,
+        0.05559261014791924
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.0935195312499999,
+        0.08232234375000003,
+        0.08440596875000006,
+        0.08216203125000021,
+        0.1138623125
+      ],
+      "mean": 0.09125443750000004,
+      "t95": [
+        0.07453108171094279,
+        0.10797779328905728
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "completion_ms",
+      "blocks": [
+        3.6907329375000018,
+        3.7426066875000004,
+        3.653215375000002,
+        3.792573937500009,
+        3.6837938124999994
+      ],
+      "mean": 3.7125845500000025,
+      "t95": [
+        3.644206368046112,
+        3.780962731953893
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -37.02269255182239,
+        -37.633614385079795,
+        -36.68271588976165,
+        -38.03039397470002,
+        -36.966586121839214
+      ],
+      "mean": -37.26720058464061,
+      "t95": [
+        -37.94969202337567,
+        -36.584709145905556
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        0.00037213800000000016,
+        0.0004073409374999999,
+        0.00047901696875,
+        0.00021808699999999962,
+        0.00040914787499999987
+      ],
+      "mean": 0.0003771461562499999,
+      "t95": [
+        0.000256700917779351,
+        0.0004975913947206488
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 1,
+      "candidate_minus": "userspace",
+      "metric": "tpot_ms",
+      "blocks": [
+        0.05709862549603173,
+        0.05809975148809521,
+        0.05664776835317453,
+        0.05889542708333351,
+        0.05666557936507943
+      ],
+      "mean": 0.057481430357142885,
+      "t95": [
+        0.056257138871955305,
+        0.058705721842330465
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "ttft_ms",
+      "blocks": [
+        6.057051,
+        4.922428968749999,
+        5.7287367499999995,
+        6.187931937500001,
+        5.181462187499999
+      ],
+      "mean": 5.61552216875,
+      "t95": [
+        4.934244417466636,
+        6.296799920033364
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "completion_ms",
+      "blocks": [
+        6.057051,
+        4.922428968749999,
+        5.7287367499999995,
+        6.187931937500001,
+        5.181462187499999
+      ],
+      "mean": 5.61552216875,
+      "t95": [
+        4.934244417466636,
+        6.296799920033364
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -2058.7878030314896,
+        -1500.735565861704,
+        -1985.2981017254256,
+        -1831.2852399547162,
+        -1935.9892429371375
+      ],
+      "mean": -1862.4191907020945,
+      "t95": [
+        -2133.643047914282,
+        -1591.195333489907
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        2.876671875e-05,
+        1.7863656250000002e-05,
+        2.4251656250000002e-05,
+        2.254234375e-05,
+        1.2876999999999999e-05
+      ],
+      "mean": 2.1260275000000002e-05,
+      "t95": [
+        1.3688285657042803e-05,
+        2.8832264342957203e-05
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "ttft_ms",
+      "blocks": [
+        6.032096031250001,
+        5.1257979375,
+        5.77220759375,
+        6.202707250000001,
+        5.0973289375
+      ],
+      "mean": 5.64602755,
+      "t95": [
+        5.010903494407594,
+        6.281151605592407
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "completion_ms",
+      "blocks": [
+        6.032096031250001,
+        5.1257979375,
+        5.77220759375,
+        6.202707250000001,
+        5.0973289375
+      ],
+      "mean": 5.64602755,
+      "t95": [
+        5.010903494407594,
+        6.281151605592407
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -2008.811766763461,
+        -1769.5656250250772,
+        -2011.7871221218197,
+        -1894.166885449494,
+        -1880.8889571615127
+      ],
+      "mean": -1913.0440713042728,
+      "t95": [
+        -2038.5965116779753,
+        -1787.4916309305704
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 1,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        2.215478125e-05,
+        1.7708000000000004e-05,
+        1.7057687500000004e-05,
+        2.768409375e-05,
+        1.6448781249999998e-05
+      ],
+      "mean": 2.0210668750000002e-05,
+      "t95": [
+        1.4321328856958884e-05,
+        2.610000864304112e-05
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.14044387499999988,
+        0.0664752812499998,
+        0.23970124999999998,
+        0.23319406249999997,
+        -0.06719818749999984
+      ],
+      "mean": 0.12252325624999996,
+      "t95": [
+        -0.036287777527309995,
+        0.2813342900273099
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "completion_ms",
+      "blocks": [
+        9.137232999999995,
+        10.296480156249999,
+        10.258927531249995,
+        10.582868468750007,
+        8.878915062499999
+      ],
+      "mean": 9.830884843749999,
+      "t95": [
+        8.87858476269337,
+        10.783184924806628
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -390.2147395868715,
+        -384.7974635723622,
+        -407.1342582684256,
+        -393.3686845138918,
+        -349.7011266669024
+      ],
+      "mean": -385.0432545216907,
+      "t95": [
+        -411.6246962365664,
+        -358.461812806815
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        9.615625000000032e-06,
+        2.4854968749999967e-05,
+        3.047946875e-05,
+        -3.3805000000000467e-06,
+        4.1840437500000006e-05
+      ],
+      "mean": 2.0681999999999993e-05,
+      "t95": [
+        -1.3776566163756419e-06,
+        4.274165661637563e-05
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "uring_loop_original",
+      "metric": "tpot_ms",
+      "blocks": [
+        0.14280617658730144,
+        0.1623810297619046,
+        0.15903533779761903,
+        0.16428054613095244,
+        0.14200179761904752
+      ],
+      "mean": 0.154100977579365,
+      "t95": [
+        0.14063459662501243,
+        0.16756735853371757
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "ttft_ms",
+      "blocks": [
+        0.30077687499999994,
+        0.20048187499999992,
+        0.13737678124999997,
+        0.25508331250000005,
+        0.11974824999999978
+      ],
+      "mean": 0.20269341874999994,
+      "t95": [
+        0.10748903829573477,
+        0.2978977992042651
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "completion_ms",
+      "blocks": [
+        9.825504624999994,
+        11.170186906249995,
+        11.209493499999994,
+        11.554004500000005,
+        9.276635500000012
+      ],
+      "mean": 10.60716500625,
+      "t95": [
+        9.372099356449718,
+        11.842230656050281
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "tokens_per_s",
+      "blocks": [
+        -419.4411739790294,
+        -423.296744228589,
+        -483.02880651269606,
+        -438.3022208017255,
+        -403.4692505733028
+      ],
+      "mean": -433.50763921906855,
+      "t95": [
+        -471.1679788275417,
+        -395.8472996105954
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "known_worker_cpu_s_per_request",
+      "blocks": [
+        5.421637500000002e-05,
+        8.445640625000001e-05,
+        6.343706250000003e-05,
+        8.024699999999998e-05,
+        0.00011501690625000002
+      ],
+      "mean": 7.947475000000002e-05,
+      "t95": [
+        5.046222003196637e-05,
+        0.00010848727996803367
+      ]
+    },
+    {
+      "backend": "vllm",
+      "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "gen": 64,
+      "concurrency": 8,
+      "candidate_minus": "userspace",
+      "metric": "tpot_ms",
+      "blocks": [
+        0.15118615476190467,
+        0.17412230208333312,
+        0.1757478844246032,
+        0.17934795535714287,
+        0.14534741666666662
+      ],
+      "mean": 0.1651503426587301,
+      "t95": [
+        0.14570005585211893,
+        0.18460062946534128
+      ]
+    }
+  ]
+}

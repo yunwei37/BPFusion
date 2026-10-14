@@ -1,0 +1,6 @@
+START pair=4 mode=uring_loop_coalesced pid=345056
+PASS pair=4 mode=uring_loop_coalesced requests=136 tokens=4168 batches=None
+START pair=4 mode=uring_loop_original pid=345301
+PASS pair=4 mode=uring_loop_original requests=136 tokens=4168 batches=None
+START pair=4 mode=userspace pid=345543
+PASS pair=4 mode=userspace requests=136 tokens=4168 batches=None

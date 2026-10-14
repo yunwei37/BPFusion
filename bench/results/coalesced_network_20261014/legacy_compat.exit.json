@@ -1,0 +1,60 @@
+{
+  "exit": 0,
+  "status": [
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/legacy_compat.py",
+        "--backend",
+        "amk",
+        "--preflight",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/legacy_compat_amk_smol.jsonl"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/legacy_compat.py",
+        "--backend",
+        "vllm",
+        "--preflight",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/legacy_compat_vllm_smol.jsonl"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "/tmp/bpfusion-coalesced-network-0pls_22b/runtime/bin/python",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/legacy_compat.py",
+        "--backend",
+        "vllm",
+        "--preflight",
+        "--loop-comparison",
+        "--untraced",
+        "--reference-path",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/frozen_references.json",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+        "--output",
+        "/tmp/bpfusion-coalesced-network-0pls_22b/legacy_compat_vllm_qwen.jsonl"
+      ],
+      "exit": 0
+    }
+  ],
+  "utc": "2026-10-14T11:40:07.279211+00:00"
+}
