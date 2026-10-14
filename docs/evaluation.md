@@ -641,3 +641,21 @@ current readable mounts do not certify all interrupted other-project sessions.
 Close unchanged timing; resolve a useful causal uncertainty after actual
 host/storage validation. Full text/backend portability and performance
 acceptance remain open; the retained objective is not marked complete.
+
+## Current optimized short-input localization in progress
+
+The admitted [plan](../bench/results/optimized_latency_profile_20261014/plan.md)
+and [fresh plan review](../bench/results/optimized_latency_profile_20261014/plan-review.md)
+test finding0030's short-input question on the current optimized module-free
+loop rather than old HF computation. Current traces have logical batches/
+outputs but no kernel durations, so existing data cannot localize this budget.
+Role supporting diagnostic evidence, not a serving speedup or new paper metric.
+
+Temporary CUPTI HES/device-graph profiling wraps the unchanged ordinary
+native library, with an ordinary same-library instrumentation ablation.
+Actual recursive body/head activity coverage and request grouping must pass
+real preflight before interpreting model spans. Five paired blocks/two models
+remain planned; graph gaps and clock-compatible residuals are not attributed
+to a pure cause. Known prior host OOM remains recorded; per-executor actual
+host checks and owned cleanup are required. Setup is in progress and no
+new model serving or profiling result is claimed.
