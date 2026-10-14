@@ -1,0 +1,9 @@
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 8592.30it/s]
+Traceback (most recent call last):
+  File "/tmp/bpfusion-megakernel-reuse-oxfus39y/strict_adapter.py", line 251, in <module>
+    if __name__=="__main__": main()
+                             ^^^^^^
+  File "/tmp/bpfusion-megakernel-reuse-oxfus39y/strict_adapter.py", line 78, in main
+    raise AssertionError(open(logpath).read())
+AssertionError: strace: exec: Permission denied
+

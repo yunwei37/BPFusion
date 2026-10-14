@@ -425,3 +425,15 @@ must be empty independently. The request page ABI is unchanged. The
 [finding](findings/0044-uring-bpf-loop.md) records current upstream dependencies,
 failed setup/exit attempts and the completed measured CPU/delivery tradeoffs. This
 does not replace the existing module default or qualify interrupt notification.
+
+## Optional AMK computation adapter
+
+executor/amk_graph.py loads the pinned upstream model/VM only at bootstrap;
+executor/amk_graph.cu builds device-updatable prefill/decode graph nodes around
+the unmodified AMK persistent cubin. Eight private banks feed the existing
+qwen_graph.cu dispatcher and either existing TCP transport. Model arithmetic,
+per-token publication, final-CQ ownership and queue ABI stay in their existing
+components. The current finite checks qualify SmolLM2-135M FP16 at c1/c8;
+arbitrary models, full protocol coverage and performance remain unqualified.
+See [finding0048](findings/0048-reused-amk-dispatch.md) for actual commands,
+raw results, dependency compatibility and the ongoing experiment boundary.

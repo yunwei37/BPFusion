@@ -28,3 +28,16 @@ performance result. Request-time GPU prefill, device-updatable argument flow,
 dispatcher/graph co-residency, safe streaming/recycling and same-backend native
 network comparison remain unimplemented/unqualified. TEMP remains owned for
 continued integration, not a persistent service or infrastructure change.
+
+## Integration update
+
+The earlier unimplemented status above is historical. Current same-backend
+c1/c8 TCP checks pass, but strict eager-HF qualification fails and the
+performance experiment remains incomplete. See
+[the current finding](../../../docs/findings/0048-reused-amk-dispatch.md)
+for the implemented boundary and retained failure.
+
+The strict case2 mismatch is independently reproduced by both official AMK
+per-step and persistent execution under the current170-SM target/runtime.
+Both exactly equal the new server output; the stronger eager-HF exact check
+remains failed. See native170_comparison.json and the finding for scope.

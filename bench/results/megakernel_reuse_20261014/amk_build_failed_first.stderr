@@ -1,0 +1,10 @@
+executor/amk_graph.cu(68): error: argument of type "int" is incompatible with parameter of type "const CUgraphEdgeData *"
+          do {last_stage="cuGraphAddDependencies(graph,&prep_node,&model_node,1)";e=(cuGraphAddDependencies_v2(graph,&prep_node,&model_node,1));if(e){if(graph)cuGraphDestroy(graph);return (int)e;}} while(0);
+                                                                                                                                            ^
+
+executor/amk_graph.cu(68): error: too few arguments in function call
+          do {last_stage="cuGraphAddDependencies(graph,&prep_node,&model_node,1)";e=(cuGraphAddDependencies_v2(graph,&prep_node,&model_node,1));if(e){if(graph)cuGraphDestroy(graph);return (int)e;}} while(0);
+                                                                                                                                             ^
+
+2 errors detected in the compilation of "executor/amk_graph.cu".
+make: *** [Makefile:195: build/amk_graph_builder.so] Error 2

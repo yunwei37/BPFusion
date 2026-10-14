@@ -1,0 +1,35 @@
+HF reference model=/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2 type=llama vocab=49152
+HF eager fp16 oracle ready, model=/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2, model released
+detached from lo
+stream sockops detached
+PASS 5000 empty connections accepted/drained by userspace; exceeds undrained listener backlog
+http=False case=0 expected=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] actual=[260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649, 314, 260, 3575, 282, 260, 1798, 30, 198, 198, 504, 3575, 282, 4649] seconds=0.772
+http=False case=1 expected=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] actual=[198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 34, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36, 30, 198, 198, 8412, 216, 35, 42, 198, 198, 1780, 314, 216, 34, 8055, 216, 34, 8055, 216, 34, 8055, 216, 34, 47, 198, 198, 504, 2988, 314, 216, 36] seconds=0.471
+http=False case=2 expected=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 504, 808, 2775, 346, 868, 536] actual=[198, 198, 504, 808, 2775, 346, 868, 536, 314, 288, 2965, 253, 30099, 30, 198, 198, 2683, 416, 722, 260, 1695, 30099, 42, 198, 198, 19556, 28, 957, 1462, 314, 198, 198, 2683, 416, 597, 722, 260, 1695, 30099, 42, 198, 198, 19556, 28, 957, 1462, 314, 198, 198, 2683, 416, 597, 722, 260, 1695, 30099, 42, 198, 198, 19556, 28, 957, 1462, 314] seconds=0.434
+executor shutdown seconds=0.779
+
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]
+Loading weights:  31%|███       | 83/272 [00:00<00:00, 824.32it/s]
+Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1405.76it/s]
+ninja: no work to do.
+ninja: no work to do.
+ninja: no work to do.
+AMK_BANK 0 graphs 190 grid 170 sms 170
+AMK_BANK 1 graphs 190 grid 170 sms 170
+AMK_BANK 2 graphs 190 grid 170 sms 170
+AMK_BANK 3 graphs 190 grid 170 sms 170
+AMK_BANK 4 graphs 190 grid 170 sms 170
+AMK_BANK 5 graphs 190 grid 170 sms 170
+AMK_BANK 6 graphs 190 grid 170 sms 170
+AMK_BANK 7 graphs 190 grid 170 sms 170
+{"event": "amk_bootstrap", "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "precision": "FP16", "banks": 8, "graphs_per_bank": 190, "context": 128, "actual_sms": 170, "program_sms": 170, "knobs": {"cpasync": 0}, "protocol": "unchanged binary token HTTP", "compute": "upstream AMK persistent kernel; GPU graph prefill/decode"}
+network=userspace epoll; same resident GPU graph dispatch
+resident Qwen ready: 30 layers h=576 vocab=49152; device-tail graphs, dispatch=resident
+userspace completion wait=epoll_pwait2 timeout_ns=60000
+userspace TCP stopped: accepted=5003 published=3 completed=3 rejected=0
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=192 graph_error=0 banks=8 max_active=1
+{"event": "amk_graph_errors", "errors": [0, 0, 0, 0, 0, 0, 0, 0]}
+
+stream sockops detached
+detached from lo
+PASS test map pins removed after module shutdown and hook detach

@@ -183,3 +183,22 @@ $(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_NAMES))): $(BUILD)/%.so: executor/v
 		$(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT) $(if $(findstring trace,$*),-DBF_TRACE) $(if $(filter $*,$(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES) $(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_URING_NETWORK) $(if $(filter $*,$(VLLM_URING_LOOP_NAMES) $(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_URING_BPF_LOOP -I$(KERNEL_UAPI)) $(if $(filter $*,$(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_IO_CQ_AFTER_SUBMIT) $(if $(findstring full_copy,$*),-DBF_IO_FULL_COPY) $(if $(filter $*,$(VLLM_DEFAULT_NAMES) $(VLLM_PADDED_NAMES) $(VLLM_CHAINED_NAMES) $(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES) $(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_PAD_PREFILL) $(if $(filter $*,$(VLLM_DEFAULT_NAMES) $(VLLM_CHAINED_NAMES) $(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES) $(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_PREFIX_RELEASE) $(if $(filter $*,$(VLLM_CHAINED_NAMES)),-DBF_CHAINED_DISPATCH) $< -o $@.o
 	$(NVCC) -arch=$(SM_ARCH) -dlink -Xcompiler=-fPIC $@.o -o $@.dlink.o
 	$(CXX) -shared -Wl,-z,defs $@.o $@.dlink.o $(VLLM_CUDART) -Wl,-rpath,$(dir $(VLLM_CUDART)) -o $@ $(LDLIBS)
+
+# Optional upstream AMK graph bootstrap; reuse the existing model/transport dispatcher.
+AMK_PYTHON ?= python3
+AMK_INCLUDE = $(shell $(AMK_PYTHON) -c 'import pathlib,vm; print(pathlib.Path(vm.__file__).parent)')
+.PHONY: amk-graph-uring-loop amk-graph-user-network-wait
+amk-graph-uring-loop: $(BUILD)/uring_loop.bpf.o $(BUILD)/amk_graph_builder.so $(BUILD)/amk_graph_uring_loop.so $(BUILD)/amk_graph_uring_loop
+amk-graph-user-network-wait: $(BUILD)/amk_graph_builder.so $(BUILD)/amk_graph_user_network_wait.so $(BUILD)/amk_graph_user_network_wait
+
+$(BUILD)/amk_graph_builder.so: executor/amk_graph.cu | $(BUILD)
+	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -rdc=true -shared -Xcompiler=-fPIC -I$(AMK_INCLUDE) $< -lcuda -o $@
+
+$(BUILD)/amk_graph_uring_loop.so: executor/qwen_graph.cu executor/io_uring_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
+	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -rdc=true -shared -Xcompiler=-fPIC -I$(KERNEL_UAPI) -Ibpf/include $< -o $@ $(LDLIBS)
+
+$(BUILD)/amk_graph_user_network_wait.so: executor/qwen_graph.cu executor/userspace_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
+	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC -Ibpf/include $< -o $@ $(LDLIBS)
+
+$(BUILD)/amk_graph_uring_loop $(BUILD)/amk_graph_user_network_wait: executor/amk_graph.py | $(BUILD)
+	ln -sf $(abspath executor/amk_graph.py) $@
