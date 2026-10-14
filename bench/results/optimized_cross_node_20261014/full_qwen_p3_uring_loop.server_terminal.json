@@ -1,0 +1,34 @@
+{
+  "model": "qwen",
+  "pair": 3,
+  "mode": "uring_loop",
+  "stage": "full",
+  "source": "81baa94c84a5567950e87f3310788c000c6e9d6a",
+  "utc": "2026-10-14T05:20:37.894543+00:00",
+  "attach": {
+    "cmd": [
+      "./build/bpfusion_load",
+      "stream-uring-attach"
+    ],
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "cmd": [
+    "./build/vllm_graph_uring_loop",
+    "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "300"
+  ],
+  "pid": 294733,
+  "exit": 0,
+  "detach": {
+    "cmd": [
+      "./build/bpfusion_load",
+      "stream-detach"
+    ],
+    "exit": 0,
+    "stdout": "stream sockops detached\n",
+    "stderr": ""
+  },
+  "finished_utc": "2026-10-14T05:21:40.753258+00:00"
+}

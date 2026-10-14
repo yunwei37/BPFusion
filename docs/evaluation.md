@@ -602,21 +602,42 @@ default library, Coder processes and unrelated WIP. Close unchanged timing;
 do not promote snapshot ordering as a proven optimization. Optimized matched
 cross-node/service acceptance and the full retained goal remain open.
 
-## Optimized module-free cross-node comparison in progress
+## Completed optimized module-free cross-node observation
 
-Retain finding0029's matched cross-node delivery question. The admitted
-[plan](../bench/results/optimized_cross_node_20261014/plan.md) and
-[fresh plan review](../bench/results/optimized_cross_node_20261014/plan-review.md)
-compare the current ordinary packed/prefix vLLM loop with efficient native
-TCP using identical model computation. Old HF cross-node and optimized local
-measurements cannot supply this changed-backend/topology result.
-Role supporting; no new formal paper thesis, total CPU or performance claim.
+[Finding0046](findings/0046-optimized-cross-node.md) completes the admitted
+real different-node comparison with unchanged ordinary optimized vLLM
+computation.20 executors/80 cells deliver5120 measured requests/166400 tokens
+plus160 excluded checked warmups. Both direct analyses and independent
+timestamp/paired-interval reconstruction pass; actual clients/servers exit0.
+Role supporting; full serving and finite shared-host observation are valid.
 
-Dependency setup/builds and actual cross-node preflight complete. Both Qwen
-paths return80 requests/2096 checked tokens and normal clients/servers; the
-runner pin-cleanup omission is repaired and retained before any native sample.
-The five-block two-model full comparison remains pending; four primary effects are gen1/c1
-TTFT and gen64/c8 TPS. Both client functions and pre-observation finite whole
-output sets are reused. Current unobserved batch/KV replay remains outside
-the numerical claim. No model math, timer, host kernel or persistent service
-change. Full run, fresh result review and restoration remain pending.
+All four primary nominal five-block t95 intervals cross zero: Qwen
+native-minus-loop TTFT1/c1 -0.003691ms[-0.126505,0.119122],Smol
++0.022772[-0.033461,0.079005]; Qwen loop-minus-native TPS64/c8
+-28.059120[-76.190291,20.072051],Smol+4.687041[-43.215784,52.589865].
+Retain Smol secondary gen64/c1 TPS loss20.927330[17.416961,24.437698],
+completion loss0.792989[0.663935,0.922043]ms and TPOT loss0.013440
+[0.010434,0.016445]ms/token. No reliable primary speedup or equivalence.
+
+Material qualification: actual lab journal records global OOM and EXT4/I/O
+faults at05:28:38 inside Smol's collection window. The full Smol matrix spans
+a known resource-state discontinuity. Own normal outputs and nominal
+intervals do not establish stable-host causal performance. Keep all samples/
+outliers/faults; no post-hoc exclusions. Reconnection uses the same live server
+after observation SSH failure; no executor replacement. Qwen ends before
+the burst, but no continuous isolation proof follows.
+
+[Fresh result review](../bench/results/optimized_cross_node_20261014/result-review.md)
+retains every metric/negative/tail and numerical/environment limit. Current
+ordinary batch/KV histories remain unobserved. Same dispatcher source/policy
+does not establish byte-identical compiled SASS. Fixed reply diagnostic
+overflow136 is separate from zero transport/model trace overflow.
+No remote per-cell CPU,total CPU,energy,SLO or stage decomposition is measured.
+
+[Restoration](../bench/results/optimized_cross_node_20261014/final_restoration.json)
+removes only owned Job/Pod/runtime/builds,preserving original Workspace/PVC/
+boot/base/default library/Coder/WIP. Existing-controller volume remounts and
+current readable mounts do not certify all interrupted other-project sessions.
+Close unchanged timing; resolve a useful causal uncertainty after actual
+host/storage validation. Full text/backend portability and performance
+acceptance remain open; the retained objective is not marked complete.

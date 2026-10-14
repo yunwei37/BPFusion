@@ -103,6 +103,14 @@ Negative secondary results and higher long-output process CPU versus native
 are retained. Owned temporary resources are removed; neither unchanged
 computation nor module-free serving establishes a speedup.
 
+The [optimized cross-node comparison](docs/findings/0046-optimized-cross-node.md)
+now completes real different-node module-free serving for both models with
+unchanged backend computation. All four primary performance intervals cross
+zero. A real host OOM/filesystem fault during Smol collection materially
+qualifies the performance interpretation; the full record preserves all
+observations and failures, with no clean stable-host or speedup claim.
+Owned temporary resources are removed after independent review.
+
 ## Service and compute boundary
 
 The intended open-source boundary is a reusable serving path around existing

@@ -1,0 +1,23 @@
+{
+  "model": "smol",
+  "pair": 3,
+  "mode": "uring_loop",
+  "stage": "full",
+  "source": "81baa94c84a5567950e87f3310788c000c6e9d6a",
+  "utc": "2026-10-14T05:36:31.802876+00:00",
+  "attach": {
+    "cmd": [
+      "./build/bpfusion_load",
+      "stream-uring-attach"
+    ],
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "cmd": [
+    "./build/vllm_graph_uring_loop",
+    "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+    "300"
+  ],
+  "pid": 297668
+}
