@@ -219,6 +219,10 @@ order and waits for the previous DONE to be reclaimed. FREE or already reused
 WRITING/PENDING proves that old ownership was released. This preserves the
 head-indexed producer ring, including immediate client reuse across wrap;
 the module withholds the last token while a request remains GPU-owned PENDING.
+The [live kernel-TX regression](../tests/kernel_tx.py) reads the available prefix,
+publishes DONE and then checks the final token and exact complete response.
+Its cleanup uses the existing delete_module syscall and releases its owned tc
+attachment/maps, so it does not require a separate rmmod executable.
 
 At bootstrap, the existing HF RoPE pointwise helper and the RMSNorm
 post-reduction expression are compiled with the default backend/mode and

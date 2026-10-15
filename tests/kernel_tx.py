@@ -70,26 +70,42 @@ def main():
                 page.set_produced(idx, k + 1)
             time.sleep(0.08) # exceeds the former 500 * 60 us reclaim interval
             assert page.slot(idx)[0] == BF_PENDING, "reclaimed while executor owned slot"
+            data = b""
             if not disconnected:
-                data = b""
+                # The existing TX contract retains the final token until DONE.
+                while len(data) < len(expected) - 4:
+                    chunk = client.recv(1)
+                    assert chunk
+                    data += chunk
+                assert data == expected[:-4]
+                assert page.slot(idx)[0] == BF_PENDING
+            page.finish(idx)
+            if not disconnected:
                 while len(data) < len(expected):
-                    # Exercise client stream framing with single-byte reads.
+                    # Keep the original single-byte exact stream check.
                     chunk = client.recv(1)
                     assert chunk
                     data += chunk
                 assert data == expected
-            page.finish(idx)
             wait_for(lambda: page.slot(idx)[0] == BF_FREE)
             if not disconnected:
                 client.close()
             server.close()
         print("PASS 24 exact TCP replies, 2 resets, 26 DONE/recycle cycles, PENDING preserved", flush=True)
     finally:
-        if loaded:
-            subprocess.run(["rmmod", "bfusion_tx"], check=True)
-        listener.close()
-        mm.close()
-        subprocess.run(["./build/bpfusion_load", "detach", "lo"], check=True)
+        try:
+            if loaded:
+                ctypes.set_errno(0)
+                ret = lib.syscall(176, ctypes.c_char_p(b"bfusion_tx"), 0)
+                if ret != 0:
+                    raise OSError(ctypes.get_errno(), "delete_module")
+        finally:
+            listener.close()
+            mm.close()
+            subprocess.run(["./build/bpfusion_load", "detach", "lo"], check=True)
+            import pathlib
+            for name in ("bpfusion_stats", "bpfusion_db", "bpfusion_ctl"):
+                pathlib.Path("/sys/fs/bpf", name).unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
