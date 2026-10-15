@@ -1,0 +1,106 @@
+{
+  "model": "qwen",
+  "start": "2026-10-15T14:14:01.140820+00:00",
+  "oracle_frozen_at": "pre-observation0045: 8323c32e19a1fcdf326beba405a411a6276aa8dc",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "ready_time_ns": 1792073850316746485,
+  "native_pid": 609097,
+  "before_backlog_rst": {
+    "head": 47,
+    "queued": 32,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 31\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 79\nsockhash linked 13\nsockhash failed 0\nparser calls   79\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=47\nllm_queued=32\nllm_reserved=0xffff\nllm[0]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979676944\nllm[1]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979687125\nllm[2]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979693764\nllm[3]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979699735\nllm[4]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979705470\nllm[5]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979711052\nllm[6]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979716545\nllm[7]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979722326\nllm[8]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979728485\nllm[9]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979734555\nllm[10]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979912011\nllm[11]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979920616\nllm[12]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979926335\nllm[13]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979931847\nllm[14]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979945795\nllm[15]: state=1 prompt=5 gen=64 produced=2 client_ns=505242979653665\n"
+  },
+  "before_backlog_stop": {
+    "head": 96,
+    "queued": 48,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 80\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 144\nsockhash linked 78\nsockhash failed 0\nparser calls   144\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=96\nllm_queued=48\nllm_reserved=0xffff\nllm[0]: state=1 prompt=5 gen=64 produced=46 client_ns=505243317849578\nllm[1]: state=1 prompt=5 gen=64 produced=46 client_ns=505243317897001\nllm[2]: state=1 prompt=5 gen=64 produced=46 client_ns=505243317923073\nllm[3]: state=1 prompt=5 gen=64 produced=46 client_ns=505243317944337\nllm[4]: state=1 prompt=5 gen=64 produced=46 client_ns=505243317964375\nllm[5]: state=1 prompt=5 gen=64 produced=46 client_ns=505243317992305\nllm[6]: state=1 prompt=5 gen=64 produced=46 client_ns=505243318018997\nllm[7]: state=1 prompt=5 gen=64 produced=46 client_ns=505243318038660\nllm[8]: state=1 prompt=5 gen=64 produced=46 client_ns=505243318057774\nllm[9]: state=1 prompt=5 gen=64 produced=46 client_ns=505243318076490\nllm[10]: state=1 prompt=5 gen=64 produced=46 client_ns=505243318094218\nllm[11]: state=1 prompt=5 gen=64 produced=46 client_ns=505243318111130\nllm[12]: state=1 prompt=5 gen=64 produced=46 client_ns=505243318129144\nllm[13]: state=1 prompt=5 gen=64 produced=46 client_ns=505243318147522\nllm[14]: state=1 prompt=5 gen=64 produced=46 client_ns=505243318166775\nllm[15]: state=1 prompt=5 gen=64 produced=46 client_ns=505243318183712\n"
+  },
+  "exit": 0,
+  "native_stats": {
+    "accepted": 78,
+    "closed": 78,
+    "received": 96,
+    "sends": 1008,
+    "bytes": 9593,
+    "completed": 96,
+    "aborted": 66,
+    "max_connections": 64,
+    "max_requests": 16,
+    "pending": 0,
+    "error": 0,
+    "head": 96,
+    "reserved": 0,
+    "dropped": 0,
+    "overflow": 0,
+    "sqhead": 1612,
+    "sqtail": 1612,
+    "cqhead": 13430,
+    "cqtail": 13430,
+    "trace_count": 96,
+    "trace_overflow": 0
+  },
+  "bpf_stats": {
+    "exit": 0,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 96\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 144\nsockhash linked 78\nsockhash failed 0\nparser calls   144\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=96\nllm_queued=48\nllm_reserved=0x0\nllm[0]: state=0 prompt=5 gen=64 produced=50 client_ns=505243317849578\nllm[1]: state=0 prompt=5 gen=64 produced=50 client_ns=505243317897001\nllm[2]: state=0 prompt=5 gen=64 produced=50 client_ns=505243317923073\nllm[3]: state=0 prompt=5 gen=64 produced=50 client_ns=505243317944337\nllm[4]: state=0 prompt=5 gen=64 produced=50 client_ns=505243317964375\nllm[5]: state=0 prompt=5 gen=64 produced=50 client_ns=505243317992305\nllm[6]: state=0 prompt=5 gen=64 produced=50 client_ns=505243318018997\nllm[7]: state=0 prompt=5 gen=64 produced=50 client_ns=505243318038660\nllm[8]: state=0 prompt=5 gen=64 produced=50 client_ns=505243318057774\nllm[9]: state=0 prompt=5 gen=64 produced=50 client_ns=505243318076490\nllm[10]: state=0 prompt=5 gen=64 produced=50 client_ns=505243318094218\nllm[11]: state=0 prompt=5 gen=64 produced=50 client_ns=505243318111130\nllm[12]: state=0 prompt=5 gen=64 produced=50 client_ns=505243318129144\nllm[13]: state=0 prompt=5 gen=64 produced=50 client_ns=505243318147522\nllm[14]: state=0 prompt=5 gen=64 produced=50 client_ns=505243318166775\nllm[15]: state=0 prompt=5 gen=64 produced=50 client_ns=505243318183712\n",
+    "stderr": ""
+  },
+  "queued_at_stop_cleanup": 48,
+  "model_errors": [
+    0
+  ],
+  "pass": true,
+  "end": "2026-10-15T14:18:02.460337+00:00",
+  "remaining_pins": []
+}
+EPLY {"seq":72,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":505242980044292}
+REPLY {"seq":73,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":505242980046963}
+REPLY {"seq":74,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":505242980049467}
+REPLY {"seq":75,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":505242980051991}
+REPLY {"seq":76,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":505242980054562}
+REPLY {"seq":77,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":505242980058694}
+REPLY {"seq":78,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":505242980061990}
+REPLY {"seq":79,"gen":64,"sends":45,"early":44,"bytes":336,"aborted":0,"client_ns":505242986239058}
+REPLY {"seq":80,"gen":64,"sends":22,"early":22,"bytes":272,"aborted":1,"client_ns":505243317849578}
+REPLY {"seq":81,"gen":64,"sends":22,"early":22,"bytes":272,"aborted":1,"client_ns":505243317897001}
+REPLY {"seq":82,"gen":64,"sends":22,"early":22,"bytes":272,"aborted":1,"client_ns":505243317923073}
+REPLY {"seq":83,"gen":64,"sends":22,"early":22,"bytes":272,"aborted":1,"client_ns":505243317944337}
+REPLY {"seq":84,"gen":64,"sends":22,"early":22,"bytes":272,"aborted":1,"client_ns":505243317964375}
+REPLY {"seq":85,"gen":64,"sends":22,"early":22,"bytes":272,"aborted":1,"client_ns":505243317992305}
+REPLY {"seq":86,"gen":64,"sends":22,"early":22,"bytes":272,"aborted":1,"client_ns":505243318018997}
+REPLY {"seq":87,"gen":64,"sends":22,"early":22,"bytes":272,"aborted":1,"client_ns":505243318038660}
+REPLY {"seq":88,"gen":64,"sends":22,"early":22,"bytes":272,"aborted":1,"client_ns":505243318057774}
+REPLY {"seq":89,"gen":64,"sends":22,"early":22,"bytes":272,"aborted":1,"client_ns":505243318076490}
+REPLY {"seq":90,"gen":64,"sends":22,"early":22,"bytes":272,"aborted":1,"client_ns":505243318094218}
+REPLY {"seq":91,"gen":64,"sends":21,"early":21,"bytes":272,"aborted":1,"client_ns":505243318111130}
+REPLY {"seq":92,"gen":64,"sends":21,"early":21,"bytes":272,"aborted":1,"client_ns":505243318129144}
+REPLY {"seq":93,"gen":64,"sends":21,"early":21,"bytes":272,"aborted":1,"client_ns":505243318147522}
+REPLY {"seq":94,"gen":64,"sends":21,"early":21,"bytes":272,"aborted":1,"client_ns":505243318166775}
+REPLY {"seq":95,"gen":64,"sends":21,"early":21,"bytes":272,"aborted":1,"client_ns":505243318183712}
+CLEANUP ring_connections_buffers_released
+resident vLLM stopped: launches=1 device_graph_launches=960 graph_error=0 max_active=16 admitted=96 retired=80 trace_overflows=0 release_rounds=35 max_release=16 device_launch_calls=1920
+
+LL):  69%|██████▉   | 11/16 [00:00<00:00, 13.54it/s]
+Prefill query=62 (FULL):  81%|████████▏ | 13/16 [00:00<00:00, 11.23it/s]
+Prefill query=62 (FULL):  94%|█████████▍| 15/16 [00:01<00:00, 12.16it/s]
+Prefill query=62 (FULL): 100%|██████████| 16/16 [00:01<00:00, 14.55it/s]
+
+Prefill query=63 (FULL):   0%|          | 0/16 [00:00<?, ?it/s]
+Prefill query=63 (FULL):  38%|███▊      | 6/16 [00:00<00:00, 53.41it/s]
+Prefill query=63 (FULL):  75%|███████▌  | 12/16 [00:00<00:00, 53.30it/s]
+Prefill query=63 (FULL): 100%|██████████| 16/16 [00:00<00:00, 49.26it/s]
+
+Prefill query=64 (FULL):   0%|          | 0/16 [00:00<?, ?it/s]
+Prefill query=64 (FULL):  12%|█▎        | 2/16 [00:00<00:01, 13.54it/s]
+Prefill query=64 (FULL):  25%|██▌       | 4/16 [00:00<00:01, 11.33it/s]
+Prefill query=64 (FULL):  44%|████▍     | 7/16 [00:00<00:00, 15.63it/s]
+Prefill query=64 (FULL):  56%|█████▋    | 9/16 [00:00<00:00, 15.97it/s]
+Prefill query=64 (FULL):  69%|██████▉   | 11/16 [00:00<00:00, 14.04it/s]
+Prefill query=64 (FULL):  81%|████████▏ | 13/16 [00:00<00:00, 12.12it/s]
+Prefill query=64 (FULL): 100%|██████████| 16/16 [00:01<00:00, 14.12it/s]
+Prefill query=64 (FULL): 100%|██████████| 16/16 [00:01<00:00, 13.84it/s]
+
+LIFECYCLE_DRIVER_TERMINAL

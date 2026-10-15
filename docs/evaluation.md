@@ -1280,5 +1280,7 @@ qualification from traced replay validity. Both8/16 builds complete with matchin
 wrapper completes real preflight:256 measured successes/16384tokens,zero failures
 plus32 warmups. Both16-capacity paths actually execute widths1..16 and pass
 independent history replay;copied CPU analysis matches bytewise.16-capacity
-protocol/lifecycle qualification is running. No performance result is available. Full execution,
+Qwen16 protocol/lifecycle qualification now passes,including2568 protocol
+outcomes/94400replayedtokens and bounded ordinary reset/stop cases.
+Smol16 qualification is running. No performance result is available. Full execution,
 fresh result review,owned cleanup and final publication remain unfinished.

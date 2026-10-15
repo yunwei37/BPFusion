@@ -85,3 +85,26 @@ normal helper-stop cleanup pass. Copied protocol analysis matches stdout
 bytewise (qwen_protocol_completion.json). These are not2568 successful
 inference responses. Ordinary lifecycle and Smol qualification remain running;
 full performance collection has not started.
+
+## Qwen loop lifecycle update
+
+Ordinary16-capacity kernel-loop lifecycle exits0/pass true at14:18:02.471368UTC:
+144actions,78accepted/closed connections,max16active requests,zero graph error,
+zero pending/error/reserved/drop/overflow,and drained SQ/CQ. Final admission
+head96 plus48queued cancellations accounts for144 actions. All owned pins are
+removed. Complete/prefix bytes use the unchanged pre-observation frozen pools;
+unobserved canceled frames are not complete numerical responses.
+qwen_loop_lifecycle_completion.json and lifecycle_qwen_loop/ retain exact scope.
+Native lifecycle and both Smol qualifications remain unfinished.
+
+## Complete Qwen16 qualification update
+
+All three Qwen qualification commands pass by14:21:47.817205UTC:
+the two-path1284-outcome protocol per path,ordinary kernel-loop lifecycle,
+and ordinary native lifecycle. Native retains32actions with13connections,
+32published/31completed/10rejected and no graph error or remaining pins.
+Partial stop observations are not32complete numerical replies.
+qwen_qualification_completion.json links the completed scope.
+The same original wrapper has advanced to Smol16 qualification. Full
+throughput/tail collection remains unstarted and no performance benefit
+or production default selection is inferred.

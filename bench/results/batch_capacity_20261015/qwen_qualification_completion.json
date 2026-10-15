@@ -1,0 +1,60 @@
+{
+  "utc": "2026-10-15T14:24:11.953468+00:00",
+  "completed_commands": [
+    {
+      "name": "protocol_qwen",
+      "command": [
+        "/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/load.py",
+        "--model",
+        "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+        "--correctness",
+        "--output",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/protocol_qwen.jsonl"
+      ],
+      "exit": 0,
+      "utc": "2026-10-15T14:14:00.186222+00:00",
+      "analysis_exit": 0
+    },
+    {
+      "name": "lifecycle_qwen_loop",
+      "command": [
+        "/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/lifecycle.py",
+        "loop",
+        "qwen"
+      ],
+      "exit": 0,
+      "utc": "2026-10-15T14:18:02.471368+00:00",
+      "lifecycle_pass": true
+    },
+    {
+      "name": "lifecycle_qwen_native",
+      "command": [
+        "/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/lifecycle.py",
+        "native",
+        "qwen"
+      ],
+      "exit": 0,
+      "utc": "2026-10-15T14:21:47.817205+00:00",
+      "lifecycle_pass": true
+    }
+  ],
+  "protocol_outcomes": 2568,
+  "protocol_intended_rejections": 1030,
+  "protocol_checked_tokens": 94400,
+  "native_lifecycle": {
+    "actions": 32,
+    "checked_observed_tokens": 652,
+    "stats": {
+      "accepted": 13,
+      "published": 32,
+      "completed": 31,
+      "rejected": 10
+    },
+    "pass_": true,
+    "remaining_pins": []
+  },
+  "scope": "Complete Qwen16 qualification only. Smol still running. Finite ordinary lifecycle includes partial/canceled observations; no performance result or ordinary default selection."
+}

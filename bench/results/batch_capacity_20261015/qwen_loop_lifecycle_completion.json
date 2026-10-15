@@ -1,0 +1,45 @@
+{
+  "utc": "2026-10-15T14:21:25.839042+00:00",
+  "driver_status": {
+    "name": "lifecycle_qwen_loop",
+    "command": [
+      "/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+      "/tmp/bpfusion-batch-capacity-tkii8tus/lifecycle.py",
+      "loop",
+      "qwen"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T14:18:02.471368+00:00",
+    "lifecycle_pass": true
+  },
+  "pass_": true,
+  "actions": 144,
+  "checked_observed_tokens": 1484,
+  "unobserved_canceled_actions": 47,
+  "native_stats": {
+    "accepted": 78,
+    "closed": 78,
+    "received": 96,
+    "sends": 1008,
+    "bytes": 9593,
+    "completed": 96,
+    "aborted": 66,
+    "max_connections": 64,
+    "max_requests": 16,
+    "pending": 0,
+    "error": 0,
+    "head": 96,
+    "reserved": 0,
+    "dropped": 0,
+    "overflow": 0,
+    "sqhead": 1612,
+    "sqtail": 1612,
+    "cqhead": 13430,
+    "cqtail": 13430,
+    "trace_count": 96,
+    "trace_overflow": 0
+  },
+  "queued_at_stop_cleanup": 48,
+  "remaining_pins": [],
+  "scope": "Finite ordinary loop lifecycle: complete/prefix bytes checked against pre-observation frozen pools; canceled/unobserved frames are not complete numerical responses. Native lifecycle and Smol qualification still running; no performance result."
+}
