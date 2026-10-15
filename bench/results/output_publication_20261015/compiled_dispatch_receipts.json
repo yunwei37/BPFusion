@@ -1,0 +1,24 @@
+[
+  {
+    "label": "original",
+    "command": [
+      "/usr/local/cuda/bin/cuobjdump",
+      "--dump-sass",
+      "/tmp/bpfusion-output-publication-jivtqzci/original-build/vllm_graph_uring_loop.so"
+    ],
+    "exit": 0,
+    "bytes": 764769,
+    "library_bytes": 201616
+  },
+  {
+    "label": "candidate",
+    "command": [
+      "/usr/local/cuda/bin/cuobjdump",
+      "--dump-sass",
+      "/tmp/bpfusion-output-publication-jivtqzci/candidate-build/vllm_graph_uring_loop.so"
+    ],
+    "exit": 0,
+    "bytes": 766593,
+    "library_bytes": 201576
+  }
+]

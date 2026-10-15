@@ -553,3 +553,12 @@ Private logical tracing/profiling adds no serving/default change. All40
 client/replay cells pass finite checks; two Smol activity profiles fail exact
 coverage, leaving the planned integrated decomposition invalid. Complete Qwen
 duration/trajectory comparisons do not identify an exclusive bottleneck.
+
+## Batched token publication experiment boundary
+
+[Finding0058](findings/0058-batched-token-publication.md) tests one system fence
+for a completed batch's token payloads before publishing produced counts.
+DONE/recycle ownership and model math stay unchanged. The full comparison stops
+on an original-control finite-output-pool failure; candidate promotion is
+unsupported. Selected main restores the original per-row publisher, with no
+retained production/default change.

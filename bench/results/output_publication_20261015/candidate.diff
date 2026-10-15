@@ -1,0 +1,23 @@
+diff --git a/executor/vllm_graph.cu b/executor/vllm_graph.cu
+index f9cad77..c47a1cf 100644
+--- a/executor/vllm_graph.cu
++++ b/executor/vllm_graph.cu
+@@ -66,11 +66,17 @@ __global__ void dispatch(bf_page* p,Step* steps,Inputs in,unsigned vocab,Control
+                 unsigned token=(unsigned)step->output[row];
+                 if(event) { event->requests[row]=r->id;event->tokens[row]=token; }
+                 bf_llm_slot* slot=&p->llm[i];
+-                __stcg(&slot->tok_out[r->k],token);__threadfence_system();__stcg(&slot->produced,r->k+1);
++                __stcg(&slot->tok_out[r->k],token);
+                 r->last=token;r->k++;
+                 r->position=c->query ? r->prompt : r->position+1;
+                 r->phase=r->k==r->gen ? 2 : 1;
+             }
++            // Order every batch payload before publishing any availability.
++            __threadfence_system();
++            for(unsigned row=0;row<c->batch;row++) {
++                unsigned i=c->selected[row];
++                __stcg(&p->llm[i].produced,c->requests[i].k);
++            }
+             c->batch=0;
+         }
+         if(queue_load((unsigned long long*)&p->stop_ns))return;

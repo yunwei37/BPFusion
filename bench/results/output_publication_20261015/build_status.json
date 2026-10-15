@@ -1,0 +1,42 @@
+[
+  {
+    "label": "original",
+    "command": [
+      "make",
+      "-f",
+      "/tmp/bpfusion-output-publication-jivtqzci/Makefile.original",
+      "BUILD=/tmp/bpfusion-output-publication-jivtqzci/original-build",
+      "NVCC=/usr/local/cuda/bin/nvcc -I/workspaces/repository/executor",
+      "VLLM_PYTHON=/tmp/bpfusion-output-publication-jivtqzci/runtime/bin/python",
+      "/tmp/bpfusion-output-publication-jivtqzci/original-build/vllm_graph_uring_loop.so",
+      "/tmp/bpfusion-output-publication-jivtqzci/original-build/vllm_graph_uring_loop",
+      "/tmp/bpfusion-output-publication-jivtqzci/original-build/vllm_graph_uring_loop_trace.so",
+      "/tmp/bpfusion-output-publication-jivtqzci/original-build/vllm_graph_uring_loop_trace",
+      "/tmp/bpfusion-output-publication-jivtqzci/original-build/vllm_graph_user_network_wait.so",
+      "/tmp/bpfusion-output-publication-jivtqzci/original-build/vllm_graph_user_network_wait",
+      "/tmp/bpfusion-output-publication-jivtqzci/original-build/vllm_graph_user_network_wait_trace.so",
+      "/tmp/bpfusion-output-publication-jivtqzci/original-build/vllm_graph_user_network_wait_trace"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T03:39:32.399569+00:00"
+  },
+  {
+    "label": "candidate",
+    "command": [
+      "make",
+      "BUILD=/tmp/bpfusion-output-publication-jivtqzci/candidate-build",
+      "NVCC=/usr/local/cuda/bin/nvcc -I/workspaces/repository/executor",
+      "VLLM_PYTHON=/tmp/bpfusion-output-publication-jivtqzci/runtime/bin/python",
+      "/tmp/bpfusion-output-publication-jivtqzci/candidate-build/vllm_graph_uring_loop.so",
+      "/tmp/bpfusion-output-publication-jivtqzci/candidate-build/vllm_graph_uring_loop",
+      "/tmp/bpfusion-output-publication-jivtqzci/candidate-build/vllm_graph_uring_loop_trace.so",
+      "/tmp/bpfusion-output-publication-jivtqzci/candidate-build/vllm_graph_uring_loop_trace",
+      "/tmp/bpfusion-output-publication-jivtqzci/candidate-build/vllm_graph_user_network_wait.so",
+      "/tmp/bpfusion-output-publication-jivtqzci/candidate-build/vllm_graph_user_network_wait",
+      "/tmp/bpfusion-output-publication-jivtqzci/candidate-build/vllm_graph_user_network_wait_trace.so",
+      "/tmp/bpfusion-output-publication-jivtqzci/candidate-build/vllm_graph_user_network_wait_trace"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T03:40:00.141746+00:00"
+  }
+]

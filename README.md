@@ -295,6 +295,15 @@ GPU decomposition fails;18 complete profiles and all40 client outcomes remain
 explicitly scoped. Complete Qwen duration effects are inconclusive for the
 bottleneck. Serving source and defaults remain unchanged.
 
+## Ordinary output qualification boundary
+
+[Finding0058](docs/findings/0058-batched-token-publication.md) preserves an
+incomplete publisher experiment: an unmodified Qwen loop control returns one
+complete output outside its frozen finite reference pool. The cause remains
+unresolved without its ordinary execution history. No performance improvement
+is selected; original source is retained. Traced protocol/lifecycle passes do
+not establish every untraced trajectory.
+
 ## Repository layout
 
 ```

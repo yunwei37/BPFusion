@@ -1,0 +1,33 @@
+{
+  "utc": "2026-10-15T04:03:03.557360+00:00",
+  "preserved_paths_equal": {
+    "tools/setup_env.sh": true,
+    "build/qwen_graph.so": true,
+    "build/vllm_graph_uring_loop_trace.so": true,
+    "build/vllm_graph_uring_loop_trace.so.o": true,
+    "build/vllm_graph_uring_loop_trace.so.dlink.o": true,
+    "build/vllm_graph_uring_loop_trace": true,
+    "build/bpfusion_load": true,
+    "build/uring_loop.bpf.o": true
+  },
+  "captured_sources_equal": {
+    "Makefile": true,
+    "executor/vllm_graph.cu": true,
+    "executor/io_uring_tcp.h": true,
+    "executor/vllm_graph.py": true,
+    "executor/qwen_graph.cu": true,
+    "executor/amk_graph.py": true,
+    "executor/amk_graph.cu": true,
+    "executor/userspace_tcp.h": true,
+    "bpf/fusion.bpf.c": true,
+    "bpf/uring_loop.bpf.c": true,
+    "bpf/include/bpfusion_queue.h": true,
+    "bench/resident_dispatch.py": true
+  },
+  "preflight_exit": 0,
+  "qualification_exit": 0,
+  "lifecycle_analysis_exit": 0,
+  "tracked_dirty": [
+    "executor/vllm_graph.cu"
+  ]
+}

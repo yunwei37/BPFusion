@@ -1,0 +1,19 @@
+[
+  {
+    "name": "full_qwen",
+    "command": [
+      "/tmp/bpfusion-output-publication-jivtqzci/runtime/bin/python",
+      "/tmp/bpfusion-output-publication-jivtqzci/serving.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--loop-comparison",
+      "--output",
+      "/tmp/bpfusion-output-publication-jivtqzci/full_qwen.jsonl",
+      "--untraced",
+      "--reference-path",
+      "/tmp/bpfusion-output-publication-jivtqzci/frozen_references.json"
+    ],
+    "exit": 1,
+    "utc": "2026-10-15T04:11:05.914575+00:00"
+  }
+]

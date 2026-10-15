@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/bpfusion-output-publication-jivtqzci/analysis.py", line 216, in <module>
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument("path",type=Path);args=ap.parse_args();analyze(args.path)
+                                                                                                           ^^^^^^^^^^^^^^^^^^
+  File "/tmp/bpfusion-output-publication-jivtqzci/analysis.py", line 12, in analyze
+    assert records[-1]["event"]=="terminal" and records[-1]["exit_code"]==0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

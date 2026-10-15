@@ -1040,3 +1040,29 @@ retain failures, revisions and evidence. A late host endpoint2h16m35s after
 terminal and20 new selected NVRM warnings during full limit host interpretation;
 no causal driver/isolation claim follows. Keep source/defaults unchanged and
 close this diagnostic. The retained project objective remains active.
+
+## Incomplete batched token publication comparison
+
+[Finding0058](findings/0058-batched-token-publication.md) tests repeated output-row
+system fences within the retained serving/TPS question. Planned primary is
+loop candidate-original gen64/c8 TPS over five paired blocks/model; original/
+candidate native paths provide matched publisher and competing-transport
+controls. This is supporting selection work, distinct from SQ/CQ publication.
+
+Preflight, four622-request exact-history protocol checks and four32-action
+lifecycle suites pass. Full stops after11Qwen executors/44cells:1408measured
+requests45760tokens plus88warmups. One unmodified original-loop gen64/c8 output
+is absent from the fixed pre-observation pool, sharing62tokens with the closest
+reference. All serving exits0; full driver/wrapper and fixed analyzer fail.
+Smol full is never launched. There is no admissible five-block primary estimate.
+
+The [independent review](../bench/results/output_publication_20261015/result-review.md)
+retains all44cells/40signed descriptive contrasts and raw post-stop prefixes.
+It judges run incomplete, hypothesis inconclusive and value supporting
+boundary evidence. No numerical/transport cause or candidate gain is inferred.
+Restore original source, preserve the failure, and close this unchanged
+comparison. [Archive/replay](../bench/results/output_publication_20261015/) and
+[restoration](../bench/results/output_publication_20261015/final_restoration.json)
+record selection and cleanup. Future ordinary performance evidence needs a
+justified fidelity path; do not expand the pool after failure. The full retained
+objective remains active.

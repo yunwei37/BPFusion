@@ -1,0 +1,178 @@
+{
+  "utc": "2026-10-15T04:22:46.619484+00:00",
+  "temp": "/tmp/bpfusion-output-publication-jivtqzci",
+  "temp_removed": true,
+  "archived_files_bytes_equal_before_cleanup": 186,
+  "source_selection": "restore exact saved original uncommitted dispatcher; candidate unselected",
+  "production_code_growth": 0,
+  "defaults_changed": false,
+  "selected_sources_byte_equal": {
+    "Makefile": true,
+    "executor/vllm_graph.cu": true,
+    "executor/io_uring_tcp.h": true,
+    "executor/vllm_graph.py": true,
+    "executor/qwen_graph.cu": true,
+    "executor/amk_graph.py": true,
+    "executor/amk_graph.cu": true,
+    "executor/userspace_tcp.h": true,
+    "bpf/fusion.bpf.c": true,
+    "bpf/uring_loop.bpf.c": true,
+    "bpf/include/bpfusion_queue.h": true,
+    "bench/resident_dispatch.py": true
+  },
+  "candidate_snapshot_is_collected_source": true,
+  "selected_dispatcher_source": "original_vllm_graph.cu",
+  "preserved_equal": {
+    "tools/setup_env.sh": true,
+    "build/qwen_graph.so": true,
+    "build/vllm_graph_uring_loop_trace.so": true,
+    "build/vllm_graph_uring_loop_trace.so.o": true,
+    "build/vllm_graph_uring_loop_trace.so.dlink.o": true,
+    "build/vllm_graph_uring_loop_trace": true,
+    "build/bpfusion_load": true,
+    "build/uring_loop.bpf.o": true
+  },
+  "base_packages": "2.14.1+cu130 5.19.0 2.5.3",
+  "coder_pids_present": [
+    1,
+    10909
+  ],
+  "module_absent": true,
+  "maps_absent": true,
+  "phase_pids_absent": {
+    "494084": true,
+    "495308": true,
+    "496479": true,
+    "497801": true,
+    "498794": true
+  },
+  "all_recorded_server_pids_absent": true,
+  "recorded_server_pids": [
+    498873,
+    499138,
+    499401,
+    499648,
+    499890,
+    500157,
+    500402,
+    500651,
+    500896,
+    501142,
+    501384,
+    495386,
+    495730,
+    495972,
+    496221,
+    496558,
+    496863,
+    497235,
+    497515,
+    498256,
+    497805,
+    498509,
+    498029
+  ],
+  "removed_private_builds": [
+    "original-build/vllm_graph_user_network_wait_trace.so",
+    "original-build/vllm_graph_user_network_wait.so.o",
+    "original-build/vllm_graph_uring_loop.so.dlink.o",
+    "original-build/vllm_graph_uring_loop_trace",
+    "original-build/vllm_graph_uring_loop.so",
+    "original-build/vllm_graph_uring_loop_trace.so",
+    "original-build/vllm_graph_uring_loop.so.o",
+    "original-build/vllm_graph_user_network_wait.so",
+    "original-build/vllm_graph_user_network_wait_trace.so.o",
+    "original-build/vllm_graph_user_network_wait_trace",
+    "original-build/vllm_graph_user_network_wait",
+    "original-build/vllm_graph_uring_loop",
+    "original-build/vllm_graph_user_network_wait.so.dlink.o",
+    "original-build/vllm_graph_uring_loop_trace.so.dlink.o",
+    "original-build/vllm_graph_user_network_wait_trace.so.dlink.o",
+    "original-build/vllm_graph_uring_loop_trace.so.o",
+    "candidate-build/vllm_graph_user_network_wait_trace.so",
+    "candidate-build/vllm_graph_user_network_wait.so.o",
+    "candidate-build/vllm_graph_uring_loop.so.dlink.o",
+    "candidate-build/vllm_graph_uring_loop_trace",
+    "candidate-build/vllm_graph_uring_loop.so",
+    "candidate-build/vllm_graph_uring_loop_trace.so",
+    "candidate-build/vllm_graph_uring_loop.so.o",
+    "candidate-build/vllm_graph_user_network_wait.so",
+    "candidate-build/vllm_graph_user_network_wait_trace.so.o",
+    "candidate-build/vllm_graph_user_network_wait_trace",
+    "candidate-build/vllm_graph_user_network_wait",
+    "candidate-build/vllm_graph_uring_loop",
+    "candidate-build/vllm_graph_user_network_wait.so.dlink.o",
+    "candidate-build/vllm_graph_uring_loop_trace.so.dlink.o",
+    "candidate-build/vllm_graph_user_network_wait_trace.so.dlink.o",
+    "candidate-build/vllm_graph_uring_loop_trace.so.o"
+  ],
+  "removed_root_or_unowned_builds": [],
+  "full_status": "failed/incomplete; fixed full analysis must fail",
+  "post_cleanup_archive_replays": [
+    {
+      "label": "preflight",
+      "command": [
+        "python3",
+        "/workspaces/repository/bench/results/output_publication_20261015/analysis.py",
+        "/workspaces/repository/bench/results/output_publication_20261015/preflight_qwen.jsonl"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "stdout_byte_equal": true
+    },
+    {
+      "label": "qualification_qwen",
+      "command": [
+        "python3",
+        "/workspaces/repository/bench/results/output_publication_20261015/analysis.py",
+        "/workspaces/repository/bench/results/output_publication_20261015/qualification_qwen.jsonl"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "stdout_byte_equal": true
+    },
+    {
+      "label": "qualification_smol",
+      "command": [
+        "python3",
+        "/workspaces/repository/bench/results/output_publication_20261015/analysis.py",
+        "/workspaces/repository/bench/results/output_publication_20261015/qualification_smol.jsonl"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "stdout_byte_equal": true
+    },
+    {
+      "label": "full_expected_failure",
+      "command": [
+        "python3",
+        "/workspaces/repository/bench/results/output_publication_20261015/analysis.py",
+        "/workspaces/repository/bench/results/output_publication_20261015/full_qwen.jsonl"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "stdout_byte_equal": true,
+      "stderr_equal_after_path_relocation": true
+    },
+    {
+      "label": "lifecycle",
+      "command": [
+        "python3",
+        "/workspaces/repository/bench/results/output_publication_20261015/analysis_lifecycle.py",
+        "/workspaces/repository/bench/results/output_publication_20261015"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "stdout_byte_equal": true
+    }
+  ],
+  "post_cleanup_replay_utc": "2026-10-15T04:23:15.833273+00:00",
+  "publication_validation": {
+    "authored_doc_diff_check_exit": 0,
+    "full_staged_diff_check_exit": 2,
+    "raw_artifact_whitespace_warning_lines": 2,
+    "raw_artifact_bytes_preserved": true,
+    "secret_pattern_scan_matches": 0,
+    "documentation_content_preserved": true
+  }
+}
