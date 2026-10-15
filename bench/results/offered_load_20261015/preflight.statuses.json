@@ -1,0 +1,22 @@
+[
+  {
+    "name": "preflight_qwen",
+    "command": [
+      "/tmp/bpfusion-offered-load-6k3zzurc/runtime/bin/python",
+      "/tmp/bpfusion-offered-load-6k3zzurc/load.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--output",
+      "/tmp/bpfusion-offered-load-6k3zzurc/preflight_qwen.jsonl",
+      "--preflight"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T07:58:53.640404+00:00",
+    "analysis_command": [
+      "/usr/bin/python3",
+      "/tmp/bpfusion-offered-load-6k3zzurc/analyze.py",
+      "/tmp/bpfusion-offered-load-6k3zzurc/preflight_qwen.jsonl"
+    ],
+    "analysis_exit": 0
+  }
+]

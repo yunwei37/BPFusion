@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/usr/bin/python3",
+    "-m",
+    "pip",
+    "--python",
+    "/tmp/bpfusion-offered-load-6k3zzurc/runtime/bin/python",
+    "install",
+    "matplotlib"
+  ],
+  "exit": 0,
+  "utc": "2026-10-15T09:19:59.000540+00:00",
+  "scope": "Offline rendering dependency installed only after completed serving collection; not the measured serving environment.",
+  "changed_existing_packages": {},
+  "added_packages": {
+    "contourpy": "1.4.0",
+    "cycler": "0.12.1",
+    "fonttools": "4.67.0",
+    "kiwisolver": "1.5.1",
+    "matplotlib": "3.11.2",
+    "pyparsing": "3.3.3",
+    "python-dateutil": "2.9.0.post0"
+  },
+  "render_command": [
+    "/tmp/bpfusion-offered-load-6k3zzurc/runtime/bin/python",
+    "/tmp/bpfusion-offered-load-6k3zzurc/plot_tails.py",
+    "/tmp/bpfusion-offered-load-6k3zzurc"
+  ],
+  "render_exit": 0
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/offered_load_20261015/protocol_analysis.py",
+      "/workspaces/repository/bench/results/offered_load_20261015/protocol_qwen.jsonl"
+    ],
+    "exit": 0,
+    "stdout_byte_equal": true,
+    "stderr": "",
+    "utc": "2026-10-15T08:57:13.592085+00:00"
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/offered_load_20261015/protocol_analysis.py",
+      "/workspaces/repository/bench/results/offered_load_20261015/protocol_smol.jsonl"
+    ],
+    "exit": 0,
+    "stdout_byte_equal": true,
+    "stderr": "",
+    "utc": "2026-10-15T08:57:13.845369+00:00"
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/offered_load_20261015/analyze.py",
+      "/workspaces/repository/bench/results/offered_load_20261015/preflight_qwen.jsonl"
+    ],
+    "exit": 0,
+    "stdout_byte_equal": true,
+    "stderr": "",
+    "utc": "2026-10-15T08:57:13.882324+00:00"
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/offered_load_20261015/analyze.py",
+      "/workspaces/repository/bench/results/offered_load_20261015/full_qwen.jsonl"
+    ],
+    "exit": 0,
+    "stdout_byte_equal": true,
+    "stderr": "",
+    "utc": "2026-10-15T08:57:15.149914+00:00"
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/offered_load_20261015/tail_censoring.py",
+      "/workspaces/repository/bench/results/offered_load_20261015/full_qwen.jsonl"
+    ],
+    "exit": 0,
+    "stdout_byte_equal": true,
+    "stderr": "",
+    "utc": "2026-10-15T08:57:15.473876+00:00"
+  }
+]

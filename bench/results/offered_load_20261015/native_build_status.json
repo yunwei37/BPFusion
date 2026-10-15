@@ -1,0 +1,17 @@
+{
+  "command": [
+    "make",
+    "-f",
+    "/tmp/bpfusion-offered-load-6k3zzurc/native/Makefile",
+    "BUILD=/tmp/bpfusion-offered-load-6k3zzurc/native-build",
+    "NVCC=/usr/local/cuda/bin/nvcc -I/tmp/bpfusion-offered-load-6k3zzurc/native/bpf/include -I/workspaces/repository/executor",
+    "BPF_CFLAGS=-O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -I/tmp/bpfusion-offered-load-6k3zzurc/native/bpf/include -I/workspaces/repository/bpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value",
+    "VLLM_PYTHON=/tmp/bpfusion-offered-load-6k3zzurc/runtime/bin/python",
+    "/tmp/bpfusion-offered-load-6k3zzurc/native-build/vllm_graph_user_network_wait_trace.so",
+    "/tmp/bpfusion-offered-load-6k3zzurc/native-build/vllm_graph_user_network_wait_trace",
+    "/tmp/bpfusion-offered-load-6k3zzurc/native-build/vllm_graph_user_network_wait.so",
+    "/tmp/bpfusion-offered-load-6k3zzurc/native-build/vllm_graph_user_network_wait"
+  ],
+  "exit": 0,
+  "utc": "2026-10-15T07:36:56.234750+00:00"
+}

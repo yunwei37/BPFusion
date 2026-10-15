@@ -1,0 +1,105 @@
+(MainProcess pid=527947) INFO 10-15 07:55:20 [api_utils.py:286] non-default args: {'dtype': 'half', 'max_model_len': 128, 'disable_log_stats': True, 'model': '/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2'}
+(MainProcess pid=527947) WARNING 10-15 07:55:20 [arg_utils.py:1910] The global random seed is set to 0. Since VLLM_ENABLE_V1_MULTIPROCESSING is set to False, this may affect the random state of the Python process that launched vLLM.
+(MainProcess pid=527947) INFO 10-15 07:55:20 [model.py:699] Resolved architecture: LlamaForCausalLM
+(MainProcess pid=527947) WARNING 10-15 07:55:20 [model.py:2442] Casting torch.bfloat16 to torch.float16.
+(MainProcess pid=527947) INFO 10-15 07:55:20 [model.py:2109] Using max model len 128
+(MainProcess pid=527947) INFO 10-15 07:55:20 [scheduler.py:308] Chunked prefill is enabled with max_num_batched_tokens=8192.
+(MainProcess pid=527947) INFO 10-15 07:55:20 [kernel.py:408] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=527947) INFO 10-15 07:55:22 [core.py:129] Initializing a V1 LLM engine (v0.31.0) with config: model='/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2', speculative_config=None, tokenizer='/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, max_seq_len=128, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(MainProcess pid=527947) INFO 10-15 07:55:23 [parallel_state.py:1825] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_d25d9c08314542479c482b0200c25fdc backend=nccl
+(MainProcess pid=527947) INFO 10-15 07:55:24 [parallel_state.py:2269] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(MainProcess pid=527947) INFO 10-15 07:55:24 [gpu_worker.py:479] Using V2 Model Runner
+(MainProcess pid=527947) INFO 10-15 07:55:26 [model_runner.py:375] Loading model from scratch...
+(MainProcess pid=527947) INFO 10-15 07:55:35 [cuda.py:526] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].
+(MainProcess pid=527947) INFO 10-15 07:55:35 [flash_attn.py:1167] Using FlashAttention version 2
+(MainProcess pid=527947) INFO 10-15 07:55:36 [weight_utils.py:1063] Filesystem type for checkpoints: EXT4. Checkpoint size: 0.25 GiB. Available RAM: 78.50 GiB.
+(MainProcess pid=527947) INFO 10-15 07:55:36 [weight_utils.py:1086] Auto-prefetch is disabled because the filesystem (EXT4) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+(MainProcess pid=527947) INFO 10-15 07:55:41 [default_loader.py:484] Loading weights took 5.23 seconds
+(MainProcess pid=527947) INFO 10-15 07:55:42 [model_runner.py:407] Model loading took 0.26 GiB memory and 16.369037 seconds
+(MainProcess pid=527947) INFO 10-15 07:55:42 [topk_topp_sampler.py:124] Using FlashInfer for top-p & top-k sampling.
+(MainProcess pid=527947) INFO 10-15 07:55:42 [torch_utils.py:286] Reducing Torch threads from 24 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(MainProcess pid=527947) INFO 10-15 07:55:42 [utils.py:343] Using LBNHC KV cache layout.
+{"event": "vllm_protocol_cache", "context_tokens": 128, "banks": 8, "needed_blocks": 65, "cache_bytes": 23961600, "specs": {"model.layers.0.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.1.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.2.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.3.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.4.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.5.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.6.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.7.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.8.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.9.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.10.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.11.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.12.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.13.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.14.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.15.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.16.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.17.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.18.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.19.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.20.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.21.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.22.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.23.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.24.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.25.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.26.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.27.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.28.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}, "model.layers.29.self_attn.attn": {"block_size": 16, "page_size_bytes": 12288}}}
+(MainProcess pid=527947) INFO 10-15 07:55:45 [caching.py:342] reconstructed serializable fn from standalone compile artifacts. num_artifacts=3 num_submods=31
+(MainProcess pid=527947) INFO 10-15 07:55:45 [decorators.py:312] Directly load AOT compilation from path /root/.cache/vllm/torch_compile_cache/torch_aot_compile/40f788bf8846af4ecba942211527e61680993c31c859721634e78546999ea04b/rank_0_0/model
+(MainProcess pid=527947) INFO 10-15 07:55:45 [monitor.py:53] torch.compile took 1.29 s in total
+(MainProcess pid=527947) INFO 10-15 07:55:45 [monitor.py:81] Initial profiling/warmup run took 0.25 s
+(MainProcess pid=527947) INFO 10-15 07:55:46 [gpu_worker.py:603] Initial free memory 30.89 GiB, reserved 0.02 GiB memory for KV Cache as specified by kv_cache_memory_bytes config and skipped memory profiling. This does not respect the gpu_memory_utilization config. Only use kv_cache_memory_bytes config when you want manual control of KV cache memory size. If OOM'ed, check the difference of initial free memory between the current run and the previous run where kv_cache_memory_bytes is suggested and update it correspondingly.
+(MainProcess pid=527947) INFO 10-15 07:55:46 [kv_cache_utils.py:2464] GPU KV cache size: 1,040 tokens, Maximum concurrency for 128 tokens per request: 8.12x
+(MainProcess pid=527947) INFO 10-15 07:55:46 [kernel_warmup.py:172] JIT kernel warmup starting.
+(MainProcess pid=527947) INFO 10-15 07:55:46 [kernel_warmup.py:185] JIT kernel warmup finished in 0.00s.
+(MainProcess pid=527947) INFO 10-15 07:55:47 [kernel_warmup.py:437] Using FlashInfer autotune cache file: /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/90b12f24124ea812861e80e5144bfd064429de7dd1b156425bfda6ebd10460fc/autotune_configs.json
+(MainProcess pid=527947) INFO 10-15 07:55:47 [kernel_warmup.py:359] Running FlashInfer autotune with 8192 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192).
+(MainProcess pid=527947) INFO 10-15 07:55:53 [model_runner.py:1087] Graph capturing finished in 5 secs, took 0.06 GiB
+(MainProcess pid=527947) INFO 10-15 07:55:54 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(MainProcess pid=527947) INFO 10-15 07:55:55 [core.py:373] init engine (profile, create kv cache, warmup model) took 12.45 s (compilation: 1.29 s)
+(MainProcess pid=527947) INFO 10-15 07:55:55 [hf.py:646] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+captured vLLM query=1/64 batches1..8
+captured vLLM query=2/64 batches1..8
+captured vLLM query=3/64 batches1..8
+captured vLLM query=4/64 batches1..8
+captured vLLM query=5/64 batches1..8
+captured vLLM query=6/64 batches1..8
+captured vLLM query=7/64 batches1..8
+captured vLLM query=8/64 batches1..8
+captured vLLM query=9/64 batches1..8
+captured vLLM query=10/64 batches1..8
+captured vLLM query=11/64 batches1..8
+captured vLLM query=12/64 batches1..8
+captured vLLM query=13/64 batches1..8
+captured vLLM query=14/64 batches1..8
+captured vLLM query=15/64 batches1..8
+captured vLLM query=16/64 batches1..8
+captured vLLM query=17/64 batches1..8
+captured vLLM query=18/64 batches1..8
+captured vLLM query=19/64 batches1..8
+captured vLLM query=20/64 batches1..8
+captured vLLM query=21/64 batches1..8
+captured vLLM query=22/64 batches1..8
+captured vLLM query=23/64 batches1..8
+captured vLLM query=24/64 batches1..8
+captured vLLM query=25/64 batches1..8
+captured vLLM query=26/64 batches1..8
+captured vLLM query=27/64 batches1..8
+captured vLLM query=28/64 batches1..8
+captured vLLM query=29/64 batches1..8
+captured vLLM query=30/64 batches1..8
+captured vLLM query=31/64 batches1..8
+captured vLLM query=32/64 batches1..8
+captured vLLM query=33/64 batches1..8
+captured vLLM query=34/64 batches1..8
+captured vLLM query=35/64 batches1..8
+captured vLLM query=36/64 batches1..8
+captured vLLM query=37/64 batches1..8
+captured vLLM query=38/64 batches1..8
+captured vLLM query=39/64 batches1..8
+captured vLLM query=40/64 batches1..8
+captured vLLM query=41/64 batches1..8
+captured vLLM query=42/64 batches1..8
+captured vLLM query=43/64 batches1..8
+captured vLLM query=44/64 batches1..8
+captured vLLM query=45/64 batches1..8
+captured vLLM query=46/64 batches1..8
+captured vLLM query=47/64 batches1..8
+captured vLLM query=48/64 batches1..8
+captured vLLM query=49/64 batches1..8
+captured vLLM query=50/64 batches1..8
+captured vLLM query=51/64 batches1..8
+captured vLLM query=52/64 batches1..8
+captured vLLM query=53/64 batches1..8
+captured vLLM query=54/64 batches1..8
+captured vLLM query=55/64 batches1..8
+captured vLLM query=56/64 batches1..8
+captured vLLM query=57/64 batches1..8
+captured vLLM query=58/64 batches1..8
+captured vLLM query=59/64 batches1..8
+captured vLLM query=60/64 batches1..8
+captured vLLM query=61/64 batches1..8
+captured vLLM query=62/64 batches1..8
+captured vLLM query=63/64 batches1..8
+captured vLLM query=64/64 batches1..8
+{"event": "vllm_bootstrap", "model": "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "block_sizes": [16], "kernel_block_sizes": [16], "pages": [[1, 2, 3, 4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15, 16], [17, 18, 19, 20, 21, 22, 23, 24], [25, 26, 27, 28, 29, 30, 31, 32], [33, 34, 35, 36, 37, 38, 39, 40], [41, 42, 43, 44, 45, 46, 47, 48], [49, 50, 51, 52, 53, 54, 55, 56], [57, 58, 59, 60, 61, 62, 63, 64]], "graph_count": 520, "captured_batches": [1, 2, 3, 4, 5, 6, 7, 8], "captured_queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64]}
+resident vLLM ready: 30 layers h=576 vocab=49152; tensor batches1..8, GPU prefill/decode
+userspace completion wait=epoll_pwait2 active_timeout_ns=60000 idle=socket_or_deadline shutdown=eventfd
+userspace TCP stopped: accepted=13 published=32 completed=31 rejected=10
+resident vLLM stopped: launches=1 device_graph_launches=664 graph_error=0 max_active=2 admitted=32 retired=31 trace_overflows=0 release_rounds=31 max_release=1 device_launch_calls=1328

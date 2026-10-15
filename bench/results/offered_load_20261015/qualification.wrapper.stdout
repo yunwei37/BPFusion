@@ -1,0 +1,14 @@
+START idle_native
+TERMINAL {"name": "idle_native", "command": ["/usr/bin/python3", "/tmp/bpfusion-offered-load-6k3zzurc/idle_native.py"], "exit": 0, "utc": "2026-10-15T07:43:42.179305+00:00"}
+START protocol_qwen
+TERMINAL {"name": "protocol_qwen", "command": ["/tmp/bpfusion-offered-load-6k3zzurc/runtime/bin/python", "/tmp/bpfusion-offered-load-6k3zzurc/load.py", "--model", "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775", "--correctness", "--output", "/tmp/bpfusion-offered-load-6k3zzurc/protocol_qwen.jsonl"], "exit": 0, "utc": "2026-10-15T07:47:03.836806+00:00", "analysis_exit": 0, "analysis_command": ["/usr/bin/python3", "/tmp/bpfusion-offered-load-6k3zzurc/protocol_analysis.py", "/tmp/bpfusion-offered-load-6k3zzurc/protocol_qwen.jsonl"]}
+START lifecycle_qwen_loop
+TERMINAL {"name": "lifecycle_qwen_loop", "command": ["/tmp/bpfusion-offered-load-6k3zzurc/runtime/bin/python", "/tmp/bpfusion-offered-load-6k3zzurc/lifecycle.py", "loop", "qwen"], "exit": 0, "utc": "2026-10-15T07:48:31.819650+00:00", "lifecycle_pass": true}
+START lifecycle_qwen_native
+TERMINAL {"name": "lifecycle_qwen_native", "command": ["/tmp/bpfusion-offered-load-6k3zzurc/runtime/bin/python", "/tmp/bpfusion-offered-load-6k3zzurc/lifecycle.py", "native", "qwen"], "exit": 0, "utc": "2026-10-15T07:50:12.686578+00:00", "lifecycle_pass": true}
+START protocol_smol
+TERMINAL {"name": "protocol_smol", "command": ["/tmp/bpfusion-offered-load-6k3zzurc/runtime/bin/python", "/tmp/bpfusion-offered-load-6k3zzurc/load.py", "--model", "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "--correctness", "--output", "/tmp/bpfusion-offered-load-6k3zzurc/protocol_smol.jsonl"], "exit": 0, "utc": "2026-10-15T07:53:31.440143+00:00", "analysis_exit": 0, "analysis_command": ["/usr/bin/python3", "/tmp/bpfusion-offered-load-6k3zzurc/protocol_analysis.py", "/tmp/bpfusion-offered-load-6k3zzurc/protocol_smol.jsonl"]}
+START lifecycle_smol_loop
+TERMINAL {"name": "lifecycle_smol_loop", "command": ["/tmp/bpfusion-offered-load-6k3zzurc/runtime/bin/python", "/tmp/bpfusion-offered-load-6k3zzurc/lifecycle.py", "loop", "smol"], "exit": 0, "utc": "2026-10-15T07:55:03.680337+00:00", "lifecycle_pass": true}
+START lifecycle_smol_native
+TERMINAL {"name": "lifecycle_smol_native", "command": ["/tmp/bpfusion-offered-load-6k3zzurc/runtime/bin/python", "/tmp/bpfusion-offered-load-6k3zzurc/lifecycle.py", "native", "smol"], "exit": 0, "utc": "2026-10-15T07:56:31.080930+00:00", "lifecycle_pass": true}

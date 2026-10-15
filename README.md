@@ -39,6 +39,13 @@ remain open.
 | `qwen_graph_control` | Same graph banks, host resumes after requests | Same eBPF/kernel transport | Dispatch ablation |
 | `qwen.cu`, Python HF and synthetic MLP paths | Earlier implementations with different maturity | See their individual findings | Historical references and controls |
 
+The [complete offered-load collection](docs/findings/0061-offered-load-admission.md)
+exposes a current admission limitation: valid requests are dropped when the
+next model slot is reserved. Across both models the kernel paths time out on709
+of10240 attempts; event-driven native TCP completes all10240. Successful-only
+P99 values therefore do not establish a tail-latency win. Independent review
+confirms the negative service result; existing production source is retained.
+
 Strict regressions cover output agreement, fragmented messages, concurrent
 requests, connection reuse, pipelining, half-close, invalid inputs and queue
 recycling. The [completed cross-node comparison](docs/findings/0029-cross-node-network.md)

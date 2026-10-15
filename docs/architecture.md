@@ -584,3 +584,26 @@ forwards shutdown to the recorded wait-owner TID and passes repaired finite
 protocol/lifecycle checks. The after-submit variant remains unchanged.
 Select original behavior: no timer/report/helper/default change is retained.
 Prepared compatibility adapters are unexecuted, not backend qualification.
+
+## Offered-load admission boundary
+
+[Finding0061](findings/0061-offered-load-admission.md) completes a finite
+same-compute offered-load collection against event-driven native TCP.
+The current stream verdict validates a frame and calls llm_reserve; a
+reserved next physical slot causes SK_DROP and increments page drops/llm busy.
+There is no pending request backlog between framing and the eight model slots.
+Balanced SQ/CQ cursors and zero ring dropped/overflow counters do not account
+for this separate model-admission failure boundary.
+
+All709 observed kernel timeouts have no token and no independently replayed
+model admission, with matching per-executor admission-drop counters. Native
+buffers instead. Successful-request P99 can consequently appear low while
+the full service fails requests. The all-attempt analysis retains unknown
+upper tails rather than treating timeouts as completed60s responses.
+
+Independent result review confirms the negative service result; owned temporary
+state is removed and copied-data analyses replay identically. Original
+source/defaults remain selected. A separate private waiting-queue candidate
+is unbuilt and does not change the current interface
+or qualify arbitrary load/backends. Admission/lifetime behavior belongs to the
+driver; model arithmetic remains reused and unchanged.

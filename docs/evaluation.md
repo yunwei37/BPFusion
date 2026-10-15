@@ -1137,3 +1137,43 @@ compatibility adapters remain unexecuted and supply no pass claim. Close this
 matrix; prioritize stronger complete-service offered-load/tail/total-cost
 comparison against credible event-driven native behavior and qualified reused
 backend breadth. The full project objective remains open.
+
+## Completed collection: offered-load service tails
+
+[Finding0061](findings/0061-offered-load-admission.md) addresses the retained
+complete-serving objective with a supporting same-compute service experiment.
+The [reviewed plan/source/raw archive](../bench/results/offered_load_20261015/)
+compares the repaired adaptive loop to event-driven native TCP at4/32/64/96
+requests/s,256 attempts/cell, five paired blocks/model. This adds independent
+offered-load/failure-tail evidence beyond0060's fixed bursts and idle CPU result.
+
+Collection is complete:20 executors/80 cells/20480 measured attempts,
+1265344 successfully delivered measured tokens plus160 checked warmups.
+Both model drivers/fixed analyses and full wrapper exit0. Kernel failures are
+453/5120 Qwen and256/5120 Smol; both native conditions complete5120/5120.
+Every709 failed marker is absent from independent model-admission references,
+with zero observed token and matching page-drop/llm-busy counters.
+
+At64req/s the conditional kernel-minus-native TTFT P99 is
+-52.429704[-101.969195,-2.890212]ms Qwen and
+-7.851692[-22.570351,6.866967]ms Smol, nominal paired t95df4.
+All primary kernel blocks contain failures, so unconditional superiority is
+censored/inconclusive under the fixed plan. Those conditional intervals cannot
+support a complete-service win. At no-failure4req/s, Smol P99 is adverse
++7.204810[3.875944,10.533677]ms; Qwen is inconclusive.
+
+Supplemental all-attempt identification bounds retain unknown first-token
+times; they are neither substituted primary metrics nor CIs. Every Qwen64/96
+block's P95/P99 lower bound exceeds60s. Smol64 has unbounded P99 upper tail in
+all blocks, including one27.035s linear lower bound; Smol96 P95/P99 lower
+bounds exceed60s in every block. All raw/fixed secondary and failure rows remain.
+
+Independent result review confirms valid complete negative service evidence.
+Owned temporary state is removed, preserved files/base packages/Coder process
+identities match, and all seven copied-data analyses replay byte for byte
+without the original temporary directory. Research role is supporting and the
+tested impact is an admission/workload boundary. Native buffering and kernel admission differ;
+the result is not syscall-only attribution, total CPU/energy, steady-state
+capacity or arbitrary-backend evidence. Retain original source,
+and prioritize admission waiting/ownership rather than model arithmetic.
+The full user objective remains active.
