@@ -1,0 +1,65 @@
+--- 0063/lifecycle.py
++++ capacity/lifecycle.py
+@@ -16,11 +16,11 @@
+ p=None;native_pid=None;clients=[];rows=[];streams=[]
+ try:
+     if condition=="loop":
+-        a=subprocess.run(["/tmp/bpfusion-fair-admission-yijz8oui/build/bpfusion_load","stream-uring-attach"],text=True,capture_output=True);assert a.returncode==0,(a.stdout,a.stderr)
++        a=subprocess.run(["/tmp/bpfusion-batch-capacity-tkii8tus/build16/bpfusion_load","stream-uring-attach"],text=True,capture_output=True);assert a.returncode==0,(a.stdout,a.stderr)
+         result["attach"]={"exit":a.returncode,"stdout":a.stdout,"stderr":a.stderr}
+     cmd=["strace","-D","-f","-ttt","-o",root+"/"+name+".strace","-e",
+          "trace=accept,accept4,recvfrom,recvmsg,sendto,sendmsg,io_uring_setup,io_uring_enter,io_uring_register",
+-         base+"/build/vllm_graph_uring_loop" if condition=="loop" else base+"/build/vllm_graph_user_network_wait",paths[name],"180"]
++         base+"/build16/vllm_graph_uring_loop" if condition=="loop" else base+"/build16/vllm_graph_user_network_wait",paths[name],"180"]
+     err=open(root+"/"+name+".native.stderr","w");log=open(root+"/"+name+".native.stdout","w")
+     p=subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=err,text=True);lines=[]
+     while True:
+@@ -90,7 +90,7 @@
+     def backlog_snapshot(label,expected):
+         end=time.monotonic()+15
+         while True:
+-            snap=subprocess.run([base+"/build/bpfusion_load","stats"],text=True,capture_output=True)
++            snap=subprocess.run([base+"/build16/bpfusion_load","stats"],text=True,capture_output=True)
+             assert snap.returncode==0,(snap.stdout,snap.stderr)
+             head=int(re.search(r"llm_head=(\d+)",snap.stdout).group(1))
+             queued=int(re.search(r"llm_queued=(\d+)",snap.stdout).group(1))
+@@ -98,11 +98,11 @@
+             assert time.monotonic()<end,(expected,head,queued)
+             time.sleep(.01)
+         result[label]={"head":head,"queued":queued,"stdout":snap.stdout}
+-        assert queued>8,(label,head,queued)
++        assert queued>16,(label,head,queued)
+     if condition=="loop":
+         # Reset a connection containing queued requests outside the model slots.
+         c=connect();reset=[]
+-        for _ in range(24):reset.append(request(c,7,http=False))
++        for _ in range(48):reset.append(request(c,7,http=False))
+         read(c,*reset[0],partial=True)
+         backlog_snapshot("before_backlog_rst",len(rows))
+         c.setsockopt(socket.SOL_SOCKET,socket.SO_LINGER,struct.pack("ii",1,0));c.close()
+@@ -157,19 +157,20 @@
+     else:
+         s=next(json.loads(l[7:]) for l in result["stdout"].splitlines() if l.startswith("RESULT "));result["native_stats"]=s
+         result["replies"]=[json.loads(l[6:]) for l in result["stdout"].splitlines() if l.startswith("REPLY ")]
+-        b=subprocess.run(["/tmp/bpfusion-fair-admission-yijz8oui/build/bpfusion_load","stats"],text=True,capture_output=True)
++        b=subprocess.run(["/tmp/bpfusion-batch-capacity-tkii8tus/build16/bpfusion_load","stats"],text=True,capture_output=True)
+         result["bpf_stats"]={"exit":b.returncode,"stdout":b.stdout,"stderr":b.stderr}
+         result["queued_at_stop_cleanup"]=int(re.search(r"llm_queued=(\d+)",b.stdout).group(1))
+         result["model_errors"]=[int(re.search(r"resident vLLM stopped:.*graph_error=(\d+)",result["stdout"]).group(1))]
+-        result["pass"]=bool(result["model_errors"]==[0] and p.returncode==0 and s["error"]==s["pending"]==s["reserved"]==s["dropped"]==s["overflow"]==s["trace_overflow"]==0
++        result["pass"]=bool(result["model_errors"]==[0] and p.returncode==0 and s["error"]==s["pending"]==s["reserved"]==s["dropped"]==s["overflow"]==0
++             and s["trace_count"]==s["head"] and s["trace_overflow"]==max(0,s["head"]-128)
+              and s["accepted"]==s["closed"]==78 and s["head"]==s["completed"]
+-             and result["before_backlog_stop"]["head"]<=s["head"]<=120 and s["head"]+result["queued_at_stop_cleanup"]==120 and s["aborted"]>=3
++             and result["before_backlog_stop"]["head"]<=s["head"]<=144 and s["head"]+result["queued_at_stop_cleanup"]==144 and s["aborted"]>=3
+              and s["sqhead"]==s["sqtail"] and s["cqhead"]==s["cqtail"]
+-             and len(rows)==120 and all(r.get("exact") or r.get("unobserved_cancel") for r in rows)
++             and len(rows)==144 and all(r.get("exact") or r.get("unobserved_cancel") for r in rows)
+              and "graph_error=0" in result["stdout"])
+ except Exception as e:
+     result["error"]=repr(e);result["pass"]=False
+-    view=subprocess.run(["/tmp/bpfusion-fair-admission-yijz8oui/build/bpfusion_load","stats"],capture_output=True,text=True)
++    view=subprocess.run(["/tmp/bpfusion-batch-capacity-tkii8tus/build16/bpfusion_load","stats"],capture_output=True,text=True)
+     result["failure_page"]={"exit":view.returncode,"stdout":view.stdout,"stderr":view.stderr}
+     result["failure_tcp"]=[]
+     for tcp_file in ("/proc/net/tcp","/proc/net/tcp6"):

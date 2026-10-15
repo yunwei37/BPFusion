@@ -1,0 +1,50 @@
+{
+  "utc": "2026-10-15T13:56:44.300376+00:00",
+  "processes": [
+    {
+      "pid": 605465,
+      "ppid": 1,
+      "name": "(python3)",
+      "state": "S",
+      "utime": "1",
+      "stime": "0",
+      "start": "50374342",
+      "io": "rchar: 937790\nwchar: 12\nsyscr: 99\nsyscw: 4\nread_bytes: 0\nwrite_bytes: 4096\ncancelled_write_bytes: 0\n",
+      "wchan": "do_wait"
+    },
+    {
+      "pid": 605466,
+      "ppid": 605465,
+      "name": "(python3)",
+      "state": "S",
+      "utime": "3",
+      "stime": "0",
+      "start": "50374348",
+      "io": "rchar: 67666446\nwchar: 40217\nsyscr: 6733\nsyscw: 18\nread_bytes: 7647232\nwrite_bytes: 45056\ncancelled_write_bytes: 4096\n",
+      "wchan": "do_wait"
+    },
+    {
+      "pid": 605494,
+      "ppid": 605466,
+      "name": "(python3)",
+      "state": "S",
+      "utime": "14",
+      "stime": "1",
+      "start": "50374727",
+      "io": "rchar: 8014741\nwchar: 0\nsyscr: 879\nsyscw: 0\nread_bytes: 0\nwrite_bytes: 0\ncancelled_write_bytes: 0\n",
+      "wchan": "do_wait"
+    },
+    {
+      "pid": 605495,
+      "ppid": 605494,
+      "name": "(python)",
+      "state": "R",
+      "utime": "10598",
+      "stime": "1443",
+      "start": "50374763",
+      "io": "rchar: 16248797057\nwchar: 18489739176\nsyscr: 1875919\nsyscw: 1033313\nread_bytes: 720748544\nwrite_bytes: 18640777216\ncancelled_write_bytes: 3018182656\n",
+      "wchan": "0"
+    }
+  ],
+  "free_bytes": 343264985088
+}

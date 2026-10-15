@@ -1,0 +1,32 @@
+--- 0063/setup.py
++++ capacity/setup.py
+@@ -25,16 +25,19 @@
+ env=dict(os.environ,PATH=str(t/'runtime/bin')+':/usr/local/cuda/bin:'+os.environ['PATH'],TORCH_EXTENSIONS_DIR=str(t/'cuda_extensions'),CUDA_HOME='/usr/local/cuda',LD_LIBRARY_PATH=str(t/'libbpf_install/usr/lib64'),PYTHONUNBUFFERED='1',VLLM_ENABLE_V1_MULTIPROCESSING='0',PYTHONPATH=str(r/'executor'))
+ env.pop('VLLM_BATCH_INVARIANT',None)
+ (t/'environment.json').write_text(json.dumps({k:env[k] for k in ['PATH','TORCH_EXTENSIONS_DIR','CUDA_HOME','LD_LIBRARY_PATH','PYTHONUNBUFFERED','VLLM_ENABLE_V1_MULTIPROCESSING','PYTHONPATH']},indent=2))
+-build=t/'build'
+-names=['vllm_graph_uring_loop_trace','vllm_graph_uring_loop','vllm_graph_user_network_wait_trace','vllm_graph_user_network_wait']
+-cmd=['make','-f',str(t/'candidate/Makefile'),'BUILD='+str(build),'VLLM_PYTHON='+str(t/'runtime/bin/python'),
+- 'NVCC=/usr/local/cuda/bin/nvcc -I'+str(t/'candidate/bpf/include'),
+- 'BPF_CFLAGS=-O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -I'+str(t/'candidate/bpf/include')+' -I/workspaces/repository/bpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value',
+- 'CFLAGS=-O2 -g -Wall -Wextra -Wno-unused-parameter -I'+str(t/'candidate/bpf/include'),
+- str(build/'fusion.bpf.o'),str(build/'uring_loop.bpf.o'),str(build/'bpfusion_load')]+[str(build/(n+suffix)) for n in names for suffix in ['.so','']]
+-with (t/'build.stdout').open('x') as out,(t/'build.stderr').open('x') as err:z=subprocess.run(cmd,cwd=r,env=env,stdout=out,stderr=err)
+-(t/'build_status.json').write_text(json.dumps(dict(command=cmd,exit=z.returncode,utc=stamp()),indent=2))
+-if z.returncode:raise SystemExit(z.returncode)
++builds=[]
++for banks in [8,16]:
++ source=t/("candidate"+str(banks));build=t/("build"+str(banks))
++ names=['vllm_graph_uring_loop_trace','vllm_graph_uring_loop','vllm_graph_user_network_wait_trace','vllm_graph_user_network_wait']
++ cmd=['make','-f',str(source/'Makefile'),'BUILD='+str(build),'VLLM_PYTHON='+str(t/'runtime/bin/python'),
++  'NVCC=/usr/local/cuda/bin/nvcc -I'+str(source/'bpf/include'),
++  'BPF_CFLAGS=-O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -I'+str(source/'bpf/include')+' -I/workspaces/repository/bpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value',
++  'CFLAGS=-O2 -g -Wall -Wextra -Wno-unused-parameter -I'+str(source/'bpf/include'),
++  str(build/'fusion.bpf.o'),str(build/'uring_loop.bpf.o'),str(build/'bpfusion_load')]+[str(build/(n+suffix)) for n in names for suffix in ['.so','']]
++ with (t/('build'+str(banks)+'.stdout')).open('x') as out,(t/('build'+str(banks)+'.stderr')).open('x') as err:z=subprocess.run(cmd,cwd=r,env=env,stdout=out,stderr=err)
++ builds.append(dict(banks=banks,command=cmd,exit=z.returncode,utc=stamp()))
++ (t/'build_status.json').write_text(json.dumps(builds,indent=2))
++ if z.returncode:raise SystemExit(z.returncode)
+ with (t/'packages.json').open('w') as out:subprocess.run(['/usr/bin/python3','-m','pip','--python',str(t/'runtime/bin/python'),'list','--format=json'],stdout=out,check=True)
+ old=json.loads((r/'bench/results/pending_admission_20261015/packages.json').read_text());new=json.loads((t/'packages.json').read_text())
+ aa={x['name'].lower():x['version'] for x in old};bb={x['name'].lower():x['version'] for x in new}

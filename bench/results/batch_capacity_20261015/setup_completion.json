@@ -1,0 +1,63 @@
+{
+  "utc": "2026-10-15T14:00:58.938226+00:00",
+  "setup": {
+    "exit": 0,
+    "utc": "2026-10-15T13:58:59.851179+00:00"
+  },
+  "builds": [
+    {
+      "banks": 8,
+      "command": [
+        "make",
+        "-f",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/candidate8/Makefile",
+        "BUILD=/tmp/bpfusion-batch-capacity-tkii8tus/build8",
+        "VLLM_PYTHON=/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+        "NVCC=/usr/local/cuda/bin/nvcc -I/tmp/bpfusion-batch-capacity-tkii8tus/candidate8/bpf/include",
+        "BPF_CFLAGS=-O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -I/tmp/bpfusion-batch-capacity-tkii8tus/candidate8/bpf/include -I/workspaces/repository/bpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value",
+        "CFLAGS=-O2 -g -Wall -Wextra -Wno-unused-parameter -I/tmp/bpfusion-batch-capacity-tkii8tus/candidate8/bpf/include",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build8/fusion.bpf.o",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build8/uring_loop.bpf.o",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build8/bpfusion_load",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build8/vllm_graph_uring_loop_trace.so",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build8/vllm_graph_uring_loop_trace",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build8/vllm_graph_uring_loop.so",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build8/vllm_graph_uring_loop",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build8/vllm_graph_user_network_wait_trace.so",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build8/vllm_graph_user_network_wait_trace",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build8/vllm_graph_user_network_wait.so",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build8/vllm_graph_user_network_wait"
+      ],
+      "exit": 0,
+      "utc": "2026-10-15T13:58:25.831728+00:00"
+    },
+    {
+      "banks": 16,
+      "command": [
+        "make",
+        "-f",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/candidate16/Makefile",
+        "BUILD=/tmp/bpfusion-batch-capacity-tkii8tus/build16",
+        "VLLM_PYTHON=/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+        "NVCC=/usr/local/cuda/bin/nvcc -I/tmp/bpfusion-batch-capacity-tkii8tus/candidate16/bpf/include",
+        "BPF_CFLAGS=-O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -I/tmp/bpfusion-batch-capacity-tkii8tus/candidate16/bpf/include -I/workspaces/repository/bpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value",
+        "CFLAGS=-O2 -g -Wall -Wextra -Wno-unused-parameter -I/tmp/bpfusion-batch-capacity-tkii8tus/candidate16/bpf/include",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build16/fusion.bpf.o",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build16/uring_loop.bpf.o",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build16/bpfusion_load",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build16/vllm_graph_uring_loop_trace.so",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build16/vllm_graph_uring_loop_trace",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build16/vllm_graph_uring_loop.so",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build16/vllm_graph_uring_loop",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build16/vllm_graph_user_network_wait_trace.so",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build16/vllm_graph_user_network_wait_trace",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build16/vllm_graph_user_network_wait.so",
+        "/tmp/bpfusion-batch-capacity-tkii8tus/build16/vllm_graph_user_network_wait"
+      ],
+      "exit": 0,
+      "utc": "2026-10-15T13:58:58.736238+00:00"
+    }
+  ],
+  "package_comparison": {},
+  "scope": "Closed setup/build evidence; preflight executing; no performance result or production selection."
+}

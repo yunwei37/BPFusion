@@ -1258,3 +1258,24 @@ Production computation/transport sources remain unchanged; native FIFO stays
 an archived candidate. The result withdraws general tail attribution from the
 weak FD-priority comparison without claiming a simultaneous old/new causal
 ablation. Close this unchanged matrix; the retained full objective remains active.
+
+## Running: same-compute batch capacity
+
+The [reviewed experiment](../bench/results/batch_capacity_20261015/) tests the
+current8-slot constructor boundary after0063. Saved Qwen96/s histories have
+8759/10630 kernel decode rounds at width8,with mean block batch7.5865; these
+logical counts motivate intervention without proving time occupancy/bottleneck.
+Private8/16-capacity builds share the same upstream optimized computation and
+eligible-frame FIFO native admission. No production/default change is selected.
+
+Native16 is the strongest competing mechanism;8-width conditions are capacity
+controls. Two models/five paired blocks/four conditions/rates96and192 fix
+40executors/80cells/20480 measured attempts. Primary is kernel16-minus-kernel8
+deliveredtoken/s at192/s;96/s tails and adverse effects remain. This is
+supporting evidence for a constructor/workload boundary,not intrinsic eBPF gain.
+
+Fresh plan review admits the executable comparison after correcting condition
+order to a balanced Williams sequence and separating ordinary finite-pool
+qualification from traced replay validity. Both8/16 builds complete with matching installed dependencies;the same existing
+wrapper is running real preflight/qualification. No performance result is available. Full execution,
+fresh result review,owned cleanup and final publication remain unfinished.

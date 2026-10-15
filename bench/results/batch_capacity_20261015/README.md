@@ -1,0 +1,64 @@
+# Same-compute batch-capacity comparison — running
+
+This is an uncompleted experiment checkpoint,not a performance result.
+[plan.md](plan.md) and [plan-review.md](plan-review.md) preserve the admitted
+comparison and the two resolved execution followups. running_checkpoint.json
+identifies the actual existing process and observed setup state.
+
+## Question and planned comparison
+
+Complete0063 saved-data reanalysis (prior_batch_analysis.py/json) finds Qwen96/s
+kernel8759/10630 decode rounds at width8,and mean block batch7.5865; native
+8838/10544,mean7.6493. These are logical counts,not time occupancy or proof of
+a bottleneck. This motivates a direct8-vs16 capacity intervention.
+
+candidate8/candidate16 are source snapshots,not checkouts. Both use0063's
+qualified eligible-frame FIFO native admission and unchanged optimized model/
+transport source. capacity.diff changes only BF_LLM_SLOTS8->16; Makefile
+path bindings match each private build. Upstream graphs and KV/bank setup
+discover the native bank count. Width/resource/ABI/workload grouping can differ;
+this is not identical kernel-sequence execution or intrinsic eBPF attribution.
+
+Four matched conditions are kernel8,native8,kernel16,native16.
+Native16 is the single main competitor;8-width conditions are capacity
+controls. Both models,gen64,rates96/192,256 attempts/cell,five process blocks
+fix40executors/80cells/20480 measured attempts/1310720 requested tokens,
+plus320 gen1warmups. Primary per-model is kernel16-minus-kernel8 delivered
+token/s at192/s,nominal paired t95df4.96/s tails and same-width transport/
+native-capacity contrasts remain secondary; failures censor superiority.
+
+## Actual workflow and scope
+
+Use only original bpfusion-dev Workspace/main. The existing owned test root is
+/tmp/bpfusion-batch-capacity-tkii8tus;all.process.json identifies its only
+sequential setup->preflight->qualification wrapper. Do not start another copy.
+After root interprets actual ordinary lifecycle outcomes,full.py runs the
+admitted traced matrix. Recorded paths can be rebound to a fresh owned directory
+for an intentional later reproduction after this run reaches terminal.
+
+Normal Makefile rules build each matching header,loader,BPF and GPU/native
+variant in build8/build16. Pinned runtime matches0063; exact installed package
+comparison remains required. No production source/default,model arithmetic,
+precision,CPU placement,host policy or other Workspace is changed.
+
+16-capacity protocol exercises1..16concurrent clients,reuse,fragmentation,
+pipeline/half-close,rejection,wrap and helper stop with independent upstream
+history replay. Retained ordinary lifecycle outputs use a finite historical
+reference pool: an outside-pool response remains unqualified/ambiguous and
+blocks ordinary adoption,but does not by itself invalidate independently
+replayed traced performance. Unexpected driver exit or actual transport/
+resource corruption returns for diagnosis; it is not automatically an oracle
+ambiguity. Read the exact reviewed plan for counts and limits.
+
+No new result,default adoption,preciseP99.9,steady-state capacity,totalCPU/energy,
+continuous isolation or general model/backend support follows from setup.
+The full user serving/performance objective remains active.
+
+## Setup completion update
+
+Both capacity builds exit0 at13:58:58.736238UTC;setup terminal is
+13:58:59.851179UTC. Actual compiler logs bind each private header/source to
+its matching BPF,loader and CUDA variants. Installed measurement package
+versions match0063 exactly (package_comparison.json is empty).
+The same wrapper has entered the real Qwen preflight.16-capacity real-model
+qualification,complete performance collection and result review remain open.

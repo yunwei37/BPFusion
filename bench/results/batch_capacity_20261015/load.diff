@@ -1,0 +1,107 @@
+--- 0063/load.py
++++ capacity/load.py
+@@ -44,9 +44,9 @@
+         modes=("uring",)
+     if args.transport_comparison:modes=("uring","userspace","kernel")
+     if args.copy_comparison:modes=("uring","uring_full_copy","userspace")
+-    if args.loop_comparison:modes=("uring_loop","userspace")
++    if args.loop_comparison:modes=("uring_loop_16","userspace_16") if args.correctness else ("uring_loop_8","userspace_8","uring_loop_16","userspace_16")
+     if args.loop_progress_comparison:modes=("uring_loop","userspace","uring_loop_after")
+-    matrix=((64,64),(64,256)) if args.preflight else ((64,64),(64,96))
++    matrix=((64,96),(64,256)) if args.preflight else ((64,96),(64,192))
+     repetitions=1 if args.correctness or args.preflight else 5
+     requests_per_cell=32 if args.preflight else 256
+     reference_model=None;reference_pool={}
+@@ -59,12 +59,12 @@
+         emit("frozen_complete_references",path=str(args.reference_path),source_commit=asset["source_commit"],model=reference_model,
+              scope=asset["scope"])
+     emit("metadata",model=args.model,vocab=config.vocab_size,prompts=prompts,precision="fp16",
+-         modes=modes,matrix=matrix,repetitions=repetitions,requests_per_cell=requests_per_cell,warmups_per_executor=8,
++         modes=modes,banks_by_mode={m:int(m.rsplit("_",1)[1]) for m in modes},matrix=matrix,repetitions=repetitions,requests_per_cell=requests_per_cell,warmups_per_executor=8,
+          correctness=args.correctness,preflight=args.preflight,untraced=args.untraced,comparison="kernel-loop-progress" if args.loop_progress_comparison else "kernel-loop" if args.loop_comparison else "stock-copy" if args.copy_comparison else "stock-transport" if args.transport_comparison else "dispatch" if args.dispatch_comparison else "release" if args.release_comparison else ("packing" if args.packing_comparison else "transport"),trace_condition="ordinary paths untraced; fixed complete-output-set fidelity" if args.untraced else "both transports identically BF_TRACE",
+          commit=subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip(),
+          driver_source=Path(__file__).read_text(),client_source=Path(__file__).with_name("resident_dispatch.py").read_text(),
+          backend_source=(root/"executor/vllm_graph.py").read_text(),original_native_source=(root/"executor/vllm_graph.cu").read_text(),
+-         variant_source_paths={v:{n:str(Path(__file__).resolve().parent/v/n) for n in ["executor/vllm_graph.cu","executor/userspace_tcp.h","executor/io_uring_tcp.h","bpf/uring_loop.bpf.c","bpf/include/bpfusion_queue.h"]} for v in ["candidate"]},numpy=np.__version__,
++         variant_source_paths={v:{n:str(Path(__file__).resolve().parent/v/n) for n in ["executor/vllm_graph.cu","executor/userspace_tcp.h","executor/io_uring_tcp.h","bpf/uring_loop.bpf.c","bpf/include/bpfusion_queue.h"]} for v in ["candidate8","candidate16"]},numpy=np.__version__,
+          python=sys.version,torch=subprocess.check_output(["python3","-c","import torch;print(torch.__version__)"],text=True).strip())
+     frozen={}
+     if args.packing_comparison or args.release_comparison:
+@@ -78,9 +78,10 @@
+     exit_code=1
+     try:
+         for pair in range(repetitions):
+-            order=modes if len(modes)==2 or (pair//2)%2==0 else modes[2:]+modes[:2]
+-            if args.transport_comparison or args.copy_comparison or args.loop_comparison or args.loop_progress_comparison:order=tuple(permutations(modes))[pair%len(tuple(permutations(modes)))]
+-            for mode in (order if args.transport_comparison or args.copy_comparison or args.loop_comparison or args.loop_progress_comparison or pair%2==0 else order[::-1]):
++            order=tuple(modes[(j+pair)%4] for j in (0,1,3,2)) if len(modes)==4 else (modes if pair%2==0 else modes[::-1])
++            for mode in order:
++                banks=int(mode.rsplit("_",1)[1])
++                directory=Path(__file__).resolve().parent/("build"+str(banks))
+                 kernel_mode=mode.endswith("kernel") or mode.startswith("uring")
+                 assert not Path("/sys/module/bfusion_tx").exists()
+                 assert not Path("/sys/fs/bpf/bpfusion_ctl").exists()
+@@ -88,19 +89,19 @@
+                 prefix=output.with_suffix("").with_name(output.stem+f"_p{pair}_{mode}")
+                 trace=Path(str(prefix)+".gpu.jsonl");logpath=Path(str(prefix)+".stdout.txt")
+                 nettrace=Path(str(prefix)+".network.txt")
+-                budget=(3*10+sum(range(1,9))+8*32*2+8*4+(6 if mode=="uring" else 24)+4+2) if args.correctness else requests_per_cell*len(matrix)+8
++                budget=(3*10+sum(range(1,banks+1))+banks*32*2+banks*4+(6 if mode=="uring" else 24)+4+2) if args.correctness else requests_per_cell*len(matrix)+8
+                 binary=(("vllm_graph_chained" if mode.startswith("chained") else "vllm_graph") if args.dispatch_comparison else ("vllm_graph" if mode.startswith("prefix") else "vllm_graph_padded") if args.release_comparison
+                         else ("vllm_graph_padded" if mode.startswith("packed") else "vllm_graph_grouped") if args.packing_comparison
+                         else "vllm_graph")+("" if kernel_mode else "_user_network_wait")+("" if args.untraced else "_trace")
+-                if mode.startswith("uring"):binary="vllm_graph_"+mode+("" if args.untraced else "_trace")
++                if mode.startswith("uring"):binary="vllm_graph_uring_loop"+("" if args.untraced else "_trace")
+                 private=Path(__file__).resolve().parent
+-                directory=private/"build"
++                directory=private/("build"+str(banks))
+                 command=[str(directory/binary),args.model,"300"]
+                 if not args.untraced:command+=["--trace-output",str(trace),"--trace-requests",str(budget)]
+                 if args.correctness:command=["strace","-D","-f","-e","trace=network,write,io_uring_enter","-o",str(nettrace),*command]
+                 try:
+                     if kernel_mode:
+-                        r=subprocess.run(["/tmp/bpfusion-fair-admission-yijz8oui/build/bpfusion_load","stream-uring-attach" if mode.startswith("uring") else "stream-attach"],capture_output=True,text=True)
++                        r=subprocess.run([str(directory/"bpfusion_load"),"stream-uring-attach" if mode.startswith("uring") else "stream-attach"],capture_output=True,text=True)
+                         emit("attach",pair=pair,mode=mode,code=r.returncode,stdout=r.stdout,stderr=r.stderr)
+                         assert r.returncode==0;attached=True
+                     with logpath.open("w") as log:p=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+@@ -176,9 +177,9 @@
+                                 futures=[pool.submit(lane,i) for i in range(count)]
+                                 for future in futures:future.result()
+                         # Every client concurrency count is exercised; report actual GPU batches.
+-                        for count in range(1,9):concurrent(count,1,"concurrency_"+str(count))
+-                        concurrent(8,32,"wrap",reject=True)
+-                        concurrent(8,4,"mixed",mixed=True)
++                        for count in range(1,banks+1):concurrent(count,1,"concurrency_"+str(count))
++                        concurrent(banks,32,"wrap",reject=True)
++                        concurrent(banks,4,"mixed",mixed=True)
+                         with connect() as client:
+                             sent=[]
+                             for i in range(6 if mode=="uring" else 24):
+@@ -343,12 +344,12 @@
+                         assert counters["trace_count"]==admitted_count and counters["trace_overflow"]==max(0,admitted_count-128)
+                         emit("uring_verified",pair=pair,mode=mode,counters=counters)
+                     if kernel_mode:
+-                        r=subprocess.run(["/tmp/bpfusion-fair-admission-yijz8oui/build/bpfusion_load","stats"],capture_output=True,text=True)
++                        r=subprocess.run([str(directory/"bpfusion_load"),"stats"],capture_output=True,text=True)
+                         emit("stats",pair=pair,mode=mode,code=r.returncode,stdout=r.stdout,stderr=r.stderr);assert r.returncode==0
+                         if args.untraced or mode.startswith("uring"):
+                             assert f"llm_head={admitted_count}\n" in r.stdout and "llm_reserved=0x0" in r.stdout and "llm_queued=0" in r.stdout
+                             slots=re.findall(r"llm\[(\d+)\]: state=(\d+)",r.stdout)
+-                            assert sorted(slots)==[(str(i),"0") for i in range(8)],slots
++                            assert sorted(slots,key=lambda x:int(x[0]))==[(str(i),"0") for i in range(banks)],slots
+                     elif args.untraced:
+                         native=re.search(r"userspace TCP stopped: accepted=(\d+) published=(\d+) completed=(\d+) rejected=(\d+)",log)
+                         assert native and int(native[2])==int(native[3])==len(rows)
+@@ -359,9 +360,9 @@
+                 finally:
+                     if p is not None and p.poll() is None:p.terminate();emit("cleanup_executor",pair=pair,mode=mode,exit_code=p.wait())
+                     if attached:
+-                        snapshot=subprocess.run(["/tmp/bpfusion-fair-admission-yijz8oui/build/bpfusion_load","stats"],capture_output=True,text=True)
++                        snapshot=subprocess.run([str(directory/"bpfusion_load"),"stats"],capture_output=True,text=True)
+                         emit("cleanup_stats",pair=pair,mode=mode,code=snapshot.returncode,stdout=snapshot.stdout,stderr=snapshot.stderr)
+-                        r=subprocess.run(["/tmp/bpfusion-fair-admission-yijz8oui/build/bpfusion_load","stream-detach"],capture_output=True,text=True)
++                        r=subprocess.run([str(directory/"bpfusion_load"),"stream-detach"],capture_output=True,text=True)
+                         emit("detach",pair=pair,mode=mode,code=r.returncode,stdout=r.stdout,stderr=r.stderr)
+                         for name in ("bpfusion_ctl","bpfusion_stats","bpfusion_db"):Path("/sys/fs/bpf",name).unlink(missing_ok=True)
+                     emit("executor_terminal",pair=pair,mode=mode,success=success)
