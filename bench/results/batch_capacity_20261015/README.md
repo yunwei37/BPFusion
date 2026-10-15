@@ -74,3 +74,14 @@ queue peaks,terminal and coverage. This is setup/correctness evidence only.
 The same original wrapper now continues the16-capacity protocol/lifecycle
 qualification. Full performance collection and independent result review
 remain unfinished; no ordinary default is selected.
+
+## Qwen protocol qualification update
+
+Both16-capacity Qwen protocol executors and the fixed analysis exit0 at
+14:14:00.186222UTC. Together they complete2568 outcomes,including1030 intended
+rejections,and94400 independently replayed output tokens. Both actually execute
+batch widths1..16. Wire/history ownership,recycling,network syscall checks and
+normal helper-stop cleanup pass. Copied protocol analysis matches stdout
+bytewise (qwen_protocol_completion.json). These are not2568 successful
+inference responses. Ordinary lifecycle and Smol qualification remain running;
+full performance collection has not started.

@@ -1,0 +1,129 @@
+{
+  "utc": "2026-10-15T14:15:58.228336+00:00",
+  "driver_status": {
+    "name": "protocol_qwen",
+    "command": [
+      "/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+      "/tmp/bpfusion-batch-capacity-tkii8tus/load.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--correctness",
+      "--output",
+      "/tmp/bpfusion-batch-capacity-tkii8tus/protocol_qwen.jsonl"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T14:14:00.186222+00:00",
+    "analysis_exit": 0
+  },
+  "coverage": {
+    "event": "coverage",
+    "requests": 2568,
+    "tokens": 94400,
+    "actual_batches": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ]
+  },
+  "executors": [
+    {
+      "event": "verified_executor",
+      "pair": 0,
+      "mode": "uring_loop_16",
+      "requests": 1284,
+      "tokens": 47200,
+      "rejections": 515,
+      "actual_batches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "graphs": 7919,
+      "prefill_graphs": 308,
+      "decode_graphs": 7611,
+      "real_prompt_tokens": 11678,
+      "padded_query_tokens": 12510,
+      "release_rounds": 200,
+      "max_release": 16
+    },
+    {
+      "event": "verified_executor",
+      "pair": 0,
+      "mode": "userspace_16",
+      "requests": 1284,
+      "tokens": 47200,
+      "rejections": 515,
+      "actual_batches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "graphs": 9940,
+      "prefill_graphs": 216,
+      "decode_graphs": 9724,
+      "real_prompt_tokens": 11678,
+      "padded_query_tokens": 18995,
+      "release_rounds": 256,
+      "max_release": 16
+    }
+  ],
+  "copied_files": [
+    "protocol_qwen.driver.stdout",
+    "protocol_qwen.analysis.stderr",
+    "protocol_qwen_p0_userspace_16.stdout.txt",
+    "protocol_qwen_p0_userspace_16.network.txt",
+    "protocol_qwen.driver.stderr",
+    "protocol_qwen_p0_userspace_16.gpu.jsonl",
+    "protocol_qwen_p0_uring_loop_16.network.txt",
+    "protocol_qwen_p0_uring_loop_16.gpu.jsonl",
+    "protocol_qwen.analysis.stdout",
+    "protocol_qwen_p0_userspace_16.gpu.jsonl.references.jsonl",
+    "protocol_qwen_p0_uring_loop_16.gpu.jsonl.references.jsonl",
+    "protocol_qwen_p0_uring_loop_16.stdout.txt",
+    "protocol_qwen.jsonl"
+  ],
+  "copied_cpu_replay": {
+    "exit": 0,
+    "byte_equal": true
+  },
+  "scope": "Completed Qwen16 protocol qualification only. Ordinary lifecycle and Smol qualification still running. No performance result."
+}
