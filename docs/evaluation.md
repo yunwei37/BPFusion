@@ -1218,3 +1218,25 @@ admissions ahead of an earlier request149/175/165/72/159 per block,versus
 1/2/2/1/1 on the kernel FIFO. Client stamps are not precise ingress timestamps.
 This strengthens the scheduling/fairness competing explanation and motivates
 aligning native admission policy before driver-only tail attribution.
+
+## Running: fair native admission follow-up
+
+The [reviewed plan and actual source snapshot](../bench/results/fair_admission_20261015/)
+test whether the prior Qwen96/s tail advantage persists against event-driven
+native TCP with eligible-frame FIFO admission. Saved-data reanalysis exposed
+FD-priority bypass in the older native constructor; changing timer/model math
+would leave that competing explanation unresolved. This is supporting evidence
+for the retained complete-serving objective, with mechanism/workload impact.
+
+A new predeclared primary is connect-inclusive TTFT P99 at96/s per model;
+64/s is secondary. The old finding0062 primary remains unchanged. Five paired
+blocks/model,two paths,two rates,256 attempts/cell fix20 executors/40 cells/
+10240 measured attempts. Model computation,weights,KV and dispatcher are shared.
+Fairness is aligned only within one-request-per-connection performance traffic.
+
+Setup and source builds pass with matching installed dependency versions.
+Two native idle/shutdown dependencies pass; Qwen protocol qualification is
+running. Full qualification,real preflight,full results and fresh result review
+are unfinished. There is no numerical result or production selection from this
+follow-up yet. Preserve median/CPU/throughput costs,failures,host scheduling and
+pipeline/buffer-policy limits when the full run is interpreted.

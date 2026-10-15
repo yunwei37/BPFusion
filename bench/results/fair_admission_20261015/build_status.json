@@ -1,0 +1,25 @@
+{
+  "command": [
+    "make",
+    "-f",
+    "/tmp/bpfusion-fair-admission-yijz8oui/candidate/Makefile",
+    "BUILD=/tmp/bpfusion-fair-admission-yijz8oui/build",
+    "VLLM_PYTHON=/tmp/bpfusion-fair-admission-yijz8oui/runtime/bin/python",
+    "NVCC=/usr/local/cuda/bin/nvcc -I/tmp/bpfusion-fair-admission-yijz8oui/candidate/bpf/include",
+    "BPF_CFLAGS=-O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -I/tmp/bpfusion-fair-admission-yijz8oui/candidate/bpf/include -I/workspaces/repository/bpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value",
+    "CFLAGS=-O2 -g -Wall -Wextra -Wno-unused-parameter -I/tmp/bpfusion-fair-admission-yijz8oui/candidate/bpf/include",
+    "/tmp/bpfusion-fair-admission-yijz8oui/build/fusion.bpf.o",
+    "/tmp/bpfusion-fair-admission-yijz8oui/build/uring_loop.bpf.o",
+    "/tmp/bpfusion-fair-admission-yijz8oui/build/bpfusion_load",
+    "/tmp/bpfusion-fair-admission-yijz8oui/build/vllm_graph_uring_loop_trace.so",
+    "/tmp/bpfusion-fair-admission-yijz8oui/build/vllm_graph_uring_loop_trace",
+    "/tmp/bpfusion-fair-admission-yijz8oui/build/vllm_graph_uring_loop.so",
+    "/tmp/bpfusion-fair-admission-yijz8oui/build/vllm_graph_uring_loop",
+    "/tmp/bpfusion-fair-admission-yijz8oui/build/vllm_graph_user_network_wait_trace.so",
+    "/tmp/bpfusion-fair-admission-yijz8oui/build/vllm_graph_user_network_wait_trace",
+    "/tmp/bpfusion-fair-admission-yijz8oui/build/vllm_graph_user_network_wait.so",
+    "/tmp/bpfusion-fair-admission-yijz8oui/build/vllm_graph_user_network_wait"
+  ],
+  "exit": 0,
+  "utc": "2026-10-15T12:23:12.092582+00:00"
+}

@@ -1,0 +1,27 @@
+{
+  "case": "deadline",
+  "pid": 586146,
+  "command": [
+    "strace",
+    "-D",
+    "-f",
+    "-ttt",
+    "-e",
+    "trace=epoll_pwait2,eventfd2,write,read,epoll_ctl",
+    "-o",
+    "/tmp/bpfusion-fair-admission-yijz8oui/idle_native_deadline.strace",
+    "/tmp/bpfusion-fair-admission-yijz8oui/build/vllm_graph_user_network_wait_trace",
+    "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "2",
+    "--trace-output",
+    "/tmp/bpfusion-fair-admission-yijz8oui/idle_native_deadline.gpu.jsonl",
+    "--trace-requests",
+    "1"
+  ],
+  "ready_ns": 498929886214366,
+  "utc": "2026-10-15T12:32:37.886652+00:00",
+  "exit": 0,
+  "end_ns": 498938082107339,
+  "ready_to_python_exit_s": 8.195892973,
+  "scope": "includes upstream replay/teardown; strace diagnostic, not production deadline/latency SLO"
+}
