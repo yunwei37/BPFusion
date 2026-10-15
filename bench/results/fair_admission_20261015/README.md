@@ -8,11 +8,18 @@ model computation remains shared and unchanged. Main application behavior is
 not changed by this archive; candidate/ is a source snapshot, not a checkout.
 
 Setup/build exits0, all installed package versions match the preceding measured
-environment (package_comparison.json is empty). Native idle deadline and
-helper-thread shutdown dependencies both pass. The live original run is now
-performing Qwen protocol qualification. Qualification as a whole, real preflight,
-the full matrix and result review remain unfinished. No new performance result
-is reported here and no partial prefix should be interpreted as the experiment.
+environment (package_comparison.json is empty). Qualification completes all5
+commands at12:56:50.942245UTC: two idle cases,four protocol executors across
+both models/paths (2560 outcomes/93504 replayed tokens,including1036 intended
+rejections),and both retained native lifecycle cases. Each lifecycle has32
+actions,including partial/canceled observations,not32 complete deliveries.
+
+Real preflight attempt1 completes at12:58:36.652011UTC: both paths complete all
+128 measured requests/8192 tokens plus16 checked warmups. Both admission queues
+reach16 entries and clear at stop; kernel reservations/SQ/CQ counters drain.
+Full begins12:58:36UTC and remains running. The full matrix and result review
+are unfinished. No new performance result is reported here,and no partial
+prefix should be interpreted as the experiment.
 
 ## Question and sources
 
@@ -63,3 +70,19 @@ full fixed matrix. Full raw outputs, independent model-history/wire replay,
 all analyses, queue engagement and a fresh result review are required before
 interpretation or adoption. Preserve all failures and deviations. The full
 retained project objective remains active.
+
+## Qualification/preflight completion update
+
+This update preserves closed qualification and real-preflight data separately
+from the still-running full collection. qualification_completion.json and
+preflight_completion.json give exact terminal/coverage scope. CPU replay of both
+copied protocol analyses already matches saved stdout. Large queued native
+reset/stop behavior is not newly qualified by these retained32-action cases.
+
+The sparse host CPU observation is during native preflight bootstrap,after
+kernel preflight terminal. Its per-process scan estimate is approximate and can
+slightly exceed the24-core host because sample brackets differ. Prominent repl
+processes map by exact cgroup Pod UID to the separately running gpu-smt-dev
+Workspace; none were changed. host_full_qwen_short is0.682474s after Qwen pair0
+native measured cells,therefore a replay/teardown observation,not serving
+isolation. Phase receipts retain the actual timestamps and limits.

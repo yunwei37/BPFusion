@@ -1,0 +1,742 @@
+{
+  "model": "smol",
+  "start": "2026-10-15T12:52:38.412930+00:00",
+  "oracle_frozen_at": "pre-observation0045: 8323c32e19a1fcdf326beba405a411a6276aa8dc",
+  "ready_time_ns": 1792068983464816179,
+  "native_pid": 588600,
+  "cmd": [
+    "strace",
+    "-D",
+    "-f",
+    "-ttt",
+    "-o",
+    "/tmp/bpfusion-fair-admission-yijz8oui/lifecycle_smol_native/smol.strace",
+    "-e",
+    "trace=accept,accept4,recvfrom,recvmsg,sendto,sendmsg,io_uring_setup,io_uring_enter,io_uring_register",
+    "/tmp/bpfusion-fair-admission-yijz8oui/build/vllm_graph_user_network_wait",
+    "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+    "180"
+  ],
+  "exit": 0,
+  "stdout": "(MainProcess pid=588600) INFO 10-15 12:53:50 [api_utils.py:286] non-default args: {'dtype': 'half', 'max_model_len': 128, 'disable_log_stats': True, 'model': '/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2'}\n(MainProcess pid=588600) WARNING 10-15 12:53:50 [arg_utils.py:1910] The global random seed is set to 0. Since VLLM_ENABLE_V1_MULTIPROCESSING is set to False, this may affect the random state of the Python process that launched vLLM.\n(MainProcess pid=588600) INFO 10-15 12:53:50 [model.py:699] Resolved architecture: LlamaForCausalLM\n(MainProcess pid=588600) WARNING 10-15 12:53:50 [model.py:2442] Casting torch.bfloat16 to torch.float16.\n(MainProcess pid=588600) INFO 10-15 12:53:50 [model.py:2109] Using max model len 128\n(MainProcess pid=588600) INFO 10-15 12:53:50 [scheduler.py:308] Chunked prefill is enabled with max_num_batched_tokens=8192.\n(MainProcess pid=588600) INFO 10-15 12:53:50 [kernel.py:408] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])\n(MainProcess pid=588600) INFO 10-15 12:53:52 [core.py:129] Initializing a V1 LLM engine (v0.31.0) with config: model='/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2', speculative_config=None, tokenizer='/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, max_seq_len=128, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)\n(MainProcess pid=588600) INFO 10-15 12:53:54 [parallel_state.py:1825] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_168bba16fb9e4d0aa0253b89fbf45c51 backend=nccl\n(MainProcess pid=588600) INFO 10-15 12:53:54 [parallel_state.py:2269] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A\n(MainProcess pid=588600) INFO 10-15 12:53:54 [gpu_worker.py:479] Using V2 Model Runner\n(MainProcess pid=588600) INFO 10-15 12:53:58 [model_runner.py:375] Loading model from scratch...\n(MainProcess pid=588600) INFO 10-15 12:54:20 [cuda.py:526] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].\n(MainProcess pid=588600) INFO 10-15 12:54:20 [flash_attn.py:1167] Using FlashAttention version 2\n(MainProcess pid=588600) INFO 10-15 12:54:23 [weight_utils.py:1063] Filesystem type for checkpoints: EXT4. Checkpoint size: 0.25 GiB. Available RAM: 74.15 GiB.\n(MainProcess pid=588600) INFO 10-15 12:54:23 [weight_utils.py:1086] Auto-prefetch is disabled because the filesystem (EXT4) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.\n(MainProcess pid=588600) INFO 10-15 12:54:30 [default_loader.py:484] Loading weights took 7.27 seconds\n(MainProcess pid=588600) INFO 10-15 12:54:31 [model_runner.py:407] Model loading took 0.26 GiB memory and 34.271592 seconds\n(MainProcess pid=588600) INFO 10-15 12:54:31 [topk_topp_sampler.py:124] Using FlashInfer for top-p & top-k sampling.\n(MainProcess pid=588600) INFO 10-15 12:54:31 [torch_utils.py:286] Reducing Torch threads from 24 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.\n(MainProcess pid=588600) INFO 10-15 12:54:31 [utils.py:343] Using LBNHC KV cache layout.\n{\"event\": \"vllm_protocol_cache\", \"context_tokens\": 128, \"banks\": 8, \"needed_blocks\": 65, \"cache_bytes\": 23961600, \"specs\": {\"model.layers.0.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.1.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.2.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.3.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.4.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.5.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.6.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.7.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.8.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.9.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.10.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.11.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.12.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.13.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.14.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.15.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.16.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.17.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.18.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.19.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.20.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.21.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.22.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.23.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.24.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.25.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.26.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.27.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.28.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.29.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}}}\n(MainProcess pid=588600) INFO 10-15 12:55:00 [caching.py:342] reconstructed serializable fn from standalone compile artifacts. num_artifacts=3 num_submods=31\n(MainProcess pid=588600) INFO 10-15 12:55:01 [decorators.py:312] Directly load AOT compilation from path /root/.cache/vllm/torch_compile_cache/torch_aot_compile/40f788bf8846af4ecba942211527e61680993c31c859721634e78546999ea04b/rank_0_0/model\n(MainProcess pid=588600) INFO 10-15 12:55:01 [monitor.py:53] torch.compile took 5.22 s in total\n(MainProcess pid=588600) INFO 10-15 12:55:02 [monitor.py:81] Initial profiling/warmup run took 1.78 s\n(MainProcess pid=588600) INFO 10-15 12:55:04 [gpu_worker.py:603] Initial free memory 30.89 GiB, reserved 0.02 GiB memory for KV Cache as specified by kv_cache_memory_bytes config and skipped memory profiling. This does not respect the gpu_memory_utilization config. Only use kv_cache_memory_bytes config when you want manual control of KV cache memory size. If OOM'ed, check the difference of initial free memory between the current run and the previous run where kv_cache_memory_bytes is suggested and update it correspondingly.\n(MainProcess pid=588600) INFO 10-15 12:55:04 [kv_cache_utils.py:2464] GPU KV cache size: 1,040 tokens, Maximum concurrency for 128 tokens per request: 8.12x\n(MainProcess pid=588600) INFO 10-15 12:55:05 [kernel_warmup.py:172] JIT kernel warmup starting.\n(MainProcess pid=588600) INFO 10-15 12:55:05 [kernel_warmup.py:185] JIT kernel warmup finished in 0.00s.\n(MainProcess pid=588600) INFO 10-15 12:55:13 [kernel_warmup.py:437] Using FlashInfer autotune cache file: /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/90b12f24124ea812861e80e5144bfd064429de7dd1b156425bfda6ebd10460fc/autotune_configs.json\n(MainProcess pid=588600) INFO 10-15 12:55:14 [kernel_warmup.py:359] Running FlashInfer autotune with 8192 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192).\n(MainProcess pid=588600) INFO 10-15 12:55:35 [model_runner.py:1087] Graph capturing finished in 20 secs, took 0.06 GiB\n(MainProcess pid=588600) INFO 10-15 12:55:53 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.\n(MainProcess pid=588600) INFO 10-15 12:55:54 [core.py:373] init engine (profile, create kv cache, warmup model) took 82.47 s (compilation: 5.22 s)\n(MainProcess pid=588600) INFO 10-15 12:55:54 [hf.py:646] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.\ncaptured vLLM query=1/64 batches1..8\ncaptured vLLM query=2/64 batches1..8\ncaptured vLLM query=3/64 batches1..8\ncaptured vLLM query=4/64 batches1..8\ncaptured vLLM query=5/64 batches1..8\ncaptured vLLM query=6/64 batches1..8\ncaptured vLLM query=7/64 batches1..8\ncaptured vLLM query=8/64 batches1..8\ncaptured vLLM query=9/64 batches1..8\ncaptured vLLM query=10/64 batches1..8\ncaptured vLLM query=11/64 batches1..8\ncaptured vLLM query=12/64 batches1..8\ncaptured vLLM query=13/64 batches1..8\ncaptured vLLM query=14/64 batches1..8\ncaptured vLLM query=15/64 batches1..8\ncaptured vLLM query=16/64 batches1..8\ncaptured vLLM query=17/64 batches1..8\ncaptured vLLM query=18/64 batches1..8\ncaptured vLLM query=19/64 batches1..8\ncaptured vLLM query=20/64 batches1..8\ncaptured vLLM query=21/64 batches1..8\ncaptured vLLM query=22/64 batches1..8\ncaptured vLLM query=23/64 batches1..8\ncaptured vLLM query=24/64 batches1..8\ncaptured vLLM query=25/64 batches1..8\ncaptured vLLM query=26/64 batches1..8\ncaptured vLLM query=27/64 batches1..8\ncaptured vLLM query=28/64 batches1..8\ncaptured vLLM query=29/64 batches1..8\ncaptured vLLM query=30/64 batches1..8\ncaptured vLLM query=31/64 batches1..8\ncaptured vLLM query=32/64 batches1..8\ncaptured vLLM query=33/64 batches1..8\ncaptured vLLM query=34/64 batches1..8\ncaptured vLLM query=35/64 batches1..8\ncaptured vLLM query=36/64 batches1..8\ncaptured vLLM query=37/64 batches1..8\ncaptured vLLM query=38/64 batches1..8\ncaptured vLLM query=39/64 batches1..8\ncaptured vLLM query=40/64 batches1..8\ncaptured vLLM query=41/64 batches1..8\ncaptured vLLM query=42/64 batches1..8\ncaptured vLLM query=43/64 batches1..8\ncaptured vLLM query=44/64 batches1..8\ncaptured vLLM query=45/64 batches1..8\ncaptured vLLM query=46/64 batches1..8\ncaptured vLLM query=47/64 batches1..8\ncaptured vLLM query=48/64 batches1..8\ncaptured vLLM query=49/64 batches1..8\ncaptured vLLM query=50/64 batches1..8\ncaptured vLLM query=51/64 batches1..8\ncaptured vLLM query=52/64 batches1..8\ncaptured vLLM query=53/64 batches1..8\ncaptured vLLM query=54/64 batches1..8\ncaptured vLLM query=55/64 batches1..8\ncaptured vLLM query=56/64 batches1..8\ncaptured vLLM query=57/64 batches1..8\ncaptured vLLM query=58/64 batches1..8\ncaptured vLLM query=59/64 batches1..8\ncaptured vLLM query=60/64 batches1..8\ncaptured vLLM query=61/64 batches1..8\ncaptured vLLM query=62/64 batches1..8\ncaptured vLLM query=63/64 batches1..8\ncaptured vLLM query=64/64 batches1..8\n{\"event\": \"vllm_bootstrap\", \"model\": \"/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2\", \"block_sizes\": [16], \"kernel_block_sizes\": [16], \"pages\": [[1, 2, 3, 4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15, 16], [17, 18, 19, 20, 21, 22, 23, 24], [25, 26, 27, 28, 29, 30, 31, 32], [33, 34, 35, 36, 37, 38, 39, 40], [41, 42, 43, 44, 45, 46, 47, 48], [49, 50, 51, 52, 53, 54, 55, 56], [57, 58, 59, 60, 61, 62, 63, 64]], \"graph_count\": 520, \"captured_batches\": [1, 2, 3, 4, 5, 6, 7, 8], \"captured_queries\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64]}\nresident vLLM ready: 30 layers h=576 vocab=49152; tensor batches1..8, GPU prefill/decode\nuserspace completion wait=epoll_pwait2 active_timeout_ns=60000 idle=socket_or_deadline shutdown=eventfd\nUSER_ADMISSION policy=eligible_frame_fifo queued_peak=1 queued_at_stop=0\nuserspace TCP stopped: accepted=13 published=32 completed=31 rejected=10\nresident vLLM stopped: launches=1 device_graph_launches=709 graph_error=0 max_active=2 admitted=32 retired=31 trace_overflows=0 release_rounds=31 max_release=1 device_launch_calls=1418\n",
+  "stderr": "<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.\n<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.\n\nLoading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]\n\nLoading safetensors checkpoint shards: 100% Completed | 1/1 [00:07<00:00,  7.08s/it]\n\nLoading safetensors checkpoint shards: 100% Completed | 1/1 [00:07<00:00,  7.08s/it]\n\n2026-10-15 12:55:14,271 - INFO - autotuner.py:3691 - flashinfer.jit: [Autotuner]: Loaded 0 configs from /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/90b12f24124ea812861e80e5144bfd064429de7dd1b156425bfda6ebd10460fc/autotune_configs.json\n2026-10-15 12:55:14,272 - INFO - autotuner.py:1046 - flashinfer.jit: [Autotuner]: Autotuning process starts ...\n2026-10-15 12:55:14,379 - INFO - autotuner.py:1069 - flashinfer.jit: [Autotuner]: Autotuning process ends\n2026-10-15 12:55:14,380 - INFO - autotuner.py:3554 - flashinfer.jit: [Autotuner]: Saved 0 configs to /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/90b12f24124ea812861e80e5144bfd064429de7dd1b156425bfda6ebd10460fc/autotune_configs.json (0 new, 0 from previous config)\n\nCapturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]\nCapturing CUDA graphs (PIECEWISE):   2%|\u258f         | 1/51 [00:00<00:06,  7.89it/s]\nCapturing CUDA graphs (PIECEWISE):   6%|\u258c         | 3/51 [00:00<00:04, 11.63it/s]\nCapturing CUDA graphs (PIECEWISE):  12%|\u2588\u258f        | 6/51 [00:00<00:02, 16.99it/s]\nCapturing CUDA graphs (PIECEWISE):  16%|\u2588\u258c        | 8/51 [00:00<00:02, 16.35it/s]\nCapturing CUDA graphs (PIECEWISE):  20%|\u2588\u2589        | 10/51 [00:02<00:13,  3.10it/s]\nCapturing CUDA graphs (PIECEWISE):  24%|\u2588\u2588\u258e       | 12/51 [00:02<00:11,  3.36it/s]\nCapturing CUDA graphs (PIECEWISE):  27%|\u2588\u2588\u258b       | 14/51 [00:02<00:08,  4.55it/s]\nCapturing CUDA graphs (PIECEWISE):  31%|\u2588\u2588\u2588\u258f      | 16/51 [00:02<00:06,  5.42it/s]\nCapturing CUDA graphs (PIECEWISE):  35%|\u2588\u2588\u2588\u258c      | 18/51 [00:03<00:04,  6.84it/s]\nCapturing CUDA graphs (PIECEWISE):  39%|\u2588\u2588\u2588\u2589      | 20/51 [00:03<00:03,  8.54it/s]\nCapturing CUDA graphs (PIECEWISE):  43%|\u2588\u2588\u2588\u2588\u258e     | 22/51 [00:03<00:03,  9.15it/s]\nCapturing CUDA graphs (PIECEWISE):  49%|\u2588\u2588\u2588\u2588\u2589     | 25/51 [00:03<00:02, 11.75it/s]\nCapturing CUDA graphs (PIECEWISE):  53%|\u2588\u2588\u2588\u2588\u2588\u258e    | 27/51 [00:03<00:01, 12.84it/s]\nCapturing CUDA graphs (PIECEWISE):  57%|\u2588\u2588\u2588\u2588\u2588\u258b    | 29/51 [00:03<00:01, 14.25it/s]\nCapturing CUDA graphs (PIECEWISE):  61%|\u2588\u2588\u2588\u2588\u2588\u2588    | 31/51 [00:03<00:01, 15.01it/s]\nCapturing CUDA graphs (PIECEWISE):  65%|\u2588\u2588\u2588\u2588\u2588\u2588\u258d   | 33/51 [00:03<00:01, 15.97it/s]\nCapturing CUDA graphs (PIECEWISE):  71%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | 36/51 [00:04<00:01,  8.43it/s]\nCapturing CUDA graphs (PIECEWISE):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d  | 38/51 [00:06<00:04,  2.93it/s]\nCapturing CUDA graphs (PIECEWISE):  78%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a  | 40/51 [00:07<00:04,  2.23it/s]\nCapturing CUDA graphs (PIECEWISE):  80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  | 41/51 [00:08<00:04,  2.10it/s]\nCapturing CUDA graphs (PIECEWISE):  82%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f | 42/51 [00:09<00:04,  1.85it/s]\nCapturing CUDA graphs (PIECEWISE):  84%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d | 43/51 [00:09<00:03,  2.18it/s]\nCapturing CUDA graphs (PIECEWISE):  86%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b | 44/51 [00:09<00:03,  2.22it/s]\nCapturing CUDA graphs (PIECEWISE):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 45/51 [00:10<00:02,  2.45it/s]\nCapturing CUDA graphs (PIECEWISE):  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 46/51 [00:10<00:02,  2.20it/s]\nCapturing CUDA graphs (PIECEWISE):  92%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f| 47/51 [00:11<00:01,  2.05it/s]\nCapturing CUDA graphs (PIECEWISE):  94%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d| 48/51 [00:11<00:01,  1.96it/s]\nCapturing CUDA graphs (PIECEWISE):  96%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 49/51 [00:12<00:01,  1.92it/s]\nCapturing CUDA graphs (PIECEWISE):  98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a| 50/51 [00:12<00:00,  2.09it/s]\nCapturing CUDA graphs (PIECEWISE): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 51/51 [00:12<00:00,  3.94it/s]\n\nCapturing CUDA graphs (FULL):   0%|          | 0/35 [00:00<?, ?it/s]\nCapturing CUDA graphs (FULL):   9%|\u258a         | 3/35 [00:00<00:01, 26.22it/s]\nCapturing CUDA graphs (FULL):  17%|\u2588\u258b        | 6/35 [00:00<00:01, 26.14it/s]\nCapturing CUDA graphs (FULL):  26%|\u2588\u2588\u258c       | 9/35 [00:01<00:03,  7.22it/s]\nCapturing CUDA graphs (FULL):  31%|\u2588\u2588\u2588\u258f      | 11/35 [00:02<00:07,  3.17it/s]\nCapturing CUDA graphs (FULL):  37%|\u2588\u2588\u2588\u258b      | 13/35 [00:02<00:06,  3.60it/s]\nCapturing CUDA graphs (FULL):  40%|\u2588\u2588\u2588\u2588      | 14/35 [00:02<00:05,  3.99it/s]\nCapturing CUDA graphs (FULL):  43%|\u2588\u2588\u2588\u2588\u258e     | 15/35 [00:03<00:05,  3.68it/s]\nCapturing CUDA graphs (FULL):  46%|\u2588\u2588\u2588\u2588\u258c     | 16/35 [00:03<00:05,  3.59it/s]\nCapturing CUDA graphs (FULL):  49%|\u2588\u2588\u2588\u2588\u258a     | 17/35 [00:03<00:05,  3.59it/s]\nCapturing CUDA graphs (FULL):  51%|\u2588\u2588\u2588\u2588\u2588\u258f    | 18/35 [00:04<00:04,  3.92it/s]\nCapturing CUDA graphs (FULL):  63%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 22/35 [00:04<00:01,  8.18it/s]\nCapturing CUDA graphs (FULL):  71%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f  | 25/35 [00:04<00:00, 11.27it/s]\nCapturing CUDA graphs (FULL):  83%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e | 29/35 [00:04<00:00, 10.48it/s]\nCapturing CUDA graphs (FULL):  91%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f| 32/35 [00:05<00:00, 10.42it/s]\nCapturing CUDA graphs (FULL):  97%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b| 34/35 [00:05<00:00,  7.63it/s]\nCapturing CUDA graphs (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 35/35 [00:05<00:00,  6.03it/s]\n\nPrefill query=1 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=1 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 19.99it/s]\nPrefill query=1 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 17.56it/s]\nPrefill query=1 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 16.87it/s]\nPrefill query=1 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 19.84it/s]\n\nPrefill query=2 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=2 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 42.46it/s]\nPrefill query=2 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 27.64it/s]\n\nPrefill query=3 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=3 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 24.34it/s]\nPrefill query=3 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 25.51it/s]\nPrefill query=3 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 25.42it/s]\n\nPrefill query=4 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=4 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 52.25it/s]\nPrefill query=4 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 52.41it/s]\n\nPrefill query=5 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=5 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 23.53it/s]\nPrefill query=5 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 21.00it/s]\nPrefill query=5 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 20.07it/s]\n\nPrefill query=6 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=6 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 17.23it/s]\nPrefill query=6 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 38.17it/s]\nPrefill query=6 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 34.94it/s]\n\nPrefill query=7 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=7 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 36.19it/s]\nPrefill query=7 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 21.23it/s]\nPrefill query=7 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 22.61it/s]\n\nPrefill query=8 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=8 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 19.70it/s]\nPrefill query=8 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 18.26it/s]\nPrefill query=8 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 16.99it/s]\nPrefill query=8 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 16.87it/s]\nPrefill query=8 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 17.05it/s]\n\nPrefill query=9 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=9 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 14.60it/s]\nPrefill query=9 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 14.68it/s]\nPrefill query=9 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 16.25it/s]\nPrefill query=9 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 17.22it/s]\n\nPrefill query=10 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=10 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 50.53it/s]\nPrefill query=10 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 51.44it/s]\n\nPrefill query=11 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=11 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 51.96it/s]\nPrefill query=11 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 43.47it/s]\n\nPrefill query=12 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=12 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 28.83it/s]\nPrefill query=12 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 33.73it/s]\nPrefill query=12 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 32.86it/s]\n\nPrefill query=13 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=13 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 35.42it/s]\nPrefill query=13 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 28.47it/s]\nPrefill query=13 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 29.30it/s]\n\nPrefill query=14 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=14 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 51.35it/s]\nPrefill query=14 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 51.80it/s]\n\nPrefill query=15 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=15 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 35.53it/s]\nPrefill query=15 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 21.62it/s]\nPrefill query=15 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 22.70it/s]\n\nPrefill query=16 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=16 (FULL):  38%|\u2588\u2588\u2588\u258a      | 3/8 [00:00<00:00, 20.64it/s]\nPrefill query=16 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 21.95it/s]\nPrefill query=16 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 21.26it/s]\n\nPrefill query=17 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=17 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 14.47it/s]\nPrefill query=17 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 16.99it/s]\nPrefill query=17 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 16.90it/s]\nPrefill query=17 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 17.13it/s]\nPrefill query=17 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 16.73it/s]\n\nPrefill query=18 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=18 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 11.38it/s]\nPrefill query=18 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 12.57it/s]\nPrefill query=18 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 19.03it/s]\n\nPrefill query=19 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=19 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 33.95it/s]\nPrefill query=19 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 27.07it/s]\nPrefill query=19 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 27.48it/s]\n\nPrefill query=20 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=20 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 16.17it/s]\nPrefill query=20 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 18.01it/s]\nPrefill query=20 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 20.46it/s]\nPrefill query=20 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 19.25it/s]\n\nPrefill query=21 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=21 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 16.46it/s]\nPrefill query=21 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 17.90it/s]\nPrefill query=21 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 17.82it/s]\nPrefill query=21 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 18.58it/s]\n\nPrefill query=22 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=22 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 15.88it/s]\nPrefill query=22 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 16.60it/s]\nPrefill query=22 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 15.89it/s]\nPrefill query=22 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 15.68it/s]\nPrefill query=22 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 15.65it/s]\n\nPrefill query=23 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=23 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 11.99it/s]\nPrefill query=23 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 16.26it/s]\nPrefill query=23 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 16.87it/s]\nPrefill query=23 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 16.64it/s]\n\nPrefill query=24 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=24 (FULL):  12%|\u2588\u258e        | 1/8 [00:00<00:00,  7.99it/s]\nPrefill query=24 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 12.33it/s]\nPrefill query=24 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 13.83it/s]\nPrefill query=24 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 15.14it/s]\nPrefill query=24 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 13.79it/s]\n\nPrefill query=25 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=25 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 14.30it/s]\nPrefill query=25 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 16.41it/s]\nPrefill query=25 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 20.71it/s]\nPrefill query=25 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 19.71it/s]\n\nPrefill query=26 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=26 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 12.02it/s]\nPrefill query=26 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 13.84it/s]\nPrefill query=26 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 16.66it/s]\nPrefill query=26 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 16.01it/s]\n\nPrefill query=27 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=27 (FULL):  12%|\u2588\u258e        | 1/8 [00:00<00:01,  6.87it/s]\nPrefill query=27 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00,  7.22it/s]\nPrefill query=27 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 10.68it/s]\nPrefill query=27 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 10.85it/s]\nPrefill query=27 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 12.89it/s]\nPrefill query=27 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 11.24it/s]\n\nPrefill query=28 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=28 (FULL):  12%|\u2588\u258e        | 1/8 [00:00<00:01,  6.89it/s]\nPrefill query=28 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 22.59it/s]\nPrefill query=28 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 20.19it/s]\nPrefill query=28 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 19.02it/s]\n\nPrefill query=29 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=29 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 15.92it/s]\nPrefill query=29 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 25.54it/s]\nPrefill query=29 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 24.97it/s]\n\nPrefill query=30 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=30 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 11.64it/s]\nPrefill query=30 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 11.59it/s]\nPrefill query=30 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 12.71it/s]\nPrefill query=30 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 14.49it/s]\nPrefill query=30 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 13.42it/s]\n\nPrefill query=31 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=31 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00,  9.26it/s]\nPrefill query=31 (FULL):  38%|\u2588\u2588\u2588\u258a      | 3/8 [00:00<00:00,  9.11it/s]\nPrefill query=31 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 18.90it/s]\nPrefill query=31 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 17.26it/s]\n\nPrefill query=32 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=32 (FULL):  12%|\u2588\u258e        | 1/8 [00:00<00:00,  8.13it/s]\nPrefill query=32 (FULL):  38%|\u2588\u2588\u2588\u258a      | 3/8 [00:00<00:00, 11.92it/s]\nPrefill query=32 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 14.63it/s]\nPrefill query=32 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 19.33it/s]\nPrefill query=32 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 16.62it/s]\n\nPrefill query=33 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=33 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 18.29it/s]\nPrefill query=33 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 13.91it/s]\nPrefill query=33 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 14.61it/s]\nPrefill query=33 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 15.86it/s]\n\nPrefill query=34 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=34 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 15.20it/s]\nPrefill query=34 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 14.56it/s]\nPrefill query=34 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 19.51it/s]\nPrefill query=34 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 17.59it/s]\n\nPrefill query=35 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=35 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 13.11it/s]\nPrefill query=35 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 26.60it/s]\nPrefill query=35 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 22.84it/s]\n\nPrefill query=36 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=36 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 16.16it/s]\nPrefill query=36 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 11.78it/s]\nPrefill query=36 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 12.53it/s]\nPrefill query=36 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 13.45it/s]\nPrefill query=36 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 13.15it/s]\n\nPrefill query=37 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=37 (FULL):  12%|\u2588\u258e        | 1/8 [00:00<00:00,  8.21it/s]\nPrefill query=37 (FULL):  38%|\u2588\u2588\u2588\u258a      | 3/8 [00:00<00:00, 11.03it/s]\nPrefill query=37 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 12.48it/s]\nPrefill query=37 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 14.61it/s]\nPrefill query=37 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 14.64it/s]\n\nPrefill query=38 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=38 (FULL):  12%|\u2588\u258e        | 1/8 [00:00<00:00,  7.52it/s]\nPrefill query=38 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 21.44it/s]\nPrefill query=38 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 22.97it/s]\nPrefill query=38 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 20.59it/s]\n\nPrefill query=39 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=39 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 46.92it/s]\nPrefill query=39 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 40.59it/s]\n\nPrefill query=40 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=40 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 37.33it/s]\nPrefill query=40 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 29.46it/s]\n\nPrefill query=41 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=41 (FULL):  12%|\u2588\u258e        | 1/8 [00:00<00:00,  9.91it/s]\nPrefill query=41 (FULL):  38%|\u2588\u2588\u2588\u258a      | 3/8 [00:00<00:00, 12.82it/s]\nPrefill query=41 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 13.06it/s]\nPrefill query=41 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 13.94it/s]\nPrefill query=41 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 13.96it/s]\n\nPrefill query=42 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=42 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 13.01it/s]\nPrefill query=42 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 15.16it/s]\nPrefill query=42 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 16.55it/s]\nPrefill query=42 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 17.58it/s]\n\nPrefill query=43 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=43 (FULL):  12%|\u2588\u258e        | 1/8 [00:00<00:00,  8.32it/s]\nPrefill query=43 (FULL):  38%|\u2588\u2588\u2588\u258a      | 3/8 [00:00<00:00, 11.16it/s]\nPrefill query=43 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 21.85it/s]\nPrefill query=43 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 20.13it/s]\n\nPrefill query=44 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=44 (FULL):  38%|\u2588\u2588\u2588\u258a      | 3/8 [00:00<00:00, 24.88it/s]\nPrefill query=44 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 30.76it/s]\nPrefill query=44 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 31.57it/s]\n\nPrefill query=45 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=45 (FULL):  38%|\u2588\u2588\u2588\u258a      | 3/8 [00:00<00:00, 20.03it/s]\nPrefill query=45 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 34.59it/s]\nPrefill query=45 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 31.94it/s]\n\nPrefill query=46 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=46 (FULL):  38%|\u2588\u2588\u2588\u258a      | 3/8 [00:00<00:00, 26.80it/s]\nPrefill query=46 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 15.36it/s]\nPrefill query=46 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 19.82it/s]\n\nPrefill query=47 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=47 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 15.25it/s]\nPrefill query=47 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 13.03it/s]\nPrefill query=47 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 13.86it/s]\nPrefill query=47 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 16.33it/s]\n\nPrefill query=48 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=48 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 24.59it/s]\nPrefill query=48 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 19.61it/s]\nPrefill query=48 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 20.20it/s]\n\nPrefill query=49 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=49 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 14.02it/s]\nPrefill query=49 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 13.74it/s]\nPrefill query=49 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 17.88it/s]\nPrefill query=49 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 17.18it/s]\n\nPrefill query=50 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=50 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 11.13it/s]\nPrefill query=50 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 11.18it/s]\nPrefill query=50 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 14.86it/s]\nPrefill query=50 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 13.81it/s]\n\nPrefill query=51 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=51 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 15.77it/s]\nPrefill query=51 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 17.16it/s]\nPrefill query=51 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 16.48it/s]\nPrefill query=51 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 17.49it/s]\n\nPrefill query=52 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=52 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00,  9.74it/s]\nPrefill query=52 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 25.35it/s]\nPrefill query=52 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 24.07it/s]\n\nPrefill query=53 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=53 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 48.06it/s]\nPrefill query=53 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 50.27it/s]\n\nPrefill query=54 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=54 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 41.27it/s]\nPrefill query=54 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 32.85it/s]\n\nPrefill query=55 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=55 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 12.75it/s]\nPrefill query=55 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 12.97it/s]\nPrefill query=55 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 15.11it/s]\nPrefill query=55 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 15.57it/s]\n\nPrefill query=56 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=56 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 14.96it/s]\nPrefill query=56 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 16.48it/s]\nPrefill query=56 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 16.47it/s]\nPrefill query=56 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 19.50it/s]\n\nPrefill query=57 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=57 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 50.47it/s]\nPrefill query=57 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 51.08it/s]\n\nPrefill query=58 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=58 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 46.25it/s]\nPrefill query=58 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 34.68it/s]\n\nPrefill query=59 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=59 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 18.78it/s]\nPrefill query=59 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 17.06it/s]\nPrefill query=59 (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 7/8 [00:00<00:00, 14.53it/s]\nPrefill query=59 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 15.30it/s]\n\nPrefill query=60 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=60 (FULL):  38%|\u2588\u2588\u2588\u258a      | 3/8 [00:00<00:00, 26.95it/s]\nPrefill query=60 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 38.23it/s]\n\nPrefill query=61 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=61 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 42.70it/s]\nPrefill query=61 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 39.25it/s]\n\nPrefill query=62 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=62 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00, 19.65it/s]\nPrefill query=62 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00, 17.54it/s]\nPrefill query=62 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 17.19it/s]\nPrefill query=62 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 19.01it/s]\n\nPrefill query=63 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=63 (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 5/8 [00:00<00:00, 43.20it/s]\nPrefill query=63 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 44.86it/s]\n\nPrefill query=64 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]\nPrefill query=64 (FULL):  12%|\u2588\u258e        | 1/8 [00:00<00:01,  6.60it/s]\nPrefill query=64 (FULL):  25%|\u2588\u2588\u258c       | 2/8 [00:00<00:00,  8.02it/s]\nPrefill query=64 (FULL):  50%|\u2588\u2588\u2588\u2588\u2588     | 4/8 [00:00<00:00,  9.58it/s]\nPrefill query=64 (FULL):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 6/8 [00:00<00:00, 10.67it/s]\nPrefill query=64 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 11.65it/s]\nPrefill query=64 (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 8/8 [00:00<00:00, 10.53it/s]\n",
+  "rows": [
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500357670720315,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000003b53399912c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        51956
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 500357708620660,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c5101000000010000000000000074a37b9b12c7010000c00000",
+      "peer": [
+        "127.0.0.1",
+        51956
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500357729356851,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000330cb89c12c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        51956
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500360000045240,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000000100000000000000b800102413c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        51964
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 500360017322604,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c510100000001000000000000006ca2172513c7010000c00000",
+      "peer": [
+        "127.0.0.1",
+        51964
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500360034151552,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000806c182613c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        51964
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500362292375765,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000000100000000000000d530b2ac13c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        51978
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 500362301572284,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000bc843ead13c7010000c00000",
+      "peer": [
+        "127.0.0.1",
+        51978
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500362304943116,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000000cf471ad13c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        51978
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500364555678871,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000009774993314c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        58146
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 500364568174268,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000bc1e583414c7010000c00000",
+      "peer": [
+        "127.0.0.1",
+        58146
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500364569475924,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000054fb6b3414c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        58146
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500366818308460,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000006c7176ba14c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        58152
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 500366822572433,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c510100000001000000000000009181b7ba14c7010000c00000",
+      "peer": [
+        "127.0.0.1",
+        58152
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500366824928929,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000a176dbba14c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        58152
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500369077995021,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000000d86264115c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        58164
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 500369088611056,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000f082c84115c7010000c00000",
+      "peer": [
+        "127.0.0.1",
+        58164
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500369107099107,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000e39de24215c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        58164
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500371370556514,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000000100000000000000623cccc915c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        58168
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 500371373623829,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000150afbc915c7010000c00000",
+      "peer": [
+        "127.0.0.1",
+        58168
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500371374019581,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000fd1301ca15c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        58168
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500373627372135,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000006782505016c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        52584
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 500373638331682,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c5101000000010000000000000022bdf75016c7010000c00000",
+      "peer": [
+        "127.0.0.1",
+        52584
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500373644130359,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000003738505116c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        52584
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500375899006322,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000010000000000000072e5b6d716c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        52598
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 500375926266695,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c5101000000010000000000000047db56d916c7010000c00000",
+      "peer": [
+        "127.0.0.1",
+        52598
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500375938237566,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000007e840dda16c70100f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        52598
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "binary",
+      "invalid": true,
+      "client_ns": 500376003230197,
+      "request_hex": "514d4c51010000000100000000000000f539eddd16c7010000c00000",
+      "peer": [
+        "127.0.0.1",
+        52598
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "",
+      "status": "EOF",
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 2,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 500376010476577,
+      "request_hex": "514d4c5108000000010000000000000021cc5bde16c70100f40600003a010000d800000022000000771f0000d8000000220000002f000000",
+      "peer": [
+        "127.0.0.1",
+        52610
+      ],
+      "gen": 1,
+      "prompt": [
+        1780,
+        314,
+        216,
+        34,
+        8055,
+        216,
+        34,
+        47
+      ],
+      "reply_hex": "c6000000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 500376030224348,
+      "request_hex": "514d4c51050000004000000000000000dc1f89df16c70100d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        52626
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "reply_hex": "c6000000",
+      "checked_tokens": 1,
+      "partial": true,
+      "exact": true,
+      "action": "RST"
+    },
+    {
+      "case": 3,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500376055991566,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2035360d0a0d0a514d4c510800000040000000000000000e4d12e116c70100f40600003a010000d800000022000000771f0000d8000000220000002f000000",
+      "peer": [
+        "127.0.0.1",
+        52642
+      ],
+      "gen": 64,
+      "prompt": [
+        1780,
+        314,
+        216,
+        34,
+        8055,
+        216,
+        34,
+        47
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000c6000000f8010000ac0b00003a010000d8000000240000001e000000c6000000c6000000dc200000d8000000220000002a000000c6000000c6000000f40600003a010000d800000022000000771f0000d800000022000000771f0000d8000000220000002f000000c6000000c6000000f8010000ac0b00003a010000d8000000240000001e000000c6000000c6000000dc200000d8000000230000002a000000c6000000c6000000f40600003a010000d800000022000000771f0000d800000022000000771f0000d800000022000000771f0000d8000000220000002f000000c6000000c6000000f8010000ac0b00003a010000d800000024000000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 500376146980872,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000008b07ee616c70100d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        52656
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000",
+      "checked_tokens": 1,
+      "partial": true,
+      "exact": true,
+      "action": "SIGTERM",
+      "post_stop_extra_hex": "c6000000f801000028030000d70a00005a010000"
+    }
+  ],
+  "model_errors": [
+    0
+  ],
+  "native_stats": {
+    "accepted": 13,
+    "published": 32,
+    "completed": 31,
+    "rejected": 10
+  },
+  "pass": true,
+  "end": "2026-10-15T12:56:50.918933+00:00",
+  "remaining_pins": []
+}

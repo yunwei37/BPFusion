@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-15T12:57:54.384461+00:00",
+  "qualification_terminal": {
+    "exit": 0,
+    "completed": 5,
+    "expected": 5,
+    "utc": "2026-10-15T12:56:50.942245+00:00"
+  },
+  "protocol_requests": 2560,
+  "protocol_replayed_tokens": 93504,
+  "deliberate_protocol_rejections": 1036,
+  "lifecycle": {
+    "qwen": {
+      "pass": true,
+      "exit": 0,
+      "native_stats": {
+        "accepted": 13,
+        "published": 32,
+        "completed": 31,
+        "rejected": 10
+      },
+      "remaining_pins": [],
+      "model_errors": [
+        0
+      ]
+    },
+    "smol": {
+      "pass": true,
+      "exit": 0,
+      "native_stats": {
+        "accepted": 13,
+        "published": 32,
+        "completed": 31,
+        "rejected": 10
+      },
+      "remaining_pins": [],
+      "model_errors": [
+        0
+      ]
+    }
+  },
+  "scope": "Complete dependency qualification; real preflight/full/result review unfinished, not a performance result."
+}

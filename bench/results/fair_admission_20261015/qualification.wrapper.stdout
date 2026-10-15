@@ -1,0 +1,10 @@
+START idle_native
+DONE {"name": "idle_native", "command": ["/usr/bin/python3", "/tmp/bpfusion-fair-admission-yijz8oui/idle_native.py"], "exit": 0, "utc": "2026-10-15T12:35:54.754367+00:00"}
+START protocol_qwen
+DONE {"name": "protocol_qwen", "command": ["/tmp/bpfusion-fair-admission-yijz8oui/runtime/bin/python", "/tmp/bpfusion-fair-admission-yijz8oui/load.py", "--model", "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775", "--correctness", "--output", "/tmp/bpfusion-fair-admission-yijz8oui/protocol_qwen.jsonl"], "exit": 0, "utc": "2026-10-15T12:42:27.535087+00:00", "analysis_exit": 0}
+START lifecycle_qwen_native
+DONE {"name": "lifecycle_qwen_native", "command": ["/tmp/bpfusion-fair-admission-yijz8oui/runtime/bin/python", "/tmp/bpfusion-fair-admission-yijz8oui/lifecycle.py", "native", "qwen"], "exit": 0, "utc": "2026-10-15T12:45:18.934338+00:00", "lifecycle_pass": true}
+START protocol_smol
+DONE {"name": "protocol_smol", "command": ["/tmp/bpfusion-fair-admission-yijz8oui/runtime/bin/python", "/tmp/bpfusion-fair-admission-yijz8oui/load.py", "--model", "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2", "--correctness", "--output", "/tmp/bpfusion-fair-admission-yijz8oui/protocol_smol.jsonl"], "exit": 0, "utc": "2026-10-15T12:52:37.927851+00:00", "analysis_exit": 0}
+START lifecycle_smol_native
+DONE {"name": "lifecycle_smol_native", "command": ["/tmp/bpfusion-fair-admission-yijz8oui/runtime/bin/python", "/tmp/bpfusion-fair-admission-yijz8oui/lifecycle.py", "native", "smol"], "exit": 0, "utc": "2026-10-15T12:56:50.941588+00:00", "lifecycle_pass": true}

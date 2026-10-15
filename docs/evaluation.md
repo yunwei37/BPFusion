@@ -1235,8 +1235,14 @@ blocks/model,two paths,two rates,256 attempts/cell fix20 executors/40 cells/
 Fairness is aligned only within one-request-per-connection performance traffic.
 
 Setup and source builds pass with matching installed dependency versions.
-Two native idle/shutdown dependencies pass; Qwen protocol qualification is
-running. Full qualification,real preflight,full results and fresh result review
-are unfinished. There is no numerical result or production selection from this
-follow-up yet. Preserve median/CPU/throughput costs,failures,host scheduling and
-pipeline/buffer-policy limits when the full run is interpreted.
+Qualification completes all5 commands: four real-model protocol executors pass
+2560 outcomes/93504 replayed tokens,including1036 intended rejections; both
+native retained lifecycle cases and two idle/shutdown cases pass. Lifecycle
+partial/canceled observations are not all complete numerical deliveries.
+
+Real preflight attempt1 completes128 measured requests/8192 tokens plus16
+warmups without failure. Both queues reach16 entries and final queue/reservation
+state clears. Full fixed collection is running; complete results and fresh
+result review remain unfinished. There is no performance result or production
+selection from this follow-up yet. Preserve median/CPU/throughput costs,failures,
+shared-host scheduling and pipeline/buffer-policy limits when interpreting it.

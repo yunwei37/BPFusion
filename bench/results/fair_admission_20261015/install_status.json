@@ -1,0 +1,31 @@
+[
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-m",
+      "venv",
+      "--without-pip",
+      "/tmp/bpfusion-fair-admission-yijz8oui/runtime"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T12:17:43.039130+00:00"
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-m",
+      "pip",
+      "--python",
+      "/tmp/bpfusion-fair-admission-yijz8oui/runtime/bin/python",
+      "install",
+      "vllm==0.31.0",
+      "torch==2.13.0+cu129",
+      "transformers==5.17.0",
+      "numpy==2.3.5",
+      "--extra-index-url",
+      "https://download.pytorch.org/whl/cu129"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T12:22:02.977432+00:00"
+  }
+]

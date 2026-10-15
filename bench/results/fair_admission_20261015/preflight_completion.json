@@ -1,0 +1,28 @@
+{
+  "utc": "2026-10-15T13:03:16.518597+00:00",
+  "terminal": {
+    "exit": 0,
+    "completed": 1,
+    "expected": 1,
+    "utc": "2026-10-15T12:58:36.652011+00:00"
+  },
+  "coverage": {
+    "event": "coverage",
+    "executors": 2,
+    "cells": 4,
+    "attempts": 128,
+    "successes": 128,
+    "failures": 0,
+    "successful_measured_tokens": 8192,
+    "warmups": 16
+  },
+  "backlogs": {
+    "uring_loop": [
+      "ADMISSION queued_peak=16"
+    ],
+    "userspace": [
+      "USER_ADMISSION policy=eligible_frame_fifo queued_peak=16 queued_at_stop=0"
+    ]
+  },
+  "scope": "Real path/mechanism dependency, not a performance result. Both paths loss-free and final queues clear; full fixed matrix still running."
+}
