@@ -1287,5 +1287,13 @@ executors total5136outcomes/188800replayedtokens,including2060intendedrejects;
 all four ordinary lifecycle cases pass within their recorded partial/canceled
 scope. The three archived CPU analyses reproduce bytewise. One full.py starts
 14:38:25.993951UTC and is running the complete40-executor80-cell matrix.
-No performance result or production default selection is available. Full execution,
-fresh result review,owned cleanup and final publication remain unfinished.
+Qwen full collection and fixed analysis exit0 at15:00:58.704112UTC:
+20executors/40cells,10240 successful measured attempts,zero failures,
+655360 measured tokens plus160 checked warmups. Copied fixed analysis reproduces
+stdout bytewise. The same full process has advanced to Smol;this is not complete
+two-model evidence. The15:01:55UTC short host sample falls inside a Smol192/s
+measured cell,with one reported owned GPU app;other snapshots are outside
+measurement. Sparse observations do not establish continuous isolation.
+No complete-matrix performance result or production default selection is available.
+Smol collection,fresh result review,plots,owned cleanup and final publication
+remain unfinished.

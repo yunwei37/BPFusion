@@ -132,3 +132,21 @@ the full host snapshot is during earlier lifecycle bootstrap. Neither establishe
 continuous isolation. The full40-executor80-cell matrix is running.
 No full performance result,ordinary default selection or overall goal completion
 is claimed. Preserve the active owned runtime/build directory until work ends.
+
+## Complete Qwen collection; Smol continues
+
+The Qwen full driver and fixed analysis exit0 at15:00:58.704112UTC.
+All20executors/40cells complete10240 measured attempts without failures,
+655360 delivered measured tokens and160 checked gen1warmups. Its complete raw
+histories,references and analysis are saved here. Running the copied analyze.py
+against the copied raw files reproduces saved stdout bytewise.
+This is one completed model within the still-running two-model experiment;
+no complete-matrix performance interpretation or default selection follows.
+
+The same full.py process611266/start50647799 has advanced to Smol.
+host_full_qwen_short1_phase.json places the Qwen snapshot4.167s after its
+preceding measured cell,not inside measurement. In contrast,the short Smol
+snapshot15:01:55.107858..55.197721UTC falls inside pair0 kernel8's192/s
+measured cell,with one reported GPU app in the owning Workspace cgroup.
+Both are sparse observations,not continuous isolation or total CPU evidence.
+Both-model completion,fresh result review,plots and owned cleanup remain open.
