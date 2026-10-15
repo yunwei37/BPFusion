@@ -7,7 +7,7 @@
 # Requires: clang, libbpf, libelf, zlib, libcuda/nvcc for the executor.
 
 BUILD    := build
-CPPFLAGS += -DBF_BUILD_DIR='"$(abspath $(BUILD))"'
+override CPPFLAGS += -DBF_BUILD_DIR='"$(abspath $(BUILD))"'
 ARCH     := $(shell uname -m | sed 's/x86_64/x86/;s/aarch64/arm64/')
 BPF_CFLAGS := -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_$(ARCH) \
               -I/usr/include/$(shell uname -m)-linux-gnu -Ibpf/include \
@@ -37,13 +37,13 @@ tools: $(TOOLS)
 executor: $(BUILD)/executor
 
 $(BUILD)/%.bpf.o: bpf/%.bpf.c bpf/include/bpfusion_queue.h bpf/include/bpfusion_admission.h | $(BUILD)
-	clang $(BPF_CFLAGS) -c $< -o $@
+	clang $(CPPFLAGS) $(BPF_CFLAGS) -c $< -o $@
 
 $(BUILD)/wake_probe: tools/wake_probe/main.c | $(BUILD)
 	$(CC) $(CFLAGS) $< -o $@ $(LDLIBS)
 
 $(BUILD)/client: tools/client.c bpf/include/bpfusion_queue.h | $(BUILD)
-	$(CC) $(CFLAGS) -Ibpf/include $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -Ibpf/include $< -o $@
 
 $(BUILD)/echo_udp: tools/echo_udp.c | $(BUILD)
 	$(CC) $(CFLAGS) $< -o $@
@@ -55,7 +55,7 @@ $(BUILD)/perfcount: tools/perfcount.c | $(BUILD)
 
 $(BUILD)/executor: executor/executor.cu bpf/include/bpfusion_queue.h \
                    executor/cuda_timer.h | $(BUILD)
-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -Iexecutor -Ibpf/include \
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -Iexecutor -Ibpf/include \
 		$< -o $@ $(LDLIBS)
 
 
@@ -76,21 +76,21 @@ clean:
 qwen: $(BUILD)/qwen
 
 $(BUILD)/qwen: executor/qwen.cu bpf/include/bpfusion_queue.h | $(BUILD)
-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -Ibpf/include $< -o $@ $(LDLIBS)
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -Ibpf/include $< -o $@ $(LDLIBS)
 
 # Same device kernel, host dispatch once per request: a mechanism control.
 .PHONY: qwen-control
 qwen-control: $(BUILD)/qwen_host_launch
 
 $(BUILD)/qwen_host_launch: executor/qwen.cu bpf/include/bpfusion_queue.h | $(BUILD)
-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_HOST_LAUNCH -Ibpf/include $< -o $@ $(LDLIBS)
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_HOST_LAUNCH -Ibpf/include $< -o $@ $(LDLIBS)
 
 # Device-launched HF graphs; Python captures only during bootstrap.
 .PHONY: qwen-graph
 qwen-graph: $(BUILD)/qwen_graph.so $(BUILD)/qwen_graph
 
 $(BUILD)/qwen_graph.so: executor/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -rdc=true -shared -Xcompiler=-fPIC \
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -rdc=true -shared -Xcompiler=-fPIC \
 		-Ibpf/include $< -o $@ $(LDLIBS)
 
 # GPU-owned stock io_uring TCP; uses the same HF graph computation.
@@ -98,7 +98,7 @@ $(BUILD)/qwen_graph.so: executor/qwen_graph.cu bpf/include/bpfusion_queue.h | $(
 qwen-graph-uring: $(BUILD)/qwen_graph_uring.so $(BUILD)/qwen_graph_uring
 
 $(BUILD)/qwen_graph_uring.so: executor/qwen_graph.cu executor/io_uring_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -rdc=true -shared -Xcompiler=-fPIC \
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -rdc=true -shared -Xcompiler=-fPIC \
 		-Ibpf/include $< -o $@ $(LDLIBS)
 
 # Same concurrent GPU graph banks; host resumes once per retired request.
@@ -106,7 +106,7 @@ $(BUILD)/qwen_graph_uring.so: executor/qwen_graph.cu executor/io_uring_tcp.h bpf
 qwen-graph-control: $(BUILD)/qwen_graph_host_launch.so $(BUILD)/qwen_graph_host_launch
 
 $(BUILD)/qwen_graph_host_launch.so: executor/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
 		-Ibpf/include $< -o $@ $(LDLIBS)
 
 $(BUILD)/qwen_graph $(BUILD)/qwen_graph_host_launch $(BUILD)/qwen_graph_user_network $(BUILD)/qwen_graph_user_network_wait $(BUILD)/qwen_graph_uring: executor/qwen_graph.py | $(BUILD)
@@ -117,7 +117,7 @@ $(BUILD)/qwen_graph $(BUILD)/qwen_graph_host_launch $(BUILD)/qwen_graph_user_net
 qwen-graph-user-network: $(BUILD)/qwen_graph_user_network.so $(BUILD)/qwen_graph_user_network
 
 $(BUILD)/qwen_graph_user_network.so: executor/qwen_graph.cu executor/userspace_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -rdc=true -shared -Xcompiler=-fPIC \
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -rdc=true -shared -Xcompiler=-fPIC \
 		-Ibpf/include $< -o $@ $(LDLIBS)
 
 # CPU-efficient network control; model graphs and device dispatcher are unchanged.
@@ -125,7 +125,7 @@ $(BUILD)/qwen_graph_user_network.so: executor/qwen_graph.cu executor/userspace_t
 qwen-graph-user-network-wait: $(BUILD)/qwen_graph_user_network_wait.so $(BUILD)/qwen_graph_user_network_wait
 
 $(BUILD)/qwen_graph_user_network_wait.so: executor/qwen_graph.cu executor/userspace_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC \
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC \
 		-Ibpf/include $< -o $@ $(LDLIBS)
 
 # Upstream vLLM graphs with bootstrap-owned KV and GPU prefill/decode.
@@ -203,7 +203,7 @@ $(BUILD)/amk_graph_uring_loop.so: executor/qwen_graph.cu executor/io_uring_tcp.h
 	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -rdc=true -shared -Xcompiler=-fPIC -I$(KERNEL_UAPI) -Ibpf/include $< -o $@ $(LDLIBS)
 
 $(BUILD)/amk_graph_user_network_wait.so: executor/qwen_graph.cu executor/userspace_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC -Ibpf/include $< -o $@ $(LDLIBS)
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC -Ibpf/include $< -o $@ $(LDLIBS)
 
 $(BUILD)/amk_graph_uring_loop $(BUILD)/amk_graph_user_network_wait: executor/amk_graph.py | $(BUILD)
 	ln -sf $(abspath executor/amk_graph.py) $@

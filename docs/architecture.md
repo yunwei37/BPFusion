@@ -637,3 +637,32 @@ Four newly compiled loop/native protocol executors pass2560 outcomes/93504
 replayed model tokens. Other shared-adapter builds are compile coverage only.
 This adoption repairs observed admission loss; it does not establish general
 performance superiority or complete TCP backpressure.
+
+
+## Native FIFO admission and explicit build capacity
+
+The ordinary native TCP alternative now uses the eligible-complete-frame FIFO
+from findings0063/0064. A connection queues one eligible frame once; its next
+frame becomes eligible after its preceding response retires. Shared Peer
+ownership survives reply completion and disconnect, and stale disconnected
+entries are discarded. This preserves per-connection response ordering while
+removing FD-ordered cross-connection admission. It does not establish transport
+superiority; the fair comparison does not reproduce the earlier tail advantage.
+
+The canonical header still defaults BF_LLM_SLOTS to8. A CPPFLAGS override is
+propagated consistently by the normal Makefile to queue consumers, with its
+absolute BUILD binding retained even for command-line CPPFLAGS. Each capacity
+needs a separate build directory and matching BPF/loader/GPU objects.
+At16, the header preprocesses identically to finding0064's qualified snapshot.
+The existing module rejects mismatched page sizes; module16 and HF/AMK16
+are outside the qualified scope.
+
+The [integration record](../bench/results/batch_capacity_integration_20261015/)
+contains actual normal-Make builds and six traced protocol executors across
+both checkpoints:6416 outcomes including2578 intended rejects,235552 replayed
+tokens,actual batch1..8 or1..16 and normal ownership/queue drain.
+Four ordinary native lifecycle cases pass:HF/vLLM with both checkpoints at8,
+32 actions and652 checked tokens each,including two partial observations.
+Frozen references are unchanged; no untraced performance or universal fidelity
+generalization follows.
+Default8 and model arithmetic remain unchanged.

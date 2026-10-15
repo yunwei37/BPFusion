@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-15T16:09:02.312883+00:00",
+  "default8_preprocessed_header_equal": true,
+  "explicit16_preprocessed_header_equal_qualified_snapshot": true,
+  "normal_make_dry_runs": [
+    {
+      "banks": 8,
+      "command": [
+        "make",
+        "-n",
+        "BUILD=/tmp/bpfusion-capacity-integration-m67rrvb0/build8",
+        "VLLM_CUDART=/usr/local/cuda/lib64/libcudart.so",
+        "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/fusion.bpf.o",
+        "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/uring_loop.bpf.o",
+        "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/bpfusion_load",
+        "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/vllm_graph_uring_loop_trace.so",
+        "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/vllm_graph_user_network_wait_trace.so"
+      ],
+      "exit": 0,
+      "compiles_with_matching_bindings": 5,
+      "build_dir_bound": true
+    },
+    {
+      "banks": 16,
+      "command": [
+        "make",
+        "-n",
+        "BUILD=/tmp/bpfusion-capacity-integration-m67rrvb0/build16",
+        "VLLM_CUDART=/usr/local/cuda/lib64/libcudart.so",
+        "CPPFLAGS=-DBF_LLM_SLOTS=16",
+        "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/fusion.bpf.o",
+        "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/uring_loop.bpf.o",
+        "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/bpfusion_load",
+        "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/vllm_graph_uring_loop_trace.so",
+        "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/vllm_graph_user_network_wait_trace.so"
+      ],
+      "exit": 0,
+      "compiles_with_matching_bindings": 5,
+      "build_dir_bound": true
+    }
+  ],
+  "note": "An initial diagnostic counted device-link and compile commands incorrectly and stopped before compiling; that irrelevant command-count assertion was removed. Binding checks and source are unchanged."
+}

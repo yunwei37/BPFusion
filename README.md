@@ -52,7 +52,8 @@ computation and eligible-frame FIFO native admission. New96/s TTFT P99 is
 246/220ms Qwen and81/66ms Smol (kernel/native,mean block quantiles); both paired
 intervals cross zero. Completion tails, median/CPU costs and generation-stall
 outliers remain visible. No reliable tail or throughput advantage is established.
-The native FIFO candidate is archived, not selected in ordinary source.
+The native eligible-frame FIFO admission is now integrated in ordinary source;
+its protocol qualification is recorded in the [integration archive](bench/results/batch_capacity_integration_20261015/).
 
 Finite kernel queue overflow remains a drop boundary; module/SQPOLL paths
 retain direct admission. Admission-policy differences prevent syscall-only
@@ -387,6 +388,26 @@ The executor is compiled for `SM_ARCH` (default `sm_120`); override for other
 GPUs, e.g. `make executor SM_ARCH=sm_90`. This tree is verified on one RTX 5090
 (32 GB, `sm_120`) with CUDA 13; the exact host is recorded in
 [bench/results/HOST.md](bench/results/HOST.md).
+
+The queue defaults to eight model banks. The normal Makefile accepts an
+explicit capacity through its existing CPPFLAGS and binds the same flag into
+the BPF object, loader, client and GPU compilation. Use a separate BUILD
+directory for each capacity; Make does not detect a changed compiler flag in
+an existing object.
+
+```sh
+make BUILD=/tmp/bpfusion-build16 CPPFLAGS=-DBF_LLM_SLOTS=16 \
+  /tmp/bpfusion-build16/fusion.bpf.o /tmp/bpfusion-build16/bpfusion_load \
+  vllm-graph-uring-loop vllm-graph-user-network-wait
+```
+
+Use the [recorded vLLM environment](bench/results/batch_capacity_integration_20261015/)
+and set VLLM_PYTHON to that environment's Python for those adapter targets.
+Only the recorded vLLM BPF-loop/native paths are qualified at sixteen banks.
+The legacy module must match the shared-page ABI; an eight-bank module rejects
+a sixteen-bank map. HF/AMK sixteen-bank operation is not qualified.
+This build option does not select a new runtime default or transfer traced
+performance evidence to ordinary operation.
 
 ## Run
 

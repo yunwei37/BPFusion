@@ -1,0 +1,196 @@
+[
+  {
+    "label": "protocol_qwen_8",
+    "command": [
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/runtime/bin/python",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/load.py",
+      "--correctness",
+      "--banks",
+      "8",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--output",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/protocol_qwen_8.jsonl",
+      "--native-only"
+    ],
+    "start": "2026-10-15T16:21:54.764720+00:00",
+    "pid": 643814,
+    "proc_stat": "643814 (python) R 643812 643812 643812 0 -1 4194304 283 0 0 0 0 0 0 0 20 0 1 0 51268676 13881344 1221 18446744073709551615 4325376 7352253 140724807422912 0 0 0 0 0 0 0 0 0 17 1 0 0 0 0 0 10653128 12216448 561491968 140724807426137 140724807426495 140724807426495 140724807434169 0\n",
+    "exit": 0,
+    "end": "2026-10-15T16:32:06.768961+00:00"
+  },
+  {
+    "label": "protocol_qwen_8_analysis",
+    "command": [
+      "/usr/bin/python3",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/protocol_analysis.py",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/protocol_qwen_8.jsonl"
+    ],
+    "start": "2026-10-15T16:32:06.769337+00:00",
+    "pid": 644409,
+    "proc_stat": "644409 (python3) R 643812 643812 643812 0 -1 4194304 94 0 0 0 0 0 0 0 20 0 1 0 51329876 12038144 664 18446744073709551615 4325376 7352253 140722837920288 0 0 0 0 0 0 0 0 0 17 5 0 0 0 0 0 10653128 12216448 807714816 140722837922137 140722837922285 140722837922285 140722837929959 0\n",
+    "exit": 0,
+    "end": "2026-10-15T16:32:07.006859+00:00"
+  },
+  {
+    "label": "protocol_smol_8",
+    "command": [
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/runtime/bin/python",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/load.py",
+      "--correctness",
+      "--banks",
+      "8",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--output",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/protocol_smol_8.jsonl",
+      "--native-only"
+    ],
+    "start": "2026-10-15T16:32:07.007161+00:00",
+    "pid": 644410,
+    "proc_stat": "644410 (python) R 643812 643812 643812 0 -1 4194560 5 0 0 0 0 0 0 0 20 0 1 0 51329900 8454144 0 18446744073709551615 4325376 7352253 140721337113568 0 0 0 0 0 0 0 0 0 17 0 0 0 0 0 0 10653128 12216448 55283712 140721337114713 140721337115071 140721337115071 140721337122745 0\n",
+    "exit": 0,
+    "end": "2026-10-15T16:34:55.350243+00:00"
+  },
+  {
+    "label": "protocol_smol_8_analysis",
+    "command": [
+      "/usr/bin/python3",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/protocol_analysis.py",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/protocol_smol_8.jsonl"
+    ],
+    "start": "2026-10-15T16:34:55.350547+00:00",
+    "pid": 644772,
+    "proc_stat": "644772 (python3) R 643812 643812 643812 0 -1 4194304 138 0 0 0 0 0 0 0 20 0 1 0 51346735 12431360 960 18446744073709551615 4325376 7352253 140729675467840 0 0 0 0 0 0 0 0 0 17 5 0 0 0 0 0 10653128 12216448 498491392 140729675469145 140729675469293 140729675469293 140729675476967 0\n",
+    "exit": 0,
+    "end": "2026-10-15T16:34:55.522520+00:00"
+  },
+  {
+    "label": "protocol_qwen_16",
+    "command": [
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/runtime/bin/python",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/load.py",
+      "--correctness",
+      "--banks",
+      "16",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--output",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/protocol_qwen_16.jsonl"
+    ],
+    "start": "2026-10-15T16:34:55.522811+00:00",
+    "pid": 644773,
+    "proc_stat": "644773 (python) R 643812 643812 643812 0 -1 4194304 211 0 0 0 0 0 0 0 20 0 1 0 51346752 13881344 1107 18446744073709551615 4325376 7352253 140725283984720 0 0 0 0 0 0 0 0 0 17 6 0 0 0 0 0 10653128 12216448 339709952 140725283991653 140725283991999 140725283991999 140725283999673 0\n",
+    "exit": 0,
+    "end": "2026-10-15T16:41:40.183902+00:00"
+  },
+  {
+    "label": "protocol_qwen_16_analysis",
+    "command": [
+      "/usr/bin/python3",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/protocol_analysis.py",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/protocol_qwen_16.jsonl"
+    ],
+    "start": "2026-10-15T16:41:40.184247+00:00",
+    "pid": 645735,
+    "proc_stat": "645735 (python3) R 643812 643812 643812 0 -1 4194304 5 0 0 0 0 0 0 0 20 0 1 0 51387219 8454144 0 18446744073709551615 4325376 7352253 140733668496512 0 0 0 0 0 0 0 0 0 17 1 0 0 0 0 0 10653128 12216448 904982528 140733668503896 140733668504045 140733668504045 140733668511719 0\n",
+    "exit": 0,
+    "end": "2026-10-15T16:41:41.032628+00:00"
+  },
+  {
+    "label": "protocol_smol_16",
+    "command": [
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/runtime/bin/python",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/load.py",
+      "--correctness",
+      "--banks",
+      "16",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--output",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/protocol_smol_16.jsonl"
+    ],
+    "start": "2026-10-15T16:41:41.032947+00:00",
+    "pid": 645736,
+    "proc_stat": "645736 (python) R 643812 643812 643812 0 -1 4194304 263 0 0 0 0 0 0 0 20 0 1 0 51387304 13881344 1173 18446744073709551615 4325376 7352253 140727904870512 0 0 0 0 0 0 0 0 0 17 0 0 0 0 0 0 10653128 12216448 869134336 140727904878693 140727904879039 140727904879039 140727904886713 0\n",
+    "exit": 0,
+    "end": "2026-10-15T16:47:50.484605+00:00"
+  },
+  {
+    "label": "protocol_smol_16_analysis",
+    "command": [
+      "/usr/bin/python3",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/protocol_analysis.py",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/protocol_smol_16.jsonl"
+    ],
+    "start": "2026-10-15T16:47:50.485067+00:00",
+    "pid": 646656,
+    "proc_stat": "646656 (python3) R 643812 643812 643812 0 -1 4194304 137 0 0 0 0 0 0 0 20 0 1 0 51424249 12431360 969 18446744073709551615 4325376 7352253 140730113826576 0 0 0 0 0 0 0 0 0 17 14 0 0 0 0 0 10653128 12216448 511938560 140730113831256 140730113831405 140730113831405 140730113839079 0\n",
+    "exit": 0,
+    "end": "2026-10-15T16:47:51.752244+00:00"
+  },
+  {
+    "label": "lifecycle_vllm_qwen_8",
+    "command": [
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/runtime/bin/python",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/lifecycle.py",
+      "native",
+      "qwen",
+      "8",
+      "vllm"
+    ],
+    "start": "2026-10-15T16:47:51.752747+00:00",
+    "pid": 646657,
+    "proc_stat": "646657 (python) R 643812 643812 643812 0 -1 4194304 100 0 0 0 0 0 0 0 20 0 1 0 51424376 12431360 703 18446744073709551615 4325376 7352253 140729869737696 0 0 0 0 0 0 0 0 0 17 18 0 0 0 0 0 10653128 12216448 1053331456 140729869742388 140729869742527 140729869742527 140729869750201 0\n",
+    "exit": 0,
+    "end": "2026-10-15T16:50:34.904012+00:00"
+  },
+  {
+    "label": "lifecycle_vllm_smol_8",
+    "command": [
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/runtime/bin/python",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/lifecycle.py",
+      "native",
+      "smol",
+      "8",
+      "vllm"
+    ],
+    "start": "2026-10-15T16:50:34.904795+00:00",
+    "pid": 646961,
+    "proc_stat": "646961 (python) R 643812 643812 643812 0 -1 4194304 90 0 0 0 0 0 0 0 20 0 1 0 51440691 12038144 624 18446744073709551615 4325376 7352253 140720502585360 0 0 0 0 0 0 0 0 0 17 0 0 0 0 0 0 10653128 12216448 1055674368 140720502587700 140720502587839 140720502587839 140720502595513 0\n",
+    "exit": 0,
+    "end": "2026-10-15T16:53:12.742258+00:00"
+  },
+  {
+    "label": "lifecycle_hf_qwen_8",
+    "command": [
+      "/usr/bin/python3",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/lifecycle.py",
+      "native",
+      "qwen",
+      "8",
+      "hf"
+    ],
+    "start": "2026-10-15T16:53:12.743003+00:00",
+    "pid": 647189,
+    "proc_stat": "647189 (python3) R 643812 643812 643812 0 -1 4194304 274 0 0 0 0 0 0 0 20 0 1 0 51456475 13881344 1178 18446744073709551615 4325376 7352253 140733253534752 0 0 0 0 0 0 0 0 0 17 4 0 0 0 0 0 10653128 12216448 134705152 140733253538472 140733253538563 140733253538563 140733253545959 0\n",
+    "exit": 0,
+    "end": "2026-10-15T16:58:13.350514+00:00"
+  },
+  {
+    "label": "lifecycle_hf_smol_8",
+    "command": [
+      "/usr/bin/python3",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/lifecycle.py",
+      "native",
+      "smol",
+      "8",
+      "hf"
+    ],
+    "start": "2026-10-15T16:58:13.351181+00:00",
+    "pid": 647478,
+    "proc_stat": "647478 (python3) R 643812 643812 643812 0 -1 4194304 213 0 0 0 0 0 0 0 20 0 1 0 51486536 13881344 1132 18446744073709551615 4325376 7352253 140720380390224 0 0 0 0 0 0 0 0 0 17 5 0 0 0 0 0 10653128 12216448 558837760 140720380392104 140720380392195 140720380392195 140720380399591 0\n",
+    "exit": 0,
+    "end": "2026-10-15T17:01:58.069556+00:00"
+  }
+]

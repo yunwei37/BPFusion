@@ -1,0 +1,80 @@
+{
+  "model": "smol",
+  "start": "2026-10-15T16:58:13.409079+00:00",
+  "oracle_frozen_at": "2026-10-13T01:50:59.810351+00:00",
+  "ready_time_ns": 1792083688118971402,
+  "native_pid": 647479,
+  "exit": 0,
+  "model_errors": [
+    0
+  ],
+  "fifo_queued_peak": 1,
+  "native_stats": {
+    "accepted": 13,
+    "published": 32,
+    "completed": 31,
+    "rejected": 10
+  },
+  "pass": true,
+  "end": "2026-10-15T17:01:58.062372+00:00",
+  "remaining_pins": []
+}
+capturing model=/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2 type=llama fp16 eager
+captured bank 0 model graph 32/190
+captured bank 0 model graph 64/190
+captured bank 0 model graph 96/190
+captured bank 0 model graph 128/190
+captured bank 0 model graph 160/190
+captured bank 1 model graph 32/190
+captured bank 1 model graph 64/190
+captured bank 1 model graph 96/190
+captured bank 1 model graph 128/190
+captured bank 1 model graph 160/190
+captured bank 2 model graph 32/190
+captured bank 2 model graph 64/190
+captured bank 2 model graph 96/190
+captured bank 2 model graph 128/190
+captured bank 2 model graph 160/190
+captured bank 3 model graph 32/190
+captured bank 3 model graph 64/190
+captured bank 3 model graph 96/190
+captured bank 3 model graph 128/190
+captured bank 3 model graph 160/190
+captured bank 4 model graph 32/190
+captured bank 4 model graph 64/190
+captured bank 4 model graph 96/190
+captured bank 4 model graph 128/190
+captured bank 4 model graph 160/190
+captured bank 5 model graph 32/190
+captured bank 5 model graph 64/190
+captured bank 5 model graph 96/190
+captured bank 5 model graph 128/190
+captured bank 5 model graph 160/190
+captured bank 6 model graph 32/190
+captured bank 6 model graph 64/190
+captured bank 6 model graph 96/190
+captured bank 6 model graph 128/190
+captured bank 6 model graph 160/190
+captured bank 7 model graph 32/190
+captured bank 7 model graph 64/190
+captured bank 7 model graph 96/190
+captured bank 7 model graph 128/190
+captured bank 7 model graph 160/190
+network=userspace epoll; same resident GPU graph dispatch
+resident Qwen ready: 30 layers h=576 vocab=49152; device-tail graphs, dispatch=resident
+userspace completion wait=epoll_pwait2 active_timeout_ns=60000 idle=socket_or_deadline shutdown=eventfd
+USER_ADMISSION policy=eligible_frame_fifo queued_peak=1 queued_at_stop=0
+userspace TCP stopped: accepted=13 published=32 completed=31 rejected=10
+resident Qwen stopped: dispatch=resident launches=1 device_graph_launches=728 graph_error=0 banks=8 max_active=2
+
+
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]
+Loading weights:   8%|▊         | 22/272 [00:00<00:01, 210.60it/s]
+Loading weights:  26%|██▌       | 70/272 [00:00<00:00, 353.46it/s]
+Loading weights:  40%|████      | 109/272 [00:00<00:00, 347.09it/s]
+Loading weights:  58%|█████▊    | 158/272 [00:00<00:00, 366.67it/s]
+Loading weights:  79%|███████▉  | 215/272 [00:00<00:00, 430.88it/s]
+Loading weights:  95%|█████████▌| 259/272 [00:00<00:00, 339.09it/s]
+Loading weights: 100%|██████████| 272/272 [00:00<00:00, 325.24it/s]
+
+LIFECYCLE_DRIVER_TERMINAL

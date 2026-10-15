@@ -1,0 +1,45 @@
+[
+  {
+    "banks": 8,
+    "command": [
+      "make",
+      "BUILD=/tmp/bpfusion-capacity-integration-m67rrvb0/build8",
+      "VLLM_PYTHON=/tmp/bpfusion-capacity-integration-m67rrvb0/runtime/bin/python",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/fusion.bpf.o",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/uring_loop.bpf.o",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/bpfusion_load",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/vllm_graph_uring_loop_trace.so",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/vllm_graph_uring_loop_trace",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/vllm_graph_uring_loop.so",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/vllm_graph_uring_loop",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/vllm_graph_user_network_wait_trace.so",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/vllm_graph_user_network_wait_trace",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/vllm_graph_user_network_wait.so",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build8/vllm_graph_user_network_wait"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T16:15:42.972654+00:00"
+  },
+  {
+    "banks": 16,
+    "command": [
+      "make",
+      "BUILD=/tmp/bpfusion-capacity-integration-m67rrvb0/build16",
+      "VLLM_PYTHON=/tmp/bpfusion-capacity-integration-m67rrvb0/runtime/bin/python",
+      "CPPFLAGS=-DBF_LLM_SLOTS=16",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/fusion.bpf.o",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/uring_loop.bpf.o",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/bpfusion_load",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/vllm_graph_uring_loop_trace.so",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/vllm_graph_uring_loop_trace",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/vllm_graph_uring_loop.so",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/vllm_graph_uring_loop",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/vllm_graph_user_network_wait_trace.so",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/vllm_graph_user_network_wait_trace",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/vllm_graph_user_network_wait.so",
+      "/tmp/bpfusion-capacity-integration-m67rrvb0/build16/vllm_graph_user_network_wait"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T16:16:21.813347+00:00"
+  }
+]

@@ -1326,3 +1326,36 @@ No GPU run, build, package or source/default change occurs. The plan-only
 temporary directory is removed. Do not widen tolerances or rerun the unchanged
 proposal;0058 remains unresolved and0064's evidence remains traced.
 This prunes an insufficient route without claiming new performance progress.
+
+
+## Normal-build capacity and native-FIFO integration
+
+The [engineering integration](../bench/results/batch_capacity_integration_20261015/)
+adopts the already reviewed eligible-frame FIFO native competitor and exposes
+the tested capacity using standard CPPFLAGS in the normal Makefile. Default8
+remains unchanged. The ordinary header preprocesses identically to the original
+at8 and to the qualified private snapshot at16; required BUILD bindings survive
+command-line CPPFLAGS. No model arithmetic is changed.
+
+Normal8/16 BPF,loader,traced/ordinary vLLM loop/native builds and default8 HF
+native build exit0. Setup initially fails only at package-version comparison
+after those builds; cuda-python/cuda-bindings are restored to12.9.7/12.9.9 before
+GPU serving. The full installed-version comparison then matches0064.
+The first failure and exact repair remain in the archive.
+
+Six newly built traced protocol executors pass6416 outcomes including2578
+intentional rejects,with235552 independently replayed tokens. Default8 native
+and16 loop/native cover both models,actual batches1..8/1..16,wire agreement,
+fragmentation,pipelines,invalid requests,half-close,normal stop and queue drain.
+This is implementation qualification,not a new performance experiment.
+All four ordinary native lifecycle cases pass at8:HF/vLLM,both models,
+32 actions/13 connections/652 checked tokens per case,including two partial
+observations. RST and SIGTERM prefixes are not full-response fidelity claims.
+The existing frozen references are unchanged. Module16,HF/AMK16,ordinary
+performance and general eBPF superiority remain unqualified. Findings0063/0064 retain their original evidence boundaries.
+
+Integration cleanup removes the owned temporary runtime/build after terminal,
+with no process/map/FD/cwd user,pin or module remaining. Four archived CPU
+analyses replay bytewise after removal;the original8 file fingerprints,Coder
+process identities and base packages remain unchanged. See the integration
+restoration/replay records. This closes implementation qualification only.

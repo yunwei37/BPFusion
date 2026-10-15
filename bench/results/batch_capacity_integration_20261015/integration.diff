@@ -1,0 +1,303 @@
+diff --git a/Makefile b/Makefile
+index 9aebe67..3dfbfe6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -7,7 +7,7 @@
+ # Requires: clang, libbpf, libelf, zlib, libcuda/nvcc for the executor.
+ 
+ BUILD    := build
+-CPPFLAGS += -DBF_BUILD_DIR='"$(abspath $(BUILD))"'
++override CPPFLAGS += -DBF_BUILD_DIR='"$(abspath $(BUILD))"'
+ ARCH     := $(shell uname -m | sed 's/x86_64/x86/;s/aarch64/arm64/')
+ BPF_CFLAGS := -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_$(ARCH) \
+               -I/usr/include/$(shell uname -m)-linux-gnu -Ibpf/include \
+@@ -37,13 +37,13 @@ tools: $(TOOLS)
+ executor: $(BUILD)/executor
+ 
+ $(BUILD)/%.bpf.o: bpf/%.bpf.c bpf/include/bpfusion_queue.h bpf/include/bpfusion_admission.h | $(BUILD)
+-	clang $(BPF_CFLAGS) -c $< -o $@
++	clang $(CPPFLAGS) $(BPF_CFLAGS) -c $< -o $@
+ 
+ $(BUILD)/wake_probe: tools/wake_probe/main.c | $(BUILD)
+ 	$(CC) $(CFLAGS) $< -o $@ $(LDLIBS)
+ 
+ $(BUILD)/client: tools/client.c bpf/include/bpfusion_queue.h | $(BUILD)
+-	$(CC) $(CFLAGS) -Ibpf/include $< -o $@
++	$(CC) $(CPPFLAGS) $(CFLAGS) -Ibpf/include $< -o $@
+ 
+ $(BUILD)/echo_udp: tools/echo_udp.c | $(BUILD)
+ 	$(CC) $(CFLAGS) $< -o $@
+@@ -55,7 +55,7 @@ $(BUILD)/perfcount: tools/perfcount.c | $(BUILD)
+ 
+ $(BUILD)/executor: executor/executor.cu bpf/include/bpfusion_queue.h \
+                    executor/cuda_timer.h | $(BUILD)
+-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -Iexecutor -Ibpf/include \
++	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -Iexecutor -Ibpf/include \
+ 		$< -o $@ $(LDLIBS)
+ 
+ 
+@@ -76,21 +76,21 @@ clean:
+ qwen: $(BUILD)/qwen
+ 
+ $(BUILD)/qwen: executor/qwen.cu bpf/include/bpfusion_queue.h | $(BUILD)
+-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -Ibpf/include $< -o $@ $(LDLIBS)
++	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -Ibpf/include $< -o $@ $(LDLIBS)
+ 
+ # Same device kernel, host dispatch once per request: a mechanism control.
+ .PHONY: qwen-control
+ qwen-control: $(BUILD)/qwen_host_launch
+ 
+ $(BUILD)/qwen_host_launch: executor/qwen.cu bpf/include/bpfusion_queue.h | $(BUILD)
+-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_HOST_LAUNCH -Ibpf/include $< -o $@ $(LDLIBS)
++	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_HOST_LAUNCH -Ibpf/include $< -o $@ $(LDLIBS)
+ 
+ # Device-launched HF graphs; Python captures only during bootstrap.
+ .PHONY: qwen-graph
+ qwen-graph: $(BUILD)/qwen_graph.so $(BUILD)/qwen_graph
+ 
+ $(BUILD)/qwen_graph.so: executor/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
+-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -rdc=true -shared -Xcompiler=-fPIC \
++	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -rdc=true -shared -Xcompiler=-fPIC \
+ 		-Ibpf/include $< -o $@ $(LDLIBS)
+ 
+ # GPU-owned stock io_uring TCP; uses the same HF graph computation.
+@@ -98,7 +98,7 @@ $(BUILD)/qwen_graph.so: executor/qwen_graph.cu bpf/include/bpfusion_queue.h | $(
+ qwen-graph-uring: $(BUILD)/qwen_graph_uring.so $(BUILD)/qwen_graph_uring
+ 
+ $(BUILD)/qwen_graph_uring.so: executor/qwen_graph.cu executor/io_uring_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
+-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -rdc=true -shared -Xcompiler=-fPIC \
++	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -rdc=true -shared -Xcompiler=-fPIC \
+ 		-Ibpf/include $< -o $@ $(LDLIBS)
+ 
+ # Same concurrent GPU graph banks; host resumes once per retired request.
+@@ -106,7 +106,7 @@ $(BUILD)/qwen_graph_uring.so: executor/qwen_graph.cu executor/io_uring_tcp.h bpf
+ qwen-graph-control: $(BUILD)/qwen_graph_host_launch.so $(BUILD)/qwen_graph_host_launch
+ 
+ $(BUILD)/qwen_graph_host_launch.so: executor/qwen_graph.cu bpf/include/bpfusion_queue.h | $(BUILD)
+-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
++	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_HOST_LAUNCH -rdc=true -shared -Xcompiler=-fPIC \
+ 		-Ibpf/include $< -o $@ $(LDLIBS)
+ 
+ $(BUILD)/qwen_graph $(BUILD)/qwen_graph_host_launch $(BUILD)/qwen_graph_user_network $(BUILD)/qwen_graph_user_network_wait $(BUILD)/qwen_graph_uring: executor/qwen_graph.py | $(BUILD)
+@@ -117,7 +117,7 @@ $(BUILD)/qwen_graph $(BUILD)/qwen_graph_host_launch $(BUILD)/qwen_graph_user_net
+ qwen-graph-user-network: $(BUILD)/qwen_graph_user_network.so $(BUILD)/qwen_graph_user_network
+ 
+ $(BUILD)/qwen_graph_user_network.so: executor/qwen_graph.cu executor/userspace_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
+-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -rdc=true -shared -Xcompiler=-fPIC \
++	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -rdc=true -shared -Xcompiler=-fPIC \
+ 		-Ibpf/include $< -o $@ $(LDLIBS)
+ 
+ # CPU-efficient network control; model graphs and device dispatcher are unchanged.
+@@ -125,7 +125,7 @@ $(BUILD)/qwen_graph_user_network.so: executor/qwen_graph.cu executor/userspace_t
+ qwen-graph-user-network-wait: $(BUILD)/qwen_graph_user_network_wait.so $(BUILD)/qwen_graph_user_network_wait
+ 
+ $(BUILD)/qwen_graph_user_network_wait.so: executor/qwen_graph.cu executor/userspace_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
+-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC \
++	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC \
+ 		-Ibpf/include $< -o $@ $(LDLIBS)
+ 
+ # Upstream vLLM graphs with bootstrap-owned KV and GPU prefill/decode.
+@@ -203,7 +203,7 @@ $(BUILD)/amk_graph_uring_loop.so: executor/qwen_graph.cu executor/io_uring_tcp.h
+ 	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -rdc=true -shared -Xcompiler=-fPIC -I$(KERNEL_UAPI) -Ibpf/include $< -o $@ $(LDLIBS)
+ 
+ $(BUILD)/amk_graph_user_network_wait.so: executor/qwen_graph.cu executor/userspace_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
+-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC -Ibpf/include $< -o $@ $(LDLIBS)
++	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC -Ibpf/include $< -o $@ $(LDLIBS)
+ 
+ $(BUILD)/amk_graph_uring_loop $(BUILD)/amk_graph_user_network_wait: executor/amk_graph.py | $(BUILD)
+ 	ln -sf $(abspath executor/amk_graph.py) $@
+diff --git a/bpf/include/bpfusion_queue.h b/bpf/include/bpfusion_queue.h
+index 791bdb6..a5ef6b3 100644
+--- a/bpf/include/bpfusion_queue.h
++++ b/bpf/include/bpfusion_queue.h
+@@ -45,7 +45,9 @@ typedef unsigned short __u16;
+ #define BF_LLM_PORT 39402
+ #define BF_LLM_TCP_PORT 39403 /* same LLM ring, over stream TCP */
+ #define BF_LLM_MAGIC 0x514c4d51u /* 'Q','M','L','Q' little-endian */
++#ifndef BF_LLM_SLOTS
+ #define BF_LLM_SLOTS 8
++#endif
+ #define BF_LLM_MAX_TOK 64
+ #define BF_LLM_TRANSPORT_MASK 3u
+ #define BF_LLM_VALIDATING 4u /* stream request awaits model-vocabulary check */
+diff --git a/executor/userspace_tcp.h b/executor/userspace_tcp.h
+index 47c9a16..171ef8f 100644
+--- a/executor/userspace_tcp.h
++++ b/executor/userspace_tcp.h
+@@ -6,6 +6,7 @@
+ #include <cerrno>
+ #include <cstring>
+ #include <map>
++#include <deque>
+ #include <memory>
+ #include <string>
+ #include <chrono>
+@@ -20,10 +21,19 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
+                         volatile sig_atomic_t *stopped) {
+     struct Peer {
+         int fd;
+-        bool eof=false;
++        bool eof=false,queued=false;
+         int slot=-1;
+         std::string input;
+     };
++    struct Pending {
++        std::shared_ptr<Peer> peer;
++        size_t offset,bytes;
++        unsigned prompt,gen;
++        unsigned long long client_ns;
++        bool http;
++    };
++    std::deque<Pending> pending;
++    size_t queued_peak=0;
+     struct Reply {
+         std::shared_ptr<Peer> peer;
+         std::string header;
+@@ -31,7 +41,6 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
+     } replies[BF_LLM_SLOTS];
+     std::map<int,std::shared_ptr<Peer>> peers;
+     unsigned head=0,completed=0,rejected_count=0,accepted=0;
+-    bool buffered_ready=false;
+     int ep=epoll_create1(EPOLL_CLOEXEC);
+     if(ep<0) { perror("epoll_create1");return 1; }
+     fcntl(listener,F_SETFL,fcntl(listener,F_GETFL)|O_NONBLOCK);
+@@ -49,6 +58,37 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
+         }
+         peer.eof=true;
+     };
++    // Queue each complete eligible frame once, when readiness is observed.
++    // A connection retains its existing one-in-flight response-order contract.
++    auto enqueue=[&](const std::shared_ptr<Peer> &peer) {
++        if(peer->fd<0 || peer->slot>=0 || peer->queued || peer->input.empty())return;
++        size_t offset=0;
++        bool http=peer->input.compare(0,4,"POST")==0;
++        if(http) {
++            size_t end=peer->input.find("\r\n\r\n");
++            if(end==std::string::npos)return;
++            offset=end+4;
++        }
++        if(peer->input.size()<offset+24)return;
++        unsigned fields[4];unsigned long long client_ns;
++        memcpy(fields,peer->input.data()+offset,16);
++        memcpy(&client_ns,peer->input.data()+offset+16,8);
++        unsigned prompt=fields[1],gen=fields[2];
++        if(fields[0]!=BF_LLM_MAGIC || !prompt || prompt>BF_LLM_MAX_TOK ||
++           !gen || gen>BF_LLM_MAX_TOK) { disconnect(*peer);return; }
++        size_t bytes=24+prompt*4;
++        if(http) {
++            size_t key=peer->input.find("\r\nContent-Length: ");
++            if(key==std::string::npos || key>=offset ||
++               strtoul(peer->input.c_str()+key+18,nullptr,10)!=bytes) {
++                disconnect(*peer);return;
++            }
++        }
++        if(peer->input.size()<offset+bytes)return;
++        pending.push_back({peer,offset,bytes,prompt,gen,client_ns,http});
++        peer->queued=true;
++        if(pending.size()>queued_peak)queued_peak=pending.size();
++    };
+     auto send_reply=[&](Peer &peer,Reply &reply,bf_llm_slot *slot,unsigned produced) {
+         iovec vec[2];unsigned count=0;
+         size_t header_bytes=reply.header.size()-reply.header_sent;
+@@ -80,7 +120,7 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
+         auto remaining=std::chrono::duration_cast<std::chrono::nanoseconds>(
+             deadline-std::chrono::steady_clock::now()).count();
+         if(remaining<=0)break;
+-        long long wait_ns=(head!=completed || buffered_ready) ? 60000 : remaining;
++        long long wait_ns=(head!=completed || !pending.empty()) ? 60000 : remaining;
+         const timespec timeout={wait_ns/1000000000,wait_ns%1000000000};
+         int n=epoll_pwait2(ep,events,BF_LLM_SLOTS*2,&timeout,nullptr);
+ #else
+@@ -115,11 +155,12 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
+                         break;
+                     }
+                 }
++                enqueue(it->second);
+             }
+         }
+         for(unsigned i=0;i<BF_LLM_SLOTS;i++) {
+             Reply &reply=replies[i];if(!reply.peer) continue;
+-            Peer &peer=*reply.peer;bf_llm_slot *slot=&page->llm[i];
++            auto peer_ref=reply.peer;Peer &peer=*peer_ref;bf_llm_slot *slot=&page->llm[i];
+             unsigned state=__atomic_load_n(&slot->state,__ATOMIC_ACQUIRE);
+             unsigned short flags=__atomic_load_n(&slot->pad,__ATOMIC_ACQUIRE);
+             bool rejected=flags&BF_LLM_REJECTED;
+@@ -141,59 +182,36 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
+                 __atomic_store_n(&slot->state,(unsigned)BF_FREE,__ATOMIC_RELEASE);
+                 __atomic_fetch_and(&page->llm_admission,~(1ULL<<(32+i)),__ATOMIC_RELEASE);
+                 completed++;if(rejected) rejected_count++;
++                enqueue(peer_ref);
+             }
+         }
+-        buffered_ready=false;
+         for(auto it=peers.begin();it!=peers.end();) {
+             auto peer=it->second;
+-            if(peer->fd>=0 && peer->slot<0 && !peer->input.empty()) {
+-                size_t offset=0;
+-                bool http=peer->input.compare(0,4,"POST")==0;
+-                if(http) {
+-                    size_t end=peer->input.find("\r\n\r\n");
+-                    if(end==std::string::npos) { ++it;continue; }
+-                    offset=end+4;
+-                }
+-                if(peer->input.size()<offset+24) { ++it;continue; }
+-                unsigned fields[4];unsigned long long client_ns;
+-                memcpy(fields,peer->input.data()+offset,16);
+-                memcpy(&client_ns,peer->input.data()+offset+16,8);
+-                unsigned prompt=fields[1],gen=fields[2];
+-                if(fields[0]!=BF_LLM_MAGIC || !prompt || prompt>BF_LLM_MAX_TOK ||
+-                   !gen || gen>BF_LLM_MAX_TOK) {
+-                    disconnect(*peer);
+-                } else {
+-                    size_t bytes=24+prompt*4;
+-                    if(http) {
+-                        size_t key=peer->input.find("\r\nContent-Length: ");
+-                        if(key==std::string::npos || key>=offset ||
+-                           strtoul(peer->input.c_str()+key+18,nullptr,10)!=bytes) {
+-                            disconnect(*peer);++it;continue;
+-                        }
+-                    }
+-                    if(peer->input.size()<offset+bytes) { ++it;continue; }
+-                    unsigned i=head%BF_LLM_SLOTS;bf_llm_slot *slot=&page->llm[i];
+-                    if(!(__atomic_load_n(&page->llm_reserved,__ATOMIC_ACQUIRE)&(1u<<i))) {
+-                        __atomic_fetch_or(&page->llm_admission,1ULL<<(32+i),__ATOMIC_ACQ_REL);
+-                        __atomic_store_n(&slot->state,(unsigned)BF_WRITING,__ATOMIC_RELEASE);
+-                        slot->n_prompt=prompt;slot->n_gen=gen;slot->produced=0;
+-                        slot->client_ns=client_ns;
+-                        slot->pad=(http ? 2 : 1)|BF_LLM_VALIDATING;
+-                        memcpy(slot->tok_in,peer->input.data()+offset+24,prompt*4);
+-                        peer->input.erase(0,offset+bytes);
+-                        replies[i].peer=peer;peer->slot=i;
+-                        __atomic_store_n(&slot->state,(unsigned)BF_PENDING,__ATOMIC_RELEASE);
+-                        __atomic_store_n(&page->llm_head,++head,__ATOMIC_RELEASE);
+-                    } else buffered_ready=true;
+-                }
+-            }
+             if(peer->slot<0 && (peer->fd<0 || (peer->eof && peer->input.empty()))) {
+                 disconnect(*peer);it=peers.erase(it);
+             } else ++it;
+         }
++        while(!pending.empty()) {
++            auto &request=pending.front();
++            auto peer=request.peer;
++            if(peer->fd<0) { peer->queued=false;pending.pop_front();continue; }
++            unsigned i=head%BF_LLM_SLOTS;bf_llm_slot *slot=&page->llm[i];
++            if(__atomic_load_n(&page->llm_reserved,__ATOMIC_ACQUIRE)&(1u<<i))break;
++            __atomic_fetch_or(&page->llm_admission,1ULL<<(32+i),__ATOMIC_ACQ_REL);
++            __atomic_store_n(&slot->state,(unsigned)BF_WRITING,__ATOMIC_RELEASE);
++            slot->n_prompt=request.prompt;slot->n_gen=request.gen;slot->produced=0;
++            slot->client_ns=request.client_ns;
++            slot->pad=(request.http ? 2 : 1)|BF_LLM_VALIDATING;
++            memcpy(slot->tok_in,peer->input.data()+request.offset+24,request.prompt*4);
++            peer->input.erase(0,request.offset+request.bytes);
++            replies[i].peer=peer;peer->slot=i;peer->queued=false;pending.pop_front();
++            __atomic_store_n(&slot->state,(unsigned)BF_PENDING,__ATOMIC_RELEASE);
++            __atomic_store_n(&page->llm_head,++head,__ATOMIC_RELEASE);
++        }
+     }
+     for(auto &item:peers) disconnect(*item.second);
+     user_wake_fd=-1;close(wake);close(ep);
++    printf("USER_ADMISSION policy=eligible_frame_fifo queued_peak=%zu queued_at_stop=%zu\n",queued_peak,pending.size());
+     printf("userspace TCP stopped: accepted=%u published=%u completed=%u rejected=%u\n",
+            accepted,head,completed,rejected_count);fflush(stdout);
+     return 0;

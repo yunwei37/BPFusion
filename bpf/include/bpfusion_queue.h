@@ -45,7 +45,9 @@ typedef unsigned short __u16;
 #define BF_LLM_PORT 39402
 #define BF_LLM_TCP_PORT 39403 /* same LLM ring, over stream TCP */
 #define BF_LLM_MAGIC 0x514c4d51u /* 'Q','M','L','Q' little-endian */
+#ifndef BF_LLM_SLOTS
 #define BF_LLM_SLOTS 8
+#endif
 #define BF_LLM_MAX_TOK 64
 #define BF_LLM_TRANSPORT_MASK 3u
 #define BF_LLM_VALIDATING 4u /* stream request awaits model-vocabulary check */
