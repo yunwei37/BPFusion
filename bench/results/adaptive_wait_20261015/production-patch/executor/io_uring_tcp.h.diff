@@ -1,0 +1,117 @@
+--- a/executor/io_uring_tcp.h
++++ b/executor/io_uring_tcp.h
+@@ -89,6 +89,9 @@
+     bool stopping=false,cancelled=false,cancel_done=false;
+ #ifdef BF_URING_BPF_LOOP
+     bool timeout_active=true,timeout_removing=false;
++#ifndef BF_IO_CQ_AFTER_SUBMIT
++    bool timeout_idle=false,timeout_updating=false;
++#endif
+ #endif
+     IoRequest requests[BF_LLM_SLOTS]={};
+ };
+@@ -100,6 +103,13 @@
+     for(unsigned i=0;i<s->capacity;i++)s->conns[i]={-1,i+1<s->capacity?(int)i+1:-1,-1,-1,0,0,0,0,0};
+     for(auto &r:s->requests){r.conn=-1;r.next=-1;}
+ }
++#if defined(BF_URING_BPF_LOOP) && !defined(BF_IO_CQ_AFTER_SUBMIT)
++__device__ void io_acknowledge(IoStats *out,unsigned head) {
++    if(io_load(&out->loop.cq_seen)!=head) {
++        __threadfence_system();io_store(&out->loop.cq_seen,head);
++    }
++}
++#endif
+ __device__ bool io_progress(IoState *s) {
+     auto ring=s->ring;
+ #ifdef BF_IO_COALESCED
+@@ -174,6 +184,13 @@
+                 // A timeout may be in deferred task work when cancel-all runs.
+                 if(e.res==-ENOENT)timeout_removing=false;
+                 else if(e.res<0)out->error=6;
++#ifndef BF_IO_CQ_AFTER_SUBMIT
++            }else if(kind==10) {
++                s->timeout_updating=false;
++                if(e.res==0)s->timeout_idle=index;
++                io_store(&out->loop.timer_may_idle,s->timeout_idle);
++                if(e.res<0 && e.res!=-ENOENT && e.res!=-EALREADY && !(stopping && e.res==-ECANCELED))out->error=7;
++#endif
+ #endif
+             }else out->error=4;
+         }
+@@ -188,6 +205,9 @@
+         if(stopping&&!cancel_done) {
+ #ifdef BF_IO_COALESCED
+             io_publish(ring);
++#endif
++#if defined(BF_URING_BPF_LOOP) && !defined(BF_IO_CQ_AFTER_SUBMIT)
++            io_acknowledge(out,ch);
+ #endif
+             __nanosleep(1000);return true;
+         }
+@@ -306,8 +326,26 @@
+             e.off=host_buffer+i*stride+4112;e.user_data=io_id(1,i,c.generation+1);
+             if(io_submit(ring,e,out)){free=next;accepting=i;c={-1,-1,-1,-1,0,0,0,0,c.generation+1};}
+         }
++#if defined(BF_URING_BPF_LOOP) && !defined(BF_IO_CQ_AFTER_SUBMIT)
++        unsigned long long deadline=io_load64(&out->loop.deadline_ns),now=io_load64(&out->loop.now_ns);
++        bool idle=seen==next_final && seen==io_load(&page->llm_head) && now && deadline>now;
++        if(!stopping && timeout_active && !s->timeout_updating && idle!=s->timeout_idle) {
++            auto *tick=(__kernel_timespec*)(buffer+capacity*stride+BF_LLM_SLOTS*txstride);
++            unsigned long long ns=idle ? deadline-now : 60000;
++            tick->tv_sec=ns/1000000000ULL;tick->tv_nsec=ns%1000000000ULL;
++            io_uring_sqe e{};e.opcode=IORING_OP_TIMEOUT_REMOVE;e.addr=8ULL<<56;
++            e.off=host_buffer+capacity*stride+BF_LLM_SLOTS*txstride;
++            e.timeout_flags=IORING_TIMEOUT_UPDATE;e.user_data=io_id(10,idle);
++            if(idle)io_store(&out->loop.timer_may_idle,1);
++            if(io_submit(ring,e,out))s->timeout_updating=true;
++            else io_store(&out->loop.timer_may_idle,s->timeout_idle);
++        }
++#endif
+ #ifdef BF_IO_COALESCED
+         io_publish(ring);
++#endif
++#if defined(BF_URING_BPF_LOOP) && !defined(BF_IO_CQ_AFTER_SUBMIT)
++        io_acknowledge(out,ch);
+ #endif
+         if(stopping&&cancelled&&!out->pending&&active<0&&!active_requests) {
+     out->head=io_load(&page->llm_head);out->reserved=io_load(&page->llm_reserved);
+@@ -348,8 +386,18 @@
+ };
+ #ifdef BF_URING_BPF_LOOP
+ static bf_uring_loop_control *io_signal_control=nullptr;
++#ifndef BF_IO_CQ_AFTER_SUBMIT
++static volatile sig_atomic_t io_loop_tid=0;
++#endif
+ static void uring_interrupt() {
+-    if(io_signal_control)__atomic_store_n(&io_signal_control->stop_requested,1,__ATOMIC_RELEASE);
++    if(io_signal_control) {
++        __atomic_store_n(&io_signal_control->stop_requested,1,__ATOMIC_RELEASE);
++#ifndef BF_IO_CQ_AFTER_SUBMIT
++        // A signal on another thread must also wake the sleeping loop owner.
++        sig_atomic_t tid=io_loop_tid;
++        if(tid && syscall(__NR_gettid)!=tid)syscall(__NR_tgkill,getpid(),tid,SIGTERM);
++#endif
++    }
+ }
+ static int uring_attach_loop(UringNetwork *net) {
+     io_uring_region_desc region{};
+@@ -389,6 +437,9 @@
+     return 0;
+ }
+ static int uring_wait(UringNetwork *net,unsigned seconds,volatile sig_atomic_t *stopped) {
++#ifndef BF_IO_CQ_AFTER_SUBMIT
++    io_loop_tid=syscall(__NR_gettid);
++#endif
+     timespec now{};clock_gettime(CLOCK_MONOTONIC,&now);
+     unsigned long long deadline=(unsigned long long)now.tv_sec*1000000000+now.tv_nsec+(unsigned long long)seconds*1000000000;
+     __atomic_store_n(&net->report->loop.deadline_ns,deadline,__ATOMIC_RELEASE);
+@@ -519,6 +570,9 @@
+     unsigned error=r.error;
+ #ifdef BF_URING_BPF_LOOP
+     io_signal_control=nullptr;
++#ifndef BF_IO_CQ_AFTER_SUBMIT
++    io_loop_tid=0;
++#endif
+     bpf_link__destroy(net->loop_link);bpf_object__close(net->loop_object);
+ #endif
+     close(net->ringfd);io_check(cudaFree(net->conns),"io connections free");

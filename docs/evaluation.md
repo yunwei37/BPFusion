@@ -1096,3 +1096,44 @@ mode overhead, total CPU, arbitrary model support or exclusive bottleneck.
 Production source/defaults remain unchanged. Owned runtime/build/dependencies
 are removed; original state is preserved and five CPU replays match bytewise.
 The comparison is closed; the full project objective remains active.
+
+## Completed adaptive kernel-loop wait comparison
+
+[Finding0060](findings/0060-adaptive-kernel-wait.md) tests lower process
+coordination cost without adverse delivery within the retained serving question.
+This supporting intervention adds idle-wait evidence, with fixed gen64/c8
+executor CPU/request primary, original-loop ablation and current native TCP
+competitor. The approved plan and fresh reviews are in the
+[raw archive](../bench/results/adaptive_wait_20261015/).
+
+Repaired full completes30 executors/60 cells/1920 measured requests62400 tokens
+plus240 warmups, both drivers/analyses and final wrapper0. Independent review
+recomputes all12 rows/78 contrasts and five analyses bytewise. First manually
+assisted helper-stop qualification remains failed; source-local owner-TID wakeup
+repair passes both affected protocol/lifecycle suites before full.
+No full serving exclusion/replacement/retry or oracle/timeout/metric change.
+
+Adaptive/fixed/native CPU ms/request is1.021333/3.030955/2.878811 Qwen and
+0.888569/2.980229/2.733718 Smol. Primary adaptive-fixed t95 intervals
+[-2.485738,-1.533506] and[-2.467929,-1.715392] support reduction.
+Achieved fixed-burst TPS is603.031/599.922/604.134 and614.488/616.494/616.619.
+Smol adaptive-fixed -2.005826[-3.049775,-0.961878] is adverse in all five blocks;
+Qwen and both native TPS contrasts cross zero. Positive Qwen completion/TPOT
+secondary effects and all adverse/outlier rows remain visible.
+
+Run status is valid for repaired finite traced comparison; primary CPU
+component supported, full no-adverse-delivery conjunction contradicted/mixed.
+Research value supporting; paper impact mechanism/workload boundary.
+Native itself has fixed60us idle waiting, partial process CPU excludes kernel
+work, wall TPS includes1s quiet gaps, and neither ordinary untraced fidelity
+nor saturation/total CPU/arbitrary-backend claims follow. Both active host
+samples are bootstrap; late after receipt is537.969s after terminal.
+
+Select original source per mixed-result plan. Three owned paths restored,
+private dependencies/build removed, eight original setup/build files and base
+environment preserved; [restoration](../bench/results/adaptive_wait_20261015/final_restoration.json)
+records evidence. No production-code growth/default change. Prepared affected
+compatibility adapters remain unexecuted and supply no pass claim. Close this
+matrix; prioritize stronger complete-service offered-load/tail/total-cost
+comparison against credible event-driven native behavior and qualified reused
+backend breadth. The full project objective remains open.

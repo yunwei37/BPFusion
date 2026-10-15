@@ -1,0 +1,11 @@
+--- original/bpf/include/bpfusion_queue.h
++++ candidate/bpf/include/bpfusion_queue.h
+@@ -66,6 +66,8 @@
+     __u32 sq_head, sq_tail, cq_tail;
+     __u32 model_quiesced, finished, stop_requested;
+     __u64 deadline_ns;
++    __u32 cq_seen, timer_may_idle;
++    __u64 now_ns;
+ };
+ #define BF_IO_SEND_TAG 0xbff0ULL
+ #define BF_IO_ABORT_TAG 0xbff1ULL

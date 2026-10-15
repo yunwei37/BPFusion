@@ -1,6 +1,6 @@
 # Background and related work
 
-Last updated: 2026-10-14 (primary sources checked during the active independent-I/O publication experiment).
+Last updated: 2026-10-15 UTC (scoped reusable-backend refresh below; earlier source checks retain their dated scope).
 Source/command: web searches and primary papers, official documentation, upstream source and artifacts; current repository findings.
 Completeness: covers GPU networking/proxy removal, GPU-owned Linux I/O, reusable model execution, and recent contradictory performance evidence. This is a scoped map, not an exhaustive bibliography or a new thesis/RQ. No paper contract, idea-story or user-instruction document exists here.
 
@@ -39,7 +39,7 @@ The last row is a candidate difference, not a demonstrated absence of prior work
 | [Tutti, arXiv2605.03375v1](https://arxiv.org/html/2605.03375v1) | GPU-centric SSD KV object I/O, GPU-HBM SQ/CQ, layer-wise CPU preparation and resource-aware overlap | LLM storage/application adjacency; official numerical protocol differs | gio_uring mirrors the ring idea for storage rather than being the same Linux network ring. GPU compute/I/O contention is relevant; public runnable artifact and accepted venue are unverified |
 | [GPU-initiated dSB, arXiv2610.06622v1](https://arxiv.org/html/2610.06622v1) | DOCA persistent receive/solve/reply service without a dedicated CPU data-path core | Recent same-solver socket comparisons, offered load and tail latency | Broad GPU service/control-removal claim overlaps. Its raw Ethernet custom EtherType protocol differs from Linux TCP; arXiv preprint, not verified accepted venue |
 | [GPU-Initiated Communication, arXiv2610.01380v1](https://arxiv.org/html/2610.01380v1), [artifact](https://github.com/ParCoreLab/Dissecting-GPU-Communication-Experiments) | Minimal GPU versus tuned CPU-proxy RDMA transports distinguish issue/completion costs, load and resource footprint | Strong contrary evidence: GPU submission does not guarantee lower idle latency; queue/software/resource costs matter | Mechanism insights are relevant, while RDMA/datacenter hardware numbers cannot be substituted into this TCP/RTX5090 comparison |
-| [AMK](https://github.com/RightNow-AI/AutoMegaKernel), [paper](https://arxiv.org/abs/2606.09682); [MPK](https://github.com/mirage-project/mirage), [paper](https://arxiv.org/abs/2512.22219) | Existing model lowering/persistent-kernel computation assets | Compute-engine precedent, not matched transport superiority | Reuse rather than duplicate their optimization. Current AMK integration's stronger eager-HF failure remains failed; MPK compatibility here is untested |
+| [AMK](https://github.com/RightNow-AI/AutoMegaKernel), [paper](https://arxiv.org/abs/2606.09682); [MPK](https://github.com/mirage-project/mirage), [OSDI2026 paper](https://www.usenix.org/conference/osdi26/presentation/cheng) | Existing model lowering/persistent-kernel computation assets | Compute-engine precedent, not matched transport superiority | Reuse rather than duplicate their optimization. Current AMK integration's stronger eager-HF failure remains failed; MPK compatibility here is untested |
 
 The older DOCA2.8 [TCP/HTTP example](https://docs.nvidia.com/doca/archive/2-8-0/nvidia-doca-gpu-packet-processing-application-guide/index.html) explicitly uses CPU DPDK handling of TCP control packets and GPU data processing. That versioned example is not evidence that every current GPUNetIO path requires a CPU proxy. The October2026 dSB full text uses raw Ethernet frames; its socket baselines do not make its proposed service a Linux TCP implementation.
 
@@ -100,3 +100,38 @@ Generic GPU I/O, removal of a userspace polling proxy and megakernel computation
 Preserve the original goal and model-independent driver direction. Use the efficient matched native path as the current numerical competitor, and cite broader direct-NIC/kernel-ring precedents honestly. Reuse existing computation rather than start a model-specific arithmetic campaign.
 
 [Finding0055](findings/0055-current-gpu-io-arrangements.md) records the current arrangement boundary. [Finding0056](findings/0056-independent-gpu-queue-publication.md) completes that intervention: both primary improvements are inconclusive, and selected source restores original publication after fresh independent review. This survey changes neither its conditions nor its primary interpretation. After that decision, prioritize a distinct discriminator or stronger complete-service evidence; another unchanged timing matrix is not justified.
+
+## Reusable backend compatibility refresh (2026-10-15 UTC)
+
+This bounded refresh asks which unchanged computation assets could fit the
+existing transport-independent driver on the actual RTX5090, rather than
+claiming another model compiler or changing the serving objective. Search
+branches are hardware/API compatibility, model breadth and baseline quality.
+Exact additional searches:
+
+- site.github.com/mirage-project/mirage megakernel RTX 5090 Blackwell sm120
+- site.github.com/RightNow-AI/AutoMegaKernel RTX 5090 supported models
+- persistent megakernel language model inference Blackwell RTX 5090 official github 2026
+- GPU initiated Linux TCP server eBPF io_uring kernel loop
+- site.github.com/mirage-project/mirage "sm_120"
+- site.github.com/mirage-project/mirage "5090"
+- site.usenix.org "MPK: A Compiler and Runtime"
+- site.github.com/emmanuelalo52/Qwen3-0.6B-megakernel-RTX-5090 accuracy correctness benchmark
+
+Primary source inspection,
+not search snippets, supports the following distinctions.
+
+| Asset | Verified primary evidence | Reuse decision and remaining uncertainty |
+|---|---|---|
+| [MPK, OSDI2026](https://www.usenix.org/conference/osdi26/presentation/cheng), [Qwen3 demo](https://github.com/mirage-project/mirage/blob/mpk/demo/qwen3/demo.py) | Accepted venue is now verified independently of its README. The official artifact exposes device tensors and discovers SM counts. Its [current shared-memory utility](https://github.com/mirage-project/mirage/blob/mpk/python/mirage/utils.py) handles compute capabilities80/86/89/90/100, without a120 case. The [fall roadmap](https://github.com/mirage-project/mirage/issues/773) names B200/B300 as the current platform. | A promising general computation asset, with actual RTX5090 build/run/correctness still unqualified. B200/B300 support does not establish consumer Blackwell support; absence of a helper branch alone is not a complete runtime incompatibility proof. Do not start a local arithmetic or porting campaign on this evidence. |
+| [Current AMK README](https://github.com/RightNow-AI/AutoMegaKernel) | The documented current coverage is the HF Llama family on CUDA sm75..120. Its highlighted int8-versus-BF16 cuBLAS measurements change precision. | Keep finding0048's actual pinned FP16 negative result and eager-HF failure. New upstream claims do not retroactively repair them, establish arbitrary-model coverage, or form a matched transport baseline. |
+| [AlpinDale Qwen megakernel](https://github.com/AlpinDale/qwen_megakernel), [README](https://github.com/AlpinDale/qwen_megakernel/blob/master/README.md) | An actual BF16 Qwen3-0.6B/RTX5090-specific asset; its table compares against PyTorch HF, and its stated hardware coverage is that GPU. | An optional fixed-model asset, not a generic model interface or evidence of superiority over optimized vLLM. GPU-driven graph interoperation and independent fidelity here remain untested. |
+| [Another Qwen3/5090 reproduction](https://github.com/emmanuelalo52/Qwen3-0.6B-megakernel-RTX-5090) | The published reproduction guide uses an enforce-eager vLLM baseline and a fixed model. | Useful lead, but disabling CUDA graphs changes the competitor relevant to this project. Do not import its speedup as a current BPFusion result or spend effort matching a deliberately weaker baseline. |
+
+These sources do not change the novelty judgment or authorize a new GPU run
+during the active adaptive-wait matrix. Reuse existing model engines, preserve
+the same computation on both I/O paths, and require an actual hardware/API
+preflight before integration. An unmeasured upstream speedup is not evidence
+that an adapter would improve this service. Stronger complete-service offered
+load/tail evidence and independently qualified backend breadth remain higher
+value than a speculative model-specific kernel rewrite.

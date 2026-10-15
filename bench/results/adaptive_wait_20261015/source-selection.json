@@ -1,0 +1,28 @@
+{
+  "utc": "2026-10-15T07:05:41.765484+00:00",
+  "selection": "original",
+  "reason": "Supported process CPU reduction but mixed delivery: Smol wall TPS adverse versus fixed; no unqualified no-delivery-penalty selection. Prepared compatibility adapters not executed because candidate is not retained.",
+  "paths": [
+    {
+      "path": "bpf/include/bpfusion_queue.h",
+      "restored_to_HEAD": true,
+      "candidate_archived": true,
+      "original_lines": 179,
+      "candidate_lines": 181
+    },
+    {
+      "path": "bpf/uring_loop.bpf.c",
+      "restored_to_HEAD": true,
+      "candidate_archived": true,
+      "original_lines": 46,
+      "candidate_lines": 55
+    },
+    {
+      "path": "executor/io_uring_tcp.h",
+      "restored_to_HEAD": true,
+      "candidate_archived": true,
+      "original_lines": 534,
+      "candidate_lines": 588
+    }
+  ]
+}

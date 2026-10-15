@@ -313,6 +313,13 @@ loop. The tested mode supplies finite exact-output evidence, with no low-latency
 default promotion, default-mode qualification or explanation of0058. Source
 and defaults remain unchanged.
 
+The [adaptive-wait experiment](docs/findings/0060-adaptive-kernel-wait.md)
+reduces process CPU/request by66.3% Qwen and70.2% Smol in finite bursty traced
+serving, but Smol achieved burst TPS falls0.325% versus fixed waiting.
+Native also uses fixed idle polling, so this establishes no eBPF-only CPU
+advantage or total-service CPU saving. Original source/defaults are retained;
+the candidate and complete positive/adverse results are archived.
+
 ## Repository layout
 
 ```

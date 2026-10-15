@@ -1,0 +1,560 @@
+{
+  "utc": "2026-10-15T06:15:50.968793+00:00",
+  "reason": "622 replies complete, helper-thread SIGTERM did not wake main io_uring loop; no terminal accounting observed",
+  "stage_pid": 513704,
+  "executor_pid": 513782,
+  "last_event": {
+    "event": "helper_signal",
+    "utc": "2026-10-15T06:12:35Z",
+    "pair": 0,
+    "mode": "uring_loop_candidate",
+    "pid": 513782,
+    "tid": 513787
+  },
+  "request_count": 622,
+  "status": "Name:\tpython3\nUmask:\t0022\nState:\tS (sleeping)\nTgid:\t513782\nNgid:\t0\nPid:\t513782\nPPid:\t513705\nTracerPid:\t513786\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t256\nGroups:\t0 \nNStgid:\t513782\nNSpid:\t513782\nNSpgid:\t513782\nNSsid:\t513782\nKthread:\t0\nVmPeak:\t37258000 kB\nVmSize:\t37250888 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t 4782616 kB\nVmRSS:\t 4782616 kB\nRssAnon:\t 3968128 kB\nRssFile:\t  794032 kB\nRssShmem:\t   20456 kB\nVmData:\t 9373260 kB\nVmStk:\t     136 kB\nVmExe:\t    2956 kB\nVmLib:\t 3999672 kB\nVmPTE:\t   12712 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t134\nSigQ:\t5/476275\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000201001000\nSigCgt:\t0000000108004402\nCapInh:\t0000000000000000\nCapPrm:\t000001ffffffffff\nCapEff:\t000001ffffffffff\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffffff\nCpus_allowed_list:\t0-23\nMems_allowed:\t1\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t1019448\nnonvoluntary_ctxt_switches:\t15783\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+  "fdinfo": {
+    "72": {
+      "target": "anon_inode:[io_uring]",
+      "text": "pos:\t0\nflags:\t02000002\nmnt_id:\t20\nino:\t214802809\nSqMask:\t0x1fff\nSqHead:\t40876\nSqTail:\t40876\nCachedSqHead:\t40876\nCqMask:\t0x3fff\nCqHead:\t129085\nCqTail:\t129085\nCachedCqTail:\t129085\nSQEs:\t0\nCQEs:\t0\nSqThread:\t-1\nSqThreadCpu:\t-1\nSqTotalTime:\t0\nSqWorkTime:\t0\nUserFiles:\t0\nUserBufs:\t0\nPollList:\n  op=13, task_works=0\nCqOverflowList:\nNAPI:\tdisabled\n"
+    }
+  },
+  "tasks": {
+    "513782": {
+      "comm": "python3\n",
+      "wchan": "__io_run_loop"
+    },
+    "513787": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513788": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513789": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513790": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513791": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513792": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513793": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513794": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513795": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513796": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513797": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513798": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513799": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513800": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513801": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513802": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513803": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513804": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513805": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513806": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513807": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513808": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513809": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513811": {
+      "comm": "cuda00001800007\n",
+      "wchan": "poll_schedule_timeout.constprop.0"
+    },
+    "513815": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513816": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513817": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513818": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513819": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513820": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513821": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513822": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513823": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513824": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513825": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513826": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513827": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513828": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513829": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513830": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513831": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513832": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513833": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513834": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513835": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513836": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513837": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513895": {
+      "comm": "pt_nccl_watchdg\n",
+      "wchan": "futex_do_wait"
+    },
+    "513896": {
+      "comm": "pt_nccl_watchdg\n",
+      "wchan": "futex_do_wait"
+    },
+    "513897": {
+      "comm": "gloo_tcp_loop\n",
+      "wchan": "ep_poll"
+    },
+    "513898": {
+      "comm": "pt_nccl_heartbt\n",
+      "wchan": "futex_do_wait"
+    },
+    "513899": {
+      "comm": "pt_nccl_heartbt\n",
+      "wchan": "futex_do_wait"
+    },
+    "513900": {
+      "comm": "pt_gloo_runloop\n",
+      "wchan": "futex_do_wait"
+    },
+    "513901": {
+      "comm": "pt_gloo_runloop\n",
+      "wchan": "futex_do_wait"
+    },
+    "513902": {
+      "comm": "pt_nccl_watchdg\n",
+      "wchan": "futex_do_wait"
+    },
+    "513903": {
+      "comm": "gloo_tcp_loop\n",
+      "wchan": "ep_poll"
+    },
+    "513904": {
+      "comm": "pt_gloo_runloop\n",
+      "wchan": "futex_do_wait"
+    },
+    "513905": {
+      "comm": "pt_gloo_runloop\n",
+      "wchan": "futex_do_wait"
+    },
+    "513906": {
+      "comm": "pt_nccl_watchdg\n",
+      "wchan": "futex_do_wait"
+    },
+    "513907": {
+      "comm": "gloo_tcp_loop\n",
+      "wchan": "ep_poll"
+    },
+    "513908": {
+      "comm": "pt_nccl_heartbt\n",
+      "wchan": "futex_do_wait"
+    },
+    "513909": {
+      "comm": "pt_gloo_runloop\n",
+      "wchan": "futex_do_wait"
+    },
+    "513910": {
+      "comm": "pt_gloo_runloop\n",
+      "wchan": "futex_do_wait"
+    },
+    "513911": {
+      "comm": "pt_nccl_watchdg\n",
+      "wchan": "futex_do_wait"
+    },
+    "513912": {
+      "comm": "pt_nccl_heartbt\n",
+      "wchan": "futex_do_wait"
+    },
+    "513913": {
+      "comm": "gloo_tcp_loop\n",
+      "wchan": "ep_poll"
+    },
+    "513914": {
+      "comm": "pt_nccl_heartbt\n",
+      "wchan": "futex_do_wait"
+    },
+    "513915": {
+      "comm": "pt_gloo_runloop\n",
+      "wchan": "futex_do_wait"
+    },
+    "513916": {
+      "comm": "pt_gloo_runloop\n",
+      "wchan": "futex_do_wait"
+    },
+    "513917": {
+      "comm": "pt_nccl_watchdg\n",
+      "wchan": "futex_do_wait"
+    },
+    "513918": {
+      "comm": "pt_nccl_heartbt\n",
+      "wchan": "futex_do_wait"
+    },
+    "513919": {
+      "comm": "gloo_tcp_loop\n",
+      "wchan": "ep_poll"
+    },
+    "513920": {
+      "comm": "pt_gloo_runloop\n",
+      "wchan": "futex_do_wait"
+    },
+    "513921": {
+      "comm": "pt_gloo_runloop\n",
+      "wchan": "futex_do_wait"
+    },
+    "513922": {
+      "comm": "pt_nccl_watchdg\n",
+      "wchan": "futex_do_wait"
+    },
+    "513923": {
+      "comm": "pt_nccl_heartbt\n",
+      "wchan": "futex_do_wait"
+    },
+    "513924": {
+      "comm": "gloo_tcp_loop\n",
+      "wchan": "ep_poll"
+    },
+    "513925": {
+      "comm": "pt_gloo_runloop\n",
+      "wchan": "futex_do_wait"
+    },
+    "513926": {
+      "comm": "pt_gloo_runloop\n",
+      "wchan": "futex_do_wait"
+    },
+    "513927": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513928": {
+      "comm": "cuda-EvtHandlr\n",
+      "wchan": "poll_schedule_timeout.constprop.0"
+    },
+    "513929": {
+      "comm": "python3\n",
+      "wchan": "poll_schedule_timeout.constprop.0"
+    },
+    "513930": {
+      "comm": "python3\n",
+      "wchan": "hrtimer_nanosleep"
+    },
+    "513946": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513947": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513948": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513949": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513950": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513951": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513952": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513953": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513954": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513955": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513956": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513957": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513958": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513959": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513960": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513961": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513962": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513963": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513964": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513965": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513966": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513967": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513968": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513969": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513997": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "513999": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514000": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514001": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514002": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514003": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514004": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514005": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514006": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514007": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514008": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514009": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514010": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514011": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514012": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514013": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514014": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514015": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514016": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514017": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514018": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514019": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514020": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514021": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514022": {
+      "comm": "python3\n",
+      "wchan": "futex_do_wait"
+    },
+    "514031": {
+      "comm": "iou-wrk-2502714\n",
+      "wchan": "io_wq_worker"
+    }
+  }
+}

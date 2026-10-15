@@ -1,0 +1,22 @@
+[
+  {
+    "name": "idle_deadline",
+    "command": [
+      "/usr/bin/python3",
+      "/tmp/bpfusion-adaptive-wait-nwu1nulh/idle_deadline.py"
+    ]
+  },
+  {
+    "name": "preflight_qwen",
+    "command": [
+      "/tmp/bpfusion-adaptive-wait-nwu1nulh/runtime/bin/python",
+      "/tmp/bpfusion-adaptive-wait-nwu1nulh/serving.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--loop-comparison",
+      "--output",
+      "/tmp/bpfusion-adaptive-wait-nwu1nulh/preflight_qwen.jsonl",
+      "--preflight"
+    ]
+  }
+]

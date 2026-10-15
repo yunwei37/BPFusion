@@ -1,0 +1,223 @@
+{
+  "utc": "2026-10-15T07:07:27.973741+00:00",
+  "owned_processes": [],
+  "removed": [
+    {
+      "path": "/tmp/bpfusion-adaptive-wait-nwu1nulh/runtime",
+      "entries": 89991,
+      "absent": true
+    },
+    {
+      "path": "/tmp/bpfusion-adaptive-wait-nwu1nulh/original-build",
+      "entries": 9,
+      "absent": true
+    },
+    {
+      "path": "/tmp/bpfusion-adaptive-wait-nwu1nulh/candidate-build",
+      "entries": 9,
+      "absent": true
+    },
+    {
+      "path": "/tmp/bpfusion-adaptive-wait-nwu1nulh/libbpf-1.6.3",
+      "entries": 192,
+      "absent": true
+    },
+    {
+      "path": "/tmp/bpfusion-adaptive-wait-nwu1nulh/libbpf_install",
+      "entries": 23,
+      "absent": true
+    },
+    {
+      "path": "/tmp/bpfusion-adaptive-wait-nwu1nulh/libbpf.tar.gz",
+      "entries": 1,
+      "absent": true
+    }
+  ],
+  "preserved_before": {
+    "tools/setup_env.sh": {
+      "inode": 262652,
+      "size": 2012,
+      "mtime_ns": 1791579025166604645,
+      "symlink": null
+    },
+    "build/qwen_graph.so": {
+      "inode": 262875,
+      "size": 1032248,
+      "mtime_ns": 1791861786400049402,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace.so": {
+      "inode": 265534,
+      "size": 205648,
+      "mtime_ns": 1791966223520416941,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace.so.o": {
+      "inode": 265532,
+      "size": 90360,
+      "mtime_ns": 1791966223401484801,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace.so.dlink.o": {
+      "inode": 265533,
+      "size": 112664,
+      "mtime_ns": 1791966223473486635,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace": {
+      "inode": 265536,
+      "size": 45,
+      "mtime_ns": 1791966223522487883,
+      "symlink": "/workspaces/repository/executor/vllm_graph.py"
+    },
+    "build/bpfusion_load": {
+      "inode": 262174,
+      "size": 51152,
+      "mtime_ns": 1791944193272715359,
+      "symlink": null
+    },
+    "build/uring_loop.bpf.o": {
+      "inode": 265845,
+      "size": 10680,
+      "mtime_ns": 1791984245025511169,
+      "symlink": null
+    }
+  },
+  "preserved_after": {
+    "tools/setup_env.sh": {
+      "inode": 262652,
+      "size": 2012,
+      "mtime_ns": 1791579025166604645,
+      "symlink": null
+    },
+    "build/qwen_graph.so": {
+      "inode": 262875,
+      "size": 1032248,
+      "mtime_ns": 1791861786400049402,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace.so": {
+      "inode": 265534,
+      "size": 205648,
+      "mtime_ns": 1791966223520416941,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace.so.o": {
+      "inode": 265532,
+      "size": 90360,
+      "mtime_ns": 1791966223401484801,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace.so.dlink.o": {
+      "inode": 265533,
+      "size": 112664,
+      "mtime_ns": 1791966223473486635,
+      "symlink": null
+    },
+    "build/vllm_graph_uring_loop_trace": {
+      "inode": 265536,
+      "size": 45,
+      "mtime_ns": 1791966223522487883,
+      "symlink": "/workspaces/repository/executor/vllm_graph.py"
+    },
+    "build/bpfusion_load": {
+      "inode": 262174,
+      "size": 51152,
+      "mtime_ns": 1791944193272715359,
+      "symlink": null
+    },
+    "build/uring_loop.bpf.o": {
+      "inode": 265845,
+      "size": 10680,
+      "mtime_ns": 1791984245025511169,
+      "symlink": null
+    }
+  },
+  "base_packages": {
+    "torch": "2.14.1+cu130",
+    "transformers": "5.19.0",
+    "numpy": "2.5.3"
+  },
+  "coder_starttimes": {
+    "1": "8626595",
+    "10909": "8662925"
+  },
+  "source_bytes_equal": {
+    "Makefile": true,
+    "executor/userspace_tcp.h": true,
+    "executor/vllm_graph.cu": true,
+    "executor/io_uring_tcp.h": true,
+    "executor/vllm_graph.py": true,
+    "bpf/uring_loop.bpf.c": true,
+    "bench/resident_dispatch.py": true,
+    "bench/vllm_serving.py": true,
+    "bench/vllm_serving_analysis.py": true,
+    "bpf/include/bpfusion_queue.h": true
+  },
+  "cpu_replays": [
+    {
+      "name": "preflight_qwen",
+      "exit": 0,
+      "stdout_stderr_byte_equal": true
+    },
+    {
+      "name": "qualification_repaired_qwen",
+      "exit": 0,
+      "stdout_stderr_byte_equal": true
+    },
+    {
+      "name": "qualification_repaired_smol",
+      "exit": 0,
+      "stdout_stderr_byte_equal": true
+    },
+    {
+      "name": "full_qwen",
+      "exit": 0,
+      "stdout_stderr_byte_equal": true
+    },
+    {
+      "name": "full_smol",
+      "exit": 0,
+      "stdout_stderr_byte_equal": true
+    }
+  ],
+  "modules": [],
+  "pins": [],
+  "shared_model_and_global_caches_preserved": true,
+  "source_selection": "original",
+  "temporary_raw_source_retained_for_review_archive": true,
+  "archive_cleanup": {
+    "utc": "2026-10-15T07:10:44.612690+00:00",
+    "owned_temp": "/tmp/bpfusion-adaptive-wait-nwu1nulh",
+    "absent": true,
+    "all_copied_raw_source_bytes_equal_before_removal": true,
+    "archive": "/workspaces/repository/bench/results/adaptive_wait_20261015",
+    "cpu_replays_after_temp_removal": [
+      {
+        "name": "preflight_qwen",
+        "exit": 0,
+        "stdout_stderr_byte_equal": true
+      },
+      {
+        "name": "qualification_repaired_qwen",
+        "exit": 0,
+        "stdout_stderr_byte_equal": true
+      },
+      {
+        "name": "qualification_repaired_smol",
+        "exit": 0,
+        "stdout_stderr_byte_equal": true
+      },
+      {
+        "name": "full_qwen",
+        "exit": 0,
+        "stdout_stderr_byte_equal": true
+      },
+      {
+        "name": "full_smol",
+        "exit": 0,
+        "stdout_stderr_byte_equal": true
+      }
+    ]
+  }
+}

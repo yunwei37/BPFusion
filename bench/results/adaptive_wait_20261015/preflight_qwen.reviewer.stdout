@@ -1,0 +1,10 @@
+{"event": "cell_release", "pair": 0, "mode": "uring_loop_candidate", "gen": 1, "concurrency": 1, "release_rounds": 32, "max_prefix": 1, "multi_release_requests": 0}
+{"event": "cell_release", "pair": 0, "mode": "uring_loop_candidate", "gen": 64, "concurrency": 8, "release_rounds": 5, "max_prefix": 8, "multi_release_requests": 31}
+{"event": "verified_executor", "pair": 0, "mode": "uring_loop_candidate", "requests": 72, "tokens": 2088, "rejections": 0, "actual_batches": [1, 2, 4, 7, 8], "graphs": 314, "prefill_graphs": 50, "decode_graphs": 264, "real_prompt_tokens": 360, "padded_query_tokens": 90, "release_rounds": 45, "max_release": 8}
+{"event": "cell_release", "pair": 0, "mode": "uring_loop_original", "gen": 1, "concurrency": 1, "release_rounds": 32, "max_prefix": 1, "multi_release_requests": 0}
+{"event": "cell_release", "pair": 0, "mode": "uring_loop_original", "gen": 64, "concurrency": 8, "release_rounds": 4, "max_prefix": 8, "multi_release_requests": 32}
+{"event": "verified_executor", "pair": 0, "mode": "uring_loop_original", "requests": 72, "tokens": 2088, "rejections": 0, "actual_batches": [1, 3, 4, 5, 7, 8], "graphs": 303, "prefill_graphs": 51, "decode_graphs": 252, "real_prompt_tokens": 360, "padded_query_tokens": 81, "release_rounds": 44, "max_release": 8}
+{"event": "cell_release", "pair": 0, "mode": "userspace", "gen": 1, "concurrency": 1, "release_rounds": 32, "max_prefix": 1, "multi_release_requests": 0}
+{"event": "cell_release", "pair": 0, "mode": "userspace", "gen": 64, "concurrency": 8, "release_rounds": 4, "max_prefix": 8, "multi_release_requests": 32}
+{"event": "verified_executor", "pair": 0, "mode": "userspace", "requests": 72, "tokens": 2088, "rejections": 0, "actual_batches": [1, 2, 3, 4, 5, 6, 8], "graphs": 303, "prefill_graphs": 51, "decode_graphs": 252, "real_prompt_tokens": 360, "padded_query_tokens": 63, "release_rounds": 44, "max_release": 8}
+{"event": "coverage", "requests": 216, "tokens": 6264, "actual_batches": [1, 2, 3, 4, 5, 6, 7, 8]}

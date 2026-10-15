@@ -573,3 +573,14 @@ and native TCP; transport/dispatcher sources are unchanged. Ordinary outputs pas
 the finite frozen single-sequence checks, but throughput superiority is
 unestablished and concurrent long-output TTFT worsens. No production mode/default,
 new adapter framework, arbitrary-backend or default-mode fidelity claim follows.
+
+## Adaptive idle-wait experiment boundary
+
+[Finding0060](findings/0060-adaptive-kernel-wait.md) tests request-aware updates
+to the existing before-submit multishot timer, with unchanged reused model math.
+Process CPU falls, but Smol achieved fixed-burst TPS worsens. Removing idle
+heartbeat wakeups also exposes a helper-stop wakeup bug; the archived candidate
+forwards shutdown to the recorded wait-owner TID and passes repaired finite
+protocol/lifecycle checks. The after-submit variant remains unchanged.
+Select original behavior: no timer/report/helper/default change is retained.
+Prepared compatibility adapters are unexecuted, not backend qualification.

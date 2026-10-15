@@ -1,0 +1,35 @@
+--- original/bpf/uring_loop.bpf.c
++++ candidate/bpf/uring_loop.bpf.c
+@@ -16,20 +16,29 @@
+     __u8 *rings = bpf_io_uring_get_region(loop_ctx, IOU_REGION_CQ, 4096);
+     if (!control || !rings) return IOU_LOOP_STOP;
+     if (control->finished) return IOU_LOOP_STOP;
++    __u64 now = bpf_ktime_get_ns();
++#ifndef BF_IO_CQ_AFTER_SUBMIT
++    control->now_ns = now;
++#endif
+     if (!control->model_quiesced &&
+         (control->stop_requested ||
+-         (control->deadline_ns && bpf_ktime_get_ns() >= control->deadline_ns)))
++         (control->deadline_ns && now >= control->deadline_ns)))
+         return IOU_LOOP_STOP;
+     __u32 sh=control->sq_head, st=control->sq_tail, ct=control->cq_tail;
+     if (sh>4092 || st>4092 || ct>4092 || ((sh|st|ct)&3)) return IOU_LOOP_STOP;
++    /* The after-submit control retains its fixed timer. */
+ #ifndef BF_IO_CQ_AFTER_SUBMIT
+-    __u32 wait=*(volatile __u32 *)(rings+ct)+1;
++    /* Snapshot before SQ tail so GPU releases include timer updates. */
++    __u32 may_idle=*(volatile __u32 *)&control->timer_may_idle;
++    __u32 acknowledged=*(volatile __u32 *)&control->cq_seen;
++    __u32 observed=*(volatile __u32 *)(rings+ct);
++    __u32 wait=observed+(!may_idle || acknowledged==observed);
+ #endif
+     __u32 head=*(volatile __u32 *)(rings+sh);
+     __u32 tail=*(volatile __u32 *)(rings+st);
+     if (tail!=head && bpf_io_uring_submit_sqes(loop_ctx,tail-head)<0)
+         return IOU_LOOP_STOP;
+-    /* Kernel timeout CQEs wake steady service; cleanup drains until GPU done. */
++    /* Do not sleep past GPU processing that may publish timer/SQ updates. */
+ #ifdef BF_IO_CQ_AFTER_SUBMIT
+     lp->cq_wait_idx=*(volatile __u32 *)(rings+ct)+!control->model_quiesced;
+ #else

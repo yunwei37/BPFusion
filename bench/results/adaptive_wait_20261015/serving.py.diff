@@ -1,0 +1,103 @@
+--- /workspaces/repository/bench/vllm_serving.py
++++ /tmp/bpfusion-adaptive-wait-nwu1nulh/serving.py
+@@ -5,8 +5,8 @@
+ from concurrent.futures import ThreadPoolExecutor
+ from itertools import permutations
+ from pathlib import Path
+-sys.path.insert(0,str(Path(__file__).resolve().parent))
+-from resident_dispatch import connect,request,worker_cpu_snapshot,worker_cpu_delta
++sys.path.insert(0,"/workspaces/repository/bench")
++from resident_dispatch import connect,request,worker_cpu_snapshot,worker_cpu_delta,host_cpu_ticks
+ from transformers import AutoConfig,AutoTokenizer
+ 
+ def main():
+@@ -27,7 +27,7 @@
+     comparisons.add_argument("--release-comparison",action="store_true")
+     comparisons.add_argument("--dispatch-comparison",action="store_true")
+     args=ap.parse_args()
+-    root=Path(__file__).resolve().parents[1];os.chdir(root)
++    root=Path("/workspaces/repository");os.chdir(root)
+     output=Path(args.output).resolve();output.parent.mkdir(parents=True,exist_ok=True)
+     assert not output.exists(),output
+     raw=output.open("w",buffering=1);lock=threading.Lock()
+@@ -42,11 +42,11 @@
+         modes=("uring",)
+     if args.transport_comparison:modes=("uring","userspace","kernel")
+     if args.copy_comparison:modes=("uring","uring_full_copy","userspace")
+-    if args.loop_comparison:modes=("uring_loop","userspace","uring")
++    if args.loop_comparison:modes=("uring_loop_candidate",) if args.correctness else ("uring_loop_candidate","uring_loop_original","userspace")
+     if args.loop_progress_comparison:modes=("uring_loop","userspace","uring_loop_after")
+-    matrix=((64,8),) if args.copy_comparison else ((1,1),(64,1),(1,8),(64,8))
+-    repetitions=1 if args.correctness or args.preflight else (6 if args.transport_comparison or args.copy_comparison or args.loop_comparison or args.loop_progress_comparison else 5)
+-    requests_per_cell=8 if args.preflight else (256 if args.copy_comparison else 64)
++    matrix=((1,1),(64,8))
++    repetitions=1 if args.correctness or args.preflight else 5
++    requests_per_cell=32
+     reference_model=None;reference_pool={}
+     if args.untraced:
+         assert args.reference_path is not None,"Untraced qualification requires pre-observation frozen complete references"
+@@ -90,9 +90,12 @@
+                         else ("vllm_graph_padded" if mode.startswith("packed") else "vllm_graph_grouped") if args.packing_comparison
+                         else "vllm_graph")+("" if kernel_mode else "_user_network_wait")+("" if args.untraced else "_trace")
+                 if mode.startswith("uring"):binary="vllm_graph_"+mode+("" if args.untraced else "_trace")
+-                command=["./build/"+binary,args.model,"300"]
++                private=Path(__file__).resolve().parent
++                directory=private/("candidate-build" if mode=="uring_loop_candidate" else "original-build")
++                binary="vllm_graph_uring_loop_trace" if kernel_mode else "vllm_graph_user_network_wait_trace"
++                command=[str(directory/binary),args.model,"300"]
+                 if not args.untraced:command+=["--trace-output",str(trace),"--trace-requests",str(budget)]
+-                if args.correctness:command=["strace","-D","-f","-e","trace=network,write,io_uring_enter","-o",str(nettrace),*command]
++                if args.correctness:command=["strace","-D","-f","-ttt","-e","trace=network,write,io_uring_enter","-o",str(nettrace),*command]
+                 try:
+                     if kernel_mode:
+                         r=subprocess.run(["./build/bpfusion_load","stream-uring-attach" if mode.startswith("uring") else "stream-attach"],capture_output=True,text=True)
+@@ -194,28 +197,32 @@
+                             for i in range(8):
+                                 ids=prompts[i%len(prompts)]
+                                 keep(dict(request(client,ids,None,gen=1),input_ids=ids,gen=1,bad=False),"warmup")
+-                        cell_order=matrix[pair%4:]+matrix[:pair%4] if args.transport_comparison or args.copy_comparison or args.loop_comparison or args.loop_progress_comparison else matrix
++                        shift=pair%len(matrix);cell_order=matrix[shift:]+matrix[:shift]
+                         for gen,concurrency in cell_order:
+-                            barrier=threading.Barrier(concurrency+1);ready=threading.Barrier(concurrency+1)
+-                            selected=[]
+-                            def lane(i):
+-                                with connect() as client:
++                            selected=[];host_before=host_cpu_ticks();before=worker_cpu_snapshot(p.pid)
++                            for wave in range(4):
++                                barrier=threading.Barrier(concurrency+1);ready=threading.Barrier(concurrency+1)
++                                def lane(i):
++                                    with connect() as client:
++                                        ready.wait(timeout=60);barrier.wait(timeout=60)
++                                        for offset in range(i,8,concurrency):
++                                            index=wave*8+offset;ids=prompts[index%len(prompts)]
++                                            row=dict(request(client,ids,None,gen=gen),input_ids=ids,gen=gen,bad=False,index=index,concurrency=concurrency,wave=wave)
++                                            selected.append(row)
++                                emit("wave_start",pair=pair,mode=mode,gen=gen,concurrency=concurrency,wave=wave,monotonic_ns=time.monotonic_ns())
++                                with ThreadPoolExecutor(max_workers=concurrency) as pool:
++                                    futures=[pool.submit(lane,i) for i in range(concurrency)]
+                                     ready.wait(timeout=60);barrier.wait(timeout=60)
+-                                    for index in range(i,requests_per_cell,concurrency):
+-                                        ids=prompts[index%len(prompts)]
+-                                        row=dict(request(client,ids,None,gen=gen),input_ids=ids,gen=gen,bad=False,index=index,concurrency=concurrency)
+-                                        selected.append(row)
+-                            with ThreadPoolExecutor(max_workers=concurrency) as pool:
+-                                futures=[pool.submit(lane,i) for i in range(concurrency)]
+-                                ready.wait(timeout=60)
+-                                before=worker_cpu_snapshot(p.pid) if args.transport_comparison or args.copy_comparison or args.loop_comparison or args.loop_progress_comparison else None
+-                                barrier.wait(timeout=60)
+-                                for future in futures:future.result()
+-                            cpu=worker_cpu_delta(before,worker_cpu_snapshot(p.pid)) if args.transport_comparison or args.copy_comparison or args.loop_comparison or args.loop_progress_comparison else {}
++                                    for future in futures:future.result()
++                                emit("wave_end",pair=pair,mode=mode,gen=gen,concurrency=concurrency,wave=wave,monotonic_ns=time.monotonic_ns())
++                                if wave<3:
++                                    begin=time.monotonic_ns();time.sleep(1)
++                                    emit("quiet_gap",pair=pair,mode=mode,gen=gen,concurrency=concurrency,wave=wave,begin_ns=begin,end_ns=time.monotonic_ns(),requested_s=1)
++                            cpu=worker_cpu_delta(before,worker_cpu_snapshot(p.pid))
+                             first=min(row["start_ns"] for row in selected);last=max(row["arrival_ns"][-1] for row in selected)
+                             for row in selected:keep(row,"measured")
+                             emit("cell",pair=pair,mode=mode,gen=gen,concurrency=concurrency,
+-                                requests=requests_per_cell,tokens=requests_per_cell*gen,first_ns=first,last_ns=last,output_tokens_per_s=requests_per_cell*gen/((last-first)/1e9),**cpu)
++                                requests=requests_per_cell,tokens=requests_per_cell*gen,first_ns=first,last_ns=last,output_tokens_per_s=requests_per_cell*gen/((last-first)/1e9),host_cpu_ticks_before=host_before,host_cpu_ticks_after=host_cpu_ticks(),**cpu)
+                     if args.correctness:
+                         tids=[int(t.name) for t in Path(f"/proc/{p.pid}/task").iterdir() if int(t.name)!=p.pid]
+                         assert tids
