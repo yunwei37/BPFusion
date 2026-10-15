@@ -1,0 +1,49 @@
+# Plan review, round 1 — ordinary capacity
+
+Reviewer: `/root/ordinary_capacity_plan_review`, fresh for this proposal.
+Observed: 2026-10-15T15:52:59.639495+00:00.
+Repository: main, `28de3b6efc95eae7e564af4d911c114c13b4a422`.
+
+**Verdict: REJECT the full proposal as currently justified.** One blocking scientific defect remains: the proposed near-greedy rule does not establish the ordinary computation correctness needed for the claimed capacity qualification. This is a diagnostic judgment, not authority to alter the experiment or user goal. The matrix, baseline choice and source-native implementation route are otherwise reasonable. No GPU observation, setup, build, model execution or source change was performed by this reviewer.
+
+## Evidence read
+
+I read this plan and its identical `/tmp/bpfusion-ordinary-capacity-qf1lgjhp/plan.md` copy; current docs/evaluation.md; findings0058,0059,0064; the complete0064 plan, three-part plan-review and result-review; archived setup.py, preflight.py, full.py, run.py, relevant load.py request/launch/validation paths, analyze.py, and normal Makefile serving targets. The new artifact directory contains only plan.md before this review. Future adapters and auditors are explicitly unimplemented; I do not certify their execution or results. There is no formal paper RQ/thesis to rewrite; the retained complete serving/performance objective supplies the question.
+
+## Blocking defect: useful conditional audit, unjustified correctness substitution
+
+The proposed evaluator is independent in an important, legitimate sense: for each actual prefix, official eager Transformers computes the next-token scores before consulting the candidate token being scored. Teacher forcing actual earlier tokens is appropriate for a conditional next-token audit. It is not automatically circular or useless, and it avoids the finite accepted-output-pool coverage problem. Checking all positions, preserving exact agreement/rank/margins and running the audit after GPU release are good choices.
+
+However, `max(z)-z[chosen] <= 1e-5+1e-3*abs(max(z))` compares **two scores from the same FP32 reference vector**. It neither compares actual FP16 logits with reference logits nor measures the FP16 backend's numerical error. The [PyTorch testing table](https://docs.pytorch.org/docs/2.14/testing.html) supplies generic tensor-comparison defaults; it provides no implication from those constants to correct token selection by a layered FP16 model. Verifying the installed source would confirm the constants, not this inference. The plan acknowledges this absence but still uses the rule as the all-token acceptance condition for useful ordinary capacity.
+
+There is a concrete semantic problem with the chosen scaling. With reference logits `(20,19.985)`, choosing the second token passes because its gap .015 is below .02001. Subtract20 from both scores: `(0,-.015)` describes exactly the same softmax distribution and argmax, but the identical choice now fails the .00001 threshold. This is a mathematical example, not an observed model result. Fixed model logits make the rule reproducible, but do not justify why their arbitrary common offset should determine an acceptable generation error.
+
+A misrouted/stale/incorrect token that happens to be near the reference maximum could pass. Subsequent evaluations then condition on that accepted divergence. They establish local scores along the delivered branch, not that the ordinary FP16 executor followed its intended computation or that the full response is an independently generated greedy response. None of this proves such corruption occurred; it explains why a pass cannot resolve the stated uncertainty. Conversely, a correct FP16 path might fail this FP32 rule without being broken. [PyTorch numerical guidance](https://docs.pytorch.org/docs/2.14/notes/numerical_accuracy.html) explains batch-dependent floating-point differences, but does not classify0058's mismatch or validate the new acceptance rule.
+
+The user objective is correct computation-matched serving. The repository has not established approximate near-greedy serving under this new rule as the intended acceptable behavior. Honest disclaimers narrow a report's claim but do not, on their own, make that narrower property sufficient for the retained acceptance question. This is not a demand for universal determinism, task-quality evaluation, or exact equality across unrelated backends. A scientifically justified finite fidelity path could be adequate; this particular justification is missing.
+
+Preflighting0058's outside-pool response is useful diagnosis, but lacks an independently established correct/incorrect label. Its passing this criterion would not establish the criterion's soundness or repair the old run. Do not tune a threshold or widen scope based on those observations.
+
+## Admission and next decision
+
+Ordinary performance is a real missing condition:0064 qualifies a positive capacity effect only with BF_TRACE;0059 changes computation mode;0058 leaves one ordinary mismatch unresolved. Archived timing cannot answer the untraced intervention, so an eventual ordinary study is nonduplicate supporting work. Positive, absent and adverse capacity effects would then change the bounded integration decision. Native16 winning appropriately prevents a transport-superiority claim.
+
+But this proposal currently cannot convert even a positive full result into the justified ordinary qualification it identifies as its main decision value. Repeating15360 attempts while attaching a new weakly justified acceptance label would add activity before solving the load-bearing question. The offline score audit is dependency/diagnostic work, not an independent serving-correctness contribution. Record it that way if the owner judges a targeted diagnostic worthwhile; that is not admission of this full matrix.
+
+Reuse0064's valid traced result. If ordinary adoption remains the immediate target, first establish the missing fidelity rationale through the existing source/model paths rather than collect this matrix. The strongest stated alternative is a real residency/control counterfactual addressing the residual native16 gap, using the already justified fidelity mode and its explicit timing scope. It could add a causal discriminator where this plan currently adds an unsupported acceptance interpretation. That alternative needs its own admission judgment; this review neither prescribes a redesign nor authorizes a new run. No extra baseline/model/task suite is demanded.
+
+## Fairness, metrics and executable feasibility
+
+Native16 is the single credible strong mechanism competitor: same optimized upstream model arithmetic/precision, banks, packing and FIFO eligible-frame admission. Kernel8 is the capacity ablation. Omitting native8 is reasonable because its separate capacity effect is already established. Capacity changes KV/ABI/graph dimensions and realized histories; matching computation does not mean identical executed kernel sequences. One-request connections avoid the known native pipelining asymmetry.
+
+The two-model/five-block/three-condition/two-rate arithmetic is correct:30 executors,60 cells,15360 measured attempts,983040 measured requested tokens and240 gen1 warmups. The proposed order puts each condition in every position over the first three blocks and gives pairwise precedence counts2/3 over five. Intended arrivals are matched; scheduling lag remains part of the finite-window result. Five paired nominal t95df4 intervals are appropriate for the declared limited estimate, with shared-host drift, two model primaries and sparse P99 order statistics disclosed. Crossing zero is inconclusive. No broader SLO, equivalence, total CPU or syscall-only attribution follows.
+
+The [pinned official vLLM benchmark](https://raw.githubusercontent.com/vllm-project/vllm/v0.31.0/vllm/benchmarks/serve.py) supports the throughput/TTFT/TPOT family. Connect-inclusive and scheduled-origin clocks remain documented adapter variants, not official API benchmark equivalence. Partial executor CPU and adverse TPOT/native rows must stay visible. [Transformers causal outputs](https://huggingface.co/docs/transformers/main_classes/output) support next-token score access; they do not supply the acceptance threshold.
+
+Source-native feasibility is plausible: the normal Makefile selects BF_TRACE only for trace-named targets; archived setup already builds both ordinary widths and preserves original builds; load.py has untraced launch support. Adapting its finite-pool validation and trace-dependent analyzer, three-condition ordering, preflight rate192 and offline audit is necessary implementation, not yet passing work. A causal full-forward check at the correct shifted positions, with actual FP32/eager settings recorded, is a sensible preflight dependency. Full-forward and sequential arithmetic need not be bitwise identical; such a discrepancy is diagnosis, not permission to relax the oracle after observation.
+
+The real Qwen preflight, all-terminal completion, raw token/timing/attempt records, offline checks, preserved failures, source/package/binding receipts, post-cleanup CPU replay and fresh result review are sufficient in structure. No framework, competing GPU run, new infrastructure or wider validation is needed. No execution defect independently blocks the proposal at this conceptual stage; the scientific acceptance defect above does.
+
+## Return
+
+Keep this proposal unexecuted pending the owner's scientific decision. Preserve0058 as unresolved and0064 as valid within BF_TRACE scope. Only this report was written; plan, source, raw results, original sessions and unowned tools/setup_env.sh were untouched. This is round1 of the single reviewer discussion; at most two follow-ups remain, and an unchanged plan should not be rereviewed.

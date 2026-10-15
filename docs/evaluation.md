@@ -1313,3 +1313,16 @@ five analyses replay bytewise after cleanup,with original8file fingerprints,
 Coder process identities,base packages and application source preserved.
 Close this unchanged matrix. Ordinary adoption and general transport benefit
 remain unproven;the full project objective remains active.
+
+
+## Ordinary-capacity proposal rejected before execution
+
+The [proposal and single review](../bench/results/ordinary_capacity_20261015/)
+considered a no-trace capacity comparison with an independent FP32 per-prefix
+near-greedy score audit. Review rejects its unsupported correctness acceptance:
+PyTorch's generic FP16 tensor tolerances do not establish model execution
+fidelity, and the proposed gap rule changes under a common logit offset.
+No GPU run, build, package or source/default change occurs. The plan-only
+temporary directory is removed. Do not widen tolerances or rerun the unchanged
+proposal;0058 remains unresolved and0064's evidence remains traced.
+This prunes an insufficient route without claiming new performance progress.
