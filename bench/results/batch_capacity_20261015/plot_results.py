@@ -34,7 +34,7 @@ for col,(key,label) in enumerate(models):
   ax=axes[row,col];ax.set_xticks([8,16]);ax.set_xlim(7,17)
   ax.set_xlabel('Configured model-bank capacity')
   ax.grid(axis='y',alpha=.22);ax.spines[['top','right']].set_visible(False)
-  ax.text(.02,.97,'192 req/s: primary capacity contrast' if row==0 else '96 req/s: secondary tail',transform=ax.transAxes,va='top',fontsize=9)
+  ax.text(.02 if row==0 else .98,.97,'192 req/s: primary capacity contrast' if row==0 else '96 req/s: secondary tail',transform=ax.transAxes,ha='left' if row==0 else 'right',va='top',fontsize=9)
  axes[1,col].set_yscale('log')
 axes[0,0].set_ylabel(panels[0][2]);axes[1,0].set_ylabel(panels[1][2])
 axes[0,0].legend(frameon=False,loc='lower right')

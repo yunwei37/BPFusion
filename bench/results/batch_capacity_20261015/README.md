@@ -1,11 +1,13 @@
-# Same-compute batch-capacity comparison — running
+# Same-compute batch-capacity comparison — complete
 
-This is an uncompleted experiment checkpoint,not a performance result.
+The complete traced collection,independent result review and owned cleanup
+are finished. Read result-review.md and final_restoration.json for scope and
+actual restoration. This does not select an ordinary runtime default.
 [plan.md](plan.md) and [plan-review.md](plan-review.md) preserve the admitted
 comparison and the two resolved execution followups. running_checkpoint.json
-records the early setup observation. full.process.json identifies the current
+records the early setup observation. full.process.json identifies the completed
 measurement process;all.exit.json covers the three preparation stages.
-full.exit.json will record measurement completion.
+full.exit.json records measurement completion.
 
 ## Question and planned comparison
 
@@ -31,12 +33,12 @@ native-capacity contrasts remain secondary; failures censor superiority.
 
 ## Actual workflow and scope
 
-Use only original bpfusion-dev Workspace/main. The existing owned test root is
-/tmp/bpfusion-batch-capacity-tkii8tus;all.process.json identifies its only
-sequential setup->preflight->qualification wrapper. Do not start another copy.
-After root interprets actual ordinary lifecycle outcomes,full.py runs the
-admitted traced matrix. Recorded paths can be rebound to a fresh owned directory
-for an intentional later reproduction after this run reaches terminal.
+Use only original bpfusion-dev Workspace/main. The recorded owned test root was
+/tmp/bpfusion-batch-capacity-tkii8tus and is now removed. all.process.json
+identifies the original sequential setup->preflight->qualification wrapper;
+full.process.json identifies the subsequently completed traced matrix.
+Recorded paths can be rebound to a fresh owned directory for an intentional
+later reproduction;do not resume the removed completed run.
 
 Normal Makefile rules build each matching header,loader,BPF and GPU/native
 variant in build8/build16. Pinned runtime matches0063; exact installed package
@@ -150,3 +152,33 @@ snapshot15:01:55.107858..55.197721UTC falls inside pair0 kernel8's192/s
 measured cell,with one reported GPU app in the owning Workspace cgroup.
 Both are sparse observations,not continuous isolation or total CPU evidence.
 Both-model completion,fresh result review,plots and owned cleanup remain open.
+
+
+## Collection completion checkpoint before review
+
+The original full.py ends15:22:39.023596UTC with both model driver/analysis
+pairs exit0. All40executors/80cells complete20480 measured attempts,zero failures,
+1310720 measured tokens plus320 checked gen1warmups. Five copied CPU analyses
+reproduce saved stdout bytewise. All raw files,full terminal records,figure
+PNG/PDF/data and post-full host snapshot are archived here.
+Finding0064 documents the primary effects and adverse same-width comparisons.
+At this checkpoint,independent result review and owned cleanup remained pending;
+main application source/defaults were unchanged. Do not restart the completed full process.
+
+
+## Independent review and final restoration
+
+The single fresh result-review.md judges the complete traced run valid,both
+primary capacity hypotheses supported,and research value supporting. It retains
+native16 counterevidence,all timing/CPU/adverse TPOT rows and shared-host limits.
+Root visually inspected the actual canonical PNG and corrected only annotation
+placement;all plotted values remain unchanged. Existing measured packages were
+unchanged when plot-only dependencies were installed after full terminal.
+
+final_restoration.json records removal of the completed owned temporary tree,
+after no remaining process,pin,module,cwd,mapping or open-file user was observed.
+Original8file fingerprints,the two Coder session identities,base packages and
+ordinary application source remain unchanged. Five copied CPU analyses reproduce
+saved stdout bytewise after removal. Historical checkpoint sections above remain
+historical;this final record is the current state. No default is selected and
+the broader project goal remains active.

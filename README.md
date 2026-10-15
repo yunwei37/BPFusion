@@ -53,9 +53,21 @@ computation and eligible-frame FIFO native admission. New96/s TTFT P99 is
 intervals cross zero. Completion tails, median/CPU costs and generation-stall
 outliers remain visible. No reliable tail or throughput advantage is established.
 The native FIFO candidate is archived, not selected in ordinary source.
+
 Finite kernel queue overflow remains a drop boundary; module/SQPOLL paths
 retain direct admission. Admission-policy differences prevent syscall-only
 attribution.
+
+The [completed traced capacity comparison](docs/findings/0064-batch-capacity.md)
+raises private model banks from8 to16 with unchanged model arithmetic.
+At192 requests/s,kernel throughput rises5653->9673 token/s Qwen and
+7190->10525 Smol,with positive paired intervals and no failures across20480
+measured requests. High-load tails also improve against the eight-bank controls.
+Native16 gains as well and beats kernel16 on Qwen192/s throughput/tails;
+Smol same-width transport differences remain inconclusive. This is a capacity
+result,not an eBPF speedup or ordinary-default selection. The independent review
+finds the traced comparison valid;owned temporary state is removed and original
+state preserved. Mean TPOT worsens with16 banks despite the queueing relief.
 
 Strict regressions cover output agreement, fragmented messages, concurrent
 requests, connection reuse, pipelining, half-close, invalid inputs and queue

@@ -1259,7 +1259,7 @@ an archived candidate. The result withdraws general tail attribution from the
 weak FD-priority comparison without claiming a simultaneous old/new causal
 ablation. Close this unchanged matrix; the retained full objective remains active.
 
-## Running: same-compute batch capacity
+## Completed same-compute batch capacity
 
 The [reviewed experiment](../bench/results/batch_capacity_20261015/) tests the
 current8-slot constructor boundary after0063. Saved Qwen96/s histories have
@@ -1285,15 +1285,31 @@ outcomes/94400replayedtokens and bounded ordinary reset/stop cases.
 Smol16 qualification also passes;all6commands are complete. Four protocol
 executors total5136outcomes/188800replayedtokens,including2060intendedrejects;
 all four ordinary lifecycle cases pass within their recorded partial/canceled
-scope. The three archived CPU analyses reproduce bytewise. One full.py starts
-14:38:25.993951UTC and is running the complete40-executor80-cell matrix.
+scope. The three preparation analyses reproduce bytewise. One full.py started
+14:38:25.993951UTC and completed the40-executor80-cell matrix below.
 Qwen full collection and fixed analysis exit0 at15:00:58.704112UTC:
 20executors/40cells,10240 successful measured attempts,zero failures,
 655360 measured tokens plus160 checked warmups. Copied fixed analysis reproduces
-stdout bytewise. The same full process has advanced to Smol;this is not complete
-two-model evidence. The15:01:55UTC short host sample falls inside a Smol192/s
+stdout bytewise. At that checkpoint,the same process advanced to Smol;Qwen
+alone was not complete two-model evidence. The15:01:55UTC short host sample falls inside a Smol192/s
 measured cell,with one reported owned GPU app;other snapshots are outside
 measurement. Sparse observations do not establish continuous isolation.
-No complete-matrix performance result or production default selection is available.
-Smol collection,fresh result review,plots,owned cleanup and final publication
-remain unfinished.
+The full two-model wrapper ends15:22:39.023596UTC,all driver/analysis exits0:
+40executors/80cells,20480 measured successes,zero failures,1310720 measured
+tokens plus320 warmups. All five archived CPU analyses reproduce bytewise.
+[Finding0064](findings/0064-batch-capacity.md) records primary192/s kernel16-minus8
+TPS+4019.207[3554.685,4483.729]Qwen and+3334.411[2143.702,4525.120]Smol,
+nominal paired t95df4.192/s kernel-capacity TTFT P99 also improves for both.
+Native capacity gains are positive too. Same-width16 Qwen is adverse against
+native at192/s:TPS-687.151[-1145.186,-229.115],TTFTP99+96.843[17.381,176.306]ms;
+Smol transport contrasts remain inconclusive with retained client-lag outliers.
+This supports a constructor-capacity boundary,not intrinsic eBPF superiority.
+Complete figures/data retain all primary/secondary/adverse rows,including mean
+192/s kernel TPOT worsening1.346190->1.514645ms Qwen and1.046937->1.332702ms Smol.
+The single fresh result review finds a valid supporting run and both primary
+capacity hypotheses supported;impact is a mechanism/workload boundary.
+No ordinary source/default is selected. Owned temporary state is removed;
+five analyses replay bytewise after cleanup,with original8file fingerprints,
+Coder process identities,base packages and application source preserved.
+Close this unchanged matrix. Ordinary adoption and general transport benefit
+remain unproven;the full project objective remains active.

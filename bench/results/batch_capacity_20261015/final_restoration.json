@@ -1,0 +1,105 @@
+{
+  "utc": "2026-10-15T15:37:45.115528+00:00",
+  "removed_owned_temp": "/tmp/bpfusion-batch-capacity-tkii8tus",
+  "temp_absent": true,
+  "scope": "Only completed experiment-owned temp tree removed after reviewer completion and no remaining process/pin/module. Original sessions, WIP, build fingerprints, base packages and production source preserved.",
+  "state_after": {
+    "preserved_files": {
+      "tools/setup_env.sh": {
+        "inode": 262652,
+        "size": 2012,
+        "mtime_ns": 1791579025166604645,
+        "symlink": null
+      },
+      "build/qwen_graph.so": {
+        "inode": 262875,
+        "size": 1032248,
+        "mtime_ns": 1791861786400049402,
+        "symlink": null
+      },
+      "build/vllm_graph_uring_loop_trace.so": {
+        "inode": 265534,
+        "size": 205648,
+        "mtime_ns": 1791966223520416941,
+        "symlink": null
+      },
+      "build/vllm_graph_uring_loop_trace.so.o": {
+        "inode": 265532,
+        "size": 90360,
+        "mtime_ns": 1791966223401484801,
+        "symlink": null
+      },
+      "build/vllm_graph_uring_loop_trace.so.dlink.o": {
+        "inode": 265533,
+        "size": 112664,
+        "mtime_ns": 1791966223473486635,
+        "symlink": null
+      },
+      "build/vllm_graph_uring_loop_trace": {
+        "inode": 265536,
+        "size": 45,
+        "mtime_ns": 1791966223522487883,
+        "symlink": "/workspaces/repository/executor/vllm_graph.py"
+      },
+      "build/bpfusion_load": {
+        "inode": 262174,
+        "size": 51152,
+        "mtime_ns": 1791944193272715359,
+        "symlink": null
+      },
+      "build/uring_loop.bpf.o": {
+        "inode": 265845,
+        "size": 10680,
+        "mtime_ns": 1791984245025511169,
+        "symlink": null
+      }
+    },
+    "coder_starttimes": {
+      "1": "8626595",
+      "10909": "8662925"
+    },
+    "base_packages": {
+      "torch": "2.14.1+cu130",
+      "transformers": "5.19.0",
+      "numpy": "2.5.3"
+    },
+    "pins": [],
+    "module": [],
+    "temp_process_users": []
+  },
+  "base_version_comparison_command": [
+    "/usr/bin/python3",
+    "-c",
+    "import torch,transformers,numpy,json;print(json.dumps(dict(torch=torch.__version__,transformers=transformers.__version__,numpy=numpy.__version__)))"
+  ],
+  "base_version_note": "Original imported torch.__version__ includes +cu130 while distribution metadata reports2.14.1; comparing the same import method as the entry snapshot confirms no change. Initial mismatched-method assertion stopped before deletion.",
+  "copied_replays_after_cleanup": [
+    {
+      "raw": "preflight_qwen.jsonl",
+      "exit": 0,
+      "byte_equal": true
+    },
+    {
+      "raw": "protocol_qwen.jsonl",
+      "exit": 0,
+      "byte_equal": true
+    },
+    {
+      "raw": "protocol_smol.jsonl",
+      "exit": 0,
+      "byte_equal": true
+    },
+    {
+      "raw": "full_qwen.jsonl",
+      "exit": 0,
+      "byte_equal": true
+    },
+    {
+      "raw": "full_smol.jsonl",
+      "exit": 0,
+      "byte_equal": true
+    }
+  ],
+  "main_branch": "main",
+  "production_source_diff_from_fa84_empty": true
+}
