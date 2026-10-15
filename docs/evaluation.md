@@ -1016,3 +1016,27 @@ production-code growth. This supporting experiment does not establish generic
 backend acceptance, fresh eager-HF parity, total CPU elimination or causal
 PCIe/GPU-time mediation. The unchanged matrix is closed; full objective remains
 active and future work needs a distinct discriminator or stronger service evidence.
+
+## Long-output GPU service-time diagnostic
+
+[Finding0057](findings/0057-long-output-service-timeline.md) collects40 serving
+and40 fresh graph/KV/history replay children, all exit0:1280 measured gen64/c8
+requests81920 tokens plus320 checked warmups. Independent review validates all
+client/logical outcomes but only18/20 GPU profiles; Smol loop p2/p4 each miss3
+model activities. Fixed full analysis remains failed. The post-hoc client
+supplement does not repair the planned integrated decomposition.
+
+BF_TRACE-unprofiled loop/native TPS is5268.768/5267.119 Smol and4550.125/4675.792
+Qwen; paired intervals cross zero. Profiled Qwen loses104.366 token/s
+[-149.564,-59.167]. Qwen union+16.469ms[-1.182,34.120] and epoch+4.647ms
+[-5.671,14.965] remain inconclusive; altered histories prevent exclusive
+per-round service/availability attribution. Missing Smol duration blocks stay
+NA without replacement or partial pooling. All signed results/outliers remain.
+
+[Independent review](../bench/results/long_service_timeline_20261014/result-review.md),
+[archive/replay](../bench/results/long_service_timeline_20261014/) and
+[restoration](../bench/results/long_service_timeline_20261014/final_restoration.json)
+retain failures, revisions and evidence. A late host endpoint2h16m35s after
+terminal and20 new selected NVRM warnings during full limit host interpretation;
+no causal driver/isolation claim follows. Keep source/defaults unchanged and
+close this diagnostic. The retained project objective remains active.

@@ -1,0 +1,30 @@
+[
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-m",
+      "venv",
+      "--without-pip",
+      "/tmp/bpfusion-long-service-timeline-bk7zo7qp/runtime"
+    ],
+    "exit": 0,
+    "utc": "2026-10-14T23:32:15.467507+00:00"
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-m",
+      "pip",
+      "--python",
+      "/tmp/bpfusion-long-service-timeline-bk7zo7qp/runtime/bin/python",
+      "install",
+      "vllm==0.31.0",
+      "torch==2.13.0+cu129",
+      "transformers==5.17.0",
+      "--extra-index-url",
+      "https://download.pytorch.org/whl/cu129"
+    ],
+    "exit": 0,
+    "utc": "2026-10-14T23:36:17.746072+00:00"
+  }
+]

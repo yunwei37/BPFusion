@@ -286,6 +286,15 @@ Efficient native TCP remains the competitor. The
 [literature/novelty map](docs/background-related-work.md) records prior GPU I/O
 and compute mechanisms and the incomplete generic-driver evidence.
 
+## Long-output GPU timeline result
+
+[Finding0057](docs/findings/0057-long-output-service-timeline.md) completes40
+matched traced-client/replay cells. It establishes no throughput improvement.
+Two of20 profiles miss three model activities each, so the planned integrated
+GPU decomposition fails;18 complete profiles and all40 client outcomes remain
+explicitly scoped. Complete Qwen duration effects are inconclusive for the
+bottleneck. Serving source and defaults remain unchanged.
+
 ## Repository layout
 
 ```

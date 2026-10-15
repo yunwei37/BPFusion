@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/bpfusion-long-service-timeline-bk7zo7qp/analysis.py", line 63, in <module>
+    assert len(kernels)==sum(count(x) for x in computes),(p,len(kernels),sum(count(x) for x in computes))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (PosixPath('/tmp/bpfusion-long-service-timeline-bk7zo7qp/preflight_qwen_p0_loop_profiled.jsonl'), 24615, 24614)

@@ -544,3 +544,12 @@ protocol/lifecycle but demonstrates no primary throughput gain for either model.
 Selected source restores original per-entry independent publication. Captured
 candidate sources remain reproducible; no default, timer, ABI or compute change
 is retained. The tested bundle does not isolate dynamic PCIe or GPU-time costs.
+
+## Long-output observation boundary
+
+[Finding0057](findings/0057-long-output-service-timeline.md) observes current
+independent BPF-loop and efficient native TCP with identical reused vLLM math.
+Private logical tracing/profiling adds no serving/default change. All40
+client/replay cells pass finite checks; two Smol activity profiles fail exact
+coverage, leaving the planned integrated decomposition invalid. Complete Qwen
+duration/trajectory comparisons do not identify an exclusive bottleneck.

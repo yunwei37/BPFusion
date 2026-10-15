@@ -1,0 +1,1080 @@
+{
+  "stage": "preflight",
+  "cases": [
+    {
+      "model": "qwen",
+      "pair": 0,
+      "path": "loop",
+      "condition": "profiled",
+      "requests": 16,
+      "measured_requests": 8,
+      "tps": 5341.560337796102,
+      "ttft_ms": 2.571582,
+      "completion_ms": 94.3602865,
+      "rounds": 66,
+      "batch_histogram": {
+        "1": 1,
+        "5": 1,
+        "2": 1,
+        "8": 63
+      },
+      "non_model_kernel_records": [
+        {
+          "name": "io_initialize(IoState*)",
+          "ts": 1164819318105.935,
+          "dur": 211.456,
+          "graph_id": 0
+        },
+        {
+          "name": "io_network(IoState*)",
+          "ts": 1164819318388.112,
+          "dur": 200628.391,
+          "graph_id": 0
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819318462.832,
+          "dur": 70054.513,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819389820.13,
+          "dur": 576.545,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819391667.876,
+          "dur": 846.209,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819393780.423,
+          "dur": 717.376,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819395806.025,
+          "dur": 691.073,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819397761.003,
+          "dur": 745.057,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819399775.373,
+          "dur": 134.177,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819401175.823,
+          "dur": 304.736,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819402791.345,
+          "dur": 14710.385,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819418810.051,
+          "dur": 153.281,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819420297.573,
+          "dur": 77.472,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819421650.407,
+          "dur": 18.624,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819423006.376,
+          "dur": 25.729,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819424372.49,
+          "dur": 26.784,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819425740.907,
+          "dur": 26.977,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819427105.709,
+          "dur": 25.984,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819428468.495,
+          "dur": 26.304,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819429834.576,
+          "dur": 25.984,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819431201.682,
+          "dur": 26.304,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819432564.691,
+          "dur": 25.857,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819433931.989,
+          "dur": 26.72,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819435296.726,
+          "dur": 26.401,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819436663.352,
+          "dur": 27.616,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819438031.162,
+          "dur": 27.328,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819439396.731,
+          "dur": 26.432,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819440762.397,
+          "dur": 27.84,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819442128.062,
+          "dur": 26.465,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819443493.248,
+          "dur": 26.464,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819444859.458,
+          "dur": 25.952,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819446222.595,
+          "dur": 25.952,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819447584.581,
+          "dur": 26.08,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819448950.182,
+          "dur": 26.144,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819450318.376,
+          "dur": 27.104,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819451683.498,
+          "dur": 27.008,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819453048.843,
+          "dur": 26.688,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819454412.301,
+          "dur": 26.4,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819455777.998,
+          "dur": 26.016,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819457142.96,
+          "dur": 25.856,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819458508.049,
+          "dur": 25.76,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819459871.219,
+          "dur": 26.368,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819461236.244,
+          "dur": 28.929,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819462603.062,
+          "dur": 26.016,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819463968.344,
+          "dur": 26.304,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819465332.921,
+          "dur": 25.76,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819466696.091,
+          "dur": 26.752,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819468063.452,
+          "dur": 26.401,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819469428.19,
+          "dur": 25.472,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819470793.952,
+          "dur": 25.824,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819472158.465,
+          "dur": 26.048,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819473523.651,
+          "dur": 29.44,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819474890.98,
+          "dur": 25.888,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819476254.598,
+          "dur": 26.72,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819477622.215,
+          "dur": 26.464,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819478987.401,
+          "dur": 27.2,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819480353.547,
+          "dur": 25.984,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819481717.324,
+          "dur": 25.984,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819483081.902,
+          "dur": 26.656,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819484447.567,
+          "dur": 26.4,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819485811.345,
+          "dur": 26.016,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819487176.594,
+          "dur": 26.944,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819488542.26,
+          "dur": 26.88,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819489909.206,
+          "dur": 25.92,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819491274.039,
+          "dur": 26.688,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819492640.793,
+          "dur": 25.664,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819494003.482,
+          "dur": 26.4,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819495371.548,
+          "dur": 25.984,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819496735.902,
+          "dur": 25.983,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819498101.951,
+          "dur": 26.944,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819499469.121,
+          "dur": 26.72,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819500836.994,
+          "dur": 25.696,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819502201.86,
+          "dur": 25.44,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819503568.39,
+          "dur": 26.271,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819504933.671,
+          "dur": 26.816,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819506299.689,
+          "dur": 26.72,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164819507666.922,
+          "dur": 11274.637,
+          "graph_id": 6944
+        }
+      ],
+      "model_epoch_ms": 90.16106396484375,
+      "model_union_ms": 76.43813452148437,
+      "model_round_span_sum_ms": 87.97853149414063,
+      "model_kernel_sum_ms": 76.438318,
+      "model_kernel_records": 22446,
+      "inter_round_gap_ms": 2.182532470703123,
+      "within_round_gap_ms": 11.540396972656254,
+      "strata": [
+        {
+          "query": 0,
+          "batch": 8,
+          "rounds": 63,
+          "mean_span_ms": 1.3345046115451389,
+          "mean_union_ms": 1.158189488002232
+        },
+        {
+          "query": 2,
+          "batch": 1,
+          "rounds": 1,
+          "mean_span_ms": 1.304001953125,
+          "mean_union_ms": 1.16294482421875
+        },
+        {
+          "query": 8,
+          "batch": 2,
+          "rounds": 1,
+          "mean_span_ms": 1.271010009765625,
+          "mean_union_ms": 1.130914306640625
+        },
+        {
+          "query": 8,
+          "batch": 5,
+          "rounds": 1,
+          "mean_span_ms": 1.32972900390625,
+          "mean_union_ms": 1.178337646484375
+        }
+      ]
+    },
+    {
+      "model": "qwen",
+      "pair": 0,
+      "path": "loop",
+      "condition": "unprofiled",
+      "requests": 16,
+      "measured_requests": 8,
+      "tps": 5621.916928952333,
+      "ttft_ms": 2.556835125,
+      "completion_ms": 90.04720999999999,
+      "rounds": 66,
+      "batch_histogram": {
+        "1": 1,
+        "5": 1,
+        "2": 1,
+        "8": 63
+      }
+    },
+    {
+      "model": "qwen",
+      "pair": 0,
+      "path": "native",
+      "condition": "profiled",
+      "requests": 16,
+      "measured_requests": 8,
+      "tps": 5486.753770811715,
+      "ttft_ms": 2.5617669999999997,
+      "completion_ms": 90.904548625,
+      "rounds": 67,
+      "batch_histogram": {
+        "1": 2,
+        "3": 2,
+        "8": 63
+      },
+      "non_model_kernel_records": [
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729788884.275,
+          "dur": 69043.434,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729859217.727,
+          "dur": 287.136,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729860775.105,
+          "dur": 125.088,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729862167.619,
+          "dur": 107.52,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729863582.694,
+          "dur": 90.592,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729864940.232,
+          "dur": 127.904,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729866340.234,
+          "dur": 122.048,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729867730.06,
+          "dur": 98.272,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729869136.366,
+          "dur": 12312.595,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729882719.363,
+          "dur": 45.888,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729884034.629,
+          "dur": 65.056,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729885376.679,
+          "dur": 28.64,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729886669.993,
+          "dur": 17.792,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729888028.107,
+          "dur": 25.696,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729889392.781,
+          "dur": 25.408,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729890755.343,
+          "dur": 25.312,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729892121.329,
+          "dur": 25.536,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729893485.043,
+          "dur": 25.376,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729894849.206,
+          "dur": 25.376,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729896214.295,
+          "dur": 25.312,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729897579.322,
+          "dur": 25.472,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729898944.892,
+          "dur": 25.344,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729900308.67,
+          "dur": 25.344,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729901673.856,
+          "dur": 25.312,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729903036.546,
+          "dur": 25.728,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729904403.78,
+          "dur": 25.408,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729905768.326,
+          "dur": 25.568,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729907132.264,
+          "dur": 25.408,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729908495.786,
+          "dur": 25.376,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729909860.94,
+          "dur": 25.408,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729911224.91,
+          "dur": 25.313,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729912590.225,
+          "dur": 25.312,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729913952.115,
+          "dur": 25.376,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729915316.341,
+          "dur": 25.6,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729916682.007,
+          "dur": 25.376,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729918047.577,
+          "dur": 25.664,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729919412.763,
+          "dur": 25.472,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729920778.749,
+          "dur": 25.376,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729922144.575,
+          "dur": 25.696,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729923510.593,
+          "dur": 25.44,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729924877.155,
+          "dur": 25.216,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729926241.925,
+          "dur": 25.409,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729927606.952,
+          "dur": 25.408,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729928971.37,
+          "dur": 25.344,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729930336.78,
+          "dur": 25.28,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729931702.414,
+          "dur": 25.312,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729933068.496,
+          "dur": 25.536,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729934435.954,
+          "dur": 25.312,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729935804.724,
+          "dur": 25.376,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729937170.39,
+          "dur": 25.376,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729938534.008,
+          "dur": 25.568,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729939898.618,
+          "dur": 25.408,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729941264.604,
+          "dur": 25.344,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729942631.935,
+          "dur": 25.28,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729943998.593,
+          "dur": 25.472,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729945367.075,
+          "dur": 25.536,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729946732.101,
+          "dur": 25.376,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729948097.319,
+          "dur": 25.408,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729949462.313,
+          "dur": 25.44,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729950828.011,
+          "dur": 25.6,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729952192.749,
+          "dur": 25.312,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729953557.263,
+          "dur": 25.6,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729954922.193,
+          "dur": 25.376,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729956288.819,
+          "dur": 25.376,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729957654.293,
+          "dur": 25.537,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729959020.792,
+          "dur": 25.344,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729960386.746,
+          "dur": 25.312,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729961753.084,
+          "dur": 25.408,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729963119.422,
+          "dur": 25.344,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729964484.16,
+          "dur": 25.248,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729965849.442,
+          "dur": 25.28,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729967212.644,
+          "dur": 25.312,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729968577.894,
+          "dur": 25.408,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729969942.792,
+          "dur": 25.409,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729971308.778,
+          "dur": 25.568,
+          "graph_id": 6944
+        },
+        {
+          "name": "dispatch(bf_page*, Step*, Inputs, unsigned int, Control*)",
+          "ts": 1164729972675.276,
+          "dur": 2594.18,
+          "graph_id": 6944
+        }
+      ],
+      "model_epoch_ms": 91.2217080078125,
+      "model_union_ms": 77.48836743164063,
+      "model_round_span_sum_ms": 89.192009765625,
+      "model_kernel_sum_ms": 77.488645,
+      "model_kernel_records": 22717,
+      "inter_round_gap_ms": 2.029698242187493,
+      "within_round_gap_ms": 11.703642333984376,
+      "strata": [
+        {
+          "query": 0,
+          "batch": 8,
+          "rounds": 63,
+          "mean_span_ms": 1.3353777979290675,
+          "mean_union_ms": 1.158670402405754
+        },
+        {
+          "query": 5,
+          "batch": 1,
+          "rounds": 1,
+          "mean_span_ms": 1.26009814453125,
+          "mean_union_ms": 1.12060400390625
+        },
+        {
+          "query": 5,
+          "batch": 3,
+          "rounds": 1,
+          "mean_span_ms": 1.264738037109375,
+          "mean_union_ms": 1.1248623046875
+        },
+        {
+          "query": 8,
+          "batch": 1,
+          "rounds": 1,
+          "mean_span_ms": 1.26589013671875,
+          "mean_union_ms": 1.12506201171875
+        },
+        {
+          "query": 8,
+          "batch": 3,
+          "rounds": 1,
+          "mean_span_ms": 1.272482177734375,
+          "mean_union_ms": 1.121603759765625
+        }
+      ]
+    },
+    {
+      "model": "qwen",
+      "pair": 0,
+      "path": "native",
+      "condition": "unprofiled",
+      "requests": 16,
+      "measured_requests": 8,
+      "tps": 5724.901060962817,
+      "ttft_ms": 2.087934125,
+      "completion_ms": 88.527058,
+      "rounds": 65,
+      "batch_histogram": {
+        "1": 1,
+        "7": 1,
+        "8": 63
+      }
+    }
+  ],
+  "effects": [],
+  "exit": 0
+}

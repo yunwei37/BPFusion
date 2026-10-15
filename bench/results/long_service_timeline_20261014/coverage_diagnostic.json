@@ -1,0 +1,367 @@
+{
+  "utc": "2026-10-15T03:14:56.559663+00:00",
+  "raw_unchanged": true,
+  "rows": [
+    {
+      "case": "full_qwen_p0_loop_profiled",
+      "model": "qwen",
+      "pair": 0,
+      "path": "loop",
+      "actual_model_kernels": 93307,
+      "expected_model_kernels": 93307,
+      "difference": 0,
+      "rounds": 277,
+      "gpu_memcpy": {
+        "expected": 349,
+        "actual": 349
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_qwen_p0_native_profiled",
+      "model": "qwen",
+      "pair": 0,
+      "path": "native",
+      "actual_model_kernels": 91681,
+      "expected_model_kernels": 91681,
+      "difference": 0,
+      "rounds": 271,
+      "gpu_memcpy": {
+        "expected": 295,
+        "actual": 295
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_qwen_p1_loop_profiled",
+      "model": "qwen",
+      "pair": 1,
+      "path": "loop",
+      "actual_model_kernels": 99657,
+      "expected_model_kernels": 99657,
+      "difference": 0,
+      "rounds": 303,
+      "gpu_memcpy": {
+        "expected": 1023,
+        "actual": 1023
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_qwen_p1_native_profiled",
+      "model": "qwen",
+      "pair": 1,
+      "path": "native",
+      "actual_model_kernels": 90621,
+      "expected_model_kernels": 90621,
+      "difference": 0,
+      "rounds": 267,
+      "gpu_memcpy": {
+        "expected": 267,
+        "actual": 267
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_qwen_p2_loop_profiled",
+      "model": "qwen",
+      "pair": 2,
+      "path": "loop",
+      "actual_model_kernels": 92916,
+      "expected_model_kernels": 92916,
+      "difference": 0,
+      "rounds": 276,
+      "gpu_memcpy": {
+        "expected": 396,
+        "actual": 396
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_qwen_p2_native_profiled",
+      "model": "qwen",
+      "pair": 2,
+      "path": "native",
+      "actual_model_kernels": 91139,
+      "expected_model_kernels": 91139,
+      "difference": 0,
+      "rounds": 269,
+      "gpu_memcpy": {
+        "expected": 293,
+        "actual": 293
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_qwen_p3_loop_profiled",
+      "model": "qwen",
+      "pair": 3,
+      "path": "loop",
+      "actual_model_kernels": 96367,
+      "expected_model_kernels": 96367,
+      "difference": 0,
+      "rounds": 289,
+      "gpu_memcpy": {
+        "expected": 625,
+        "actual": 625
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_qwen_p3_native_profiled",
+      "model": "qwen",
+      "pair": 3,
+      "path": "native",
+      "actual_model_kernels": 92621,
+      "expected_model_kernels": 92621,
+      "difference": 0,
+      "rounds": 275,
+      "gpu_memcpy": {
+        "expected": 443,
+        "actual": 443
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_qwen_p4_loop_profiled",
+      "model": "qwen",
+      "pair": 4,
+      "path": "loop",
+      "actual_model_kernels": 92789,
+      "expected_model_kernels": 92789,
+      "difference": 0,
+      "rounds": 275,
+      "gpu_memcpy": {
+        "expected": 323,
+        "actual": 323
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_qwen_p4_native_profiled",
+      "model": "qwen",
+      "pair": 4,
+      "path": "native",
+      "actual_model_kernels": 90326,
+      "expected_model_kernels": 90326,
+      "difference": 0,
+      "rounds": 266,
+      "gpu_memcpy": {
+        "expected": 266,
+        "actual": 266
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_smol_p0_loop_profiled",
+      "model": "smol",
+      "pair": 0,
+      "path": "loop",
+      "actual_model_kernels": 115692,
+      "expected_model_kernels": 115692,
+      "difference": 0,
+      "rounds": 276,
+      "gpu_memcpy": {
+        "expected": 336,
+        "actual": 336
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_smol_p0_native_profiled",
+      "model": "smol",
+      "pair": 0,
+      "path": "native",
+      "actual_model_kernels": 112262,
+      "expected_model_kernels": 112262,
+      "difference": 0,
+      "rounds": 266,
+      "gpu_memcpy": {
+        "expected": 266,
+        "actual": 266
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_smol_p1_loop_profiled",
+      "model": "smol",
+      "pair": 1,
+      "path": "loop",
+      "actual_model_kernels": 113917,
+      "expected_model_kernels": 113917,
+      "difference": 0,
+      "rounds": 271,
+      "gpu_memcpy": {
+        "expected": 271,
+        "actual": 271
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_smol_p1_native_profiled",
+      "model": "smol",
+      "pair": 1,
+      "path": "native",
+      "actual_model_kernels": 112262,
+      "expected_model_kernels": 112262,
+      "difference": 0,
+      "rounds": 266,
+      "gpu_memcpy": {
+        "expected": 266,
+        "actual": 266
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_smol_p2_loop_profiled",
+      "model": "smol",
+      "pair": 2,
+      "path": "loop",
+      "actual_model_kernels": 113944,
+      "expected_model_kernels": 113947,
+      "difference": -3,
+      "rounds": 271,
+      "gpu_memcpy": {
+        "expected": 271,
+        "actual": 271
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_smol_p2_native_profiled",
+      "model": "smol",
+      "pair": 2,
+      "path": "native",
+      "actual_model_kernels": 113363,
+      "expected_model_kernels": 113363,
+      "difference": 0,
+      "rounds": 269,
+      "gpu_memcpy": {
+        "expected": 269,
+        "actual": 269
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_smol_p3_loop_profiled",
+      "model": "smol",
+      "pair": 3,
+      "path": "loop",
+      "actual_model_kernels": 117781,
+      "expected_model_kernels": 117781,
+      "difference": 0,
+      "rounds": 283,
+      "gpu_memcpy": {
+        "expected": 553,
+        "actual": 553
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_smol_p3_native_profiled",
+      "model": "smol",
+      "pair": 3,
+      "path": "native",
+      "actual_model_kernels": 112262,
+      "expected_model_kernels": 112262,
+      "difference": 0,
+      "rounds": 266,
+      "gpu_memcpy": {
+        "expected": 266,
+        "actual": 266
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_smol_p4_loop_profiled",
+      "model": "smol",
+      "pair": 4,
+      "path": "loop",
+      "actual_model_kernels": 117217,
+      "expected_model_kernels": 117220,
+      "difference": -3,
+      "rounds": 280,
+      "gpu_memcpy": {
+        "expected": 340,
+        "actual": 340
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    },
+    {
+      "case": "full_smol_p4_native_profiled",
+      "model": "smol",
+      "pair": 4,
+      "path": "native",
+      "actual_model_kernels": 112599,
+      "expected_model_kernels": 112599,
+      "difference": 0,
+      "rounds": 267,
+      "gpu_memcpy": {
+        "expected": 267,
+        "actual": 267
+      },
+      "gpu_memset": {
+        "expected": 0,
+        "actual": 0
+      }
+    }
+  ],
+  "scope": "diagnosis only; fixed full analyzer failed; no relaxed criterion or imputed activity"
+}
