@@ -562,3 +562,14 @@ DONE/recycle ownership and model math stay unchanged. The full comparison stops
 on an original-control finite-output-pool failure; candidate promotion is
 unsupported. Selected main restores the original per-row publisher, with no
 retained production/default change.
+
+## Upstream batch-invariant compute boundary
+
+[Finding0059](findings/0059-batch-invariant-serving.md) qualifies the existing
+GPU-owned graph interface in upstream batch-invariant FP16 mode against official
+LLM.generate outputs and exact history replay for the two tested checkpoints.
+The optional test environment changes upstream compute behavior equally for loop
+and native TCP; transport/dispatcher sources are unchanged. Ordinary outputs pass
+the finite frozen single-sequence checks, but throughput superiority is
+unestablished and concurrent long-output TTFT worsens. No production mode/default,
+new adapter framework, arbitrary-backend or default-mode fidelity claim follows.

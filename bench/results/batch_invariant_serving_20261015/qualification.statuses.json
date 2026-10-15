@@ -1,0 +1,48 @@
+[
+  {
+    "name": "qualification_qwen",
+    "command": [
+      "/tmp/bpfusion-batch-invariance-l9g59rgj/runtime/bin/python",
+      "/tmp/bpfusion-batch-invariance-l9g59rgj/serving.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--loop-comparison",
+      "--reference-path",
+      "/tmp/bpfusion-batch-invariance-l9g59rgj/frozen_references.json",
+      "--output",
+      "/tmp/bpfusion-batch-invariance-l9g59rgj/qualification_qwen.jsonl",
+      "--correctness"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T04:54:58.482575+00:00",
+    "analysis_command": [
+      "/usr/bin/python3",
+      "/tmp/bpfusion-batch-invariance-l9g59rgj/analysis.py",
+      "/tmp/bpfusion-batch-invariance-l9g59rgj/qualification_qwen.jsonl"
+    ],
+    "analysis_exit": 0
+  },
+  {
+    "name": "qualification_smol",
+    "command": [
+      "/tmp/bpfusion-batch-invariance-l9g59rgj/runtime/bin/python",
+      "/tmp/bpfusion-batch-invariance-l9g59rgj/serving.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--loop-comparison",
+      "--reference-path",
+      "/tmp/bpfusion-batch-invariance-l9g59rgj/frozen_references.json",
+      "--output",
+      "/tmp/bpfusion-batch-invariance-l9g59rgj/qualification_smol.jsonl",
+      "--correctness"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T05:00:16.432609+00:00",
+    "analysis_command": [
+      "/usr/bin/python3",
+      "/tmp/bpfusion-batch-invariance-l9g59rgj/analysis.py",
+      "/tmp/bpfusion-batch-invariance-l9g59rgj/qualification_smol.jsonl"
+    ],
+    "analysis_exit": 0
+  }
+]

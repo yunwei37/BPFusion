@@ -1,0 +1,18 @@
+{
+  "command": [
+    "make",
+    "BUILD=/tmp/bpfusion-batch-invariance-l9g59rgj/private-build",
+    "NVCC=/usr/local/cuda/bin/nvcc -I/workspaces/repository/executor",
+    "VLLM_PYTHON=/tmp/bpfusion-batch-invariance-l9g59rgj/runtime/bin/python",
+    "/tmp/bpfusion-batch-invariance-l9g59rgj/private-build/vllm_graph_uring_loop.so",
+    "/tmp/bpfusion-batch-invariance-l9g59rgj/private-build/vllm_graph_uring_loop",
+    "/tmp/bpfusion-batch-invariance-l9g59rgj/private-build/vllm_graph_uring_loop_trace.so",
+    "/tmp/bpfusion-batch-invariance-l9g59rgj/private-build/vllm_graph_uring_loop_trace",
+    "/tmp/bpfusion-batch-invariance-l9g59rgj/private-build/vllm_graph_user_network_wait.so",
+    "/tmp/bpfusion-batch-invariance-l9g59rgj/private-build/vllm_graph_user_network_wait",
+    "/tmp/bpfusion-batch-invariance-l9g59rgj/private-build/vllm_graph_user_network_wait_trace.so",
+    "/tmp/bpfusion-batch-invariance-l9g59rgj/private-build/vllm_graph_user_network_wait_trace"
+  ],
+  "exit": 0,
+  "utc": "2026-10-15T04:40:45.839577+00:00"
+}

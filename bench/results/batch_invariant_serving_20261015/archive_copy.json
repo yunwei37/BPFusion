@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-15T05:29:38.975254+00:00",
+  "source": "/tmp/bpfusion-batch-invariance-l9g59rgj",
+  "files": 154,
+  "bytes": 18718523,
+  "byte_equal": true,
+  "omitted_read_only_upstream_inspection_directory": "vllm",
+  "cpu_replays": [
+    {
+      "name": "preflight_qwen",
+      "exit": 0,
+      "stdout_stderr_byte_equal": true
+    },
+    {
+      "name": "qualification_qwen",
+      "exit": 0,
+      "stdout_stderr_byte_equal": true
+    },
+    {
+      "name": "qualification_smol",
+      "exit": 0,
+      "stdout_stderr_byte_equal": true
+    },
+    {
+      "name": "full_qwen",
+      "exit": 0,
+      "stdout_stderr_byte_equal": true
+    },
+    {
+      "name": "full_smol",
+      "exit": 0,
+      "stdout_stderr_byte_equal": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+--- executor/vllm_graph.py
++++ vllm_graph.py
+@@ -19,7 +19,7 @@
+     ap.add_argument("model");ap.add_argument("seconds",type=int,nargs="?",default=60)
+     ap.add_argument("--trace-output");ap.add_argument("--trace-requests",type=int,default=0)
+     args=ap.parse_args()
+-    root=Path(__file__).resolve().parents[1]
++    root=Path("/workspaces/repository")
+     entry=Path(sys.argv[0]).absolute()
+     library=entry.with_suffix(".so") if entry.name.startswith("vllm_graph") and entry.suffix!=".py" else root/"build/vllm_graph.so"
+     trace_path=Path(args.trace_output).resolve() if args.trace_output else None
+@@ -52,6 +52,9 @@
+         llm=LLM(model=args.model,dtype="half",max_model_len=2*limit)
+     finally:
+         Worker.determine_available_memory=original_memory
++    from vllm.model_executor.determinism import batch_invariant as bi
++    assert os.environ["VLLM_BATCH_INVARIANT"]=="1" and bi._batch_invariant_MODE
++    print(json.dumps(dict(event="batch_invariance_active",enabled=bi._batch_invariant_MODE,settings={k:os.environ.get(k) for k in ["VLLM_BATCH_INVARIANT","CUBLAS_WORKSPACE_CONFIG","CUBLASLT_WORKSPACE_SIZE","VLLM_USE_BREAKABLE_CUDAGRAPH","VLLM_USE_AOT_COMPILE"]})),flush=True)
+     runner=llm.llm_engine.model_executor.driver_worker.worker.model_runner
+     bt=runner.block_tables;buf=runner.input_buffers;config=runner.model_config.hf_config
+     assert bt.num_kv_cache_groups==1 and bt.cp_size==1 and not runner.use_aux_hidden_state_outputs

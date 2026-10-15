@@ -1066,3 +1066,33 @@ comparison. [Archive/replay](../bench/results/output_publication_20261015/) and
 record selection and cleanup. Future ordinary performance evidence needs a
 justified fidelity path; do not expand the pool after failure. The full retained
 objective remains active.
+
+## Upstream batch-invariant ordinary serving comparison
+
+[Finding0059](findings/0059-batch-invariant-serving.md) addresses the retained
+serving/TPS question after0058's finite ordinary-output-pool failure. This
+supporting comparison uses one independent official LLM.generate sequence per
+prompt, fixed before observing BPFusion, and the existing efficient native TCP
+baseline with identical upstream batch-invariant FP16 computation. Reference
+generation is dependency work; no new determinism/model-kernel claim is made.
+
+Both official controls pass394requests13120tokens/model at widths1..8 and both
+input orders. Four complete protocol suites pass2488requests88896tokens against
+official outputs and exact graph/KV/history replay. The ordinary full matrix
+completes20executors80cells2560measured requests83200tokens plus160warmups;
+both model drivers/fixed analyses and final wrapper exit0 without excluded,
+replaced, failed or retried cells or changed oracle/timeout/metric.
+
+Loop/native gen64/c8 TPS is1204.243/1213.613 Qwen and2304.157/2303.451 Smol.
+Loop-minus-native nominal paired t95df4 intervals[-18.755,0.014] and
+[-56.624,58.037] cross zero. Long TTFT is adverse+3.547[2.635,4.458]ms Qwen
+and+1.071[0.147,1.995]ms Smol. All signed secondary rows/outliers remain in
+[raw analysis/review](../bench/results/batch_invariant_serving_20261015/).
+
+This establishes finite ordinary official-output qualification in the tested
+mode, with no demonstrated throughput advantage or low-latency default choice.
+It neither explains0058 nor qualifies default-mode ordinary output or measures
+mode overhead, total CPU, arbitrary model support or exclusive bottleneck.
+Production source/defaults remain unchanged. Owned runtime/build/dependencies
+are removed; original state is preserved and five CPU replays match bytewise.
+The comparison is closed; the full project objective remains active.

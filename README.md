@@ -304,6 +304,15 @@ unresolved without its ordinary execution history. No performance improvement
 is selected; original source is retained. Traced protocol/lifecycle passes do
 not establish every untraced trajectory.
 
+[Finding0059](docs/findings/0059-batch-invariant-serving.md) tests upstream
+batch-invariant FP16 execution with one official pre-observation sequence per
+prompt. Both models pass independent official controls, full loop/native
+protocol checks and20 ordinary performance executors. Long-output throughput
+intervals cross zero; concurrent long-output first-token latency is worse on
+loop. The tested mode supplies finite exact-output evidence, with no low-latency
+default promotion, default-mode qualification or explanation of0058. Source
+and defaults remain unchanged.
+
 ## Repository layout
 
 ```

@@ -1,0 +1,193 @@
+(MainProcess pid=504841) INFO 10-15 04:51:52 [api_utils.py:286] non-default args: {'dtype': 'half', 'max_model_len': 128, 'disable_log_stats': True, 'model': '/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775'}
+(MainProcess pid=504841) WARNING 10-15 04:51:52 [arg_utils.py:1910] The global random seed is set to 0. Since VLLM_ENABLE_V1_MULTIPROCESSING is set to False, this may affect the random state of the Python process that launched vLLM.
+(MainProcess pid=504841) INFO 10-15 04:51:52 [model.py:699] Resolved architecture: Qwen2ForCausalLM
+(MainProcess pid=504841) WARNING 10-15 04:51:52 [model.py:2442] Casting torch.bfloat16 to torch.float16.
+(MainProcess pid=504841) INFO 10-15 04:51:52 [model.py:2109] Using max model len 128
+(MainProcess pid=504841) INFO 10-15 04:51:52 [scheduler.py:308] Chunked prefill is enabled with max_num_batched_tokens=8192.
+(MainProcess pid=504841) INFO 10-15 04:51:52 [kernel.py:408] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=504841) INFO 10-15 04:51:58 [core.py:129] Initializing a V1 LLM engine (v0.31.0) with config: model='/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775', speculative_config=None, tokenizer='/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, max_seq_len=128, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=True, quantization=None, quantization_config=None, enforce_eager=False, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+[W1015 04:51:58.638434475 Context.cpp:597] Warning: torch.backends.cuda.preferred_blas_library is an experimental feature. If you see any error or unexpected behavior when this flag is set please file an issue on GitHub. (function operator())
+(MainProcess pid=504841) INFO 10-15 04:51:58 [parallel_state.py:1825] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_abbe68c7c1dd4df9843a8e9ba658b097 backend=nccl
+(MainProcess pid=504841) INFO 10-15 04:51:59 [parallel_state.py:2269] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(MainProcess pid=504841) INFO 10-15 04:51:59 [gpu_worker.py:479] Using V2 Model Runner
+(MainProcess pid=504841) INFO 10-15 04:52:01 [model_runner.py:375] Loading model from scratch...
+(MainProcess pid=504841) INFO 10-15 04:52:12 [cuda.py:526] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'TRITON_ATTN', 'FLEX_ATTENTION'].
+(MainProcess pid=504841) INFO 10-15 04:52:12 [flash_attn.py:1167] Using FlashAttention version 2
+<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(MainProcess pid=504841) INFO 10-15 04:52:12 [weight_utils.py:1063] Filesystem type for checkpoints: EXT4. Checkpoint size: 0.92 GiB. Available RAM: 80.86 GiB.
+(MainProcess pid=504841) INFO 10-15 04:52:12 [weight_utils.py:1086] Auto-prefetch is disabled because the filesystem (EXT4) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:04<00:00,  4.99s/it]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:05<00:00,  5.01s/it]
+
+(MainProcess pid=504841) INFO 10-15 04:52:17 [default_loader.py:484] Loading weights took 5.05 seconds
+(MainProcess pid=504841) INFO 10-15 04:52:18 [model_runner.py:407] Model loading took 0.93 GiB memory and 16.623723 seconds
+(MainProcess pid=504841) INFO 10-15 04:52:18 [topk_topp_sampler.py:124] Using FlashInfer for top-p & top-k sampling.
+(MainProcess pid=504841) INFO 10-15 04:52:18 [torch_utils.py:286] Reducing Torch threads from 24 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(MainProcess pid=504841) INFO 10-15 04:52:18 [utils.py:343] Using LBNHC KV cache layout.
+{"event": "vllm_protocol_cache", "context_tokens": 128, "banks": 8, "needed_blocks": 65, "cache_bytes": 12779520, "specs": {"model.layers.0.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.1.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.2.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.3.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.4.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.5.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.6.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.7.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.8.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.9.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.10.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.11.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.12.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.13.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.14.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.15.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.16.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.17.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.18.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.19.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.20.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.21.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.22.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}, "model.layers.23.self_attn.attn": {"block_size": 16, "page_size_bytes": 8192}}}
+/tmp/bpfusion-batch-invariance-l9g59rgj/runtime/lib/python3.12/site-packages/torch/_dynamo/variables/functions.py:2590: UserWarning: Dynamo detected a call to a `functools.lru_cache`-wrapped function at 'batch_invariant.py:290'. Dynamo ignores the cache wrapper and directly traces the wrapped function. Silent incorrectness is only a *potential* risk, not something we have observed. Enable TORCH_LOGS=+dynamo for a DEBUG stack trace.
+
+This call originates from:
+  File "/tmp/bpfusion-batch-invariance-l9g59rgj/runtime/lib/python3.12/site-packages/vllm/model_executor/determinism/batch_invariant.py", line 290, in matmul_persistent
+    NUM_SMS = num_compute_units(a.device.index)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  torch._dynamo.utils.warn_once(msg)
+(MainProcess pid=504841) INFO 10-15 04:52:48 [backends.py:1090] Using cache directory: /root/.cache/vllm/torch_compile_cache/9e616ae8c7/rank_0_0/backbone for vLLM's torch.compile
+(MainProcess pid=504841) INFO 10-15 04:52:48 [backends.py:1151] Dynamo bytecode transform time: 29.90 s
+(MainProcess pid=504841) INFO 10-15 04:52:51 [backends.py:290] Directly load the compiled graph(s) for compile range (1, 8192) from the cache, took 1.108 s
+(MainProcess pid=504841) INFO 10-15 04:52:51 [monitor.py:53] torch.compile and initial profiling/warmup run together took 32.78 s in total
+(MainProcess pid=504841) INFO 10-15 04:52:52 [gpu_worker.py:603] Initial free memory 30.89 GiB, reserved 0.01 GiB memory for KV Cache as specified by kv_cache_memory_bytes config and skipped memory profiling. This does not respect the gpu_memory_utilization config. Only use kv_cache_memory_bytes config when you want manual control of KV cache memory size. If OOM'ed, check the difference of initial free memory between the current run and the previous run where kv_cache_memory_bytes is suggested and update it correspondingly.
+(MainProcess pid=504841) INFO 10-15 04:52:52 [kv_cache_utils.py:2464] GPU KV cache size: 1,040 tokens, Maximum concurrency for 128 tokens per request: 8.12x
+(MainProcess pid=504841) INFO 10-15 04:52:52 [kernel_warmup.py:172] JIT kernel warmup starting.
+(MainProcess pid=504841) INFO 10-15 04:52:52 [kernel_warmup.py:185] JIT kernel warmup finished in 0.00s.
+(MainProcess pid=504841) INFO 10-15 04:52:53 [kernel_warmup.py:437] Using FlashInfer autotune cache file: /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/c633e1a351cd55fa23f0c755d06aaeb353e4b84cd6af2ef8e02a601e15ce1772/autotune_configs.json
+2026-10-15 04:52:53,616 - INFO - autotuner.py:3691 - flashinfer.jit: [Autotuner]: Loaded 0 configs from /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/c633e1a351cd55fa23f0c755d06aaeb353e4b84cd6af2ef8e02a601e15ce1772/autotune_configs.json
+2026-10-15 04:52:53,616 - INFO - autotuner.py:1046 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+(MainProcess pid=504841) INFO 10-15 04:52:53 [kernel_warmup.py:359] Running FlashInfer autotune with 8192 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192).
+2026-10-15 04:52:53,727 - INFO - autotuner.py:1069 - flashinfer.jit: [Autotuner]: Autotuning process ends
+2026-10-15 04:52:53,728 - INFO - autotuner.py:3554 - flashinfer.jit: [Autotuner]: Saved 0 configs to /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/c633e1a351cd55fa23f0c755d06aaeb353e4b84cd6af2ef8e02a601e15ce1772/autotune_configs.json (0 new, 0 from previous config)
+(MainProcess pid=504841) WARNING 10-15 04:52:53 [sampling_params.py:544] Random sampling without an explicit seed may not be batch invariant. Set seed in SamplingParams or use temperature=0.
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]Capturing CUDA graphs (PIECEWISE):   4%|▍         | 2/51 [00:00<00:03, 15.15it/s]Capturing CUDA graphs (PIECEWISE):  10%|▉         | 5/51 [00:00<00:02, 20.13it/s]Capturing CUDA graphs (PIECEWISE):  16%|█▌        | 8/51 [00:00<00:02, 21.16it/s]Capturing CUDA graphs (PIECEWISE):  22%|██▏       | 11/51 [00:00<00:02, 19.90it/s]Capturing CUDA graphs (PIECEWISE):  27%|██▋       | 14/51 [00:00<00:01, 21.43it/s]Capturing CUDA graphs (PIECEWISE):  33%|███▎      | 17/51 [00:00<00:01, 20.26it/s]Capturing CUDA graphs (PIECEWISE):  39%|███▉      | 20/51 [00:00<00:01, 20.30it/s]Capturing CUDA graphs (PIECEWISE):  45%|████▌     | 23/51 [00:01<00:01, 18.92it/s]Capturing CUDA graphs (PIECEWISE):  51%|█████     | 26/51 [00:01<00:01, 20.03it/s]Capturing CUDA graphs (PIECEWISE):  57%|█████▋    | 29/51 [00:01<00:01, 19.83it/s]Capturing CUDA graphs (PIECEWISE):  63%|██████▎   | 32/51 [00:01<00:00, 19.40it/s]Capturing CUDA graphs (PIECEWISE):  67%|██████▋   | 34/51 [00:01<00:00, 18.58it/s]Capturing CUDA graphs (PIECEWISE):  73%|███████▎  | 37/51 [00:01<00:00, 19.19it/s]Capturing CUDA graphs (PIECEWISE):  76%|███████▋  | 39/51 [00:01<00:00, 19.27it/s]Capturing CUDA graphs (PIECEWISE):  82%|████████▏ | 42/51 [00:02<00:00, 20.92it/s]Capturing CUDA graphs (PIECEWISE):  88%|████████▊ | 45/51 [00:02<00:00, 20.12it/s]Capturing CUDA graphs (PIECEWISE):  94%|█████████▍| 48/51 [00:02<00:00, 21.59it/s]Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:02<00:00, 19.03it/s]Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:02<00:00, 19.73it/s]
+Capturing CUDA graphs (FULL):   0%|          | 0/35 [00:00<?, ?it/s]Capturing CUDA graphs (FULL):   6%|▌         | 2/35 [00:00<00:01, 17.21it/s]Capturing CUDA graphs (FULL):  14%|█▍        | 5/35 [00:00<00:01, 19.22it/s]Capturing CUDA graphs (FULL):  23%|██▎       | 8/35 [00:00<00:01, 20.06it/s]Capturing CUDA graphs (FULL):  29%|██▊       | 10/35 [00:00<00:01, 16.03it/s]Capturing CUDA graphs (FULL):  34%|███▍      | 12/35 [00:00<00:01, 17.09it/s]Capturing CUDA graphs (FULL):  40%|████      | 14/35 [00:00<00:01, 15.96it/s]Capturing CUDA graphs (FULL):  46%|████▌     | 16/35 [00:01<00:01, 11.14it/s]Capturing CUDA graphs (FULL):  54%|█████▍    | 19/35 [00:01<00:01, 13.92it/s]Capturing CUDA graphs (FULL):  63%|██████▎   | 22/35 [00:01<00:00, 13.12it/s]Capturing CUDA graphs (FULL):  69%|██████▊   | 24/35 [00:01<00:00, 12.21it/s]Capturing CUDA graphs (FULL):  74%|███████▍  | 26/35 [00:01<00:00, 12.87it/s]Capturing CUDA graphs (FULL):  80%|████████  | 28/35 [00:02<00:00, 11.49it/s]Capturing CUDA graphs (FULL):  86%|████████▌ | 30/35 [00:02<00:00, 13.04it/s]Capturing CUDA graphs (FULL):  91%|█████████▏| 32/35 [00:02<00:00, 11.75it/s]Capturing CUDA graphs (FULL):  97%|█████████▋| 34/35 [00:02<00:00, 10.53it/s]Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:02<00:00, 13.17it/s]
+(MainProcess pid=504841) INFO 10-15 04:53:00 [model_runner.py:1087] Graph capturing finished in 6 secs, took 0.03 GiB
+(MainProcess pid=504841) INFO 10-15 04:53:01 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(MainProcess pid=504841) INFO 10-15 04:53:02 [core.py:373] init engine (profile, create kv cache, warmup model) took 43.50 s (compilation: 32.78 s)
+(MainProcess pid=504841) INFO 10-15 04:53:02 [hf.py:646] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+{"event": "batch_invariance_active", "enabled": true, "settings": {"VLLM_BATCH_INVARIANT": "1", "CUBLAS_WORKSPACE_CONFIG": ":16:8", "CUBLASLT_WORKSPACE_SIZE": "1", "VLLM_USE_BREAKABLE_CUDAGRAPH": null, "VLLM_USE_AOT_COMPILE": "0"}}
+Prefill query=1 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=1 (FULL):  38%|███▊      | 3/8 [00:00<00:00, 29.10it/s]Prefill query=1 (FULL): 100%|██████████| 8/8 [00:00<00:00, 40.11it/s]
+captured vLLM query=1/64 batches1..8
+Prefill query=2 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=2 (FULL):  62%|██████▎   | 5/8 [00:00<00:00, 44.35it/s]Prefill query=2 (FULL): 100%|██████████| 8/8 [00:00<00:00, 51.68it/s]
+captured vLLM query=2/64 batches1..8
+Prefill query=3 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=3 (FULL):  88%|████████▊ | 7/8 [00:00<00:00, 59.11it/s]Prefill query=3 (FULL): 100%|██████████| 8/8 [00:00<00:00, 59.63it/s]
+captured vLLM query=3/64 batches1..8
+Prefill query=4 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=4 (FULL):  88%|████████▊ | 7/8 [00:00<00:00, 64.23it/s]Prefill query=4 (FULL): 100%|██████████| 8/8 [00:00<00:00, 64.96it/s]
+captured vLLM query=4/64 batches1..8
+Prefill query=5 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=5 (FULL):  88%|████████▊ | 7/8 [00:00<00:00, 61.55it/s]Prefill query=5 (FULL): 100%|██████████| 8/8 [00:00<00:00, 58.87it/s]
+captured vLLM query=5/64 batches1..8
+Prefill query=6 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=6 (FULL):  88%|████████▊ | 7/8 [00:00<00:00, 61.21it/s]Prefill query=6 (FULL): 100%|██████████| 8/8 [00:00<00:00, 60.36it/s]
+captured vLLM query=6/64 batches1..8
+Prefill query=7 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=7 (FULL):  38%|███▊      | 3/8 [00:00<00:00, 21.62it/s]Prefill query=7 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 23.04it/s]Prefill query=7 (FULL): 100%|██████████| 8/8 [00:00<00:00, 27.40it/s]
+captured vLLM query=7/64 batches1..8
+Prefill query=8 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=8 (FULL):  88%|████████▊ | 7/8 [00:00<00:00, 69.85it/s]Prefill query=8 (FULL): 100%|██████████| 8/8 [00:00<00:00, 56.22it/s]
+captured vLLM query=8/64 batches1..8
+Prefill query=9 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=9 (FULL):  62%|██████▎   | 5/8 [00:00<00:00, 44.83it/s]Prefill query=9 (FULL): 100%|██████████| 8/8 [00:00<00:00, 50.11it/s]
+captured vLLM query=9/64 batches1..8
+Prefill query=10 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=10 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 57.23it/s]Prefill query=10 (FULL): 100%|██████████| 8/8 [00:00<00:00, 55.64it/s]
+captured vLLM query=10/64 batches1..8
+Prefill query=11 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=11 (FULL):  88%|████████▊ | 7/8 [00:00<00:00, 63.29it/s]Prefill query=11 (FULL): 100%|██████████| 8/8 [00:00<00:00, 63.96it/s]
+captured vLLM query=11/64 batches1..8
+Prefill query=12 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=12 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 57.21it/s]Prefill query=12 (FULL): 100%|██████████| 8/8 [00:00<00:00, 59.78it/s]
+captured vLLM query=12/64 batches1..8
+Prefill query=13 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=13 (FULL):  38%|███▊      | 3/8 [00:00<00:00, 22.61it/s]Prefill query=13 (FULL): 100%|██████████| 8/8 [00:00<00:00, 37.64it/s]
+captured vLLM query=13/64 batches1..8
+Prefill query=14 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=14 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 55.08it/s]Prefill query=14 (FULL): 100%|██████████| 8/8 [00:00<00:00, 49.02it/s]
+captured vLLM query=14/64 batches1..8
+Prefill query=15 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=15 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 59.46it/s]Prefill query=15 (FULL): 100%|██████████| 8/8 [00:00<00:00, 61.84it/s]
+captured vLLM query=15/64 batches1..8
+Prefill query=16 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=16 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 56.71it/s]Prefill query=16 (FULL): 100%|██████████| 8/8 [00:00<00:00, 54.44it/s]
+captured vLLM query=16/64 batches1..8
+Prefill query=17 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=17 (FULL):  62%|██████▎   | 5/8 [00:00<00:00, 48.86it/s]Prefill query=17 (FULL): 100%|██████████| 8/8 [00:00<00:00, 34.03it/s]
+captured vLLM query=17/64 batches1..8
+Prefill query=18 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=18 (FULL):  25%|██▌       | 2/8 [00:00<00:00, 10.81it/s]Prefill query=18 (FULL): 100%|██████████| 8/8 [00:00<00:00, 29.06it/s]
+captured vLLM query=18/64 batches1..8
+Prefill query=19 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=19 (FULL):  50%|█████     | 4/8 [00:00<00:00, 35.24it/s]Prefill query=19 (FULL): 100%|██████████| 8/8 [00:00<00:00, 46.04it/s]
+captured vLLM query=19/64 batches1..8
+Prefill query=20 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=20 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 57.53it/s]Prefill query=20 (FULL): 100%|██████████| 8/8 [00:00<00:00, 59.59it/s]
+captured vLLM query=20/64 batches1..8
+Prefill query=21 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=21 (FULL):  12%|█▎        | 1/8 [00:00<00:00,  7.38it/s]Prefill query=21 (FULL):  38%|███▊      | 3/8 [00:00<00:00, 11.69it/s]Prefill query=21 (FULL):  88%|████████▊ | 7/8 [00:00<00:00, 21.32it/s]Prefill query=21 (FULL): 100%|██████████| 8/8 [00:00<00:00, 19.93it/s]
+captured vLLM query=21/64 batches1..8
+Prefill query=22 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=22 (FULL):  25%|██▌       | 2/8 [00:00<00:00, 16.93it/s]Prefill query=22 (FULL):  50%|█████     | 4/8 [00:00<00:00, 13.91it/s]Prefill query=22 (FULL): 100%|██████████| 8/8 [00:00<00:00, 21.32it/s]Prefill query=22 (FULL): 100%|██████████| 8/8 [00:00<00:00, 19.27it/s]
+captured vLLM query=22/64 batches1..8
+Prefill query=23 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=23 (FULL):  38%|███▊      | 3/8 [00:00<00:00, 18.97it/s]Prefill query=23 (FULL): 100%|██████████| 8/8 [00:00<00:00, 31.42it/s]
+captured vLLM query=23/64 batches1..8
+Prefill query=24 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=24 (FULL):  50%|█████     | 4/8 [00:00<00:00, 29.36it/s]Prefill query=24 (FULL):  88%|████████▊ | 7/8 [00:00<00:00, 27.64it/s]Prefill query=24 (FULL): 100%|██████████| 8/8 [00:00<00:00, 30.47it/s]
+captured vLLM query=24/64 batches1..8
+Prefill query=25 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=25 (FULL): 100%|██████████| 8/8 [00:00<00:00, 83.58it/s]
+captured vLLM query=25/64 batches1..8
+Prefill query=26 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=26 (FULL):  50%|█████     | 4/8 [00:00<00:00, 36.20it/s]Prefill query=26 (FULL): 100%|██████████| 8/8 [00:00<00:00, 24.40it/s]Prefill query=26 (FULL): 100%|██████████| 8/8 [00:00<00:00, 25.44it/s]
+captured vLLM query=26/64 batches1..8
+Prefill query=27 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=27 (FULL):  50%|█████     | 4/8 [00:00<00:00, 34.85it/s]Prefill query=27 (FULL): 100%|██████████| 8/8 [00:00<00:00, 38.47it/s]
+captured vLLM query=27/64 batches1..8
+Prefill query=28 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=28 (FULL):  12%|█▎        | 1/8 [00:00<00:00,  9.27it/s]Prefill query=28 (FULL):  38%|███▊      | 3/8 [00:00<00:00, 11.32it/s]Prefill query=28 (FULL):  62%|██████▎   | 5/8 [00:00<00:00, 13.28it/s]Prefill query=28 (FULL): 100%|██████████| 8/8 [00:00<00:00, 17.27it/s]
+captured vLLM query=28/64 batches1..8
+Prefill query=29 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=29 (FULL):  88%|████████▊ | 7/8 [00:00<00:00, 61.20it/s]Prefill query=29 (FULL): 100%|██████████| 8/8 [00:00<00:00, 61.66it/s]
+captured vLLM query=29/64 batches1..8
+Prefill query=30 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=30 (FULL):  62%|██████▎   | 5/8 [00:00<00:00, 48.90it/s]Prefill query=30 (FULL): 100%|██████████| 8/8 [00:00<00:00, 42.70it/s]
+captured vLLM query=30/64 batches1..8
+Prefill query=31 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=31 (FULL):  38%|███▊      | 3/8 [00:00<00:00, 23.33it/s]Prefill query=31 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 15.48it/s]Prefill query=31 (FULL): 100%|██████████| 8/8 [00:00<00:00, 16.28it/s]Prefill query=31 (FULL): 100%|██████████| 8/8 [00:00<00:00, 16.64it/s]
+captured vLLM query=31/64 batches1..8
+Prefill query=32 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=32 (FULL):  25%|██▌       | 2/8 [00:00<00:00, 13.50it/s]Prefill query=32 (FULL):  88%|████████▊ | 7/8 [00:00<00:00, 29.27it/s]Prefill query=32 (FULL): 100%|██████████| 8/8 [00:00<00:00, 28.73it/s]
+captured vLLM query=32/64 batches1..8
+Prefill query=33 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=33 (FULL):  38%|███▊      | 3/8 [00:00<00:00, 20.46it/s]Prefill query=33 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 21.99it/s]Prefill query=33 (FULL): 100%|██████████| 8/8 [00:00<00:00, 25.33it/s]
+captured vLLM query=33/64 batches1..8
+Prefill query=34 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=34 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 59.64it/s]Prefill query=34 (FULL): 100%|██████████| 8/8 [00:00<00:00, 52.27it/s]
+captured vLLM query=34/64 batches1..8
+Prefill query=35 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=35 (FULL):  38%|███▊      | 3/8 [00:00<00:00, 23.37it/s]Prefill query=35 (FULL): 100%|██████████| 8/8 [00:00<00:00, 36.28it/s]
+captured vLLM query=35/64 batches1..8
+Prefill query=36 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=36 (FULL):  38%|███▊      | 3/8 [00:00<00:00, 21.95it/s]Prefill query=36 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 24.17it/s]Prefill query=36 (FULL): 100%|██████████| 8/8 [00:00<00:00, 24.86it/s]
+captured vLLM query=36/64 batches1..8
+Prefill query=37 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=37 (FULL):  38%|███▊      | 3/8 [00:00<00:00, 21.54it/s]Prefill query=37 (FULL): 100%|██████████| 8/8 [00:00<00:00, 35.21it/s]Prefill query=37 (FULL): 100%|██████████| 8/8 [00:00<00:00, 32.68it/s]
+captured vLLM query=37/64 batches1..8
+Prefill query=38 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=38 (FULL):  25%|██▌       | 2/8 [00:00<00:00, 19.09it/s]Prefill query=38 (FULL):  62%|██████▎   | 5/8 [00:00<00:00, 24.28it/s]Prefill query=38 (FULL): 100%|██████████| 8/8 [00:00<00:00, 30.74it/s]
+captured vLLM query=38/64 batches1..8
+Prefill query=39 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=39 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 57.08it/s]Prefill query=39 (FULL): 100%|██████████| 8/8 [00:00<00:00, 56.92it/s]
+captured vLLM query=39/64 batches1..8
+Prefill query=40 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=40 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 58.48it/s]Prefill query=40 (FULL): 100%|██████████| 8/8 [00:00<00:00, 59.26it/s]
+captured vLLM query=40/64 batches1..8
+Prefill query=41 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=41 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 58.08it/s]Prefill query=41 (FULL): 100%|██████████| 8/8 [00:00<00:00, 59.06it/s]
+captured vLLM query=41/64 batches1..8
+Prefill query=42 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=42 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 55.02it/s]Prefill query=42 (FULL): 100%|██████████| 8/8 [00:00<00:00, 57.02it/s]
+captured vLLM query=42/64 batches1..8
+Prefill query=43 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=43 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 55.99it/s]Prefill query=43 (FULL): 100%|██████████| 8/8 [00:00<00:00, 56.97it/s]
+captured vLLM query=43/64 batches1..8
+Prefill query=44 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=44 (FULL):  62%|██████▎   | 5/8 [00:00<00:00, 49.99it/s]Prefill query=44 (FULL): 100%|██████████| 8/8 [00:00<00:00, 53.82it/s]
+captured vLLM query=44/64 batches1..8
+Prefill query=45 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=45 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 58.34it/s]Prefill query=45 (FULL): 100%|██████████| 8/8 [00:00<00:00, 58.24it/s]
+captured vLLM query=45/64 batches1..8
+Prefill query=46 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=46 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 59.32it/s]Prefill query=46 (FULL): 100%|██████████| 8/8 [00:00<00:00, 60.53it/s]
+captured vLLM query=46/64 batches1..8
+Prefill query=47 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=47 (FULL):  88%|████████▊ | 7/8 [00:00<00:00, 60.57it/s]Prefill query=47 (FULL): 100%|██████████| 8/8 [00:00<00:00, 60.91it/s]
+captured vLLM query=47/64 batches1..8
+Prefill query=48 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=48 (FULL):  88%|████████▊ | 7/8 [00:00<00:00, 62.52it/s]Prefill query=48 (FULL): 100%|██████████| 8/8 [00:00<00:00, 62.94it/s]
+captured vLLM query=48/64 batches1..8
+Prefill query=49 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=49 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 56.50it/s]Prefill query=49 (FULL): 100%|██████████| 8/8 [00:00<00:00, 33.55it/s]
+captured vLLM query=49/64 batches1..8
+Prefill query=50 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=50 (FULL):  62%|██████▎   | 5/8 [00:00<00:00, 48.45it/s]Prefill query=50 (FULL): 100%|██████████| 8/8 [00:00<00:00, 51.37it/s]
+captured vLLM query=50/64 batches1..8
+Prefill query=51 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=51 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 57.82it/s]Prefill query=51 (FULL): 100%|██████████| 8/8 [00:00<00:00, 44.30it/s]
+captured vLLM query=51/64 batches1..8
+Prefill query=52 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=52 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 58.26it/s]Prefill query=52 (FULL): 100%|██████████| 8/8 [00:00<00:00, 58.95it/s]
+captured vLLM query=52/64 batches1..8
+Prefill query=53 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=53 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 58.74it/s]Prefill query=53 (FULL): 100%|██████████| 8/8 [00:00<00:00, 59.80it/s]
+captured vLLM query=53/64 batches1..8
+Prefill query=54 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=54 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 59.82it/s]Prefill query=54 (FULL): 100%|██████████| 8/8 [00:00<00:00, 58.91it/s]
+captured vLLM query=54/64 batches1..8
+Prefill query=55 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=55 (FULL):  50%|█████     | 4/8 [00:00<00:00, 37.68it/s]Prefill query=55 (FULL): 100%|██████████| 8/8 [00:00<00:00, 26.70it/s]Prefill query=55 (FULL): 100%|██████████| 8/8 [00:00<00:00, 27.89it/s]
+captured vLLM query=55/64 batches1..8
+Prefill query=56 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=56 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 58.07it/s]Prefill query=56 (FULL): 100%|██████████| 8/8 [00:00<00:00, 58.79it/s]
+captured vLLM query=56/64 batches1..8
+Prefill query=57 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=57 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 55.88it/s]Prefill query=57 (FULL): 100%|██████████| 8/8 [00:00<00:00, 56.71it/s]
+captured vLLM query=57/64 batches1..8
+Prefill query=58 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=58 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 54.06it/s]Prefill query=58 (FULL): 100%|██████████| 8/8 [00:00<00:00, 53.58it/s]
+captured vLLM query=58/64 batches1..8
+Prefill query=59 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=59 (FULL):  25%|██▌       | 2/8 [00:00<00:00,  7.32it/s]Prefill query=59 (FULL):  50%|█████     | 4/8 [00:00<00:00,  8.95it/s]Prefill query=59 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 10.42it/s]Prefill query=59 (FULL): 100%|██████████| 8/8 [00:00<00:00, 12.38it/s]Prefill query=59 (FULL): 100%|██████████| 8/8 [00:00<00:00, 10.94it/s]
+captured vLLM query=59/64 batches1..8
+Prefill query=60 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=60 (FULL):  25%|██▌       | 2/8 [00:00<00:00, 16.35it/s]Prefill query=60 (FULL): 100%|██████████| 8/8 [00:00<00:00, 41.19it/s]
+captured vLLM query=60/64 batches1..8
+Prefill query=61 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=61 (FULL): 100%|██████████| 8/8 [00:00<00:00, 81.99it/s]
+captured vLLM query=61/64 batches1..8
+Prefill query=62 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=62 (FULL):  25%|██▌       | 2/8 [00:00<00:00, 11.28it/s]Prefill query=62 (FULL):  50%|█████     | 4/8 [00:00<00:00, 14.32it/s]Prefill query=62 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 15.84it/s]Prefill query=62 (FULL): 100%|██████████| 8/8 [00:00<00:00, 16.60it/s]
+captured vLLM query=62/64 batches1..8
+Prefill query=63 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=63 (FULL):  75%|███████▌  | 6/8 [00:00<00:00, 58.23it/s]Prefill query=63 (FULL): 100%|██████████| 8/8 [00:00<00:00, 55.15it/s]
+captured vLLM query=63/64 batches1..8
+Prefill query=64 (FULL):   0%|          | 0/8 [00:00<?, ?it/s]Prefill query=64 (FULL): 100%|██████████| 8/8 [00:00<00:00, 83.07it/s]
+captured vLLM query=64/64 batches1..8
+{"event": "vllm_bootstrap", "model": "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775", "block_sizes": [16], "kernel_block_sizes": [16], "pages": [[1, 2, 3, 4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15, 16], [17, 18, 19, 20, 21, 22, 23, 24], [25, 26, 27, 28, 29, 30, 31, 32], [33, 34, 35, 36, 37, 38, 39, 40], [41, 42, 43, 44, 45, 46, 47, 48], [49, 50, 51, 52, 53, 54, 55, 56], [57, 58, 59, 60, 61, 62, 63, 64]], "graph_count": 520, "captured_batches": [1, 2, 3, 4, 5, 6, 7, 8], "captured_queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64]}
+resident vLLM ready: 24 layers h=896 vocab=151936; tensor batches1..8, GPU prefill/decode
+userspace completion wait=epoll_pwait2 timeout_ns=60000
+userspace TCP stopped: accepted=5086 published=622 completed=622 rejected=259
+resident vLLM stopped: launches=1 device_graph_launches=6504 graph_error=0 max_active=8 admitted=622 retired=622 trace_overflows=0 release_rounds=187 max_release=8 device_launch_calls=13008
+{"event": "vllm_reference_replay", "requests": 622, "checked_tokens": 22224, "reference_file": "/tmp/bpfusion-batch-invariance-l9g59rgj/qualification_qwen_p0_userspace.gpu.jsonl.references.jsonl"}

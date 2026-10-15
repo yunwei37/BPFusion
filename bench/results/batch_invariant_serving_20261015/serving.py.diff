@@ -1,0 +1,94 @@
+--- bench/vllm_serving.py
++++ serving.py
+@@ -5,7 +5,7 @@
+ from concurrent.futures import ThreadPoolExecutor
+ from itertools import permutations
+ from pathlib import Path
+-sys.path.insert(0,str(Path(__file__).resolve().parent))
++sys.path.insert(0,"/workspaces/repository/bench")
+ from resident_dispatch import connect,request,worker_cpu_snapshot,worker_cpu_delta
+ from transformers import AutoConfig,AutoTokenizer
+ 
+@@ -27,7 +27,8 @@
+     comparisons.add_argument("--release-comparison",action="store_true")
+     comparisons.add_argument("--dispatch-comparison",action="store_true")
+     args=ap.parse_args()
+-    root=Path(__file__).resolve().parents[1];os.chdir(root)
++    root=Path("/workspaces/repository");os.chdir(root)
++    private_build=Path(__file__).resolve().parent/"private-build"
+     output=Path(args.output).resolve();output.parent.mkdir(parents=True,exist_ok=True)
+     assert not output.exists(),output
+     raw=output.open("w",buffering=1);lock=threading.Lock()
+@@ -42,13 +43,13 @@
+         modes=("uring",)
+     if args.transport_comparison:modes=("uring","userspace","kernel")
+     if args.copy_comparison:modes=("uring","uring_full_copy","userspace")
+-    if args.loop_comparison:modes=("uring_loop","userspace","uring")
++    if args.loop_comparison:modes=("uring_loop","userspace")
+     if args.loop_progress_comparison:modes=("uring_loop","userspace","uring_loop_after")
+     matrix=((64,8),) if args.copy_comparison else ((1,1),(64,1),(1,8),(64,8))
+-    repetitions=1 if args.correctness or args.preflight else (6 if args.transport_comparison or args.copy_comparison or args.loop_comparison or args.loop_progress_comparison else 5)
+-    requests_per_cell=8 if args.preflight else (256 if args.copy_comparison else 64)
++    repetitions=1 if args.correctness or args.preflight else 5
++    requests_per_cell=8 if args.preflight else (256 if args.copy_comparison else 32)
+     reference_model=None;reference_pool={}
+-    if args.untraced:
++    if args.reference_path is not None:
+         assert args.reference_path is not None,"Untraced qualification requires pre-observation frozen complete references"
+         asset=json.loads(args.reference_path.read_text())
+         reference_model=next(m for m in asset["models"].values() if m["model"]==args.model)
+@@ -56,13 +57,14 @@
+         reference_pool={(tuple(r["prompt"]),r["gen"]):{tuple(s) for s in r["sequences"]} for r in reference_model["references"]}
+         emit("frozen_complete_references",path=str(args.reference_path),source_commit=asset["source_commit"],model=reference_model,
+              scope=asset["scope"])
++        assert all(len(v)==1 for v in reference_pool.values()),"one official reference only"
+     emit("metadata",model=args.model,vocab=config.vocab_size,prompts=prompts,precision="fp16",
+          modes=modes,matrix=matrix,repetitions=repetitions,requests_per_cell=requests_per_cell,warmups_per_executor=8,
+-         correctness=args.correctness,preflight=args.preflight,untraced=args.untraced,comparison="kernel-loop-progress" if args.loop_progress_comparison else "kernel-loop" if args.loop_comparison else "stock-copy" if args.copy_comparison else "stock-transport" if args.transport_comparison else "dispatch" if args.dispatch_comparison else "release" if args.release_comparison else ("packing" if args.packing_comparison else "transport"),trace_condition="ordinary paths untraced; fixed complete-output-set fidelity" if args.untraced else "both transports identically BF_TRACE",
++         correctness=args.correctness,preflight=args.preflight,untraced=args.untraced,comparison="kernel-loop-progress" if args.loop_progress_comparison else "kernel-loop" if args.loop_comparison else "stock-copy" if args.copy_comparison else "stock-transport" if args.transport_comparison else "dispatch" if args.dispatch_comparison else "release" if args.release_comparison else ("packing" if args.packing_comparison else "transport"),trace_condition="ordinary untraced; single official same-mode reference per prompt" if args.untraced else "both transports identically BF_TRACE",
+          commit=subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip(),
+          driver_source=Path(__file__).read_text(),client_source=(root/"bench/resident_dispatch.py").read_text(),
+          backend_source=(root/"executor/vllm_graph.py").read_text(),native_source=(root/"executor/vllm_graph.cu").read_text(),
+-         python=sys.version,torch=subprocess.check_output(["python3","-c","import torch;print(torch.__version__)"],text=True).strip())
++         python=sys.version,torch=subprocess.check_output([sys.executable,"-c","import torch;print(torch.__version__)"],text=True).strip())
+     frozen={}
+     if args.packing_comparison or args.release_comparison:
+         for previous in (root/"bench/results/vllm_server_20261012").glob("*_correctness.jsonl"):
+@@ -76,7 +78,7 @@
+     try:
+         for pair in range(repetitions):
+             order=modes if len(modes)==2 or (pair//2)%2==0 else modes[2:]+modes[:2]
+-            if args.transport_comparison or args.copy_comparison or args.loop_comparison or args.loop_progress_comparison:order=tuple(permutations(modes))[pair%6]
++            if args.transport_comparison or args.copy_comparison or args.loop_comparison or args.loop_progress_comparison:order=tuple(permutations(modes))[pair%len(tuple(permutations(modes)))]
+             for mode in (order if args.transport_comparison or args.copy_comparison or args.loop_comparison or args.loop_progress_comparison or pair%2==0 else order[::-1]):
+                 kernel_mode=mode.endswith("kernel") or mode.startswith("uring")
+                 assert not Path("/sys/module/bfusion_tx").exists()
+@@ -90,7 +92,7 @@
+                         else ("vllm_graph_padded" if mode.startswith("packed") else "vllm_graph_grouped") if args.packing_comparison
+                         else "vllm_graph")+("" if kernel_mode else "_user_network_wait")+("" if args.untraced else "_trace")
+                 if mode.startswith("uring"):binary="vllm_graph_"+mode+("" if args.untraced else "_trace")
+-                command=["./build/"+binary,args.model,"300"]
++                command=[str(private_build/binary),args.model,"300"]
+                 if not args.untraced:command+=["--trace-output",str(trace),"--trace-requests",str(budget)]
+                 if args.correctness:command=["strace","-D","-f","-e","trace=network,write,io_uring_enter","-o",str(nettrace),*command]
+                 try:
+@@ -229,6 +231,10 @@
+                         calls={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",log.split("resident vLLM stopped:",1)[1].splitlines()[0])}
+                         assert calls["device_launch_calls"]==calls["device_graph_launches"]*(1 if mode.startswith("chained") else 2),calls
+                         emit("dispatch_verified",pair=pair,mode=mode,device_launch_calls=calls["device_launch_calls"],model_steps=calls["device_graph_launches"])
++                    if reference_pool:
++                        for row in rows:
++                            assert tuple(row["tokens"])==(() if row["bad"] else next(iter(reference_pool[(tuple(row["input_ids"]),row["gen"])]))),("official same-mode output mismatch",row)
++                        emit("official_output_verified",pair=pair,mode=mode,requests=len(rows),tokens=sum(len(row["tokens"]) for row in rows))
+                     if args.untraced:
+                         batches=None
+                         counters={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",log.split("resident vLLM stopped:",1)[1].splitlines()[0])}
+@@ -242,7 +248,7 @@
+                                 assert tuple(row["tokens"]) in reference_pool[(tuple(row["input_ids"]),row["gen"])],("unqualified complete output sequence",row)
+                                 checked+=len(row["tokens"])
+                         emit("verified",pair=pair,mode=mode,requests=len(rows),tokens=checked,
+-                             rejections=sum(row["bad"] for row in rows),reference_scope="frozen complete-output-set membership; current batch trajectory unobserved",
++                             rejections=sum(row["bad"] for row in rows),reference_scope="single pre-observation official same-mode token sequence; current batch trajectory unobserved",
+                              reference_path=str(args.reference_path),native_counters=counters)
+                     else:
+                         refs=[json.loads(line) for line in Path(str(trace)+".references.jsonl").open()]
