@@ -605,9 +605,9 @@ buffers instead. Successful-request P99 can consequently appear low while
 the full service fails requests. The all-attempt analysis retains unknown
 upper tails rather than treating timeouts as completed60s responses.
 
-Independent result review confirms the negative service result; owned temporary
-state is removed and copied-data analyses replay identically. Original
-source/defaults remain selected. The subsequent private waiting-queue
+At finding0061 publication, independent review confirms the negative service
+result; owned temporary state is removed and copied-data analyses replay
+identically. Original source/defaults remain selected at that step. The subsequent private waiting-queue
 candidate has now completed the separately scoped finding0062 below; its
 qualification does not select production behavior or establish arbitrary
 load/backend support. Admission/lifetime behavior belongs to the driver;
@@ -627,5 +627,13 @@ recycling; stop cancels unadmitted work instead of claiming completed responses.
 Both paths/models complete all 15,360 measured requests. The primary 64/s
 P99 effects remain inconclusive. Qwen/96 has better P99 but worse median and
 process CPU; no general performance or total-CPU saving follows. Source,
-qualification, raw data and independent review are archived together. This
-publication does not select the candidate into ordinary application behavior.
+qualification, raw data and independent review are archived together.
+Subsequent [ordinary-source integration](../bench/results/pending_admission_integration_20261015/)
+selects the finite queue and repaired wait/stop behavior for the BPF loop,
+with the event-driven native competitor synchronized too. The normal Makefile
+passes its absolute BUILD directory to loader/loop object bindings; private
+source paths are absent. The page-size change requires a module rebuild.
+Four newly compiled loop/native protocol executors pass2560 outcomes/93504
+replayed model tokens. Other shared-adapter builds are compile coverage only.
+This adoption repairs observed admission loss; it does not establish general
+performance superiority or complete TCP backpressure.

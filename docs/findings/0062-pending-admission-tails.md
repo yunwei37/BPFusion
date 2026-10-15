@@ -3,8 +3,8 @@
 2026-10-15 UTC. Complete collection and independent result review. Both
 paths deliver every measured request; the predeclared P99 superiority remains
 inconclusive. A secondary Qwen high-load tail benefit comes with worse median
-latency and higher executor CPU. Production selection and final temporary
-runtime cleanup remain separate, unfinished work.
+latency and higher executor CPU. At collection publication, production selection and temporary runtime cleanup
+remain separate, unfinished work; the subsequent integration is recorded below.
 
 ## Question and mechanism
 
@@ -161,3 +161,28 @@ a private-source candidate: ordinary application source/defaults are unchanged.
 Production integration and final owned-runtime restoration remain unfinished;
 the original Workspace, private runtime needed for that work, and unowned WIP
 are preserved. The full retained project objective remains active.
+
+## Subsequent ordinary-source integration
+
+2026-10-15 UTC,after collection review. The
+[integration evidence](../../bench/results/pending_admission_integration_20261015/)
+records normal-root Makefile builds and four actual loop/native protocol
+executors:2560 outcomes/93504 replayed tokens,including1036 intended rejections.
+Source binding matches the independently reviewed candidate/native snapshots,
+apart from normal BUILD-derived BPF paths and the same shared-adapter shutdown
+interrupt. The BPF loop now selects finite queued admission; other direct
+admission modes retain their boundary. This is a correctness repair adoption,
+not a new performance run or a change to the primary result.
+
+A separate post-review ordering analysis of the saved full trace finds Qwen96
+native requests bypassed by up to149/175/165/72/159 later-client-stamped requests
+per block,versus1/2/2/1/1 on the kernel FIFO. Client stamps precede sends and do
+not measure exact kernel ingress or queue residence. These observations support
+the competing scheduling/fairness explanation for better P99 with worse median.
+Native admission policy must be aligned before attributing that gain to eBPF
+or syscall removal. The original independent review is not claimed to have
+reviewed this later analysis or integration.
+
+Owned temporary runtime/build removal and unchanged original state are recorded
+separately in the integration restoration receipt; saved-data replay remains
+portable. The broader performance objective remains active.

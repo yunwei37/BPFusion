@@ -2,12 +2,19 @@
 // Matched userspace network control: same page ABI and resident GPU dispatcher.
 #include <sys/epoll.h>
 #include <sys/uio.h>
+#include <sys/eventfd.h>
 #include <cerrno>
 #include <cstring>
 #include <map>
 #include <memory>
 #include <string>
 #include <chrono>
+
+static volatile sig_atomic_t user_wake_fd=-1;
+static void user_network_interrupt() {
+    int fd=user_wake_fd;
+    if(fd>=0) { uint64_t one=1;ssize_t ignored=write(fd,&one,sizeof(one));(void)ignored; }
+}
 
 static int user_network(bf_page *page,int listener,unsigned seconds,
                         volatile sig_atomic_t *stopped) {
@@ -24,11 +31,17 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
     } replies[BF_LLM_SLOTS];
     std::map<int,std::shared_ptr<Peer>> peers;
     unsigned head=0,completed=0,rejected_count=0,accepted=0;
+    bool buffered_ready=false;
     int ep=epoll_create1(EPOLL_CLOEXEC);
     if(ep<0) { perror("epoll_create1");return 1; }
     fcntl(listener,F_SETFL,fcntl(listener,F_GETFL)|O_NONBLOCK);
     epoll_event watch={};watch.events=EPOLLIN;watch.data.fd=listener;
     if(epoll_ctl(ep,EPOLL_CTL_ADD,listener,&watch)) { close(ep);return 1; }
+    int wake=eventfd(0,EFD_NONBLOCK|EFD_CLOEXEC);
+    if(wake<0) { close(ep);return 1; }
+    watch.events=EPOLLIN;watch.data.fd=wake;
+    if(epoll_ctl(ep,EPOLL_CTL_ADD,wake,&watch)) { close(wake);close(ep);return 1; }
+    user_wake_fd=wake;
     auto disconnect=[&](Peer &peer) {
         if(peer.fd>=0) {
             epoll_ctl(ep,EPOLL_CTL_DEL,peer.fd,nullptr);
@@ -53,7 +66,7 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
         }
     };
 #ifdef BF_USER_NETWORK_WAIT
-    printf("userspace completion wait=epoll_pwait2 timeout_ns=60000\n");
+    printf("userspace completion wait=epoll_pwait2 active_timeout_ns=60000 idle=socket_or_deadline shutdown=eventfd\n");
 #else
     printf("userspace completion wait=busy epoll_wait timeout_ms=0\n");
 #endif
@@ -64,14 +77,20 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
 #ifdef BF_USER_NETWORK_WAIT
         // Socket readiness wakes immediately; GPU completions are polled after
         // the same nominal 60 us lower wait bound used by kernel TX.
-        const timespec timeout={0,60000};
+        auto remaining=std::chrono::duration_cast<std::chrono::nanoseconds>(
+            deadline-std::chrono::steady_clock::now()).count();
+        if(remaining<=0)break;
+        long long wait_ns=(head!=completed || buffered_ready) ? 60000 : remaining;
+        const timespec timeout={wait_ns/1000000000,wait_ns%1000000000};
         int n=epoll_pwait2(ep,events,BF_LLM_SLOTS*2,&timeout,nullptr);
 #else
         int n=epoll_wait(ep,events,BF_LLM_SLOTS*2,0);
 #endif
+        if(*stopped)break;
         if(n<0 && errno!=EINTR) { perror("epoll wait");break; }
         for(int e=0;e<n;e++) {
             int fd=events[e].data.fd;
+            if(fd==wake) { uint64_t count;ssize_t ignored=read(wake,&count,sizeof(count));(void)ignored;continue; }
             if(fd==listener) {
                 while(true) {
                     int child=accept4(listener,nullptr,nullptr,SOCK_NONBLOCK|SOCK_CLOEXEC);
@@ -124,6 +143,7 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
                 completed++;if(rejected) rejected_count++;
             }
         }
+        buffered_ready=false;
         for(auto it=peers.begin();it!=peers.end();) {
             auto peer=it->second;
             if(peer->fd>=0 && peer->slot<0 && !peer->input.empty()) {
@@ -164,7 +184,7 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
                         replies[i].peer=peer;peer->slot=i;
                         __atomic_store_n(&slot->state,(unsigned)BF_PENDING,__ATOMIC_RELEASE);
                         __atomic_store_n(&page->llm_head,++head,__ATOMIC_RELEASE);
-                    }
+                    } else buffered_ready=true;
                 }
             }
             if(peer->slot<0 && (peer->fd<0 || (peer->eof && peer->input.empty()))) {
@@ -173,7 +193,7 @@ static int user_network(bf_page *page,int listener,unsigned seconds,
         }
     }
     for(auto &item:peers) disconnect(*item.second);
-    close(ep);
+    user_wake_fd=-1;close(wake);close(ep);
     printf("userspace TCP stopped: accepted=%u published=%u completed=%u rejected=%u\n",
            accepted,head,completed,rejected_count);fflush(stdout);
     return 0;

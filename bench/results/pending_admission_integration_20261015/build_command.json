@@ -1,0 +1,22 @@
+{
+  "command": [
+    "make",
+    "BUILD=/tmp/bpfusion-admission-integration-avimcrs6/build",
+    "VLLM_PYTHON=/tmp/bpfusion-pending-admission-t4hv6ezt/runtime/bin/python",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/fusion.bpf.o",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/uring_loop.bpf.o",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/uring_loop_after.bpf.o",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/bpfusion_load",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/vllm_graph_uring_loop_trace.so",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/vllm_graph_uring_loop_trace",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/vllm_graph_uring_loop.so",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/vllm_graph_uring_loop",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/vllm_graph_uring_trace.so",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/vllm_graph_uring_trace",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/vllm_graph_user_network_wait_trace.so",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/vllm_graph_user_network_wait_trace",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/vllm_graph_user_network_wait.so",
+    "/tmp/bpfusion-admission-integration-avimcrs6/build/vllm_graph_user_network_wait"
+  ],
+  "scope": "Ordinary root Makefile and sources with supported BUILD override; preserved root artifacts unchanged."
+}

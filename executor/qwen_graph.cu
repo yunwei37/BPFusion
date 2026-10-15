@@ -106,6 +106,9 @@ extern "C" unsigned max_requests() { return BF_LLM_SLOTS; }
 static volatile sig_atomic_t stopped=0;
 static void stop_signal(int) {
     stopped=1;
+#ifdef BF_USER_NETWORK
+    user_network_interrupt();
+#endif
 #ifdef BF_URING_BPF_LOOP
     uring_interrupt();
 #endif

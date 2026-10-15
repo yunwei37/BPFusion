@@ -1,0 +1,106 @@
+{
+  "utc": "2026-10-15T12:00:48.810550+00:00",
+  "temporary_directories_absent": true,
+  "analyses": [
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/pending_admission_20261015/protocol_analysis.py",
+        "/workspaces/repository/bench/results/pending_admission_20261015/protocol_qwen.jsonl"
+      ],
+      "exit": 0,
+      "stdout_byte_equal": true,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/pending_admission_20261015/protocol_analysis.py",
+        "/workspaces/repository/bench/results/pending_admission_20261015/protocol_compat_qwen.jsonl"
+      ],
+      "exit": 0,
+      "stdout_byte_equal": true,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/pending_admission_20261015/protocol_analysis.py",
+        "/workspaces/repository/bench/results/pending_admission_20261015/protocol_smol.jsonl"
+      ],
+      "exit": 0,
+      "stdout_byte_equal": true,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/pending_admission_20261015/protocol_analysis.py",
+        "/workspaces/repository/bench/results/pending_admission_20261015/protocol_compat_smol.jsonl"
+      ],
+      "exit": 0,
+      "stdout_byte_equal": true,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/pending_admission_20261015/analyze.py",
+        "/workspaces/repository/bench/results/pending_admission_20261015/preflight_qwen.jsonl"
+      ],
+      "exit": 0,
+      "stdout_byte_equal": true,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/pending_admission_20261015/analyze.py",
+        "/workspaces/repository/bench/results/pending_admission_20261015/full_qwen.jsonl"
+      ],
+      "exit": 0,
+      "stdout_byte_equal": true,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/pending_admission_20261015/analyze.py",
+        "/workspaces/repository/bench/results/pending_admission_20261015/full_smol.jsonl"
+      ],
+      "exit": 0,
+      "stdout_byte_equal": true,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/pending_admission_integration_20261015/protocol_analysis.py",
+        "/workspaces/repository/bench/results/pending_admission_integration_20261015/protocol_qwen.jsonl"
+      ],
+      "exit": 0,
+      "stdout_byte_equal": true,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/pending_admission_integration_20261015/protocol_analysis.py",
+        "/workspaces/repository/bench/results/pending_admission_integration_20261015/protocol_smol.jsonl"
+      ],
+      "exit": 0,
+      "stdout_byte_equal": true,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/workspaces/repository/bench/results/pending_admission_integration_20261015/admission_order.py",
+        "/workspaces/repository/bench/results/pending_admission_20261015"
+      ],
+      "exit": 0,
+      "stdout_byte_equal": true,
+      "stderr": ""
+    }
+  ]
+}

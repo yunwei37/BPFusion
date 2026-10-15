@@ -149,3 +149,15 @@ work; no final cleanup or production selection is claimed here.
 Archived source, diff and terminal-output whitespace is preserved verbatim.
 Git whitespace diagnostics on those evidence files are not cleaned by altering
 the recorded inputs; authored summary documentation passes whitespace checks.
+
+## Subsequent integration and cleanup
+
+The selection/cleanup statements above describe the collection-publication
+checkpoint. The later [ordinary-source integration](../pending_admission_integration_20261015/)
+adopts finite pending admission in the BPF loop and synchronizes the native
+event-driven competitor. Its final_restoration.json records removal of both
+owned temporary directories, unchanged original build/setup artifacts and base
+packages, and no remaining BPFusion process/map/module state. Its
+final_replay.json reproduces all seven analyses here, two integration protocol
+analyses and the separate exploratory ordering analysis after temporary removal.
+The original result review does not certify these later actions.

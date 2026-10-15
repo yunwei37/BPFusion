@@ -46,8 +46,11 @@ valid requests to drop. The subsequent independently reviewed
 completes all 15,360 measured requests across both paths/models. Neither model
 establishes the primary P99 advantage at 64 requests/s. At secondary Qwen/96,
 first-token P99 is 280/1418 ms kernel/native, but median latency and process CPU
-are worse and throughput superiority remains unproven. The candidate is
-archived; ordinary application source/defaults still retain the old behavior.
+are worse and throughput superiority remains unproven. The io_uring BPF loop
+now adopts the finite admission repair after
+[ordinary-source regression](bench/results/pending_admission_integration_20261015/).
+Queue overflow remains a drop boundary; module/SQPOLL paths retain direct
+admission. Admission-policy differences still prevent syscall-only attribution.
 
 Strict regressions cover output agreement, fragmented messages, concurrent
 requests, connection reuse, pipelining, half-close, invalid inputs and queue

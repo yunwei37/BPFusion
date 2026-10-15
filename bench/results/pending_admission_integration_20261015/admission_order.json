@@ -1,0 +1,605 @@
+{
+  "scope": "Exploratory post-review saved-data analysis. GPU model-admission order versus client stamp order, not exact ingress order or queue residence time. No causal or new primary claim.",
+  "cells": [
+    {
+      "model": "qwen",
+      "pair": 0,
+      "mode": "uring_loop",
+      "rate": 4,
+      "client_stamp_order_inversions": 1,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 16.70104,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 0,
+      "mode": "uring_loop",
+      "rate": 64,
+      "client_stamp_order_inversions": 4,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 85.073397,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 0,
+      "mode": "uring_loop",
+      "rate": 96,
+      "client_stamp_order_inversions": 1,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 322.340775,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 0,
+      "mode": "userspace",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 10.874498,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 0,
+      "mode": "userspace",
+      "rate": 64,
+      "client_stamp_order_inversions": 98,
+      "max_later_stamp_admitted_first": 23,
+      "worst_ttft_ms": 291.617531,
+      "worst_ttft_later_stamp_admitted_first": 23
+    },
+    {
+      "model": "qwen",
+      "pair": 0,
+      "mode": "userspace",
+      "rate": 96,
+      "client_stamp_order_inversions": 2773,
+      "max_later_stamp_admitted_first": 149,
+      "worst_ttft_ms": 1780.907887,
+      "worst_ttft_later_stamp_admitted_first": 143
+    },
+    {
+      "model": "qwen",
+      "pair": 1,
+      "mode": "uring_loop",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 21.535685,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 1,
+      "mode": "uring_loop",
+      "rate": 64,
+      "client_stamp_order_inversions": 1,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 59.749726,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 1,
+      "mode": "uring_loop",
+      "rate": 96,
+      "client_stamp_order_inversions": 3,
+      "max_later_stamp_admitted_first": 2,
+      "worst_ttft_ms": 343.915172,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 1,
+      "mode": "userspace",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 14.518858,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 1,
+      "mode": "userspace",
+      "rate": 64,
+      "client_stamp_order_inversions": 14,
+      "max_later_stamp_admitted_first": 5,
+      "worst_ttft_ms": 97.155404,
+      "worst_ttft_later_stamp_admitted_first": 5
+    },
+    {
+      "model": "qwen",
+      "pair": 1,
+      "mode": "userspace",
+      "rate": 96,
+      "client_stamp_order_inversions": 1454,
+      "max_later_stamp_admitted_first": 175,
+      "worst_ttft_ms": 2045.972101,
+      "worst_ttft_later_stamp_admitted_first": 175
+    },
+    {
+      "model": "qwen",
+      "pair": 2,
+      "mode": "uring_loop",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 14.946095,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 2,
+      "mode": "uring_loop",
+      "rate": 64,
+      "client_stamp_order_inversions": 1,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 58.041476,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 2,
+      "mode": "uring_loop",
+      "rate": 96,
+      "client_stamp_order_inversions": 3,
+      "max_later_stamp_admitted_first": 2,
+      "worst_ttft_ms": 389.61269,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 2,
+      "mode": "userspace",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 18.842673,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 2,
+      "mode": "userspace",
+      "rate": 64,
+      "client_stamp_order_inversions": 14,
+      "max_later_stamp_admitted_first": 4,
+      "worst_ttft_ms": 91.528641,
+      "worst_ttft_later_stamp_admitted_first": 4
+    },
+    {
+      "model": "qwen",
+      "pair": 2,
+      "mode": "userspace",
+      "rate": 96,
+      "client_stamp_order_inversions": 2001,
+      "max_later_stamp_admitted_first": 165,
+      "worst_ttft_ms": 2056.035306,
+      "worst_ttft_later_stamp_admitted_first": 165
+    },
+    {
+      "model": "qwen",
+      "pair": 3,
+      "mode": "uring_loop",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 19.557755,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 3,
+      "mode": "uring_loop",
+      "rate": 64,
+      "client_stamp_order_inversions": 1,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 46.960825,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 3,
+      "mode": "uring_loop",
+      "rate": 96,
+      "client_stamp_order_inversions": 2,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 176.501063,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 3,
+      "mode": "userspace",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 15.310207,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 3,
+      "mode": "userspace",
+      "rate": 64,
+      "client_stamp_order_inversions": 10,
+      "max_later_stamp_admitted_first": 6,
+      "worst_ttft_ms": 97.238287,
+      "worst_ttft_later_stamp_admitted_first": 6
+    },
+    {
+      "model": "qwen",
+      "pair": 3,
+      "mode": "userspace",
+      "rate": 96,
+      "client_stamp_order_inversions": 970,
+      "max_later_stamp_admitted_first": 72,
+      "worst_ttft_ms": 872.67447,
+      "worst_ttft_later_stamp_admitted_first": 72
+    },
+    {
+      "model": "qwen",
+      "pair": 4,
+      "mode": "uring_loop",
+      "rate": 4,
+      "client_stamp_order_inversions": 1,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 26.952966,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 4,
+      "mode": "uring_loop",
+      "rate": 64,
+      "client_stamp_order_inversions": 2,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 72.390775,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 4,
+      "mode": "uring_loop",
+      "rate": 96,
+      "client_stamp_order_inversions": 6,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 224.036221,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 4,
+      "mode": "userspace",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 36.759133,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "qwen",
+      "pair": 4,
+      "mode": "userspace",
+      "rate": 64,
+      "client_stamp_order_inversions": 27,
+      "max_later_stamp_admitted_first": 8,
+      "worst_ttft_ms": 103.454511,
+      "worst_ttft_later_stamp_admitted_first": 8
+    },
+    {
+      "model": "qwen",
+      "pair": 4,
+      "mode": "userspace",
+      "rate": 96,
+      "client_stamp_order_inversions": 1836,
+      "max_later_stamp_admitted_first": 159,
+      "worst_ttft_ms": 1918.956299,
+      "worst_ttft_later_stamp_admitted_first": 159
+    },
+    {
+      "model": "smol",
+      "pair": 0,
+      "mode": "uring_loop",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 26.073603,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 0,
+      "mode": "uring_loop",
+      "rate": 64,
+      "client_stamp_order_inversions": 2,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 47.570207,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 0,
+      "mode": "uring_loop",
+      "rate": 96,
+      "client_stamp_order_inversions": 3,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 112.582805,
+      "worst_ttft_later_stamp_admitted_first": 1
+    },
+    {
+      "model": "smol",
+      "pair": 0,
+      "mode": "userspace",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 9.592509,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 0,
+      "mode": "userspace",
+      "rate": 64,
+      "client_stamp_order_inversions": 10,
+      "max_later_stamp_admitted_first": 4,
+      "worst_ttft_ms": 45.970097,
+      "worst_ttft_later_stamp_admitted_first": 4
+    },
+    {
+      "model": "smol",
+      "pair": 0,
+      "mode": "userspace",
+      "rate": 96,
+      "client_stamp_order_inversions": 315,
+      "max_later_stamp_admitted_first": 28,
+      "worst_ttft_ms": 292.276355,
+      "worst_ttft_later_stamp_admitted_first": 28
+    },
+    {
+      "model": "smol",
+      "pair": 1,
+      "mode": "uring_loop",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 33.966824,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 1,
+      "mode": "uring_loop",
+      "rate": 64,
+      "client_stamp_order_inversions": 1,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 33.210498,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 1,
+      "mode": "uring_loop",
+      "rate": 96,
+      "client_stamp_order_inversions": 3,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 51.159569,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 1,
+      "mode": "userspace",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 13.797289,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 1,
+      "mode": "userspace",
+      "rate": 64,
+      "client_stamp_order_inversions": 1,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 15.965919,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 1,
+      "mode": "userspace",
+      "rate": 96,
+      "client_stamp_order_inversions": 36,
+      "max_later_stamp_admitted_first": 8,
+      "worst_ttft_ms": 116.146866,
+      "worst_ttft_later_stamp_admitted_first": 8
+    },
+    {
+      "model": "smol",
+      "pair": 2,
+      "mode": "uring_loop",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 24.078804,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 2,
+      "mode": "uring_loop",
+      "rate": 64,
+      "client_stamp_order_inversions": 2,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 34.429089,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 2,
+      "mode": "uring_loop",
+      "rate": 96,
+      "client_stamp_order_inversions": 4,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 48.629319,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 2,
+      "mode": "userspace",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 21.107893,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 2,
+      "mode": "userspace",
+      "rate": 64,
+      "client_stamp_order_inversions": 4,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 42.180756,
+      "worst_ttft_later_stamp_admitted_first": 1
+    },
+    {
+      "model": "smol",
+      "pair": 2,
+      "mode": "userspace",
+      "rate": 96,
+      "client_stamp_order_inversions": 247,
+      "max_later_stamp_admitted_first": 25,
+      "worst_ttft_ms": 321.360928,
+      "worst_ttft_later_stamp_admitted_first": 25
+    },
+    {
+      "model": "smol",
+      "pair": 3,
+      "mode": "uring_loop",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 16.824198,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 3,
+      "mode": "uring_loop",
+      "rate": 64,
+      "client_stamp_order_inversions": 2,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 19.62698,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 3,
+      "mode": "uring_loop",
+      "rate": 96,
+      "client_stamp_order_inversions": 1,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 50.240581,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 3,
+      "mode": "userspace",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 16.713696,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 3,
+      "mode": "userspace",
+      "rate": 64,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 15.156631,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 3,
+      "mode": "userspace",
+      "rate": 96,
+      "client_stamp_order_inversions": 32,
+      "max_later_stamp_admitted_first": 6,
+      "worst_ttft_ms": 89.162888,
+      "worst_ttft_later_stamp_admitted_first": 6
+    },
+    {
+      "model": "smol",
+      "pair": 4,
+      "mode": "uring_loop",
+      "rate": 4,
+      "client_stamp_order_inversions": 0,
+      "max_later_stamp_admitted_first": 0,
+      "worst_ttft_ms": 16.648634,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 4,
+      "mode": "uring_loop",
+      "rate": 64,
+      "client_stamp_order_inversions": 4,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 263.359394,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 4,
+      "mode": "uring_loop",
+      "rate": 96,
+      "client_stamp_order_inversions": 3,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 107.183518,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 4,
+      "mode": "userspace",
+      "rate": 4,
+      "client_stamp_order_inversions": 1,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 21.410648,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 4,
+      "mode": "userspace",
+      "rate": 64,
+      "client_stamp_order_inversions": 3,
+      "max_later_stamp_admitted_first": 1,
+      "worst_ttft_ms": 29.008146,
+      "worst_ttft_later_stamp_admitted_first": 0
+    },
+    {
+      "model": "smol",
+      "pair": 4,
+      "mode": "userspace",
+      "rate": 96,
+      "client_stamp_order_inversions": 78,
+      "max_later_stamp_admitted_first": 11,
+      "worst_ttft_ms": 157.792292,
+      "worst_ttft_later_stamp_admitted_first": 11
+    }
+  ]
+}

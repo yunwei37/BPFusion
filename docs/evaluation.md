@@ -1205,3 +1205,16 @@ The fresh [result review](../bench/results/pending_admission_20261015/result-rev
 finds valid supporting mechanism/workload evidence, not general superiority.
 All seven archived CPU analyses replay bytewise. Private-source qualification
 does not select production behavior or certify later cleanup/publication.
+
+Subsequent [ordinary-source integration](../bench/results/pending_admission_integration_20261015/)
+adopts the reviewed finite queue into the BPF-loop path. Four newly built
+loop/native protocol executors pass2560 outcomes/93504 replayed tokens,including
+1036 intentional rejections. This regression supplies no new performance effect.
+The normal Makefile's BUILD override selects actual BPF paths; preserved root
+build artifacts are unchanged.
+
+Post-review saved-trace exploration finds Qwen96 native maximum later-stamped
+admissions ahead of an earlier request149/175/165/72/159 per block,versus
+1/2/2/1/1 on the kernel FIFO. Client stamps are not precise ingress timestamps.
+This strengthens the scheduling/fairness competing explanation and motivates
+aligning native admission policy before driver-only tail attribution.

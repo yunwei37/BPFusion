@@ -7,6 +7,7 @@
 # Requires: clang, libbpf, libelf, zlib, libcuda/nvcc for the executor.
 
 BUILD    := build
+CPPFLAGS += -DBF_BUILD_DIR='"$(abspath $(BUILD))"'
 ARCH     := $(shell uname -m | sed 's/x86_64/x86/;s/aarch64/arm64/')
 BPF_CFLAGS := -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_$(ARCH) \
               -I/usr/include/$(shell uname -m)-linux-gnu -Ibpf/include \
@@ -35,7 +36,7 @@ tools: $(TOOLS)
 
 executor: $(BUILD)/executor
 
-$(BUILD)/%.bpf.o: bpf/%.bpf.c bpf/include/bpfusion_queue.h | $(BUILD)
+$(BUILD)/%.bpf.o: bpf/%.bpf.c bpf/include/bpfusion_queue.h bpf/include/bpfusion_admission.h | $(BUILD)
 	clang $(BPF_CFLAGS) -c $< -o $@
 
 $(BUILD)/wake_probe: tools/wake_probe/main.c | $(BUILD)
@@ -47,7 +48,7 @@ $(BUILD)/client: tools/client.c bpf/include/bpfusion_queue.h | $(BUILD)
 $(BUILD)/echo_udp: tools/echo_udp.c | $(BUILD)
 	$(CC) $(CFLAGS) $< -o $@
 $(BUILD)/bpfusion_load: tools/bpfusion_load.c bpf/include/bpfusion_queue.h | $(BUILD)
-	$(CC) $(CFLAGS) -Ibpf/include $< -o $@ $(LDLIBS)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -Ibpf/include $< -o $@ $(LDLIBS)
 
 $(BUILD)/perfcount: tools/perfcount.c | $(BUILD)
 	$(CC) $(CFLAGS) $< -o $@
@@ -157,11 +158,11 @@ vllm-graph-uring-coalesced: $(BUILD)/uring_loop.bpf.o $(addprefix $(BUILD)/,$(ad
 .PHONY: vllm-graph-uring-loop-after
 vllm-graph-uring-loop-after: $(BUILD)/uring_loop_after.bpf.o $(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_URING_LOOP_AFTER_NAMES))) $(addprefix $(BUILD)/,$(VLLM_URING_LOOP_AFTER_NAMES))
 
-$(BUILD)/uring_loop_after.bpf.o: bpf/uring_loop.bpf.c bpf/include/bpfusion_queue.h | $(BUILD)
+$(BUILD)/uring_loop_after.bpf.o: bpf/uring_loop.bpf.c bpf/include/bpfusion_queue.h bpf/include/bpfusion_admission.h | $(BUILD)
 	clang $(BPF_CFLAGS) -DBF_IO_CQ_AFTER_SUBMIT -c $< -o $@
 
 $(BUILD)/qwen_graph_uring_loop.so: executor/qwen_graph.cu executor/io_uring_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -rdc=true -shared -Xcompiler=-fPIC \
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -rdc=true -shared -Xcompiler=-fPIC \
 		-I$(KERNEL_UAPI) -Ibpf/include $< -o $@ $(LDLIBS)
 
 $(BUILD)/qwen_graph_uring_loop: executor/qwen_graph.py | $(BUILD)
@@ -183,7 +184,7 @@ $(addprefix $(BUILD)/,$(VLLM_NAMES)): executor/vllm_graph.py | $(BUILD)
 	ln -sf $(abspath executor/vllm_graph.py) $@
 
 $(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_NAMES))): $(BUILD)/%.so: executor/vllm_graph.cu executor/userspace_tcp.h executor/io_uring_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
 		$(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT) $(if $(findstring trace,$*),-DBF_TRACE) $(if $(filter $*,$(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES) $(VLLM_URING_COALESCED_NAMES) $(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_URING_NETWORK) $(if $(filter $*,$(VLLM_URING_LOOP_NAMES) $(VLLM_URING_COALESCED_NAMES) $(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_URING_BPF_LOOP -I$(KERNEL_UAPI)) $(if $(filter $*,$(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_IO_CQ_AFTER_SUBMIT) $(if $(findstring full_copy,$*),-DBF_IO_FULL_COPY) $(if $(findstring coalesced,$*),-DBF_IO_COALESCED) $(if $(filter $*,$(VLLM_DEFAULT_NAMES) $(VLLM_PADDED_NAMES) $(VLLM_CHAINED_NAMES) $(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES) $(VLLM_URING_COALESCED_NAMES) $(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_PAD_PREFILL) $(if $(filter $*,$(VLLM_DEFAULT_NAMES) $(VLLM_CHAINED_NAMES) $(VLLM_URING_NAMES) $(VLLM_URING_CONTROL_NAMES) $(VLLM_URING_LOOP_NAMES) $(VLLM_URING_COALESCED_NAMES) $(VLLM_URING_LOOP_AFTER_NAMES)),-DBF_PREFIX_RELEASE) $(if $(filter $*,$(VLLM_CHAINED_NAMES)),-DBF_CHAINED_DISPATCH) $< -o $@.o
 	$(NVCC) -arch=$(SM_ARCH) -dlink -Xcompiler=-fPIC $@.o -o $@.dlink.o
 	$(CXX) -shared -Wl,-z,defs $@.o $@.dlink.o $(VLLM_CUDART) -Wl,-rpath,$(dir $(VLLM_CUDART)) -o $@ $(LDLIBS)
@@ -199,7 +200,7 @@ $(BUILD)/amk_graph_builder.so: executor/amk_graph.cu | $(BUILD)
 	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -rdc=true -shared -Xcompiler=-fPIC -I$(AMK_INCLUDE) $< -lcuda -o $@
 
 $(BUILD)/amk_graph_uring_loop.so: executor/qwen_graph.cu executor/io_uring_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -rdc=true -shared -Xcompiler=-fPIC -I$(KERNEL_UAPI) -Ibpf/include $< -o $@ $(LDLIBS)
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -rdc=true -shared -Xcompiler=-fPIC -I$(KERNEL_UAPI) -Ibpf/include $< -o $@ $(LDLIBS)
 
 $(BUILD)/amk_graph_user_network_wait.so: executor/qwen_graph.cu executor/userspace_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
 	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT -rdc=true -shared -Xcompiler=-fPIC -Ibpf/include $< -o $@ $(LDLIBS)
@@ -211,7 +212,7 @@ $(BUILD)/amk_graph_uring_loop $(BUILD)/amk_graph_user_network_wait: executor/amk
 amk-graph-uring-coalesced: $(BUILD)/uring_loop.bpf.o $(BUILD)/amk_graph_builder.so $(BUILD)/amk_graph_uring_loop_coalesced.so $(BUILD)/amk_graph_uring_loop_coalesced
 
 $(BUILD)/amk_graph_uring_loop_coalesced.so: executor/qwen_graph.cu executor/io_uring_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
-	$(NVCC) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -DBF_IO_COALESCED -rdc=true -shared -Xcompiler=-fPIC -I$(KERNEL_UAPI) -Ibpf/include $< -o $@ $(LDLIBS)
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -DBF_IO_COALESCED -rdc=true -shared -Xcompiler=-fPIC -I$(KERNEL_UAPI) -Ibpf/include $< -o $@ $(LDLIBS)
 
 $(BUILD)/amk_graph_uring_loop_coalesced: executor/amk_graph.py | $(BUILD)
 	ln -sf $(abspath executor/amk_graph.py) $@

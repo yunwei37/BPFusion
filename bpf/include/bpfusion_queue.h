@@ -66,9 +66,20 @@ struct bf_uring_loop_control {
     __u32 sq_head, sq_tail, cq_tail;
     __u32 model_quiesced, finished, stop_requested;
     __u64 deadline_ns;
+    __u32 cq_seen, timer_may_idle;
+    __u64 now_ns;
+    __u32 admission_seen, backlog_peak;
 };
 #define BF_IO_SEND_TAG 0xbff0ULL
 #define BF_IO_ABORT_TAG 0xbff1ULL
+
+/* CPU-owned admission backlog; model slots keep their existing layout. */
+struct bf_llm_pending {
+    __u32 n_prompt, n_gen, addr_be;
+    __u16 port_be, flags;
+    __u64 client_ns, ingress_ns;
+    __u32 tokens[BF_LLM_MAX_TOK];
+};
 
 struct bf_llm_slot {
 	__u32 state;      /* producer FREE->PENDING; executor ->DONE; TX ->FREE */
@@ -165,6 +176,7 @@ struct bf_page {
 		__u64 llm_admission;
 	};
 	struct bf_llm_slot llm[BF_LLM_SLOTS];
+    __u32 llm_queued, admission_pad; /* CPU atomic count, read-only on GPU */
 };
 
 #define BF_PAGE_BYTES ((int)sizeof(struct bf_page))
