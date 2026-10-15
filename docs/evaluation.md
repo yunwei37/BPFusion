@@ -1282,5 +1282,10 @@ plus32 warmups. Both16-capacity paths actually execute widths1..16 and pass
 independent history replay;copied CPU analysis matches bytewise.16-capacity
 Qwen16 protocol/lifecycle qualification now passes,including2568 protocol
 outcomes/94400replayedtokens and bounded ordinary reset/stop cases.
-Smol16 qualification is running. No performance result is available. Full execution,
+Smol16 qualification also passes;all6commands are complete. Four protocol
+executors total5136outcomes/188800replayedtokens,including2060intendedrejects;
+all four ordinary lifecycle cases pass within their recorded partial/canceled
+scope. The three archived CPU analyses reproduce bytewise. One full.py starts
+14:38:25.993951UTC and is running the complete40-executor80-cell matrix.
+No performance result or production default selection is available. Full execution,
 fresh result review,owned cleanup and final publication remain unfinished.

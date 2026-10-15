@@ -3,7 +3,9 @@
 This is an uncompleted experiment checkpoint,not a performance result.
 [plan.md](plan.md) and [plan-review.md](plan-review.md) preserve the admitted
 comparison and the two resolved execution followups. running_checkpoint.json
-identifies the actual existing process and observed setup state.
+records the early setup observation. full.process.json identifies the current
+measurement process;all.exit.json covers the three preparation stages.
+full.exit.json will record measurement completion.
 
 ## Question and planned comparison
 
@@ -108,3 +110,25 @@ qwen_qualification_completion.json links the completed scope.
 The same original wrapper has advanced to Smol16 qualification. Full
 throughput/tail collection remains unstarted and no performance benefit
 or production default selection is inferred.
+
+## Complete qualification and full collection start
+
+All6qualification commands pass at14:35:58.407703UTC. Four16-capacity protocol
+executors complete5136 outcomes,including2060 intended rejections,and188800
+independently replayed tokens. Both models and both paths actually exercise
+widths1..16. Both copied protocol analyses and the real-preflight analysis
+match saved stdout bytewise.
+
+All four retained ordinary lifecycle cases also pass. Each loop has144actions/
+78connections with16active requests,queued RST and64-connection active stop;
+each native case has32actions,including a partial stop. Their exact complete/
+prefix/cancellation scope remains in qualification_completion.json and raw folders.
+
+The original preparation wrapper is terminal. After inspecting every outcome,
+checking preserved original files,and confirming no remaining owned pins/module,
+root starts exactly one full.py at14:38:25.993951UTC,PID611266,start50647799.
+The prelaunch short GPU snapshot is14:38:02.651149UTC with no reported app;
+the full host snapshot is during earlier lifecycle bootstrap. Neither establishes
+continuous isolation. The full40-executor80-cell matrix is running.
+No full performance result,ordinary default selection or overall goal completion
+is claimed. Preserve the active owned runtime/build directory until work ends.

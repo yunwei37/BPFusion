@@ -1,0 +1,114 @@
+{
+  "utc": "2026-10-15T14:31:00.534609+00:00",
+  "driver_status": {
+    "name": "protocol_smol",
+    "command": [
+      "/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+      "/tmp/bpfusion-batch-capacity-tkii8tus/load.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--correctness",
+      "--output",
+      "/tmp/bpfusion-batch-capacity-tkii8tus/protocol_smol.jsonl"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T14:29:16.024581+00:00",
+    "analysis_exit": 0
+  },
+  "coverage": {
+    "event": "coverage",
+    "requests": 2568,
+    "tokens": 94400,
+    "actual_batches": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ]
+  },
+  "executors": [
+    {
+      "event": "verified_executor",
+      "pair": 0,
+      "mode": "uring_loop_16",
+      "requests": 1284,
+      "tokens": 47200,
+      "rejections": 515,
+      "actual_batches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "graphs": 7774,
+      "prefill_graphs": 309,
+      "decode_graphs": 7465,
+      "real_prompt_tokens": 11678,
+      "padded_query_tokens": 12855,
+      "release_rounds": 179,
+      "max_release": 16
+    },
+    {
+      "event": "verified_executor",
+      "pair": 0,
+      "mode": "userspace_16",
+      "requests": 1284,
+      "tokens": 47200,
+      "rejections": 515,
+      "actual_batches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "graphs": 11203,
+      "prefill_graphs": 245,
+      "decode_graphs": 10958,
+      "real_prompt_tokens": 11678,
+      "padded_query_tokens": 17125,
+      "release_rounds": 269,
+      "max_release": 16
+    }
+  ],
+  "copied_cpu_replay": {
+    "exit": 0,
+    "byte_equal": true
+  },
+  "scope": "Complete Smol16 protocol qualification; its ordinary lifecycle still running. No performance result."
+}

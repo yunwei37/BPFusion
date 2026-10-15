@@ -1,0 +1,80 @@
+[
+  {
+    "name": "protocol_qwen",
+    "command": [
+      "/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+      "/tmp/bpfusion-batch-capacity-tkii8tus/load.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--correctness",
+      "--output",
+      "/tmp/bpfusion-batch-capacity-tkii8tus/protocol_qwen.jsonl"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T14:14:00.186222+00:00",
+    "analysis_exit": 0
+  },
+  {
+    "name": "lifecycle_qwen_loop",
+    "command": [
+      "/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+      "/tmp/bpfusion-batch-capacity-tkii8tus/lifecycle.py",
+      "loop",
+      "qwen"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T14:18:02.471368+00:00",
+    "lifecycle_pass": true
+  },
+  {
+    "name": "lifecycle_qwen_native",
+    "command": [
+      "/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+      "/tmp/bpfusion-batch-capacity-tkii8tus/lifecycle.py",
+      "native",
+      "qwen"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T14:21:47.817205+00:00",
+    "lifecycle_pass": true
+  },
+  {
+    "name": "protocol_smol",
+    "command": [
+      "/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+      "/tmp/bpfusion-batch-capacity-tkii8tus/load.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--correctness",
+      "--output",
+      "/tmp/bpfusion-batch-capacity-tkii8tus/protocol_smol.jsonl"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T14:29:16.024581+00:00",
+    "analysis_exit": 0
+  },
+  {
+    "name": "lifecycle_smol_loop",
+    "command": [
+      "/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+      "/tmp/bpfusion-batch-capacity-tkii8tus/lifecycle.py",
+      "loop",
+      "smol"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T14:32:44.767978+00:00",
+    "lifecycle_pass": true
+  },
+  {
+    "name": "lifecycle_smol_native",
+    "command": [
+      "/tmp/bpfusion-batch-capacity-tkii8tus/runtime/bin/python",
+      "/tmp/bpfusion-batch-capacity-tkii8tus/lifecycle.py",
+      "native",
+      "smol"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T14:35:58.398181+00:00",
+    "lifecycle_pass": true
+  }
+]
