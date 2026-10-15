@@ -1,0 +1,144 @@
+{
+  "utc": "2026-10-15T13:26:13.006900+00:00",
+  "preserved": {
+    "tools/setup_env.sh": {
+      "match": true,
+      "now": {
+        "inode": 262652,
+        "size": 2012,
+        "mtime_ns": 1791579025166604645,
+        "symlink": null
+      }
+    },
+    "build/qwen_graph.so": {
+      "match": true,
+      "now": {
+        "inode": 262875,
+        "size": 1032248,
+        "mtime_ns": 1791861786400049402,
+        "symlink": null
+      }
+    },
+    "build/vllm_graph_uring_loop_trace.so": {
+      "match": true,
+      "now": {
+        "inode": 265534,
+        "size": 205648,
+        "mtime_ns": 1791966223520416941,
+        "symlink": null
+      }
+    },
+    "build/vllm_graph_uring_loop_trace.so.o": {
+      "match": true,
+      "now": {
+        "inode": 265532,
+        "size": 90360,
+        "mtime_ns": 1791966223401484801,
+        "symlink": null
+      }
+    },
+    "build/vllm_graph_uring_loop_trace.so.dlink.o": {
+      "match": true,
+      "now": {
+        "inode": 265533,
+        "size": 112664,
+        "mtime_ns": 1791966223473486635,
+        "symlink": null
+      }
+    },
+    "build/vllm_graph_uring_loop_trace": {
+      "match": true,
+      "now": {
+        "inode": 265536,
+        "size": 45,
+        "mtime_ns": 1791966223522487883,
+        "symlink": "/workspaces/repository/executor/vllm_graph.py"
+      }
+    },
+    "build/bpfusion_load": {
+      "match": true,
+      "now": {
+        "inode": 262174,
+        "size": 51152,
+        "mtime_ns": 1791944193272715359,
+        "symlink": null
+      }
+    },
+    "build/uring_loop.bpf.o": {
+      "match": true,
+      "now": {
+        "inode": 265845,
+        "size": 10680,
+        "mtime_ns": 1791984245025511169,
+        "symlink": null
+      }
+    }
+  },
+  "coder": {
+    "1": {
+      "exists": true,
+      "start_unchanged": true
+    },
+    "10909": {
+      "exists": true,
+      "start_unchanged": true
+    }
+  },
+  "base_packages": {
+    "torch": "2.14.1+cu130",
+    "transformers": "5.19.0",
+    "numpy": "2.5.3"
+  },
+  "base_packages_unchanged": true,
+  "wrapper_absent": true,
+  "bpfusion_pins": [],
+  "temporary": "/tmp/bpfusion-fair-admission-yijz8oui",
+  "temporary_still_present": false,
+  "source_selection": "70988 production unchanged; native FIFO remains archived private candidate",
+  "utc_after_cleanup": "2026-10-15T13:28:58.544338+00:00",
+  "temporary_removed": true,
+  "active_temp_processes": [],
+  "byte_equal_preserved_files": 189,
+  "post_cleanup_replays": [
+    {
+      "name": "protocol_qwen",
+      "exit": 0,
+      "byte_equal": true
+    },
+    {
+      "name": "protocol_smol",
+      "exit": 0,
+      "byte_equal": true
+    },
+    {
+      "name": "preflight_qwen",
+      "exit": 0,
+      "byte_equal": true
+    },
+    {
+      "name": "full_qwen",
+      "exit": 0,
+      "byte_equal": true
+    },
+    {
+      "name": "full_smol",
+      "exit": 0,
+      "byte_equal": true
+    },
+    {
+      "name": "admission_order.py",
+      "exit": 0,
+      "byte_equal": true
+    },
+    {
+      "name": "tail_summary.py",
+      "exit": 0,
+      "byte_equal": true
+    }
+  ],
+  "production_diff": [],
+  "copy_comparison_exceptions": {
+    "host_full_smol_short_phase.json": "Archive enriched with actual timestamp join after original subset snapshot.",
+    "fair_admission_results.pdf": "Temporary preview render produces its own PDF creation metadata; canonical plot remains archived."
+  }
+}

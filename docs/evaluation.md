@@ -1219,30 +1219,42 @@ admissions ahead of an earlier request149/175/165/72/159 per block,versus
 This strengthens the scheduling/fairness competing explanation and motivates
 aligning native admission policy before driver-only tail attribution.
 
-## Running: fair native admission follow-up
+## Completed fair native admission follow-up
 
-The [reviewed plan and actual source snapshot](../bench/results/fair_admission_20261015/)
-test whether the prior Qwen96/s tail advantage persists against event-driven
-native TCP with eligible-frame FIFO admission. Saved-data reanalysis exposed
-FD-priority bypass in the older native constructor; changing timer/model math
-would leave that competing explanation unresolved. This is supporting evidence
-for the retained complete-serving objective, with mechanism/workload impact.
+[Finding0063](findings/0063-fair-native-admission.md) tests whether the prior
+Qwen96/s tail advantage persists against event-driven native TCP with
+eligible-frame FIFO admission. It removes a concrete native FD-priority
+weakness while retaining identical computation. Role supporting; retained
+complete-serving objective; impact mechanism/workload boundary.
 
-A new predeclared primary is connect-inclusive TTFT P99 at96/s per model;
-64/s is secondary. The old finding0062 primary remains unchanged. Five paired
-blocks/model,two paths,two rates,256 attempts/cell fix20 executors/40 cells/
-10240 measured attempts. Model computation,weights,KV and dispatcher are shared.
-Fairness is aligned only within one-request-per-connection performance traffic.
+The new fixed primary is per-model connect-inclusive TTFT P99 at96/s,
+64/s secondary; finding0062's original primary is unchanged.
+All20 executors/40cells complete10,240 measured requests,zero failures,
+655,360 measured output tokens plus160 checked gen1 warmups.
+No oracle/metric/timeout change, favorable-cell replacement or exclusion occurs.
 
-Setup and source builds pass with matching installed dependency versions.
-Qualification completes all5 commands: four real-model protocol executors pass
-2560 outcomes/93504 replayed tokens,including1036 intended rejections; both
-native retained lifecycle cases and two idle/shutdown cases pass. Lifecycle
-partial/canceled observations are not all complete numerical deliveries.
+Kernel-minus-native primary P99 is+26.113ms [-121.273,173.499] Qwen and
++14.573ms [-26.449,55.596] Smol,nominal paired t95df4. Both are inconclusive.
+The64/s secondary P99,completion-P99 and throughput intervals also cross zero.
+Median costs and higher Qwen process CPU remain. Neither earlier idle CPU
+savings nor the old FD-priority tail result proves current active-service gain.
 
-Real preflight attempt1 completes128 measured requests/8192 tokens plus16
-warmups without failure. Both queues reach16 entries and final queue/reservation
-state clears. Full fixed collection is running; complete results and fresh
-result review remain unfinished. There is no performance result or production
-selection from this follow-up yet. Preserve median/CPU/throughput costs,failures,
-shared-host scheduling and pipeline/buffer-policy limits when interpreting it.
+Both queues engage/drain. Client-stamp bypass is now at most2 in the96/s cells;
+stamps are not exact ingress timestamps or queue residence.
+Generation-stall tails are an exploratory saved-data supplement,including
+client scheduling and recv coalescing,not isolated GPU decode time.
+Large scheduling-lag outliers and shared-host exposure remain unreplaced.
+No P99.9,continuous isolation,total-service CPU or steady-state SLO claim follows.
+
+The [archive](../bench/results/fair_admission_20261015/) contains plan/review,
+frozen implementation/bindings,complete raw histories/references,all metric rows,
+plots and host phase receipts. Five fixed CPU analyses reproduce bytewise.
+The fresh [result review](../bench/results/fair_admission_20261015/result-review.md)
+finds a valid complete run and inconclusive hypothesis. Owned runtime/build
+state is removed; seven saved-data analyses replay bytewise after cleanup,
+with original sessions/build files/base packages preserved
+([restoration](../bench/results/fair_admission_20261015/final_restoration.json)).
+Production computation/transport sources remain unchanged; native FIFO stays
+an archived candidate. The result withdraws general tail attribution from the
+weak FD-priority comparison without claiming a simultaneous old/new causal
+ablation. Close this unchanged matrix; the retained full objective remains active.

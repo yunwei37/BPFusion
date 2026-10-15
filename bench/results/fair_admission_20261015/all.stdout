@@ -1,0 +1,8 @@
+START setup
+TERMINAL {"stage": "setup", "command": ["/usr/bin/python3", "-u", "/tmp/bpfusion-fair-admission-yijz8oui/setup.py"], "exit": 0, "utc": "2026-10-15T12:23:13.483488+00:00"}
+START qualification
+TERMINAL {"stage": "qualification", "command": ["/usr/bin/python3", "-u", "/tmp/bpfusion-fair-admission-yijz8oui/qualification.py"], "exit": 0, "utc": "2026-10-15T12:56:50.950989+00:00"}
+START preflight
+TERMINAL {"stage": "preflight", "command": ["/usr/bin/python3", "-u", "/tmp/bpfusion-fair-admission-yijz8oui/preflight.py"], "exit": 0, "utc": "2026-10-15T12:58:36.658922+00:00"}
+START full
+TERMINAL {"stage": "full", "command": ["/usr/bin/python3", "-u", "/tmp/bpfusion-fair-admission-yijz8oui/full.py"], "exit": 0, "utc": "2026-10-15T13:20:13.210718+00:00"}

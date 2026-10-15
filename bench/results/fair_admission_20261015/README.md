@@ -1,88 +1,94 @@
-# Fair native admission comparison — running
+# Complete fair native admission comparison
 
-Checkpoint 2026-10-15T12:37:18.523819+00:00.
+All20 executors/40cells terminate successfully at2026-10-15T13:20:13.202909UTC.
+Both models/paths complete10,240 measured requests,zero failures and655,360
+checked measured output tokens,plus160 gen1 warmups.
+The new per-model96/s connect-inclusive TTFT-P99 primary remains inconclusive:
+kernel-minus-native+26.113ms [-121.273,173.499] Qwen and
++14.573ms [-26.449,55.596] Smol,nominal paired t95df4.
+This does not relabel finding0062's original64/s primary or prove equivalence.
+See [finding0063](../../../docs/findings/0063-fair-native-admission.md).
 
-The plan and fresh independent round1 review admit a comparison of the unchanged
-kernel FIFO loop with a stronger eligible-frame FIFO native competitor. All
-model computation remains shared and unchanged. Main application behavior is
-not changed by this archive; candidate/ is a source snapshot, not a checkout.
+## Experiment and executable sources
 
-Setup/build exits0, all installed package versions match the preceding measured
-environment (package_comparison.json is empty). Qualification completes all5
-commands at12:56:50.942245UTC: two idle cases,four protocol executors across
-both models/paths (2560 outcomes/93504 replayed tokens,including1036 intended
-rejections),and both retained native lifecycle cases. Each lifecycle has32
-actions,including partial/canceled observations,not32 complete deliveries.
+[plan.md](plan.md) and [plan-review.md](plan-review.md) preserve the single
+reviewed comparison. candidate/ is a source snapshot,not a checkout;
+native_fifo.diff replaces native FD-priority publication with eligible-frame FIFO.
+The kernel loop,FP16 upstream vLLM graphs,weights,KV layout,eight banks,packed
+prefill and FIFO prefix release are unchanged from production70988bed.
+The native candidate remains unselected in ordinary application source.
 
-Real preflight attempt1 completes at12:58:36.652011UTC: both paths complete all
-128 measured requests/8192 tokens plus16 checked warmups. Both admission queues
-reach16 entries and clear at stop; kernel reservations/SQ/CQ counters drain.
-Full begins12:58:36UTC and remains running. The full matrix and result review
-are unfinished. No new performance result is reported here,and no partial
-prefix should be interpreted as the experiment.
+Rates64/96,256 gen64 attempts/cell,five paired blocks/model,alternating path order
+and rotating rate order use identical normalized gamma(shape1) arrival schedules.
+The actual client creates uncapped independent Python request threads.
+Native retains one active response/connection and uncapped buffering; kernel
+has finite4096 admission FIFO. Performance traffic has one request/connection.
+Both queues engage and clear; the policies align fairness class,not exact
+ingress order or every protocol condition.
 
-## Question and sources
+In the original bpfusion-dev Workspace,the recorded recipe is
+/usr/bin/python3 -u run.py,which sequences setup.py,qualification.py,preflight.py,
+full.py. Rebind recorded owned temporary source/build/output paths to a new
+owned test directory before an intentional rerun; do not launch against another
+live experiment. setup.py uses pinned dependencies,normal Makefile rules with
+candidate source inputs first,and one private BUILD path. Build logs show actual
+bindings. No model/host tuning or module/ABI change is introduced.
 
-Does the previously observed high-load kernel P99 advantage survive removal of
-the native FD-priority admission weakness? See plan.md and plan-review.md.
-native_fifo.diff is the exact intended policy change; candidate/ contains actual
-frozen inputs and Makefile bindings. The single main competitor uses identical
-FP16 vLLM graphs, weights, KV setup, eight model banks and dispatcher.
+## Evidence and replay
 
-New fixed primary: per-model connect-inclusive first-token P99 at96 requests/s;
-64/s is secondary. Five paired blocks/model,256 attempts/cell,gen64:
-20 executors,40 cells,10240 measured attempts,655360 requested output tokens
-plus160 checked warmups. This new follow-up does not relabel finding0062's
-original64/s primary. Failed primary requests censor superiority. Keep median,
-completion,throughput,CPU,scheduling lag and all adverse outcomes.
+full_completion.json gives exact coverage/queue peaks; full_qwen.jsonl and
+full_smol.jsonl retain every request,arrival schedule,process/log/counter and
+terminal. Adjacent GPU histories and independent upstream references preserve
+wire/history fidelity. BF_TRACE numerical-history overflow is zero; bounded
+reply diagnostic overflow is a separate expected counter.
 
-FIFO is among complete eligible native frames in observed readiness order.
-Native retains one in-flight response per connection; kernel pipeline behavior
-differs. Performance traffic has one request per connection. This aligns the
-fairness class for that workload, not every protocol or exact ingress order.
-Client-stamp bypass diagnostics are not queue-residence timestamps. Native has
-no artificial new buffering cap; the finite kernel queue can still overflow.
+Recompute full_qwen/smol and preflight_qwen with
+/usr/bin/python3 analyze.py FILE.jsonl.
+Recompute protocol_qwen/smol with
+/usr/bin/python3 protocol_analysis.py FILE.jsonl.
+cpu_replay_full.json confirms all five copied fixed stdout files match bytewise.
+Run /usr/bin/python3 admission_order.py . for client-stamp admission diagnostics.
+Its inherited output scope says post-review; in this follow-up the plan already
+names this diagnostic,and it runs after collection before the fresh result review.
+It is not exact ingress ordering,queue residence or a new primary metric.
 
-## Execution
+The user-requested generation-stall supplement is
+/usr/bin/python3 tail_summary.py . .
+It uses saved client recv timestamps. Same-recv token IDs share timestamps;
+gaps include client scheduling/network buffering,not pure GPU decode time.
+The output distinguishes token-weighted gap quantiles from request-weighted
+maximum-gap quantiles,with all failure denominators.
+It is exploratory,not a mid-run change to primary metrics.
 
-All execution stays in the original bpfusion-dev Workspace. The single current
-temporary directory is /tmp/bpfusion-fair-admission-yijz8oui; all.process.json
-identifies its existing wrapper, which sequences setup -> qualification ->
-preflight -> full. Do not launch another copy alongside it. Source scripts and
-recorded temporary paths can be rebound to a new owned rerun directory after
-the original reaches terminal. Use /usr/bin/python3 -u run.py with the pinned
-dependencies and recorded cached model revisions. Root vmlinux and Python
-bootstrap are reused; candidate include paths take precedence in actual builds.
+plot_results.py uses complete fixed analyses,shows every block and mean block
+P99/P50 statistics,and exports PNG/PDF/data.json. Matplotlib is installed only
+after full terminal with no changed existing measurement dependency
+(plot_dependency.json). figure_qa.json records a90dpi identical-source visual
+preview; canonical PNG is170dpi. Five pairs and256 requests/cell do not support
+a stable population tail,P99.9,production SLO or equivalence claim.
 
-The original Workspace sessions, unowned tools/setup_env.sh, eight recorded
-setup/build artifacts, base packages and cached weights are preserved.
-Runtime/build files and downloaded dependency trees are not archived.
+## Qualification and host boundaries
 
-## Evidence scope and next decision
+Qualification completes all5 commands: two actual idle/shutdown cases,four
+640-outcome protocol executors totaling2560 outcomes/93,504 replayed tokens,
+including1036 intended rejections,and both retained32-action native lifecycle
+cases. These include partial/canceled observations and do not newly qualify
+large queued-backlog cancellation. Real preflight attempt1 completes128 measured
+requests/8192 tokens plus16 warmups; both queues peak16 and drain.
 
-Current idle receipts include upstream teardown and are not stop-latency SLOs.
-Host snapshots and CPU/cgroup receipts describe their observation phases,
-not continuous isolation. Workspace CPU has no hard quota; host load is shared.
-No other Workspace or host setting was changed.
+Host receipts name their exact phases. Smol short ownership sample is inside
+pair2/kernel64 measurement. Qwen short sample is0.682474s after sampled cells.
+The after receipt is58.553113s after full terminal,with no GPU app then,same boot
+and the same56 selected historical fault lines. Ambient CPU activity belongs
+partly to another Workspace; no foreign workload or host setting is changed.
+Sparse observations cannot certify continuous GPU isolation or all-fault absence.
 
-After complete qualification and real preflight, the original wrapper runs the
-full fixed matrix. Full raw outputs, independent model-history/wire replay,
-all analyses, queue engagement and a fresh result review are required before
-interpretation or adoption. Preserve all failures and deviations. The full
-retained project objective remains active.
-
-## Qualification/preflight completion update
-
-This update preserves closed qualification and real-preflight data separately
-from the still-running full collection. qualification_completion.json and
-preflight_completion.json give exact terminal/coverage scope. CPU replay of both
-copied protocol analyses already matches saved stdout. Large queued native
-reset/stop behavior is not newly qualified by these retained32-action cases.
-
-The sparse host CPU observation is during native preflight bootstrap,after
-kernel preflight terminal. Its per-process scan estimate is approximate and can
-slightly exceed the24-core host because sample brackets differ. Prominent repl
-processes map by exact cgroup Pod UID to the separately running gpu-smt-dev
-Workspace; none were changed. host_full_qwen_short is0.682474s after Qwen pair0
-native measured cells,therefore a replay/teardown observation,not serving
-isolation. Phase receipts retain the actual timestamps and limits.
+The original Workspace sessions,unowned tools/setup_env.sh,eight recorded
+setup/build artifacts,base packages and cached weights are preserved.
+restoration_before_cleanup.json records exact checks.
+[result-review.md](result-review.md) finds valid supporting evidence and an
+inconclusive hypothesis; it independently recomputes metrics,whole histories
+and both supplements. [final_restoration.json](final_restoration.json) records
+owned runtime/build removal after no active user remained and seven byte-equal
+CPU replays without the original temporary directory. Production sources remain
+unchanged. No new GPU experiment or favorable rerun is implied by this result.

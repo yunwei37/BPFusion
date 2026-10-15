@@ -1,0 +1,154 @@
+{
+  "utc": "2026-10-15T13:23:35.094161+00:00",
+  "full_terminal": {
+    "exit": 0,
+    "completed": 2,
+    "expected": 2,
+    "utc": "2026-10-15T13:20:13.202909+00:00"
+  },
+  "coverage": [
+    {
+      "event": "coverage",
+      "executors": 10,
+      "cells": 20,
+      "attempts": 5120,
+      "successes": 5120,
+      "failures": 0,
+      "successful_measured_tokens": 327680,
+      "warmups": 80
+    },
+    {
+      "event": "coverage",
+      "executors": 10,
+      "cells": 20,
+      "attempts": 5120,
+      "successes": 5120,
+      "failures": 0,
+      "successful_measured_tokens": 327680,
+      "warmups": 80
+    }
+  ],
+  "admission_peaks": [
+    {
+      "model": "qwen",
+      "pair": 0,
+      "mode": "uring_loop",
+      "peak": 29
+    },
+    {
+      "model": "qwen",
+      "pair": 0,
+      "mode": "userspace",
+      "peak": 28
+    },
+    {
+      "model": "qwen",
+      "pair": 1,
+      "mode": "uring_loop",
+      "peak": 11
+    },
+    {
+      "model": "qwen",
+      "pair": 1,
+      "mode": "userspace",
+      "peak": 12
+    },
+    {
+      "model": "qwen",
+      "pair": 2,
+      "mode": "uring_loop",
+      "peak": 17
+    },
+    {
+      "model": "qwen",
+      "pair": 2,
+      "mode": "userspace",
+      "peak": 29
+    },
+    {
+      "model": "qwen",
+      "pair": 3,
+      "mode": "uring_loop",
+      "peak": 36
+    },
+    {
+      "model": "qwen",
+      "pair": 3,
+      "mode": "userspace",
+      "peak": 17
+    },
+    {
+      "model": "qwen",
+      "pair": 4,
+      "mode": "uring_loop",
+      "peak": 23
+    },
+    {
+      "model": "qwen",
+      "pair": 4,
+      "mode": "userspace",
+      "peak": 21
+    },
+    {
+      "model": "smol",
+      "pair": 0,
+      "mode": "uring_loop",
+      "peak": 17
+    },
+    {
+      "model": "smol",
+      "pair": 0,
+      "mode": "userspace",
+      "peak": 17
+    },
+    {
+      "model": "smol",
+      "pair": 1,
+      "mode": "uring_loop",
+      "peak": 6
+    },
+    {
+      "model": "smol",
+      "pair": 1,
+      "mode": "userspace",
+      "peak": 6
+    },
+    {
+      "model": "smol",
+      "pair": 2,
+      "mode": "uring_loop",
+      "peak": 15
+    },
+    {
+      "model": "smol",
+      "pair": 2,
+      "mode": "userspace",
+      "peak": 7
+    },
+    {
+      "model": "smol",
+      "pair": 3,
+      "mode": "uring_loop",
+      "peak": 6
+    },
+    {
+      "model": "smol",
+      "pair": 3,
+      "mode": "userspace",
+      "peak": 6
+    },
+    {
+      "model": "smol",
+      "pair": 4,
+      "mode": "uring_loop",
+      "peak": 7
+    },
+    {
+      "model": "smol",
+      "pair": 4,
+      "mode": "userspace",
+      "peak": 7
+    }
+  ],
+  "scope": "Complete collection and fixed CPU replay; independent result review pending, no superiority inferred."
+}

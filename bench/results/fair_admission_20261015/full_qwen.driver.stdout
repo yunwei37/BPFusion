@@ -1,0 +1,20 @@
+START pair=0 mode=uring_loop pid=589601
+PASS pair=0 mode=uring_loop requests=520 tokens=32776 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=0 mode=userspace pid=590348
+PASS pair=0 mode=userspace requests=520 tokens=32776 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=1 mode=userspace pid=591092
+PASS pair=1 mode=userspace requests=520 tokens=32776 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=1 mode=uring_loop pid=591843
+PASS pair=1 mode=uring_loop requests=520 tokens=32776 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=2 mode=uring_loop pid=592593
+PASS pair=2 mode=uring_loop requests=520 tokens=32776 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=2 mode=userspace pid=593340
+PASS pair=2 mode=userspace requests=520 tokens=32776 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=3 mode=userspace pid=594161
+PASS pair=3 mode=userspace requests=520 tokens=32776 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=3 mode=uring_loop pid=594896
+PASS pair=3 mode=uring_loop requests=520 tokens=32776 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=4 mode=uring_loop pid=595668
+PASS pair=4 mode=uring_loop requests=520 tokens=32776 batches=[1, 2, 3, 4, 5, 6, 7, 8]
+START pair=4 mode=userspace pid=596436
+PASS pair=4 mode=userspace requests=520 tokens=32776 batches=[1, 2, 3, 4, 5, 6, 7, 8]

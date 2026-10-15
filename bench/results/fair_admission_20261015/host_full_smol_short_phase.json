@@ -1,0 +1,29 @@
+{
+  "utc_begin": "2026-10-15T13:14:28.493768+00:00",
+  "utc_end": "2026-10-15T13:14:28.564918+00:00",
+  "monotonic_begin_ns": 501440493358416,
+  "monotonic_end_ns": 501440564504290,
+  "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167",
+  "host_pid": 137972,
+  "workspace_pid": 600136,
+  "own_pod_uid": "3e8994f8-77ba-4a73-a3a5-35ed69a0a8a2",
+  "source": "Read-only existing SSH nvidia-smi and /proc snapshot at stated time; only one reported GPU application. Sparse evidence, not continuous isolation.",
+  "matching_measurement_windows": [
+    {
+      "pair": 2,
+      "mode": "uring_loop",
+      "rate": 64,
+      "begin_ns": 501438894714782,
+      "end_ns": 501442958840737
+    },
+    {
+      "pair": 2,
+      "mode": "uring_loop",
+      "rate": 96,
+      "begin_ns": 501442975326857,
+      "end_ns": 501445716702822
+    }
+  ],
+  "inside_measurement": true,
+  "phase": "measured cell"
+}

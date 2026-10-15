@@ -40,17 +40,22 @@ remain open.
 | `qwen.cu`, Python HF and synthetic MLP paths | Earlier implementations with different maturity | See their individual findings | Historical references and controls |
 
 The [offered-load collection](docs/findings/0061-offered-load-admission.md)
-exposes a production admission limitation: a reserved next model slot causes
-valid requests to drop. The subsequent independently reviewed
-[pending-admission candidate](docs/findings/0062-pending-admission-tails.md)
-completes all 15,360 measured requests across both paths/models. Neither model
-establishes the primary P99 advantage at 64 requests/s. At secondary Qwen/96,
-first-token P99 is 280/1418 ms kernel/native, but median latency and process CPU
-are worse and throughput superiority remains unproven. The io_uring BPF loop
-now adopts the finite admission repair after
-[ordinary-source regression](bench/results/pending_admission_integration_20261015/).
-Queue overflow remains a drop boundary; module/SQPOLL paths retain direct
-admission. Admission-policy differences still prevent syscall-only attribution.
+exposes valid-request drops when the next physical model slot is reserved.
+The reviewed [finite admission repair](docs/findings/0062-pending-admission-tails.md)
+completes15,360 measured requests and is selected in the optional BPF-loop path.
+Its primary64/s P99 result is inconclusive. A large secondary Qwen96/s advantage
+also exposes native FD-priority overtaking.
+
+The subsequent [fair-native-admission comparison](docs/findings/0063-fair-native-admission.md)
+completes all10,240 measured requests/655,360 tokens with identical GPU
+computation and eligible-frame FIFO native admission. New96/s TTFT P99 is
+246/220ms Qwen and81/66ms Smol (kernel/native,mean block quantiles); both paired
+intervals cross zero. Completion tails, median/CPU costs and generation-stall
+outliers remain visible. No reliable tail or throughput advantage is established.
+The native FIFO candidate is archived, not selected in ordinary source.
+Finite kernel queue overflow remains a drop boundary; module/SQPOLL paths
+retain direct admission. Admission-policy differences prevent syscall-only
+attribution.
 
 Strict regressions cover output agreement, fragmented messages, concurrent
 requests, connection reuse, pipelining, half-close, invalid inputs and queue
