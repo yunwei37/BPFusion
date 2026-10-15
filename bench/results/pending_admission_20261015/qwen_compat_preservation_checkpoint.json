@@ -1,0 +1,52 @@
+{
+  "utc": "2026-10-15T10:08:31.016667+00:00",
+  "scope": "Complete non-loop Qwen compatibility only; remaining qualification active.",
+  "files": [
+    {
+      "path": "protocol_compat_qwen.driver.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "protocol_compat_qwen_p0_uring.gpu.jsonl",
+      "bytes": 765202
+    },
+    {
+      "path": "protocol_compat_qwen_p0_uring.stdout.txt",
+      "bytes": 50247
+    },
+    {
+      "path": "protocol_compat_qwen.analysis.stdout",
+      "bytes": 416
+    },
+    {
+      "path": "protocol_compat_qwen.jsonl",
+      "bytes": 609100
+    },
+    {
+      "path": "protocol_compat_qwen.analysis.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "protocol_compat_qwen_p0_uring.network.txt",
+      "bytes": 151514
+    },
+    {
+      "path": "protocol_compat_qwen_p0_uring.gpu.jsonl.references.jsonl",
+      "bytes": 229431
+    },
+    {
+      "path": "protocol_compat_qwen.driver.stdout",
+      "bytes": 117
+    }
+  ],
+  "replay": {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/pending_admission_20261015/protocol_analysis.py",
+      "/workspaces/repository/bench/results/pending_admission_20261015/protocol_compat_qwen.jsonl"
+    ],
+    "exit": 0,
+    "stdout_byte_equal": true,
+    "stderr": ""
+  }
+}

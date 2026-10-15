@@ -1,0 +1,82 @@
+{
+  "utc": "2026-10-15T09:58:18.749159+00:00",
+  "scope": "Closed idle qualification copied; overall qualification still active, no preflight/full performance result.",
+  "files": [
+    {
+      "path": "idle_native.driver.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "idle_native_deadline.stdout",
+      "bytes": 38095
+    },
+    {
+      "path": "idle_native.py",
+      "bytes": 2664
+    },
+    {
+      "path": "idle_native_deadline.gpu.jsonl",
+      "bytes": 47
+    },
+    {
+      "path": "idle_native_helper_idle.stdout",
+      "bytes": 36511
+    },
+    {
+      "path": "idle_native_helper_idle.result.json",
+      "bytes": 978
+    },
+    {
+      "path": "idle_native.driver.stdout",
+      "bytes": 1695
+    },
+    {
+      "path": "idle_native_helper_idle.gpu.jsonl",
+      "bytes": 47
+    },
+    {
+      "path": "idle_native_helper_idle.gpu.jsonl.references.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "idle_native_deadline.strace",
+      "bytes": 13318189
+    },
+    {
+      "path": "idle_native_deadline.result.json",
+      "bytes": 889
+    },
+    {
+      "path": "idle_native_deadline.gpu.jsonl.references.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "idle_native_helper_idle.strace",
+      "bytes": 3759528
+    },
+    {
+      "path": "qualification.statuses.json",
+      "bytes": 471
+    }
+  ],
+  "statuses": [
+    {
+      "name": "module_compat",
+      "command": [
+        "/tmp/bpfusion-pending-admission-t4hv6ezt/runtime/bin/python",
+        "/tmp/bpfusion-pending-admission-t4hv6ezt/module_compat.py"
+      ],
+      "exit": 0,
+      "utc": "2026-10-15T09:47:01.120584+00:00"
+    },
+    {
+      "name": "idle_native",
+      "command": [
+        "/usr/bin/python3",
+        "/tmp/bpfusion-pending-admission-t4hv6ezt/idle_native.py"
+      ],
+      "exit": 0,
+      "utc": "2026-10-15T09:57:12.842279+00:00"
+    }
+  ]
+}

@@ -607,7 +607,25 @@ upper tails rather than treating timeouts as completed60s responses.
 
 Independent result review confirms the negative service result; owned temporary
 state is removed and copied-data analyses replay identically. Original
-source/defaults remain selected. A separate private waiting-queue candidate
-is unbuilt and does not change the current interface
-or qualify arbitrary load/backends. Admission/lifetime behavior belongs to the
-driver; model arithmetic remains reused and unchanged.
+source/defaults remain selected. The subsequent private waiting-queue
+candidate has now completed the separately scoped finding0062 below; its
+qualification does not select production behavior or establish arbitrary
+load/backend support. Admission/lifetime behavior belongs to the driver;
+model arithmetic remains reused and unchanged.
+
+## Finite pending-admission candidate
+
+[Finding0062](findings/0062-pending-admission-tails.md) qualifies a private FIFO
+between frame validation and physical model-slot publication. The existing
+kernel loop is its single consumer; model arithmetic and GPU reservation
+ownership are unchanged. Capacity is discovered from somaxconn; a full queue
+still drops, so finite buffering is not complete transport backpressure.
+The shared page adds eight tail bytes, preserving existing offsets but requiring
+a same-header module rebuild. Global backlog conservatively delays normal EOF
+recycling; stop cancels unadmitted work instead of claiming completed responses.
+
+Both paths/models complete all 15,360 measured requests. The primary 64/s
+P99 effects remain inconclusive. Qwen/96 has better P99 but worse median and
+process CPU; no general performance or total-CPU saving follows. Source,
+qualification, raw data and independent review are archived together. This
+publication does not select the candidate into ordinary application behavior.

@@ -1,0 +1,59 @@
+{
+  "utc": "2026-10-15T10:11:24.108709+00:00",
+  "scope": "Closed loop lifecycle only; cancellations/prefixes are not fully delivered numerical responses. Overall qualification remains active.",
+  "files": [
+    {
+      "path": "lifecycle_qwen_loop/qwen.strace",
+      "bytes": 74257
+    },
+    {
+      "path": "lifecycle_qwen_loop/qwen.native.stderr",
+      "bytes": 24341
+    },
+    {
+      "path": "lifecycle_qwen_loop/qwen.native.stdout",
+      "bytes": 22234
+    },
+    {
+      "path": "lifecycle_qwen_loop/qwen.results.json",
+      "bytes": 151911
+    }
+  ],
+  "summary": {
+    "rows": 120,
+    "unobserved_cancel": 23,
+    "checked_tokens": 852,
+    "actions": {
+      "default": 31,
+      "RST": 1,
+      "backlog_RST": 24,
+      "backlog_SIGTERM": 64
+    },
+    "before_rst": 16,
+    "before_stop": 56,
+    "queued_at_stop_cleanup": 56,
+    "stats": {
+      "accepted": 78,
+      "closed": 78,
+      "received": 97,
+      "sends": 783,
+      "bytes": 6425,
+      "completed": 64,
+      "aborted": 34,
+      "max_connections": 64,
+      "max_requests": 8,
+      "pending": 0,
+      "error": 0,
+      "head": 64,
+      "reserved": 0,
+      "dropped": 0,
+      "overflow": 0,
+      "sqhead": 1327,
+      "sqtail": 1327,
+      "cqhead": 13316,
+      "cqtail": 13316,
+      "trace_count": 64,
+      "trace_overflow": 0
+    }
+  }
+}

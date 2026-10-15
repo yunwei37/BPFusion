@@ -1,0 +1,72 @@
+{
+  "utc": "2026-10-15T10:18:09.055576+00:00",
+  "scope": "Complete main Smol protocol copied and replayed. Remaining qualification active; no preflight/full performance result.",
+  "files": [
+    {
+      "path": "protocol_smol.driver.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "protocol_smol_p0_userspace.gpu.jsonl.references.jsonl",
+      "bytes": 234994
+    },
+    {
+      "path": "protocol_smol.analysis.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "protocol_smol_p0_uring_loop.gpu.jsonl.references.jsonl",
+      "bytes": 234999
+    },
+    {
+      "path": "protocol_smol.jsonl",
+      "bytes": 1155022
+    },
+    {
+      "path": "protocol_smol_p0_uring_loop.network.txt",
+      "bytes": 154775
+    },
+    {
+      "path": "protocol_smol_p0_uring_loop.stdout.txt",
+      "bytes": 53370
+    },
+    {
+      "path": "protocol_smol_p0_userspace.stdout.txt",
+      "bytes": 38852
+    },
+    {
+      "path": "protocol_smol_p0_userspace.gpu.jsonl",
+      "bytes": 870401
+    },
+    {
+      "path": "protocol_smol_p0_uring_loop.gpu.jsonl",
+      "bytes": 790958
+    },
+    {
+      "path": "protocol_smol.driver.stdout",
+      "bytes": 252
+    },
+    {
+      "path": "protocol_smol_p0_userspace.network.txt",
+      "bytes": 1906286
+    },
+    {
+      "path": "protocol_smol.analysis.stdout",
+      "bytes": 742
+    },
+    {
+      "path": "qualification.statuses.json",
+      "bytes": 3338
+    }
+  ],
+  "replay": {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/pending_admission_20261015/protocol_analysis.py",
+      "/workspaces/repository/bench/results/pending_admission_20261015/protocol_smol.jsonl"
+    ],
+    "exit": 0,
+    "stdout_byte_equal": true,
+    "stderr": ""
+  }
+}

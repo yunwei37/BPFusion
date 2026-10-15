@@ -1,0 +1,13 @@
+make: Entering directory '/tmp/bpfusion-pending-admission-t4hv6ezt/candidate/module'
+make CC=gcc-15 -C /usr/src/linux-headers-7.3.0-070300rc3-generic M=/tmp/bpfusion-pending-admission-t4hv6ezt/candidate/module modules
+make[1]: Entering directory '/usr/src/linux-headers-7.3.0-070300rc3-generic'
+make[2]: Entering directory '/tmp/bpfusion-pending-admission-t4hv6ezt/candidate/module'
+  CC [M]  bfusion_tx.o
+  MODPOST Module.symvers
+  CC [M]  bfusion_tx.mod.o
+  CC [M]  .module-common.o
+  LD [M]  bfusion_tx.ko
+  BTF [M] bfusion_tx.ko
+make[2]: Leaving directory '/tmp/bpfusion-pending-admission-t4hv6ezt/candidate/module'
+make[1]: Leaving directory '/usr/src/linux-headers-7.3.0-070300rc3-generic'
+make: Leaving directory '/tmp/bpfusion-pending-admission-t4hv6ezt/candidate/module'

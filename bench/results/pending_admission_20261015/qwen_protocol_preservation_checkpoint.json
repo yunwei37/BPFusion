@@ -1,0 +1,76 @@
+{
+  "utc": "2026-10-15T10:06:13.762449+00:00",
+  "scope": "Complete main Qwen protocol cases copied and CPU analysis replayed. Remaining qualification active; no preflight/full performance result.",
+  "files": [
+    {
+      "path": "protocol_qwen_p0_uring_loop.network.txt",
+      "bytes": 155020
+    },
+    {
+      "path": "protocol_qwen.driver.stdout",
+      "bytes": 252
+    },
+    {
+      "path": "protocol_qwen.analysis.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "protocol_qwen_p0_uring_loop.stdout.txt",
+      "bytes": 51719
+    },
+    {
+      "path": "protocol_qwen.driver.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "protocol_qwen_p0_userspace.stdout.txt",
+      "bytes": 38122
+    },
+    {
+      "path": "protocol_qwen.analysis.stdout",
+      "bytes": 742
+    },
+    {
+      "path": "protocol_qwen_p0_userspace.gpu.jsonl.references.jsonl",
+      "bytes": 239026
+    },
+    {
+      "path": "protocol_qwen.jsonl",
+      "bytes": 1162560
+    },
+    {
+      "path": "protocol_qwen_p0_userspace.network.txt",
+      "bytes": 2031395
+    },
+    {
+      "path": "protocol_qwen_p0_uring_loop.gpu.jsonl",
+      "bytes": 787829
+    },
+    {
+      "path": "protocol_qwen_p0_userspace.gpu.jsonl",
+      "bytes": 867811
+    },
+    {
+      "path": "protocol_qwen_p0_uring_loop.gpu.jsonl.references.jsonl",
+      "bytes": 239021
+    },
+    {
+      "path": "implementation-notes.md",
+      "bytes": 4485
+    },
+    {
+      "path": "qualification.statuses.json",
+      "bytes": 1202
+    }
+  ],
+  "replay": {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/pending_admission_20261015/protocol_analysis.py",
+      "/workspaces/repository/bench/results/pending_admission_20261015/protocol_qwen.jsonl"
+    ],
+    "exit": 0,
+    "stdout_byte_equal": true,
+    "stderr": ""
+  }
+}

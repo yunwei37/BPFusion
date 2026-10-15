@@ -1,0 +1,31 @@
+[
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-m",
+      "venv",
+      "--without-pip",
+      "/tmp/bpfusion-pending-admission-t4hv6ezt/runtime"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T09:37:50.593257+00:00"
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-m",
+      "pip",
+      "--python",
+      "/tmp/bpfusion-pending-admission-t4hv6ezt/runtime/bin/python",
+      "install",
+      "vllm==0.31.0",
+      "torch==2.13.0+cu129",
+      "transformers==5.17.0",
+      "numpy==2.3.5",
+      "--extra-index-url",
+      "https://download.pytorch.org/whl/cu129"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T09:41:54.822408+00:00"
+  }
+]

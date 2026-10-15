@@ -1,0 +1,80 @@
+--- original/tools/bpfusion_load.c
++++ candidate/tools/bpfusion_load.c
+@@ -51,7 +51,8 @@
+ 
+ 	if (!strcmp(cmd, "stream-detach")) {
+         const char *uring_pins[]={"/sys/fs/bpf/bpfusion_uring_link",
+-            "/sys/fs/bpf/bpfusion_uring_bind_link","/sys/fs/bpf/bpfusion_uring_owner"};
++            "/sys/fs/bpf/bpfusion_uring_bind_link","/sys/fs/bpf/bpfusion_uring_owner",
++            "/sys/fs/bpf/bpfusion_pending"};
+         for (unsigned j=0;j<sizeof(uring_pins)/sizeof(uring_pins[0]);j++)
+             if (unlink(uring_pins[j]) && errno!=ENOENT) { perror("unlink io_uring"); return 1; }
+ 		if (unlink("/sys/fs/bpf/bpfusion_stream_link") && errno != ENOENT) {
+@@ -107,6 +108,7 @@
+ 		unlink("/sys/fs/bpf/bpfusion_ctl");
+ 		unlink("/sys/fs/bpf/bpfusion_stats");
+ 		unlink("/sys/fs/bpf/bpfusion_db");
++        unlink("/sys/fs/bpf/bpfusion_pending");
+ 	}
+ 
+ 	if (!strcmp(cmd, "stats")) {
+@@ -146,6 +148,7 @@
+ 			       page->slots[i].x[0], page->done[i].state,
+ 			       page->done[i].id, page->done[i].y[0]);
+ 		printf("llm_head=%u\n", page->llm_head);
++        printf("llm_queued=%u\n",page->llm_queued);
+         printf("llm_reserved=0x%x\n", page->llm_reserved);
+ 		for (i = 0; i < BF_LLM_SLOTS; i++)
+ 			printf("llm[%d]: state=%u prompt=%u gen=%u produced=%u client_ns=%llu\n",
+@@ -155,7 +158,7 @@
+ 		return 0;
+ 	}
+ 
+-	bo = bpf_object__open_file("build/fusion.bpf.o", NULL);
++	bo = bpf_object__open_file("/tmp/bpfusion-pending-admission-t4hv6ezt/kernel-build/fusion.bpf.o", NULL);
+ 	if (!bo) {
+ 		perror("open bpf object");
+ 		return 1;
+@@ -163,10 +166,15 @@
+ 	bpf_object__for_each_program(prog, bo) {
+ 		int stream_program = !strncmp(bpf_program__name(prog), "stream_", 7);
+ 		int uring_program = !strncmp(bpf_program__name(prog), "uring_", 6);
+-		bpf_program__set_autoload(prog, uring_program ? uring_mode : stream_program == stream_mode);
++		int verdict = !strcmp(bpf_program__name(prog), "stream_publish");
++        int uring_verdict = !strcmp(bpf_program__name(prog), "stream_uring_publish");
++        bpf_program__set_autoload(prog, uring_verdict ? uring_mode :
++            verdict ? stream_mode && !uring_mode :
++            uring_program ? uring_mode : stream_program == stream_mode);
+ 	}
+ 	bpf_map__set_autocreate(bpf_object__find_map_by_name(bo, "streams"), stream_mode);
+ 	bpf_map__set_autocreate(bpf_object__find_map_by_name(bo, "uring_owner"), uring_mode);
++    bpf_map__set_autocreate(bpf_object__find_map_by_name(bo,"pending"),uring_mode);
+ 	if (stream_mode) {
+ 		unsigned backlog;
+ 		FILE *setting = fopen("/proc/sys/net/core/somaxconn", "r");
+@@ -176,6 +184,7 @@
+ 		}
+ 		fclose(setting);
+ 		bpf_map__set_max_entries(bpf_object__find_map_by_name(bo, "streams"), backlog);
++        if(uring_mode)bpf_map__set_max_entries(bpf_object__find_map_by_name(bo,"pending"),backlog);
+ 		printf("sockhash capacity follows somaxconn=%u\n", backlog);
+ 	}
+ 
+@@ -189,6 +198,8 @@
+         if (uring_mode) {
+             m = bpf_object__find_map_by_name(bo, "uring_owner");
+             bpf_map__set_pin_path(m,"/sys/fs/bpf/bpfusion_uring_owner");
++            m=bpf_object__find_map_by_name(bo,"pending");
++            bpf_map__set_pin_path(m,"/sys/fs/bpf/bpfusion_pending");
+         }
+ 		m = bpf_object__find_map_by_name(bo, "ctl");
+ 		bpf_map__set_pin_path(m, "/sys/fs/bpf/bpfusion_ctl");
+@@ -230,7 +241,7 @@
+ 		if (bpf_prog_attach(bpf_program__fd(prog), sockmap, BPF_SK_SKB_STREAM_PARSER, 0)) {
+ 			perror("stream parser attach"); return 1;
+ 		}
+-		prog = bpf_object__find_program_by_name(bo, "stream_publish");
++		prog = bpf_object__find_program_by_name(bo, uring_mode ? "stream_uring_publish" : "stream_publish");
+ 		if (bpf_prog_attach(bpf_program__fd(prog), sockmap, BPF_SK_SKB_STREAM_VERDICT, 0)) {
+ 			perror("stream verdict attach"); return 1;
+ 		}

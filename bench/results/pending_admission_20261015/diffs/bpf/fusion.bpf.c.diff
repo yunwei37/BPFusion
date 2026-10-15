@@ -1,0 +1,158 @@
+--- original/bpf/fusion.bpf.c
++++ candidate/bpf/fusion.bpf.c
+@@ -23,7 +23,7 @@
+ #include <bpf/bpf_helpers.h>
+ #include <bpf/bpf_core_read.h>
+ #include <bpf/bpf_endian.h>
+-#include "bpfusion_queue.h"
++#include "bpfusion_admission.h"
+ 
+ 
+ #ifndef TC_ACT_OK
+@@ -32,14 +32,6 @@
+ #define ETH_P_IP 0x0800
+ #define IPPROTO_UDP 17
+ #define IPPROTO_TCP 6
+-
+-struct {
+-	__uint(type, BPF_MAP_TYPE_ARRAY);
+-	__uint(max_entries, 1);
+-	__uint(map_flags, BPF_F_MMAPABLE);
+-	__type(key, __u32);
+-	__type(value, struct bf_page);
+-} ctl SEC(".maps");
+ 
+ /* Doorbell: the record's presence is the wakeup, contents are unused. */
+ struct {
+@@ -75,27 +67,6 @@
+ 	};
+ 	__u64 v;
+ };
+-
+-/* Reserve the sequence and physical slot in one atomic operation. Separate
+- * state/head CAS can reject another producer's transient WRITING reservation.
+- * The bitmap also prevents wrap over a producer paused before publishing state. */
+-static __always_inline struct bf_llm_slot *llm_reserve(struct bf_page *p)
+-{
+-    if (*(volatile __u64 *)&p->stop_ns) return 0;
+-    for (__u32 attempt=0; attempt<BF_LLM_SLOTS; attempt++) {
+-        __u64 word=*(volatile __u64 *)&p->llm_admission;
+-        __u32 head=(__u32)word, idx=head%BF_LLM_SLOTS;
+-        __u32 reserved=word>>32, bit=1u<<idx;
+-        if (reserved&bit) break;
+-        __u64 next=((__u64)(reserved|bit)<<32)|(__u32)(head+1);
+-        if (__sync_val_compare_and_swap(&p->llm_admission,word,next)==word) {
+-            struct bf_llm_slot *slot=&p->llm[idx];
+-            slot->state=BF_WRITING;
+-            return slot;
+-        }
+-    }
+-    return 0;
+-}
+ 
+ /* Fill the next LLM slot from a request whose payload starts at `payload`.
+  * `flags` = 0 for a UDP datagram (reply goes to addr_be/port_be), 1 for a TCP
+@@ -371,49 +342,66 @@
+     return length;
+ }
+ 
+-SEC("sk_skb/stream_verdict")
+-int stream_publish(struct __sk_buff *skb)
+-{
+-    union bf_llm_hdr h;
+-    __u32 tokens[BF_LLM_MAX_TOK] = {};
+-    __u32 zero=0, body;
+-    __u16 http;
+-    __u32 offset=stream_offset(skb);
+-    int length=frame_info(skb,&body,&http);
+-    struct bf_page *p;
+-    struct bf_llm_slot *slot;
+-    if (length<=0 || offset>skb->len || length>skb->len-offset || bpf_skb_load_bytes(skb,offset+body,&h,sizeof(h)) ||
+-        h.magic!=BF_LLM_MAGIC || length!=body+sizeof(h)+h.n_prompt*4 ||
+-        !h.n_prompt || h.n_prompt > BF_LLM_MAX_TOK ||
+-        !h.n_gen || h.n_gen > BF_LLM_MAX_TOK) return SK_DROP;
+-#pragma unroll
+-    for (__u32 i=0;i<BF_LLM_MAX_TOK;i++)
+-        if (i<h.n_prompt && bpf_skb_load_bytes(skb,offset+body+sizeof(h)+i*4,&tokens[i],4)) return SK_DROP;
+-    p=bpf_map_lookup_elem(&ctl,&zero);
+-    if (!p) return SK_DROP;
+-    slot=llm_reserve(p);
+-    if (!slot) { bump(8); __sync_fetch_and_add(&p->drops,1); return SK_DROP; }
+-    for (__u32 i=0;i<BF_LLM_MAX_TOK;i++) slot->tok_in[i]=tokens[i];
+-    slot->n_prompt=h.n_prompt; slot->n_gen=h.n_gen; slot->produced=0; slot->pad=(http ? 2 : 1) | BF_LLM_VALIDATING;
+-    slot->addr_be=skb->remote_ip4; slot->port_be=(__u16)(skb->remote_port>>16);
+-    slot->client_ns=h.client_ns; slot->ingress_ns=bpf_ktime_get_ns(); slot->gpu_done_ns=0;
+-    slot->state=BF_PENDING;
+-    bump(11);
+-    /* Keep ingress accounting on the sockmap redirect path when the accepted
+-     * socket is drained after parsing; plain SK_PASS can desynchronize its
+-     * TCP and psock receive cursors on the qualified kernel. */
+-    struct bf_flow key={skb->local_ip4,skb->remote_ip4,skb->local_port,skb->remote_port};
+-    return bpf_sk_redirect_hash(skb,&streams,&key,BPF_F_INGRESS);
+-}
+-
+-char _license[] SEC("license") = "GPL";
+-
+ struct {
+     __uint(type,BPF_MAP_TYPE_ARRAY);
+     __uint(max_entries,1);
+     __type(key,__u32);
+     __type(value,struct bf_uring_context);
+ } uring_owner SEC(".maps");
++
++static __always_inline int stream_dispatch(struct __sk_buff *skb, int queued)
++{
++    union bf_llm_hdr h;
++    struct bf_llm_pending request={};
++    __u32 zero=0, body, offset=stream_offset(skb);
++    __u16 http;
++    int length=frame_info(skb,&body,&http);
++    if (length<=0 || offset>skb->len || length>skb->len-offset ||
++        bpf_skb_load_bytes(skb,offset+body,&h,sizeof(h)) ||
++        h.magic!=BF_LLM_MAGIC || length!=body+sizeof(h)+h.n_prompt*4 ||
++        !h.n_prompt || h.n_prompt>BF_LLM_MAX_TOK ||
++        !h.n_gen || h.n_gen>BF_LLM_MAX_TOK) return SK_DROP;
++#pragma unroll
++    for (__u32 i=0;i<BF_LLM_MAX_TOK;i++)
++        if (i<h.n_prompt && bpf_skb_load_bytes(skb,offset+body+sizeof(h)+i*4,&request.tokens[i],4)) return SK_DROP;
++    struct bf_page *p=bpf_map_lookup_elem(&ctl,&zero);
++    if (!p || *(volatile __u64 *)&p->stop_ns) return SK_DROP;
++    request.n_prompt=h.n_prompt; request.n_gen=h.n_gen;
++    request.flags=(http ? 2 : 1) | BF_LLM_VALIDATING;
++    request.addr_be=skb->remote_ip4; request.port_be=(__u16)(skb->remote_port>>16);
++    request.client_ns=h.client_ns; request.ingress_ns=bpf_ktime_get_ns();
++    if (queued) {
++        /* Count before publishing so EOF cannot recycle a connection while
++         * one of its requests is waiting outside the model's eight slots. */
++        __sync_fetch_and_add(&p->llm_queued,1);
++        if (bpf_map_push_elem(&pending,&request,BPF_ANY)) {
++            __sync_fetch_and_sub(&p->llm_queued,1);
++            bump(8); __sync_fetch_and_add(&p->drops,1); return SK_DROP;
++        }
++    } else {
++        struct bf_llm_slot *slot=llm_reserve(p);
++        if (!slot) { bump(8); __sync_fetch_and_add(&p->drops,1); return SK_DROP; }
++        llm_publish(slot,&request);
++    }
++    bump(11);
++    /* Preserve qualified sockmap/TCP receive-cursor accounting. */
++    struct bf_flow key={skb->local_ip4,skb->remote_ip4,skb->local_port,skb->remote_port};
++    return bpf_sk_redirect_hash(skb,&streams,&key,BPF_F_INGRESS);
++}
++SEC("sk_skb/stream_verdict")
++int stream_publish(struct __sk_buff *skb)
++{
++    return stream_dispatch(skb,0);
++}
++SEC("sk_skb/stream_verdict")
++int stream_uring_publish(struct __sk_buff *skb)
++{
++    __u32 zero=0;
++    struct bf_uring_context *owner=bpf_map_lookup_elem(&uring_owner,&zero);
++    return stream_dispatch(skb,owner && owner->pad);
++}
++
++char _license[] SEC("license") = "GPL";
+ 
+ SEC("tracepoint/io_uring/io_uring_create")
+ int uring_bind(struct trace_event_raw_io_uring_create *ctx)

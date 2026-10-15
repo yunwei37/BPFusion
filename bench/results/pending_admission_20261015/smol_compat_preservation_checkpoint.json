@@ -1,0 +1,52 @@
+{
+  "utc": "2026-10-15T10:20:36.558855+00:00",
+  "scope": "Closed non-loop Smol compatibility only; remaining lifecycle qualification active.",
+  "files": [
+    {
+      "path": "protocol_compat_smol_p0_uring.gpu.jsonl",
+      "bytes": 770781
+    },
+    {
+      "path": "protocol_compat_smol.analysis.stdout",
+      "bytes": 416
+    },
+    {
+      "path": "protocol_compat_smol.analysis.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "protocol_compat_smol.driver.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "protocol_compat_smol.jsonl",
+      "bytes": 609889
+    },
+    {
+      "path": "protocol_compat_smol.driver.stdout",
+      "bytes": 117
+    },
+    {
+      "path": "protocol_compat_smol_p0_uring.gpu.jsonl.references.jsonl",
+      "bytes": 225576
+    },
+    {
+      "path": "protocol_compat_smol_p0_uring.network.txt",
+      "bytes": 154477
+    },
+    {
+      "path": "protocol_compat_smol_p0_uring.stdout.txt",
+      "bytes": 54179
+    }
+  ],
+  "replay": {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/pending_admission_20261015/protocol_analysis.py",
+      "/workspaces/repository/bench/results/pending_admission_20261015/protocol_compat_smol.jsonl"
+    ],
+    "exit": 0,
+    "stdout_byte_equal": true,
+    "stderr": ""
+  }
+}

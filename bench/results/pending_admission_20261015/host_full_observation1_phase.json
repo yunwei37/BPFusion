@@ -1,0 +1,47 @@
+{
+  "utc": "2026-10-15T10:40:07.880026+00:00",
+  "host_observation_utc": "2026-10-15T10:34:13.199385+00:00",
+  "timeline": [
+    {
+      "event": "cell",
+      "utc": "2026-10-15T10:33:49Z",
+      "pair": 0,
+      "mode": "uring_loop",
+      "rate": 4
+    },
+    {
+      "event": "cell",
+      "utc": "2026-10-15T10:33:53Z",
+      "pair": 0,
+      "mode": "uring_loop",
+      "rate": 64
+    },
+    {
+      "event": "cell",
+      "utc": "2026-10-15T10:33:56Z",
+      "pair": 0,
+      "mode": "uring_loop",
+      "rate": 96
+    },
+    {
+      "event": "executor",
+      "utc": "2026-10-15T10:34:33Z",
+      "pair": 0,
+      "mode": "uring_loop"
+    },
+    {
+      "event": "verified",
+      "utc": "2026-10-15T10:34:33Z",
+      "pair": 0,
+      "mode": "uring_loop"
+    },
+    {
+      "event": "executor_terminal",
+      "utc": "2026-10-15T10:34:33Z",
+      "pair": 0,
+      "mode": "uring_loop",
+      "success": true
+    }
+  ],
+  "scope": "Host snapshot was after all first-kernel measured cells completed. It is post-measurement/replay/teardown evidence, not a serving-measurement GPU-isolation sample."
+}

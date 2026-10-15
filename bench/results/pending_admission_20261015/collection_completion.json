@@ -1,0 +1,79 @@
+{
+  "utc": "2026-10-15T11:22:22.472647+00:00",
+  "source": "/tmp/bpfusion-pending-admission-t4hv6ezt",
+  "copied_files": 287,
+  "copied_bytes": 114639770,
+  "full_terminal": {
+    "exit": 0,
+    "completed": 2,
+    "expected": 2,
+    "utc": "2026-10-15T11:21:07.991049+00:00"
+  },
+  "coverage": [
+    {
+      "model": "qwen",
+      "event": "coverage",
+      "executors": 10,
+      "cells": 30,
+      "attempts": 7680,
+      "successes": 7680,
+      "failures": 0,
+      "successful_measured_tokens": 491520,
+      "warmups": 80
+    },
+    {
+      "model": "smol",
+      "event": "coverage",
+      "executors": 10,
+      "cells": 30,
+      "attempts": 7680,
+      "successes": 7680,
+      "failures": 0,
+      "successful_measured_tokens": 491520,
+      "warmups": 80
+    }
+  ],
+  "primaries": [
+    {
+      "model": "qwen",
+      "event": "paired",
+      "rate": 64,
+      "metric": "connect_ttft_ms_p99",
+      "effects": [
+        -68.99664729999904,
+        12.211456449999972,
+        -9.20298829999998,
+        4.310305000000007,
+        -9.199895000000033
+      ],
+      "signed_mean": -14.175553829999815,
+      "signed_t95": [
+        -53.8934582724762,
+        25.542350612476575
+      ],
+      "failed_request_censoring": false,
+      "primary": true
+    },
+    {
+      "model": "smol",
+      "event": "paired",
+      "rate": 64,
+      "metric": "connect_ttft_ms_p99",
+      "effects": [
+        -2.8872033999999687,
+        18.447024099999958,
+        5.836503849999978,
+        2.0706866999999978,
+        103.49146965
+      ],
+      "signed_mean": 25.391696179999993,
+      "signed_t95": [
+        -29.697390662422233,
+        80.48078302242222
+      ],
+      "failed_request_censoring": false,
+      "primary": true
+    }
+  ],
+  "scope": "Complete collection copied byte for byte and all seven CPU analyses replay identically. Independent result review, production selection, cleanup and main publication pending."
+}

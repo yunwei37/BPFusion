@@ -1,0 +1,23 @@
+{
+  "command": [
+    "make",
+    "-f",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/candidate/Makefile",
+    "BUILD=/tmp/bpfusion-pending-admission-t4hv6ezt/kernel-build",
+    "NVCC=/usr/local/cuda/bin/nvcc -I/tmp/bpfusion-pending-admission-t4hv6ezt/candidate/bpf/include -I/workspaces/repository/executor",
+    "BPF_CFLAGS=-O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -I/tmp/bpfusion-pending-admission-t4hv6ezt/candidate/bpf/include -I/workspaces/repository/bpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value",
+    "CFLAGS=-O2 -g -Wall -Wextra -Wno-unused-parameter -I/tmp/bpfusion-pending-admission-t4hv6ezt/candidate/bpf/include",
+    "VLLM_PYTHON=/tmp/bpfusion-pending-admission-t4hv6ezt/runtime/bin/python",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/kernel-build/fusion.bpf.o",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/kernel-build/bpfusion_load",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/kernel-build/uring_loop.bpf.o",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/kernel-build/vllm_graph_uring_loop_trace.so",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/kernel-build/vllm_graph_uring_loop_trace",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/kernel-build/vllm_graph_uring_loop.so",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/kernel-build/vllm_graph_uring_loop",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/kernel-build/vllm_graph_uring_trace.so",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/kernel-build/vllm_graph_uring_trace"
+  ],
+  "exit": 0,
+  "utc": "2026-10-15T09:42:44.652567+00:00"
+}

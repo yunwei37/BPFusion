@@ -1,0 +1,12 @@
+{
+  "command": [
+    "make",
+    "-C",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/candidate/module",
+    "CC=gcc-15",
+    "KDIR=/usr/src/linux-headers-7.3.0-070300rc3-generic"
+  ],
+  "exit": 0,
+  "utc": "2026-10-15T09:44:11.279639+00:00",
+  "reason": "Default /lib/modules/<running>/build absent in original Workspace; use existing /usr/src running-kernel headers through supported KDIR override. No host change."
+}

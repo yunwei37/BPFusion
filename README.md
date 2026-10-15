@@ -39,12 +39,15 @@ remain open.
 | `qwen_graph_control` | Same graph banks, host resumes after requests | Same eBPF/kernel transport | Dispatch ablation |
 | `qwen.cu`, Python HF and synthetic MLP paths | Earlier implementations with different maturity | See their individual findings | Historical references and controls |
 
-The [complete offered-load collection](docs/findings/0061-offered-load-admission.md)
-exposes a current admission limitation: valid requests are dropped when the
-next model slot is reserved. Across both models the kernel paths time out on709
-of10240 attempts; event-driven native TCP completes all10240. Successful-only
-P99 values therefore do not establish a tail-latency win. Independent review
-confirms the negative service result; existing production source is retained.
+The [offered-load collection](docs/findings/0061-offered-load-admission.md)
+exposes a production admission limitation: a reserved next model slot causes
+valid requests to drop. The subsequent independently reviewed
+[pending-admission candidate](docs/findings/0062-pending-admission-tails.md)
+completes all 15,360 measured requests across both paths/models. Neither model
+establishes the primary P99 advantage at 64 requests/s. At secondary Qwen/96,
+first-token P99 is 280/1418 ms kernel/native, but median latency and process CPU
+are worse and throughput superiority remains unproven. The candidate is
+archived; ordinary application source/defaults still retain the old behavior.
 
 Strict regressions cover output agreement, fragmented messages, concurrent
 requests, connection reuse, pipelining, half-close, invalid inputs and queue

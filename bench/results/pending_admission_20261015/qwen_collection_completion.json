@@ -1,0 +1,192 @@
+{
+  "utc": "2026-10-15T10:58:49.259899+00:00",
+  "scope": "Complete Qwen model collection only. Smol and full matrix remain active; independent result review pending.",
+  "coverage": {
+    "event": "coverage",
+    "executors": 10,
+    "cells": 30,
+    "attempts": 7680,
+    "successes": 7680,
+    "failures": 0,
+    "successful_measured_tokens": 491520,
+    "warmups": 80
+  },
+  "primary": {
+    "event": "paired",
+    "rate": 64,
+    "metric": "connect_ttft_ms_p99",
+    "effects": [
+      -68.99664729999904,
+      12.211456449999972,
+      -9.20298829999998,
+      4.310305000000007,
+      -9.199895000000033
+    ],
+    "signed_mean": -14.175553829999815,
+    "signed_t95": [
+      -53.8934582724762,
+      25.542350612476575
+    ],
+    "failed_request_censoring": false,
+    "primary": true
+  },
+  "admission_peaks": {
+    "full_qwen_p1_uring_loop.stdout.txt": 31,
+    "full_qwen_p2_uring_loop.stdout.txt": 33,
+    "full_qwen_p0_uring_loop.stdout.txt": 29,
+    "full_qwen_p3_uring_loop.stdout.txt": 16,
+    "full_qwen_p4_uring_loop.stdout.txt": 21
+  },
+  "files": [
+    {
+      "path": "full_qwen_p2_uring_loop.gpu.jsonl",
+      "bytes": 1839812
+    },
+    {
+      "path": "full_qwen.driver.stdout",
+      "bytes": 1260
+    },
+    {
+      "path": "full_qwen.analysis.stdout",
+      "bytes": 49636
+    },
+    {
+      "path": "full_qwen_p4_uring_loop.gpu.jsonl",
+      "bytes": 1838099
+    },
+    {
+      "path": "full_qwen_p3_uring_loop.gpu.jsonl.references.jsonl",
+      "bytes": 358436
+    },
+    {
+      "path": "full_qwen_p2_userspace.gpu.jsonl.references.jsonl",
+      "bytes": 358455
+    },
+    {
+      "path": "full_qwen_p1_userspace.gpu.jsonl.references.jsonl",
+      "bytes": 358380
+    },
+    {
+      "path": "full_qwen_p4_userspace.gpu.jsonl",
+      "bytes": 1843676
+    },
+    {
+      "path": "full_qwen.driver.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "full_qwen_p0_userspace.stdout.txt",
+      "bytes": 34896
+    },
+    {
+      "path": "full_qwen_p0_uring_loop.gpu.jsonl",
+      "bytes": 1843245
+    },
+    {
+      "path": "full_qwen.jsonl",
+      "bytes": 16973774
+    },
+    {
+      "path": "full_qwen_p3_userspace.gpu.jsonl",
+      "bytes": 1836853
+    },
+    {
+      "path": "full_qwen_p1_userspace.gpu.jsonl",
+      "bytes": 1887472
+    },
+    {
+      "path": "full_qwen_p3_uring_loop.gpu.jsonl",
+      "bytes": 1837574
+    },
+    {
+      "path": "full_qwen_p4_userspace.gpu.jsonl.references.jsonl",
+      "bytes": 358359
+    },
+    {
+      "path": "full_qwen_p0_userspace.gpu.jsonl.references.jsonl",
+      "bytes": 358411
+    },
+    {
+      "path": "full_qwen_p2_uring_loop.gpu.jsonl.references.jsonl",
+      "bytes": 358386
+    },
+    {
+      "path": "full_qwen_p3_userspace.stdout.txt",
+      "bytes": 33202
+    },
+    {
+      "path": "full_qwen_p0_uring_loop.stdout.txt",
+      "bytes": 49088
+    },
+    {
+      "path": "full_qwen_p2_userspace.gpu.jsonl",
+      "bytes": 1835803
+    },
+    {
+      "path": "full_qwen_p4_uring_loop.gpu.jsonl.references.jsonl",
+      "bytes": 358393
+    },
+    {
+      "path": "full_qwen_p0_uring_loop.gpu.jsonl.references.jsonl",
+      "bytes": 358428
+    },
+    {
+      "path": "full_qwen_p4_uring_loop.stdout.txt",
+      "bytes": 48776
+    },
+    {
+      "path": "full_qwen_p4_userspace.stdout.txt",
+      "bytes": 33100
+    },
+    {
+      "path": "full_qwen_p3_uring_loop.stdout.txt",
+      "bytes": 47777
+    },
+    {
+      "path": "full_qwen_p3_userspace.gpu.jsonl.references.jsonl",
+      "bytes": 358431
+    },
+    {
+      "path": "full_qwen_p0_userspace.gpu.jsonl",
+      "bytes": 1842990
+    },
+    {
+      "path": "full_qwen_p1_uring_loop.gpu.jsonl",
+      "bytes": 1862457
+    },
+    {
+      "path": "full_qwen.analysis.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "full_qwen_p1_uring_loop.stdout.txt",
+      "bytes": 47976
+    },
+    {
+      "path": "full_qwen_p1_uring_loop.gpu.jsonl.references.jsonl",
+      "bytes": 358443
+    },
+    {
+      "path": "full_qwen_p2_userspace.stdout.txt",
+      "bytes": 33942
+    },
+    {
+      "path": "full_qwen_p2_uring_loop.stdout.txt",
+      "bytes": 48439
+    },
+    {
+      "path": "full_qwen_p1_userspace.stdout.txt",
+      "bytes": 35945
+    }
+  ],
+  "replay": {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/pending_admission_20261015/analyze.py",
+      "/workspaces/repository/bench/results/pending_admission_20261015/full_qwen.jsonl"
+    ],
+    "exit": 0,
+    "stdout_byte_equal": true,
+    "stderr": ""
+  }
+}

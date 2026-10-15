@@ -1,0 +1,22 @@
+libbpf: Kernel error message: Exclusivity flag on, cannot modify
+Traceback (most recent call last):
+  File "/tmp/bpfusion-pending-admission-t4hv6ezt/module_compat.py", line 77, in main
+    chunk = client.recv(1)
+            ^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/bpfusion-pending-admission-t4hv6ezt/module_compat.py", line 96, in <module>
+    main()
+  File "/tmp/bpfusion-pending-admission-t4hv6ezt/module_compat.py", line 89, in main
+    subprocess.run(["rmmod", "bfusion_tx"], check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'rmmod'

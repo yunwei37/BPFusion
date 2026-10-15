@@ -1174,6 +1174,34 @@ identities match, and all seven copied-data analyses replay byte for byte
 without the original temporary directory. Research role is supporting and the
 tested impact is an admission/workload boundary. Native buffering and kernel admission differ;
 the result is not syscall-only attribution, total CPU/energy, steady-state
-capacity or arbitrary-backend evidence. Retain original source,
-and prioritize admission waiting/ownership rather than model arithmetic.
+capacity or arbitrary-backend evidence. Original source remains selected;
+the subsequent admission-waiting experiment is reported in finding0062 below.
 The full user objective remains active.
+
+## Completed pending-admission comparison
+
+[Finding0062](findings/0062-pending-admission-tails.md) tests finite admission
+waiting against the strongest current same-compute event-driven native TCP
+competitor. Rates 4/64/96, 256 independent scheduled attempts/cell, five paired
+blocks/model and gen64 are fixed before collection. All 20 executors/60 cells
+complete: 15,360 successful measured attempts, zero failures and 983,040
+delivered measured tokens, plus 160 gen1 warmups. Actual model histories,
+wire outputs and release ownership pass replay for both models/paths.
+
+Primary kernel-minus-native connect-inclusive TTFT P99 at64/s is
+-14.175554 ms [-53.893458,+25.542351] Qwen and
++25.391696 ms [-29.697391,+80.480783] Smol, nominal paired t95df4.
+Both remain inconclusive without failure censoring. Secondary Qwen/96 improves
+P99 by1138.298 ms [628.885,1647.711], but median TTFT worsens134.386/30.120 ms
+kernel/native. No throughput advantage is established. Executor CPU/attempt
+increases for both models at64/96; partial process accounting excludes other
+kernel tasks and is not total service cost.
+
+Keep the Smol/64 block with218.468 ms scheduling-lag P99 and all low-load/adverse
+results. A busy shared host, actual Python-thread arrivals, small P99 samples
+and differing admission/batch policies limit causal interpretation. Finite
+queue overflow remains a drop boundary; stop cancellations are explicit.
+The fresh [result review](../bench/results/pending_admission_20261015/result-review.md)
+finds valid supporting mechanism/workload evidence, not general superiority.
+All seven archived CPU analyses replay bytewise. Private-source qualification
+does not select production behavior or certify later cleanup/publication.

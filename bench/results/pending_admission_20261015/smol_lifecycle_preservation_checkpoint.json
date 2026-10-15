@@ -1,0 +1,53 @@
+{
+  "utc": "2026-10-15T10:23:04.594773+00:00",
+  "scope": "Closed loop lifecycle only; canceled/prefix responses are not fully delivered numerical responses. Final native Smol lifecycle active.",
+  "files": [
+    {
+      "path": "lifecycle_smol_loop/smol.native.stdout",
+      "bytes": 22737
+    },
+    {
+      "path": "lifecycle_smol_loop/smol.strace",
+      "bytes": 73197
+    },
+    {
+      "path": "lifecycle_smol_loop/smol.native.stderr",
+      "bytes": 20942
+    },
+    {
+      "path": "lifecycle_smol_loop/smol.results.json",
+      "bytes": 150131
+    }
+  ],
+  "summary": {
+    "rows": 120,
+    "checked_tokens": 1044,
+    "unobserved_cancel": 23,
+    "before_rst": 16,
+    "before_stop": 56,
+    "queued_at_stop_cleanup": 56,
+    "stats": {
+      "accepted": 78,
+      "closed": 78,
+      "received": 93,
+      "sends": 913,
+      "bytes": 7189,
+      "completed": 64,
+      "aborted": 34,
+      "max_connections": 64,
+      "max_requests": 8,
+      "pending": 0,
+      "error": 0,
+      "head": 64,
+      "reserved": 0,
+      "dropped": 0,
+      "overflow": 0,
+      "sqhead": 1416,
+      "sqtail": 1416,
+      "cqhead": 11426,
+      "cqtail": 11426,
+      "trace_count": 64,
+      "trace_overflow": 0
+    }
+  }
+}

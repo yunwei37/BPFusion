@@ -1,0 +1,103 @@
+{
+  "utc": "2026-10-15T10:25:09.814469+00:00",
+  "scope": "All qualification dependencies complete, no preflight/full performance result yet.",
+  "summary": {
+    "terminal": {
+      "exit": 0,
+      "completed": 10,
+      "expected": 10,
+      "utc": "2026-10-15T10:24:36.373252+00:00"
+    },
+    "protocol_requests": 3804,
+    "protocol_checked_tokens": 137952,
+    "lifecycle": {
+      "qwen_loop": {
+        "rows": 120,
+        "checked_tokens": 852,
+        "unobserved_cancel": 23,
+        "stats": {
+          "accepted": 78,
+          "closed": 78,
+          "received": 97,
+          "sends": 783,
+          "bytes": 6425,
+          "completed": 64,
+          "aborted": 34,
+          "max_connections": 64,
+          "max_requests": 8,
+          "pending": 0,
+          "error": 0,
+          "head": 64,
+          "reserved": 0,
+          "dropped": 0,
+          "overflow": 0,
+          "sqhead": 1327,
+          "sqtail": 1327,
+          "cqhead": 13316,
+          "cqtail": 13316,
+          "trace_count": 64,
+          "trace_overflow": 0
+        },
+        "marked_partial_rows": 66,
+        "invalid_rows": 10
+      },
+      "qwen_native": {
+        "rows": 32,
+        "checked_tokens": 652,
+        "unobserved_cancel": 0,
+        "stats": {
+          "accepted": 13,
+          "published": 32,
+          "completed": 31,
+          "rejected": 10
+        },
+        "marked_partial_rows": 2,
+        "invalid_rows": 10
+      },
+      "smol_loop": {
+        "rows": 120,
+        "checked_tokens": 1044,
+        "unobserved_cancel": 23,
+        "stats": {
+          "accepted": 78,
+          "closed": 78,
+          "received": 93,
+          "sends": 913,
+          "bytes": 7189,
+          "completed": 64,
+          "aborted": 34,
+          "max_connections": 64,
+          "max_requests": 8,
+          "pending": 0,
+          "error": 0,
+          "head": 64,
+          "reserved": 0,
+          "dropped": 0,
+          "overflow": 0,
+          "sqhead": 1416,
+          "sqtail": 1416,
+          "cqhead": 11426,
+          "cqtail": 11426,
+          "trace_count": 64,
+          "trace_overflow": 0
+        },
+        "marked_partial_rows": 66,
+        "invalid_rows": 10
+      },
+      "smol_native": {
+        "rows": 32,
+        "checked_tokens": 652,
+        "unobserved_cancel": 0,
+        "stats": {
+          "accepted": 13,
+          "published": 32,
+          "completed": 31,
+          "rejected": 10
+        },
+        "marked_partial_rows": 2,
+        "invalid_rows": 10
+      }
+    }
+  },
+  "summary_note": "Partial counts use the explicit raw partial flag. Invalid/rejected and unobserved canceled rows are separate; checked_tokens<gen is not a partial-response definition."
+}

@@ -1,0 +1,18 @@
+{
+  "command": [
+    "make",
+    "-f",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/native/Makefile",
+    "BUILD=/tmp/bpfusion-pending-admission-t4hv6ezt/native-build",
+    "NVCC=/usr/local/cuda/bin/nvcc -I/tmp/bpfusion-pending-admission-t4hv6ezt/native/bpf/include -I/workspaces/repository/executor",
+    "BPF_CFLAGS=-O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -I/tmp/bpfusion-pending-admission-t4hv6ezt/native/bpf/include -I/workspaces/repository/bpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value",
+    "CFLAGS=-O2 -g -Wall -Wextra -Wno-unused-parameter -I/tmp/bpfusion-pending-admission-t4hv6ezt/candidate/bpf/include",
+    "VLLM_PYTHON=/tmp/bpfusion-pending-admission-t4hv6ezt/runtime/bin/python",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/native-build/vllm_graph_user_network_wait_trace.so",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/native-build/vllm_graph_user_network_wait_trace",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/native-build/vllm_graph_user_network_wait.so",
+    "/tmp/bpfusion-pending-admission-t4hv6ezt/native-build/vllm_graph_user_network_wait"
+  ],
+  "exit": 0,
+  "utc": "2026-10-15T09:43:01.897108+00:00"
+}

@@ -1,0 +1,94 @@
+{
+  "utc": "2026-10-15T10:28:18.383542+00:00",
+  "scope": "Preflight only; not a full performance result.",
+  "terminal": {
+    "exit": 0,
+    "completed": 1,
+    "expected": 1,
+    "utc": "2026-10-15T10:27:15.998038+00:00"
+  },
+  "files": [
+    {
+      "path": "preflight_qwen.driver.stdout",
+      "bytes": 245
+    },
+    {
+      "path": "preflight.statuses.json",
+      "bytes": 724
+    },
+    {
+      "path": "preflight_qwen_p0_uring_loop.gpu.jsonl",
+      "bytes": 181955
+    },
+    {
+      "path": "preflight.py",
+      "bytes": 1711
+    },
+    {
+      "path": "preflight_qwen.jsonl",
+      "bytes": 468163
+    },
+    {
+      "path": "preflight_qwen.analysis.stdout",
+      "bytes": 8329
+    },
+    {
+      "path": "preflight_qwen_p0_uring_loop.gpu.jsonl.references.jsonl",
+      "bytes": 30704
+    },
+    {
+      "path": "preflight_qwen_p0_userspace.stdout.txt",
+      "bytes": 33649
+    },
+    {
+      "path": "preflight.wrapper.exit.json",
+      "bytes": 54
+    },
+    {
+      "path": "preflight.wrapper.stdout",
+      "bytes": 649
+    },
+    {
+      "path": "preflight_qwen.analysis.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "preflight.process.json",
+      "bytes": 276
+    },
+    {
+      "path": "preflight_qwen_p0_userspace.gpu.jsonl.references.jsonl",
+      "bytes": 30704
+    },
+    {
+      "path": "preflight.exit.json",
+      "bytes": 95
+    },
+    {
+      "path": "preflight_qwen.driver.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "preflight_qwen_p0_userspace.gpu.jsonl",
+      "bytes": 181260
+    },
+    {
+      "path": "preflight.wrapper.stderr",
+      "bytes": 0
+    },
+    {
+      "path": "preflight_qwen_p0_uring_loop.stdout.txt",
+      "bytes": 42358
+    }
+  ],
+  "replay": {
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/pending_admission_20261015/analyze.py",
+      "/workspaces/repository/bench/results/pending_admission_20261015/preflight_qwen.jsonl"
+    ],
+    "exit": 0,
+    "stdout_byte_equal": true,
+    "stderr": ""
+  }
+}
