@@ -62,3 +62,15 @@ its matching BPF,loader and CUDA variants. Installed measurement package
 versions match0063 exactly (package_comparison.json is empty).
 The same wrapper has entered the real Qwen preflight.16-capacity real-model
 qualification,complete performance collection and result review remain open.
+
+## Real preflight completion update
+
+The one Qwen real preflight completes all four conditions and8cells:
+256 measured requests,zero failures,16384 checked measured tokens plus32
+gen1warmups. Both16-capacity paths actually execute every batch width1..16;
+both8-capacity controls execute1..8. The copied fixed CPU analysis exits0
+and matches saved stdout bytewise. preflight_completion.json retains actual
+queue peaks,terminal and coverage. This is setup/correctness evidence only.
+The same original wrapper now continues the16-capacity protocol/lifecycle
+qualification. Full performance collection and independent result review
+remain unfinished; no ordinary default is selected.

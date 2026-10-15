@@ -1,0 +1,106 @@
+{
+  "utc": "2026-10-15T14:05:46.083456+00:00",
+  "terminal": {
+    "exit": 0,
+    "completed": 1,
+    "expected": 1,
+    "utc": "2026-10-15T14:04:47.440583+00:00"
+  },
+  "coverage": {
+    "event": "coverage",
+    "executors": 4,
+    "cells": 8,
+    "attempts": 256,
+    "successes": 256,
+    "failures": 0,
+    "successful_measured_tokens": 16384,
+    "warmups": 32
+  },
+  "engagement": [
+    {
+      "mode": "uring_loop_8",
+      "actual_batches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "requests_including_warmup": 72,
+      "checked_tokens": 4104,
+      "queued_peak": 16
+    },
+    {
+      "mode": "userspace_8",
+      "actual_batches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "requests_including_warmup": 72,
+      "checked_tokens": 4104,
+      "queued_peak": 16
+    },
+    {
+      "mode": "uring_loop_16",
+      "actual_batches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "requests_including_warmup": 72,
+      "checked_tokens": 4104,
+      "queued_peak": 11
+    },
+    {
+      "mode": "userspace_16",
+      "actual_batches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "requests_including_warmup": 72,
+      "checked_tokens": 4104,
+      "queued_peak": 8
+    }
+  ],
+  "copied_cpu_replay": {
+    "exit": 0,
+    "byte_equal": true
+  },
+  "scope": "Real preflight only; no full throughput/latency result."
+}

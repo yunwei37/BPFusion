@@ -1277,5 +1277,8 @@ supporting evidence for a constructor/workload boundary,not intrinsic eBPF gain.
 Fresh plan review admits the executable comparison after correcting condition
 order to a balanced Williams sequence and separating ordinary finite-pool
 qualification from traced replay validity. Both8/16 builds complete with matching installed dependencies;the same existing
-wrapper is running real preflight/qualification. No performance result is available. Full execution,
+wrapper completes real preflight:256 measured successes/16384tokens,zero failures
+plus32 warmups. Both16-capacity paths actually execute widths1..16 and pass
+independent history replay;copied CPU analysis matches bytewise.16-capacity
+protocol/lifecycle qualification is running. No performance result is available. Full execution,
 fresh result review,owned cleanup and final publication remain unfinished.
