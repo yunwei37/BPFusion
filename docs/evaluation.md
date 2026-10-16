@@ -1748,3 +1748,15 @@ tradeoffs remain. This is proposed supporting RQ evidence, not a result.
 Source/build preparations are dependencies only. Fresh plan review, actual
 protocol/lifetime/cancel/model qualification, three-condition remote preflight,
 full15-cell ordinary matrix and fresh result review remain before any decision.
+
+### 2026-10-16 kernel-owned network: real qualification/preflight passed
+
+[Qualification](../bench/results/kernel_network_placement_20261016/qualification.md)
+passes actual default8 Qwen/Smol TCP/HTTP, existing dual replay and ordinary
+idle/reuse/reject/backlog/cancellation/drain fixtures. Compiled K/L/N dispatch
+is actually identical at8/16; current candidate has no GPU I/O CTA.
+[Remote preflight](../bench/results/kernel_network_placement_20261016/preflight.md)
+completes384successes/24576measured tokens with13 retained pool disagreements,
+24excluded warmups, correct terminals and byte-identical archive analysis.
+This is dependency acceptance, not a speed/result/adoption claim. Full15cells,
+fresh result review, actual client cleanup and ordinary source decision remain.
