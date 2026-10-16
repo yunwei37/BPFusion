@@ -1,0 +1,26 @@
+{
+  "command": [
+    "clang",
+    "-DBF_LLM_SLOTS=16",
+    "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/errno_build16\"",
+    "-O2",
+    "-g",
+    "-target",
+    "bpf",
+    "-mcpu=v3",
+    "-D__TARGET_ARCH_x86",
+    "-I/usr/include/x86_64-linux-gnu",
+    "-Ibpf/include",
+    "-Wall",
+    "-Werror",
+    "-Wno-missing-declarations",
+    "-Wno-unused-value",
+    "-c",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/errno_fusion.bpf.c",
+    "-o",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/errno_build16/fusion.bpf.o"
+  ],
+  "exit": 0,
+  "stdout": "",
+  "stderr": ""
+}

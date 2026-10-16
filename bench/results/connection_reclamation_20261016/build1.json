@@ -1,0 +1,23 @@
+{
+  "command": [
+    "cc",
+    "-DBF_LLM_SLOTS=16",
+    "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/errno_build16\"",
+    "-O2",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-Wno-unused-parameter",
+    "-Ibpf/include",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/errno_load.c",
+    "-o",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/errno_build16/bpfusion_load",
+    "-lbpf",
+    "-lelf",
+    "-lz",
+    "-lpthread"
+  ],
+  "exit": 0,
+  "stdout": "",
+  "stderr": ""
+}

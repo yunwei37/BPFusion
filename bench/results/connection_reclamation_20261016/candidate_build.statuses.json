@@ -1,0 +1,949 @@
+[
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "mkdir",
+      "-p",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:25.435312+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "clang",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8\"",
+      "-O2",
+      "-g",
+      "-target",
+      "bpf",
+      "-mcpu=v3",
+      "-D__TARGET_ARCH_x86",
+      "-I/usr/include/x86_64-linux-gnu",
+      "-I/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source",
+      "-I/workspaces/repository/executor",
+      "-Ibpf/include",
+      "-Wall",
+      "-Werror",
+      "-Wno-missing-declarations",
+      "-Wno-unused-value",
+      "-c",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source/uring_loop.bpf.c",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/uring_loop.bpf.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:25.745176+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8\"",
+      "-O3",
+      "-std=c++17",
+      "-arch=sm_120",
+      "--cudart=none",
+      "-dc",
+      "-Xcompiler=-fPIC",
+      "-Ibpf/include",
+      "-DBF_PAD_PREFILL",
+      "-DBF_PREFIX_RELEASE",
+      "-DBF_URING_NETWORK",
+      "-DBF_URING_BPF_LOOP",
+      "-I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi",
+      "executor/vllm_mixed.cu",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop.so.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:27.287086+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-arch=sm_120",
+      "-dlink",
+      "-Xcompiler=-fPIC",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop.so.o",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop.so.dlink.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:27.359747+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "g++",
+      "-shared",
+      "-Wl,-z,defs",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop.so.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop.so.dlink.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+      "-Wl,-rpath,/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop.so",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:27.408295+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "ln",
+      "-sf",
+      "/workspaces/repository/executor/vllm_mixed.py",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:27.409841+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8\"",
+      "-O3",
+      "-std=c++17",
+      "-arch=sm_120",
+      "--cudart=none",
+      "-dc",
+      "-Xcompiler=-fPIC",
+      "-Ibpf/include",
+      "-DBF_PAD_PREFILL",
+      "-DBF_PREFIX_RELEASE",
+      "-DBF_USER_NETWORK",
+      "-DBF_USER_NETWORK_WAIT",
+      "executor/vllm_mixed.cu",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait.so.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:29.421299+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-arch=sm_120",
+      "-dlink",
+      "-Xcompiler=-fPIC",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait.so.o",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait.so.dlink.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:29.484833+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "g++",
+      "-shared",
+      "-Wl,-z,defs",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait.so.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait.so.dlink.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+      "-Wl,-rpath,/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait.so",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:29.532544+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "ln",
+      "-sf",
+      "/workspaces/repository/executor/vllm_mixed.py",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:29.534130+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8\"",
+      "-O3",
+      "-std=c++17",
+      "-arch=sm_120",
+      "--cudart=none",
+      "-dc",
+      "-Xcompiler=-fPIC",
+      "-Ibpf/include",
+      "-DBF_PAD_PREFILL",
+      "-DBF_PREFIX_RELEASE",
+      "-DBF_URING_NETWORK",
+      "-DBF_URING_BPF_LOOP",
+      "-I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi",
+      "-DBF_TRACE",
+      "executor/vllm_mixed.cu",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop_trace.so.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:31.115598+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-arch=sm_120",
+      "-dlink",
+      "-Xcompiler=-fPIC",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop_trace.so.o",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop_trace.so.dlink.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:31.188451+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "g++",
+      "-shared",
+      "-Wl,-z,defs",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop_trace.so.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop_trace.so.dlink.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+      "-Wl,-rpath,/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop_trace.so",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:31.238359+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "ln",
+      "-sf",
+      "/workspaces/repository/executor/vllm_mixed.py",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_uring_loop_trace"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:31.240090+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8\"",
+      "-O3",
+      "-std=c++17",
+      "-arch=sm_120",
+      "--cudart=none",
+      "-dc",
+      "-Xcompiler=-fPIC",
+      "-Ibpf/include",
+      "-DBF_PAD_PREFILL",
+      "-DBF_PREFIX_RELEASE",
+      "-DBF_USER_NETWORK",
+      "-DBF_USER_NETWORK_WAIT",
+      "-DBF_TRACE",
+      "executor/vllm_mixed.cu",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait_trace.so.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:33.295519+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-arch=sm_120",
+      "-dlink",
+      "-Xcompiler=-fPIC",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait_trace.so.o",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait_trace.so.dlink.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:33.359957+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "g++",
+      "-shared",
+      "-Wl,-z,defs",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait_trace.so.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait_trace.so.dlink.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+      "-Wl,-rpath,/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait_trace.so",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:33.407728+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "ln",
+      "-sf",
+      "/workspaces/repository/executor/vllm_mixed.py",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/vllm_mixed_user_network_wait_trace"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:33.409166+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "cc",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8\"",
+      "-O2",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unused-parameter",
+      "-I/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source",
+      "-I/workspaces/repository/executor",
+      "-Ibpf/include",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source/bpfusion_load.c",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/bpfusion_load",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:33.547196+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 8,
+    "command": [
+      "clang",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8\"",
+      "-O2",
+      "-g",
+      "-target",
+      "bpf",
+      "-mcpu=v3",
+      "-D__TARGET_ARCH_x86",
+      "-I/usr/include/x86_64-linux-gnu",
+      "-I/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source",
+      "-I/workspaces/repository/executor",
+      "-Ibpf/include",
+      "-Wall",
+      "-Werror",
+      "-Wno-missing-declarations",
+      "-Wno-unused-value",
+      "-c",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source/fusion.bpf.c",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local8/fusion.bpf.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:33.998194+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "mkdir",
+      "-p",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:34.000081+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "clang",
+      "-DBF_LLM_SLOTS=16",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16\"",
+      "-O2",
+      "-g",
+      "-target",
+      "bpf",
+      "-mcpu=v3",
+      "-D__TARGET_ARCH_x86",
+      "-I/usr/include/x86_64-linux-gnu",
+      "-I/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source",
+      "-I/workspaces/repository/executor",
+      "-Ibpf/include",
+      "-Wall",
+      "-Werror",
+      "-Wno-missing-declarations",
+      "-Wno-unused-value",
+      "-c",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source/uring_loop.bpf.c",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/uring_loop.bpf.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:34.255639+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-DBF_LLM_SLOTS=16",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16\"",
+      "-O3",
+      "-std=c++17",
+      "-arch=sm_120",
+      "--cudart=none",
+      "-dc",
+      "-Xcompiler=-fPIC",
+      "-Ibpf/include",
+      "-DBF_PAD_PREFILL",
+      "-DBF_PREFIX_RELEASE",
+      "-DBF_URING_NETWORK",
+      "-DBF_URING_BPF_LOOP",
+      "-I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi",
+      "executor/vllm_mixed.cu",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop.so.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:35.745421+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-arch=sm_120",
+      "-dlink",
+      "-Xcompiler=-fPIC",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop.so.o",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop.so.dlink.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:35.817699+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "g++",
+      "-shared",
+      "-Wl,-z,defs",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop.so.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop.so.dlink.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+      "-Wl,-rpath,/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop.so",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:35.866529+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "ln",
+      "-sf",
+      "/workspaces/repository/executor/vllm_mixed.py",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:35.868119+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-DBF_LLM_SLOTS=16",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16\"",
+      "-O3",
+      "-std=c++17",
+      "-arch=sm_120",
+      "--cudart=none",
+      "-dc",
+      "-Xcompiler=-fPIC",
+      "-Ibpf/include",
+      "-DBF_PAD_PREFILL",
+      "-DBF_PREFIX_RELEASE",
+      "-DBF_USER_NETWORK",
+      "-DBF_USER_NETWORK_WAIT",
+      "executor/vllm_mixed.cu",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait.so.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:37.863715+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-arch=sm_120",
+      "-dlink",
+      "-Xcompiler=-fPIC",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait.so.o",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait.so.dlink.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:37.926844+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "g++",
+      "-shared",
+      "-Wl,-z,defs",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait.so.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait.so.dlink.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+      "-Wl,-rpath,/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait.so",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:37.974342+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "ln",
+      "-sf",
+      "/workspaces/repository/executor/vllm_mixed.py",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:37.975895+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-DBF_LLM_SLOTS=16",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16\"",
+      "-O3",
+      "-std=c++17",
+      "-arch=sm_120",
+      "--cudart=none",
+      "-dc",
+      "-Xcompiler=-fPIC",
+      "-Ibpf/include",
+      "-DBF_PAD_PREFILL",
+      "-DBF_PREFIX_RELEASE",
+      "-DBF_URING_NETWORK",
+      "-DBF_URING_BPF_LOOP",
+      "-I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi",
+      "-DBF_TRACE",
+      "executor/vllm_mixed.cu",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop_trace.so.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:39.536653+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-arch=sm_120",
+      "-dlink",
+      "-Xcompiler=-fPIC",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop_trace.so.o",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop_trace.so.dlink.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:39.609630+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "g++",
+      "-shared",
+      "-Wl,-z,defs",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop_trace.so.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop_trace.so.dlink.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+      "-Wl,-rpath,/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop_trace.so",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:39.658218+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "ln",
+      "-sf",
+      "/workspaces/repository/executor/vllm_mixed.py",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_uring_loop_trace"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:39.659838+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-DBF_LLM_SLOTS=16",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16\"",
+      "-O3",
+      "-std=c++17",
+      "-arch=sm_120",
+      "--cudart=none",
+      "-dc",
+      "-Xcompiler=-fPIC",
+      "-Ibpf/include",
+      "-DBF_PAD_PREFILL",
+      "-DBF_PREFIX_RELEASE",
+      "-DBF_USER_NETWORK",
+      "-DBF_USER_NETWORK_WAIT",
+      "-DBF_TRACE",
+      "executor/vllm_mixed.cu",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait_trace.so.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:41.711344+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-arch=sm_120",
+      "-dlink",
+      "-Xcompiler=-fPIC",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait_trace.so.o",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait_trace.so.dlink.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:41.777479+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "g++",
+      "-shared",
+      "-Wl,-z,defs",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait_trace.so.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait_trace.so.dlink.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+      "-Wl,-rpath,/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait_trace.so",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:41.825220+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "ln",
+      "-sf",
+      "/workspaces/repository/executor/vllm_mixed.py",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/vllm_mixed_user_network_wait_trace"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:41.826941+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "cc",
+      "-DBF_LLM_SLOTS=16",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16\"",
+      "-O2",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unused-parameter",
+      "-I/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source",
+      "-I/workspaces/repository/executor",
+      "-Ibpf/include",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source/bpfusion_load.c",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/bpfusion_load",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:41.948082+00:00"
+  },
+  {
+    "condition": "local",
+    "banks": 16,
+    "command": [
+      "clang",
+      "-DBF_LLM_SLOTS=16",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16\"",
+      "-O2",
+      "-g",
+      "-target",
+      "bpf",
+      "-mcpu=v3",
+      "-D__TARGET_ARCH_x86",
+      "-I/usr/include/x86_64-linux-gnu",
+      "-I/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source",
+      "-I/workspaces/repository/executor",
+      "-Ibpf/include",
+      "-Wall",
+      "-Werror",
+      "-Wno-missing-declarations",
+      "-Wno-unused-value",
+      "-c",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source/fusion.bpf.c",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_local16/fusion.bpf.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:42.385683+00:00"
+  },
+  {
+    "condition": "global",
+    "banks": 16,
+    "command": [
+      "mkdir",
+      "-p",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:42.387608+00:00"
+  },
+  {
+    "condition": "global",
+    "banks": 16,
+    "command": [
+      "clang",
+      "-DBF_IO_GLOBAL_PENDING_GUARD",
+      "-DBF_LLM_SLOTS=16",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16\"",
+      "-O2",
+      "-g",
+      "-target",
+      "bpf",
+      "-mcpu=v3",
+      "-D__TARGET_ARCH_x86",
+      "-I/usr/include/x86_64-linux-gnu",
+      "-I/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source",
+      "-I/workspaces/repository/executor",
+      "-Ibpf/include",
+      "-Wall",
+      "-Werror",
+      "-Wno-missing-declarations",
+      "-Wno-unused-value",
+      "-c",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source/uring_loop.bpf.c",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16/uring_loop.bpf.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:42.646269+00:00"
+  },
+  {
+    "condition": "global",
+    "banks": 16,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-DBF_LLM_SLOTS=16",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16\"",
+      "-O3",
+      "-std=c++17",
+      "-arch=sm_120",
+      "--cudart=none",
+      "-dc",
+      "-Xcompiler=-fPIC",
+      "-Ibpf/include",
+      "-DBF_PAD_PREFILL",
+      "-DBF_PREFIX_RELEASE",
+      "-DBF_URING_NETWORK",
+      "-DBF_URING_BPF_LOOP",
+      "-I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi",
+      "executor/vllm_mixed.cu",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16/vllm_mixed_uring_loop.so.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:44.212864+00:00"
+  },
+  {
+    "condition": "global",
+    "banks": 16,
+    "command": [
+      "/usr/local/cuda/bin/nvcc",
+      "-arch=sm_120",
+      "-dlink",
+      "-Xcompiler=-fPIC",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16/vllm_mixed_uring_loop.so.o",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16/vllm_mixed_uring_loop.so.dlink.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:44.285301+00:00"
+  },
+  {
+    "condition": "global",
+    "banks": 16,
+    "command": [
+      "g++",
+      "-shared",
+      "-Wl,-z,defs",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16/vllm_mixed_uring_loop.so.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16/vllm_mixed_uring_loop.so.dlink.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+      "-Wl,-rpath,/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16/vllm_mixed_uring_loop.so",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:44.333923+00:00"
+  },
+  {
+    "condition": "global",
+    "banks": 16,
+    "command": [
+      "ln",
+      "-sf",
+      "/workspaces/repository/executor/vllm_mixed.py",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16/vllm_mixed_uring_loop"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:44.335531+00:00"
+  },
+  {
+    "condition": "global",
+    "banks": 16,
+    "command": [
+      "cc",
+      "-DBF_IO_GLOBAL_PENDING_GUARD",
+      "-DBF_LLM_SLOTS=16",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16\"",
+      "-O2",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unused-parameter",
+      "-I/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source",
+      "-I/workspaces/repository/executor",
+      "-Ibpf/include",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source/bpfusion_load.c",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16/bpfusion_load",
+      "-lbpf",
+      "-lelf",
+      "-lz",
+      "-lpthread"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:44.473970+00:00"
+  },
+  {
+    "condition": "global",
+    "banks": 16,
+    "command": [
+      "clang",
+      "-DBF_IO_GLOBAL_PENDING_GUARD",
+      "-DBF_LLM_SLOTS=16",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16\"",
+      "-O2",
+      "-g",
+      "-target",
+      "bpf",
+      "-mcpu=v3",
+      "-D__TARGET_ARCH_x86",
+      "-I/usr/include/x86_64-linux-gnu",
+      "-I/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source",
+      "-I/workspaces/repository/executor",
+      "-Ibpf/include",
+      "-Wall",
+      "-Werror",
+      "-Wno-missing-declarations",
+      "-Wno-unused-value",
+      "-c",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_source/fusion.bpf.c",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/reclaim_global16/fusion.bpf.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T12:15:45.062586+00:00"
+  }
+]

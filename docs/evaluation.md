@@ -1522,3 +1522,13 @@ shared work and checkpoint exposure retained. Sockhash insertion failures
 match one timeout cell; global-queue closure dependency is an unproved cause.
 Next diagnose/repair and matched retest. Valid observations, current192 advantage
 contradicted, supporting additional RQ/workload-boundary evidence.
+
+### 2026-10-16 connection reclamation diagnostic
+[Plan/review](../bench/results/connection_reclamation_20261016/plan.md) admits
+the causal discriminator. [Actual errno/census](../bench/results/connection_reclamation_20261016/errno-result.md)
+finds E2BIG,2947 owned CLOSE_WAIT while queued173, later368 insertion failures
+matching368 timeouts out of4608. Native4608 all succeeds. Both exit0.
+Later snapshot is post-drain, not simultaneous full-map inventory. Candidate
+has conservative peer pending references, EOF-only reclamation, matched global
+ablation accounting and unchanged model math; default8 qualification active,
+not source adoption or completed causal-performance result.
