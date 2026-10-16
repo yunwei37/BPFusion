@@ -1,0 +1,41 @@
+--- a/executor/io_uring_tcp.h
++++ b/executor/io_uring_tcp.h
+@@ -29,7 +29,7 @@
+     unsigned sq_head,sq_tail,sq_published;
+ #endif
+ };
+-struct IoConn { int fd,next,reply,last;unsigned receiving,closing,dead,eof,generation; };
++struct IoConn { int fd,next,reply,last;unsigned receiving,closing,dead,eof,generation;unsigned addr_be;unsigned short port_be; };
+ struct IoRequest {
+     int conn,next;unsigned seq,ng,header,sent,busy,active,final,header_ready;
+     unsigned long long tag,client_ns;unsigned sends,early,bytes;
+@@ -145,6 +145,8 @@
+             if(kind==1) {
+                 accepting=-1;auto &c=conns[index];
+                 if(e.res>=0) {
++                    auto *peer=(sockaddr_in*)(buffer+index*stride+4096);
++                    c.addr_be=peer->sin_addr.s_addr;c.port_be=peer->sin_port;
+                     c.fd=e.res;c.next=active;active=index;connections++;out->accepted++;
+                     if(connections>out->max_connections)out->max_connections=connections;
+                     if(stopping)c.dead=1;
+@@ -226,8 +228,7 @@
+             if(r.active||(state!=BF_PENDING&&state!=BF_DONE))break;
+             int peer=active;
+             while(peer>=0) {
+-                auto *addr=(sockaddr_in*)(buffer+(unsigned)peer*stride+4096);
+-                if(slot->addr_be==addr->sin_addr.s_addr&&slot->port_be==addr->sin_port)break;
++                if(slot->addr_be==conns[peer].addr_be&&slot->port_be==conns[peer].port_be)break;
+                 peer=conns[peer].next;
+             }
+             if(peer<0&&!stopping)break;
+@@ -317,9 +318,8 @@
+                 if(c.eof) {
+                     // RECV EOF ends this socket's producer. Pending references
+                     // protect frames not yet published into a model slot.
+-                    auto *peer=(sockaddr_in*)(buffer+i*stride+4096);
+                     queued=io_load(&page->llm_peer_pending[
+-                        bf_pending_bucket(peer->sin_addr.s_addr,peer->sin_port)]);
++                        bf_pending_bucket(c.addr_be,c.port_be)]);
+                 }else
+ #endif
+                     queued=io_load(&page->llm_queued);
