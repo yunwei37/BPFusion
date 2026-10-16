@@ -11,8 +11,9 @@ and arbitrary-backend support remain unproven.
 scheduling result, selected as explicit mixed targets after the ordinary
 default8/cancellation qualification in [0068](findings/0068-mixed-source-integration.md).
 [0074](findings/0074-active-admission-wait.md) is the accepted CPU repair;
-[0076](findings/0076-current-controller-stage-time.md) is the latest complete
-diagnostic and preserves the remaining native delivery advantage.
+[0076](findings/0076-current-controller-stage-time.md) completes timing diagnosis.
+[0077](findings/0077-kernel-network-placement.md) adds the complete ordinary
+placement intervention: local speed/CPU tradeoff, no established native advantage.
 
 The following sections preserve plans,raw outcomes,reviews and failures.
 Historical status refers to its recorded snapshot,not a new audit or default
@@ -1760,3 +1761,24 @@ completes384successes/24576measured tokens with13 retained pool disagreements,
 24excluded warmups, correct terminals and byte-identical archive analysis.
 This is dependency acceptance, not a speed/result/adoption claim. Full15cells,
 fresh result review, actual client cleanup and ordinary source decision remain.
+
+### 2026-10-16 kernel-owned network placement: complete supporting intervention
+
+[Finding0077](findings/0077-kernel-network-placement.md) and
+[full result](../bench/results/kernel_network_placement_20261016/result.md)
+complete the reviewed15-cell matrix:172800 successes,11059200 output tokens,
+0 failures, all terminals/controls/CPU archive replay and actual cleanup pass.
+Fixed primary K-L TPS +25.343567 [15.901519,34.785614] (~0.22%) supports
+local placement benefit; completionP99 -124.193ms and owned CPU +28.49%.
+K-N TPS/completionP99/CPU intervals cross0; mean TPOT adversely +0.003901905
+[0.001569381,0.006234429]ms. No native superiority/equivalence is proven.
+
+All996 frozen-pool flags, bounded network reply-record overflow and foreign-
+host/client-cost limits remain explicit. Finite two-model dual replay is not
+full ordinary exactness/general parity. Same actual GPU dispatch controls
+support the bundled intervention, not exclusive SM/PCIe attribution.
+Run valid/hypothesis supported locally/research value supporting; paper impact
+additional objective evidence and a mechanism/workload boundary. Candidate
+remains unselected; selected0074 unchanged. Historical6.36ms is not explained
+or repaired. Next decision is a matched sustained official-vLLM reference,
+rather than ranking this60s load against0069's short256-request window.

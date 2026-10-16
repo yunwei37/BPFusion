@@ -19,3 +19,16 @@ A read-only client context receipt records no Pod resources and cpu.max=max,
 no recorded CPU quota throttling. Actual per-cell client CPU/scheduling delays
 are retained in raw data and must bound final serving-capacity interpretation.
 No source/metric change follows from these observations.
+
+## Control-plane observation, 2026-10-16T21:34:14.5749846Z
+
+One SSH connect timeout to the existing control-plane gateway was observed
+during block3 native's post-serving raw recovery. The same acquisition continues:
+all16files archive and PASS, actual server/client exit0 and no remaining pins.
+No measured cell/client is retried or replaced and no source/metric changes.
+
+Live follow-up API reads succeed. All11 managed nodes report Ready=True;
+node Lease ages1.918--9.657s are below their observed40s duration, including
+lab 8.032s and g10 9.657s. The event is a recovered control-plane data-transfer
+gap, not evidence of a service/node outage or a failed request. No runtime,
+credential, scheduler, Workspace or recovery configuration was changed.

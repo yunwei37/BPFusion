@@ -130,6 +130,10 @@ forced into a Python per-token loop.
   the complete20-cell experiment finds a small instrumented dispatch difference;
   instrumentation itself affects delivery. Ordinary loop still has lower owned
   CPU but slower TPS/completionP99. Historical6.36ms is not explained or repaired.
+- [Kernel-owned network placement](docs/findings/0077-kernel-network-placement.md):
+  an unselected candidate removes the GPU I/O CTA with identical model dispatch.
+  TPS improves0.22% and completionP99 falls124ms versus the old loop, while owned
+  CPU rises28.5%. It establishes no native advantage or historical6.36ms repair.
 - [Opaque graph backend](docs/findings/0067-opaque-graph-backend.md):cuBLAS/cuFFT
   ordinary default8 numerical/lifecycle checks pass on both transports.
 - [Fair native admission](docs/findings/0063-fair-native-admission.md):

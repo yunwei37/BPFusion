@@ -769,5 +769,9 @@ the ordinary mixed io_uring path starts an independent GPU io_network CTA;
 it is concurrent with resident model dispatch. Timed network residence is not
 inline model delay. A private kernel-owned-network candidate moves CQ/SQ and
 connection/reply state progression to BPF while retaining the same model page
-and compiled GPU dispatcher. It currently has ordinary8/16 build and verifier-
-only load evidence; it is not selected, application-qualified or faster.
+and compiled GPU dispatcher. [Finding0077](findings/0077-kernel-network-placement.md) adds actual two-model
+finite default8 protocol/replay/cancellation qualification and a complete
+ordinary15-cell remote comparison. Identical model dispatch accompanies a
+small0.22% TPS/124ms completionP99 local improvement at28.5% higher owned CPU;
+native superiority and receive-gap improvement remain unproven. The candidate
+stays an unselected archived source; normal Make targets retain0074.

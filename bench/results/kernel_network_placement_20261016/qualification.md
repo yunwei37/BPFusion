@@ -7,7 +7,11 @@ repair: all4 protocol/ordinary stages exit0 and pass their existing checks.
 At default8, Qwen and Smol each640 protocol requests and23376 exact token IDs,
 259 expected rejections, actual tensor batches1..8, no padded query tokens.
 Each actual current trajectory passes captured graph/KV and fresh upstream
-attention-metadata replay/client joins; graph/trace/ring/drop/overflow errors0.
+attention-metadata replay/client joins; GPU graph/trace overflow and ring/drop errors0.
+The bounded network reply-record buffer retains128 of640 request records per
+model (trace_count=640, trace_overflow=512); this truncation is retained and is
+not GPU trace overflow. It prevents complete per-reply transport tracing, not
+the complete client token joins or two GPU trajectory replays.
 Kernel-owned BPF struct_ops really attaches and serves TCP/HTTP: verifier-only
 acceptance is no longer the strongest evidence. Strace retains no steady
 userspace accept/recv/send worker and the existing single serving enter check.
