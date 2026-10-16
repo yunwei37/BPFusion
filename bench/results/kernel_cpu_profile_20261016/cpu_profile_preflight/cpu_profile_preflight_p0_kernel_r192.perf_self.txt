@@ -1,0 +1,46 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 41  of event 'cpu-clock:k'
+# Event count (approx.): 82164328
+#
+# Overhead  Command  Shared Object                              Symbol                                       
+# ........  .......  .........................................  .............................................
+#
+    19.51%  python3  [kernel.kallsyms]                          [k] nft_do_chain
+     4.88%  python3  [kernel.kallsyms]                          [k] __bpf_prog_enter_sleepable
+     4.88%  python3  [kernel.kallsyms]                          [k] __queue_map_get
+     4.88%  python3  [kernel.kallsyms]                          [k] aa_inet_msg_perm
+     4.88%  python3  bpf_prog_99e00051f38cec12_uring_loop_step  [k] bpf_prog_99e00051f38cec12_uring_loop_step
+     2.44%  python3  [kernel.kallsyms]                          [k] __io_submit_flush_completions
+     2.44%  python3  [kernel.kallsyms]                          [k] __nf_conntrack_find_get
+     2.44%  python3  [kernel.kallsyms]                          [k] __pi_memcpy
+     2.44%  python3  [kernel.kallsyms]                          [k] _copy_from_iter
+     2.44%  python3  [kernel.kallsyms]                          [k] _raw_spin_unlock_irqrestore
+     2.44%  python3  [kernel.kallsyms]                          [k] br_handle_frame
+     2.44%  python3  [kernel.kallsyms]                          [k] br_nf_local_in
+     2.44%  python3  [kernel.kallsyms]                          [k] br_validate_ipv4
+     2.44%  python3  [kernel.kallsyms]                          [k] csum_partial
+     2.44%  python3  [kernel.kallsyms]                          [k] fdb_find_rcu
+     2.44%  python3  [kernel.kallsyms]                          [k] fib_get_table
+     2.44%  python3  [kernel.kallsyms]                          [k] fib_rules_lookup
+     2.44%  python3  [kernel.kallsyms]                          [k] finish_task_switch.isra.0
+     2.44%  python3  [kernel.kallsyms]                          [k] hook_socket_sendmsg
+     2.44%  python3  [kernel.kallsyms]                          [k] io_init_req
+     2.44%  python3  [kernel.kallsyms]                          [k] ip_output
+     2.44%  python3  [kernel.kallsyms]                          [k] ip_send_check
+     2.44%  python3  [kernel.kallsyms]                          [k] kmem_cache_alloc_node_noprof
+     2.44%  python3  [kernel.kallsyms]                          [k] net_rx_action
+     2.44%  python3  [kernel.kallsyms]                          [k] nf_nat_ipv4_local_fn
+     2.44%  python3  [kernel.kallsyms]                          [k] nf_nat_ipv4_pre_routing
+     2.44%  python3  [kernel.kallsyms]                          [k] nft_meta_store_ifname
+     2.44%  python3  [kernel.kallsyms]                          [k] perf_trace_io_uring_complete
+     2.44%  python3  [kernel.kallsyms]                          [k] pskb_expand_head
+     2.44%  python3  [kernel.kallsyms]                          [k] tcp_bpf_recvmsg_parser
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

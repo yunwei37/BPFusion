@@ -1,0 +1,152 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 41  of event 'cpu-clock:k'
+# Event count (approx.): 82164328
+#
+# Children      Self  Command  Shared Object                              Symbol                                       
+# ........  ........  .......  .........................................  .............................................
+#
+   100.00%     0.00%  python3  [kernel.kallsyms]                          [k] __do_sys_io_uring_enter
+   100.00%     0.00%  python3  [kernel.kallsyms]                          [k] __io_run_loop
+   100.00%     0.00%  python3  [kernel.kallsyms]                          [k] __x64_sys_io_uring_enter
+   100.00%     0.00%  python3  [kernel.kallsyms]                          [k] do_syscall_64
+   100.00%     0.00%  python3  [kernel.kallsyms]                          [k] entry_SYSCALL_64_after_hwframe
+   100.00%     0.00%  python3  [kernel.kallsyms]                          [k] io_run_loop
+   100.00%     0.00%  python3  [kernel.kallsyms]                          [k] x64_sys_call
+   100.00%     0.00%  python3  libc.so.6                                  [.] syscall
+   100.00%     0.00%  python3  libffi.so.8.1.4                            [.] 0x00007f7214deab16
+   100.00%     0.00%  python3  [unknown]                                  [k] 0x00007ffd8d36e560
+    85.37%     4.88%  python3  bpf_prog_99e00051f38cec12_uring_loop_step  [k] bpf_prog_99e00051f38cec12_uring_loop_step
+    85.37%     0.00%  python3  [kernel.kallsyms]                          [k] 0xffffffffc02c3e47
+    75.61%     0.00%  python3  [kernel.kallsyms]                          [k] bpf_io_uring_submit_sqes
+    75.61%     0.00%  python3  [kernel.kallsyms]                          [k] io_submit_sqes
+    73.17%     0.00%  python3  [kernel.kallsyms]                          [k] __io_issue_sqe
+    73.17%     0.00%  python3  [kernel.kallsyms]                          [k] io_issue_sqe
+    73.17%     0.00%  python3  [kernel.kallsyms]                          [k] io_submit_sqe
+    70.73%     0.00%  python3  [kernel.kallsyms]                          [k] io_send
+    70.73%     0.00%  python3  [kernel.kallsyms]                          [k] sock_sendmsg
+    63.41%     2.44%  python3  [kernel.kallsyms]                          [k] ip_output
+    63.41%     0.00%  python3  [kernel.kallsyms]                          [k] __ip_queue_xmit
+    63.41%     0.00%  python3  [kernel.kallsyms]                          [k] __tcp_push_pending_frames
+    63.41%     0.00%  python3  [kernel.kallsyms]                          [k] __tcp_transmit_skb
+    63.41%     0.00%  python3  [kernel.kallsyms]                          [k] inet_sendmsg
+    63.41%     0.00%  python3  [kernel.kallsyms]                          [k] ip_local_out
+    63.41%     0.00%  python3  [kernel.kallsyms]                          [k] ip_queue_xmit
+    63.41%     0.00%  python3  [kernel.kallsyms]                          [k] tcp_sendmsg
+    63.41%     0.00%  python3  [kernel.kallsyms]                          [k] tcp_sendmsg_locked
+    63.41%     0.00%  python3  [kernel.kallsyms]                          [k] tcp_write_xmit
+    60.98%     2.44%  python3  [kernel.kallsyms]                          [k] net_rx_action
+    60.98%     0.00%  python3  [kernel.kallsyms]                          [k] __dev_queue_xmit
+    60.98%     0.00%  python3  [kernel.kallsyms]                          [k] __do_softirq
+    60.98%     0.00%  python3  [kernel.kallsyms]                          [k] __ip_finish_output
+    60.98%     0.00%  python3  [kernel.kallsyms]                          [k] __local_bh_enable_ip
+    60.98%     0.00%  python3  [kernel.kallsyms]                          [k] do_softirq.part.0
+    60.98%     0.00%  python3  [kernel.kallsyms]                          [k] handle_softirqs
+    60.98%     0.00%  python3  [kernel.kallsyms]                          [k] ip_finish_output
+    60.98%     0.00%  python3  [kernel.kallsyms]                          [k] ip_finish_output2
+    60.98%     0.00%  python3  [kernel.kallsyms]                          [k] neigh_hh_output
+    60.98%     0.00%  python3  [kernel.kallsyms]                          [k] tcp_push
+    58.54%     2.44%  python3  [kernel.kallsyms]                          [k] br_handle_frame
+    58.54%     0.00%  python3  [kernel.kallsyms]                          [k] __napi_poll
+    58.54%     0.00%  python3  [kernel.kallsyms]                          [k] __netif_receive_skb
+    58.54%     0.00%  python3  [kernel.kallsyms]                          [k] __netif_receive_skb_core.constprop.0
+    58.54%     0.00%  python3  [kernel.kallsyms]                          [k] __netif_receive_skb_one_core
+    58.54%     0.00%  python3  [kernel.kallsyms]                          [k] process_backlog
+    56.10%     0.00%  python3  [kernel.kallsyms]                          [k] br_nf_pre_routing
+    48.78%     0.00%  python3  [kernel.kallsyms]                          [k] nf_hook_slow
+    43.90%     0.00%  python3  [kernel.kallsyms]                          [k] br_handle_frame_finish
+    43.90%     0.00%  python3  [kernel.kallsyms]                          [k] br_nf_hook_thresh
+    43.90%     0.00%  python3  [kernel.kallsyms]                          [k] br_nf_pre_routing_finish
+    41.46%     0.00%  python3  [kernel.kallsyms]                          [k] br_pass_frame_up
+    39.02%     0.00%  python3  [kernel.kallsyms]                          [k] ip_rcv
+    39.02%     0.00%  python3  [kernel.kallsyms]                          [k] ip_rcv_finish
+    39.02%     0.00%  python3  [kernel.kallsyms]                          [k] ip_sabotage_in
+    39.02%     0.00%  python3  [kernel.kallsyms]                          [k] netif_receive_skb
+    34.15%     0.00%  python3  [kernel.kallsyms]                          [k] ip_forward
+    24.39%    19.51%  python3  [kernel.kallsyms]                          [k] nft_do_chain
+    24.39%     0.00%  python3  [kernel.kallsyms]                          [k] nft_do_chain_ipv4
+    17.07%     0.00%  python3  [kernel.kallsyms]                          [k] dev_hard_start_xmit
+    17.07%     0.00%  python3  [kernel.kallsyms]                          [k] ip_forward_finish
+    17.07%     0.00%  python3  [kernel.kallsyms]                          [k] udp_tunnel_xmit_skb
+    17.07%     0.00%  python3  [kernel.kallsyms]                          [k] vxlan_xmit
+    17.07%     0.00%  python3  [kernel.kallsyms]                          [k] vxlan_xmit_one
+    17.07%     0.00%  python3  [kernel.kallsyms]                          [k] xmit_one.constprop.0
+    14.63%     0.00%  python3  [kernel.kallsyms]                          [k] iptunnel_xmit
+    12.20%     0.00%  python3  [kernel.kallsyms]                          [k] __ip_local_out
+     7.32%     0.00%  python3  [kernel.kallsyms]                          [k] security_socket_sendmsg
+     4.88%     4.88%  python3  [kernel.kallsyms]                          [k] __bpf_prog_enter_sleepable
+     4.88%     4.88%  python3  [kernel.kallsyms]                          [k] __queue_map_get
+     4.88%     4.88%  python3  [kernel.kallsyms]                          [k] aa_inet_msg_perm
+     4.88%     2.44%  python3  [kernel.kallsyms]                          [k] fib_rules_lookup
+     4.88%     2.44%  python3  [kernel.kallsyms]                          [k] pskb_expand_head
+     4.88%     0.00%  python3  [kernel.kallsyms]                          [k] __fib_lookup
+     4.88%     0.00%  python3  [kernel.kallsyms]                          [k] __io_run_local_work
+     4.88%     0.00%  python3  [kernel.kallsyms]                          [k] apparmor_socket_sendmsg
+     4.88%     0.00%  python3  [kernel.kallsyms]                          [k] expr_call_ops_eval
+     4.88%     0.00%  python3  [kernel.kallsyms]                          [k] io_run_local_work_locked
+     4.88%     0.00%  python3  [kernel.kallsyms]                          [k] ip_rcv_finish_core
+     4.88%     0.00%  python3  [kernel.kallsyms]                          [k] ip_route_input_noref
+     4.88%     0.00%  python3  [kernel.kallsyms]                          [k] ip_route_input_slow
+     4.88%     0.00%  python3  [kernel.kallsyms]                          [k] queue_map_peek_elem
+     4.88%     0.00%  python3  [kernel.kallsyms]                          [k] 0xffffffffc02c3e36
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] __io_submit_flush_completions
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] __nf_conntrack_find_get
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] __pi_memcpy
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] _copy_from_iter
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] _raw_spin_unlock_irqrestore
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] br_nf_local_in
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] br_validate_ipv4
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] csum_partial
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] fdb_find_rcu
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] fib_get_table
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] finish_task_switch.isra.0
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] hook_socket_sendmsg
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] io_init_req
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] ip_send_check
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] kmem_cache_alloc_node_noprof
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] nf_nat_ipv4_local_fn
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] nf_nat_ipv4_pre_routing
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] nft_meta_store_ifname
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] perf_trace_io_uring_complete
+     2.44%     2.44%  python3  [kernel.kallsyms]                          [k] tcp_bpf_recvmsg_parser
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] ____fput
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] __dev_xmit_skb
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] __fput
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] __schedule
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] __sock_release
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] __tcp_close
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] __wake_up_sync_key
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] br_fdb_update
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] inet_recvmsg
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] inet_release
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] io_poll_task_func
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] io_recv
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] io_req_post_cqe
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] io_req_task_submit
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] io_run_task_work.isra.0
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] io_timeout_complete
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] ipv4_conntrack_in
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] kmalloc_reserve
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] neigh_connected_output
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] nf_conntrack_in
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] nft_meta_get_eval
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] resolve_normal_ct
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] sch_direct_xmit
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] schedule
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] skb_do_copy_data_nocache
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] sock_close
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] sock_def_readable
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] sock_map_close
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] sock_recvmsg
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] task_work_run
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] tcp_close
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] tcp_send_fin
+     2.44%     0.00%  python3  [kernel.kallsyms]                          [k] tun_net_xmit
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

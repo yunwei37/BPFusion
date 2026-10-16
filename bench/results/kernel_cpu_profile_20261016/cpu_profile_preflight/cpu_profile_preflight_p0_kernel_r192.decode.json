@@ -1,0 +1,64 @@
+[
+  {
+    "command": [
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/perf_runtime/usr/bin/perf",
+      "report",
+      "--stdio",
+      "--no-children",
+      "--call-graph",
+      "none",
+      "--percent-limit",
+      "0",
+      "-i",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/cpu_profile_preflight/cpu_profile_preflight_p0_kernel_r192.perf.data"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/perf_runtime/usr/bin/perf",
+      "report",
+      "--stdio",
+      "--children",
+      "--call-graph",
+      "none",
+      "--percent-limit",
+      "0",
+      "-i",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/cpu_profile_preflight/cpu_profile_preflight_p0_kernel_r192.perf.data"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/perf_runtime/usr/bin/perf",
+      "script",
+      "-F",
+      "comm,pid,tid,time,period,event,ip,sym,dso",
+      "-i",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/cpu_profile_preflight/cpu_profile_preflight_p0_kernel_r192.perf.data"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/perf_runtime/usr/bin/perf",
+      "report",
+      "--stdio",
+      "--header-only",
+      "-i",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/cpu_profile_preflight/cpu_profile_preflight_p0_kernel_r192.perf.data"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/perf_runtime/usr/bin/perf",
+      "script",
+      "-D",
+      "-i",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/cpu_profile_preflight/cpu_profile_preflight_p0_kernel_r192.perf.data"
+    ],
+    "exit": 0
+  }
+]

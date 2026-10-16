@@ -1,0 +1,33 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 24  of event 'cpu-clock:k'
+# Event count (approx.): 48096192
+#
+# Overhead  Command  Shared Object      Symbol                         
+# ........  .......  .................  ...............................
+#
+    16.67%  python3  [kernel.kallsyms]  [k] nft_do_chain
+    12.50%  python3  [kernel.kallsyms]  [k] _raw_spin_unlock_irqrestore
+     8.33%  python3  [kernel.kallsyms]  [k] __rcu_read_lock
+     8.33%  python3  [kernel.kallsyms]  [k] vxlan_xmit_one
+     4.17%  python3  [kernel.kallsyms]  [k] __pi_memset
+     4.17%  python3  [kernel.kallsyms]  [k] __siphash_unaligned
+     4.17%  python3  [kernel.kallsyms]  [k] __tcp_transmit_skb
+     4.17%  python3  [kernel.kallsyms]  [k] _raw_spin_unlock_irq
+     4.17%  python3  [kernel.kallsyms]  [k] br_handle_frame
+     4.17%  python3  [kernel.kallsyms]  [k] do_softirq.part.0
+     4.17%  python3  [kernel.kallsyms]  [k] finish_task_switch.isra.0
+     4.17%  python3  [kernel.kallsyms]  [k] ipv4_dst_check
+     4.17%  python3  [kernel.kallsyms]  [k] kmem_cache_alloc_noprof
+     4.17%  python3  [kernel.kallsyms]  [k] nft_match_eval
+     4.17%  python3  [kernel.kallsyms]  [k] tcp_current_mss
+     4.17%  python3  [kernel.kallsyms]  [k] tcp_event_new_data_sent
+     4.17%  python3  [kernel.kallsyms]  [k] vxlan_find_mac_rcu
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

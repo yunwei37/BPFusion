@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/perf_runtime/usr/bin/perf",
+    "record",
+    "-e",
+    "cpu-clock:k",
+    "-F",
+    "499",
+    "--call-graph",
+    "fp",
+    "--tid",
+    "764067",
+    "--no-inherit",
+    "--no-buildid",
+    "--no-buildid-cache",
+    "-o",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/cpu_profile_preflight/cpu_profile_preflight_p0_native_r192.perf.data"
+  ],
+  "target_pid": 764067,
+  "started_utc": "2026-10-16T14:12:24.823814+00:00",
+  "pid": 764306,
+  "exit": -2,
+  "terminal_utc": "2026-10-16T14:12:30.098914+00:00"
+}
