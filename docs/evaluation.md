@@ -1594,3 +1594,11 @@ contrasts retain adverse/inconclusive outcomes. GPU/model/timer unchanged.
 Normal8/16 builds and two-model correctness/cancellation precede the planned
 five-block remote matrix. Prepared candidate is not canonical adoption or a
 claimed speedup; old profile only localizes the next discriminator.
+
+### 2026-10-16 active wait candidate qualification
+[Normal-source qualification](../bench/results/active_admission_wait_20261016/qualification.md)
+passes8/16 builds, all4 identical GPU SASS streams and intended loop-only BPF
+change. Candidate Qwen/Smol1280 protocol outcomes/46752 dual-replayed tokens,
+288 ordinary lifecycle outcomes and4 generic graph cases pass. Both archive
+CPU replays match. This is dependency acceptance, not performance or adoption;
+remote before/candidate/native preflight and five blocks remain.
