@@ -34,3 +34,18 @@ The separately labeled post-matrix profiler uses run_active_wait_profile.ps1.
 Its samples are supporting mechanism context, not a replacement performance
 cell or an unprofiled speed estimate. profile_summary.py decodes descriptive
 period-weighted categories from the archived standard perf script output.
+
+
+The separately labeled post-matrix diagnostic is reproduced with
+run_active_wait_profile.ps1 using the same current Workspace/owned temporary
+client before its cleanup, with the private official perf environment
+documented in ../kernel_cpu_profile_20261016. This is a creator-only kernel
+sampling cell, not a performance-matrix replacement. Offline context replay:
+
+    python3 active_wait_profile_analysis.py active_wait_profile
+    python3 profile_summary.py active_wait_profile
+
+The serving stdout must match active_wait_profile/analysis.stdout; profile
+summary must match its summary.stdout. PERF binary is losslessly compressed,
+with actual commands, decode records and explicit loss/unknown-frame limits.
+The bounded client was deleted after collection; no live service is retained.

@@ -7,9 +7,10 @@ This is a CPU-efficiency result, not a transport speedup: candidate-before
 throughput and completion/token-gap P99 intervals include zero. Candidate
 still has lower throughput and higher completion P99 than native epoll.
 
-Production source adoption and independent result review are pending at this
-publication. The separately planned candidate creator-TID perf check is also
-pending; it cannot replace these fifteen unprofiled performance cells.
+The separately planned candidate creator-TID perf check completed after this
+matrix; see profile.md and active_wait_profile. It cannot replace these fifteen
+unprofiled performance cells. Production source adoption and independent
+result-review closure are recorded separately below.
 
 ## Mechanism and controlled change
 
@@ -127,3 +128,21 @@ The temporary client Job remains solely for the planned post-matrix perf
 check and is removed on closure. Original Workspace sessions1/10909 and
 foreign tools/setup_env.sh are preserved; postmatrix_runtime.json records no
 GPU compute applications or pins after the matrix.
+
+## Post-matrix diagnostic and delivery status
+
+[Creator-TID context](profile.md) completes the planned separately profiled
+candidate cell:11520 successes,26 finite reference disagreements,3427 samples,
+no change to the performance matrix. Observed coordination/map samples cease
+to dominate, consistent with the fixed-primary result. Unknown ancestry and
+noncontemporaneous sampling prevent an exact causal sample/time partition.
+The same independent result review includes both the primary matrix and this
+context. Source adoption and cleanup receipts are recorded on completion.
+
+Independent result review is complete and finds the run valid, fixed CPU
+hypothesis supported and research value supporting/additional RQ evidence.
+There is no scientific blocker or requested unchanged rerun. The bounded
+client Job and dependent Pod are both absent; client_cleanup.json captures
+the actual UIDs and normal deletion grace observation. cleanup_runtime.json
+confirms original sessions unchanged, foreign WIP preserved and no own GPU
+application or BPF pins. Source adoption follows as its own engineering step.
