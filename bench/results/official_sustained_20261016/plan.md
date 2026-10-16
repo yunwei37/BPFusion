@@ -221,3 +221,24 @@ This changes only after-stop archival, not any measured client/server/clock/
 metric. Durable prefix lengths, original byte counts and lossless gzip checks
 remain. No new transfer helper, checksum gate, persistent setting or runtime
 configuration. Initial chunked driver remains in two_worker_client/.
+
+## Client root cause and necessary repair
+
+The actual client-only instrumented60s control is complete. Default generation2
+GC pauses up to395--473ms overlap89.37% of the worst1% actual client task-start
+delay time; exclusive non-GC logging2.38%, residual8.25%. See
+client_diagnosis/original_result.md and raw analysis. This is same-worker
+interval coverage, not summed P99s or GPU/Linux stage attribution. Merely adding
+workers did not fix the retained decoded SSE object graphs.
+
+Keep4 common workers, default GC enabled/thresholds unchanged, synchronous
+durable per-request output and all parser/oracle/timeout/arrival/primary
+semantics. Store complete raw SSE data payload text plus its receive timestamp,
+decode only transiently, and stop retaining nested decoded response trees.
+Lossless payload text also permits independent archive reconstruction of
+prompt/finish/token/arrival fields; existing full correctness checks remain.
+No decoded model-output disagreement is excluded or added to the frozen pool.
+One instrumented same-workload payload control tests this fault repair before
+the ordinary full restart. It is a diagnostic causal control, not an extra
+preflight or changed scientific primary. All earlier incomplete prefixes,
+transfer failures and instrumented values remain distinct and preserved.

@@ -33,6 +33,16 @@ def main(args):
    if x["outcome"]!="success":continue
    assert len(x["tokens"])==64 and all(type(v)==int and 0<=v<frozen["frozen_model"]["vocab"] for v in x["tokens"])
    assert x["reference_set_match"]==(x["tokens"] in pool[tuple(x["input_ids"]),64])
+   if meta["mode"]=="official" and meta.get("frame_log_format","").startswith("arrival_ns and raw SSE"):
+    decoded=[];stamps=[];prompt=None;finish=None
+    for seen,payload in x["frames"]:
+     obj=json.loads(payload.encode("utf-8","surrogateescape"))
+     if "prompt_token_ids" in obj:prompt=obj["prompt_token_ids"]
+     for choice in obj["choices"]:
+      assert choice["index"]==0
+      values=choice.get("token_ids") or [];decoded.extend(values);stamps.extend([seen]*len(values))
+      if choice.get("finish_reason") is not None:finish=choice["finish_reason"]
+    assert decoded==x["tokens"] and stamps==x["arrival_ns"] and prompt==x["input_ids"] and finish=="length"
   if meta.get("workers"):
    worker_count=meta["workers"]
    assert len(meta["worker_files"])==worker_count and len(cell["worker_cells"])==worker_count

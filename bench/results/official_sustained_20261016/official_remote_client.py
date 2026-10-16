@@ -4,6 +4,7 @@ import argparse,asyncio,json,os,socket,struct,sys,time,traceback
 import uvloop
 import multiprocessing,copy
 CLIENT_WORKERS=4
+FRAME_LOG_FORMAT="arrival_ns and raw SSE data payload text; UTF-8 surrogateescape roundtrip"
 from pathlib import Path
 def now():return time.monotonic_ns()
 async def external_attempt(session,host,ids,gen,row,tokens,arrival,vocab):
@@ -23,6 +24,7 @@ async def external_attempt(session,host,ids,gen,row,tokens,arrival,vocab):
     if not payload:continue
     assert not done,"payload after DONE"
     if payload==b"[DONE]":done=True;continue
+    row["frames"].append((seen,payload.decode("utf-8","surrogateescape")))
     obj=json.loads(payload)
     if "prompt_token_ids" in obj:prompt=obj["prompt_token_ids"]
     for choice in obj["choices"]:
@@ -31,7 +33,6 @@ async def external_attempt(session,host,ids,gen,row,tokens,arrival,vocab):
      assert all(type(x)==int and 0<=x<vocab for x in values)
      tokens.extend(values);arrival.extend([seen]*len(values))
      if choice.get("finish_reason") is not None:finish=choice["finish_reason"]
-    row["frames"].append({"arrival_ns":seen,"response":obj})
   assert done and not pending.strip() and prompt==ids and finish=="length" and len(tokens)==gen
 
 async def main(args):
@@ -46,7 +47,7 @@ async def main(args):
     headers={"Authorization":"Bearer "+Path(args.key_file).read_text().strip()})
  raw=Path(args.output).open("x",buffering=1)
  def emit(event,**kw):raw.write(json.dumps(dict(event=event,mono_ns=now(),**kw))+"\n")
- emit("client_metadata",python=sys.version,event_loop="uvloop "+uvloop.__version__,worker_id=getattr(args,"worker_id",None),host=args.host,pair=args.pair,mode=args.mode,rate=args.rate,process_cpu_ns=time.process_time_ns(),scope="remote client-local stamps; no cross-host clock subtraction",source=Path(__file__).read_text(),config=cfg,
+ emit("client_metadata",python=sys.version,event_loop="uvloop "+uvloop.__version__,frame_log_format=FRAME_LOG_FORMAT,worker_id=getattr(args,"worker_id",None),host=args.host,pair=args.pair,mode=args.mode,rate=args.rate,process_cpu_ns=time.process_time_ns(),scope="remote client-local stamps; no cross-host clock subtraction",source=Path(__file__).read_text(),config=cfg,
       proc={f:Path("/proc/"+f).read_text() for f in ["stat","softirqs","interrupts","net/route","self/stat","self/cgroup","loadavg","pressure/cpu"]})
  async def attempt(index,gen,due=None,warmup=False):
   ids=prompts[index%4];tokens=[];arrival=[];writer=None
