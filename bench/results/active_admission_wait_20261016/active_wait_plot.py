@@ -1,0 +1,27 @@
+from pathlib import Path
+import json,sys
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+root=Path(sys.argv[1])
+rows=[json.loads(l) for l in (root/"analysis.stdout").read_text().splitlines()]
+cells=[x for x in rows if x["event"]=="cell_metrics"]
+assert len(cells)==15 and all(len([x for x in cells if x["condition"]==c])==5 for c in ["before","candidate","native"])
+conditions=["before","candidate","native"];labels=["Before kernel","Active wait","Native epoll"]
+colors=["#777777","#2067b2","#d67b2c"]
+fig,axes=plt.subplots(1,3,figsize=(13.8,4.4),layout="constrained")
+panels=[("owned_group_cpu_ms_per_attempt","Owned group CPU (ms/attempt)"),("output_tokens_per_s","Delivered tokens/s"),("client_token_gap_ms_p99","Client receive token-gap P99 (ms)")]
+for ax,(metric,title) in zip(axes,panels):
+ for block in range(5):
+  values=[next(x[metric] for x in cells if x["condition"]==c and x["pair"]==block) for c in conditions]
+  ax.plot(range(3),values,color="#aaaaaa",alpha=.5,linewidth=.8,zorder=1)
+ for index,c in enumerate(conditions):
+  values=[x[metric] for x in sorted(cells,key=lambda q:q["pair"]) if x["condition"]==c]
+  ax.scatter([index]*5,values,color=colors[index],s=24,alpha=.8,zorder=2)
+  ax.plot([index-.13,index+.13],[sum(values)/5]*2,color=colors[index],linewidth=3,zorder=3)
+ ax.set_xticks(range(3),labels,rotation=15)
+ ax.set_ylabel(title);ax.grid(axis="y",alpha=.2);ax.spines[["top","right"]].set_visible(False)
+ if metric=="owned_group_cpu_ms_per_attempt":ax.set_ylim(bottom=0)
+fig.suptitle("Qwen, remote192 requests/s: five matched process blocks",fontsize=15)
+fig.savefig(root/"active_wait_comparison.png",dpi=160)
+fig.savefig(root/"active_wait_comparison.pdf")
