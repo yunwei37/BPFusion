@@ -1782,3 +1782,36 @@ additional objective evidence and a mechanism/workload boundary. Candidate
 remains unselected; selected0074 unchanged. Historical6.36ms is not explained
 or repaired. Next decision is a matched sustained official-vLLM reference,
 rather than ranking this60s load against0069's short256-request window.
+
+### 2026-10-16 sustained official comparison: client-fairness diagnosis
+
+The [reviewed plan](../bench/results/official_sustained_20261016/plan.md)
+fills a missing strongest-external comparison:0069's256-request loopback
+reference cannot rank the current60s remote workload. Retained serving objective
+is unchanged. Hypothesis asks whether resident-native delivery keeps up with
+official optimized vLLM at the same192/s offered arrivals. Primary N-O TPS,
+five paired blocks; K-N isolates the same-executor transport and K-O is separate
+whole-service context. Official default compute/cache/capacity stays enabled;
+no eBPF attribution from an external API/scheduler difference. Role supporting.
+
+Three real preflights are retained; finite success does not certify sustained
+client capacity. The [first full block](../bench/results/official_sustained_20261016/first_full.md)
+completes34560 successes but exposes official-client arrival lagP99~417ms.
+It is incomplete and unsuitable for external server ranking, not a server loss.
+All original rows/worker files and [client context](../bench/results/official_sustained_20261016/first_full_client_context.md)
+remain. No partial primary effect is computed.
+
+The recorded full-run repair uses four common unrestricted client processes,
+unchanged original schedule/parser/oracle/timeout/primary. Its first complete
+block also exposes official-client lagP99~209ms despite per-worker CPU~0.58.
+[Retry1 context](../bench/results/official_sustained_20261016/retry1_client_context.md)
+retains another34560 successes and all raw worker data. This prefix is incomplete;
+more workers did not establish a root cause. A client-only GC/serialize/write
+[diagnostic](../bench/results/official_sustained_20261016/client_diagnosis/plan.md)
+now investigates retained decoded SSE objects and synchronous logging before
+another ordinary full acquisition. There is no fourth preflight or
+mixing of old/new client cells. Full data/actual client engagement, independent
+archive replay, fresh result review and exactUID cleanup are still required.
+Research value/paper impact remain planned supporting objective evidence and
+a workload/method boundary until completion. Historical6.36ms allocation and
+total attributed CPU remain distinct open limits.

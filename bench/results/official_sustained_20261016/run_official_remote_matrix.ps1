@@ -23,7 +23,7 @@ print(p.stat().st_size)
  $taskOffset=[long](Invoke-Workspace $taskInit)
  if($taskOffset -gt $taskInfo[1]){throw "Existing transfer longer than original"}
  while($taskOffset -lt $taskInfo[1]) {
-  $taskChunk=[long]$taskInfo[1]-$taskOffset
+  $taskChunk=[Math]::Min([long]1048576,[long]$taskInfo[1]-$taskOffset)
   $taskRead='import base64,pathlib;p=pathlib.Path("/tmp/{0}.transfer.gz");print(base64.b64encode(p.read_bytes()[{1}:{2}]).decode())' -f $Name,$taskOffset,($taskOffset+$taskChunk)
   $taskPayload=& $KubectlHome -n coder exec $ClientPod '--' python3 -c $taskRead
   if($LASTEXITCODE -ne 0){throw "Original data chunk read failed; retain durable prefix"}
