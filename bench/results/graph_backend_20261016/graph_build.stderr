@@ -1,0 +1,34 @@
+In file included from /usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi/linux/bpf.h:11,
+                 from /usr/include/bpf/bpf.h:26,
+                 from executor/graph_server.cu:4:
+/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi/linux/types.h:10:2: warning: #warning "Attempt to use kernel headers from user space, see https://kernelnewbies.org/KernelHeaders" [-Wcpp]
+   10 | #warning "Attempt to use kernel headers from user space, see https://kernelnewbies.org/KernelHeaders"
+      |  ^~~~~~~
+In file included from /usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi/linux/bpf.h:11,
+                 from /usr/include/bpf/bpf.h:26,
+                 from executor/graph_server.cu:4:
+/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi/linux/types.h:10:2: warning: #warning "Attempt to use kernel headers from user space, see https://kernelnewbies.org/KernelHeaders" [-Wcpp]
+   10 | #warning "Attempt to use kernel headers from user space, see https://kernelnewbies.org/KernelHeaders"
+      |  ^~~~~~~
+executor/userspace_tcp.h(46): error: identifier "F_SETFL" is undefined
+      fcntl(listener,F_SETFL,fcntl(listener,F_GETFL)|O_NONBLOCK);
+                     ^
+
+executor/userspace_tcp.h(46): error: identifier "F_GETFL" is undefined
+      fcntl(listener,F_SETFL,fcntl(listener,F_GETFL)|O_NONBLOCK);
+                                            ^
+
+executor/userspace_tcp.h(46): error: identifier "fcntl" is undefined
+      fcntl(listener,F_SETFL,fcntl(listener,F_GETFL)|O_NONBLOCK);
+                             ^
+
+executor/userspace_tcp.h(46): error: identifier "O_NONBLOCK" is undefined
+      fcntl(listener,F_SETFL,fcntl(listener,F_GETFL)|O_NONBLOCK);
+                                                     ^
+
+executor/userspace_tcp.h(46): error: identifier "fcntl" is undefined
+      fcntl(listener,F_SETFL,fcntl(listener,F_GETFL)|O_NONBLOCK);
+      ^
+
+5 errors detected in the compilation of "executor/graph_server.cu".
+make: *** [Makefile:228: /tmp/bpfusion-mixed-integration-n4cog5c6/graphbuild8/graph_server_user_network_wait.so] Error 2

@@ -71,9 +71,10 @@ Explicit16-bank vLLM qualification uses a matching shared-page ABI and separate
 builds. See [architecture](docs/architecture.md) and
 [capacity evidence](docs/findings/0064-batch-capacity.md).
 
-The transport serves two computation adapters, but its request format and
-generation dispatcher remain LLM-specific. There is no stable arbitrary-CUDA
-backend plugin API yet.
+An experimental [opaque CUDA Graph adapter](docs/graph-backends.md) also runs
+unchanged cuBLAS/cuFFT computation through both transports. It accepts fixed
+input/output buffers and is separate from LLM generation; arbitrary-CUDA
+plugin stability and compatibility are not established.
 
 ## Results and research meaning
 
@@ -89,6 +90,12 @@ forced into a Python per-token loop.
   reviewed experiment improves mean generation time on both paths.
   General transport superiority is unproven; Qwen has an adverse tail-token
   result. This candidate is archived, not selected for ordinary serving.
+- [Tail-path diagnosis](docs/findings/0066-tail-path-diagnosis.md):the complete
+  close-scan retest is inconclusive; the candidate is not adopted. The old tail
+  gap does not reproduce even before modification, and process CPU is adverse
+  versus native in this retest.
+- [Opaque graph backend](docs/findings/0067-opaque-graph-backend.md):cuBLAS/cuFFT
+  ordinary default8 numerical/lifecycle checks pass on both transports.
 - [Fair native admission](docs/findings/0063-fair-native-admission.md):
   removing a native scheduling disadvantage weakens earlier apparent wins.
 - [Kernel-loop coordination](docs/findings/0044-uring-bpf-loop.md):less known
@@ -116,8 +123,8 @@ See [related work](docs/background-related-work.md) and
   resource cost; process CPU alone is insufficient.
 - Establish sustained remote offered-load/tail behavior with errors and client
   lag visible. Current finite runs do not prove production SLOs or isolation.
-- Validate another unchanged compute backend and a practical adapter boundary
-  before claiming arbitrary-model/kernel support.
+- Broaden the experimental fixed-shape graph boundary beyond the qualified
+  cuBLAS/cuFFT cases before claiming arbitrary-model/kernel support.
 - Extend kernel/hardware compatibility and longer-running reliability with real
   runs. Text/JSON APIs, TLS, long context and multi-GPU serving are not qualified.
 

@@ -694,3 +694,22 @@ Full/protocol trajectories pass graph replay and independently reconstructed
 attention metadata at16 banks. Both transports gain in mean TPOT;general
 eBPF speed superiority is unproven and adverse Qwen ITL P99 remains.
 The candidate stays in its archive;ordinary/default8/partial-stop adoption is open.
+
+## Opaque one-shot graph adapter
+
+[graph_server.cu](../executor/graph_server.cu) reuses both transport headers with
+caller-owned captured graphs and opaque32-bit input/output words. Per-slot
+graphs execute as GPU fire-and-forget children; a tail launch observes outputs
+after child completion, then publishes and retires the FIFO prefix. Input and
+output buffers remain device-owned and are retained by the caller for the whole
+serve lifetime. There is no model/vocabulary/KV metadata in this adapter.
+
+[ABI1 and example](graph-backends.md) are qualified for cuBLAS/cuFFT on the tested
+stack with default8. This fixed-shape one-shot interface is experimental;
+autoregressive model scheduling remains separate and the existing wire shape
+is limited to64 words. [Finding0067](findings/0067-opaque-graph-backend.md)
+retains finite numerical/lifecycle checks and failed setup/cleanup attempts.
+
+[Finding0066](findings/0066-tail-path-diagnosis.md) closes the tail diagnostic
+and conservative close-scan candidate. Its confirmation is inconclusive, so
+the production transport header remains unchanged.

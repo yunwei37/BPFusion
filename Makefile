@@ -216,3 +216,16 @@ $(BUILD)/amk_graph_uring_loop_coalesced.so: executor/qwen_graph.cu executor/io_u
 
 $(BUILD)/amk_graph_uring_loop_coalesced: executor/amk_graph.py | $(BUILD)
 	ln -sf $(abspath executor/amk_graph.py) $@
+
+
+# Opaque captured-graph backend; the compute graph and buffers are caller-owned.
+GRAPH_SERVER_NAMES := graph_server_uring_loop graph_server_user_network_wait
+.PHONY: graph-server-uring-loop graph-server-user-network-wait
+graph-server-uring-loop: $(BUILD)/uring_loop.bpf.o $(BUILD)/graph_server_uring_loop.so
+graph-server-user-network-wait: $(BUILD)/graph_server_user_network_wait.so
+
+$(addprefix $(BUILD)/,$(addsuffix .so,$(GRAPH_SERVER_NAMES))): $(BUILD)/%.so: executor/graph_server.cu executor/graph_backend.h executor/userspace_tcp.h executor/io_uring_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+		$(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT,-DBF_URING_NETWORK -DBF_URING_BPF_LOOP -I$(KERNEL_UAPI)) $< -o $@.o
+	$(NVCC) -arch=$(SM_ARCH) -dlink -Xcompiler=-fPIC $@.o -o $@.dlink.o
+	$(CXX) -shared -Wl,-z,defs $@.o $@.dlink.o $(VLLM_CUDART) -Wl,-rpath,$(dir $(VLLM_CUDART)) -o $@ $(LDLIBS)
