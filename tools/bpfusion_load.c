@@ -148,7 +148,7 @@ int main(int argc, char **argv)
 			       page->slots[i].x[0], page->done[i].state,
 			       page->done[i].id, page->done[i].y[0]);
 		printf("llm_head=%u\n", page->llm_head);
-        printf("llm_queued=%u\n",page->llm_queued);
+        printf("llm_queued=%u sockhash_first_errno=%u\n",page->llm_queued,page->admission_pad);
         printf("llm_reserved=0x%x\n", page->llm_reserved);
 		for (i = 0; i < BF_LLM_SLOTS; i++)
 			printf("llm[%d]: state=%u prompt=%u gen=%u produced=%u client_ns=%llu\n",

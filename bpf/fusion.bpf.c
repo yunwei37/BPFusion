@@ -240,7 +240,13 @@ int stream_sockops(struct bpf_sock_ops *ctx)
         ctx->family == 2 && ctx->local_port == BF_LLM_TCP_PORT) {
         struct bf_flow key = { ctx->local_ip4, ctx->remote_ip4,
                               ctx->local_port, ctx->remote_port };
-        if (bpf_sock_hash_update(ctx, &streams, &key, BPF_NOEXIST)) bump(13);
+        int error=bpf_sock_hash_update(ctx, &streams, &key, BPF_NOEXIST);
+        if (error) {
+            __u32 zero=0;
+            struct bf_page *page=bpf_map_lookup_elem(&ctl,&zero);
+            if(page)__sync_val_compare_and_swap(&page->admission_pad,0,(__u32)-error);
+            bump(13);
+        }
         else bump(12);
     }
     return 0;
@@ -373,9 +379,12 @@ static __always_inline int stream_dispatch(struct __sk_buff *skb, int queued)
     if (queued) {
         /* Count before publishing so EOF cannot recycle a connection while
          * one of its requests is waiting outside the model's eight slots. */
+        __u32 bucket=bf_pending_bucket(request.addr_be,request.port_be);
+        __sync_fetch_and_add(&p->llm_peer_pending[bucket],1);
         __sync_fetch_and_add(&p->llm_queued,1);
         if (bpf_map_push_elem(&pending,&request,BPF_ANY)) {
             __sync_fetch_and_sub(&p->llm_queued,1);
+            __sync_fetch_and_sub(&p->llm_peer_pending[bucket],1);
             bump(8); __sync_fetch_and_add(&p->drops,1); return SK_DROP;
         }
     } else {

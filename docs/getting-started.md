@@ -85,6 +85,9 @@ model="$(python3 -c 'from huggingface_hub import snapshot_download; print(snapsh
 Default capacity is 8. Different capacities need separate BUILD directories
 and matching BPF, loader, client and executor ABI. The explicit 16-bank result
 is a separate vLLM configuration, not an interchangeable module/map ABI.
+After the connection-reclamation update, rebuild every shared-page consumer
+with the current header; old BPF/loader/executor/module objects are incompatible.
+See the [ABI and EOF ownership contract](architecture.md#eof-pending-reference-reclamation).
 
 ## Run the kernel-owned path
 

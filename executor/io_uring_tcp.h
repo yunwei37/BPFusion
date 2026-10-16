@@ -310,8 +310,24 @@ __device__ bool io_progress(IoState *s) {
                 io_uring_sqe e{};e.opcode=IORING_OP_ASYNC_CANCEL;e.addr=io_id(2,i,c.generation);e.user_data=io_id(6,i,c.generation);
                 if(io_submit(ring,e,out))c.closing=2; // wait for receive CQE
             }
-            if((c.dead||c.eof)&&!c.receiving&&c.reply<0&&seen==io_load(&page->llm_head)&&
-               (stopping||!io_load(&page->llm_queued))&&c.closing!=1) {
+            bool reclaim=(c.dead||c.eof)&&!c.receiving&&c.reply<0&&c.closing!=1;
+            if(reclaim) {
+                unsigned queued;
+#ifndef BF_IO_GLOBAL_PENDING_GUARD
+                if(c.eof) {
+                    // RECV EOF ends this socket's producer. Pending references
+                    // protect frames not yet published into a model slot.
+                    auto *peer=(sockaddr_in*)(buffer+i*stride+4096);
+                    queued=io_load(&page->llm_peer_pending[
+                        bf_pending_bucket(peer->sin_addr.s_addr,peer->sin_port)]);
+                }else
+#endif
+                    queued=io_load(&page->llm_queued);
+                // Acquire pending first, then freshly observe admission/head.
+                // A consumer publishes the slot/head before releasing pending.
+                reclaim=(stopping||!queued)&&seen==io_load(&page->llm_head);
+            }
+            if(reclaim) {
                 io_uring_sqe e{};e.opcode=IORING_OP_CLOSE;e.fd=c.fd;e.user_data=io_id(4,i,c.generation);
                 if(io_submit(ring,e,out))c.closing=1;
             }else if(!c.dead&&!c.eof&&!c.receiving&&!stopping) {

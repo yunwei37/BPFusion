@@ -1564,3 +1564,12 @@ not untouched earlier source. All attempts/failures,1355 finite-reference
 disagreements, invalid builds and collection recovery remain. Shared total
 resources are not exclusive cost; zero failures is not rare-failure equivalence.
 See raw result/review, source provenance, archive replay and all-attempt CDF.
+
+### 2026-10-16 reclamation ordinary-source adoption
+Normal default8/explicit16 Make builds pass. Four normal GPU library instruction
+streams equal the correctly qualified private source. Ordinary default8 Qwen
+loop/native lifecycle passes144/32 outcomes,869/652 checked tokens,errors0,
+exit0 and no pins. Canonical five-file repair selected with16KiB pending tail,
+same-capacity ABI rebuild required. Model math/default8 unchanged.
+[Integration](../bench/results/connection_reclamation_20261016/source_integration/)
+is engineering acceptance, not another performance result.

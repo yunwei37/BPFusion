@@ -46,5 +46,8 @@ All affected checks were repeated with the actual corrected source.
 Primary and both protocol archive CPU replays are byte-identical.
 
 Default8 qualification passes both models, dual-replayed93504 tokens and
-352 ordinary lifecycle outcomes; cuBLAS/cuFFT cases also pass. Canonical-source
-integration is recorded separately after normal build and cancellation checks.
+352 ordinary lifecycle outcomes; cuBLAS/cuFFT cases also pass. The
+[canonical integration](../../bench/results/connection_reclamation_20261016/source_integration/)
+passes normal8/16 builds,4 exact ordinary-library SASS comparisons and176
+normal default8 Qwen lifecycle outcomes. The reviewed repair is now selected;
+rebuild all shared-page consumers. No new performance advantage is claimed.

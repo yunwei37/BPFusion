@@ -109,6 +109,11 @@ forced into a Python per-token loop.
   throughput and group CPU adverse. Sockhash failures expose a connection
   lifetime investigation.96/s latency/host inconclusive; host/device totals
   are not exclusive service costs.
+- [Connection reclamation](docs/findings/0072-connection-reclamation.md):
+  a matched global/local/native retest repairs EOF connection retention.
+  Local and native each deliver57600/57600 requests at192/s; native retains
+  better throughput, completion/token-gap P99 and group CPU. Default8/explicit16
+  normal builds and default8 reset/partial-stop checks qualify source adoption.
 - [Opaque graph backend](docs/findings/0067-opaque-graph-backend.md):cuBLAS/cuFFT
   ordinary default8 numerical/lifecycle checks pass on both transports.
 - [Fair native admission](docs/findings/0063-fair-native-admission.md):
@@ -134,10 +139,12 @@ See [related work](docs/background-related-work.md) and
 
 - Broaden reliability and workload coverage beyond the finite default8
   mixed-scheduling protocol and partial-output cancellation checks.
-- Measure complete service CPU, including kernel I/O, softirq and GPU polling/
-  resource cost; process CPU alone is insufficient.
-- Repair the sustained192/s kernel connection failure and repeat matched tests;
-  current remote results retain timeouts/client lag and do not prove SLOs.
+- Resolve the remaining native performance/CPU advantage using matched paths.
+  Measured TGID/cgroup totals include owned io-wq; shared host IRQ/softirq,
+  GPU energy and finite queue occupancy do not provide exclusive attribution.
+- Extend sustained reliability beyond the repaired EOF workload, including
+  continuous reset/non-EOF disconnect pressure. Zero observed failures in
+  this finite retest does not establish long-duration SLOs.
 - Broaden the experimental fixed-shape graph boundary beyond the qualified
   cuBLAS/cuFFT cases before claiming arbitrary-model/kernel support.
 - Extend kernel/hardware compatibility and longer-running reliability with real

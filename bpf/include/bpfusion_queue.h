@@ -49,6 +49,8 @@ typedef unsigned short __u16;
 #define BF_LLM_SLOTS 8
 #endif
 #define BF_LLM_MAX_TOK 64
+/* Conservative peer buckets, not a connection/admission capacity limit. */
+#define BF_PENDING_BUCKETS 4096
 #define BF_LLM_TRANSPORT_MASK 3u
 #define BF_LLM_VALIDATING 4u /* stream request awaits model-vocabulary check */
 #define BF_LLM_REJECTED 8u /* executor rejected request before producing tokens */
@@ -179,14 +181,30 @@ struct bf_page {
 	};
 	struct bf_llm_slot llm[BF_LLM_SLOTS];
     __u32 llm_queued, admission_pad; /* CPU atomic count, read-only on GPU */
+    __u32 llm_peer_pending[BF_PENDING_BUCKETS];
 };
+
+/* Network-order peer identity is identical in skb, slots and sockaddr_in.
+ * Collisions retain another peer longer; they never permit an early close. */
+#ifdef __CUDACC__
+static __host__ __device__ __forceinline__
+#else
+static __inline__ __attribute__((always_inline))
+#endif
+__u32 bf_pending_bucket(__u32 addr_be, __u16 port_be)
+{
+    __u32 word=addr_be ^ (((__u32)port_be<<16)|port_be);
+    word^=word>>16;word*=0x7feb352du;word^=word>>15;
+    word*=0x846ca68bu;word^=word>>16;
+    return word & (BF_PENDING_BUCKETS-1);
+}
 
 #define BF_PAGE_BYTES ((int)sizeof(struct bf_page))
 
 /* A BPF_F_MMAPABLE array map exposes its value at offset 0 and the region is
  * the value size rounded up to a page multiple. Mapping only BF_PAGE_BYTES
- * (or a fixed two pages) is wrong: the page is 12832 bytes, so a short
- * mapping turns the tail of `done[]` into out-of-bounds writes. */
+ * (or a fixed two pages) is wrong: the layout grows with slot count and
+ * transport metadata. A short mapping leaves fields outside the valid region. */
 #define BF_PAGE_MMAP_BYTES \
 	((long)((((long)BF_PAGE_BYTES + 4095L) / 4096L) * 4096L))
 

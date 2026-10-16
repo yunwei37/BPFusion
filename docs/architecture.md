@@ -723,3 +723,28 @@ The selected mixed executor enables checked TCP_NODELAY on its listener before
 listen, inherited by native and io_uring accepted sockets. This startup-only
 change removes a measured shared small-send/ACK stall; it changes no GPU kernel
 and is not evidence of intrinsic eBPF speedup. See [finding0070](findings/0070-tcp-nodelay.md).
+
+## EOF pending-reference reclamation
+
+The selected source appends4096 conservative peer pending counters to bf_page
+(16KiB; unchanged preceding offsets). These hash buckets are metadata, not
+connection/admission capacity. BPF increments peer/global references before
+publishing queued frames and rolls back failed enqueue. The single consumer
+publishes reservation/head/slot before releasing references. GPU reads pending
+with acquire before a fresh head check. Once actual receive EOF ends a peer's
+producer, own pending0 and fully observed head permit reclamation even while
+unrelated work remains. Hash collisions delay close; non-EOF dead/reset paths
+retain the conservative global dependency. Stop keeps its existing override.
+
+All page consumers must rebuild with the same header/capacity, including legacy
+module builds if used; existing objects are not ABI compatible. This adoption
+qualifies ordinary mixed8/16 builds and default8 cancellation after private
+two-model protocol/replay. Shared transport users receive the same ABI;
+arbitrary backends/legacy module runtime are not newly qualified.
+[Finding0072](findings/0072-connection-reclamation.md) retains source provenance,
+collision/port reuse, corrected builds, full adverse native comparison and
+[source integration](../bench/results/connection_reclamation_20261016/source_integration/).
+The compile-only BF_IO_GLOBAL_PENDING_GUARD keeps a matched global ablation;
+it is not selected by normal Make targets. sockhash_first_errno exposes only
+the first observed insertion error, not a distribution. Model arithmetic and
+dispatch GPU instructions are unchanged.

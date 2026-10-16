@@ -135,5 +135,6 @@ No benchmark outcome or metric was modified.
 [Independent result review](result-review.md) is complete: valid run, supported
 bounded repair, supporting research value and mechanism/workload boundary.
 All cell metrics and16 paired intervals independently recompute exactly. The
-collection-timing prose correction is resolved. Canonical integration is
-recorded separately; no additional scientific rerun is required.
+collection-timing prose correction is resolved. [Canonical integration](source_integration/)
+passes normal8/16 builds, matching GPU instructions and176 default8 lifecycle
+outcomes. The bounded repair is selected; no additional scientific rerun is required.

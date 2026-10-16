@@ -1,0 +1,744 @@
+{
+  "model": "qwen",
+  "start": "2026-10-16T13:57:05.140125+00:00",
+  "oracle_frozen_at": "2026-10-16T09:00:30.523112+00:00",
+  "ready_time_ns": 1792159052627506803,
+  "native_pid": 762861,
+  "cmd": [
+    "strace",
+    "-D",
+    "-f",
+    "-ttt",
+    "-o",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/lifecycle_reclamation_source_vllm_qwen_8_native/qwen.strace",
+    "-e",
+    "trace=accept,accept4,recvfrom,recvmsg,sendto,sendmsg,io_uring_setup,io_uring_enter,io_uring_register",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/reclamation_sourcebuild8/vllm_mixed_user_network_wait",
+    "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "180"
+  ],
+  "exit": 0,
+  "stdout": "(MainProcess pid=762861) INFO 10-16 13:57:13 [api_utils.py:286] non-default args: {'dtype': 'half', 'max_model_len': 128, 'disable_log_stats': True, 'model': '/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775'}\n(MainProcess pid=762861) WARNING 10-16 13:57:13 [arg_utils.py:1910] The global random seed is set to 0. Since VLLM_ENABLE_V1_MULTIPROCESSING is set to False, this may affect the random state of the Python process that launched vLLM.\n(MainProcess pid=762861) INFO 10-16 13:57:13 [model.py:699] Resolved architecture: Qwen2ForCausalLM\n(MainProcess pid=762861) WARNING 10-16 13:57:13 [model.py:2442] Casting torch.bfloat16 to torch.float16.\n(MainProcess pid=762861) INFO 10-16 13:57:13 [model.py:2109] Using max model len 128\n(MainProcess pid=762861) INFO 10-16 13:57:13 [scheduler.py:308] Chunked prefill is enabled with max_num_batched_tokens=8192.\n(MainProcess pid=762861) INFO 10-16 13:57:13 [kernel.py:408] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])\n(MainProcess pid=762861) INFO 10-16 13:57:15 [core.py:129] Initializing a V1 LLM engine (v0.31.0) with config: model='/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775', speculative_config=None, tokenizer='/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, max_seq_len=128, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)\n(MainProcess pid=762861) INFO 10-16 13:57:15 [parallel_state.py:1825] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_3ee872816ccb4423aa711ff32b7017b5 backend=nccl\n(MainProcess pid=762861) INFO 10-16 13:57:15 [parallel_state.py:2269] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A\n(MainProcess pid=762861) INFO 10-16 13:57:15 [gpu_worker.py:479] Using V2 Model Runner\n(MainProcess pid=762861) INFO 10-16 13:57:16 [model_runner.py:375] Loading model from scratch...\n(MainProcess pid=762861) INFO 10-16 13:57:17 [cuda.py:526] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].\n(MainProcess pid=762861) INFO 10-16 13:57:17 [flash_attn.py:1167] Using FlashAttention version 2\n(MainProcess pid=762861) INFO 10-16 13:57:17 [weight_utils.py:1063] Filesystem type for checkpoints: EXT4. Checkpoint size: 0.92 GiB. Available RAM: 101.34 GiB.\n(MainProcess pid=762861) INFO 10-16 13:57:17 [weight_utils.py:1086] Auto-prefetch is disabled because the filesystem (EXT4) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.\n(MainProcess pid=762861) INFO 10-16 13:57:19 [default_loader.py:484] Loading weights took 1.52 seconds\n(MainProcess pid=762861) INFO 10-16 13:57:19 [model_runner.py:407] Model loading took 0.93 GiB memory and 3.385619 seconds\n(MainProcess pid=762861) INFO 10-16 13:57:19 [topk_topp_sampler.py:124] Using FlashInfer for top-p & top-k sampling.\n(MainProcess pid=762861) INFO 10-16 13:57:19 [torch_utils.py:286] Reducing Torch threads from 24 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.\n(MainProcess pid=762861) INFO 10-16 13:57:19 [utils.py:343] Using LBNHC KV cache layout.\n{\"event\": \"vllm_protocol_cache\", \"context_tokens\": 128, \"banks\": 8, \"needed_blocks\": 65, \"cache_bytes\": 12779520, \"specs\": {\"model.layers.0.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.1.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.2.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.3.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.4.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.5.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.6.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.7.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.8.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.9.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.10.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.11.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.12.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.13.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.14.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.15.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.16.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.17.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.18.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.19.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.20.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.21.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.22.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}, \"model.layers.23.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 8192}}}\n(MainProcess pid=762861) INFO 10-16 13:57:20 [caching.py:342] reconstructed serializable fn from standalone compile artifacts. num_artifacts=3 num_submods=25\n(MainProcess pid=762861) INFO 10-16 13:57:20 [decorators.py:312] Directly load AOT compilation from path /root/.cache/vllm/torch_compile_cache/torch_aot_compile/e8fbf11701718ae9f6d40606dc50288ad3a1846d1a7642eb7cad2f26aa62e750/rank_0_0/model\n(MainProcess pid=762861) INFO 10-16 13:57:20 [monitor.py:53] torch.compile took 0.18 s in total\n(MainProcess pid=762861) INFO 10-16 13:57:20 [monitor.py:81] Initial profiling/warmup run took 0.17 s\n(MainProcess pid=762861) INFO 10-16 13:57:21 [gpu_worker.py:603] Initial free memory 30.89 GiB, reserved 0.01 GiB memory for KV Cache as specified by kv_cache_memory_bytes config and skipped memory profiling. This does not respect the gpu_memory_utilization config. Only use kv_cache_memory_bytes config when you want manual control of KV cache memory size. If OOM'ed, check the difference of initial free memory between the current run and the previous run where kv_cache_memory_bytes is suggested and update it correspondingly.\n(MainProcess pid=762861) INFO 10-16 13:57:21 [kv_cache_utils.py:2464] GPU KV cache size: 1,040 tokens, Maximum concurrency for 128 tokens per request: 8.12x\n(MainProcess pid=762861) INFO 10-16 13:57:21 [kernel_warmup.py:172] JIT kernel warmup starting.\n(MainProcess pid=762861) INFO 10-16 13:57:21 [kernel_warmup.py:185] JIT kernel warmup finished in 0.00s.\n(MainProcess pid=762861) INFO 10-16 13:57:21 [kernel_warmup.py:437] Using FlashInfer autotune cache file: /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/c633e1a351cd55fa23f0c755d06aaeb353e4b84cd6af2ef8e02a601e15ce1772/autotune_configs.json\n(MainProcess pid=762861) INFO 10-16 13:57:21 [kernel_warmup.py:359] Running FlashInfer autotune with 8192 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192).\n(MainProcess pid=762861) INFO 10-16 13:57:24 [model_runner.py:1087] Graph capturing finished in 2 secs, took 0.06 GiB\n(MainProcess pid=762861) INFO 10-16 13:57:25 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.\n(MainProcess pid=762861) INFO 10-16 13:57:25 [core.py:373] init engine (profile, create kv cache, warmup model) took 5.83 s (compilation: 0.18 s)\n(MainProcess pid=762861) INFO 10-16 13:57:25 [hf.py:646] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.\ncaptured packed mixed input tokens1..64/512\ncaptured packed mixed input tokens1..128/512\ncaptured packed mixed input tokens1..192/512\ncaptured packed mixed input tokens1..256/512\ncaptured packed mixed input tokens1..320/512\ncaptured packed mixed input tokens1..384/512\ncaptured packed mixed input tokens1..448/512\ncaptured packed mixed input tokens1..512/512\n{\"event\": \"vllm_bootstrap\", \"model\": \"/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775\", \"block_sizes\": [16], \"kernel_block_sizes\": [16], \"pages\": [[1, 2, 3, 4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15, 16], [17, 18, 19, 20, 21, 22, 23, 24], [25, 26, 27, 28, 29, 30, 31, 32], [33, 34, 35, 36, 37, 38, 39, 40], [41, 42, 43, 44, 45, 46, 47, 48], [49, 50, 51, 52, 53, 54, 55, 56], [57, 58, 59, 60, 61, 62, 63, 64]], \"graph_count\": 512, \"captured_input_tokens\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512], \"graph_request_padding\": \"min(input_tokens,banks)\", \"capture\": \"upstream mixed descriptor; no attention support override\"}\nresident vLLM ready: 24 layers h=896 vocab=151936; tensor batches1..8, GPU prefill/decode\nuserspace completion wait=epoll_pwait2 active_timeout_ns=60000 idle=socket_or_deadline shutdown=eventfd\nUSER_ADMISSION policy=eligible_frame_fifo queued_peak=1 queued_at_stop=0\nuserspace TCP stopped: accepted=13 published=32 completed=31 rejected=10\nresident vLLM stopped: launches=1 device_graph_launches=654 graph_error=0 max_active=2 admitted=32 retired=31 trace_overflows=0 release_rounds=31 max_release=1 device_launch_calls=1308\n",
+  "stderr": "<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.\n<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.\n\nLoading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]\n\nLoading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.50s/it]\n\nLoading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.51s/it]\n\n2026-10-16 13:57:21,801 - INFO - autotuner.py:3691 - flashinfer.jit: [Autotuner]: Loaded 0 configs from /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/c633e1a351cd55fa23f0c755d06aaeb353e4b84cd6af2ef8e02a601e15ce1772/autotune_configs.json\n2026-10-16 13:57:21,801 - INFO - autotuner.py:1046 - flashinfer.jit: [Autotuner]: Autotuning process starts ...\n2026-10-16 13:57:21,882 - INFO - autotuner.py:1069 - flashinfer.jit: [Autotuner]: Autotuning process ends\n2026-10-16 13:57:21,883 - INFO - autotuner.py:3554 - flashinfer.jit: [Autotuner]: Saved 0 configs to /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/c633e1a351cd55fa23f0c755d06aaeb353e4b84cd6af2ef8e02a601e15ce1772/autotune_configs.json (0 new, 0 from previous config)\n\nCapturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]\nCapturing CUDA graphs (PIECEWISE):  10%|\u2589         | 5/51 [00:00<00:01, 45.74it/s]\nCapturing CUDA graphs (PIECEWISE):  20%|\u2588\u2589        | 10/51 [00:00<00:00, 46.51it/s]\nCapturing CUDA graphs (PIECEWISE):  29%|\u2588\u2588\u2589       | 15/51 [00:00<00:00, 46.39it/s]\nCapturing CUDA graphs (PIECEWISE):  39%|\u2588\u2588\u2588\u2589      | 20/51 [00:00<00:00, 46.04it/s]\nCapturing CUDA graphs (PIECEWISE):  49%|\u2588\u2588\u2588\u2588\u2589     | 25/51 [00:00<00:00, 46.74it/s]\nCapturing CUDA graphs (PIECEWISE):  59%|\u2588\u2588\u2588\u2588\u2588\u2589    | 30/51 [00:00<00:00, 46.94it/s]\nCapturing CUDA graphs (PIECEWISE):  71%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | 36/51 [00:00<00:00, 48.00it/s]\nCapturing CUDA graphs (PIECEWISE):  82%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f | 42/51 [00:00<00:00, 49.88it/s]\nCapturing CUDA graphs (PIECEWISE):  94%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d| 48/51 [00:00<00:00, 52.40it/s]\nCapturing CUDA graphs (PIECEWISE): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 51/51 [00:01<00:00, 49.75it/s]\n\nCapturing CUDA graphs (FULL):   0%|          | 0/35 [00:00<?, ?it/s]\nCapturing CUDA graphs (FULL):  14%|\u2588\u258d        | 5/35 [00:00<00:00, 46.93it/s]\nCapturing CUDA graphs (FULL):  31%|\u2588\u2588\u2588\u258f      | 11/35 [00:00<00:00, 50.07it/s]\nCapturing CUDA graphs (FULL):  49%|\u2588\u2588\u2588\u2588\u258a     | 17/35 [00:00<00:00, 53.85it/s]\nCapturing CUDA graphs (FULL):  69%|\u2588\u2588\u2588\u2588\u2588\u2588\u258a   | 24/35 [00:00<00:00, 56.89it/s]\nCapturing CUDA graphs (FULL):  91%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f| 32/35 [00:00<00:00, 64.07it/s]\nCapturing CUDA graphs (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 35/35 [00:00<00:00, 60.96it/s]\n\nPacked mixed (FULL):   0%|          | 0/512 [00:00<?, ?it/s]\nPacked mixed (FULL):   2%|\u258f         | 10/512 [00:00<00:05, 94.70it/s]\nPacked mixed (FULL):   4%|\u258d         | 20/512 [00:00<00:05, 92.90it/s]\nPacked mixed (FULL):   6%|\u258c         | 30/512 [00:00<00:05, 92.09it/s]\nPacked mixed (FULL):   8%|\u258a         | 40/512 [00:00<00:05, 91.54it/s]\nPacked mixed (FULL):  10%|\u2589         | 50/512 [00:00<00:05, 91.66it/s]\nPacked mixed (FULL):  12%|\u2588\u258f        | 60/512 [00:00<00:04, 92.16it/s]\nPacked mixed (FULL):  14%|\u2588\u258e        | 70/512 [00:00<00:04, 92.04it/s]\nPacked mixed (FULL):  16%|\u2588\u258c        | 80/512 [00:00<00:04, 91.25it/s]\nPacked mixed (FULL):  18%|\u2588\u258a        | 90/512 [00:00<00:04, 91.03it/s]\nPacked mixed (FULL):  20%|\u2588\u2589        | 100/512 [00:01<00:04, 91.08it/s]\nPacked mixed (FULL):  21%|\u2588\u2588\u258f       | 110/512 [00:01<00:04, 90.99it/s]\nPacked mixed (FULL):  23%|\u2588\u2588\u258e       | 120/512 [00:01<00:04, 90.91it/s]\nPacked mixed (FULL):  25%|\u2588\u2588\u258c       | 130/512 [00:01<00:04, 89.87it/s]\nPacked mixed (FULL):  27%|\u2588\u2588\u258b       | 140/512 [00:01<00:04, 90.43it/s]\nPacked mixed (FULL):  29%|\u2588\u2588\u2589       | 150/512 [00:01<00:03, 90.61it/s]\nPacked mixed (FULL):  31%|\u2588\u2588\u2588\u258f      | 160/512 [00:01<00:03, 91.09it/s]\nPacked mixed (FULL):  33%|\u2588\u2588\u2588\u258e      | 170/512 [00:01<00:03, 90.70it/s]\nPacked mixed (FULL):  35%|\u2588\u2588\u2588\u258c      | 180/512 [00:01<00:03, 90.53it/s]\nPacked mixed (FULL):  37%|\u2588\u2588\u2588\u258b      | 190/512 [00:02<00:03, 91.68it/s]\nPacked mixed (FULL):  39%|\u2588\u2588\u2588\u2589      | 200/512 [00:02<00:03, 92.31it/s]\nPacked mixed (FULL):  41%|\u2588\u2588\u2588\u2588      | 210/512 [00:02<00:03, 91.52it/s]\nPacked mixed (FULL):  43%|\u2588\u2588\u2588\u2588\u258e     | 220/512 [00:02<00:03, 90.98it/s]\nPacked mixed (FULL):  45%|\u2588\u2588\u2588\u2588\u258d     | 230/512 [00:02<00:03, 91.15it/s]\nPacked mixed (FULL):  47%|\u2588\u2588\u2588\u2588\u258b     | 240/512 [00:02<00:02, 91.83it/s]\nPacked mixed (FULL):  49%|\u2588\u2588\u2588\u2588\u2589     | 250/512 [00:02<00:02, 91.61it/s]\nPacked mixed (FULL):  51%|\u2588\u2588\u2588\u2588\u2588     | 260/512 [00:02<00:02, 91.15it/s]\nPacked mixed (FULL):  53%|\u2588\u2588\u2588\u2588\u2588\u258e    | 270/512 [00:02<00:02, 90.67it/s]\nPacked mixed (FULL):  55%|\u2588\u2588\u2588\u2588\u2588\u258d    | 280/512 [00:03<00:02, 90.13it/s]\nPacked mixed (FULL):  57%|\u2588\u2588\u2588\u2588\u2588\u258b    | 290/512 [00:03<00:02, 89.93it/s]\nPacked mixed (FULL):  58%|\u2588\u2588\u2588\u2588\u2588\u258a    | 299/512 [00:03<00:02, 89.41it/s]\nPacked mixed (FULL):  60%|\u2588\u2588\u2588\u2588\u2588\u2588    | 309/512 [00:03<00:02, 90.30it/s]\nPacked mixed (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258f   | 319/512 [00:03<00:02, 90.33it/s]\nPacked mixed (FULL):  64%|\u2588\u2588\u2588\u2588\u2588\u2588\u258d   | 329/512 [00:03<00:02, 90.04it/s]\nPacked mixed (FULL):  66%|\u2588\u2588\u2588\u2588\u2588\u2588\u258c   | 339/512 [00:03<00:01, 91.18it/s]\nPacked mixed (FULL):  68%|\u2588\u2588\u2588\u2588\u2588\u2588\u258a   | 349/512 [00:03<00:01, 91.19it/s]\nPacked mixed (FULL):  70%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | 359/512 [00:03<00:01, 92.08it/s]\nPacked mixed (FULL):  72%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f  | 369/512 [00:04<00:01, 92.08it/s]\nPacked mixed (FULL):  74%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d  | 379/512 [00:04<00:01, 90.71it/s]\nPacked mixed (FULL):  76%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 389/512 [00:04<00:01, 88.78it/s]\nPacked mixed (FULL):  78%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a  | 399/512 [00:04<00:01, 90.17it/s]\nPacked mixed (FULL):  80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589  | 409/512 [00:04<00:01, 91.57it/s]\nPacked mixed (FULL):  82%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f | 419/512 [00:04<00:01, 86.45it/s]\nPacked mixed (FULL):  84%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d | 429/512 [00:04<00:00, 88.25it/s]\nPacked mixed (FULL):  86%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c | 439/512 [00:04<00:00, 89.03it/s]\nPacked mixed (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 449/512 [00:04<00:00, 89.87it/s]\nPacked mixed (FULL):  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589 | 459/512 [00:05<00:00, 91.99it/s]\nPacked mixed (FULL):  92%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f| 469/512 [00:05<00:00, 93.77it/s]\nPacked mixed (FULL):  94%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e| 479/512 [00:05<00:00, 94.31it/s]\nPacked mixed (FULL):  96%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 490/512 [00:05<00:00, 96.55it/s]\nPacked mixed (FULL):  98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a| 501/512 [00:05<00:00, 98.96it/s]\nPacked mixed (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 512/512 [00:05<00:00, 100.80it/s]\nPacked mixed (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 512/512 [00:05<00:00, 91.81it/s] \n",
+  "rows": [
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590426828924146,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000000100000000000000f2646775fd18020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        47270
+      ],
+      "gen": 1,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a3f2f0000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 590426831144508,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c510100000001000000000000003c468975fd18020080510200",
+      "peer": [
+        "127.0.0.1",
+        47270
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590426831564928,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000080b08f75fd18020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        47270
+      ],
+      "gen": 64,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a3f2f00000d0000003c04000076010000170100005c1e0000d30c000030010000991100004301000017010000eb1200005c1e0000d30c00003001000017010000570700000d0000003c04000076010000ef1c000030010000170100004e2600003b010000992500000b0000008501000017010000873600003b0100001701000041050000e2010000c42a00000d0000003c04000076010000837500008501000017010000e4e600001101000099010000a3040000640100000f3200000b0000007c0300007601000008010000350a00007a32000030010000170100001e1000003b01000017010000d30c00000d00000040020000d30c00007601000051590000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590429110020897,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000000100000000000000212b5efdfd18020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        47280
+      ],
+      "gen": 1,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a3f2f0000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 590429112073025,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000417b7dfdfd18020080510200",
+      "peer": [
+        "127.0.0.1",
+        47280
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590429112873400,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000b8b189fdfd18020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        47280
+      ],
+      "gen": 64,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a3f2f00000d0000003c04000076010000170100005c1e0000d30c000030010000991100004301000017010000eb1200005c1e0000d30c00003001000017010000570700000d0000003c04000076010000ef1c000030010000170100004e2600003b010000992500000b0000008501000017010000873600003b0100001701000041050000e2010000c42a00000d0000003c04000076010000837500008501000017010000e4e600001101000099010000a3040000640100000f3200000b0000007c0300007601000008010000350a00007a32000030010000170100001e1000003b01000017010000d30c00000d00000040020000d30c00007601000051590000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590431392039272,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000010000000000000068016385fe18020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        47288
+      ],
+      "gen": 1,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a3f2f0000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 590431394415007,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c510100000001000000000000009f418785fe18020080510200",
+      "peer": [
+        "127.0.0.1",
+        47288
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590431394812403,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000f3518d85fe18020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        47288
+      ],
+      "gen": 64,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a3f2f00000d0000003c04000076010000170100005c1e0000d30c000030010000991100004301000017010000eb1200005c1e0000d30c00003001000017010000570700000d0000003c04000076010000ef1c000030010000170100004e2600003b010000992500000b0000008501000017010000873600003b0100001701000041050000e2010000c42a00000d0000003c04000076010000837500008501000017010000e4e600001101000099010000a3040000640100000f3200000b0000007c0300007601000008010000350a00007a32000030010000170100001e1000003b01000017010000d30c00000d00000040020000d30c00007601000051590000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590433673557656,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000009836600dff18020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        34380
+      ],
+      "gen": 1,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a3f2f0000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 590433675918348,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c510100000001000000000000000c3c840dff18020080510200",
+      "peer": [
+        "127.0.0.1",
+        34380
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590433676459461,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000c57d8c0dff18020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        34380
+      ],
+      "gen": 64,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a3f2f00000d0000003c04000076010000170100005c1e0000d30c000030010000991100004301000017010000eb1200005c1e0000d30c00003001000017010000570700000d0000003c04000076010000ef1c000030010000170100004e2600003b010000992500000b0000008501000017010000873600003b0100001701000041050000e2010000c42a00000d0000003c04000076010000837500008501000017010000e4e600001101000099010000a3040000640100000f3200000b0000007c0300007601000008010000350a00007a32000030010000170100001e1000003b01000017010000d30c00000d00000040020000d30c00007601000051590000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590435955394392,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000010000000000000058476295ff18020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        34390
+      ],
+      "gen": 1,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a3f2f0000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 590435957145152,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c5101000000010000000000000040fe7c95ff18020080510200",
+      "peer": [
+        "127.0.0.1",
+        34390
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590435957421185,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000081348195ff18020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        34390
+      ],
+      "gen": 64,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a3f2f00000d0000003c04000076010000170100005c1e0000d30c000030010000991100004301000017010000eb1200005c1e0000d30c00003001000017010000570700000d0000003c04000076010000ef1c000030010000170100004e2600003b010000992500000b0000008501000017010000873600003b0100001701000041050000e2010000c42a00000d0000003c04000076010000837500008501000017010000e4e600001101000099010000a3040000640100000f3200000b0000007c0300007601000008010000350a00007a32000030010000170100001e1000003b01000017010000d30c00000d00000040020000d30c00007601000051590000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590438236119374,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000004e61531d0019020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        34394
+      ],
+      "gen": 1,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a3f2f0000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 590438238498063,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c510100000001000000000000000fad771d0019020080510200",
+      "peer": [
+        "127.0.0.1",
+        34394
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590438238901421,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000add47d1d0019020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        34394
+      ],
+      "gen": 64,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a3f2f00000d0000003c04000076010000170100005c1e0000d30c000030010000991100004301000017010000eb1200005c1e0000d30c00003001000017010000570700000d0000003c04000076010000ef1c000030010000170100004e2600003b010000992500000b0000008501000017010000873600003b0100001701000041050000e2010000c42a00000d0000003c04000076010000837500008501000017010000e4e600001101000099010000a3040000640100000f3200000b0000007c0300007601000008010000350a00007a32000030010000170100001e1000003b01000017010000d30c00000d00000040020000d30c00007601000051590000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590440517339467,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000004b094ca50019020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        34404
+      ],
+      "gen": 1,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a3f2f0000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 590440520125237,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000358b76a50019020080510200",
+      "peer": [
+        "127.0.0.1",
+        34404
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590440520490316,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000004c1d7ca50019020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        34404
+      ],
+      "gen": 64,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a3f2f00000d0000003c04000076010000170100005c1e0000d30c000030010000991100004301000017010000eb1200005c1e0000d30c00003001000017010000570700000d0000003c04000076010000ef1c000030010000170100004e2600003b010000992500000b0000008501000017010000873600003b0100001701000041050000e2010000c42a00000d0000003c04000076010000837500008501000017010000e4e600001101000099010000a3040000640100000f3200000b0000007c0300007601000008010000350a00007a32000030010000170100001e1000003b01000017010000d30c00000d00000040020000d30c00007601000051590000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590442798909227,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000002b074a2d0119020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        34410
+      ],
+      "gen": 1,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a3f2f0000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 590442801108703,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000df966b2d0119020080510200",
+      "peer": [
+        "127.0.0.1",
+        34410
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590442801902527,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000bfb3772d0119020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        34410
+      ],
+      "gen": 64,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a3f2f00000d0000003c04000076010000170100005c1e0000d30c000030010000991100004301000017010000eb1200005c1e0000d30c00003001000017010000570700000d0000003c04000076010000ef1c000030010000170100004e2600003b010000992500000b0000008501000017010000873600003b0100001701000041050000e2010000c42a00000d0000003c04000076010000837500008501000017010000e4e600001101000099010000a3040000640100000f3200000b0000007c0300007601000008010000350a00007a32000030010000170100001e1000003b01000017010000d30c00000d00000040020000d30c00007601000051590000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590445082235261,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000007dd162b50119020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        44780
+      ],
+      "gen": 1,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a3f2f0000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 590445084225106,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000522e81b50119020080510200",
+      "peer": [
+        "127.0.0.1",
+        44780
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590445084563097,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000995686b50119020011030000421a00003b0100009925000076010000",
+      "peer": [
+        "127.0.0.1",
+        44780
+      ],
+      "gen": 64,
+      "prompt": [
+        785,
+        6722,
+        315,
+        9625,
+        374
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a3f2f00000d0000003c04000076010000170100005c1e0000d30c000030010000991100004301000017010000eb1200005c1e0000d30c00003001000017010000570700000d0000003c04000076010000ef1c000030010000170100004e2600003b010000992500000b0000008501000017010000873600003b0100001701000041050000e2010000c42a00000d0000003c04000076010000837500008501000017010000e4e600001101000099010000a3040000640100000f3200000b0000007c0300007601000008010000350a00007a32000030010000170100001e1000003b01000017010000d30c00000d00000040020000d30c00007601000051590000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "binary",
+      "invalid": true,
+      "client_ns": 590445162877173,
+      "request_hex": "514d4c51010000000100000000000000f55031ba0119020080510200",
+      "peer": [
+        "127.0.0.1",
+        44780
+      ],
+      "gen": 1,
+      "prompt": [
+        151936
+      ],
+      "reply_hex": "",
+      "status": "EOF",
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 2,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 590445163220892,
+      "request_hex": "514d4c510800000001000000000000009c8f36ba01190200fe0e000076010000dc000000110000008f150000dc000000110000001e000000",
+      "peer": [
+        "127.0.0.1",
+        44796
+      ],
+      "gen": 1,
+      "prompt": [
+        3838,
+        374,
+        220,
+        17,
+        5519,
+        220,
+        17,
+        30
+      ],
+      "reply_hex": "de070000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 590445164797254,
+      "request_hex": "514d4c51050000004000000000000000469d4eba01190200311f000008010000f50a000081a400000d000000",
+      "peer": [
+        "127.0.0.1",
+        44798
+      ],
+      "gen": 64,
+      "prompt": [
+        7985,
+        264,
+        2805,
+        42113,
+        13
+      ],
+      "reply_hex": "66120000",
+      "checked_tokens": 1,
+      "partial": true,
+      "exact": true,
+      "action": "RST"
+    },
+    {
+      "case": 3,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590445166322360,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2035360d0a0d0a514d4c51080000004000000000000000b8e265ba01190200fe0e000076010000dc000000110000008f150000dc000000110000001e000000",
+      "peer": [
+        "127.0.0.1",
+        44800
+      ],
+      "gen": 64,
+      "prompt": [
+        3838,
+        374,
+        220,
+        17,
+        5519,
+        220,
+        17,
+        30
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ade070000692d000017010000a30d00003b010000a21e0000dc0000001100000043010000dc000000110000000b000000460200008602000003070000d5050000ba1c0000a7050000100000000d00000019140000c0010000170100005c050000dc0000001100000070020000110000000d000000830a0000170100005c050000dc000000110000003701000017010000ca0500005c050000dc000000110000007e010000401100000b00000046020000b00a00001701000088140000a7050000dd300100dc00000011000000e8010000dc000000110000001c010000dc0000001300000064040000e50900001fd600000b000000170100008210000076010000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 590445246163204,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000042928bf01190200311f000008010000f50a000081a400000d000000",
+      "peer": [
+        "127.0.0.1",
+        44814
+      ],
+      "gen": 64,
+      "prompt": [
+        7985,
+        264,
+        2805,
+        42113,
+        13
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a66120000",
+      "checked_tokens": 1,
+      "partial": true,
+      "exact": true,
+      "action": "backlog_SIGTERM",
+      "post_stop_extra_hex": "",
+      "observed_wire_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a66120000"
+    }
+  ],
+  "model_errors": [
+    0
+  ],
+  "fifo_queued_peak": 1,
+  "native_stats": {
+    "accepted": 13,
+    "published": 32,
+    "completed": 31,
+    "rejected": 10
+  },
+  "pass": true,
+  "end": "2026-10-16T13:57:56.325790+00:00",
+  "remaining_pins": []
+}

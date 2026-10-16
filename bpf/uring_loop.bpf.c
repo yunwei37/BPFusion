@@ -41,6 +41,8 @@ int BPF_PROG(uring_loop_step, struct iou_ctx *loop_ctx, struct iou_loop_params *
             if (bpf_map_pop_elem(&pending,&request)) return IOU_LOOP_STOP;
             llm_publish(slot,&request);
             __sync_fetch_and_sub(&page->llm_queued,1);
+            /* Full CPU atomic release follows reservation/head and slot publication. */
+            __sync_fetch_and_sub(&page->llm_peer_pending[bf_pending_bucket(request.addr_be,request.port_be)],1);
         }
     }
     __u32 sh=control->sq_head, st=control->sq_tail, ct=control->cq_tail;
