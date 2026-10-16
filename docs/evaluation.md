@@ -1689,3 +1689,22 @@ blocks. Network time overlaps model/dispatch and is never summed into wall time
 or historical6.36ms. Private source/commands/fixed analysis and unchanged client
 assets are archived; actual build and real four-condition preflight are next.
 This is dependency preparation, not completed scientific evidence.
+
+
+### 2026-10-16 controller timing: real preflight complete
+
+[Preflight](../bench/results/controller_stage_time_20261016/preflight.md)
+completes all4 conditions/512 successes/32768 measured tokens,32 excluded
+warmup tokens. Both instrumented trajectories pass source-native two-pass
+replay/client joins (16400 tokens including warmups), clock/count/histogram
+checks. Two ordinary frozen-pool disagreements stay flagged. Archived gzip
+CPU replay matches acquisition stdout exactly. This is dependency acceptance,
+not a completed primary or ordinary-serving speedup. Planned20 full cells
+and fresh result review remain. Canonical source and original sessions/WIP
+are unchanged; bounded client remains for that full matrix.
+
+The small [existing-data context](../bench/results/controller_stage_time_20261016/prior_mean_latency_context.md)
+reuses0075 summaries: selected-before minus native mean completion+49.744ms,
+TTFT+49.286ms, first-to-last receive span+0.457ms. Mean identity holds for all
+15 cells; it does not decompose marginal P99, identify an internal stage or
+replace the current GPU diagnostic. Overload/backlog is a plausible inference.
