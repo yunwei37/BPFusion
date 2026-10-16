@@ -1435,3 +1435,14 @@ cancellation. See [finding0068](findings/0068-mixed-source-integration.md) and
 acceptance of the prior measured scheduler, not another paper speedup.
 The close-scan candidate stays unselected; full resources, sustained remote
 tails and current official reference remain pending.
+
+### 2026-10-16 current official vLLM reference (preflight complete)
+The [reviewed plan](../bench/results/official_reference_20261016/plan.md) compares
+ordinary mixed kernel/native16 with official optimized vLLM on the same Qwen
+checkpoint/GPU/FP16 runtime. Whole-service throughput and explicitly named
+client-observed per-token gap P99 are measured separately from transport
+attribution. Official stream-output ITL is not equated with zero-expanded
+client token gaps. Three-condition real preflight passes96 requests/6144
+measured tokens; first collector failure and repaired full preflight are
+retained. This dependency has no independent performance value. Full five-block
+15-executor/30-cell comparison remains pending, as do full resources and remote.

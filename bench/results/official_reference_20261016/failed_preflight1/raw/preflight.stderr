@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/official_reference.py", line 169, in main
+    receipt=stop(p);emit('executor',pair=pair,mode=mode,**receipt,stdout=path.read_text())
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/official_reference.py", line 63, in emit
+    with lock:raw.write(json.dumps(dict(event=event,utc=utc(),**row))+'\n')
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: dict() got multiple values for keyword argument 'utc'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/official_reference.py", line 173, in main
+    if p is not None:emit('cleanup',pair=pair,mode=mode,**stop(p))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/official_reference.py", line 63, in emit
+    with lock:raw.write(json.dumps(dict(event=event,utc=utc(),**row))+'\n')
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: dict() got multiple values for keyword argument 'utc'
