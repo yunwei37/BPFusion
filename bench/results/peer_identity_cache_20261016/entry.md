@@ -9,3 +9,10 @@ from client_job.json, removed after data recovered; no service paused.
 Restore before header if candidate rejected, forward-only if later committed;
 keep qualified source only on reviewed benefit. Stop/detach owning test
 servers, delete owning Job/Pod and verify original state on closure.
+
+
+Client setup note: an initial kubectl -f Windows temporary-file path failed
+before creation because the owning kubectl executes on the remote control
+plane. Retried through the existing wrapper's /dev/stdin input; one Job
+created, no failed workload or preflight request. Actual client receipt in
+client_started.json. No source/timeout/oracle deviation.

@@ -1,0 +1,43 @@
+[
+  {
+    "banks": 8,
+    "object": "fusion.bpf.o",
+    "instructions_and_relocations_equal": true
+  },
+  {
+    "banks": 8,
+    "object": "uring_loop.bpf.o",
+    "instructions_and_relocations_equal": true
+  },
+  {
+    "banks": 8,
+    "library": "vllm_mixed_user_network_wait.so",
+    "native_gpu_sass_equal": true
+  },
+  {
+    "banks": 8,
+    "candidate_loop_binding": "/tmp/bpfusion-mixed-integration-n4cog5c6/peer_identity_sourcebuild8/uring_loop.bpf.o"
+  },
+  {
+    "banks": 16,
+    "object": "fusion.bpf.o",
+    "instructions_and_relocations_equal": true
+  },
+  {
+    "banks": 16,
+    "object": "uring_loop.bpf.o",
+    "instructions_and_relocations_equal": true
+  },
+  {
+    "banks": 16,
+    "library": "vllm_mixed_user_network_wait.so",
+    "native_gpu_sass_equal": true
+  },
+  {
+    "banks": 16,
+    "candidate_loop_binding": "/tmp/bpfusion-mixed-integration-n4cog5c6/peer_identity_sourcebuild16/uring_loop.bpf.o"
+  },
+  {
+    "shared_header_equal": true
+  }
+]
