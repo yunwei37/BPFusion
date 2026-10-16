@@ -1,0 +1,30 @@
+{
+  "compile_command": [
+    "g++",
+    "-O2",
+    "-std=c++17",
+    "-DBF_LLM_SLOTS=16",
+    "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16\"",
+    "-I/usr/local/cuda/include",
+    "-I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi",
+    "-Ibpf/include",
+    "-I/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/verify_load.cpp",
+    "-o",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/verify_load",
+    "-lbpf",
+    "-lelf",
+    "-lz"
+  ],
+  "compile_exit": 0,
+  "capacity_from_completed_NET_READY": 4096,
+  "pins_before": [],
+  "utc": "2026-10-16T19:15:44.165870+00:00",
+  "load_command": [
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/verify_load",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16/kernel_tcp.bpf.o",
+    "4096"
+  ],
+  "load_exit": 1,
+  "pins_after": []
+}

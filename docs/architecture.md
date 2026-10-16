@@ -761,3 +761,13 @@ changes. [Finding0074](findings/0074-active-admission-wait.md) supports lower
 owned-group CPU after normal8/16 and finite lifecycle qualification; native
 still has better throughput/completionP99. This is not an arbitrary-concurrency
 proof or a bound on scheduler/timer service latency.
+
+## Current transport-placement investigation
+
+[Current stage evidence](findings/0076-current-controller-stage-time.md) confirms
+the ordinary mixed io_uring path starts an independent GPU io_network CTA;
+it is concurrent with resident model dispatch. Timed network residence is not
+inline model delay. A private kernel-owned-network candidate moves CQ/SQ and
+connection/reply state progression to BPF while retaining the same model page
+and compiled GPU dispatcher. It currently has ordinary8/16 build and verifier-
+only load evidence; it is not selected, application-qualified or faster.

@@ -1,0 +1,65 @@
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:21:38: error: redefinition of 'config' as different kind of symbol
+   21 | const volatile struct bf_ktcp_layout config = {};
+      |                                      ^
+bpf/include/vmlinux.h:62266:25: note: previous definition is here
+ 62266 | typedef struct config_s config;
+       |                         ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:45:14: error: unexpected type name 'config': expected expression
+   45 |     if (i >= config.capacity) return 0;
+      |              ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:46:33: error: unexpected type name 'config': expected expression
+   46 |     return (void *)(x->memory + config.conns + i * sizeof(struct bf_ktcp_conn));
+      |                                 ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:54:26: error: unexpected type name 'config': expected expression
+   54 |     if (x->st - x->sh >= config.entries) return 0;
+      |                          ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:55:30: error: expected ')'
+   55 |     __u32 i = x->st & (config.entries - 1);
+      |                              ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:55:23: note: to match this '('
+   55 |     __u32 i = x->st & (config.entries - 1);
+      |                       ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:55:43: error: expected expression
+   55 |     __u32 i = x->st & (config.entries - 1);
+      |                                           ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:65:36: error: unexpected type name 'config': expected expression
+   65 |     *(volatile __u32 *)(x->rings + config.st) = x->st;
+      |                                    ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:108:44: error: unexpected type name 'config': expected expression
+  108 |     __u32 end = load32((void *)(x->rings + config.ct));
+      |                                            ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:109:31: error: unexpected type name 'config': expected expression
+  109 |     for (__u32 n = 0; n < 2 * config.entries; n++) {
+      |                               ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:111:36: error: unexpected type name 'config': expected expression
+  111 |         __u32 j = x->cqhead & (2 * config.entries - 1);
+      |                                    ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:112:55: error: unexpected type name 'config': expected expression
+  112 |         struct io_uring_cqe *cq = (void *)(x->rings + config.cqes +
+      |                                                       ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:186:36: error: unexpected type name 'config': expected expression
+  186 |     *(volatile __u32 *)(x->rings + config.ch) = x->cqhead;
+      |                                    ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:201:31: error: unexpected type name 'config': expected expression
+  201 |         for (__u32 k = 0; k < config.capacity && peer >= 0; k++) {
+      |                               ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:204:61: error: unexpected type name 'config': expected expression
+  204 |             struct sockaddr_in *addr = (void *)(x->memory + config.buffers +
+      |                                                             ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:233:28: error: unexpected type name 'config': expected expression
+  233 |     __u8 *tx = x->memory + config.tx + i * BF_KTCP_TX_STRIDE;
+      |                            ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:312:32: error: unexpected type name 'config': expected expression
+  312 |         __u8 *tx = x->memory + config.tx + i * BF_KTCP_TX_STRIDE;
+      |                                ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:322:22: error: unexpected type name 'config': expected expression
+  322 |         entry.addr = config.user_base + config.tx +
+      |                      ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:322:41: error: unexpected type name 'config': expected expression
+  322 |         entry.addr = config.user_base + config.tx +
+      |                                         ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:338:27: error: unexpected type name 'config': expected expression
+  338 |     for (__u32 n = 0; n < config.capacity && current >= 0; n++) {
+      |                           ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.

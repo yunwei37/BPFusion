@@ -1,0 +1,1041 @@
+libbpf: prog 'kernel_tcp_step': BPF program load failed: -EACCES
+libbpf: prog 'kernel_tcp_step': -- BEGIN PROG LOAD LOG --
+0: R1=ctx() R10=fp0
+; int BPF_PROG(kernel_tcp_step, struct iou_ctx *loop_ctx, struct iou_loop_params *lp) @ kernel_tcp.bpf.c:529
+0: (79) r2 = *(u64 *)(r1 +8)
+func 'loop_step' arg1 has btf_id 130461 type STRUCT 'iou_loop_params'
+1: R1=ctx() R2=trusted_ptr_iou_loop_params()
+1: (7b) *(u64 *)(r10 -144) = r2       ; R2=trusted_ptr_iou_loop_params() R10=fp0 fp-144=trusted_ptr_iou_loop_params()
+2: (79) r9 = *(u64 *)(r1 +0)
+func 'loop_step' arg0 has btf_id 130460 type STRUCT 'iou_ctx'
+3: R1=ctx() R9=trusted_ptr_iou_ctx()
+; __u8 *memory = bpf_io_uring_get_region(loop_ctx, IOU_REGION_MEM, bf_ktcp_config.mem_bytes); @ kernel_tcp.bpf.c:531
+3: (18) r7 = 0xffffce7384e32000       ; R7=map_value(map=kernel_t.rodata,ks=4,vs=72)
+5: (61) r3 = *(u32 *)(r7 +20)         ; R3=0x1068000 R7=map_value(map=kernel_t.rodata,ks=4,vs=72)
+6: (bf) r1 = r9                       ; R1=trusted_ptr_iou_ctx() R9=trusted_ptr_iou_ctx()
+7: (b4) w2 = 0                        ; R2=0
+8: (85) call bpf_io_uring_get_region#100762   ; R0=mem_or_null(id=1,sz=0x1068000)
+9: (bf) r8 = r0                       ; R0=mem_or_null(id=1,sz=0x1068000) R8=mem_or_null(id=1,sz=0x1068000)
+; __u8 *rings = bpf_io_uring_get_region(loop_ctx, IOU_REGION_CQ, bf_ktcp_config.ring_bytes); @ kernel_tcp.bpf.c:532
+10: (61) r3 = *(u32 *)(r7 +16)        ; R3=0x41000 R7=map_value(map=kernel_t.rodata,ks=4,vs=72)
+11: (b4) w1 = 1                       ; R1=1
+12: (63) *(u32 *)(r10 -136) = r1      ; R1=1 R10=fp0 fp-136=????1
+13: (bf) r1 = r9                      ; R1=trusted_ptr_iou_ctx() R9=trusted_ptr_iou_ctx()
+14: (b4) w2 = 1                       ; R2=1
+15: (85) call bpf_io_uring_get_region#100762          ; R0=mem_or_null(id=2,sz=0x41000)
+16: (bf) r6 = r0                      ; R0=mem_or_null(id=2,sz=0x41000) R6=mem_or_null(id=2,sz=0x41000)
+; bf_ktcp_config.entries*sizeof(struct io_uring_sqe)); @ kernel_tcp.bpf.c:534
+17: (61) r3 = *(u32 *)(r7 +12)        ; R3=8192 R7=map_value(map=kernel_t.rodata,ks=4,vs=72)
+18: (67) r3 <<= 6                     ; R3=0x80000
+19: (7b) *(u64 *)(r10 -152) = r9      ; R9=trusted_ptr_iou_ctx() R10=fp0 fp-152=trusted_ptr_iou_ctx()
+; __u8 *sq = bpf_io_uring_get_region(loop_ctx, IOU_REGION_SQ, @ kernel_tcp.bpf.c:533
+20: (bf) r1 = r9                      ; R1=trusted_ptr_iou_ctx() R9=trusted_ptr_iou_ctx()
+21: (b4) w2 = 2                       ; R2=2
+22: (85) call bpf_io_uring_get_region#100762          ; R0=mem_or_null(id=3,sz=0x80000)
+23: (bf) r7 = r0                      ; R7=mem_or_null(id=3,sz=0x80000)
+; if (!memory || !rings || !sq) return IOU_LOOP_STOP; @ kernel_tcp.bpf.c:535
+24: (15) if r8 == 0x0 goto pc+252     ; R8=mem(id=1,sz=0x1068000)
+25: (15) if r6 == 0x0 goto pc+251     ; R6=mem(id=2,sz=0x41000)
+26: (15) if r7 == 0x0 goto pc+250     ; R7=mem(id=3,sz=0x80000)
+; if (s->loop.finished) return IOU_LOOP_STOP; @ kernel_tcp.bpf.c:537
+27: (61) r1 = *(u32 *)(r8 +16)        ; R1=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R8=mem(id=1,sz=0x1068000)
+28: (56) if w1 != 0x0 goto pc+248     ; R1=0
+; __u64 now = bpf_ktime_get_ns(); s->loop.now_ns = now; @ kernel_tcp.bpf.c:538
+29: (85) call bpf_ktime_get_ns#5      ; R0=scalar()
+30: (bf) r2 = r8                      ; R2=mem(id=1,sz=0x1068000) R8=mem(id=1,sz=0x1068000)
+31: (7b) *(u64 *)(r2 +40) = r0        ; R0=scalar() R2=mem(id=1,sz=0x1068000)
+; if (!s->loop.model_quiesced && (s->loop.stop_requested || @ kernel_tcp.bpf.c:539
+32: (61) r1 = *(u32 *)(r2 +12)        ; R1=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R2=mem(id=1,sz=0x1068000)
+33: (56) if w1 != 0x0 goto pc+5       ; R1=0
+34: (61) r1 = *(u32 *)(r2 +20)        ; R1=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R2=mem(id=1,sz=0x1068000)
+35: (56) if w1 != 0x0 goto pc+241     ; R1=0
+; (s->loop.deadline_ns && now >= s->loop.deadline_ns))) @ kernel_tcp.bpf.c:540
+36: (79) r1 = *(u64 *)(r2 +24)        ; R1=scalar() R2=mem(id=1,sz=0x1068000)
+37: (07) r1 += -1                     ; R1=scalar()
+38: (ad) if r1 < r0 goto pc+238       ; R0=scalar() R1=scalar()
+39: (b4) w1 = 0                       ; R1=0
+; __u32 zero = 0; @ kernel_tcp.bpf.c:542
+40: (63) *(u32 *)(r10 -4) = r1        ; R1=0 R10=fp0 fp-8=0000????
+41: (bf) r2 = r10                     ; R2=fp0 R10=fp0
+42: (07) r2 += -4                     ; R2=fp-4
+; struct bf_page *page = bpf_map_lookup_elem(&ctl, &zero); @ kernel_tcp.bpf.c:543
+43: (18) r1 = 0xffffce73b12e1ed8      ; R1=map_ptr(map=ctl,ks=4,vs=38208)
+45: (85) call bpf_map_lookup_elem#1   ; R0=map_value(map=ctl,ks=4,vs=38208)
+46: (bf) r9 = r0                      ; R0=map_value(map=ctl,ks=4,vs=38208) R9=map_value(map=ctl,ks=4,vs=38208)
+47: (b4) w1 = 1                       ; R1=1
+; if (!page) return IOU_LOOP_STOP; @ kernel_tcp.bpf.c:544
+48: (15) if r9 == 0x0 goto pc+227     ; R9=map_value(map=ctl,ks=4,vs=38208)
+49: (bf) r5 = r8                      ; R5=mem(id=1,sz=0x1068000) R8=mem(id=1,sz=0x1068000)
+; if (s->loop.model_quiesced || *(volatile __u64 *)&page->stop_ns) @ kernel_tcp.bpf.c:545
+50: (61) r1 = *(u32 *)(r5 +12)        ; R1=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R5=mem(id=1,sz=0x1068000)
+51: (56) if w1 != 0x0 goto pc+2       ; R1=0
+52: (79) r1 = *(u64 *)(r9 +40)        ; R1=scalar() R9=map_value(map=ctl,ks=4,vs=38208)
+53: (15) if r1 == 0x0 goto pc+2       ; R1=scalar(umin=1)
+54: (b4) w1 = 1                       ; R1=1
+; s->stopping = 1; @ kernel_tcp.bpf.c:546
+55: (63) *(u32 *)(r5 +164) = r1       ; R5=mem(id=1,sz=0x1068000)
+; __u32 value = *(volatile const __u32 *)p; @ kernel_tcp.bpf.c:39
+56: (61) r1 = *(u32 *)(r9 +21816)     ; R1=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R9=map_value(map=ctl,ks=4,vs=38208)
+; if (queued > s->loop.backlog_peak) s->loop.backlog_peak = queued; @ kernel_tcp.bpf.c:548
+57: (61) r2 = *(u32 *)(r5 +52)        ; R2=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R5=mem(id=1,sz=0x1068000)
+58: (bf) r4 = r6                      ; R4=mem(id=2,sz=0x41000) R6=mem(id=2,sz=0x41000)
+59: (be) if w1 <= w2 goto pc+1        ; R1=scalar(smin=umin=umin32=1,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R2=scalar(smin=0,smax=umax=umax32=0xfffffffe,var_off=(0x0; 0xffffffff))
+60: (63) *(u32 *)(r5 +52) = r1        ; R5=mem(id=1,sz=0x1068000)
+; struct step x = { @ kernel_tcp.bpf.c:549
+61: (7b) *(u64 *)(r10 -32) = r9       ; R9=map_value(map=ctl,ks=4,vs=38208) R10=fp0 fp-32=map_value(map=ctl,ks=4,vs=38208)
+62: (7b) *(u64 *)(r10 -48) = r7       ; R7=mem(id=3,sz=0x80000) R10=fp0 fp-48=mem(id=3,sz=0x80000)
+63: (7b) *(u64 *)(r10 -40) = r5       ; R5=mem(id=1,sz=0x1068000) R10=fp0 fp-40=mem(id=1,sz=0x1068000)
+64: (7b) *(u64 *)(r10 -64) = r5       ; R5=mem(id=1,sz=0x1068000) R10=fp0 fp-64=mem(id=1,sz=0x1068000)
+65: (7b) *(u64 *)(r10 -56) = r4       ; R4=mem(id=2,sz=0x41000) R10=fp0 fp-56=mem(id=2,sz=0x41000)
+; .sh=load32((void *)(rings+bf_ktcp_config.sh)), @ kernel_tcp.bpf.c:551
+66: (18) r1 = 0xffffce7384e32000      ; R1=map_value(map=kernel_t.rodata,ks=4,vs=72)
+68: (61) r2 = *(u32 *)(r1 +40)        ; R1=map_value(map=kernel_t.rodata,ks=4,vs=72) R2=0
+69: (bf) r3 = r4                      ; R3=mem(id=2,sz=0x41000) R4=mem(id=2,sz=0x41000)
+70: (0f) r3 += r2                     ; R2=0 R3=mem(id=2,sz=0x41000)
+; __u32 value = *(volatile const __u32 *)p; @ kernel_tcp.bpf.c:39
+71: (61) r2 = *(u32 *)(r3 +0)         ; R2=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R3=mem(id=2,sz=0x41000)
+; struct step x = { @ kernel_tcp.bpf.c:549
+72: (63) *(u32 *)(r10 -24) = r2       ; R2=scalar(id=4,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R10=fp0 fp-24=ppppscalar(id=4,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+; .st=load32((void *)(rings+bf_ktcp_config.st)), @ kernel_tcp.bpf.c:552
+73: (61) r2 = *(u32 *)(r1 +44)        ; R1=map_value(map=kernel_t.rodata,ks=4,vs=72) R2=4
+74: (bf) r3 = r4                      ; R3=mem(id=2,sz=0x41000) R4=mem(id=2,sz=0x41000)
+75: (0f) r3 += r2                     ; R2=4 R3=mem(id=2,sz=0x41000,imm=4)
+; __u32 value = *(volatile const __u32 *)p; @ kernel_tcp.bpf.c:39
+76: (61) r2 = *(u32 *)(r3 +0)         ; R2=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R3=mem(id=2,sz=0x41000,imm=4)
+; struct step x = { @ kernel_tcp.bpf.c:549
+77: (63) *(u32 *)(r10 -20) = r2       ; R2=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R10=fp0 fp-24=mmmmmmmm
+; .cqhead=load32((void *)(rings+bf_ktcp_config.ch)) @ kernel_tcp.bpf.c:553
+78: (61) r1 = *(u32 *)(r1 +48)        ; R1=8
+79: (bf) r2 = r4                      ; R2=mem(id=2,sz=0x41000) R4=mem(id=2,sz=0x41000)
+80: (0f) r2 += r1                     ; R1=8 R2=mem(id=2,sz=0x41000,imm=8)
+; __u32 value = *(volatile const __u32 *)p; @ kernel_tcp.bpf.c:39
+81: (61) r1 = *(u32 *)(r2 +0)         ; R1=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R2=mem(id=2,sz=0x41000,imm=8)
+; struct step x = { @ kernel_tcp.bpf.c:549
+82: (63) *(u32 *)(r10 -16) = r1       ; R1=scalar(id=5,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R10=fp0 fp-16=????scalar(id=5,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+83: (bf) r1 = r10                     ; R1=fp0 R10=fp0
+;  @ kernel_tcp.bpf.c:0
+84: (07) r1 += -64                    ; R1=fp-64
+85: (bf) r7 = r5                      ; R5=mem(id=1,sz=0x1068000) R7=mem(id=1,sz=0x1068000)
+; if (drain_completions(&x)) { s->error=1; return IOU_LOOP_STOP; } @ kernel_tcp.bpf.c:555
+86: (85) call pc+192
+caller:
+ R6=mem(id=2,sz=0x41000) R7=mem(id=1,sz=0x1068000) R8=mem(id=1,sz=0x1068000) R9=map_value(map=ctl,ks=4,vs=38208) R10=fp0 fp-8=0000???? fp-16=????scalar(id=5,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) fp-24=mmmmmmmm fp-32=map_value(map=ctl,ks=4,vs=38208) fp-40=mem(id=1,sz=0x1068000) fp-48=mem(id=3,sz=0x80000) fp-56=mem(id=2,sz=0x41000) fp-64=mem(id=1,sz=0x1068000) fp-136=????1 fp-144=trusted_ptr_iou_loop_params() fp-152=trusted_ptr_iou_ctx()
+callee:
+ frame1: R1=fp[0]-64 R2=mem(id=2,sz=0x41000,imm=8) R3=mem(id=2,sz=0x41000,imm=4) R4=mem(id=2,sz=0x41000) R5=mem(id=1,sz=0x1068000) R10=fp0
+279: frame1: R1=fp[0]-64 R10=fp0
+; static __noinline int drain_completions(struct step *x) @ kernel_tcp.bpf.c:194
+279: (bf) r6 = r1                     ; frame1: R1=fp[0]-64 R6=fp[0]-64
+; struct drain_context context={.x=x,.end=load32((void *)(x->rings+bf_ktcp_config.ct))}; @ kernel_tcp.bpf.c:196
+280: (7b) *(u64 *)(r10 -16) = r6      ; frame1: R6=fp[0]-64 R10=fp0 fp-16=fp[0]-64
+281: (79) r1 = *(u64 *)(r6 +8)        ; frame1: R1=mem(id=2,sz=0x41000) R6=fp[0]-64
+282: (18) r2 = 0xffffce7384e32000     ; frame1: R2=map_value(map=kernel_t.rodata,ks=4,vs=72)
+284: (61) r3 = *(u32 *)(r2 +52)       ; frame1: R2=map_value(map=kernel_t.rodata,ks=4,vs=72) R3=12
+285: (0f) r1 += r3                    ; frame1: R1=mem(id=2,sz=0x41000,imm=12) R3=12
+; __u32 value = *(volatile const __u32 *)p; @ kernel_tcp.bpf.c:39
+286: (61) r1 = *(u32 *)(r1 +0)        ; frame1: R1=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+287: (b4) w3 = 0                      ; frame1: R3=0
+; struct drain_context context={.x=x,.end=load32((void *)(x->rings+bf_ktcp_config.ct))}; @ kernel_tcp.bpf.c:196
+288: (63) *(u32 *)(r10 -4) = r3       ; frame1: R3=0 R10=fp0 fp-8=0000????
+289: (63) *(u32 *)(r10 -8) = r1       ; frame1: R1=scalar(id=6,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R10=fp0 fp-8=0000scalar(id=6,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+; long result=bpf_loop(2*bf_ktcp_config.entries,drain_callback,&context,0); @ kernel_tcp.bpf.c:197
+290: (61) r1 = *(u32 *)(r2 +12)       ; frame1: R1=8192 R2=map_value(map=kernel_t.rodata,ks=4,vs=72)
+291: (64) w1 <<= 1                    ; frame1: R1=16384
+292: (bf) r3 = r10                    ; frame1: R3=fp0 R10=fp0
+;  @ kernel_tcp.bpf.c:0
+293: (07) r3 += -16                   ; frame1: R3=fp-16
+; long result=bpf_loop(2*bf_ktcp_config.entries,drain_callback,&context,0); @ kernel_tcp.bpf.c:197
+294: (18) r2 = 0x11                   ; frame1: R2=func()
+296: (b7) r4 = 0                      ; frame1: R4=0
+297: (85) call bpf_loop#181 312: frame2: R2=fp[1]-16 R10=fp0 cb
+; static long drain_callback(__u64 index, void *opaque) @ kernel_tcp.bpf.c:187
+312: (bf) r6 = r2                     ; frame2: R2=fp[1]-16 R6=fp[1]-16 cb
+; int result=drain_entry(context->x,context->end); @ kernel_tcp.bpf.c:190
+313: (61) r2 = *(u32 *)(r6 +8)        ; frame2: R2=scalar(id=11535,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R6=fp[1]-16 cb
+314: (79) r1 = *(u64 *)(r6 +0)        ; frame2: R1=fp[0]-64 R6=fp[1]-16 cb
+315: (85) call pc+8
+caller:
+ frame2: R6=fp[1]-16 R10=fp0 cb
+callee:
+ frame3: R1=fp[0]-64 R2=scalar(id=11535,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R10=fp0
+324: frame3: R1=fp[0]-64 R2=scalar(id=11535,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R10=fp0
+; static __noinline int drain_entry(struct step *x, __u32 end) @ kernel_tcp.bpf.c:105
+324: (b4) w0 = 1                      ; frame3: R0=1
+; if (x->cqhead == end) return 1; @ kernel_tcp.bpf.c:109
+325: (61) r3 = *(u32 *)(r1 +48)       ; frame3: R1=fp[0]-64 R3=scalar(id=11536,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+326: (1e) if w3 == w2 goto pc+351     ; frame3: R2=scalar(id=11535,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R3=scalar(id=11536,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+;  @ kernel_tcp.bpf.c:0
+327: (79) r2 = *(u64 *)(r1 +24)       ; frame3: R1=fp[0]-64 R2=mem(id=1,sz=0x1068000)
+; __u32 j = x->cqhead & (2 * bf_ktcp_config.entries - 1); @ kernel_tcp.bpf.c:110
+328: (18) r4 = 0xffffce7384e32000     ; frame3: R4=map_value(map=kernel_t.rodata,ks=4,vs=72)
+330: (61) r5 = *(u32 *)(r4 +12)       ; frame3: R4=map_value(map=kernel_t.rodata,ks=4,vs=72) R5=8192
+; struct io_uring_cqe *cq = (void *)(x->rings + bf_ktcp_config.cqes + @ kernel_tcp.bpf.c:111
+331: (79) r0 = *(u64 *)(r1 +8)        ; frame3: R0=mem(id=2,sz=0x41000) R1=fp[0]-64
+332: (61) r4 = *(u32 *)(r4 +56)       ; frame3: R4=64
+333: (0f) r0 += r4                    ; frame3: R0=mem(id=2,sz=0x41000,imm=64) R4=64
+; __u32 j = x->cqhead & (2 * bf_ktcp_config.entries - 1); @ kernel_tcp.bpf.c:110
+334: (64) w5 <<= 1                    ; frame3: R5=16384
+335: (04) w5 += -1                    ; frame3: R5=16383
+336: (5c) w5 &= w3                    ; frame3: R3=scalar(id=11536,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R5=scalar(smin=smin32=0,smax=umax=smax32=umax32=16383,var_off=(0x0; 0x3fff))
+; j * sizeof(struct io_uring_cqe)); @ kernel_tcp.bpf.c:112
+337: (67) r5 <<= 4                    ; frame3: R5=scalar(smin=smin32=0,smax=umax=smax32=umax32=0x3fff0,var_off=(0x0; 0x3fff0))
+; struct io_uring_cqe *cq = (void *)(x->rings + bf_ktcp_config.cqes + @ kernel_tcp.bpf.c:111
+338: (0f) r0 += r5                    ; frame3: R0=mem(id=2,sz=0x41000,smin=umin=smin32=umin32=64,smax=umax=smax32=umax32=0x40030,var_off=(0x0; 0x7fff0)) R5=scalar(smin=smin32=0,smax=umax=smax32=umax32=0x3fff0,var_off=(0x0; 0x3fff0))
+; __builtin_memcpy(&e, cq, sizeof(e)); @ kernel_tcp.bpf.c:114
+339: (79) r4 = *(u64 *)(r0 +8)        ; frame3: R0=mem(id=2,sz=0x41000,smin=umin=smin32=umin32=64,smax=umax=smax32=umax32=0x40030,var_off=(0x0; 0x7fff0)) R4=scalar()
+340: (7b) *(u64 *)(r10 -8) = r4       ; frame3: R4=scalar(id=11537) R10=fp0 fp-8=scalar(id=11537)
+341: (79) r4 = *(u64 *)(r0 +0)        ; frame3: R0=mem(id=2,sz=0x41000,smin=umin=smin32=umin32=64,smax=umax=smax32=umax32=0x40030,var_off=(0x0; 0x7fff0)) R4=scalar()
+342: (7b) *(u64 *)(r10 -16) = r4      ; frame3: R4=scalar(id=11538) R10=fp0 fp-16=scalar(id=11538)
+; x->cqhead++; @ kernel_tcp.bpf.c:115
+343: (04) w3 += 1                     ; frame3: R3=scalar(id=11536+1,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+344: (63) *(u32 *)(r1 +48) = r3       ; frame3: R1=fp[0]-64 R3=scalar(id=11539,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) fp-16=scalar(id=11538)
+345: (bf) r6 = r10                    ; frame3: R6=fp0 R10=fp0
+;  @ kernel_tcp.bpf.c:0
+346: (07) r6 += -16                   ; frame3: R6=fp-16
+; __u32 kind = e.user_data >> 56, index = (__u32)e.user_data; @ kernel_tcp.bpf.c:116
+347: (79) r4 = *(u64 *)(r6 +0)        ; frame3: R4=scalar(id=11538) R6=fp-16 fp-16=scalar(id=11538)
+348: (bf) r3 = r4                     ; frame3: R3=scalar(id=11538) R4=scalar(id=11538)
+349: (77) r3 >>= 56                   ; frame3: R3=scalar(smin=smin32=0,smax=umax=smax32=umax32=255,var_off=(0x0; 0xff))
+; if (kind == 8 && (e.flags & KTCP_CQE_MORE)) return 0; @ kernel_tcp.bpf.c:117
+350: (56) if w3 != 0x8 goto pc+6      ; frame3: R3=8
+351: (bf) r5 = r10                    ; frame3: R5=fp0 R10=fp0
+352: (07) r5 += -16                   ; frame3: R5=fp-16
+353: (b4) w0 = 0                      ; frame3: R0=0
+354: (61) r5 = *(u32 *)(r5 +12)       ; frame3: R5=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) fp-8=scalar()
+355: (54) w5 &= 2                     ; frame3: R5=scalar(smin=smin32=0,smax=umax=smax32=umax32=2,var_off=(0x0; 0x2))
+356: (56) if w5 != 0x0 goto pc+321    ; frame3: R5=0
+357: (b4) w0 = -1                     ; frame3: R0=0xffffffff
+; if (!s->pending) return -1; @ kernel_tcp.bpf.c:118
+358: (61) r5 = *(u32 *)(r2 +92)       ; frame3: R2=mem(id=1,sz=0x1068000) R5=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+359: (16) if w5 == 0x0 goto pc+318    ; frame3: R5=scalar(smin=umin=umin32=1,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+; s->pending--; @ kernel_tcp.bpf.c:119
+360: (04) w5 += -1                    ; frame3: R5=scalar(smin=0,smax=umax=umax32=0xfffffffe,var_off=(0x0; 0xffffffff))
+361: (63) *(u32 *)(r2 +92) = r5       ; frame3: R2=mem(id=1,sz=0x1068000) R5=scalar(smin=0,smax=umax=umax32=0xfffffffe,var_off=(0x0; 0xffffffff))
+; __u32 prefix = e.user_data >> 48; @ kernel_tcp.bpf.c:120
+362: (79) r7 = *(u64 *)(r6 +0)        ; frame3: R6=fp-16 R7=scalar(id=11538) fp-16=scalar(id=11538)
+363: (77) r7 >>= 48                   ; frame3: R7=scalar(smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff))
+364: (b4) w5 = 7                      ; frame3: R5=7
+365: (b4) w8 = 7                      ; frame3: R8=7
+; if (prefix == BF_IO_SEND_TAG || prefix == BF_IO_ABORT_TAG) kind = 7; @ kernel_tcp.bpf.c:121
+366: (15) if r7 == 0xbff1 goto pc+1   ; frame3: R7=scalar(smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff))
+367: (bc) w8 = w3                     ; frame3: R8=8
+368: (bf) r3 = r4                     ; frame3: R3=scalar(id=11538) R4=scalar(id=11538)
+369: (67) r3 <<= 32                   ; frame3: R3=scalar(smax=0x7fffffff00000000,smin32=0,smax32=umax32=0,var_off=(0x0; 0xffffffff00000000))
+370: (15) if r7 == 0xbff0 goto pc+1   ; frame3: R7=scalar(smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff))
+371: (bc) w5 = w8                     ; frame3: R5=8
+372: (77) r3 >>= 32                   ; frame3: R3=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+; if (kind == 1) { @ kernel_tcp.bpf.c:122
+373: (16) if w5 == 0x2 goto pc+35     ; frame3: R5=8
+374: (56) if w5 != 0x1 goto pc+54     ; frame3: R5=8
+; } else if (kind == 3 || kind == 7) { @ kernel_tcp.bpf.c:143
+429: (16) if w5 == 0x7 goto pc+1      ; frame3: R5=8
+430: (56) if w5 != 0x3 goto pc+71     ; frame3: R5=8
+; } else if (kind == 4) { @ kernel_tcp.bpf.c:164
+502: (54) w5 &= 255                   ; frame3: R5=8
+503: (66) if w5 s> 0x7 goto pc+4      ; frame3: R5=8
+508: (16) if w5 == 0x8 goto pc+47     ; frame3: R5=8
+; c->fd = -1; c->closing = 0; s->closed++; @ kernel_tcp.bpf.c:167
+556: (b4) w1 = 0                      ; frame3: R1=0
+; s->timeout_active = 0; @ kernel_tcp.bpf.c:171
+557: (63) *(u32 *)(r2 +176) = r1      ; frame3: R1=0 R2=mem(id=1,sz=0x1068000)
+558: (bf) r1 = r10                    ; frame3: R1=fp0 R10=fp0
+559: (07) r1 += -16                   ; frame3: R1=fp-16
+; if (e.res != -ECANCELED) return -1; @ kernel_tcp.bpf.c:172
+560: (61) r1 = *(u32 *)(r1 +8)        ; frame3: R1=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+561: (16) if w1 == 0xffffff83 goto pc+115     ; frame3: R1=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+562: (05) goto pc+115
+; } @ kernel_tcp.bpf.c:185
+678: (95) exit
+returning from callee:
+ frame3: R0=0xffffffff R10=fp0
+to caller at 316:
+ frame2: R0=0xffffffff R6=fp[1]-16 R10=fp0 cb
+; if(result<0)context->failed=1; @ kernel_tcp.bpf.c:191
+316: (66) if w0 s> 0xffffffff goto pc+2       ; frame2: R0=0xffffffff cb
+317: (b4) w1 = 1                      ; frame2: R1=1 cb
+318: (63) *(u32 *)(r6 +12) = r1       ; frame2: cb
+319: (b4) w1 = 1                      ; frame2: R1=1 cb
+; return result!=0; @ kernel_tcp.bpf.c:192
+320: (56) if w0 != 0x0 goto pc+1      ; frame2: R0=0xffffffff cb
+322: (bf) r0 = r1                     ; frame2: R0=1 R1=1 cb
+323: (95) exit
+returning from callee:
+ frame2: R0=1 R1=1 R10=fp0 cb
+to caller at 297:
+ frame1: R1=16384 R2=func() R3=fp-16 R4=0 R6=fp[0]-64 R10=fp0 fp-8=mmmmmmmm fp-16=fp[0]-64
+; long result=bpf_loop(2*bf_ktcp_config.entries,drain_callback,&context,0); @ kernel_tcp.bpf.c:197
+297: (85) call bpf_loop#181 312: frame2: R2=fp[1]-16 R10=fp0 cb
+; static long drain_callback(__u64 index, void *opaque) @ kernel_tcp.bpf.c:187
+312: (bf) r6 = r2                     ; frame2: R2=fp[1]-16 R6=fp[1]-16 cb
+; int result=drain_entry(context->x,context->end); @ kernel_tcp.bpf.c:190
+313: (61) r2 = *(u32 *)(r6 +8)        ; frame2: R2=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R6=fp[1]-16 cb
+314: (79) r1 = *(u64 *)(r6 +0)        ; frame2: R1=fp[0]-64 R6=fp[1]-16 cb
+315: (85) call pc+8
+caller:
+ frame2: R6=fp[1]-16 R10=fp0 cb
+callee:
+ frame3: R1=fp[0]-64 R2=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R10=fp0
+324: frame3: R1=fp[0]-64 R2=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R10=fp0
+; static __noinline int drain_entry(struct step *x, __u32 end) @ kernel_tcp.bpf.c:105
+324: (b4) w0 = 1                      ; frame3: R0=1
+; if (x->cqhead == end) return 1; @ kernel_tcp.bpf.c:109
+325: (61) r3 = *(u32 *)(r1 +48)       ; frame3: R1=fp[0]-64 R3=scalar(id=11542,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+326: (1e) if w3 == w2 goto pc+351     ; frame3: R2=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R3=scalar(id=11542,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+;  @ kernel_tcp.bpf.c:0
+327: (79) r2 = *(u64 *)(r1 +24)       ; frame3: R1=fp[0]-64 R2=mem(id=1,sz=0x1068000)
+; __u32 j = x->cqhead & (2 * bf_ktcp_config.entries - 1); @ kernel_tcp.bpf.c:110
+328: (18) r4 = 0xffffce7384e32000     ; frame3: R4=map_value(map=kernel_t.rodata,ks=4,vs=72)
+330: (61) r5 = *(u32 *)(r4 +12)       ; frame3: R4=map_value(map=kernel_t.rodata,ks=4,vs=72) R5=8192
+; struct io_uring_cqe *cq = (void *)(x->rings + bf_ktcp_config.cqes + @ kernel_tcp.bpf.c:111
+331: (79) r0 = *(u64 *)(r1 +8)        ; frame3: R0=mem(id=2,sz=0x41000) R1=fp[0]-64
+332: (61) r4 = *(u32 *)(r4 +56)       ; frame3: R4=64
+333: (0f) r0 += r4                    ; frame3: R0=mem(id=2,sz=0x41000,imm=64) R4=64
+; __u32 j = x->cqhead & (2 * bf_ktcp_config.entries - 1); @ kernel_tcp.bpf.c:110
+334: (64) w5 <<= 1                    ; frame3: R5=16384
+335: (04) w5 += -1                    ; frame3: R5=16383
+336: (5c) w5 &= w3                    ; frame3: R3=scalar(id=11542,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R5=scalar(smin=smin32=0,smax=umax=smax32=umax32=16383,var_off=(0x0; 0x3fff))
+; j * sizeof(struct io_uring_cqe)); @ kernel_tcp.bpf.c:112
+337: (67) r5 <<= 4                    ; frame3: R5=scalar(smin=smin32=0,smax=umax=smax32=umax32=0x3fff0,var_off=(0x0; 0x3fff0))
+; struct io_uring_cqe *cq = (void *)(x->rings + bf_ktcp_config.cqes + @ kernel_tcp.bpf.c:111
+338: (0f) r0 += r5                    ; frame3: R0=mem(id=2,sz=0x41000,smin=umin=smin32=umin32=64,smax=umax=smax32=umax32=0x40030,var_off=(0x0; 0x7fff0)) R5=scalar(smin=smin32=0,smax=umax=smax32=umax32=0x3fff0,var_off=(0x0; 0x3fff0))
+; __builtin_memcpy(&e, cq, sizeof(e)); @ kernel_tcp.bpf.c:114
+339: (79) r4 = *(u64 *)(r0 +8)        ; frame3: R0=mem(id=2,sz=0x41000,smin=umin=smin32=umin32=64,smax=umax=smax32=umax32=0x40030,var_off=(0x0; 0x7fff0)) R4=scalar()
+340: (7b) *(u64 *)(r10 -8) = r4       ; frame3: R4=scalar(id=11543) R10=fp0 fp-8=scalar(id=11543)
+341: (79) r4 = *(u64 *)(r0 +0)        ; frame3: R0=mem(id=2,sz=0x41000,smin=umin=smin32=umin32=64,smax=umax=smax32=umax32=0x40030,var_off=(0x0; 0x7fff0)) R4=scalar()
+342: (7b) *(u64 *)(r10 -16) = r4      ; frame3: R4=scalar(id=11544) R10=fp0 fp-16=scalar(id=11544)
+; x->cqhead++; @ kernel_tcp.bpf.c:115
+343: (04) w3 += 1                     ; frame3: R3=scalar(id=11542+1,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+344: (63) *(u32 *)(r1 +48) = r3       ; frame3: R1=fp[0]-64 R3=scalar(id=11545,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) fp-16=scalar(id=11544)
+345: (bf) r6 = r10                    ; frame3: R6=fp0 R10=fp0
+;  @ kernel_tcp.bpf.c:0
+346: (07) r6 += -16                   ; frame3: R6=fp-16
+; __u32 kind = e.user_data >> 56, index = (__u32)e.user_data; @ kernel_tcp.bpf.c:116
+347: (79) r4 = *(u64 *)(r6 +0)        ; frame3: R4=scalar(id=11544) R6=fp-16 fp-16=scalar(id=11544)
+348: (bf) r3 = r4                     ; frame3: R3=scalar(id=11544) R4=scalar(id=11544)
+349: (77) r3 >>= 56                   ; frame3: R3=scalar(smin=smin32=0,smax=umax=smax32=umax32=255,var_off=(0x0; 0xff))
+; if (kind == 8 && (e.flags & KTCP_CQE_MORE)) return 0; @ kernel_tcp.bpf.c:117
+350: (56) if w3 != 0x8 goto pc+6 357: frame3: R1=fp[0]-64 R2=mem(id=1,sz=0x1068000) R3=scalar(smin=smin32=0,smax=umax=smax32=umax32=255,var_off=(0x0; 0xff)) R4=scalar(id=11544) R6=fp-16 R10=fp0 fp-8=ppppscalar() fp-16=scalar(id=11544)
+; if (kind == 8 && (e.flags & KTCP_CQE_MORE)) return 0; @ kernel_tcp.bpf.c:117
+357: (b4) w0 = -1                     ; frame3: R0=0xffffffff
+; if (!s->pending) return -1; @ kernel_tcp.bpf.c:118
+358: (61) r5 = *(u32 *)(r2 +92)       ; frame3: R2=mem(id=1,sz=0x1068000) R5=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+359: (16) if w5 == 0x0 goto pc+318    ; frame3: R5=scalar(smin=umin=umin32=1,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+; s->pending--; @ kernel_tcp.bpf.c:119
+360: (04) w5 += -1                    ; frame3: R5=scalar(smin=0,smax=umax=umax32=0xfffffffe,var_off=(0x0; 0xffffffff))
+361: (63) *(u32 *)(r2 +92) = r5       ; frame3: R2=mem(id=1,sz=0x1068000) R5=scalar(smin=0,smax=umax=umax32=0xfffffffe,var_off=(0x0; 0xffffffff))
+; __u32 prefix = e.user_data >> 48; @ kernel_tcp.bpf.c:120
+362: (79) r7 = *(u64 *)(r6 +0)        ; frame3: R6=fp-16 R7=scalar(id=11544) fp-16=scalar(id=11544)
+363: (77) r7 >>= 48                   ; frame3: R7=scalar(smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff))
+364: (b4) w5 = 7                      ; frame3: R5=7
+365: (b4) w8 = 7                      ; frame3: R8=7
+; if (prefix == BF_IO_SEND_TAG || prefix == BF_IO_ABORT_TAG) kind = 7; @ kernel_tcp.bpf.c:121
+366: (15) if r7 == 0xbff1 goto pc+1   ; frame3: R7=scalar(smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff))
+367: (bc) w8 = w3                     ; frame3: R8=scalar(id=11560,smin=smin32=0,smax=umax=smax32=umax32=255,var_off=(0x0; 0xff))
+368: (bf) r3 = r4                     ; frame3: R3=scalar(id=11544) R4=scalar(id=11544)
+369: (67) r3 <<= 32                   ; frame3: R3=scalar(smax=0x7fffffff00000000,smin32=0,smax32=umax32=0,var_off=(0x0; 0xffffffff00000000))
+370: (15) if r7 == 0xbff0 goto pc+1   ; frame3: R7=scalar(smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff))
+371: (bc) w5 = w8                     ; frame3: R5=scalar(id=11561,smin=smin32=0,smax=umax=smax32=umax32=255,var_off=(0x0; 0xff))
+372: (77) r3 >>= 32                   ; frame3: R3=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+; if (kind == 1) { @ kernel_tcp.bpf.c:122
+373: (16) if w5 == 0x2 goto pc+35     ; frame3: R5=scalar(id=11561,smin=smin32=0,smax=umax=smax32=umax32=255,var_off=(0x0; 0xff))
+374: (56) if w5 != 0x1 goto pc+54     ; frame3: R5=1
+; if (i >= bf_ktcp_config.capacity) return 0; @ kernel_tcp.bpf.c:45
+375: (18) r5 = 0xffffce7384e32000     ; frame3: R5=map_value(map=kernel_t.rodata,ks=4,vs=72)
+377: (61) r6 = *(u32 *)(r5 +8)        ; frame3: R5=map_value(map=kernel_t.rodata,ks=4,vs=72) R6=4096
+378: (be) if w6 <= w4 goto pc+299     ; frame3: R4=scalar(id=11544,umax=0xffffffff00000fff,smin32=0,smax32=umax32=4095,var_off=(0x0; 0xffffffff00000fff)) R6=4096
+; return (void *)(x->memory + bf_ktcp_config.conns + i * sizeof(struct bf_ktcp_conn)); @ kernel_tcp.bpf.c:46
+379: (79) r1 = *(u64 *)(r1 +0)        ; frame3: R1=mem(id=1,sz=0x1068000)
+380: (61) r5 = *(u32 *)(r5 +24)       ; frame3: R5=5440
+; if (!c) return -1; @ kernel_tcp.bpf.c:124
+381: (15) if r1 == 0x0 goto pc+296    ; frame3: R1=mem(id=1,sz=0x1068000)
+382: (0f) r1 += r5                    ; frame3: R1=mem(id=1,sz=0x1068000,imm=5440) R5=5440
+383: (27) r3 *= 36                    ; frame3: R3=scalar(smin=0,smax=umax=0x23ffffffdc,smax32=0x7ffffffc,var_off=(0x0; 0x3ffffffffc))
+384: (0f) r1 += r3                    ; frame3: R1=mem(id=1,sz=0x1068000,smin=umin=5440,smax=umax=0x240000151c,smax32=0x7ffffffc,var_off=(0x0; 0x3ffffffffc)) R3=scalar(smin=0,smax=umax=0x23ffffffdc,smax32=0x7ffffffc,var_off=(0x0; 0x3ffffffffc))
+; s->accepting = -1; @ kernel_tcp.bpf.c:125
+385: (63) *(u32 *)(r2 +148) = r0      ; frame3: R0=0xffffffff R2=mem(id=1,sz=0x1068000)
+386: (bf) r3 = r10                    ; frame3: R3=fp0 R10=fp0
+;  @ kernel_tcp.bpf.c:0
+387: (07) r3 += -16                   ; frame3: R3=fp-16
+; if (e.res >= 0) { @ kernel_tcp.bpf.c:126
+388: (61) r5 = *(u32 *)(r3 +8)        ; frame3: R3=fp-16 R5=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) fp-8=ppppscalar()
+389: (c6) if w5 s< 0x0 goto pc+130    ; frame3: R5=scalar(smin=smin32=0,smax=umax=umax32=0x7fffffff,var_off=(0x0; 0x7fffffff))
+; c->fd = e.res; c->next = s->active; s->active = index; @ kernel_tcp.bpf.c:127
+390: (61) r3 = *(u32 *)(r3 +8)        ; frame3: R3=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) fp-8=ppppscalar()
+391: (63) *(u32 *)(r1 +0) = r3
+R1 unbounded memory access, make sure to bounds check any such access
+
+Verification failed: Memory Safety: Access outside bounds
+
+Reason:
+  The verifier cannot prove offset + access_size <= object_size. Here, the maximal bound for a
+  memory access is 154618828060 and exceeds maximum allowed offset of 536870912. R1 is mem; offset
+  is variable: known bits 0x0, unknown mask 0x3ffffffffc; signed range [5440, 154618828060],
+  unsigned range [5440, 154618828060]; access_size is 4; object_size is 17203200.
+
+At:
+  drain_entry @ kernel_tcp.bpf.c:127:23
+  Source context:
+      125 |             s->accepting = -1;
+      126 |             if (e.res >= 0) {
+  >>> 127 |                 c->fd = e.res; c->next = s->active; s->active = index;
+          |                 ^-- error: access may be outside object bounds
+      128 |                 s->connections++; s->accepted++;
+      129 |                 if (s->connections > s->max_connections)
+  Instruction context:
+       389 | (c6) if w5 s< 0x0 goto pc+130
+       390 | (61) r3 = *(u32 *)(r3 +8)
+  >>>  391 | (63) *(u32 *)(r1 +0) = r3
+       392 | (61) r3 = *(u32 *)(r2 +144)
+       393 | (63) *(u32 *)(r1 +4) = r3
+
+Causal path:
+  kernel_tcp_step @ kernel_tcp.bpf.c:531:20
+  Source context:
+      529 | int BPF_PROG(kernel_tcp_step, struct iou_ctx *loop_ctx, struct iou_loop_par...
+      530 | ...
+  >>> 531 |     __u8 *memory = bpf_io_uring_get_region(loop_ctx, IOU_REGION_MEM, bf_ktc...
+          |     ^-- update: R0 changed from uninitialized value to mem_or_null at offset 0
+      532 |     __u8 *rings = bpf_io_uring_get_region(loop_ctx, IOU_REGION_CQ, bf_ktcp_...
+      533 |     __u8 *sq = bpf_io_uring_get_region(loop_ctx, IOU_REGION_SQ,
+  Instruction context:
+         6 | (bf) r1 = r9
+         7 | (b4) w2 = 0
+  >>>    8 | (85) call bpf_io_uring_get_region#100762
+         9 | (bf) r8 = r0
+        10 | (61) r3 = *(u32 *)(r7 +16)
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:531:20
+  Source context:
+      529 | int BPF_PROG(kernel_tcp_step, struct iou_ctx *loop_ctx, struct iou_loop_par...
+      530 | ...
+  >>> 531 |     __u8 *memory = bpf_io_uring_get_region(loop_ctx, IOU_REGION_MEM, bf_ktc...
+          |     ^-- update: R8 changed from uninitialized value to mem_or_null at offset 0
+      532 |     __u8 *rings = bpf_io_uring_get_region(loop_ctx, IOU_REGION_CQ, bf_ktcp_...
+      533 |     __u8 *sq = bpf_io_uring_get_region(loop_ctx, IOU_REGION_SQ,
+  Instruction context:
+         7 | (b4) w2 = 0
+         8 | (85) call bpf_io_uring_get_region#100762
+  >>>    9 | (bf) r8 = r0
+        10 | (61) r3 = *(u32 *)(r7 +16)
+        11 | (b4) w1 = 1
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:535:17
+  Source context:
+      533 |     __u8 *sq = bpf_io_uring_get_region(loop_ctx, IOU_REGION_SQ,
+      534 |                                       bf_ktcp_config.entries*sizeof(struct ...
+  >>> 535 |     if (!memory || !rings || !sq) return IOU_LOOP_STOP;
+          |     ^-- branch: took the false branch of this conditional, goto not followed
+      536 | ...
+      537 |     if (s->loop.finished) return IOU_LOOP_STOP;
+  Instruction context:
+        22 | (85) call bpf_io_uring_get_region#100762
+        23 | (bf) r7 = r0
+  >>>   24 | (15) if r8 == 0x0 goto pc+252
+        25 | (15) if r6 == 0x0 goto pc+251
+        26 | (15) if r7 == 0x0 goto pc+250
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:535:17
+  Source context:
+      533 |     __u8 *sq = bpf_io_uring_get_region(loop_ctx, IOU_REGION_SQ,
+      534 |                                       bf_ktcp_config.entries*sizeof(struct ...
+  >>> 535 |     if (!memory || !rings || !sq) return IOU_LOOP_STOP;
+          |     ^-- branch: took the false branch of this conditional, goto not followed
+      536 | ...
+      537 |     if (s->loop.finished) return IOU_LOOP_STOP;
+  Instruction context:
+        23 | (bf) r7 = r0
+        24 | (15) if r8 == 0x0 goto pc+252
+  >>>   25 | (15) if r6 == 0x0 goto pc+251
+        26 | (15) if r7 == 0x0 goto pc+250
+        27 | (61) r1 = *(u32 *)(r8 +16)
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:535:17
+  Source context:
+      533 |     __u8 *sq = bpf_io_uring_get_region(loop_ctx, IOU_REGION_SQ,
+      534 |                                       bf_ktcp_config.entries*sizeof(struct ...
+  >>> 535 |     if (!memory || !rings || !sq) return IOU_LOOP_STOP;
+          |     ^-- branch: took the false branch of this conditional, goto not followed
+      536 | ...
+      537 |     if (s->loop.finished) return IOU_LOOP_STOP;
+  Instruction context:
+        24 | (15) if r8 == 0x0 goto pc+252
+        25 | (15) if r6 == 0x0 goto pc+251
+  >>>   26 | (15) if r7 == 0x0 goto pc+250
+        27 | (61) r1 = *(u32 *)(r8 +16)
+        28 | (56) if w1 != 0x0 goto pc+248
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:537:9
+  Source context:
+      535 |     if (!memory || !rings || !sq) return IOU_LOOP_STOP;
+      536 | ...
+  >>> 537 |     if (s->loop.finished) return IOU_LOOP_STOP;
+          |     ^-- branch: took the false branch of this conditional, goto not followed
+      538 |     __u64 now = bpf_ktime_get_ns(); s->loop.now_ns = now;
+      539 |     if (!s->loop.model_quiesced && (s->loop.stop_requested ||
+  Instruction context:
+        26 | (15) if r7 == 0x0 goto pc+250
+        27 | (61) r1 = *(u32 *)(r8 +16)
+  >>>   28 | (56) if w1 != 0x0 goto pc+248
+        29 | (85) call bpf_ktime_get_ns#5
+        30 | (bf) r2 = r8
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:539:33
+  Source context:
+      537 |     if (s->loop.finished) return IOU_LOOP_STOP;
+      538 |     __u64 now = bpf_ktime_get_ns(); s->loop.now_ns = now;
+  >>> 539 |     if (!s->loop.model_quiesced && (s->loop.stop_requested ||
+          |     ^-- branch: took the false branch of this conditional, goto not followed
+      540 |         (s->loop.deadline_ns && now >= s->loop.deadline_ns)))
+      541 | ...
+  Instruction context:
+        31 | (7b) *(u64 *)(r2 +40) = r0
+        32 | (61) r1 = *(u32 *)(r2 +12)
+  >>>   33 | (56) if w1 != 0x0 goto pc+5
+        34 | (61) r1 = *(u32 *)(r2 +20)
+        35 | (56) if w1 != 0x0 goto pc+241
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:539:60
+  Source context:
+      537 |     if (s->loop.finished) return IOU_LOOP_STOP;
+      538 |     __u64 now = bpf_ktime_get_ns(); s->loop.now_ns = now;
+  >>> 539 |     if (!s->loop.model_quiesced && (s->loop.stop_requested ||
+          |     ^-- branch: took the false branch of this conditional, goto not followed
+      540 |         (s->loop.deadline_ns && now >= s->loop.deadline_ns)))
+      541 | ...
+  Instruction context:
+        33 | (56) if w1 != 0x0 goto pc+5
+        34 | (61) r1 = *(u32 *)(r2 +20)
+  >>>   35 | (56) if w1 != 0x0 goto pc+241
+        36 | (79) r1 = *(u64 *)(r2 +24)
+        37 | (07) r1 += -1
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:540:30
+  Source context:
+      538 |     __u64 now = bpf_ktime_get_ns(); s->loop.now_ns = now;
+      539 |     if (!s->loop.model_quiesced && (s->loop.stop_requested ||
+  >>> 540 |         (s->loop.deadline_ns && now >= s->loop.deadline_ns)))
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      541 | ...
+      542 |     __u32 zero = 0;
+  Instruction context:
+        36 | (79) r1 = *(u64 *)(r2 +24)
+        37 | (07) r1 += -1
+  >>>   38 | (ad) if r1 < r0 goto pc+238
+        39 | (b4) w1 = 0
+        40 | (63) *(u32 *)(r10 -4) = r1
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:544:9
+  Source context:
+      542 |     __u32 zero = 0;
+      543 |     struct bf_page *page = bpf_map_lookup_elem(&ctl, &zero);
+  >>> 544 |     if (!page) return IOU_LOOP_STOP;
+          |     ^-- branch: took the false branch of this conditional, goto not followed
+      545 |     if (s->loop.model_quiesced || *(volatile __u64 *)&page->stop_ns)
+      546 |         s->stopping = 1;
+  Instruction context:
+        46 | (bf) r9 = r0
+        47 | (b4) w1 = 1
+  >>>   48 | (15) if r9 == 0x0 goto pc+227
+        49 | (bf) r5 = r8
+        50 | (61) r1 = *(u32 *)(r5 +12)
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:544:9
+  Source context:
+      542 |     __u32 zero = 0;
+      543 |     struct bf_page *page = bpf_map_lookup_elem(&ctl, &zero);
+  >>> 544 |     if (!page) return IOU_LOOP_STOP;
+          |     ^-- update: R5 changed from uninitialized value to mem at offset 0
+      545 |     if (s->loop.model_quiesced || *(volatile __u64 *)&page->stop_ns)
+      546 |         s->stopping = 1;
+  Instruction context:
+        47 | (b4) w1 = 1
+        48 | (15) if r9 == 0x0 goto pc+227
+  >>>   49 | (bf) r5 = r8
+        50 | (61) r1 = *(u32 *)(r5 +12)
+        51 | (56) if w1 != 0x0 goto pc+2
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:545:32
+  Source context:
+      543 |     struct bf_page *page = bpf_map_lookup_elem(&ctl, &zero);
+      544 |     if (!page) return IOU_LOOP_STOP;
+  >>> 545 |     if (s->loop.model_quiesced || *(volatile __u64 *)&page->stop_ns)
+          |     ^-- branch: took the false branch of this conditional, goto not followed
+      546 |         s->stopping = 1;
+      547 | ...
+  Instruction context:
+        49 | (bf) r5 = r8
+        50 | (61) r1 = *(u32 *)(r5 +12)
+  >>>   51 | (56) if w1 != 0x0 goto pc+2
+        52 | (79) r1 = *(u64 *)(r9 +40)
+        53 | (15) if r1 == 0x0 goto pc+2
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:545:9
+  Source context:
+      543 |     struct bf_page *page = bpf_map_lookup_elem(&ctl, &zero);
+      544 |     if (!page) return IOU_LOOP_STOP;
+  >>> 545 |     if (s->loop.model_quiesced || *(volatile __u64 *)&page->stop_ns)
+          |     ^-- branch: took the false branch of this conditional, goto not followed
+      546 |         s->stopping = 1;
+      547 | ...
+  Instruction context:
+        51 | (56) if w1 != 0x0 goto pc+2
+        52 | (79) r1 = *(u64 *)(r9 +40)
+  >>>   53 | (15) if r1 == 0x0 goto pc+2
+        54 | (b4) w1 = 1
+        55 | (63) *(u32 *)(r5 +164) = r1
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:548:9
+  Source context:
+      546 |         s->stopping = 1;
+      547 | ...
+  >>> 548 |     if (queued > s->loop.backlog_peak) s->loop.backlog_peak = queued;
+          |     ^-- branch: took the false branch of this conditional, goto not followed
+      549 |     struct step x = {
+      550 | ...
+  Instruction context:
+        57 | (61) r2 = *(u32 *)(r5 +52)
+        58 | (bf) r4 = r6
+  >>>   59 | (be) if w1 <= w2 goto pc+1
+        60 | (63) *(u32 *)(r5 +52) = r1
+        61 | (7b) *(u64 *)(r10 -32) = r9
+
+  kernel_tcp_step @ kernel_tcp.bpf.c:549:21
+  Source context:
+      547 | ...
+      548 |     if (queued > s->loop.backlog_peak) s->loop.backlog_peak = queued;
+  >>> 549 |     struct step x = {
+          |     ^-- spilled: stack slot fp-64 changed from uninitialized value to mem at offset 0
+      550 | ...
+      551 |         .sh=load32((void *)(rings+bf_ktcp_config.sh)),
+  Instruction context:
+        62 | (7b) *(u64 *)(r10 -48) = r7
+        63 | (7b) *(u64 *)(r10 -40) = r5
+  >>>   64 | (7b) *(u64 *)(r10 -64) = r5
+        65 | (7b) *(u64 *)(r10 -56) = r4
+        66 | (18) r1 = 0xffffce7384e32000
+
+  drain_entry @ kernel_tcp.bpf.c:109:13
+  Source context:
+      107 | ...
+      108 | ...
+  >>> 109 |         if (x->cqhead == end) return 1;
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      110 |         __u32 j = x->cqhead & (2 * bf_ktcp_config.entries - 1);
+      111 |         struct io_uring_cqe *cq = (void *)(x->rings + bf_ktcp_config.cqes +
+  Instruction context:
+       324 | (b4) w0 = 1
+       325 | (61) r3 = *(u32 *)(r1 +48)
+  >>>  326 | (1e) if w3 == w2 goto pc+351
+       327 | (79) r2 = *(u64 *)(r1 +24)
+       328 | (18) r4 = 0xffffce7384e32000
+
+  drain_entry @ kernel_tcp.bpf.c:117:23
+  Source context:
+      115 |         x->cqhead++;
+      116 |         __u32 kind = e.user_data >> 56, index = (__u32)e.user_data;
+  >>> 117 |         if (kind == 8 && (e.flags & KTCP_CQE_MORE)) return 0;
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      118 |         if (!s->pending) return -1;
+      119 |         s->pending--;
+  Instruction context:
+       348 | (bf) r3 = r4
+       349 | (77) r3 >>= 56
+  >>>  350 | (56) if w3 != 0x8 goto pc+6
+       351 | (bf) r5 = r10
+       352 | (07) r5 += -16
+
+  drain_entry @ kernel_tcp.bpf.c:117:13
+  Source context:
+      115 |         x->cqhead++;
+      116 |         __u32 kind = e.user_data >> 56, index = (__u32)e.user_data;
+  >>> 117 |         if (kind == 8 && (e.flags & KTCP_CQE_MORE)) return 0;
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      118 |         if (!s->pending) return -1;
+      119 |         s->pending--;
+  Instruction context:
+       354 | (61) r5 = *(u32 *)(r5 +12)
+       355 | (54) w5 &= 2
+  >>>  356 | (56) if w5 != 0x0 goto pc+321
+       357 | (b4) w0 = -1
+       358 | (61) r5 = *(u32 *)(r2 +92)
+
+  drain_entry @ kernel_tcp.bpf.c:118:13
+  Source context:
+      116 |         __u32 kind = e.user_data >> 56, index = (__u32)e.user_data;
+      117 |         if (kind == 8 && (e.flags & KTCP_CQE_MORE)) return 0;
+  >>> 118 |         if (!s->pending) return -1;
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      119 |         s->pending--;
+      120 |         __u32 prefix = e.user_data >> 48;
+  Instruction context:
+       357 | (b4) w0 = -1
+       358 | (61) r5 = *(u32 *)(r2 +92)
+  >>>  359 | (16) if w5 == 0x0 goto pc+318
+       360 | (04) w5 += -1
+       361 | (63) *(u32 *)(r2 +92) = r5
+
+  drain_entry @ kernel_tcp.bpf.c:121:38
+  Source context:
+      119 |         s->pending--;
+      120 |         __u32 prefix = e.user_data >> 48;
+  >>> 121 |         if (prefix == BF_IO_SEND_TAG || prefix == BF_IO_ABORT_TAG) kind = 7;
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      122 |         if (kind == 1) {
+      123 | ...
+  Instruction context:
+       364 | (b4) w5 = 7
+       365 | (b4) w8 = 7
+  >>>  366 | (15) if r7 == 0xbff1 goto pc+1
+       367 | (bc) w8 = w3
+       368 | (bf) r3 = r4
+
+  drain_entry @ kernel_tcp.bpf.c:121:38
+  Source context:
+      119 |         s->pending--;
+      120 |         __u32 prefix = e.user_data >> 48;
+  >>> 121 |         if (prefix == BF_IO_SEND_TAG || prefix == BF_IO_ABORT_TAG) kind = 7;
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      122 |         if (kind == 1) {
+      123 | ...
+  Instruction context:
+       368 | (bf) r3 = r4
+       369 | (67) r3 <<= 32
+  >>>  370 | (15) if r7 == 0xbff0 goto pc+1
+       371 | (bc) w5 = w8
+       372 | (77) r3 >>= 32
+
+  drain_entry @ kernel_tcp.bpf.c:122:13
+  Source context:
+      120 |         __u32 prefix = e.user_data >> 48;
+      121 |         if (prefix == BF_IO_SEND_TAG || prefix == BF_IO_ABORT_TAG) kind = 7;
+  >>> 122 |         if (kind == 1) {
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      123 | ...
+      124 |             if (!c) return -1;
+  Instruction context:
+       371 | (bc) w5 = w8
+       372 | (77) r3 >>= 32
+  >>>  373 | (16) if w5 == 0x2 goto pc+35
+       374 | (56) if w5 != 0x1 goto pc+54
+       375 | (18) r5 = 0xffffce7384e32000
+
+  drain_entry @ kernel_tcp.bpf.c:122:13
+  Source context:
+      120 |         __u32 prefix = e.user_data >> 48;
+      121 |         if (prefix == BF_IO_SEND_TAG || prefix == BF_IO_ABORT_TAG) kind = 7;
+  >>> 122 |         if (kind == 1) {
+          |         ^-- branch: took the true branch of this conditional, goto followed
+      123 | ...
+      124 |             if (!c) return -1;
+  Instruction context:
+       372 | (77) r3 >>= 32
+       373 | (16) if w5 == 0x2 goto pc+35
+  >>>  374 | (56) if w5 != 0x1 goto pc+54
+       375 | (18) r5 = 0xffffce7384e32000
+
+  drain_entry @ kernel_tcp.bpf.c:143:30
+  Source context:
+      141 |             else if (e.res == 0) c->eof = 1;
+      142 |             else if (e.res != -EAGAIN && e.res != -EINTR) c->dead = 1;
+  >>> 143 |         } else if (kind == 3 || kind == 7) {
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      144 |             __u32 i = index % BF_LLM_SLOTS;
+      145 |             struct bf_ktcp_request *r = &s->requests[i];
+  Instruction context:
+       427 | (63) *(u32 *)(r2 +60) = r1
+       428 | (05) goto pc+248
+  >>>  429 | (16) if w5 == 0x7 goto pc+1
+       430 | (56) if w5 != 0x3 goto pc+71
+       431 | (57) r3 &= 15
+
+  drain_entry @ kernel_tcp.bpf.c:143:30
+  Source context:
+      141 |             else if (e.res == 0) c->eof = 1;
+      142 |             else if (e.res != -EAGAIN && e.res != -EINTR) c->dead = 1;
+  >>> 143 |         } else if (kind == 3 || kind == 7) {
+          |         ^-- branch: took the true branch of this conditional, goto followed
+      144 |             __u32 i = index % BF_LLM_SLOTS;
+      145 |             struct bf_ktcp_request *r = &s->requests[i];
+  Instruction context:
+       428 | (05) goto pc+248
+       429 | (16) if w5 == 0x7 goto pc+1
+  >>>  430 | (56) if w5 != 0x3 goto pc+71
+       431 | (57) r3 &= 15
+       432 | (27) r3 *= 72
+
+  drain_entry @ kernel_tcp.bpf.c:164:20
+  Source context:
+      162 | ...
+      163 | ...
+  >>> 164 |         } else if (kind == 4) {
+          |         ^-- branch: took the true branch of this conditional, goto followed
+      165 | ...
+      166 |             if (!c) return -1;
+  Instruction context:
+       501 | (05) goto pc+193
+       502 | (54) w5 &= 255
+  >>>  503 | (66) if w5 s> 0x7 goto pc+4
+       504 | (16) if w5 == 0x4 goto pc+33
+       505 | (16) if w5 == 0x5 goto pc+57
+
+  drain_entry @ kernel_tcp.bpf.c:164:20
+  Source context:
+      162 | ...
+      163 | ...
+  >>> 164 |         } else if (kind == 4) {
+          |         ^-- branch: took the true branch of this conditional, goto followed
+      165 | ...
+      166 |             if (!c) return -1;
+  Instruction context:
+       506 | (16) if w5 == 0x6 goto pc+170
+       507 | (05) goto pc+170
+  >>>  508 | (16) if w5 == 0x8 goto pc+47
+       509 | (16) if w5 == 0x9 goto pc+56
+       510 | (16) if w5 == 0xa goto pc+1
+
+  drain_entry @ kernel_tcp.bpf.c:172:17
+  Source context:
+      170 | ...
+      171 |             s->timeout_active = 0;
+  >>> 172 |             if (e.res != -ECANCELED) return -1;
+          |             ^-- branch: took the false branch of this conditional, goto not followed
+      173 | ...
+      174 |             if (e.res == -ENOENT) s->timeout_removing = 0;
+  Instruction context:
+       559 | (07) r1 += -16
+       560 | (61) r1 = *(u32 *)(r1 +8)
+  >>>  561 | (16) if w1 == 0xffffff83 goto pc+115
+       562 | (05) goto pc+115
+       563 | (b4) w1 = 1
+
+  drain_callback @ kernel_tcp.bpf.c:191:8
+  Source context:
+      189 | ...
+      190 |     int result=drain_entry(context->x,context->end);
+  >>> 191 |     if(result<0)context->failed=1;
+          |     ^-- branch: took the false branch of this conditional, goto not followed
+      192 |     return result!=0;
+      193 | ...
+  Instruction context:
+       314 | (79) r1 = *(u64 *)(r6 +0)
+       315 | (85) call pc+8
+  >>>  316 | (66) if w0 s> 0xffffffff goto pc+2
+       317 | (b4) w1 = 1
+       318 | (63) *(u32 *)(r6 +12) = r1
+
+  drain_callback @ kernel_tcp.bpf.c:192:18
+  Source context:
+      190 |     int result=drain_entry(context->x,context->end);
+      191 |     if(result<0)context->failed=1;
+  >>> 192 |     return result!=0;
+          |     ^-- branch: took the true branch of this conditional, goto followed
+      193 | ...
+      194 | ...
+  Instruction context:
+       318 | (63) *(u32 *)(r6 +12) = r1
+       319 | (b4) w1 = 1
+  >>>  320 | (56) if w0 != 0x0 goto pc+1
+       321 | (b4) w1 = 0
+       322 | (bf) r0 = r1
+
+  drain_entry @ kernel_tcp.bpf.c:109:13
+  Source context:
+      107 | ...
+      108 | ...
+  >>> 109 |         if (x->cqhead == end) return 1;
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      110 |         __u32 j = x->cqhead & (2 * bf_ktcp_config.entries - 1);
+      111 |         struct io_uring_cqe *cq = (void *)(x->rings + bf_ktcp_config.cqes +
+  Instruction context:
+       324 | (b4) w0 = 1
+       325 | (61) r3 = *(u32 *)(r1 +48)
+  >>>  326 | (1e) if w3 == w2 goto pc+351
+       327 | (79) r2 = *(u64 *)(r1 +24)
+       328 | (18) r4 = 0xffffce7384e32000
+
+  drain_entry @ kernel_tcp.bpf.c:117:23
+  Source context:
+      115 |         x->cqhead++;
+      116 |         __u32 kind = e.user_data >> 56, index = (__u32)e.user_data;
+  >>> 117 |         if (kind == 8 && (e.flags & KTCP_CQE_MORE)) return 0;
+          |         ^-- branch: took the true branch of this conditional, goto followed
+      118 |         if (!s->pending) return -1;
+      119 |         s->pending--;
+  Instruction context:
+       348 | (bf) r3 = r4
+       349 | (77) r3 >>= 56
+  >>>  350 | (56) if w3 != 0x8 goto pc+6
+       351 | (bf) r5 = r10
+       352 | (07) r5 += -16
+
+  drain_entry @ kernel_tcp.bpf.c:118:13
+  Source context:
+      116 |         __u32 kind = e.user_data >> 56, index = (__u32)e.user_data;
+      117 |         if (kind == 8 && (e.flags & KTCP_CQE_MORE)) return 0;
+  >>> 118 |         if (!s->pending) return -1;
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      119 |         s->pending--;
+      120 |         __u32 prefix = e.user_data >> 48;
+  Instruction context:
+       357 | (b4) w0 = -1
+       358 | (61) r5 = *(u32 *)(r2 +92)
+  >>>  359 | (16) if w5 == 0x0 goto pc+318
+       360 | (04) w5 += -1
+       361 | (63) *(u32 *)(r2 +92) = r5
+
+  drain_entry @ kernel_tcp.bpf.c:121:38
+  Source context:
+      119 |         s->pending--;
+      120 |         __u32 prefix = e.user_data >> 48;
+  >>> 121 |         if (prefix == BF_IO_SEND_TAG || prefix == BF_IO_ABORT_TAG) kind = 7;
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      122 |         if (kind == 1) {
+      123 | ...
+  Instruction context:
+       364 | (b4) w5 = 7
+       365 | (b4) w8 = 7
+  >>>  366 | (15) if r7 == 0xbff1 goto pc+1
+       367 | (bc) w8 = w3
+       368 | (bf) r3 = r4
+
+  drain_entry @ kernel_tcp.bpf.c:121:38
+  Source context:
+      119 |         s->pending--;
+      120 |         __u32 prefix = e.user_data >> 48;
+  >>> 121 |         if (prefix == BF_IO_SEND_TAG || prefix == BF_IO_ABORT_TAG) kind = 7;
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      122 |         if (kind == 1) {
+      123 | ...
+  Instruction context:
+       368 | (bf) r3 = r4
+       369 | (67) r3 <<= 32
+  >>>  370 | (15) if r7 == 0xbff0 goto pc+1
+       371 | (bc) w5 = w8
+       372 | (77) r3 >>= 32
+
+  drain_entry @ kernel_tcp.bpf.c:122:13
+  Source context:
+      120 |         __u32 prefix = e.user_data >> 48;
+      121 |         if (prefix == BF_IO_SEND_TAG || prefix == BF_IO_ABORT_TAG) kind = 7;
+  >>> 122 |         if (kind == 1) {
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      123 | ...
+      124 |             if (!c) return -1;
+  Instruction context:
+       371 | (bc) w5 = w8
+       372 | (77) r3 >>= 32
+  >>>  373 | (16) if w5 == 0x2 goto pc+35
+       374 | (56) if w5 != 0x1 goto pc+54
+       375 | (18) r5 = 0xffffce7384e32000
+
+  drain_entry @ kernel_tcp.bpf.c:122:13
+  Source context:
+      120 |         __u32 prefix = e.user_data >> 48;
+      121 |         if (prefix == BF_IO_SEND_TAG || prefix == BF_IO_ABORT_TAG) kind = 7;
+  >>> 122 |         if (kind == 1) {
+          |         ^-- branch: took the false branch of this conditional, goto not followed
+      123 | ...
+      124 |             if (!c) return -1;
+  Instruction context:
+       372 | (77) r3 >>= 32
+       373 | (16) if w5 == 0x2 goto pc+35
+  >>>  374 | (56) if w5 != 0x1 goto pc+54
+       375 | (18) r5 = 0xffffce7384e32000
+
+  drain_entry @ kernel_tcp.bpf.c:45:9
+  Source context:
+      43 | ...
+      44 | ...
+  >>> 45 |     if (i >= bf_ktcp_config.capacity) return 0;
+         |     ^-- branch: took the false branch of this conditional, goto not followed
+      46 |     return (void *)(x->memory + bf_ktcp_config.conns + i * sizeof(struct bf_...
+      47 | ...
+  Instruction context:
+       377 | (61) r6 = *(u32 *)(r5 +8)
+  >>>  378 | (be) if w6 <= w4 goto pc+299
+       379 | (79) r1 = *(u64 *)(r1 +0)
+       380 | (61) r5 = *(u32 *)(r5 +24)
+
+  drain_entry @ kernel_tcp.bpf.c:46:24
+  Source context:
+      44 | ...
+      45 |     if (i >= bf_ktcp_config.capacity) return 0;
+  >>> 46 |     return (void *)(x->memory + bf_ktcp_config.conns + i * sizeof(struct bf_...
+         |     ^-- update: R1 changed from stack pointer at offset -64 to mem at offset 0
+      47 | ...
+      48 | ...
+  Instruction context:
+       377 | (61) r6 = *(u32 *)(r5 +8)
+       378 | (be) if w6 <= w4 goto pc+299
+  >>>  379 | (79) r1 = *(u64 *)(r1 +0)
+       380 | (61) r5 = *(u32 *)(r5 +24)
+       381 | (15) if r1 == 0x0 goto pc+296
+
+  drain_entry @ kernel_tcp.bpf.c:124:17
+  Source context:
+      122 |         if (kind == 1) {
+      123 | ...
+  >>> 124 |             if (!c) return -1;
+          |             ^-- branch: took the false branch of this conditional, goto not followed
+      125 |             s->accepting = -1;
+      126 |             if (e.res >= 0) {
+  Instruction context:
+       379 | (79) r1 = *(u64 *)(r1 +0)
+       380 | (61) r5 = *(u32 *)(r5 +24)
+  >>>  381 | (15) if r1 == 0x0 goto pc+296
+       382 | (0f) r1 += r5
+       383 | (27) r3 *= 36
+
+  drain_entry @ kernel_tcp.bpf.c:124:17
+  Source context:
+      122 |         if (kind == 1) {
+      123 | ...
+  >>> 124 |             if (!c) return -1;
+          |             ^-- update: R1 changed from mem at offset 0 to mem at offset 5440
+      125 |             s->accepting = -1;
+      126 |             if (e.res >= 0) {
+  Instruction context:
+       380 | (61) r5 = *(u32 *)(r5 +24)
+       381 | (15) if r1 == 0x0 goto pc+296
+  >>>  382 | (0f) r1 += r5
+       383 | (27) r3 *= 36
+       384 | (0f) r1 += r3
+
+  drain_entry @ kernel_tcp.bpf.c:124:17
+  Source context:
+      122 |         if (kind == 1) {
+      123 | ...
+  >>> 124 |             if (!c) return -1;
+          |             ^-- update: R1 changed from mem at offset 5440 to mem with variable offset:
+          |                 known bits 0x0, unknown mask 0x3ffffffffc, signed range [5440,
+          |                 154618828060], unsigned range [5440, 154618828060]
+      125 |             s->accepting = -1;
+      126 |             if (e.res >= 0) {
+  Instruction context:
+       382 | (0f) r1 += r5
+       383 | (27) r3 *= 36
+  >>>  384 | (0f) r1 += r3
+       385 | (63) *(u32 *)(r2 +148) = r0
+       386 | (bf) r3 = r10
+
+  drain_entry @ kernel_tcp.bpf.c:126:17
+  Source context:
+      124 |             if (!c) return -1;
+      125 |             s->accepting = -1;
+  >>> 126 |             if (e.res >= 0) {
+          |             ^-- branch: took the false branch of this conditional, goto not followed
+      127 |                 c->fd = e.res; c->next = s->active; s->active = index;
+      128 |                 s->connections++; s->accepted++;
+  Instruction context:
+       387 | (07) r3 += -16
+       388 | (61) r5 = *(u32 *)(r3 +8)
+  >>>  389 | (c6) if w5 s< 0x0 goto pc+130
+       390 | (61) r3 = *(u32 *)(r3 +8)
+       391 | (63) *(u32 *)(r1 +0) = r3
+
+Suggestion:
+  Add or adjust a bounds check that proves offset + access_size stays within the object.
+
+processed 219193 insns (limit 1000000) max_states_per_insn 40 total_states 9136 peak_states 11746 mark_read 0
+-- END PROG LOAD LOG --
+libbpf: prog 'kernel_tcp_step': failed to load: -EACCES
+libbpf: failed to load object '/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16/kernel_tcp.bpf.o'

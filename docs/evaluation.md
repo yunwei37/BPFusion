@@ -1708,3 +1708,26 @@ reuses0075 summaries: selected-before minus native mean completion+49.744ms,
 TTFT+49.286ms, first-to-last receive span+0.457ms. Mean identity holds for all
 15 cells; it does not decompose marginal P99, identify an internal stage or
 replace the current GPU diagnostic. Overload/backlog is a plausible inference.
+
+### 2026-10-16 current controller stage timing: complete supporting evidence
+
+[Finding0076](findings/0076-current-controller-stage-time.md) and its
+[complete result](../bench/results/controller_stage_time_20261016/result.md)
+close the admitted same-compute serving diagnostic. Five blocks/four conditions,
+230400successes/14745600 measured tokens; all raw/clock/count/replay checks,
+byte-identical archive analysis and [fresh result review](../bench/results/controller_stage_time_20261016/result-review.md)
+pass for the narrow instrumented constructor. Primary LI-minus-NI active dispatch
++1.276054[1.154234,1.397874]us/launch supports the stage association.
+Material instrumentation overhead prevents ordinary causal allocation.
+Ordinary loop remains24.638tokens/s slower, completionP99+130.692ms and owned
+groupCPU0.162614ms/attempt lower; receive-gap difference is inconclusive.
+
+Research value supporting/additional RQ evidence and a mechanism boundary,
+not a speedup, model-kernel optimization or old6.36ms explanation. Current
+independent GPU networking overlaps dispatch/model; times are never summed.
+All1051 pool flags remain, finite dual replay is not eager/general parity.
+Actual client cleanup/original source/session preservation is recorded.
+Next decision: keep0074 and test a distinct network-placement mechanism with
+ordinary controls. The private kernel-owned BPF candidate now compiles/loads
+verifier-only at8/16 with identical GPU dispatch; application/correctness and
+performance are still unproven. No source/default adoption from this diagnostic.

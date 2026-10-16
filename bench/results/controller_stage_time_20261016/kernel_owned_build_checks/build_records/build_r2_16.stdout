@@ -1,0 +1,7 @@
+clang -DBF_LLM_SLOTS=16 -I/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype -I/workspaces/repository/executor -DBF_BUILD_DIR='"/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16"' -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -Ibpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value -c /tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c -o /tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16/kernel_tcp.bpf.o
+ln -sf /workspaces/repository/executor/vllm_mixed.py /tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16/vllm_mixed_uring_loop
+ln -sf /workspaces/repository/executor/vllm_mixed.py /tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16/vllm_mixed_user_network_wait
+ln -sf /workspaces/repository/executor/vllm_mixed.py /tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16/vllm_mixed_uring_loop_trace
+ln -sf /workspaces/repository/executor/vllm_mixed.py /tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16/vllm_mixed_user_network_wait_trace
+make: '/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16/bpfusion_load' is up to date.
+make: '/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16/fusion.bpf.o' is up to date.

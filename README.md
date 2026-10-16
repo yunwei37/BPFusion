@@ -126,6 +126,10 @@ forced into a Python per-token loop.
   current creator-thread sampling selects BPF coordination/admission as a
   material cost. It motivates a matched waiting-policy intervention; sampling
   alone proves no avoidability or speedup.
+- [Current stage diagnosis](docs/findings/0076-current-controller-stage-time.md):
+  the complete20-cell experiment finds a small instrumented dispatch difference;
+  instrumentation itself affects delivery. Ordinary loop still has lower owned
+  CPU but slower TPS/completionP99. Historical6.36ms is not explained or repaired.
 - [Opaque graph backend](docs/findings/0067-opaque-graph-backend.md):cuBLAS/cuFFT
   ordinary default8 numerical/lifecycle checks pass on both transports.
 - [Fair native admission](docs/findings/0063-fair-native-admission.md):

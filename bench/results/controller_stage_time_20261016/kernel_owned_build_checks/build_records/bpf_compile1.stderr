@@ -1,0 +1,52 @@
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:449:47: error: redefinition of parameter 'ctx'
+  449 | int BPF_PROG(kernel_tcp_step, struct iou_ctx *ctx, struct iou_loop_params *lp)
+      |                                               ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:449:5: note: previous declaration is here
+  449 | int BPF_PROG(kernel_tcp_step, struct iou_ctx *ctx, struct iou_loop_params *lp)
+      |     ^
+/usr/include/bpf/bpf_tracing.h:668:32: note: expanded from macro 'BPF_PROG'
+  668 | ____##name(unsigned long long *ctx, ##args);                                \
+      |                                ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:449:47: error: redefinition of parameter 'ctx'
+  449 | int BPF_PROG(kernel_tcp_step, struct iou_ctx *ctx, struct iou_loop_params *lp)
+      |                                               ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:449:5: note: previous declaration is here
+  449 | int BPF_PROG(kernel_tcp_step, struct iou_ctx *ctx, struct iou_loop_params *lp)
+      |     ^
+/usr/include/bpf/bpf_tracing.h:677:32: note: expanded from macro 'BPF_PROG'
+  677 | ____##name(unsigned long long *ctx, ##args)
+      |                                ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:449:47: error: omitting the parameter name in a function definition is a C23 extension [-Werror,-Wc23-extensions]
+  449 | int BPF_PROG(kernel_tcp_step, struct iou_ctx *ctx, struct iou_loop_params *lp)
+      |                                               ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:451:44: error: incompatible pointer types passing 'unsigned long long *' to parameter of type 'struct iou_ctx *' [-Werror,-Wincompatible-pointer-types]
+  451 |     __u8 *memory = bpf_io_uring_get_region(ctx, IOU_REGION_MEM, bf_ktcp_config.mem_bytes);
+      |                                            ^~~
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:17:54: note: passing argument to parameter here
+   17 | extern __u8 *bpf_io_uring_get_region(struct iou_ctx *, __u32, const size_t) __ksym;
+      |                                                      ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:452:43: error: incompatible pointer types passing 'unsigned long long *' to parameter of type 'struct iou_ctx *' [-Werror,-Wincompatible-pointer-types]
+  452 |     __u8 *rings = bpf_io_uring_get_region(ctx, IOU_REGION_CQ, bf_ktcp_config.ring_bytes);
+      |                                           ^~~
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:17:54: note: passing argument to parameter here
+   17 | extern __u8 *bpf_io_uring_get_region(struct iou_ctx *, __u32, const size_t) __ksym;
+      |                                                      ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:453:40: error: incompatible pointer types passing 'unsigned long long *' to parameter of type 'struct iou_ctx *' [-Werror,-Wincompatible-pointer-types]
+  453 |     __u8 *sq = bpf_io_uring_get_region(ctx, IOU_REGION_SQ,
+      |                                        ^~~
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:17:54: note: passing argument to parameter here
+   17 | extern __u8 *bpf_io_uring_get_region(struct iou_ctx *, __u32, const size_t) __ksym;
+      |                                                      ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:485:23: error: incompatible pointer types passing 'unsigned long long *' to parameter of type 'struct iou_ctx *' [-Werror,-Wincompatible-pointer-types]
+  485 |         if (submit(&x,ctx)) {s->error=3;return IOU_LOOP_STOP;}
+      |                       ^~~
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:442:67: note: passing argument to parameter 'ctx' here
+  442 | static __always_inline int submit(struct step *x, struct iou_ctx *ctx)
+      |                                                                   ^
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:496:19: error: incompatible pointer types passing 'unsigned long long *' to parameter of type 'struct iou_ctx *' [-Werror,-Wincompatible-pointer-types]
+  496 |     if (submit(&x,ctx)) {s->error=8;return IOU_LOOP_STOP;}
+      |                   ^~~
+/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c:442:67: note: passing argument to parameter 'ctx' here
+  442 | static __always_inline int submit(struct step *x, struct iou_ctx *ctx)
+      |                                                                   ^
+8 errors generated.

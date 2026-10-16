@@ -1,0 +1,18 @@
+{
+  "command": [
+    "g++",
+    "-std=c++17",
+    "-fsyntax-only",
+    "-x",
+    "c++",
+    "-DBF_LLM_SLOTS=16",
+    "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16\"",
+    "-I/usr/local/cuda/include",
+    "-I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi",
+    "-Ibpf/include",
+    "-I/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.h"
+  ],
+  "exit": 0,
+  "utc": "2026-10-16T18:58:07.648331+00:00"
+}

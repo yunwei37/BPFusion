@@ -73,3 +73,12 @@ production. No compile/verifier/runtime/performance/adoption evidence exists.
 The source draft does not change the active matrix or its hypothesis. Its
 purpose is to make a possible next constructor concrete for review, while
 runtime work waits for the current integrated result and selection decision.
+
+## Later engineering status
+
+The separate [build record](kernel_owned_build_checks/engineering.md) now
+preserves ordinary8/16 compilation, real verifier rejection/fixes and final
+matching8/16 successful verifier-only loads. The initial draft above remains
+historical/uncompiled; current private source is under
+kernel_owned_build_checks/verifier_accepted_source/. No BPF link/listener/I/O
+or model execution has occurred for this candidate and no default changed.

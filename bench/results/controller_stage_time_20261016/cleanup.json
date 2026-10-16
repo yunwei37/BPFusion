@@ -1,0 +1,41 @@
+{
+  "utc": "2026-10-16T20:20:03.574136+00:00",
+  "original_processes": {
+    "1": {
+      "start_ticks": 8626595,
+      "cmdline": "./coder agent "
+    },
+    "10909": {
+      "start_ticks": 8662925,
+      "cmdline": "./coder agent --no-reap "
+    }
+  },
+  "production_diff_empty": true,
+  "foreign_setup_env_preserved": true,
+  "bpfusion_pins": [],
+  "gpu_compute_apps": "",
+  "client_cleanup": {
+    "job": "bpfusion-sustained-client-20261016",
+    "job_uid": "69871842-aba2-4d0a-a79e-9353c7139acd",
+    "pod": "bpfusion-sustained-client-20261016-kn2jb",
+    "pod_uid": "9b9fc657-3434-421e-b4e9-5054e97bba46",
+    "uid_checked_before_delete": true,
+    "job_deleted": true,
+    "subsequent_job_and_pod_absent": true,
+    "method": "owning Kubernetes Job delete; kubectl-home --ignore-not-found -o name returns empty for both after termination"
+  },
+  "nodes_ready": [
+    "g10",
+    "g485",
+    "lab",
+    "phobos-vt",
+    "raspberrypi",
+    "spark-44d7",
+    "spark-9773",
+    "spark-d1d8",
+    "spark-d5fe",
+    "um760",
+    "will"
+  ],
+  "disk": "Filesystem                                              Size  Used Avail Use% Mounted on\n/dev/longhorn/pvc-5d1b0ce5-fbee-43ef-93f1-d433037bb5e4   32G   20G   12G  62% /workspaces\noverlay                                                 1.8T  1.6T  250G  87% /\n"
+}

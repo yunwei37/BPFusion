@@ -1,0 +1,25 @@
+{
+  "command": [
+    "clang",
+    "-DBF_LLM_SLOTS=16",
+    "-O2",
+    "-g",
+    "-target",
+    "bpf",
+    "-mcpu=v3",
+    "-D__TARGET_ARCH_x86",
+    "-I/usr/include/x86_64-linux-gnu",
+    "-Ibpf/include",
+    "-I/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype",
+    "-Wall",
+    "-Werror",
+    "-Wno-missing-declarations",
+    "-Wno-unused-value",
+    "-c",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.c",
+    "-o",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/kernel_tcp.bpf.o"
+  ],
+  "exit": 1,
+  "utc": "2026-10-16T18:58:07.572378+00:00"
+}

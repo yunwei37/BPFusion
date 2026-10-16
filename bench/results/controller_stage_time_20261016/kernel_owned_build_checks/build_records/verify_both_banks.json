@@ -1,0 +1,58 @@
+[
+  {
+    "banks": 8,
+    "compile_command": [
+      "g++",
+      "-O2",
+      "-std=c++17",
+      "-DBF_LLM_SLOTS=8",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build8\"",
+      "-I/usr/local/cuda/include",
+      "-I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi",
+      "-Ibpf/include",
+      "-I/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/verify_load.cpp",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/verify_load_banks8",
+      "-lbpf",
+      "-lelf",
+      "-lz"
+    ],
+    "compile_exit": 0,
+    "load_command": [
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/verify_load_banks8",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build8/kernel_tcp.bpf.o",
+      "4096"
+    ],
+    "load_exit": 0,
+    "utc": "2026-10-16T20:18:20.306408+00:00"
+  },
+  {
+    "banks": 16,
+    "compile_command": [
+      "g++",
+      "-O2",
+      "-std=c++17",
+      "-DBF_LLM_SLOTS=16",
+      "-DBF_BUILD_DIR=\"/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16\"",
+      "-I/usr/local/cuda/include",
+      "-I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi",
+      "-Ibpf/include",
+      "-I/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/verify_load.cpp",
+      "-o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/verify_load_banks16",
+      "-lbpf",
+      "-lelf",
+      "-lz"
+    ],
+    "compile_exit": 0,
+    "load_command": [
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype/verify_load_banks16",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_build16/kernel_tcp.bpf.o",
+      "4096"
+    ],
+    "load_exit": 0,
+    "utc": "2026-10-16T20:18:20.761250+00:00"
+  }
+]
