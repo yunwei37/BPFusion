@@ -1,0 +1,660 @@
+(APIServer pid=719556) INFO 10-16 10:16:16 [api_utils.py:347] 
+(APIServer pid=719556) INFO 10-16 10:16:16 [api_utils.py:347]        █     █     █▄   ▄█
+(APIServer pid=719556) INFO 10-16 10:16:16 [api_utils.py:347]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.31.0
+(APIServer pid=719556) INFO 10-16 10:16:16 [api_utils.py:347]   █▄█▀ █     █     █     █  model   /workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775
+(APIServer pid=719556) INFO 10-16 10:16:16 [api_utils.py:347]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=719556) INFO 10-16 10:16:16 [api_utils.py:347] 
+(APIServer pid=719556) INFO 10-16 10:16:16 [api_utils.py:286] non-default args: {'model_tag': '/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775', 'tokens_only': True, 'host': '127.0.0.1', 'port': 39404, 'model': '/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775', 'dtype': 'half'}
+(APIServer pid=719556) INFO 10-16 10:16:16 [model.py:699] Resolved architecture: Qwen2ForCausalLM
+(APIServer pid=719556) WARNING 10-16 10:16:16 [model.py:2442] Casting torch.bfloat16 to torch.float16.
+(APIServer pid=719556) INFO 10-16 10:16:16 [model.py:2109] Using max model len 32768
+(APIServer pid=719556) INFO 10-16 10:16:16 [arg_utils.py:2461] Skipping tokenizer initialization for tokens-only mode.
+(APIServer pid=719556) INFO 10-16 10:16:16 [kernel.py:408] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(EngineCore pid=719614) INFO 10-16 10:16:21 [core.py:129] Initializing a V1 LLM engine (v0.31.0) with config: model='/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775', speculative_config=None, tokenizer='/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775', skip_tokenizer_init=True, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, max_seq_len=32768, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [2048], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(EngineCore pid=719614) INFO 10-16 10:16:22 [parallel_state.py:1825] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_d40e1bfbf8dc4c3db682d227011e03c7 backend=nccl
+(EngineCore pid=719614) INFO 10-16 10:16:22 [parallel_state.py:2269] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=719614) INFO 10-16 10:16:22 [gpu_worker.py:479] Using V2 Model Runner
+(EngineCore pid=719614) INFO 10-16 10:16:23 [model_runner.py:375] Loading model from scratch...
+(EngineCore pid=719614) INFO 10-16 10:16:24 [cuda.py:526] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].
+(EngineCore pid=719614) INFO 10-16 10:16:24 [flash_attn.py:1167] Using FlashAttention version 2
+<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(EngineCore pid=719614) INFO 10-16 10:16:24 [weight_utils.py:1063] Filesystem type for checkpoints: EXT4. Checkpoint size: 0.92 GiB. Available RAM: 92.31 GiB.
+(EngineCore pid=719614) INFO 10-16 10:16:24 [weight_utils.py:1086] Auto-prefetch is disabled because the filesystem (EXT4) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:02<00:00,  2.56s/it]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:02<00:00,  2.56s/it]
+
+(EngineCore pid=719614) INFO 10-16 10:16:26 [default_loader.py:484] Loading weights took 2.59 seconds
+(EngineCore pid=719614) INFO 10-16 10:16:27 [model_runner.py:407] Model loading took 0.93 GiB memory and 4.288650 seconds
+(EngineCore pid=719614) INFO 10-16 10:16:27 [topk_topp_sampler.py:124] Using FlashInfer for top-p & top-k sampling.
+(EngineCore pid=719614) INFO 10-16 10:16:27 [torch_utils.py:286] Reducing Torch threads from 24 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=719614) INFO 10-16 10:16:27 [utils.py:343] Using LBNHC KV cache layout.
+(EngineCore pid=719614) INFO 10-16 10:16:28 [caching.py:342] reconstructed serializable fn from standalone compile artifacts. num_artifacts=3 num_submods=25
+(EngineCore pid=719614) INFO 10-16 10:16:28 [decorators.py:312] Directly load AOT compilation from path /root/.cache/vllm/torch_compile_cache/torch_aot_compile/68d3cef1ba4ddb8d2c57c5edefde42945781dd7d8ecb32c417873827a042d218/rank_0_0/model
+(EngineCore pid=719614) INFO 10-16 10:16:28 [monitor.py:53] torch.compile took 0.58 s in total
+(EngineCore pid=719614) INFO 10-16 10:16:28 [monitor.py:81] Initial profiling/warmup run took 0.15 s
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]Capturing CUDA graphs (PIECEWISE):   4%|▍         | 2/51 [00:00<00:02, 19.45it/s]Capturing CUDA graphs (PIECEWISE):  16%|█▌        | 8/51 [00:00<00:01, 40.92it/s]Capturing CUDA graphs (PIECEWISE):  27%|██▋       | 14/51 [00:00<00:00, 46.82it/s]Capturing CUDA graphs (PIECEWISE):  37%|███▋      | 19/51 [00:00<00:00, 39.77it/s]Capturing CUDA graphs (PIECEWISE):  49%|████▉     | 25/51 [00:00<00:00, 44.60it/s]Capturing CUDA graphs (PIECEWISE):  61%|██████    | 31/51 [00:00<00:00, 47.51it/s]Capturing CUDA graphs (PIECEWISE):  73%|███████▎  | 37/51 [00:00<00:00, 49.04it/s]Capturing CUDA graphs (PIECEWISE):  82%|████████▏ | 42/51 [00:00<00:00, 49.04it/s]Capturing CUDA graphs (PIECEWISE):  94%|█████████▍| 48/51 [00:01<00:00, 50.14it/s]Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:01<00:00, 45.72it/s]
+Capturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:00<00:00, 66.64it/s]
+(EngineCore pid=719614) INFO 10-16 10:16:31 [model_runner.py:1087] Graph capturing finished in 2 secs, took 0.22 GiB
+(EngineCore pid=719614) INFO 10-16 10:16:31 [gpu_worker.py:692] Available KV cache memory: 27.17 GiB
+(EngineCore pid=719614) INFO 10-16 10:16:31 [gpu_worker.py:707] CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.9200 is equivalent to --gpu-memory-utilization=0.9113 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.9287. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+(EngineCore pid=719614) INFO 10-16 10:16:31 [kv_cache_utils.py:2464] GPU KV cache size: 2,374,096 tokens, Maximum concurrency for 32,768 tokens per request: 72.45x
+(EngineCore pid=719614) INFO 10-16 10:16:31 [kernel_warmup.py:172] JIT kernel warmup starting.
+(EngineCore pid=719614) INFO 10-16 10:16:31 [kernel_warmup.py:185] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=719614) INFO 10-16 10:16:31 [kernel_warmup.py:437] Using FlashInfer autotune cache file: /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/fcd9b1afeb85c3da55488eccb205dc7f577dcfa21ce72baab414cbd3406e917e/autotune_configs.json
+2026-10-16 10:16:31,787 - INFO - autotuner.py:3691 - flashinfer.jit: [Autotuner]: Loaded 0 configs from /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/fcd9b1afeb85c3da55488eccb205dc7f577dcfa21ce72baab414cbd3406e917e/autotune_configs.json
+2026-10-16 10:16:31,787 - INFO - autotuner.py:1046 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+(EngineCore pid=719614) INFO 10-16 10:16:31 [kernel_warmup.py:359] Running FlashInfer autotune with 2048 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048).
+2026-10-16 10:16:31,801 - INFO - autotuner.py:1069 - flashinfer.jit: [Autotuner]: Autotuning process ends
+2026-10-16 10:16:31,802 - INFO - autotuner.py:3554 - flashinfer.jit: [Autotuner]: Saved 0 configs to /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/fcd9b1afeb85c3da55488eccb205dc7f577dcfa21ce72baab414cbd3406e917e/autotune_configs.json (0 new, 0 from previous config)
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]Capturing CUDA graphs (PIECEWISE):  12%|█▏        | 6/51 [00:00<00:00, 57.98it/s]Capturing CUDA graphs (PIECEWISE):  24%|██▎       | 12/51 [00:00<00:00, 58.70it/s]Capturing CUDA graphs (PIECEWISE):  35%|███▌      | 18/51 [00:00<00:00, 57.60it/s]Capturing CUDA graphs (PIECEWISE):  47%|████▋     | 24/51 [00:00<00:00, 55.45it/s]Capturing CUDA graphs (PIECEWISE):  59%|█████▉    | 30/51 [00:00<00:00, 54.39it/s]Capturing CUDA graphs (PIECEWISE):  71%|███████   | 36/51 [00:00<00:00, 53.86it/s]Capturing CUDA graphs (PIECEWISE):  82%|████████▏ | 42/51 [00:00<00:00, 53.49it/s]Capturing CUDA graphs (PIECEWISE):  94%|█████████▍| 48/51 [00:00<00:00, 54.01it/s]Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:00<00:00, 54.89it/s]
+Capturing CUDA graphs (FULL):   0%|          | 0/35 [00:00<?, ?it/s]Capturing CUDA graphs (FULL):  23%|██▎       | 8/35 [00:00<00:00, 72.58it/s]Capturing CUDA graphs (FULL):  46%|████▌     | 16/35 [00:00<00:00, 72.21it/s]Capturing CUDA graphs (FULL):  69%|██████▊   | 24/35 [00:00<00:00, 49.63it/s]Capturing CUDA graphs (FULL):  91%|█████████▏| 32/35 [00:00<00:00, 58.07it/s]Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:00<00:00, 60.38it/s]
+(EngineCore pid=719614) INFO 10-16 10:16:33 [model_runner.py:1087] Graph capturing finished in 2 secs, took 0.09 GiB
+(EngineCore pid=719614) INFO 10-16 10:16:33 [gpu_worker.py:892] CUDA graph pool memory: 0.09 GiB (actual), 0.27 GiB (estimated), difference: 0.18 GiB (197.9%).
+(EngineCore pid=719614) INFO 10-16 10:16:33 [gpu_worker.py:955] Free memory on device (30.89/31.4 GiB) on startup. Desired GPU memory utilization is (0.92, 28.88 GiB). Actual usage is 1.36 GiB for consumed memory (weights + non-torch), 0.35 GiB for peak activation, and 0.09 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=28917044081` (26.93 GiB) to fit into requested memory, or `--kv-cache-memory=31067723264` (28.93 GiB) to fully utilize gpu memory. Current kv cache memory in use is 27.17 GiB.
+(EngineCore pid=719614) INFO 10-16 10:16:34 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=719614) INFO 10-16 10:16:34 [core.py:373] init engine (profile, create kv cache, warmup model) took 7.28 s (compilation: 0.58 s)
+(EngineCore pid=719614) INFO 10-16 10:16:34 [kernel.py:408] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(APIServer pid=719556) INFO 10-16 10:16:34 [entry.py:132] Supported tasks: ['generate']
+(APIServer pid=719556) WARNING 10-16 10:16:34 [base.py:355] Chat template warmup failed
+(APIServer pid=719556) WARNING 10-16 10:16:34 [base.py:355] Traceback (most recent call last):
+(APIServer pid=719556) WARNING 10-16 10:16:34 [base.py:355]   File "/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/vllm/renderers/base.py", line 348, in warmup
+(APIServer pid=719556) WARNING 10-16 10:16:34 [base.py:355]     self.render_chat([[{"role": "user", "content": "warmup"}]], chat_params)
+(APIServer pid=719556) WARNING 10-16 10:16:34 [base.py:355]   File "/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/vllm/renderers/base.py", line 1240, in render_chat
+(APIServer pid=719556) WARNING 10-16 10:16:34 [base.py:355]     self.render_messages(conversation, chat_params)
+(APIServer pid=719556) WARNING 10-16 10:16:34 [base.py:355]   File "/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/vllm/renderers/hf.py", line 982, in render_messages
+(APIServer pid=719556) WARNING 10-16 10:16:34 [base.py:355]     tokenizer = self.get_tokenizer()
+(APIServer pid=719556) WARNING 10-16 10:16:34 [base.py:355]                 ^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=719556) WARNING 10-16 10:16:34 [base.py:355]   File "/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/lib/python3.12/site-packages/vllm/renderers/base.py", line 192, in get_tokenizer
+(APIServer pid=719556) WARNING 10-16 10:16:34 [base.py:355]     raise ValueError("Tokenizer not available when `skip_tokenizer_init=True`")
+(APIServer pid=719556) WARNING 10-16 10:16:34 [base.py:355] ValueError: Tokenizer not available when `skip_tokenizer_init=True`
+(APIServer pid=719556) WARNING 10-16 10:16:34 [model.py:1850] Default vLLM sampling parameters have been overridden by the model's `generation_config.json`: `{'repetition_penalty': 1.1, 'temperature': 0.7, 'top_k': 20, 'top_p': 0.8}`. If this is not intended, please relaunch vLLM instance with `--generation-config vllm`.
+(APIServer pid=719556) WARNING 10-16 10:16:34 [serving.py:221] The chat template requires system-first ordering, so inline system messages in /v1/messages requests (e.g. Claude Code's per-turn reminders) are merged into the leading system prompt. Each new one changes the prompt prefix, so the rest of the conversation misses the prefix cache. Pass a --chat-template that accepts non-leading system messages to avoid this.
+(APIServer pid=719556) WARNING 10-16 10:16:34 [serving.py:221] The chat template requires system-first ordering, so inline system messages in /v1/messages requests (e.g. Claude Code's per-turn reminders) are merged into the leading system prompt. Each new one changes the prompt prefix, so the rest of the conversation misses the prefix cache. Pass a --chat-template that accepts non-leading system messages to avoid this.
+(APIServer pid=719556) INFO 10-16 10:16:34 [serving.py:92] Tokens-only mode is enabled, skipping detokenization step for incoming requests.
+(APIServer pid=719556) INFO 10-16 10:16:34 [entry.py:136] Starting vLLM server on http://127.0.0.1:39404
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:60] Available routes are:
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /openapi.json, Methods: GET, HEAD
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /docs, Methods: GET, HEAD
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /docs/oauth2-redirect, Methods: GET, HEAD
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /redoc, Methods: GET, HEAD
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /load, Methods: GET
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /version, Methods: GET
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /kv_event_sources, Methods: GET
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /health, Methods: GET
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /metrics, Methods: GET
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /tokenize, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /detokenize, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/models, Methods: GET
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /ping, Methods: GET
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /ping, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /invocations, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/chat/completions, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/chat/completions/batch, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/responses, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/responses/{response_id}, Methods: GET
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/responses/{response_id}/cancel, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/completions, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/messages, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/messages/count_tokens, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /generative_scoring, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /scale_elastic_ep, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /is_scaling_elastic_ep, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/chat/completions/render, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/messages/render, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/completions/render, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/responses/render, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/chat/completions/derender, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /v1/completions/derender, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /inference/v1/generate, Methods: POST
+(APIServer pid=719556) INFO 10-16 10:16:34 [launcher.py:69] Route: /abort_requests, Methods: POST
+INFO:     Started server process [719556]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:38016 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38018 - "POST /inference/v1/generate HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:38034 - "POST /inference/v1/generate HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:38048 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+(APIServer pid=719556) WARNING 10-16 10:16:35 [base.py:388] Using None for EOS token id because tokenizer is not initialized
+INFO:     127.0.0.1:38048 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38048 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38048 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38048 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38048 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38048 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38048 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38070 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38098 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38060 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38148 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38052 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38094 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38172 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38178 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38188 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38200 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38208 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38214 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38226 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38232 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38238 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38254 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38256 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38266 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38272 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38282 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38294 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38300 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38308 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38322 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38338 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38348 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38364 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38368 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38370 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38376 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38386 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38402 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38408 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38418 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38432 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38436 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38452 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38460 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38472 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38478 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38480 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38492 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38498 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38506 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38520 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38534 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38542 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38558 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38556 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38574 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38576 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38582 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38594 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38602 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38608 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38620 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38632 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38634 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38642 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38650 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38658 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38664 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38670 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38686 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38702 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38710 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38718 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38730 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38742 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38748 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38760 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38772 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38778 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38794 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38796 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38804 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38816 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38832 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38836 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38844 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38850 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38860 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38872 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38886 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38892 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38908 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38924 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38938 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38946 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38952 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38956 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38958 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38962 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38960 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38964 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38968 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38984 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38988 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38990 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39000 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39008 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39012 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39028 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39034 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39040 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39044 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39058 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39064 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39068 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39084 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39086 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39100 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39108 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39122 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39138 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39140 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39152 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39168 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39170 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39184 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39196 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39208 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39216 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39232 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39244 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39246 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39260 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39274 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39284 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39300 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39304 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39324 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39312 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39332 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39346 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39362 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39366 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39370 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39378 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39380 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39384 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39392 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39406 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39418 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39424 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39440 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39444 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39458 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39460 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39470 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39480 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39494 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39500 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39510 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39522 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39536 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39550 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39552 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39562 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39566 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39578 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39582 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39594 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39608 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39610 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39618 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39622 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39626 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39636 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39640 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39648 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39660 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39672 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39684 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39692 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39706 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39708 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39714 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39722 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39734 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39740 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39748 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39764 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39774 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39776 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39786 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39798 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39814 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39816 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39818 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39828 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39844 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39852 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39858 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39868 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39880 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39886 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39894 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39892 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39904 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39916 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39926 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39938 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39954 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39956 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39962 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39976 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39984 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39986 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40002 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40012 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40028 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40040 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40048 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40062 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40064 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40072 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40088 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40100 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40110 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40118 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40124 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40134 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40144 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40150 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40158 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40170 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40184 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40200 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40202 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40212 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40216 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40228 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40234 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40250 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40260 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40274 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40290 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40304 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40318 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40328 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40342 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40344 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40354 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40364 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40372 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40388 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40394 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40398 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40404 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40414 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40420 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40424 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40436 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40440 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40442 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40450 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40466 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40468 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40472 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40484 - "POST /inference/v1/generate HTTP/1.1" 200 OK
+(EngineCore pid=719614) INFO 10-16 10:16:38 [core.py:1409] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=719614) INFO 10-16 10:16:38 [core.py:1558] [shutdown] EngineCore: start mode=abort timeout=0s
+(APIServer pid=719556) INFO 10-16 10:16:38 [launcher.py:128] [shutdown] API server: shutdown triggered
+(EngineCore pid=719614) INFO 10-16 10:16:38 [core.py:1589] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=719614) INFO 10-16 10:16:38 [core.py:1422] [shutdown] EngineCore: exiting busy loop
+(APIServer pid=719556) INFO 10-16 10:16:38 [launcher.py:144] [shutdown] API server: stopping engine client mode=abort timeout=0s
+(APIServer pid=719556) INFO 10-16 10:16:38 [core_client.py:762] [shutdown] MPClient: start timeout=0s
+(APIServer pid=719556) INFO 10-16 10:16:38 [core_client.py:764] [shutdown] MPClient: stopping engine manager
+(APIServer pid=719556) INFO 10-16 10:16:38 [utils.py:638] [shutdown] Process manager: send sigterm to process EngineCore
+(APIServer pid=719556) WARNING 10-16 10:16:38 [utils.py:658] [shutdown] Process manager: force killing remaining processes count=1
+(APIServer pid=719556) WARNING 10-16 10:16:38 [utils.py:663] [shutdown] Process manager: force killing remaining process EngineCore pid 719614
+(APIServer pid=719556) INFO 10-16 10:16:38 [core_client.py:766] [shutdown] MPClient: engine manager stopped
+(APIServer pid=719556) INFO 10-16 10:16:38 [core_client.py:767] [shutdown] MPClient: cleaning up background resources
+(APIServer pid=719556) INFO 10-16 10:16:38 [core_client.py:769] [shutdown] MPClient: complete
+(APIServer pid=719556) INFO 10-16 10:16:38 [launcher.py:153] [shutdown] API server: engine client stopped
+(APIServer pid=719556) INFO 10-16 10:16:38 [launcher.py:156] [shutdown] API server: signalling HTTP server shutdown
+(APIServer pid=719556) INFO 10-16 10:16:38 [launcher.py:178] [shutdown] API server: shutting down FastAPI HTTP server
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

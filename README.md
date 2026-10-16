@@ -96,6 +96,10 @@ forced into a Python per-token loop.
   close-scan retest is inconclusive; the candidate is not adopted. The old tail
   gap does not reproduce even before modification, and process CPU is adverse
   versus native in this retest.
+- [Official vLLM reference](docs/findings/0069-current-official-vllm.md):
+  the finite whole-service comparison has mixed results. Persistent connections
+  expose approximately40ms token-gap P99 in both own paths; no eBPF speedup or
+  total-resource saving is established.
 - [Opaque graph backend](docs/findings/0067-opaque-graph-backend.md):cuBLAS/cuFFT
   ordinary default8 numerical/lifecycle checks pass on both transports.
 - [Fair native admission](docs/findings/0063-fair-native-admission.md):

@@ -1436,13 +1436,25 @@ acceptance of the prior measured scheduler, not another paper speedup.
 The close-scan candidate stays unselected; full resources, sustained remote
 tails and current official reference remain pending.
 
-### 2026-10-16 current official vLLM reference (preflight complete)
-The [reviewed plan](../bench/results/official_reference_20261016/plan.md) compares
-ordinary mixed kernel/native16 with official optimized vLLM on the same Qwen
-checkpoint/GPU/FP16 runtime. Whole-service throughput and explicitly named
-client-observed per-token gap P99 are measured separately from transport
-attribution. Official stream-output ITL is not equated with zero-expanded
-client token gaps. Three-condition real preflight passes96 requests/6144
-measured tokens; first collector failure and repaired full preflight are
-retained. This dependency has no independent performance value. Full five-block
-15-executor/30-cell comparison remains pending, as do full resources and remote.
+### 2026-10-16 current official vLLM reference (complete)
+The [reviewed plan](../bench/results/official_reference_20261016/plan.md),
+[complete result](../bench/results/official_reference_20261016/result.md),
+[raw/replay](../bench/results/official_reference_20261016/full/) and
+[independent result review](../bench/results/official_reference_20261016/result-review.md)
+close15 ordinary executors/30 cells:7680 successful attempts,491520 tokens,
+no measured failures. The retained serving-performance question is tested as
+a supporting whole-service reference, not an isolated eBPF attribution.
+Compared with official optimized vLLM, native persistent16 throughput improves
+333.971[80.480,587.461]token/s and offered192 client token-gapP99 improves
+7.405130[4.929275,9.880985]ms, nominal paired t95df4. Official stream-output ITL
+is not equated with zero-expanded client gaps. Own persistent16 gapP99 is
+adverse at40.4ms with83.4% zero gaps, versus official4.87ms. Kernel/native
+speed contrasts cross zero; kernel owned-group CPU is significantly higher
+here. Finite numerical-output disagreement, shared-host interference, differing
+wire/cache/capacity, legacy trace truncation and official child forced cleanup
+remain explicit. No same-output, eBPF superiority, equivalence, total CPU or
+production SLO claim follows. See [finding0069](findings/0069-current-official-vllm.md).
+Run valid; tested external primaries narrowly supported; research value
+supporting; impact additional RQ evidence/workload boundary. Next decision:
+diagnose the new repeatable shared40ms stall before sustained remote resources;
+do not rerun the unchanged reference or attribute its effects to eBPF.
