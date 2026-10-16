@@ -219,3 +219,87 @@ unlimited client headroom at 60 seconds; full-run client context and
 scheduling distributions remain necessary. This is follow-up 1 in the same
 plan review, not a new experiment or permission for an indefinite repair/
 benchmark sweep. No new scientific blocker to this common repair is found.
+
+## Follow-up 2: final common two-process client repair
+
+This is the second and final follow-up in this plan review. I read the
+prepared two-process official_remote_client.py, modified CPU analysis and
+worker-archive transfer path in run_official_remote_matrix.ps1, and the final
+preflight-driven repair section of plan.md. I did not execute the adapter or
+a server.
+
+The second preflight again completes all 384 attempts and 24576 tokens.
+Its reported K/N/O CPU is approximately 5.426/5.203/5.227 ms per attempt and
+lag P99 approximately 4.623/3.508/26.992 ms. Common uvloop reduces the first
+preflight's lag risk, while official scheduling lag remains materially
+larger. These are short-client observations, not proof that official model
+execution is slower or that its SSE parser consumes more total CPU. The
+near-one-core demand at the offered rate justifies one further common
+client repair before full collection.
+
+The proposed two ordinary OS processes in the same Pod are a valid adapter
+repair for all K/N/O conditions. They do not create a new server, persistent
+dispatcher, concurrency cap, model path or scientific hypothesis. Each
+process uses the same existing unrestricted async request implementation.
+Original indices are divided even/odd; prompts still use original index
+modulo four. The global offsets, seed, future client-monotonic epoch and
+complete request population are unchanged. A single supervisor launch per
+cell starts both workers and retains their original JSONL data.
+
+I checked the actual merger:
+- both child process exits and source-native terminal events must be zero;
+- configurations/modes and common schedules are checked;
+- the joined original request rows have exactly indices 0 through n-1,
+  without replacement, duplication or missing requests;
+- scheduled timestamps still equal the original full schedule at each index;
+- all request/error/partial-token rows are retained;
+- elapsed time is common epoch through the last original closed_ns;
+- combined in-flight peak is reconstructed from actual task-start/close
+  intervals, with closes preceding starts at identical timestamps;
+- child acquisition CPU deltas and supervisor startup/wait/merge CPU are
+  retained separately and summed explicitly.
+
+The updated analyzer reads both raw worker archives, checks their zero
+terminals and exact equality to merged original request rows, checks the
+last-close endpoint and CPU-component identity, then computes the same
+attempt/token/tail statistics and fixed paired primary. The driver transfers
+the two original worker files before archiving. No worker-level result is
+substituted for the full cell; warmups still use one ordinary sequential
+client and remain excluded.
+
+The revised last-close endpoint excludes the final serialization/gather
+bookkeeping that earlier preflights included. This was explicitly declared
+before full collection and applies to every condition. Therefore do not
+numerically mix the earlier and final-client preflight throughput metrics
+as if only the event loop changed. Supervisor merging remains real client
+cost outside the delivered-throughput interval; its CPU is counted separately.
+Server observer brackets include post-drain client merge/control context,
+so these resource views still cannot be advertised as exact exclusive
+inference cost.
+
+One readiness precision was identified in the prepared source: checking
+arrival_schedule.mono_ns before the future epoch timestamps creation of the
+event, before JSON schedule serialization/write. An actual monotonic check
+after emitting that event and immediately before the request-scheduling loop
+is the direct source-native way to establish scheduler readiness. If a worker
+misses that shared epoch, retain the failure rather than silently deliver
+late traffic. This is an executable clarification within this follow-up,
+not another scientific design revision or a reason to add a new coordination
+framework.
+
+Subject to that readiness check, no scientific or executable defect blocks
+the third real preflight. This review does not assert that two processes
+are already proven sufficient: inspect its actual outcomes, both workers'
+schedule readiness, aggregate/per-worker CPU and all-attempt scheduling
+lags. No fixed CPU or lag cutoff was invented by this review. If it remains
+client-limited, only the correctly bounded client-delivery interpretation
+is available; it cannot establish exclusive server capacity or turn an
+avoidable official-client limitation into a server win.
+
+Use only the successfully qualified final common client for the unchanged
+15-cell full matrix. Keep the first two preflights/source versions and all
+adverse evidence. This consumes the final follow-up and the declared third
+preflight opportunity; it does not authorize an unchanged rerun, larger N,
+more loop variants or indefinite client tuning. The primary, five blocks,
+workload, official defaults, finite correctness scope and later fresh result
+review remain unchanged.

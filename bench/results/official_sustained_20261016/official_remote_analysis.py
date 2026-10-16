@@ -33,13 +33,28 @@ def main(args):
    if x["outcome"]!="success":continue
    assert len(x["tokens"])==64 and all(type(v)==int and 0<=v<frozen["frozen_model"]["vocab"] for v in x["tokens"])
    assert x["reference_set_match"]==(x["tokens"] in pool[tuple(x["input_ids"]),64])
+  if meta.get("workers")==2:
+   assert len(meta["worker_files"])==2 and len(cell["worker_cells"])==2
+   worker_raw=[rows(root/name) for name in meta["worker_files"]]
+   assert all(w[-1]["event"]=="client_terminal" and w[-1]["exit"]==0 for w in worker_raw)
+   joined=sorted([x for w in worker_raw for x in w if x["event"]=="request"],key=lambda x:x["index"])
+   assert joined==sorted(attempts,key=lambda x:x["index"])
+   worker_schedules=[next(x for x in w if x["event"]=="arrival_schedule") for w in worker_raw]
+   assert all(x["mono_ns"]<cell["epoch_ns"] for x in worker_schedules)
+   assert all({k:v for k,v in x.items() if k!="mono_ns"}=={k:v for k,v in schedule.items() if k!="mono_ns"} for x in worker_schedules)
+   assert all([x["index"] for x in sorted([x for x in w if x["event"]=="request"],key=lambda x:x["index"])]==list(range(i,n,2)) for i,w in enumerate(worker_raw))
+   actual_cells=[next(x for x in w if x["event"]=="cell") for w in worker_raw]
+   assert cell["worker_cells"]==actual_cells
+   assert cell["child_cpu_ns"]==sum(c["client_process_cpu_ns"]-w[0]["process_cpu_ns"] for c,w in zip(actual_cells,worker_raw))
+   assert cell["end_ns"]==max(x["closed_ns"] for x in attempts)
+   assert cell["client_cpu_ns"]==cell["child_cpu_ns"]+cell["supervisor_cpu_ns"]
   sec=(cell["end_ns"]-cell["epoch_ns"])/1e9
   delivered=sum(len(x["tokens"]) for x in good);partial=sum(len(x["tokens"]) for x in bad)
   result=dict(event="cell_metrics",pair=meta["pair"],mode=meta["mode"],condition=re.search(r"_p[0-9]+_(candidate|native|official)_r",p.name).group(1),rate=meta["rate"],attempts=n,successes=len(good),failures=len(bad),
     failure_fraction=len(bad)/n,failure_censored=bool(bad),failure_types=[x.get("error_type") for x in bad],invalid_outcomes=sum(x.get("error_kind")=="protocol_or_validation" for x in bad),
     partial_tokens=partial,output_tokens=delivered,duration_s=sec,output_tokens_per_s=delivered/sec,all_observed_tokens_per_s=(delivered+partial)/sec,
     request_throughput=len(good)/sec,reference_set_matches=sum(x["reference_set_match"] for x in good),max_in_flight=cell["max_in_flight"],
-    close_errors=sum("close_error" in x for x in attempts),client_cpu_ms_per_attempt=(cell["client_process_cpu_ns"]-meta["process_cpu_ns"])/n/1e6)
+    close_errors=sum("close_error" in x for x in attempts),client_cpu_ms_per_attempt=(cell["client_cpu_ns"] if "client_cpu_ns" in cell else cell["client_process_cpu_ns"]-meta["process_cpu_ns"])/n/1e6)
   gaps=[(b-a)/1e6 for x in good for a,b in zip(x["arrival_ns"],x["arrival_ns"][1:])]
   result["client_token_gap_zero_fraction"]=sum(x==0 for x in gaps)/len(gaps) if gaps else None
   metrics={

@@ -2,7 +2,7 @@ param([Parameter(Mandatory=$true)][string]$ClientPod,[Parameter(Mandatory=$true)
 $ErrorActionPreference="Stop"
 $taskServerPod="coder-eb48d962-76f4-4ff7-bac5-7bc62ec2ada3-5c8bb655f6-khnns"
 $taskTemp="/tmp/bpfusion-mixed-integration-n4cog5c6"
-$taskStage=if($Preflight){"official_remote_preflight2"}else{"official_remote_full"}
+$taskStage=if($Preflight){"official_remote_preflight3"}else{"official_remote_full"}
 $taskDirectory="$taskTemp/$taskStage"
 function Invoke-Workspace([string]$Code) {
  $taskAnswer=$Code | & $KubectlHome -n coder exec -i $taskServerPod '--' python3 -
@@ -160,6 +160,10 @@ print('server terminal')
   }
   Receive-ClientFile $taskWarm "$taskPrefix.warmup.jsonl"
   Receive-ClientFile $taskName "$taskCell.client.jsonl"
+  foreach($taskWorker in @(0,1)){
+   $taskWorkerName=$taskName.Replace(".client.jsonl",".worker$taskWorker.jsonl")
+   Receive-ClientFile $taskWorkerName "$taskCell.worker$taskWorker.jsonl"
+  }
   $taskCode=@"
 from pathlib import Path
 import gzip,json,shutil

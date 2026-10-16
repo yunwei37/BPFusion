@@ -2,6 +2,7 @@
 """Bounded offered-arrival remote client; one async task per attempt, no cap."""
 import argparse,asyncio,json,os,socket,struct,sys,time,traceback
 import uvloop
+import multiprocessing,copy
 from pathlib import Path
 def now():return time.monotonic_ns()
 async def external_attempt(session,host,ids,gen,row,tokens,arrival,vocab):
@@ -44,7 +45,7 @@ async def main(args):
     headers={"Authorization":"Bearer "+Path(args.key_file).read_text().strip()})
  raw=Path(args.output).open("x",buffering=1)
  def emit(event,**kw):raw.write(json.dumps(dict(event=event,mono_ns=now(),**kw))+"\n")
- emit("client_metadata",python=sys.version,event_loop="uvloop "+uvloop.__version__,host=args.host,pair=args.pair,mode=args.mode,rate=args.rate,process_cpu_ns=time.process_time_ns(),scope="remote client-local stamps; no cross-host clock subtraction",source=Path(__file__).read_text(),config=cfg,
+ emit("client_metadata",python=sys.version,event_loop="uvloop "+uvloop.__version__,worker_id=getattr(args,"worker_id",None),host=args.host,pair=args.pair,mode=args.mode,rate=args.rate,process_cpu_ns=time.process_time_ns(),scope="remote client-local stamps; no cross-host clock subtraction",source=Path(__file__).read_text(),config=cfg,
       proc={f:Path("/proc/"+f).read_text() for f in ["stat","softirqs","interrupts","net/route","self/stat","self/cgroup","loadavg","pressure/cpu"]})
  async def attempt(index,gen,due=None,warmup=False):
   ids=prompts[index%4];tokens=[];arrival=[];writer=None
@@ -112,8 +113,10 @@ async def main(args):
     active+=1;peak=max(peak,active)
     try:return await attempt(i,64,due)
     finally:active-=1
-   epoch=now();emit("arrival_schedule",epoch_ns=epoch,offsets_ns=offsets,scheduled_ns=[epoch+x for x in offsets],seed=20261015+args.pair)
+   epoch=getattr(args,"epoch_ns",None) or now();emit("arrival_schedule",epoch_ns=epoch,offsets_ns=offsets,scheduled_ns=[epoch+x for x in offsets],seed=20261015+args.pair)
+   if getattr(args,"worker_id",None) is not None:assert now()<epoch,"worker schedule serialization missed common epoch"
    for i,offset in enumerate(offsets):
+    if getattr(args,"worker_id",None) is not None and i%2!=args.worker_id:continue
     due=epoch+offset;delay=(due-now())/1e9
     if delay>0:await asyncio.sleep(delay)
     tasks.append(asyncio.create_task(tracked(i,due)))
@@ -127,8 +130,66 @@ async def main(args):
   raw.close()
   if official is not None:await official.close()
  return status
+def worker(args):
+ raise SystemExit(uvloop.run(main(args)))
+def sharded(args):
+ # Two unrestricted async clients, one unchanged global arrival schedule.
+ parent_start=time.process_time_ns();epoch=now()+1000000000
+ output=Path(args.output);raw=output.open("x",buffering=1);workers=[]
+ try:
+  for index in range(2):
+   child=copy.copy(args);child.worker_id=index;child.epoch_ns=epoch
+   child.output=str(output).removesuffix(".client.jsonl")+".worker"+str(index)+".jsonl"
+   proc=multiprocessing.Process(target=worker,args=(child,));proc.start()
+   workers.append((proc,Path(child.output)))
+  for proc,_ in workers:proc.join()
+  batches=[]
+  for proc,path in workers:
+   lines=path.read_text().splitlines();rows=[json.loads(x) for x in lines]
+   assert proc.exitcode==0 and rows[-1]["event"]=="client_terminal" and rows[-1]["exit"]==0,(path,proc.exitcode)
+   batches.append((lines,rows))
+  metadata=copy.deepcopy(batches[0][1][0])
+  assert all(x[1][0]["config"]==metadata["config"] and x[1][0]["mode"]==metadata["mode"] for x in batches)
+  schedules=[next(x for x in rows if x["event"]=="arrival_schedule") for _,rows in batches]
+  assert all(x["mono_ns"]<epoch for x in schedules),"worker not ready before shared epoch"
+  assert all({k:v for k,v in x.items() if k!="mono_ns"}=={k:v for k,v in schedules[0].items() if k!="mono_ns"} for x in schedules)
+  requests=sorted([(obj,line) for lines,rows in batches for line,obj in zip(lines,rows) if obj["event"]=="request"],key=lambda x:x[0]["index"])
+  n=len(schedules[0]["offsets_ns"])
+  assert [x[0]["index"] for x in requests]==list(range(n))
+  assert all(x["scheduled_ns"]==schedules[0]["scheduled_ns"][x["index"]] for x,_ in requests)
+  cells=[next(x for x in rows if x["event"]=="cell") for _,rows in batches]
+  assert sum(c["attempts"] for c in cells)==n
+  # Shared local monotonic timestamps: never use process start/finish as duration.
+  end=max(x["closed_ns"] for x,_ in requests)
+  changes=sorted([(x["task_start_ns"],1) for x,_ in requests]+[(x["closed_ns"],-1) for x,_ in requests])
+  active=0;peak=0
+  for _,delta in changes:active+=delta;peak=max(peak,active)
+  assert active==0
+  metadata.update(worker_id=None,workers=2,worker_files=[x.name for _,x in workers],
+    client_cpu_scope="sum of child acquisition CPU deltas plus supervisor startup/wait/merge; raw worker counters retained",
+    duration_scope="one common future scheduled epoch through last original request close",
+    inflight_scope="task-start through request-close timestamps",
+    worker_metadata=[rows[0] for _,rows in batches])
+  raw.write(json.dumps(metadata)+"\n");raw.write(json.dumps(schedules[0])+"\n")
+  for _,line in requests:raw.write(line+"\n")
+  supervisor_cpu=time.process_time_ns()-parent_start
+  children_cpu=sum(c["client_process_cpu_ns"]-rows[0]["process_cpu_ns"] for c,(_,rows) in zip(cells,batches))
+  cell=dict(event="cell",mono_ns=now(),attempts=n,successes=sum(x["outcome"]=="success" for x,_ in requests),
+    failures=sum(x["outcome"]!="success" for x,_ in requests),epoch_ns=epoch,end_ns=end,max_in_flight=peak,
+    requested_output_tokens=64*n,client_cpu_ns=children_cpu+supervisor_cpu,child_cpu_ns=children_cpu,
+    supervisor_cpu_ns=supervisor_cpu,worker_cells=cells)
+  raw.write(json.dumps(cell)+"\n")
+  raw.write(json.dumps(dict(event="client_terminal",mono_ns=now(),exit=0,attempts=n))+"\n")
+  return 0
+ except BaseException as error:
+  raw.write(json.dumps(dict(event="client_failure",error=repr(error),traceback=traceback.format_exc()))+"\n")
+  raw.write(json.dumps(dict(event="client_terminal",exit=1))+"\n")
+  return 1
+ finally:
+  raw.close()
 if __name__=="__main__":
  ap=argparse.ArgumentParser();ap.add_argument("--host",required=True);ap.add_argument("--config",required=True);ap.add_argument("--offsets",required=True)
  ap.add_argument("--output",required=True);ap.add_argument("--pair",type=int,required=True);ap.add_argument("--rate",type=int,choices=[96,192],required=True)
  ap.add_argument("--mode",choices=["kernel","native","official"],required=True);ap.add_argument("--key-file",default="/tmp/official_remote_key");ap.add_argument("--warmup",action="store_true");ap.add_argument("--preflight",action="store_true")
- raise SystemExit(uvloop.run(main(ap.parse_args())))
+ args=ap.parse_args()
+ raise SystemExit(uvloop.run(main(args)) if args.warmup else sharded(args))

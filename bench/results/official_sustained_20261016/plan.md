@@ -148,3 +148,42 @@ preflight uses official_remote_preflight2 and the same128 offsets; evaluate
 actual lag/CPU before full collection. At most3 total preflight attempts still
 applies. This is a necessary client repair, not a new scientific hypothesis or
 a favorable-prefix rerun of server performance.
+
+## Final preflight-driven client repair, before full acquisition
+
+Second uvloop preflight preserves384 successes but official lagP99~27ms
+versus3.5--4.6ms, and~5.2ms clientCPU/attempt approaches one core at192/s.
+This does not prove official SSE costs more CPU or the server is slower.
+preflight2.md and single_uvloop_client/ retain all data and actual source.
+For allK/N/O, two ordinary OS processes in the same client Pod split original
+request indices even/odd, each with unlimited async tasks and the same future
+monotonic epoch/full offsets. No request/parser/oracle/timeout/server change.
+This adds no persistent dispatcher/helper, experiment-control schema or cap.
+
+Keep both original worker JSONL files. The existing client merges original
+request rows after both terminals, validates exact indices/common schedule,
+and uses common epoch through the last original request close for elapsed
+time; startup/worker exit skew is not serving time. This refines the prior
+post-gather end by only final bookkeeping and is applied identically before
+full acquisition; do not mix metrics across preflight versions. Merge/analysis
+after drain is outside delivered-throughput timing. Active-request peak is
+derived from task-start/close intervals (close before start at equal timestamps). Client CPU records actual child deltas
+plus supervisor startup/wait/merge separately, with worker counters retained.
+Resource observer bracket includes the post-drain transfer/merge context and
+is still not exclusive service cost.
+
+Third and last real preflight official_remote_preflight3 uses identical128
+offsets and all3 real backends before any full cell. Fixed primary,5blocks,
+original full schedule,finite oracle and adverse retention do not change.
+Fresh same-plan final follow-up audits actual source. No more unchanged
+preflight/largerN or favorable client-prefix selection is authorized by this
+plan. If a scientifically usable path is not established, preserve results
+and return the actual dependency/comparison boundary.
+
+Owner implementation receipt for final review condition: after serializing/
+writing the complete arrival_schedule event and before any worker request
+loop, the actual source asserts now()<epoch. A late worker records the existing
+client_failure/terminal failure and raw worker file; it cannot silently qualify
+late injected traffic. Parent and archive analysis also check readiness stamps.
+The final review's conditional executable concern is therefore addressed
+before the third real preflight; no additional review round or run occurred.
