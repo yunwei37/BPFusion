@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/analyze_timeline.py", line 162, in <module>
+    if __name__=='__main__':analyze(sys.argv[1])
+                            ^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/analyze_timeline.py", line 84, in analyze
+    assert not unparsed,unparsed[:3]
+           ^^^^^^^^^^^^
+AssertionError: ['     cloudflared-3177    [013] ..... 571401.026207: sys_sendmsg -> 0x29\n']

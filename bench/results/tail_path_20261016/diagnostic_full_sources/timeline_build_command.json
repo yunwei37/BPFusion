@@ -1,0 +1,15 @@
+[
+  "make",
+  "-f",
+  "/tmp/bpfusion-mixed-integration-n4cog5c6/timeline.Makefile",
+  "BUILD=/tmp/bpfusion-mixed-integration-n4cog5c6/build_timeline16",
+  "VLLM_PYTHON=/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/bin/python",
+  "CPPFLAGS=-DBF_LLM_SLOTS=16 -I/workspaces/repository/executor",
+  "/tmp/bpfusion-mixed-integration-n4cog5c6/build_timeline16/fusion.bpf.o",
+  "/tmp/bpfusion-mixed-integration-n4cog5c6/build_timeline16/uring_loop.bpf.o",
+  "/tmp/bpfusion-mixed-integration-n4cog5c6/build_timeline16/bpfusion_load",
+  "/tmp/bpfusion-mixed-integration-n4cog5c6/build_timeline16/vllm_graph_uring_loop_trace.so",
+  "/tmp/bpfusion-mixed-integration-n4cog5c6/build_timeline16/vllm_graph_uring_loop_trace",
+  "/tmp/bpfusion-mixed-integration-n4cog5c6/build_timeline16/vllm_graph_user_network_wait_trace.so",
+  "/tmp/bpfusion-mixed-integration-n4cog5c6/build_timeline16/vllm_graph_user_network_wait_trace"
+]

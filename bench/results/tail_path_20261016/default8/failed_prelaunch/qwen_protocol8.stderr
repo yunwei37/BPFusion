@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/load.py", line 376, in <module>
+    if __name__=="__main__":main()
+                            ^^^^^^
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/load.py", line 69, in main
+    variant_sources={v:{suffix:(Path(__file__).resolve().parent/(v+"_vllm_graph"+suffix)).read_text() for suffix in [".cu",".py"]} for v in ["original","mixed"]},mixed_replay_source=(Path(__file__).resolve().parent/"mixed_replay.py").read_text(),numpy=np.__version__,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1029, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/bpfusion-mixed-integration-n4cog5c6/original_vllm_graph.cu'

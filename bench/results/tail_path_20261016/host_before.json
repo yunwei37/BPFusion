@@ -1,0 +1,21 @@
+{
+  "utc_begin": "2026-10-16T08:37:35.240870+00:00",
+  "utc_end": "2026-10-16T08:37:35.295988+00:00",
+  "monotonic_begin_ns": 571227240464295,
+  "monotonic_end_ns": 571227295575276,
+  "hostname": "lab",
+  "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167",
+  "apps": {
+    "exit": 0,
+    "stdout": "3198064, python3, 954 MiB\n",
+    "stderr": ""
+  },
+  "gpu_app_ownership": [
+    {
+      "host_pid": 3198064,
+      "status": "Name:\tpython3\nUmask:\t0022\nState:\tR (running)\nTgid:\t3198064\nNgid:\t0\nPid:\t3198064\nPPid:\t3191967\nTracerPid:\t3198070\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t128\nGroups:\t0 \nNStgid:\t3198064\t692422\nNSpid:\t3198064\t692422\nNSpgid:\t3198064\t692422\nNSsid:\t3198064\t692422\nKthread:\t0\nVmPeak:\t29424252 kB\nVmSize:\t28517956 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t 1824840 kB\nVmRSS:\t 1564980 kB\nRssAnon:\t  958964 kB\nRssFile:\t  585560 kB\nRssShmem:\t   20456 kB\nVmData:\t 6173532 kB\nVmStk:\t     136 kB\nVmExe:\t    2956 kB\nVmLib:\t 3363428 kB\nVmPTE:\t    5488 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t110\nSigQ:\t5/476275\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000201001000\nSigCgt:\t0000000100000402\nCapInh:\t0000000000000000\nCapPrm:\t000001ffffffffff\nCapEff:\t000001ffffffffff\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffffff\nCpus_allowed_list:\t0-23\nMems_allowed:\t1\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t656594\nnonvoluntary_ctxt_switches:\t9950\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+      "cgroup": "0::/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod3e8994f8_77ba_4a73_a3a5_35ed69a0a8a2.slice/cri-containerd-a83771de83c8751ca3851fb01f648f254b33bee02efedf85f1d50713ebbf644d.scope\n"
+    }
+  ],
+  "scope": "Short read-only process snapshot with explicit time bounds; not continuous GPU isolation or full fault audit."
+}

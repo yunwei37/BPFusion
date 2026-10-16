@@ -1,0 +1,3853 @@
+{
+  "scope": "Causal timeline diagnostic; instrumented paths are not performance claims.",
+  "runs": [
+    {
+      "pair": 0,
+      "mode": "uring_loop_16_mixed",
+      "requests": 32,
+      "errors": [],
+      "calibration": {
+        "100": {
+          "gpu": 1792140027322536128,
+          "low": -1791568626724565749,
+          "high": -1791568626724543209,
+          "width_ns": 22540
+        },
+        "101": {
+          "gpu": 1792140027773402656,
+          "low": -1791568626724564753,
+          "high": -1791568626724542661,
+          "width_ns": 22092
+        }
+      },
+      "clock_alignment_assumption": "Affine interpolation between measured start/end calibration brackets; interval estimates below error bound unresolved.",
+      "alignment_half_width_ns": 12270.0,
+      "offset_drift_ns": 772.0,
+      "events": {
+        "softirq_entry": 7993,
+        "softirq_exit": 7993,
+        "sched_switch": 25859,
+        "sched_wakeup": 16606,
+        "io_uring_task_add": 76,
+        "io_uring_complete": 4712,
+        "io_uring_local_work_run": 2727,
+        "io_uring_submit_req": 2147,
+        "io_uring_queue_async_work": 18,
+        "sys_enter_sendmsg": 1,
+        "sys_exit_sendmsg": 1
+      },
+      "gpu_terminal": {
+        "event": "terminal",
+        "gpu_count": 8122,
+        "capacity": 11904,
+        "cpu_count": 0,
+        "cpu_overflow": 0
+      },
+      "itl_p99_ms": 6.319546,
+      "stages": {
+        "launch_to_publication_ms": {
+          "n": 2048,
+          "p50": 1.416384,
+          "p95": 1.430944,
+          "p99": 1.43648,
+          "maximum": 1.442496
+        },
+        "publication_to_send_estimate_ms": {
+          "n": 2048,
+          "p50": 0.0704,
+          "p95": 0.722176,
+          "p99": 1.79456,
+          "maximum": 2.980352
+        },
+        "send_to_consumed_ms": {
+          "n": 2048,
+          "p50": 0.112416,
+          "p95": 1.923136,
+          "p99": 2.854432,
+          "maximum": 4.119488
+        },
+        "delivery_age_estimate_ms": {
+          "n": 2048,
+          "p50": 0.708932,
+          "p95": 4.047794,
+          "p99": 5.559219,
+          "maximum": 9.80234
+        },
+        "sq_to_kernel_estimate_ms": {
+          "n": 2048,
+          "p50": 0.03512,
+          "p95": 1.838104,
+          "p99": 2.775072,
+          "maximum": 4.004272
+        },
+        "kernel_submit_to_complete_ms": {
+          "n": 2048,
+          "p50": 0.013,
+          "p95": 0.064,
+          "p99": 0.097,
+          "maximum": 0.718
+        },
+        "complete_to_gpu_consumed_estimate_ms": {
+          "n": 2048,
+          "p50": 0.050464,
+          "p95": 0.108016,
+          "p99": 0.13388,
+          "maximum": 0.160288
+        },
+        "client_after_kernel_complete_ms": {
+          "n": 2048,
+          "p50": 0.241919,
+          "p95": 2.999915,
+          "p99": 5.067123,
+          "maximum": 8.570684
+        },
+        "previous_gpu_progress_gap_ms": {
+          "n": 2048,
+          "p50": 0.15072,
+          "p95": 0.227744,
+          "p99": 0.263616,
+          "maximum": 0.424672
+        }
+      },
+      "p99_tail": {
+        "n": 21,
+        "production_gap_ms": {
+          "n": 21,
+          "p50": 1.327456,
+          "p95": 1.460096,
+          "p99": 1.472064,
+          "maximum": 1.472064
+        },
+        "delivery_age_change_estimate_ms": {
+          "n": 21,
+          "p50": 5.4853499999999995,
+          "p95": 7.636137999999999,
+          "p99": 7.907534999999999,
+          "maximum": 7.907534999999999
+        }
+      },
+      "largest_gaps": [
+        {
+          "client_ns": 571400911157412,
+          "index": 3,
+          "itl_ms": 9.234895,
+          "production_gap_ms": 1.327456,
+          "delivery_age_change_estimate_ms": 7.907534999999999,
+          "token": {
+            "client_ns": 571400911157412,
+            "index": 3,
+            "arrival_ns": 571400926257420,
+            "production_gpu_ns": 1792140027642352640,
+            "production_host_estimate_ns": 571400917798912.0,
+            "launch_to_publication_ms": 1.301472,
+            "publication_to_send_estimate_ms": 0.097024,
+            "send_to_consumed_ms": 0.267808,
+            "delivery_age_estimate_ms": 8.458508,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 28,
+                "offset": 92,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027642449984,
+                "client_ns": 571400911157412,
+                "tag": 216172782113783836,
+                "previous_ns": 1792140027642286112,
+                "begin_ns": 1792140027642446368,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 28,
+                "offset": 92,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027642717792,
+                "client_ns": 571400911157412,
+                "tag": 216172782113783836,
+                "previous_ns": 1792140027642653728,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400918091000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 0000000088725bf6, user_data 0x30000000000001c, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783836,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400918108000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 0000000088725bf6, user_data 0x30000000000001c, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.195064,
+            "kernel_submit_to_complete_ms": 0.017,
+            "complete_to_gpu_consumed_estimate_ms": 0.055712,
+            "client_after_kernel_complete_ms": 8.14942,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.163872
+          }
+        },
+        {
+          "client_ns": 571400826780194,
+          "index": 59,
+          "itl_ms": 8.96145,
+          "production_gap_ms": 1.325376,
+          "delivery_age_change_estimate_ms": 7.636137999999999,
+          "token": {
+            "client_ns": 571400826780194,
+            "index": 59,
+            "arrival_ns": 571400920222392,
+            "production_gpu_ns": 1792140027636960864,
+            "production_host_estimate_ns": 571400912406784.0,
+            "launch_to_publication_ms": 1.289184,
+            "publication_to_send_estimate_ms": 0.048128,
+            "send_to_consumed_ms": 0.47136,
+            "delivery_age_estimate_ms": 7.815608,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 18,
+                "offset": 316,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027637008960,
+                "client_ns": 571400826780194,
+                "tag": 216172782113783826,
+                "previous_ns": 1792140027636937760,
+                "begin_ns": 1792140027637005376,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 18,
+                "offset": 316,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027637480320,
+                "client_ns": 571400826780194,
+                "tag": 216172782113783826,
+                "previous_ns": 1792140027637453952,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400912839000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 000000009ba29207, user_data 0x300000000000012, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783826,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400912907000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 000000009ba29207, user_data 0x300000000000012, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.384088,
+            "kernel_submit_to_complete_ms": 0.068,
+            "complete_to_gpu_consumed_estimate_ms": 0.01972,
+            "client_after_kernel_complete_ms": 7.315392,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.0712
+          }
+        },
+        {
+          "client_ns": 571400863038181,
+          "index": 30,
+          "itl_ms": 8.708467,
+          "production_gap_ms": 1.325792,
+          "delivery_age_change_estimate_ms": 7.382643000000001,
+          "token": {
+            "client_ns": 571400863038181,
+            "index": 30,
+            "arrival_ns": 571400920045299,
+            "production_gpu_ns": 1792140027636972672,
+            "production_host_estimate_ns": 571400912418560.0,
+            "launch_to_publication_ms": 1.294528,
+            "publication_to_send_estimate_ms": 0.084224,
+            "send_to_consumed_ms": 0.447776,
+            "delivery_age_estimate_ms": 7.626739,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 24,
+                "offset": 200,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027637056736,
+                "client_ns": 571400863038181,
+                "tag": 216172782113783832,
+                "previous_ns": 1792140027636937760,
+                "begin_ns": 1792140027637053152,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 24,
+                "offset": 200,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027637504512,
+                "client_ns": 571400863038181,
+                "tag": 216172782113783832,
+                "previous_ns": 1792140027637453952,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400912871000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 0000000062b30269, user_data 0x300000000000018, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783832,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400912908000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 0000000062b30269, user_data 0x300000000000018, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.368216,
+            "kernel_submit_to_complete_ms": 0.037,
+            "complete_to_gpu_consumed_estimate_ms": 0.042784,
+            "client_after_kernel_complete_ms": 7.137299,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.118976
+          }
+        },
+        {
+          "client_ns": 571400803270276,
+          "index": 49,
+          "itl_ms": 7.661078,
+          "production_gap_ms": 1.46,
+          "delivery_age_change_estimate_ms": 6.201366,
+          "token": {
+            "client_ns": 571400803270276,
+            "index": 49,
+            "arrival_ns": 571400878995295,
+            "production_gpu_ns": 1792140027597171392,
+            "production_host_estimate_ns": 571400872617216.0,
+            "launch_to_publication_ms": 1.41792,
+            "publication_to_send_estimate_ms": 0.112128,
+            "send_to_consumed_ms": 0.084672,
+            "delivery_age_estimate_ms": 6.378079,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 13,
+                "offset": 276,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027597283392,
+                "client_ns": 571400803270276,
+                "tag": 216172782113783821,
+                "previous_ns": 1792140027597060128,
+                "begin_ns": 1792140027597279712,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 13,
+                "offset": 276,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027597368064,
+                "client_ns": 571400803270276,
+                "tag": 216172782113783821,
+                "previous_ns": 1792140027597168672,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400872755000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 0000000062b30269, user_data 0x30000000000000d, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783821,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400872771000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 0000000062b30269, user_data 0x30000000000000d, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.025656,
+            "kernel_submit_to_complete_ms": 0.016,
+            "complete_to_gpu_consumed_estimate_ms": 0.04308,
+            "client_after_kernel_complete_ms": 6.224295,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.223264
+          }
+        },
+        {
+          "client_ns": 571400802446576,
+          "index": 43,
+          "itl_ms": 7.500634,
+          "production_gap_ms": 1.472064,
+          "delivery_age_change_estimate_ms": 6.028634,
+          "token": {
+            "client_ns": 571400802446576,
+            "index": 43,
+            "arrival_ns": 571400870169501,
+            "production_gpu_ns": 1792140027588382304,
+            "production_host_estimate_ns": 571400863828224.0,
+            "launch_to_publication_ms": 1.424768,
+            "publication_to_send_estimate_ms": 0.126976,
+            "send_to_consumed_ms": 0.09456,
+            "delivery_age_estimate_ms": 6.341277,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 12,
+                "offset": 252,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027588509472,
+                "client_ns": 571400802446576,
+                "tag": 216172782113783820,
+                "previous_ns": 1792140027588296736,
+                "begin_ns": 1792140027588505664,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 12,
+                "offset": 252,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027588604032,
+                "client_ns": 571400802446576,
+                "tag": 216172782113783820,
+                "previous_ns": 1792140027588396032,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400863982000,
+                  "cpu": 18,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 00000000fbdddfe7, user_data 0x30000000000000c, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783820,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400863987000,
+                  "cpu": 18,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 00000000fbdddfe7, user_data 0x30000000000000c, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.0268,
+            "kernel_submit_to_complete_ms": 0.005,
+            "complete_to_gpu_consumed_estimate_ms": 0.06292,
+            "client_after_kernel_complete_ms": 6.182501,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.212736
+          }
+        },
+        {
+          "client_ns": 571400861410821,
+          "index": 35,
+          "itl_ms": 7.40746,
+          "production_gap_ms": 1.345568,
+          "delivery_age_change_estimate_ms": 6.061924,
+          "token": {
+            "client_ns": 571400861410821,
+            "index": 35,
+            "arrival_ns": 571400920319961,
+            "production_gpu_ns": 1792140027638316672,
+            "production_host_estimate_ns": 571400913762560.0,
+            "launch_to_publication_ms": 1.306848,
+            "publication_to_send_estimate_ms": 0.105472,
+            "send_to_consumed_ms": 1.172352,
+            "delivery_age_estimate_ms": 6.557401,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 23,
+                "offset": 220,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027638421984,
+                "client_ns": 571400861410821,
+                "tag": 216172782113783831,
+                "previous_ns": 1792140027638288416,
+                "begin_ns": 1792140027638418240,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 23,
+                "offset": 220,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027639594336,
+                "client_ns": 571400861410821,
+                "tag": 216172782113783831,
+                "previous_ns": 1792140027639534624,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400914963000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 000000002f8a9640, user_data 0x300000000000017, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783831,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400914986000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 000000002f8a9640, user_data 0x300000000000017, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 1.094968,
+            "kernel_submit_to_complete_ms": 0.023,
+            "complete_to_gpu_consumed_estimate_ms": 0.054256,
+            "client_after_kernel_complete_ms": 5.333961,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.133568
+          }
+        },
+        {
+          "client_ns": 571400835788339,
+          "index": 52,
+          "itl_ms": 7.149698,
+          "production_gap_ms": 1.326112,
+          "delivery_age_change_estimate_ms": 5.823874,
+          "token": {
+            "client_ns": 571400835788339,
+            "index": 52,
+            "arrival_ns": 571400918449483,
+            "production_gpu_ns": 1792140027636963392,
+            "production_host_estimate_ns": 571400912409088.0,
+            "launch_to_publication_ms": 1.290304,
+            "publication_to_send_estimate_ms": 0.053504,
+            "send_to_consumed_ms": 0.468736,
+            "delivery_age_estimate_ms": 6.040395,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 19,
+                "offset": 288,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027637016704,
+                "client_ns": 571400835788339,
+                "tag": 216172782113783827,
+                "previous_ns": 1792140027636937760,
+                "begin_ns": 1792140027637013184,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 19,
+                "offset": 288,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027637485440,
+                "client_ns": 571400835788339,
+                "tag": 216172782113783827,
+                "previous_ns": 1792140027637453952,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400912848000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 00000000c312aea5, user_data 0x300000000000013, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783827,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400912907000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 00000000c312aea5, user_data 0x300000000000013, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.385408,
+            "kernel_submit_to_complete_ms": 0.059,
+            "complete_to_gpu_consumed_estimate_ms": 0.024584,
+            "client_after_kernel_complete_ms": 5.542483,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.078944
+          }
+        },
+        {
+          "client_ns": 571400811288384,
+          "index": 42,
+          "itl_ms": 6.957975,
+          "production_gap_ms": 1.459712,
+          "delivery_age_change_estimate_ms": 5.498519,
+          "token": {
+            "client_ns": 571400811288384,
+            "index": 42,
+            "arrival_ns": 571400878222658,
+            "production_gpu_ns": 1792140027597173856,
+            "production_host_estimate_ns": 571400872619520.0,
+            "launch_to_publication_ms": 1.41936,
+            "publication_to_send_estimate_ms": 0.11776,
+            "send_to_consumed_ms": 0.080128,
+            "delivery_age_estimate_ms": 5.603138,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 14,
+                "offset": 248,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027597291456,
+                "client_ns": 571400811288384,
+                "tag": 216172782113783822,
+                "previous_ns": 1792140027597060128,
+                "begin_ns": 1792140027597287712,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 14,
+                "offset": 248,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027597371584,
+                "client_ns": 571400811288384,
+                "tag": 216172782113783822,
+                "previous_ns": 1792140027597168672,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400872759000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 0000000082d051b8, user_data 0x30000000000000e, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783822,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400872771000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 0000000082d051b8, user_data 0x30000000000000e, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.02172,
+            "kernel_submit_to_complete_ms": 0.012,
+            "complete_to_gpu_consumed_estimate_ms": 0.046664,
+            "client_after_kernel_complete_ms": 5.451658,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.231328
+          }
+        },
+        {
+          "client_ns": 571400919040601,
+          "index": 60,
+          "itl_ms": 6.926201,
+          "production_gap_ms": 1.319296,
+          "delivery_age_change_estimate_ms": 5.606777,
+          "token": {
+            "client_ns": 571400919040601,
+            "index": 60,
+            "arrival_ns": 571401013976714,
+            "production_gpu_ns": 1792140027732151264,
+            "production_host_estimate_ns": 571401007597568.0,
+            "launch_to_publication_ms": 1.289344,
+            "publication_to_send_estimate_ms": 0.07552,
+            "send_to_consumed_ms": 1.723424,
+            "delivery_age_estimate_ms": 6.379146,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 30,
+                "offset": 320,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027732226720,
+                "client_ns": 571400919040601,
+                "tag": 216172782113783838,
+                "previous_ns": 1792140027732069408,
+                "begin_ns": 1792140027732223072,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 30,
+                "offset": 320,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027733950144,
+                "client_ns": 571400919040601,
+                "tag": 216172782113783838,
+                "previous_ns": 1792140027733894272,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571401009332000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 000000008d0157b0, user_data 0x30000000000001e, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783838,
+                "async_work": [],
+                "cq": {
+                  "ns": 571401009345000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 000000008d0157b0, user_data 0x30000000000001e, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 1.658912,
+            "kernel_submit_to_complete_ms": 0.013,
+            "complete_to_gpu_consumed_estimate_ms": 0.05148,
+            "client_after_kernel_complete_ms": 4.631714,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.157312
+          }
+        },
+        {
+          "client_ns": 571400780279732,
+          "index": 17,
+          "itl_ms": 6.861094,
+          "production_gap_ms": 1.375776,
+          "delivery_age_change_estimate_ms": 5.4853499999999995,
+          "token": {
+            "client_ns": 571400780279732,
+            "index": 17,
+            "arrival_ns": 571400810718598,
+            "production_gpu_ns": 1792140027529503840,
+            "production_host_estimate_ns": 571400804949504.0,
+            "launch_to_publication_ms": 1.2968,
+            "publication_to_send_estimate_ms": 0.02688,
+            "send_to_consumed_ms": 0.053248,
+            "delivery_age_estimate_ms": 5.769094,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 9,
+                "offset": 148,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027529530592,
+                "client_ns": 571400780279732,
+                "tag": 216172782113783817,
+                "previous_ns": 1792140027529474080,
+                "begin_ns": 1792140027529527264,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 9,
+                "offset": 148,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027529583840,
+                "client_ns": 571400780279732,
+                "tag": 216172782113783817,
+                "previous_ns": 1792140027529508896,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400804985000,
+                  "cpu": 4,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 0000000093dafa6b, user_data 0x300000000000009, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783817,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400804998000,
+                  "cpu": 4,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 0000000093dafa6b, user_data 0x300000000000009, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.008616,
+            "kernel_submit_to_complete_ms": 0.013,
+            "complete_to_gpu_consumed_estimate_ms": 0.031632,
+            "client_after_kernel_complete_ms": 5.720598,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.056512
+          }
+        },
+        {
+          "client_ns": 571400780279732,
+          "index": 36,
+          "itl_ms": 6.816644,
+          "production_gap_ms": 1.321312,
+          "delivery_age_change_estimate_ms": 5.495172,
+          "token": {
+            "client_ns": 571400780279732,
+            "index": 36,
+            "arrival_ns": 571400835492111,
+            "production_gpu_ns": 1792140027554477472,
+            "production_host_estimate_ns": 571400829923328.0,
+            "launch_to_publication_ms": 1.29008,
+            "publication_to_send_estimate_ms": 0.022016,
+            "send_to_consumed_ms": 4.11712,
+            "delivery_age_estimate_ms": 5.568783,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 9,
+                "offset": 224,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027554499616,
+                "client_ns": 571400780279732,
+                "tag": 216172782113783817,
+                "previous_ns": 1792140027554409504,
+                "begin_ns": 1792140027554496160,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 9,
+                "offset": 224,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027558616736,
+                "client_ns": 571400780279732,
+                "tag": 216172782113783817,
+                "previous_ns": 1792140027558591616,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400833939000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 00000000b32ae330, user_data 0x300000000000009, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783817,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400834046000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 00000000b32ae330, user_data 0x300000000000009, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 3.993656,
+            "kernel_submit_to_complete_ms": 0.107,
+            "complete_to_gpu_consumed_estimate_ms": 0.016592,
+            "client_after_kernel_complete_ms": 1.446111,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.090112
+          }
+        },
+        {
+          "client_ns": 571400787207548,
+          "index": 11,
+          "itl_ms": 6.77871,
+          "production_gap_ms": 1.375872,
+          "delivery_age_change_estimate_ms": 5.403222,
+          "token": {
+            "client_ns": 571400787207548,
+            "index": 11,
+            "arrival_ns": 571400810421238,
+            "production_gpu_ns": 1792140027529505920,
+            "production_host_estimate_ns": 571400804951552.0,
+            "launch_to_publication_ms": 1.297952,
+            "publication_to_send_estimate_ms": 0.032768,
+            "send_to_consumed_ms": 0.049984,
+            "delivery_age_estimate_ms": 5.469686,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 10,
+                "offset": 124,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027529538496,
+                "client_ns": 571400787207548,
+                "tag": 216172782113783818,
+                "previous_ns": 1792140027529474080,
+                "begin_ns": 1792140027529535008,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 10,
+                "offset": 124,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027529588480,
+                "client_ns": 571400787207548,
+                "tag": 216172782113783818,
+                "previous_ns": 1792140027529508896,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400804990000,
+                  "cpu": 4,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 0000000031d24c75, user_data 0x30000000000000a, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783818,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400804998000,
+                  "cpu": 4,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 0000000031d24c75, user_data 0x30000000000000a, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.00568,
+            "kernel_submit_to_complete_ms": 0.008,
+            "complete_to_gpu_consumed_estimate_ms": 0.03624,
+            "client_after_kernel_complete_ms": 5.423238,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.064416
+          }
+        },
+        {
+          "client_ns": 571400802446576,
+          "index": 19,
+          "itl_ms": 6.764401,
+          "production_gap_ms": 1.320992,
+          "delivery_age_change_estimate_ms": 5.443441,
+          "token": {
+            "client_ns": 571400802446576,
+            "index": 19,
+            "arrival_ns": 571400835448977,
+            "production_gpu_ns": 1792140027554483136,
+            "production_host_estimate_ns": 571400829928960.0,
+            "launch_to_publication_ms": 1.292864,
+            "publication_to_send_estimate_ms": 0.040704,
+            "send_to_consumed_ms": 4.105472,
+            "delivery_age_estimate_ms": 5.520017,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 12,
+                "offset": 156,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027554523936,
+                "client_ns": 571400802446576,
+                "tag": 216172782113783820,
+                "previous_ns": 1792140027554409504,
+                "begin_ns": 1792140027554520320,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 12,
+                "offset": 156,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027558629408,
+                "client_ns": 571400802446576,
+                "tag": 216172782113783820,
+                "previous_ns": 1792140027558591616,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400833963000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 000000001e067fb4, user_data 0x30000000000000c, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783820,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400834046000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 000000001e067fb4, user_data 0x30000000000000c, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 3.993336,
+            "kernel_submit_to_complete_ms": 0.083,
+            "complete_to_gpu_consumed_estimate_ms": 0.029392,
+            "client_after_kernel_complete_ms": 1.402977,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.114432
+          }
+        },
+        {
+          "client_ns": 571400811288384,
+          "index": 12,
+          "itl_ms": 6.726142,
+          "production_gap_ms": 1.32064,
+          "delivery_age_change_estimate_ms": 5.405694,
+          "token": {
+            "client_ns": 571400811288384,
+            "index": 12,
+            "arrival_ns": 571400835431019,
+            "production_gpu_ns": 1792140027554486912,
+            "production_host_estimate_ns": 571400829932544.0,
+            "launch_to_publication_ms": 1.294784,
+            "publication_to_send_estimate_ms": 0.052992,
+            "send_to_consumed_ms": 4.097632,
+            "delivery_age_estimate_ms": 5.498475,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 14,
+                "offset": 128,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027554539680,
+                "client_ns": 571400811288384,
+                "tag": 216172782113783822,
+                "previous_ns": 1792140027554409504,
+                "begin_ns": 1792140027554536128,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 14,
+                "offset": 128,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027558637312,
+                "client_ns": 571400811288384,
+                "tag": 216172782113783822,
+                "previous_ns": 1792140027558591616,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400833983000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 00000000a407bf73, user_data 0x30000000000000e, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783822,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400834047000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 00000000a407bf73, user_data 0x30000000000000e, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 3.997464,
+            "kernel_submit_to_complete_ms": 0.064,
+            "complete_to_gpu_consumed_estimate_ms": 0.036072,
+            "client_after_kernel_complete_ms": 1.384019,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.130176
+          }
+        },
+        {
+          "client_ns": 571400856448257,
+          "index": 40,
+          "itl_ms": 6.613551,
+          "production_gap_ms": 1.327968,
+          "delivery_age_change_estimate_ms": 5.285423,
+          "token": {
+            "client_ns": 571400856448257,
+            "index": 40,
+            "arrival_ns": 571400923708274,
+            "production_gpu_ns": 1792140027642341024,
+            "production_host_estimate_ns": 571400917787392.0,
+            "launch_to_publication_ms": 1.296032,
+            "publication_to_send_estimate_ms": 0.057856,
+            "send_to_consumed_ms": 0.293344,
+            "delivery_age_estimate_ms": 5.920882,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 22,
+                "offset": 240,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027642399264,
+                "client_ns": 571400856448257,
+                "tag": 216172782113783830,
+                "previous_ns": 1792140027642286112,
+                "begin_ns": 1792140027642395584,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 22,
+                "offset": 240,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027642692608,
+                "client_ns": 571400856448257,
+                "tag": 216172782113783830,
+                "previous_ns": 1792140027642653728,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400918068000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 0000000062b30269, user_data 0x300000000000016, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783830,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400918107000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 0000000062b30269, user_data 0x300000000000016, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.222752,
+            "kernel_submit_to_complete_ms": 0.039,
+            "complete_to_gpu_consumed_estimate_ms": 0.031624,
+            "client_after_kernel_complete_ms": 5.601274,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.113152
+          }
+        },
+        {
+          "client_ns": 571400779249508,
+          "index": 37,
+          "itl_ms": 6.606501,
+          "production_gap_ms": 1.321248,
+          "delivery_age_change_estimate_ms": 5.285029,
+          "token": {
+            "client_ns": 571400779249508,
+            "index": 37,
+            "arrival_ns": 571400835266007,
+            "production_gpu_ns": 1792140027554475520,
+            "production_host_estimate_ns": 571400829921536.0,
+            "launch_to_publication_ms": 1.289376,
+            "publication_to_send_estimate_ms": 0.016128,
+            "send_to_consumed_ms": 4.119488,
+            "delivery_age_estimate_ms": 5.344471,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 8,
+                "offset": 228,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027554491968,
+                "client_ns": 571400779249508,
+                "tag": 216172782113783816,
+                "previous_ns": 1792140027554409504,
+                "begin_ns": 1792140027554488352,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 8,
+                "offset": 228,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027558611456,
+                "client_ns": 571400779249508,
+                "tag": 216172782113783816,
+                "previous_ns": 1792140027558591616,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400833884000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 00000000fbdddfe7, user_data 0x300000000000008, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783816,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400834046000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 00000000fbdddfe7, user_data 0x300000000000008, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 3.946336,
+            "kernel_submit_to_complete_ms": 0.162,
+            "complete_to_gpu_consumed_estimate_ms": 0.011216,
+            "client_after_kernel_complete_ms": 1.220007,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.082464
+          }
+        },
+        {
+          "client_ns": 571400797196986,
+          "index": 4,
+          "itl_ms": 6.461393,
+          "production_gap_ms": 1.375456,
+          "delivery_age_change_estimate_ms": 5.085905,
+          "token": {
+            "client_ns": 571400797196986,
+            "index": 4,
+            "arrival_ns": 571400810081123,
+            "production_gpu_ns": 1792140027529507648,
+            "production_host_estimate_ns": 571400804953344.0,
+            "launch_to_publication_ms": 1.298688,
+            "publication_to_send_estimate_ms": 0.038656,
+            "send_to_consumed_ms": 0.0464,
+            "delivery_age_estimate_ms": 5.127779,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 11,
+                "offset": 96,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027529546368,
+                "client_ns": 571400797196986,
+                "tag": 216172782113783819,
+                "previous_ns": 1792140027529474080,
+                "begin_ns": 1792140027529542784,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 11,
+                "offset": 96,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027529592768,
+                "client_ns": 571400797196986,
+                "tag": 216172782113783819,
+                "previous_ns": 1792140027529508896,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400804998000,
+                  "cpu": 4,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 0000000031d24c75, user_data 0x30000000000000b, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783819,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400805014000,
+                  "cpu": 4,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 0000000031d24c75, user_data 0x30000000000000b, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.006,
+            "kernel_submit_to_complete_ms": 0.016,
+            "complete_to_gpu_consumed_estimate_ms": 0.024592,
+            "client_after_kernel_complete_ms": 5.067123,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.072288
+          }
+        },
+        {
+          "client_ns": 571400891324274,
+          "index": 14,
+          "itl_ms": 6.429537,
+          "production_gap_ms": 1.34608,
+          "delivery_age_change_estimate_ms": 5.083233,
+          "token": {
+            "client_ns": 571400891324274,
+            "index": 14,
+            "arrival_ns": 571400920467842,
+            "production_gpu_ns": 1792140027638322336,
+            "production_host_estimate_ns": 571400913768448.0,
+            "launch_to_publication_ms": 1.309728,
+            "publication_to_send_estimate_ms": 0.123392,
+            "send_to_consumed_ms": 1.161568,
+            "delivery_age_estimate_ms": 6.699394,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 26,
+                "offset": 136,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027638445792,
+                "client_ns": 571400891324274,
+                "tag": 216172782113783834,
+                "previous_ns": 1792140027638288416,
+                "begin_ns": 1792140027638442048,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 26,
+                "offset": 136,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027639607360,
+                "client_ns": 571400891324274,
+                "tag": 216172782113783834,
+                "previous_ns": 1792140027639534624,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400914976000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 000000009ba29207, user_data 0x30000000000001a, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783834,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400914986000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 000000009ba29207, user_data 0x30000000000001a, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 1.08416,
+            "kernel_submit_to_complete_ms": 0.01,
+            "complete_to_gpu_consumed_estimate_ms": 0.067312,
+            "client_after_kernel_complete_ms": 5.481842,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.157376
+          }
+        },
+        {
+          "client_ns": 571400818124732,
+          "index": 37,
+          "itl_ms": 6.391622,
+          "production_gap_ms": 1.460096,
+          "delivery_age_change_estimate_ms": 4.931398,
+          "token": {
+            "client_ns": 571400818124732,
+            "index": 37,
+            "arrival_ns": 571400878026858,
+            "production_gpu_ns": 1792140027597179808,
+            "production_host_estimate_ns": 571400872625664.0,
+            "launch_to_publication_ms": 1.422432,
+            "publication_to_send_estimate_ms": 0.013056,
+            "send_to_consumed_ms": 0.130336,
+            "delivery_age_estimate_ms": 5.401194,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 17,
+                "offset": 228,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027597192736,
+                "client_ns": 571400818124732,
+                "tag": 216172782113783825,
+                "previous_ns": 1792140027597060128,
+                "begin_ns": 1792140027597189088,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 17,
+                "offset": 228,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027597323072,
+                "client_ns": 571400818124732,
+                "tag": 216172782113783825,
+                "previous_ns": 1792140027597168672,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400872645000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 0000000030661e76, user_data 0x300000000000011, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783825,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400872656000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 0000000030661e76, user_data 0x300000000000011, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.00628,
+            "kernel_submit_to_complete_ms": 0.011,
+            "complete_to_gpu_consumed_estimate_ms": 0.113024,
+            "client_after_kernel_complete_ms": 5.370858,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.132608
+          }
+        },
+        {
+          "client_ns": 571400812255947,
+          "index": 12,
+          "itl_ms": 6.375267,
+          "production_gap_ms": 1.320672,
+          "delivery_age_change_estimate_ms": 5.054563,
+          "token": {
+            "client_ns": 571400812255947,
+            "index": 12,
+            "arrival_ns": 571400835091247,
+            "production_gpu_ns": 1792140027554488768,
+            "production_host_estimate_ns": 571400829934592.0,
+            "launch_to_publication_ms": 1.295712,
+            "publication_to_send_estimate_ms": 0.059136,
+            "send_to_consumed_ms": 4.093792,
+            "delivery_age_estimate_ms": 5.156655,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 15,
+                "offset": 128,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027554547968,
+                "client_ns": 571400812255947,
+                "tag": 216172782113783823,
+                "previous_ns": 1792140027554409504,
+                "begin_ns": 1792140027554544160,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 15,
+                "offset": 128,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027558641760,
+                "client_ns": 571400812255947,
+                "tag": 216172782113783823,
+                "previous_ns": 1792140027558591616,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400833998000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 00000000950a3a44, user_data 0x30000000000000f, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783823,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400834047000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 00000000950a3a44, user_data 0x30000000000000f, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 4.004272,
+            "kernel_submit_to_complete_ms": 0.049,
+            "complete_to_gpu_consumed_estimate_ms": 0.040424,
+            "client_after_kernel_complete_ms": 1.044247,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.138464
+          }
+        },
+        {
+          "client_ns": 571400787207548,
+          "index": 30,
+          "itl_ms": 6.319546,
+          "production_gap_ms": 1.321376,
+          "delivery_age_change_estimate_ms": 4.99833,
+          "token": {
+            "client_ns": 571400787207548,
+            "index": 30,
+            "arrival_ns": 571400835015521,
+            "production_gpu_ns": 1792140027554479232,
+            "production_host_estimate_ns": 571400829924864.0,
+            "launch_to_publication_ms": 1.290912,
+            "publication_to_send_estimate_ms": 0.02816,
+            "send_to_consumed_ms": 4.112992,
+            "delivery_age_estimate_ms": 5.090657,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 10,
+                "offset": 200,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027554507392,
+                "client_ns": 571400787207548,
+                "tag": 216172782113783818,
+                "previous_ns": 1792140027554409504,
+                "begin_ns": 1792140027554503904,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 10,
+                "offset": 200,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027558620384,
+                "client_ns": 571400787207548,
+                "tag": 216172782113783818,
+                "previous_ns": 1792140027558591616,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400833948000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 00000000893a35cb, user_data 0x30000000000000a, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783818,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400834046000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 00000000893a35cb, user_data 0x30000000000000a, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 3.994976,
+            "kernel_submit_to_complete_ms": 0.098,
+            "complete_to_gpu_consumed_estimate_ms": 0.020176,
+            "client_after_kernel_complete_ms": 0.969521,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.097888
+          }
+        },
+        {
+          "client_ns": 571400787207548,
+          "index": 61,
+          "itl_ms": 6.283957,
+          "production_gap_ms": 1.463104,
+          "delivery_age_change_estimate_ms": 4.820917,
+          "token": {
+            "client_ns": 571400787207548,
+            "index": 61,
+            "arrival_ns": 571400879076331,
+            "production_gpu_ns": 1792140027598628320,
+            "production_host_estimate_ns": 571400874074368.0,
+            "launch_to_publication_ms": 1.417056,
+            "publication_to_send_estimate_ms": 0.1024,
+            "send_to_consumed_ms": 0.57664,
+            "delivery_age_estimate_ms": 5.001963,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 10,
+                "offset": 324,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027598730848,
+                "client_ns": 571400787207548,
+                "tag": 216172782113783818,
+                "previous_ns": 1792140027598528544,
+                "begin_ns": 1792140027598727264,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 10,
+                "offset": 324,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027599307488,
+                "client_ns": 571400787207548,
+                "tag": 216172782113783818,
+                "previous_ns": 1792140027599251488,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400874701000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 000000001ebcbad9, user_data 0x30000000000000a, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783818,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400874719000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 000000001ebcbad9, user_data 0x30000000000000a, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.524232,
+            "kernel_submit_to_complete_ms": 0.018,
+            "complete_to_gpu_consumed_estimate_ms": 0.034536,
+            "client_after_kernel_complete_ms": 4.357331,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.202304
+          }
+        },
+        {
+          "client_ns": 571400861410821,
+          "index": 7,
+          "itl_ms": 6.171814,
+          "production_gap_ms": 1.458592,
+          "delivery_age_change_estimate_ms": 4.713382,
+          "token": {
+            "client_ns": 571400861410821,
+            "index": 7,
+            "arrival_ns": 571400878943189,
+            "production_gpu_ns": 1792140027598651968,
+            "production_host_estimate_ns": 571400874097920.0,
+            "launch_to_publication_ms": 1.427904,
+            "publication_to_send_estimate_ms": 0.062208,
+            "send_to_consumed_ms": 0.585408,
+            "delivery_age_estimate_ms": 4.845269,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 23,
+                "offset": 108,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027598714048,
+                "client_ns": 571400861410821,
+                "tag": 216172782113783831,
+                "previous_ns": 1792140027598528544,
+                "begin_ns": 1792140027598710592,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 23,
+                "offset": 108,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027599299456,
+                "client_ns": 571400861410821,
+                "tag": 216172782113783831,
+                "previous_ns": 1792140027599251488,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400874686000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 0000000082d051b8, user_data 0x300000000000017, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783831,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400874719000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 0000000082d051b8, user_data 0x300000000000017, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.525872,
+            "kernel_submit_to_complete_ms": 0.033,
+            "complete_to_gpu_consumed_estimate_ms": 0.0266,
+            "client_after_kernel_complete_ms": 4.224189,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.185504
+          }
+        },
+        {
+          "client_ns": 571400803270276,
+          "index": 13,
+          "itl_ms": 6.075275,
+          "production_gap_ms": 1.314624,
+          "delivery_age_change_estimate_ms": 4.760715,
+          "token": {
+            "client_ns": 571400803270276,
+            "index": 13,
+            "arrival_ns": 571400826864386,
+            "production_gpu_ns": 1792140027546550976,
+            "production_host_estimate_ns": 571400821996800.0,
+            "launch_to_publication_ms": 1.289632,
+            "publication_to_send_estimate_ms": 0.080896,
+            "send_to_consumed_ms": 0.08848,
+            "delivery_age_estimate_ms": 4.867586,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 13,
+                "offset": 132,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027546632032,
+                "client_ns": 571400803270276,
+                "tag": 216172782113783821,
+                "previous_ns": 1792140027546510368,
+                "begin_ns": 1792140027546628256,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 13,
+                "offset": 132,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027546720512,
+                "client_ns": 571400803270276,
+                "tag": 216172782113783821,
+                "previous_ns": 1792140027546657920,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400822104000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 00000000b32ae330, user_data 0x30000000000000d, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783821,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400822123000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 00000000b32ae330, user_data 0x30000000000000d, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.026304,
+            "kernel_submit_to_complete_ms": 0.019,
+            "complete_to_gpu_consumed_estimate_ms": 0.043528,
+            "client_after_kernel_complete_ms": 4.741386,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.121664
+          }
+        },
+        {
+          "client_ns": 571400856448257,
+          "index": 3,
+          "itl_ms": 6.074554,
+          "production_gap_ms": 1.46208,
+          "delivery_age_change_estimate_ms": 4.612282,
+          "token": {
+            "client_ns": 571400856448257,
+            "index": 3,
+            "arrival_ns": 571400870080256,
+            "production_gpu_ns": 1792140027589863392,
+            "production_host_estimate_ns": 571400865309440.0,
+            "launch_to_publication_ms": 1.430656,
+            "publication_to_send_estimate_ms": 0.062464,
+            "send_to_consumed_ms": 0.115552,
+            "delivery_age_estimate_ms": 4.770816,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 22,
+                "offset": 92,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027589925952,
+                "client_ns": 571400856448257,
+                "tag": 216172782113783830,
+                "previous_ns": 1792140027589756960,
+                "begin_ns": 1792140027589922368,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 22,
+                "offset": 92,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027590041504,
+                "client_ns": 571400856448257,
+                "tag": 216172782113783830,
+                "previous_ns": 1792140027589860736,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400865386000,
+                  "cpu": 18,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 00000000893a35cb, user_data 0x300000000000016, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783830,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400865396000,
+                  "cpu": 18,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 00000000893a35cb, user_data 0x300000000000016, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.014096,
+            "kernel_submit_to_complete_ms": 0.01,
+            "complete_to_gpu_consumed_estimate_ms": 0.09136,
+            "client_after_kernel_complete_ms": 4.684256,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.168992
+          }
+        },
+        {
+          "client_ns": 571400779249508,
+          "index": 18,
+          "itl_ms": 6.023715,
+          "production_gap_ms": 1.375808,
+          "delivery_age_change_estimate_ms": 4.647971,
+          "token": {
+            "client_ns": 571400779249508,
+            "index": 18,
+            "arrival_ns": 571400809633163,
+            "production_gpu_ns": 1792140027529501984,
+            "production_host_estimate_ns": 571400804947712.0,
+            "launch_to_publication_ms": 1.308384,
+            "publication_to_send_estimate_ms": 0.021248,
+            "send_to_consumed_ms": 0.056416,
+            "delivery_age_estimate_ms": 4.685451,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 8,
+                "offset": 152,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027529523136,
+                "client_ns": 571400779249508,
+                "tag": 216172782113783816,
+                "previous_ns": 1792140027529474080,
+                "begin_ns": 1792140027529519040,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 8,
+                "offset": 152,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027529579552,
+                "client_ns": 571400779249508,
+                "tag": 216172782113783816,
+                "previous_ns": 1792140027529508896,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400804970000,
+                  "cpu": 4,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 0000000093dafa6b, user_data 0x300000000000008, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783816,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400804984000,
+                  "cpu": 4,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 0000000093dafa6b, user_data 0x300000000000008, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.00104,
+            "kernel_submit_to_complete_ms": 0.014,
+            "complete_to_gpu_consumed_estimate_ms": 0.04128,
+            "client_after_kernel_complete_ms": 4.649163,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.049056
+          }
+        },
+        {
+          "client_ns": 571400803270276,
+          "index": 19,
+          "itl_ms": 6.016806,
+          "production_gap_ms": 1.320704,
+          "delivery_age_change_estimate_ms": 4.696102,
+          "token": {
+            "client_ns": 571400803270276,
+            "index": 19,
+            "arrival_ns": 571400834773641,
+            "production_gpu_ns": 1792140027554484960,
+            "production_host_estimate_ns": 571400829930752.0,
+            "launch_to_publication_ms": 1.293792,
+            "publication_to_send_estimate_ms": 0.046848,
+            "send_to_consumed_ms": 4.101728,
+            "delivery_age_estimate_ms": 4.842889,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 13,
+                "offset": 156,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027554531872,
+                "client_ns": 571400803270276,
+                "tag": 216172782113783821,
+                "previous_ns": 1792140027554409504,
+                "begin_ns": 1792140027554528384,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 13,
+                "offset": 156,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027558633600,
+                "client_ns": 571400803270276,
+                "tag": 216172782113783821,
+                "previous_ns": 1792140027558591616,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400833973000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 00000000f5e5abe0, user_data 0x30000000000000d, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783821,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400834046000,
+                  "cpu": 16,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 00000000f5e5abe0, user_data 0x30000000000000d, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 3.9954,
+            "kernel_submit_to_complete_ms": 0.073,
+            "complete_to_gpu_consumed_estimate_ms": 0.033232,
+            "client_after_kernel_complete_ms": 0.727641,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.122368
+          }
+        },
+        {
+          "client_ns": 571400853309470,
+          "index": 13,
+          "itl_ms": 5.988362,
+          "production_gap_ms": 1.459328,
+          "delivery_age_change_estimate_ms": 4.529418000000001,
+          "token": {
+            "client_ns": 571400853309470,
+            "index": 13,
+            "arrival_ns": 571400878899079,
+            "production_gpu_ns": 1792140027598648096,
+            "production_host_estimate_ns": 571400874093824.0,
+            "launch_to_publication_ms": 1.42592,
+            "publication_to_send_estimate_ms": 0.04992,
+            "send_to_consumed_ms": 0.112704,
+            "delivery_age_estimate_ms": 4.805255,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 21,
+                "offset": 132,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027598697920,
+                "client_ns": 571400853309470,
+                "tag": 216172782113783829,
+                "previous_ns": 1792140027598528544,
+                "begin_ns": 1792140027598694240,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 21,
+                "offset": 132,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027598810624,
+                "client_ns": 571400853309470,
+                "tag": 216172782113783829,
+                "previous_ns": 1792140027598640160,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400874139000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 0000000082d051b8, user_data 0x300000000000015, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783829,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400874146000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 0000000082d051b8, user_data 0x300000000000015, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": -0.004744,
+            "kernel_submit_to_complete_ms": 0.007,
+            "complete_to_gpu_consumed_estimate_ms": 0.11064,
+            "client_after_kernel_complete_ms": 4.753079,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.169376
+          }
+        },
+        {
+          "client_ns": 571400787207548,
+          "index": 49,
+          "itl_ms": 5.939047,
+          "production_gap_ms": 1.451584,
+          "delivery_age_change_estimate_ms": 4.487015,
+          "token": {
+            "client_ns": 571400787207548,
+            "index": 49,
+            "arrival_ns": 571400861314485,
+            "production_gpu_ns": 1792140027581056896,
+            "production_host_estimate_ns": 571400856503040.0,
+            "launch_to_publication_ms": 1.414752,
+            "publication_to_send_estimate_ms": 0.035584,
+            "send_to_consumed_ms": 2.795232,
+            "delivery_age_estimate_ms": 4.811445,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 10,
+                "offset": 276,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027581092640,
+                "client_ns": 571400787207548,
+                "tag": 216172782113783818,
+                "previous_ns": 1792140027580911680,
+                "begin_ns": 1792140027581089120,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 10,
+                "offset": 276,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027583887872,
+                "client_ns": 571400787207548,
+                "tag": 216172782113783818,
+                "previous_ns": 1792140027583851552,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400859206000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 00000000f5e5abe0, user_data 0x30000000000000a, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783818,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400859292000,
+                  "cpu": 15,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 00000000f5e5abe0, user_data 0x30000000000000a, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 2.667376,
+            "kernel_submit_to_complete_ms": 0.086,
+            "complete_to_gpu_consumed_estimate_ms": 0.041888,
+            "client_after_kernel_complete_ms": 2.022485,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.18096
+          }
+        },
+        {
+          "client_ns": 571400835788339,
+          "index": 25,
+          "itl_ms": 5.93081,
+          "production_gap_ms": 1.459776,
+          "delivery_age_change_estimate_ms": 4.4710980000000005,
+          "token": {
+            "client_ns": 571400835788339,
+            "index": 25,
+            "arrival_ns": 571400878641380,
+            "production_gpu_ns": 1792140027598644384,
+            "production_host_estimate_ns": 571400874090240.0,
+            "launch_to_publication_ms": 1.424064,
+            "publication_to_send_estimate_ms": 0.037376,
+            "send_to_consumed_ms": 0.121696,
+            "delivery_age_estimate_ms": 4.55114,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 19,
+                "offset": 180,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 1792140027598681696,
+                "client_ns": 571400835788339,
+                "tag": 216172782113783827,
+                "previous_ns": 1792140027598528544,
+                "begin_ns": 1792140027598677728,
+                "clock": "gpu_globaltimer"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 19,
+                "offset": 180,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 1792140027598803392,
+                "client_ns": 571400835788339,
+                "tag": 216172782113783827,
+                "previous_ns": 1792140027598640160,
+                "begin_ns": 0,
+                "clock": "gpu_globaltimer"
+              },
+              "kernel": {
+                "sub": {
+                  "ns": 571400874133000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_submit_req",
+                  "body": "ring 000000003190232f, req 0000000062b30269, user_data 0x300000000000013, opcode SEND, flags 0x400000, sq_thread 0"
+                },
+                "tag": 216172782113783827,
+                "async_work": [],
+                "cq": {
+                  "ns": 571400874138000,
+                  "cpu": 21,
+                  "pid": 3205081,
+                  "event": "io_uring_complete",
+                  "body": "ring 000000003190232f, req 0000000062b30269, user_data 0x300000000000013, result 4, cflags 0x0 extra1 0 extra2 0 "
+                },
+                "result": 4
+              }
+            },
+            "sq_to_kernel_estimate_ms": 0.005384,
+            "kernel_submit_to_complete_ms": 0.005,
+            "complete_to_gpu_consumed_estimate_ms": 0.111472,
+            "client_after_kernel_complete_ms": 4.50338,
+            "io_wq_queued": 0,
+            "previous_gpu_progress_gap_ms": 0.153152
+          }
+        }
+      ]
+    },
+    {
+      "pair": 0,
+      "mode": "userspace_16_mixed",
+      "requests": 32,
+      "errors": [],
+      "calibration": {
+        "100": {
+          "gpu": 1792140068266933216,
+          "low": -1791568626724502929,
+          "high": -1791568626724484077,
+          "width_ns": 18852
+        },
+        "101": {
+          "gpu": 1792140068700725056,
+          "low": -1791568626724501963,
+          "high": -1791568626724484015,
+          "width_ns": 17948
+        }
+      },
+      "clock_alignment_assumption": "Affine interpolation between measured start/end calibration brackets; interval estimates below error bound unresolved.",
+      "alignment_half_width_ns": 10426.0,
+      "offset_drift_ns": 514.0,
+      "events": {
+        "sched_switch": 17405,
+        "sched_wakeup": 10817,
+        "softirq_entry": 6272,
+        "softirq_exit": 6272,
+        "io_uring_submit_req": 12,
+        "io_uring_complete": 12,
+        "sys_enter_sendmsg": 1731,
+        "sys_exit_sendmsg": 1731
+      },
+      "gpu_terminal": {
+        "event": "terminal",
+        "gpu_count": 4112,
+        "capacity": 11904,
+        "cpu_count": 3478,
+        "cpu_overflow": 0
+      },
+      "itl_p99_ms": 9.995262,
+      "stages": {
+        "launch_to_publication_ms": {
+          "n": 2048,
+          "p50": 1.32016,
+          "p95": 1.337472,
+          "p99": 1.34192,
+          "maximum": 1.347296
+        },
+        "publication_to_send_estimate_ms": {
+          "n": 2048,
+          "p50": 0.220713,
+          "p95": 2.351768,
+          "p99": 2.667491,
+          "maximum": 3.408734
+        },
+        "send_to_consumed_ms": {
+          "n": 2048,
+          "p50": 0.005324,
+          "p95": 0.027498,
+          "p99": 0.126426,
+          "maximum": 1.834198
+        },
+        "delivery_age_estimate_ms": {
+          "n": 2048,
+          "p50": 0.9889,
+          "p95": 7.579027,
+          "p99": 10.973824,
+          "maximum": 16.47444
+        }
+      },
+      "p99_tail": {
+        "n": 21,
+        "production_gap_ms": {
+          "n": 21,
+          "p50": 1.36384,
+          "p95": 1.406368,
+          "p99": 1.406432,
+          "maximum": 1.406432
+        },
+        "delivery_age_change_estimate_ms": {
+          "n": 21,
+          "p50": 10.05001,
+          "p95": 11.604081,
+          "p99": 13.688692,
+          "maximum": 13.688692
+        }
+      },
+      "largest_gaps": [
+        {
+          "client_ns": 571441879616526,
+          "index": 9,
+          "itl_ms": 15.051892,
+          "production_gap_ms": 1.363264,
+          "delivery_age_change_estimate_ms": 13.688692,
+          "token": {
+            "client_ns": 571441879616526,
+            "index": 9,
+            "arrival_ns": 571441920086905,
+            "production_gpu_ns": 1792140068629946816,
+            "production_host_estimate_ns": 571441905453568.0,
+            "launch_to_publication_ms": 1.334208,
+            "publication_to_send_estimate_ms": 0.571456,
+            "send_to_consumed_ms": 0.003964,
+            "delivery_age_estimate_ms": 14.633337,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 116,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441906025024,
+                "client_ns": 571441879616526,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 116,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441906028988,
+                "client_ns": 571441879616526,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441854728698,
+          "index": 47,
+          "itl_ms": 12.957297,
+          "production_gap_ms": 1.353152,
+          "delivery_age_change_estimate_ms": 11.604081,
+          "token": {
+            "client_ns": 571441854728698,
+            "index": 47,
+            "arrival_ns": 571441933220133,
+            "production_gpu_ns": 1792140068644885664,
+            "production_host_estimate_ns": 571441920392448.0,
+            "launch_to_publication_ms": 1.320896,
+            "publication_to_send_estimate_ms": 2.648542,
+            "send_to_consumed_ms": 0.006864,
+            "delivery_age_estimate_ms": 12.827685,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 268,
+                "length": 8,
+                "header": 80,
+                "result": 0,
+                "ns": 571441923040990,
+                "client_ns": 571441854728698,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 268,
+                "length": 0,
+                "header": 80,
+                "result": 8,
+                "ns": 571441923047854,
+                "client_ns": 571441854728698,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441855593530,
+          "index": 34,
+          "itl_ms": 12.857965,
+          "production_gap_ms": 1.364256,
+          "delivery_age_change_estimate_ms": 11.493741,
+          "token": {
+            "client_ns": 571441855593530,
+            "index": 34,
+            "arrival_ns": 571441916949431,
+            "production_gpu_ns": 1792140068628573088,
+            "production_host_estimate_ns": 571441904079872.0,
+            "launch_to_publication_ms": 1.3296,
+            "publication_to_send_estimate_ms": 0.021829,
+            "send_to_consumed_ms": 0.008747,
+            "delivery_age_estimate_ms": 12.869559,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 216,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441904101701,
+                "client_ns": 571441855593530,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 216,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441904110448,
+                "client_ns": 571441855593530,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441826278300,
+          "index": 57,
+          "itl_ms": 12.828641,
+          "production_gap_ms": 1.364512,
+          "delivery_age_change_estimate_ms": 11.464160999999999,
+          "token": {
+            "client_ns": 571441826278300,
+            "index": 57,
+            "arrival_ns": 571441916688199,
+            "production_gpu_ns": 1792140068628560896,
+            "production_host_estimate_ns": 571441904067584.0,
+            "launch_to_publication_ms": 1.323872,
+            "publication_to_send_estimate_ms": 0.067164,
+            "send_to_consumed_ms": 0.002664,
+            "delivery_age_estimate_ms": 12.620615,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 308,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441904134748,
+                "client_ns": 571441826278300,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 308,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441904137412,
+                "client_ns": 571441826278300,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441885114988,
+          "index": 9,
+          "itl_ms": 12.073731,
+          "production_gap_ms": 1.363392,
+          "delivery_age_change_estimate_ms": 10.710531,
+          "token": {
+            "client_ns": 571441885114988,
+            "index": 9,
+            "arrival_ns": 571441917181129,
+            "production_gpu_ns": 1792140068629948736,
+            "production_host_estimate_ns": 571441905455616.0,
+            "launch_to_publication_ms": 1.3352,
+            "publication_to_send_estimate_ms": 0.573421,
+            "send_to_consumed_ms": 0.00396,
+            "delivery_age_estimate_ms": 11.725513,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 116,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441906029037,
+                "client_ns": 571441885114988,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 116,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441906032997,
+                "client_ns": 571441885114988,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441854057060,
+          "index": 38,
+          "itl_ms": 12.071301,
+          "production_gap_ms": 1.36384,
+          "delivery_age_change_estimate_ms": 10.707333,
+          "token": {
+            "client_ns": 571441854057060,
+            "index": 38,
+            "arrival_ns": 571441920150618,
+            "production_gpu_ns": 1792140068632656864,
+            "production_host_estimate_ns": 571441908163584.0,
+            "launch_to_publication_ms": 1.326688,
+            "publication_to_send_estimate_ms": 0.178271,
+            "send_to_consumed_ms": 0.004101,
+            "delivery_age_estimate_ms": 11.987034,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 232,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441908341855,
+                "client_ns": 571441854057060,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 232,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441908345956,
+                "client_ns": 571441854057060,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441846148554,
+          "index": 43,
+          "itl_ms": 12.00068,
+          "production_gap_ms": 1.362912,
+          "delivery_age_change_estimate_ms": 10.637991999999999,
+          "token": {
+            "client_ns": 571441846148554,
+            "index": 43,
+            "arrival_ns": 571441917128601,
+            "production_gpu_ns": 1792140068629927200,
+            "production_host_estimate_ns": 571441905433856.0,
+            "launch_to_publication_ms": 1.324256,
+            "publication_to_send_estimate_ms": 0.601343,
+            "send_to_consumed_ms": 0.003595,
+            "delivery_age_estimate_ms": 11.694745,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 252,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441906035199,
+                "client_ns": 571441846148554,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 252,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441906038794,
+                "client_ns": 571441846148554,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441868112173,
+          "index": 28,
+          "itl_ms": 11.998329,
+          "production_gap_ms": 1.363936,
+          "delivery_age_change_estimate_ms": 10.634361,
+          "token": {
+            "client_ns": 571441868112173,
+            "index": 28,
+            "arrival_ns": 571441919232140,
+            "production_gpu_ns": 1792140068632668736,
+            "production_host_estimate_ns": 571441908175616.0,
+            "launch_to_publication_ms": 1.33216,
+            "publication_to_send_estimate_ms": 0.094293,
+            "send_to_consumed_ms": 0.004074,
+            "delivery_age_estimate_ms": 11.056524,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 192,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441908269909,
+                "client_ns": 571441868112173,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 192,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441908273983,
+                "client_ns": 571441868112173,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441876255566,
+          "index": 14,
+          "itl_ms": 11.956828,
+          "production_gap_ms": 1.363968,
+          "delivery_age_change_estimate_ms": 10.592604,
+          "token": {
+            "client_ns": 571441876255566,
+            "index": 14,
+            "arrival_ns": 571441919110536,
+            "production_gpu_ns": 1792140068632670784,
+            "production_host_estimate_ns": 571441908177664.0,
+            "launch_to_publication_ms": 1.333376,
+            "publication_to_send_estimate_ms": 0.096367,
+            "send_to_consumed_ms": 0.023961,
+            "delivery_age_estimate_ms": 10.932872,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 136,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441908274031,
+                "client_ns": 571441876255566,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 136,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441908297992,
+                "client_ns": 571441876255566,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441846181963,
+          "index": 10,
+          "itl_ms": 11.606336,
+          "production_gap_ms": 1.406144,
+          "delivery_age_change_estimate_ms": 10.200128000000001,
+          "token": {
+            "client_ns": 571441846181963,
+            "index": 10,
+            "arrival_ns": 571441870695500,
+            "production_gpu_ns": 1792140068584781600,
+            "production_host_estimate_ns": 571441860288256.0,
+            "launch_to_publication_ms": 1.333376,
+            "publication_to_send_estimate_ms": 1.603199,
+            "send_to_consumed_ms": 0.004079,
+            "delivery_age_estimate_ms": 10.407244,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 120,
+                "length": 8,
+                "header": 80,
+                "result": 0,
+                "ns": 571441861891455,
+                "client_ns": 571441846181963,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 120,
+                "length": 0,
+                "header": 80,
+                "result": 8,
+                "ns": 571441861895534,
+                "client_ns": 571441846181963,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441855156547,
+          "index": 2,
+          "itl_ms": 11.455962,
+          "production_gap_ms": 1.405888,
+          "delivery_age_change_estimate_ms": 10.05001,
+          "token": {
+            "client_ns": 571441855156547,
+            "index": 2,
+            "arrival_ns": 571441870589716,
+            "production_gpu_ns": 1792140068584786816,
+            "production_host_estimate_ns": 571441860293632.0,
+            "launch_to_publication_ms": 1.335904,
+            "publication_to_send_estimate_ms": 1.61117,
+            "send_to_consumed_ms": 0.005024,
+            "delivery_age_estimate_ms": 10.296084,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 88,
+                "length": 8,
+                "header": 80,
+                "result": 0,
+                "ns": 571441861904802,
+                "client_ns": 571441855156547,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 88,
+                "length": 0,
+                "header": 80,
+                "result": 8,
+                "ns": 571441861909826,
+                "client_ns": 571441855156547,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441868112173,
+          "index": 39,
+          "itl_ms": 11.155151,
+          "production_gap_ms": 1.35136,
+          "delivery_age_change_estimate_ms": 9.803471,
+          "token": {
+            "client_ns": 571441868112173,
+            "index": 39,
+            "arrival_ns": 571441933309910,
+            "production_gpu_ns": 1792140068647597728,
+            "production_host_estimate_ns": 571441923104768.0,
+            "launch_to_publication_ms": 1.323232,
+            "publication_to_send_estimate_ms": 0.181933,
+            "send_to_consumed_ms": 0.00956,
+            "delivery_age_estimate_ms": 10.205142,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 236,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441923286701,
+                "client_ns": 571441868112173,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 236,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441923296261,
+                "client_ns": 571441868112173,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441806176872,
+          "index": 41,
+          "itl_ms": 11.044934,
+          "production_gap_ms": 1.406368,
+          "delivery_age_change_estimate_ms": 9.638981999999999,
+          "token": {
+            "client_ns": 571441806176872,
+            "index": 41,
+            "arrival_ns": 571441870022250,
+            "production_gpu_ns": 1792140068584773216,
+            "production_host_estimate_ns": 571441860279808.0,
+            "launch_to_publication_ms": 1.329568,
+            "publication_to_send_estimate_ms": 1.593328,
+            "send_to_consumed_ms": 0.003253,
+            "delivery_age_estimate_ms": 9.742442,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 244,
+                "length": 8,
+                "header": 80,
+                "result": 0,
+                "ns": 571441861873136,
+                "client_ns": 571441806176872,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 244,
+                "length": 0,
+                "header": 80,
+                "result": 8,
+                "ns": 571441861876389,
+                "client_ns": 571441806176872,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441857039306,
+          "index": 35,
+          "itl_ms": 11.016904,
+          "production_gap_ms": 1.36384,
+          "delivery_age_change_estimate_ms": 9.652936,
+          "token": {
+            "client_ns": 571441857039306,
+            "index": 35,
+            "arrival_ns": 571441919146112,
+            "production_gpu_ns": 1792140068632665312,
+            "production_host_estimate_ns": 571441908172288.0,
+            "launch_to_publication_ms": 1.330464,
+            "publication_to_send_estimate_ms": 0.089642,
+            "send_to_consumed_ms": 0.002971,
+            "delivery_age_estimate_ms": 10.973824,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 220,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441908261930,
+                "client_ns": 571441857039306,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 220,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441908264901,
+                "client_ns": 571441857039306,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441750827109,
+          "index": 33,
+          "itl_ms": 10.858102,
+          "production_gap_ms": 1.353568,
+          "delivery_age_change_estimate_ms": 9.504374,
+          "token": {
+            "client_ns": 571441750827109,
+            "index": 33,
+            "arrival_ns": 571441806928725,
+            "production_gpu_ns": 1792140068520590720,
+            "production_host_estimate_ns": 571441796097536.0,
+            "launch_to_publication_ms": 1.323104,
+            "publication_to_send_estimate_ms": 0.069311,
+            "send_to_consumed_ms": 0.003486,
+            "delivery_age_estimate_ms": 10.831189,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 212,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441796166847,
+                "client_ns": 571441750827109,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 212,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441796170333,
+                "client_ns": 571441750827109,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441722801309,
+          "index": 56,
+          "itl_ms": 10.568296,
+          "production_gap_ms": 1.352288,
+          "delivery_age_change_estimate_ms": 9.216104,
+          "token": {
+            "client_ns": 571441722801309,
+            "index": 56,
+            "arrival_ns": 571441804079029,
+            "production_gpu_ns": 1792140068519228160,
+            "production_host_estimate_ns": 571441794734848.0,
+            "launch_to_publication_ms": 1.31872,
+            "publication_to_send_estimate_ms": 0.120542,
+            "send_to_consumed_ms": 0.002341,
+            "delivery_age_estimate_ms": 9.344181,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 304,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441794855390,
+                "client_ns": 571441722801309,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 304,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441794857731,
+                "client_ns": 571441722801309,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441856140779,
+          "index": 47,
+          "itl_ms": 10.485339,
+          "production_gap_ms": 1.352192,
+          "delivery_age_change_estimate_ms": 9.133403,
+          "token": {
+            "client_ns": 571441856140779,
+            "index": 47,
+            "arrival_ns": 571441933778766,
+            "production_gpu_ns": 1792140068648944832,
+            "production_host_estimate_ns": 571441924451584.0,
+            "launch_to_publication_ms": 1.322368,
+            "publication_to_send_estimate_ms": 1.809045,
+            "send_to_consumed_ms": 0.007336,
+            "delivery_age_estimate_ms": 9.327182,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 268,
+                "length": 8,
+                "header": 80,
+                "result": 0,
+                "ns": 571441926260629,
+                "client_ns": 571441856140779,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 268,
+                "length": 0,
+                "header": 80,
+                "result": 8,
+                "ns": 571441926267965,
+                "client_ns": 571441856140779,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441754151733,
+          "index": 30,
+          "itl_ms": 10.342865,
+          "production_gap_ms": 1.352448,
+          "delivery_age_change_estimate_ms": 8.990416999999999,
+          "token": {
+            "client_ns": 571441754151733,
+            "index": 30,
+            "arrival_ns": 571441804009758,
+            "production_gpu_ns": 1792140068519240448,
+            "production_host_estimate_ns": 571441794747136.0,
+            "launch_to_publication_ms": 1.324352,
+            "publication_to_send_estimate_ms": 0.069375,
+            "send_to_consumed_ms": 0.006636,
+            "delivery_age_estimate_ms": 9.262622,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 200,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441794816511,
+                "client_ns": 571441754151733,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 200,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441794823147,
+                "client_ns": 571441754151733,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441857856597,
+          "index": 35,
+          "itl_ms": 10.073879,
+          "production_gap_ms": 1.363872,
+          "delivery_age_change_estimate_ms": 8.709911,
+          "token": {
+            "client_ns": 571441857856597,
+            "index": 35,
+            "arrival_ns": 571441917159076,
+            "production_gpu_ns": 1792140068632667008,
+            "production_host_estimate_ns": 571441908174080.0,
+            "launch_to_publication_ms": 1.331296,
+            "publication_to_send_estimate_ms": 0.090892,
+            "send_to_consumed_ms": 0.004889,
+            "delivery_age_estimate_ms": 8.984996,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 220,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441908264972,
+                "client_ns": 571441857856597,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 220,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441908269861,
+                "client_ns": 571441857856597,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441802218597,
+          "index": 44,
+          "itl_ms": 9.995592,
+          "production_gap_ms": 1.406432,
+          "delivery_age_change_estimate_ms": 8.589384,
+          "token": {
+            "client_ns": 571441802218597,
+            "index": 44,
+            "arrival_ns": 571441868965917,
+            "production_gpu_ns": 1792140068584769664,
+            "production_host_estimate_ns": 571441860276224.0,
+            "launch_to_publication_ms": 1.327744,
+            "publication_to_send_estimate_ms": 1.584855,
+            "send_to_consumed_ms": 0.008566,
+            "delivery_age_estimate_ms": 8.689693,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 256,
+                "length": 8,
+                "header": 80,
+                "result": 0,
+                "ns": 571441861861079,
+                "client_ns": 571441802218597,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 256,
+                "length": 0,
+                "header": 80,
+                "result": 8,
+                "ns": 571441861869645,
+                "client_ns": 571441802218597,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441806262253,
+          "index": 55,
+          "itl_ms": 9.995262,
+          "production_gap_ms": 1.37152,
+          "delivery_age_change_estimate_ms": 8.62387,
+          "token": {
+            "client_ns": 571441806262253,
+            "index": 55,
+            "arrival_ns": 571441890026326,
+            "production_gpu_ns": 1792140068603931648,
+            "production_host_estimate_ns": 571441879438336.0,
+            "launch_to_publication_ms": 1.332192,
+            "publication_to_send_estimate_ms": 2.644331,
+            "send_to_consumed_ms": 0.010682,
+            "delivery_age_estimate_ms": 10.58799,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 300,
+                "length": 8,
+                "header": 80,
+                "result": 0,
+                "ns": 571441882082667,
+                "client_ns": 571441806262253,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 300,
+                "length": 0,
+                "header": 80,
+                "result": 8,
+                "ns": 571441882093349,
+                "client_ns": 571441806262253,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441846181963,
+          "index": 45,
+          "itl_ms": 9.963376,
+          "production_gap_ms": 1.363872,
+          "delivery_age_change_estimate_ms": 8.599408,
+          "token": {
+            "client_ns": 571441846181963,
+            "index": 45,
+            "arrival_ns": 571441917068530,
+            "production_gpu_ns": 1792140068632654912,
+            "production_host_estimate_ns": 571441908161792.0,
+            "launch_to_publication_ms": 1.325696,
+            "publication_to_send_estimate_ms": 0.174904,
+            "send_to_consumed_ms": 0.005091,
+            "delivery_age_estimate_ms": 8.906738,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 260,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441908336696,
+                "client_ns": 571441846181963,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 260,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441908341787,
+                "client_ns": 571441846181963,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441854728698,
+          "index": 38,
+          "itl_ms": 9.83462,
+          "production_gap_ms": 1.36384,
+          "delivery_age_change_estimate_ms": 8.470652,
+          "token": {
+            "client_ns": 571441854728698,
+            "index": 38,
+            "arrival_ns": 571441917039028,
+            "production_gpu_ns": 1792140068632658624,
+            "production_host_estimate_ns": 571441908165376.0,
+            "launch_to_publication_ms": 1.327424,
+            "publication_to_send_estimate_ms": 0.180731,
+            "send_to_consumed_ms": 0.013942,
+            "delivery_age_estimate_ms": 8.873652,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 232,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441908346107,
+                "client_ns": 571441854728698,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 232,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441908360049,
+                "client_ns": 571441854728698,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441856140779,
+          "index": 35,
+          "itl_ms": 9.813235,
+          "production_gap_ms": 1.36384,
+          "delivery_age_change_estimate_ms": 8.449523000000001,
+          "token": {
+            "client_ns": 571441856140779,
+            "index": 35,
+            "arrival_ns": 571441916994728,
+            "production_gpu_ns": 1792140068632663648,
+            "production_host_estimate_ns": 571441908170496.0,
+            "launch_to_publication_ms": 1.329664,
+            "publication_to_send_estimate_ms": 0.080622,
+            "send_to_consumed_ms": 0.010763,
+            "delivery_age_estimate_ms": 8.824232,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 220,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441908251118,
+                "client_ns": 571441856140779,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 220,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441908261881,
+                "client_ns": 571441856140779,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441854057060,
+          "index": 49,
+          "itl_ms": 9.810435,
+          "production_gap_ms": 1.351776,
+          "delivery_age_change_estimate_ms": 8.458499,
+          "token": {
+            "client_ns": 571441854057060,
+            "index": 49,
+            "arrival_ns": 571441933034721,
+            "production_gpu_ns": 1792140068647585504,
+            "production_host_estimate_ns": 571441923092480.0,
+            "launch_to_publication_ms": 1.317472,
+            "publication_to_send_estimate_ms": 0.260653,
+            "send_to_consumed_ms": 0.065312,
+            "delivery_age_estimate_ms": 9.942241,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 276,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441923353133,
+                "client_ns": 571441854057060,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 276,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441923418445,
+                "client_ns": 571441854057060,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441854728698,
+          "index": 3,
+          "itl_ms": 9.753245,
+          "production_gap_ms": 1.40624,
+          "delivery_age_change_estimate_ms": 8.347293,
+          "token": {
+            "client_ns": 571441854728698,
+            "index": 3,
+            "arrival_ns": 571441868849127,
+            "production_gpu_ns": 1792140068584785248,
+            "production_host_estimate_ns": 571441860291840.0,
+            "launch_to_publication_ms": 1.335264,
+            "publication_to_send_estimate_ms": 1.608852,
+            "send_to_consumed_ms": 0.004066,
+            "delivery_age_estimate_ms": 8.557287,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 92,
+                "length": 8,
+                "header": 80,
+                "result": 0,
+                "ns": 571441861900692,
+                "client_ns": 571441854728698,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 92,
+                "length": 0,
+                "header": 80,
+                "result": 8,
+                "ns": 571441861904758,
+                "client_ns": 571441854728698,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441830349307,
+          "index": 52,
+          "itl_ms": 9.715329,
+          "production_gap_ms": 1.362592,
+          "delivery_age_change_estimate_ms": 8.352641,
+          "token": {
+            "client_ns": 571441830349307,
+            "index": 52,
+            "arrival_ns": 571441917811784,
+            "production_gpu_ns": 1792140068625830464,
+            "production_host_estimate_ns": 571441901337344.0,
+            "launch_to_publication_ms": 1.323456,
+            "publication_to_send_estimate_ms": 1.737768,
+            "send_to_consumed_ms": 0.000848,
+            "delivery_age_estimate_ms": 16.47444,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 288,
+                "length": 8,
+                "header": 80,
+                "result": 0,
+                "ns": 571441903075112,
+                "client_ns": 571441830349307,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 288,
+                "length": 0,
+                "header": 80,
+                "result": 8,
+                "ns": 571441903075960,
+                "client_ns": 571441830349307,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441857039306,
+          "index": 47,
+          "itl_ms": 9.638838,
+          "production_gap_ms": 1.352192,
+          "delivery_age_change_estimate_ms": 8.286389999999999,
+          "token": {
+            "client_ns": 571441857039306,
+            "index": 47,
+            "arrival_ns": 571441932944679,
+            "production_gpu_ns": 1792140068648946560,
+            "production_host_estimate_ns": 571441924453632.0,
+            "launch_to_publication_ms": 1.323168,
+            "publication_to_send_estimate_ms": 1.814393,
+            "send_to_consumed_ms": 0.004526,
+            "delivery_age_estimate_ms": 8.491047,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 268,
+                "length": 8,
+                "header": 80,
+                "result": 0,
+                "ns": 571441926268025,
+                "client_ns": 571441857039306,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 268,
+                "length": 0,
+                "header": 80,
+                "result": 8,
+                "ns": 571441926272551,
+                "client_ns": 571441857039306,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441750827109,
+          "index": 61,
+          "itl_ms": 9.128234,
+          "production_gap_ms": 1.363648,
+          "delivery_age_change_estimate_ms": 7.764522000000001,
+          "token": {
+            "client_ns": 571441750827109,
+            "index": 61,
+            "arrival_ns": 571441840426464,
+            "production_gpu_ns": 1792140068557096352,
+            "production_host_estimate_ns": 571441832603136.0,
+            "launch_to_publication_ms": 1.316864,
+            "publication_to_send_estimate_ms": 0.152208,
+            "send_to_consumed_ms": 0.004034,
+            "delivery_age_estimate_ms": 7.823328,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 324,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441832755344,
+                "client_ns": 571441750827109,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 324,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441832759378,
+                "client_ns": 571441750827109,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        },
+        {
+          "client_ns": 571441726187998,
+          "index": 30,
+          "itl_ms": 9.10704,
+          "production_gap_ms": 1.227136,
+          "delivery_age_change_estimate_ms": 7.880032,
+          "token": {
+            "client_ns": 571441726187998,
+            "index": 30,
+            "arrival_ns": 571441772025386,
+            "production_gpu_ns": 1792140068488268832,
+            "production_host_estimate_ns": 571441763775488.0,
+            "launch_to_publication_ms": 1.19856,
+            "publication_to_send_estimate_ms": 0.16124,
+            "send_to_consumed_ms": 0.005916,
+            "delivery_age_estimate_ms": 8.249898,
+            "send": {
+              "sub": {
+                "kind": 3,
+                "seq": 0,
+                "offset": 200,
+                "length": 4,
+                "header": 80,
+                "result": 0,
+                "ns": 571441763936728,
+                "client_ns": 571441726187998,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              },
+              "cq": {
+                "kind": 4,
+                "seq": 0,
+                "offset": 200,
+                "length": 0,
+                "header": 80,
+                "result": 4,
+                "ns": 571441763942644,
+                "client_ns": 571441726187998,
+                "tag": 0,
+                "previous_ns": 0,
+                "begin_ns": 0,
+                "clock": "host_monotonic"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

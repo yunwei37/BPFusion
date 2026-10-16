@@ -1,6 +1,6 @@
 from pathlib import Path
 import json,math,statistics
-a=Path('/workspaces/repository/bench/results/mixed_batching_20261015')
+a=Path(__file__).resolve().parent.parent/'mixed_batching_20261015'
 rows=[json.loads(l) for l in (a/'full_qwen.jsonl').open()]
 def q(v,p):return sorted(v)[min(len(v)-1,math.ceil(p*len(v))-1)]
 out=[]
