@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-16T11:43:47.746078+00:00",
+  "begin_ns": 582399744226062,
+  "end_ns": 582399745669652,
+  "server_pid": 744780,
+  "command": [
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/tcp_sourcebuild16/bpfusion_load",
+    "stats"
+  ],
+  "exit": 0,
+  "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 9945\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 10549\nsockhash linked 10693\nsockhash failed 835\nparser calls   10549\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=9961\nllm_queued=588\nllm_reserved=0xffff\nllm[0]: state=1 prompt=2 gen=64 produced=48 client_ns=2817989865136992\nllm[1]: state=1 prompt=5 gen=64 produced=42 client_ns=2817989870388619\nllm[2]: state=1 prompt=8 gen=64 produced=36 client_ns=2817989876393981\nllm[3]: state=1 prompt=5 gen=64 produced=30 client_ns=2817989876785794\nllm[4]: state=1 prompt=2 gen=64 produced=25 client_ns=2817989894309285\nllm[5]: state=1 prompt=5 gen=64 produced=19 client_ns=2817989898051697\nllm[6]: state=1 prompt=8 gen=64 produced=13 client_ns=2817989903920308\nllm[7]: state=1 prompt=5 gen=64 produced=7 client_ns=2817989905207216\nllm[8]: state=1 prompt=2 gen=64 produced=1 client_ns=2817989909263289\nllm[9]: state=2 prompt=5 gen=64 produced=64 client_ns=2817989833064860\nllm[10]: state=2 prompt=8 gen=64 produced=64 client_ns=2817989837620652\nllm[11]: state=2 prompt=5 gen=64 produced=64 client_ns=2817989842824507\nllm[12]: state=2 prompt=2 gen=64 produced=64 client_ns=2817989845958945\nllm[13]: state=2 prompt=5 gen=64 produced=64 client_ns=2817989846635016\nllm[14]: state=1 prompt=8 gen=64 produced=60 client_ns=2817989850083603\nllm[15]: state=1 prompt=5 gen=64 produced=54 client_ns=2817989858945641\n",
+  "stderr": "",
+  "scope": "Additional read-only counter snapshot during pair3 kernel192; no source or workload mutation"
+}

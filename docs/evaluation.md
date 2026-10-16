@@ -1509,3 +1509,16 @@ dependency, not a sustained performance/resource conclusion; all20 full cells
 remain. Actual io-wq worker TGID equals the owned server, so its CPU is already
 inside group CPU and must not be double-counted. Shared root IRQ/softirq and
 device totals remain distinct, not exclusive attribution.
+
+### 2026-10-16 sustained remote/resources (complete, adverse)
+[Finding0071](findings/0071-sustained-remote-resources.md) and
+[reviewed result](../bench/results/sustained_remote_resources_20261016/result.md)
+close20 cells/172800 attempts. Kernel192 has3926/57600 zero-token timeouts;
+native has none. Throughput7622.919 versus11637.947token/s. Conditional
+completionP99 adverse +2571.373[1990.360,3152.386]ms, censoring failures.
+Group CPU higher; host/device totals do not establish exclusive attribution.
+96/s latency/host inconclusive. Reference disagreements, observer/control,
+shared work and checkpoint exposure retained. Sockhash insertion failures
+match one timeout cell; global-queue closure dependency is an unproved cause.
+Next diagnose/repair and matched retest. Valid observations, current192 advantage
+contradicted, supporting additional RQ/workload-boundary evidence.

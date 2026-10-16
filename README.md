@@ -104,6 +104,11 @@ forced into a Python per-token loop.
   a controlled server NODELAY change removes the shared persistent40ms stall,
   improving both transports. CPU rises; ordinary mixed source adopts the repair
   after default8 protocol and cancellation qualification.
+- [Sustained remote/resources](docs/findings/0071-sustained-remote-resources.md):
+  at192 requests/s kernel times out3926/57600 while native delivers all;
+  throughput and group CPU adverse. Sockhash failures expose a connection
+  lifetime investigation.96/s latency/host inconclusive; host/device totals
+  are not exclusive service costs.
 - [Opaque graph backend](docs/findings/0067-opaque-graph-backend.md):cuBLAS/cuFFT
   ordinary default8 numerical/lifecycle checks pass on both transports.
 - [Fair native admission](docs/findings/0063-fair-native-admission.md):
@@ -131,8 +136,8 @@ See [related work](docs/background-related-work.md) and
   mixed-scheduling protocol and partial-output cancellation checks.
 - Measure complete service CPU, including kernel I/O, softirq and GPU polling/
   resource cost; process CPU alone is insufficient.
-- Establish sustained remote offered-load/tail behavior with errors and client
-  lag visible. Current finite runs do not prove production SLOs or isolation.
+- Repair the sustained192/s kernel connection failure and repeat matched tests;
+  current remote results retain timeouts/client lag and do not prove SLOs.
 - Broaden the experimental fixed-shape graph boundary beyond the qualified
   cuBLAS/cuFFT cases before claiming arbitrary-model/kernel support.
 - Extend kernel/hardware compatibility and longer-running reliability with real
