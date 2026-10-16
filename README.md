@@ -37,9 +37,9 @@ With the documented dependencies and environment active:
 
 ~~~sh
 make build/fusion.bpf.o build/bpfusion_load \
-  vllm-graph-uring-loop vllm-graph-user-network-wait
+  vllm-mixed-uring-loop vllm-mixed-user-network-wait
 ./build/bpfusion_load stream-uring-attach
-./build/vllm_graph_uring_loop Qwen/Qwen2.5-0.5B-Instruct 120
+./build/vllm_mixed_uring_loop Qwen/Qwen2.5-0.5B-Instruct 120
 ~~~
 
 Wait for the ready line. In another terminal with the same Python environment:
@@ -89,7 +89,9 @@ forced into a Python per-token loop.
 - [Mixed scheduling](docs/findings/0065-mixed-prefill-decode.md):the complete
   reviewed experiment improves mean generation time on both paths.
   General transport superiority is unproven; Qwen has an adverse tail-token
-  result. This candidate is archived, not selected for ordinary serving.
+  result. [Ordinary integration](docs/findings/0068-mixed-source-integration.md)
+  selects explicit mixed Make targets after default8 and cancellation validation;
+  old homogeneous controls retain their semantics.
 - [Tail-path diagnosis](docs/findings/0066-tail-path-diagnosis.md):the complete
   close-scan retest is inconclusive; the candidate is not adopted. The old tail
   gap does not reproduce even before modification, and process CPU is adverse
@@ -117,8 +119,8 @@ See [related work](docs/background-related-work.md) and
 
 ## Remaining work
 
-- Qualify default 8, ordinary output/lifecycle and partial-output stop before
-  adopting the experimental mixed scheduler.
+- Broaden reliability and workload coverage beyond the finite default8
+  mixed-scheduling protocol and partial-output cancellation checks.
 - Measure complete service CPU, including kernel I/O, softirq and GPU polling/
   resource cost; process CPU alone is insufficient.
 - Establish sustained remote offered-load/tail behavior with errors and client

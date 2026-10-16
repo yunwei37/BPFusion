@@ -70,7 +70,7 @@ loaded Torch runtime. System Python packages remain unchanged.
 
 ~~~sh
 make build/fusion.bpf.o build/bpfusion_load \
-  vllm-graph-uring-loop vllm-graph-user-network-wait
+  vllm-mixed-uring-loop vllm-mixed-user-network-wait
 model="$(python3 -c 'from huggingface_hub import snapshot_download; print(snapshot_download("Qwen/Qwen2.5-0.5B-Instruct", revision="7ae557604adf67be50417f59c2c2f167def9a775"))')"
 ~~~
 
@@ -90,7 +90,7 @@ is a separate vLLM configuration, not an interchangeable module/map ABI.
 
 ~~~sh
 ./build/bpfusion_load stream-uring-attach
-./build/vllm_graph_uring_loop "$model" 120
+./build/vllm_mixed_uring_loop "$model" 120
 ~~~
 
 Wait for the line starting with:
@@ -102,7 +102,10 @@ resident vLLM ready:
 Its remainder contains actual dimensions. Bootstrap can take minutes.
 The 120 argument bounds serving time after bootstrap; Ctrl-C/SIGTERM stops the
 current server. This explicit BPF-loop target needs no bfusion_tx module.
-The plain vllm_graph target is a different legacy-module transport.
+The explicit mixed targets combine prefill and decode in the same upstream
+graph batch. Older vllm_graph and homogeneous/control targets remain available
+with their historical semantics; the plain vllm_graph target uses the legacy
+module transport.
 
 In another terminal, activate the same environment and set the same model path:
 
@@ -139,7 +142,7 @@ have exited. This path neither loads nor unloads the legacy TCP module.
 After the kernel server and its pins are cleaned up:
 
 ~~~sh
-./build/vllm_graph_user_network_wait "$model" 120
+./build/vllm_mixed_user_network_wait "$model" 120
 ~~~
 
 Run the same clients. This alternative needs no BPF attach or custom module.
@@ -153,7 +156,9 @@ epoll. Demo timings are not controlled benchmark results.
 records complete default 8/explicit 16 protocol and ordinary lifecycle evidence.
 The [mixed scheduling archive](../bench/results/mixed_batching_20261015/) retains
 the plan, review, actual sources, raw data, analysis and figures; its README gives
-portable standard-library reanalysis commands. Historical acquisition scripts
+portable standard-library reanalysis commands. The selected ordinary mixed
+adapter and default8 protocol/cancellation qualification are recorded in
+[the integration record](findings/0068-mixed-source-integration.md). Historical acquisition scripts
 retain their real Workspace/model-cache paths, not a portable installer.
 
 For the separate HF/legacy-module regression:

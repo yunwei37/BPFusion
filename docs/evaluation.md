@@ -1424,3 +1424,14 @@ See [complete result](../bench/results/tail_path_20261016/confirmation-result.md
 [raw/replay](../bench/results/tail_path_20261016/confirmation/),
 and the [independent result review](../bench/results/tail_path_20261016/confirmation-result-review.md). This is supporting mechanism
 boundary evidence, not a throughput/latency win or a whole-RQ conclusion.
+
+### 2026-10-16 ordinary mixed-source integration
+The selected explicit mixed Make targets now compile from ordinary repository
+source at default8 and explicit16, preserving old homogeneous/control semantics.
+Four default8 traced protocol executors pass2560 outcomes/93504 dual-replayed
+tokens; four ordinary lifecycle cases pass352 outcomes including mid-output
+cancellation. See [finding0068](findings/0068-mixed-source-integration.md) and
+[raw/build/source](../bench/results/mixed_source_20261016/). This is engineering
+acceptance of the prior measured scheduler, not another paper speedup.
+The close-scan candidate stays unselected; full resources, sustained remote
+tails and current official reference remain pending.

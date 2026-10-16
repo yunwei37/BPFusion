@@ -693,7 +693,12 @@ offsets/metadata and scheduling,not arithmetic or network ownership.
 Full/protocol trajectories pass graph replay and independently reconstructed
 attention metadata at16 banks. Both transports gain in mean TPOT;general
 eBPF speed superiority is unproven and adverse Qwen ITL P99 remains.
-The candidate stays in its archive;ordinary/default8/partial-stop adoption is open.
+The original candidate and its measurement remain frozen in the archive.
+[Ordinary-source integration](findings/0068-mixed-source-integration.md) selects
+explicit vllm-mixed-uring-loop and vllm-mixed-user-network-wait targets after
+normal default8 protocol and partial-stop acceptance. Legacy homogeneous
+controls retain their original source/meaning. The close-scan candidate is
+separate and remains unselected.
 
 ## Opaque one-shot graph adapter
 

@@ -229,3 +229,20 @@ $(addprefix $(BUILD)/,$(addsuffix .so,$(GRAPH_SERVER_NAMES))): $(BUILD)/%.so: ex
 		$(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT,-DBF_URING_NETWORK -DBF_URING_BPF_LOOP -I$(KERNEL_UAPI)) $< -o $@.o
 	$(NVCC) -arch=$(SM_ARCH) -dlink -Xcompiler=-fPIC $@.o -o $@.dlink.o
 	$(CXX) -shared -Wl,-z,defs $@.o $@.dlink.o $(VLLM_CUDART) -Wl,-rpath,$(dir $(VLLM_CUDART)) -o $@ $(LDLIBS)
+
+
+# Qualified packed mixed prefill/decode; legacy homogeneous controls stay explicit.
+VLLM_MIXED_NAMES := vllm_mixed_uring_loop vllm_mixed_uring_loop_trace vllm_mixed_user_network_wait vllm_mixed_user_network_wait_trace
+.PHONY: vllm-mixed-uring-loop vllm-mixed-user-network-wait vllm-mixed-trace
+vllm-mixed-uring-loop: $(BUILD)/uring_loop.bpf.o $(BUILD)/vllm_mixed_uring_loop.so $(BUILD)/vllm_mixed_uring_loop
+vllm-mixed-user-network-wait: $(BUILD)/vllm_mixed_user_network_wait.so $(BUILD)/vllm_mixed_user_network_wait
+vllm-mixed-trace: $(BUILD)/uring_loop.bpf.o $(BUILD)/vllm_mixed_uring_loop_trace.so $(BUILD)/vllm_mixed_uring_loop_trace $(BUILD)/vllm_mixed_user_network_wait_trace.so $(BUILD)/vllm_mixed_user_network_wait_trace
+
+$(addprefix $(BUILD)/,$(VLLM_MIXED_NAMES)): executor/vllm_mixed.py executor/mixed_replay.py | $(BUILD)
+	ln -sf $(abspath executor/vllm_mixed.py) $@
+
+$(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_MIXED_NAMES))): $(BUILD)/%.so: executor/vllm_mixed.cu executor/userspace_tcp.h executor/io_uring_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
+	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+		-DBF_PAD_PREFILL -DBF_PREFIX_RELEASE $(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT,-DBF_URING_NETWORK -DBF_URING_BPF_LOOP -I$(KERNEL_UAPI)) $(if $(findstring trace,$*),-DBF_TRACE) $< -o $@.o
+	$(NVCC) -arch=$(SM_ARCH) -dlink -Xcompiler=-fPIC $@.o -o $@.dlink.o
+	$(CXX) -shared -Wl,-z,defs $@.o $@.dlink.o $(VLLM_CUDART) -Wl,-rpath,$(dir $(VLLM_CUDART)) -o $@ $(LDLIBS)
