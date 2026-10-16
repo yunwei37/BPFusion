@@ -1,0 +1,12 @@
+--- /workspaces/repository/bench/results/controller_stage_time_20261016/io_uring_tcp.before.h	2026-10-16 17:37:30.016541066 +0000
++++ /workspaces/repository/bench/results/controller_stage_time_20261016/io_uring_tcp.instrumented.h	2026-10-16 17:37:30.016581591 +0000
+@@ -378,7 +378,8 @@
+         return false;
+         }
+ 
+-    __nanosleep(1000);return true;
++    auto stage_sleep_begin=stage_now();__nanosleep(1000);
++    stage_sleep_last=stage_now()-stage_sleep_begin;return true;
+ }
+ __global__ void io_network(IoState *s) {
+     if(threadIdx.x||blockIdx.x)return;

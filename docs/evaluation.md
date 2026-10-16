@@ -1667,3 +1667,25 @@ Job/Pod absence, preserved original sessions/WIP and no GPU applications/pins.
 Remaining uncertainty is the native delivery advantage and internal critical
 path, not whether this fixed cache primary passed. Existing data should select
 a distinct discriminator before another run. Full speed objective stays open.
+
+
+### 2026-10-16 current controller stage timing: admitted diagnostic
+
+The retained same-compute serving throughput/latency objective still has a
+native delivery advantage after0074 and rejected0075. The supporting
+[plan](../bench/results/controller_stage_time_20261016/plan.md) asks whether
+current GPU dispatch residence or outside-dispatch intervals differ; actual
+independent network-CTA sections are recorded separately. Existing raw counts
+and older0057/0066 cannot supply these current durations. A matched ordinary/
+instrumented ablation measures perturbation; efficient same-executor native
+is the main competitor. No speed or source-adoption claim follows from setup.
+
+The [fresh plan review](../bench/results/controller_stage_time_20261016/plan-review.md)
+rejects an initial unexecuted inline-I/O interpretation: the ordinary mixed
+build actually starts a separate io_network CTA. Revision1 preserves that
+constructor and is admitted after the same review's first follow-up. Primary
+is observed dispatch publication+pack+launch ns/round, with five paired process
+blocks. Network time overlaps model/dispatch and is never summed into wall time
+or historical6.36ms. Private source/commands/fixed analysis and unchanged client
+assets are archived; actual build and real four-condition preflight are next.
+This is dependency preparation, not completed scientific evidence.

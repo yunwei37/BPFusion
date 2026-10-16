@@ -1,0 +1,110 @@
+--- /workspaces/repository/bench/results/controller_stage_time_20261016/io_uring_tcp.before.h	2026-10-16 17:37:30.016541066 +0000
++++ /workspaces/repository/bench/results/controller_stage_time_20261016/io_uring_tcp.instrumented.h	2026-10-16 17:41:04.731668213 +0000
+@@ -93,11 +93,18 @@
+     bool timeout_idle=false,timeout_updating=false;
+ #endif
+ #endif
++    unsigned long long stage_count[3]={},stage_ns[3][6]={};
+     IoRequest requests[BF_LLM_SLOTS]={};
+ };
+ #ifdef BF_IO_COALESCED
+ __device__ IoState *io_state;
+ #endif
++__device__ void stage_record_io(IoState* s,unsigned kind,unsigned long long a,
++ unsigned long long b,unsigned long long c,unsigned long long d,unsigned long long e,unsigned long long f) {
++ s->stage_count[kind]++;
++ s->stage_ns[kind][0]+=a;s->stage_ns[kind][1]+=b;s->stage_ns[kind][2]+=c;
++ s->stage_ns[kind][3]+=d;s->stage_ns[kind][4]+=e;s->stage_ns[kind][5]+=f;
++}
+ __global__ void io_initialize(IoState *s) {
+     if(threadIdx.x||blockIdx.x)return;
+     for(unsigned i=0;i<s->capacity;i++)s->conns[i]={-1,i+1<s->capacity?(int)i+1:-1,-1,-1,0,0,0,0,0};
+@@ -111,6 +118,8 @@
+ }
+ #endif
+ __device__ bool io_progress(IoState *s) {
++    unsigned long long stage_begin=stage_now();
++    bool stage_owned=s->seen!=s->next_final;
+     auto ring=s->ring;
+ #ifdef BF_IO_COALESCED
+     ring.sq_head=io_load(ring.head);ring.sq_tail=ring.sq_published=io_load(ring.tail);
+@@ -197,6 +206,7 @@
+ #ifdef BF_IO_COALESCED
+         if(ch!=begin)io_store(ring.cqhead,ch);
+ #endif
++        unsigned long long stage_cq_end=stage_now();
+         if(stopping&&!cancelled) {
+             io_uring_sqe e{};e.opcode=IORING_OP_ASYNC_CANCEL;e.cancel_flags=IORING_ASYNC_CANCEL_ALL|IORING_ASYNC_CANCEL_ANY;
+             e.user_data=io_id(5,0);
+@@ -209,7 +219,9 @@
+ #if defined(BF_URING_BPF_LOOP) && !defined(BF_IO_CQ_AFTER_SUBMIT)
+             io_acknowledge(out,ch);
+ #endif
+-            __nanosleep(1000);return true;
++            auto stage_sleep_begin=stage_now();__nanosleep(1000);
++            stage_record_io(s,2,stage_delta(stage_begin,stage_cq_end),0,0,0,
++                            stage_delta(stage_cq_end,stage_sleep_begin),stage_delta(stage_sleep_begin,stage_now()));return true;
+         }
+ #ifdef BF_URING_BPF_LOOP
+         if(stopping && cancel_done && timeout_active && !timeout_removing) {
+@@ -239,6 +251,7 @@
+             }
+             seen++;
+         }
++        unsigned long long stage_claim_end=stage_now();
+         unsigned active_requests=0;
+         for(unsigned i=0;i<BF_LLM_SLOTS;++i) {
+             auto &r=requests[i];if(!r.active)continue;active_requests++;
+@@ -298,6 +311,7 @@
+             if(io_submit(ring,e,out)){r.busy=1;r.tag=e.user_data;r.final=final;}
+         }
+         if(active_requests>out->max_requests)out->max_requests=active_requests;
++        unsigned long long stage_send_end=stage_now();
+         // Rearm receive and close only after replies and receive references end.
+         int *link=&active;
+         while(*link>=0) {
+@@ -343,6 +357,7 @@
+             e.off=host_buffer+i*stride+4112;e.user_data=io_id(1,i,c.generation+1);
+             if(io_submit(ring,e,out)){free=next;accepting=i;c={-1,-1,-1,-1,0,0,0,0,c.generation+1};}
+         }
++        unsigned long long stage_conn_end=stage_now();
+ #if defined(BF_URING_BPF_LOOP) && !defined(BF_IO_CQ_AFTER_SUBMIT)
+         unsigned long long deadline=io_load64(&out->loop.deadline_ns),now=io_load64(&out->loop.now_ns);
+         bool idle=seen==next_final && seen==io_load(&page->llm_head) &&
+@@ -375,10 +390,15 @@
+ #ifdef BF_URING_BPF_LOOP
+     io_store(&out->loop.finished,1);
+ #endif
+-        return false;
+-        }
+-
+-    __nanosleep(1000);return true;
++        stage_record_io(s,2,stage_delta(stage_begin,stage_cq_end),stage_delta(stage_cq_end,stage_claim_end),
++                        stage_delta(stage_claim_end,stage_send_end),stage_delta(stage_send_end,stage_conn_end),
++                        stage_delta(stage_conn_end,stage_now()),0);return false;
++        }
++    unsigned stage_kind=stopping?2:((stage_owned||active_requests||seen!=next_final)?0:1);
++    auto stage_sleep_begin=stage_now();__nanosleep(1000);
++    stage_record_io(s,stage_kind,stage_delta(stage_begin,stage_cq_end),stage_delta(stage_cq_end,stage_claim_end),
++                    stage_delta(stage_claim_end,stage_send_end),stage_delta(stage_send_end,stage_conn_end),
++                    stage_delta(stage_conn_end,stage_sleep_begin),stage_delta(stage_sleep_begin,stage_now()));return true;
+ }
+ __global__ void io_network(IoState *s) {
+     if(threadIdx.x||blockIdx.x)return;
+@@ -587,6 +607,16 @@
+ }
+ static int uring_finish(UringNetwork *net) {
+     io_check(cudaStreamSynchronize(net->stream),"io finish");
++    IoState stage_result{};
++    io_check(cudaMemcpy(&stage_result,net->state,sizeof(stage_result),cudaMemcpyDeviceToHost),"io stage download");
++    printf("{\"event\":\"network_stage_time\",\"counts\":[%llu,%llu,%llu],\"stage_ns\":[",
++           stage_result.stage_count[0],stage_result.stage_count[1],stage_result.stage_count[2]);
++    for(unsigned kind=0;kind<3;kind++) {
++        printf("%s[",kind?",":"");
++        for(unsigned part=0;part<6;part++)printf("%s%llu",part?",":"",stage_result.stage_ns[kind][part]);
++        printf("]");
++    }
++    printf("]}\n");fflush(stdout);
+     auto &r=*net->report;
+ #ifdef BF_URING_BPF_LOOP
+     printf("ADMISSION queued_peak=%u\n",r.loop.backlog_peak);

@@ -1,0 +1,45 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "bpfusion-sustained-client-20261016",
+    "namespace": "coder",
+    "annotations": {
+      "admission.yunwei37.com/approval-ref": "https://github.com/yunwei37/BPFusion/blob/main/bench/results/controller_stage_time_20261016/plan.md",
+      "admission.yunwei37.com/user-words": "\u627e\u5230\u6839\u56e0\u3001\u4fee\u6389\u3001\u7528\u540c\u4e00\u7ec4\u6761\u4ef6\u590d\u6d4b\uff1b\u518d\u505a\u8d44\u6e90\u6210\u672c\u548c\u8fdc\u7aef\u8d1f\u8f7d\u3002"
+    }
+  },
+  "spec": {
+    "template": {
+      "spec": {
+        "restartPolicy": "Never",
+        "affinity": {
+          "podAntiAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": [
+              {
+                "labelSelector": {
+                  "matchLabels": {
+                    "com.coder.workspace.id": "eb48d962-76f4-4ff7-bac5-7bc62ec2ada3"
+                  }
+                },
+                "topologyKey": "kubernetes.io/hostname"
+              }
+            ]
+          }
+        },
+        "containers": [
+          {
+            "name": "client",
+            "image": "python:3.12.12-slim-bookworm",
+            "command": [
+              "python3",
+              "-u",
+              "-c",
+              "import signal; signal.pause()"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

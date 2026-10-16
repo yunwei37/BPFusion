@@ -1,0 +1,134 @@
+--- /workspaces/repository/bench/results/controller_stage_time_20261016/vllm_mixed.before.cu	2026-10-16 17:37:30.016465546 +0000
++++ /workspaces/repository/bench/results/controller_stage_time_20261016/vllm_mixed.instrumented.cu	2026-10-16 17:37:30.016505697 +0000
+@@ -15,6 +15,11 @@
+ #include <vector>
+ #include "bpfusion_queue.h"
+ #define CUDA(x) do { cudaError_t e=(x); if(e) { fprintf(stderr,"%s: %s\n",#x,cudaGetErrorString(e)); return (int)e; } } while(0)
++// Private observation only. One controller thread owns these counters.
++__device__ unsigned long long stage_sleep_last=0;
++__device__ unsigned long long stage_now() {
++ unsigned long long v;asm volatile("mov.u64 %0, %%globaltimer;":"=l"(v)::"memory");return v;
++}
+ #ifdef BF_USER_NETWORK
+ #include "userspace_tcp.h"
+ #endif
+@@ -38,6 +43,9 @@
+ };
+ struct Control {
+     unsigned seen,retired,reclaim,error,launches,device_launch_calls,max_active,batch,query,release_rounds,max_release;
++    unsigned long long stage_ns[3][5],stage_count[3];
++    unsigned long long stage_outside_ns,stage_outside_count,stage_last_launch_end;
++    unsigned long long stage_inputs[BF_LLM_MAX_TOK*BF_LLM_SLOTS+1];
+     unsigned input_tokens;
+     unsigned selected[BF_LLM_SLOTS];
+     Request requests[BF_LLM_SLOTS];
+@@ -58,9 +66,21 @@
+ #endif
+     return nullptr;
+ }
++__device__ void stage_record(Control* c,unsigned type,unsigned long long pub,
++ unsigned long long io,unsigned long long pack,unsigned long long launch,unsigned long long sleep) {
++ c->stage_count[type]++;
++ c->stage_ns[type][0]+=pub;c->stage_ns[type][1]+=io;
++ c->stage_ns[type][2]+=pack;c->stage_ns[type][3]+=launch;c->stage_ns[type][4]+=sleep;
++}
+ __global__ void dispatch(bf_page* p,Step* steps,Inputs in,unsigned vocab,Control* c) {
+     if(threadIdx.x || blockIdx.x)return;
++    unsigned long long stage_entry=stage_now();
++    if(c->stage_last_launch_end) {
++        c->stage_outside_ns+=stage_entry-c->stage_last_launch_end;
++        c->stage_outside_count++;
++    }
+     for(;;) {
++        unsigned long long stage_begin=stage_now();
+         if(c->batch) {
+             Trace* event=trace_next(c);
+             if(event) { event->kind=2;event->query=c->query;event->batch=c->batch;event->input_tokens=c->input_tokens; }
+@@ -77,7 +97,9 @@
+             }
+             c->batch=0;
+         }
+-        if(queue_load((unsigned long long*)&p->stop_ns))return;
++        if(queue_load((unsigned long long*)&p->stop_ns)) {
++            stage_record(c,2,stage_now()-stage_begin,0,0,0,0);return;
++        }
+         unsigned release_begin=c->retired,i=c->retired%BF_LLM_SLOTS;
+ #ifdef BF_PREFIX_RELEASE
+         // Model/head work is complete. TX owns each reservation until its
+@@ -102,6 +124,8 @@
+                 for(unsigned row=0;row<released;row++)event->requests[row]=release_begin+row;
+             }
+         }
++        unsigned long long stage_io_begin=stage_now();
++        stage_sleep_last=0;
+ #ifdef BF_IO_COALESCED
+         // Advance I/O after result publication and before model admission.
+         // This CTA returns while model children execute.
+@@ -109,8 +133,13 @@
+         // Drain completed responses and published I/O before fresh model work.
+         if(c->retired==c->seen &&
+            (io_state->next_final!=c->retired ||
+-            io_load(io_state->ring.head)!=io_load(io_state->ring.tail)))continue;
++            io_load(io_state->ring.head)!=io_load(io_state->ring.tail))) {
++            auto stage_end=stage_now();
++            stage_record(c,1,stage_io_begin-stage_begin,stage_end-stage_io_begin,0,0,stage_sleep_last);
++            continue;
++        }
+ #endif
++        unsigned long long stage_io_end=stage_now();
+         while(queue_load(&p->llm_head)!=c->seen) {
+             i=c->seen%BF_LLM_SLOTS;bf_llm_slot* slot=&p->llm[i];
+             if(c->requests[i].phase || queue_load(&slot->state)!=BF_PENDING)break;
+@@ -144,7 +173,10 @@
+             i=id%BF_LLM_SLOTS;Request* r=&c->requests[i];
+             if(r->phase==3 || r->phase==1)c->selected[c->batch++]=i;
+         }
+-        if(!c->batch)continue;
++        if(!c->batch) {
++            stage_record(c,1,stage_io_begin-stage_begin,stage_io_end-stage_io_begin,
++                         stage_now()-stage_io_end,0,stage_sleep_last);continue;
++        }
+         unsigned count=0;
+         for(unsigned row=0;row<c->batch;row++) {
+             i=c->selected[row];Request* r=&c->requests[i];
+@@ -170,6 +202,7 @@
+         in.starts[graph_reqs]=count;c->query=query;c->input_tokens=count;
+         if(c->batch>c->max_active)c->max_active=c->batch;
+         __threadfence();
++        unsigned long long stage_launch_begin=stage_now();
+         cudaError_t e=cudaGraphLaunch(steps[count].graph,
+ #ifdef BF_CHAINED_DISPATCH
+             cudaStreamGraphTailLaunch);
+@@ -182,6 +215,11 @@
+         e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
+         if(e)c->error=e;else c->device_launch_calls++;
+ #endif
++        unsigned long long stage_launch_end=stage_now();
++        stage_record(c,0,stage_io_begin-stage_begin,stage_io_end-stage_io_begin,
++                     stage_launch_begin-stage_io_end,stage_launch_end-stage_launch_begin,stage_sleep_last);
++        c->stage_inputs[count]++;
++        c->stage_last_launch_end=stage_now();
+         return;
+     }
+ }
+@@ -311,6 +349,20 @@
+     CUDA(cudaHostUnregister(page));munmap(page,BF_PAGE_MMAP_BYTES);
+     CUDA(cudaGraphExecDestroy(parent));CUDA(cudaGraphDestroy(parent_graph));CUDA(cudaFree(steps));CUDA(cudaFree(control));
+     for(unsigned index=1;index<size;index++) { CUDA(cudaGraphExecDestroy(host[index].graph));CUDA(cudaGraphDestroy(combined[index])); }
++    printf("{\"event\":\"controller_stage_time\",\"counts\":[%llu,%llu,%llu],\"stage_ns\":[",
++           result.stage_count[0],result.stage_count[1],result.stage_count[2]);
++    for(unsigned type=0;type<3;type++) {
++        printf("%s[",type?",":"");
++        for(unsigned part=0;part<5;part++)printf("%s%llu",part?",":"",result.stage_ns[type][part]);
++        printf("]");
++    }
++    printf("],\"outside_ns\":%llu,\"outside_count\":%llu,\"launches\":%u,\"input_histogram\":{",
++           result.stage_outside_ns,result.stage_outside_count,result.launches);
++    bool stage_comma=false;
++    for(unsigned count=1;count<size;count++)if(result.stage_inputs[count]) {
++        printf("%s\"%u\":%llu",stage_comma?",":"",count,result.stage_inputs[count]);stage_comma=true;
++    }
++    printf("}}\n");fflush(stdout);
+     printf("resident vLLM stopped: launches=1 device_graph_launches=%u graph_error=%u max_active=%u admitted=%u retired=%u trace_overflows=%u release_rounds=%u max_release=%u device_launch_calls=%u\n",result.launches,result.error,result.max_active,result.seen,result.retired,result.trace_overflows,result.release_rounds,result.max_release,result.device_launch_calls);fflush(stdout);
+     return result.error || result.trace_overflows;
+ }
