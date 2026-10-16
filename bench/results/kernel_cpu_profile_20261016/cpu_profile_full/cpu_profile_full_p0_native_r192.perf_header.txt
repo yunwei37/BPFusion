@@ -1,0 +1,210 @@
+# ========
+# captured on    : Fri Oct 16 14:17:09 2026
+# header version : 1
+# data offset    : 792
+# data size      : 1099528
+# feat offset    : 1100320
+# hostname : coder-eb48d962-76f4-4ff7-bac5-7bc62ec2ada3-5c8bb655f6-khnns
+# os release : 7.3.0-070300rc3-generic
+# perf version : 6.12.95
+# arch : x86_64
+# nrcpus online : 24
+# nrcpus avail : 24
+# cpudesc : Intel(R) Core(TM) Ultra 9 285K
+# cpuid : GenuineIntel,6,198,2
+# total memory : 131338424 kB
+# cmdline : /tmp/bpfusion-mixed-integration-n4cog5c6/perf_runtime/usr/bin/perf record -e cpu-clock:k -F 499 --call-graph fp --tid 764893 --no-inherit --no-buildid --no-buildid-cache -o /tmp/bpfusion-mixed-integration-n4cog5c6/cpu_profile_full/cpu_profile_full_p0_native_r192.perf.data 
+# event : name = cpu-clock:k, , id = { 119324, 119325, 119326, 119327, 119328, 119329, 119330, 119331, 119332, 119333, 119334, 119335, 119336, 119337, 119338, 119339, 119340, 119341, 119342, 119343, 119344, 119345, 119346, 119347 }, type = 1 (software), size = 136, config = 0 (PERF_COUNT_SW_CPU_CLOCK), { sample_period, sample_freq } = 499, sample_type = IP|TID|TIME|CALLCHAIN|PERIOD|IDENTIFIER, read_format = ID|LOST, disabled = 1, exclude_user = 1, exclude_hv = 1, freq = 1, sample_id_all = 1
+# event : name = dummy:u, , id = { 119348, 119349, 119350, 119351, 119352, 119353, 119354, 119355, 119356, 119357, 119358, 119359, 119360, 119361, 119362, 119363, 119364, 119365, 119366, 119367, 119368, 119369, 119370, 119371 }, type = 1 (software), size = 136, config = 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq } = 499, sample_type = IP|TID|TIME|PERIOD|IDENTIFIER, read_format = ID|LOST, exclude_kernel = 1, exclude_hv = 1, mmap = 1, comm = 1, freq = 1, task = 1, sample_id_all = 1, exclude_guest = 1, mmap2 = 1, comm_exec = 1, ksymbol = 1, bpf_event = 1
+# CPU_TOPOLOGY info available, use -I to display
+# NUMA_TOPOLOGY info available, use -I to display
+# pmu mappings: cpu_atom = 10, cpu_core = 4, breakpoint = 5, cstate_core = 40, cstate_pkg = 41, dmar0 = 13, dmar1 = 14, i915 = 43, intel_bts = 11, intel_pt = 12, kprobe = 8, msr = 15, power = 42, software = 1, tracepoint = 2, uncore_arb_0 = 30, uncore_arb_1 = 31, uncore_cbox_0 = 16, uncore_cbox_1 = 17, uncore_cbox_2 = 18, uncore_cbox_3 = 19, uncore_cbox_4 = 20, uncore_cbox_5 = 21, uncore_cbox_6 = 22, uncore_cbox_7 = 23, uncore_cbox_8 = 24, uncore_cbox_9 = 25, uncore_cbox_10 = 26, uncore_cbox_11 = 27, uncore_cncu = 34, uncore_hac_arb_0 = 28, uncore_hac_arb_1 = 29, uncore_hac_cbox_0 = 32, uncore_hac_cbox_1 = 33, uncore_imc_free_running_0 = 38, uncore_imc_free_running_1 = 39, uncore_imc_0 = 36, uncore_imc_1 = 37, uncore_sncu = 35, uprobe = 9
+# CACHE info available, use -I to display
+# time of first sample : 0.000000
+# time of last sample : 0.000000
+# sample duration :      0.000 ms
+# MEM_TOPOLOGY info available, use -I to display
+# bpf_prog_info 56: bpf_prog_5592a8780089fcce_s_cups_cupsd addr 0xffffffffc022b114 size 164
+# bpf_prog_info 60: bpf_prog_5592a8780089fcce_s_cups_cups_bro addr 0xffffffffc022dfd8 size 164
+# bpf_prog_info 61: bpf_prog_5592a8780089fcce_s_snapd_desktop addr 0xffffffffc0247290 size 164
+# bpf_prog_info 62: bpf_prog_5592a8780089fcce_s_snapd_desktop addr 0xffffffffc0247388 size 164
+# bpf_prog_info 68: bpf_prog_b8f4fb5f08605bc5 addr 0xffffffffc024c20c size 358
+# bpf_prog_info 78: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0258b90 size 330
+# bpf_prog_info 130: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc0266414 size 42
+# bpf_prog_info 159: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc026ecdc size 330
+# bpf_prog_info 172: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc026e4e0 size 42
+# bpf_prog_info 180: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc026f3e0 size 330
+# bpf_prog_info 200: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0270260 size 330
+# bpf_prog_info 6480: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0265c70 size 330
+# bpf_prog_info 6520: bpf_prog_b6a8853846922b71 addr 0xffffffffc026f8e8 size 554
+# bpf_prog_info 6525: bpf_prog_b6a8853846922b71 addr 0xffffffffc026fd5c size 554
+# bpf_prog_info 9268: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc02245a8 size 330
+# bpf_prog_info 9273: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022485c size 330
+# bpf_prog_info 9278: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0224c8c size 330
+# bpf_prog_info 9283: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022550c size 330
+# bpf_prog_info 9298: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0224fd4 size 330
+# bpf_prog_info 9311: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc0225998 size 42
+# bpf_prog_info 9346: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0225150 size 330
+# bpf_prog_info 9356: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0223dd0 size 330
+# bpf_prog_info 9361: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0225698 size 330
+# bpf_prog_info 9366: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0225a30 size 330
+# bpf_prog_info 9371: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0225f2c size 330
+# bpf_prog_info 9374: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc02252e4 size 42
+# bpf_prog_info 9389: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc02261d4 size 330
+# bpf_prog_info 9392: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc0225350 size 42
+# bpf_prog_info 9397: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0227594 size 330
+# bpf_prog_info 9402: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022784c size 330
+# bpf_prog_info 9405: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc0225cf4 size 42
+# bpf_prog_info 9408: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc0225d7c size 42
+# bpf_prog_info 9413: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0227b1c size 330
+# bpf_prog_info 9418: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0227dd8 size 330
+# bpf_prog_info 9423: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022829c size 330
+# bpf_prog_info 9428: bpf_prog_b6a8853846922b71 addr 0xffffffffc022b1f8 size 554
+# bpf_prog_info 9433: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022b594 size 330
+# bpf_prog_info 9438: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022b848 size 330
+# bpf_prog_info 9441: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc02264b8 size 42
+# bpf_prog_info 9456: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022bb30 size 330
+# bpf_prog_info 9459: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc022653c size 42
+# bpf_prog_info 9464: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022bdf0 size 330
+# bpf_prog_info 9469: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022c0a4 size 330
+# bpf_prog_info 9479: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022c628 size 330
+# bpf_prog_info 9489: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022cba4 size 330
+# bpf_prog_info 9494: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022d120 size 330
+# bpf_prog_info 9497: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc022d28c size 42
+# bpf_prog_info 9502: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022d46c size 330
+# bpf_prog_info 9512: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022dbe4 size 330
+# bpf_prog_info 9517: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc02501b0 size 330
+# bpf_prog_info 9522: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0250310 size 330
+# bpf_prog_info 9527: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc02505f0 size 330
+# bpf_prog_info 9532: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc025089c size 330
+# bpf_prog_info 9537: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0250b5c size 330
+# bpf_prog_info 9542: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0250e0c size 330
+# bpf_prog_info 9547: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc02510c8 size 330
+# bpf_prog_info 9597: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc02525d0 size 330
+# bpf_prog_info 9640: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0252d28 size 330
+# bpf_prog_info 9655: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0257dd0 size 330
+# bpf_prog_info 14547: bpf_prog_b8f4fb5f08605bc5 addr 0xffffffffc026a448 size 358
+# bpf_prog_info 14550: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc0223d74 size 42
+# bpf_prog_info 14553: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc0251a64 size 42
+# bpf_prog_info 14556: bpf_prog_b8f4fb5f08605bc5 addr 0xffffffffc0252748 size 358
+# bpf_prog_info 14559: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc025200c size 42
+# bpf_prog_info 14562: bpf_prog_b8f4fb5f08605bc5 addr 0xffffffffc0252a50 size 358
+# bpf_prog_info 16631: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0264d0c size 330
+# bpf_prog_info 16636: bpf_prog_a9ed1d0236f63fcb addr 0xffffffffc02657ac size 361
+# bpf_prog_info 16641: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0265f24 size 330
+# bpf_prog_info 16644: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc02528cc size 42
+# bpf_prog_info 16659: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022d72c size 330
+# bpf_prog_info 16662: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc022de8c size 42
+# bpf_prog_info 35611: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0251520 size 330
+# bpf_prog_info 35614: bpf_prog_b1e4e8bab2078b38 addr 0xffffffffc0223548 size 42
+# bpf_prog_info 36374: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc025169c size 330
+# bpf_prog_info 36379: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc025180c size 330
+# bpf_prog_info 51997: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0225814 size 330
+# bpf_prog_info 52002: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc022c364 size 330
+# bpf_prog_info 52007: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0251398 size 330
+# bpf_prog_info 52012: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0252e8c size 330
+# bpf_prog_info 71079: bpf_prog_5592a8780089fcce_s_telegram_desk addr 0xffffffffc02242c8 size 164
+# bpf_prog_info 71294: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0280bb0 size 330
+# bpf_prog_info 71313: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc02809cc size 330
+# bpf_prog_info 82859: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0207de4 size 273
+# bpf_prog_info 82860: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0208560 size 273
+# bpf_prog_info 82861: bpf_prog_a97c143260cd9940_sd_devices addr 0xffffffffc0224724 size 260
+# bpf_prog_info 82862: bpf_prog_a97c143260cd9940_sd_devices addr 0xffffffffc0224b54 size 260
+# bpf_prog_info 82863: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc02253e4 size 273
+# bpf_prog_info 82864: bpf_prog_fdb28fdba0de726a_sd_devices addr 0xffffffffc022c7a0 size 468
+# bpf_prog_info 82865: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0225b8c size 273
+# bpf_prog_info 82866: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0225de8 size 273
+# bpf_prog_info 82867: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0200898 size 273
+# bpf_prog_info 82868: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc022c21c size 273
+# bpf_prog_info 82869: bpf_prog_fdb28fdba0de726a_sd_devices addr 0xffffffffc022c994 size 468
+# bpf_prog_info 82870: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc02025c8 size 273
+# bpf_prog_info 82871: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0202a94 size 273
+# bpf_prog_info 82872: bpf_prog_b04cb30861e0d078_sd_devices addr 0xffffffffc02339d8 size 449
+# bpf_prog_info 82873: bpf_prog_772db7720b2728e9_sd_fw_egress addr 0xffffffffc0202bd8 size 56
+# bpf_prog_info 82874: bpf_prog_772db7720b2728e9_sd_fw_ingress addr 0xffffffffc0202c60 size 56
+# bpf_prog_info 82875: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0202ce0 size 273
+# bpf_prog_info 82876: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc02081d0 size 273
+# bpf_prog_info 82877: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020bba0 size 273
+# bpf_prog_info 82878: bpf_prog_665b9402c4a2007d_sd_devices addr 0xffffffffc020bcd0 size 296
+# bpf_prog_info 82879: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0226364 size 273
+# bpf_prog_info 82880: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0227724 size 273
+# bpf_prog_info 82881: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc022c4d8 size 273
+# bpf_prog_info 82882: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc022cd28 size 273
+# bpf_prog_info 82883: bpf_prog_99aee04c1c96cc7e_sd_devices addr 0xffffffffc022d948 size 290
+# bpf_prog_info 82884: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0208320 size 273
+# bpf_prog_info 82886: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020f7e8 size 273
+# bpf_prog_info 82887: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020f910 size 273
+# bpf_prog_info 82888: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc022b450 size 273
+# bpf_prog_info 82889: bpf_prog_fdb28fdba0de726a_sd_devices addr 0xffffffffc02580d8 size 468
+# bpf_prog_info 82890: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc022bc98 size 273
+# bpf_prog_info 82891: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020a3c8 size 273
+# bpf_prog_info 82892: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020a50c size 273
+# bpf_prog_info 82893: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020a648 size 273
+# bpf_prog_info 82894: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020a7a8 size 273
+# bpf_prog_info 82895: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020a8cc size 273
+# bpf_prog_info 82896: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc022d320 size 273
+# bpf_prog_info 82897: bpf_prog_772db7720b2728e9_sd_fw_egress addr 0xffffffffc0208470 size 56
+# bpf_prog_info 82898: bpf_prog_772db7720b2728e9_sd_fw_ingress addr 0xffffffffc02084ec size 56
+# bpf_prog_info 82899: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020aa28 size 273
+# bpf_prog_info 82900: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc022d5c8 size 273
+# bpf_prog_info 82902: bpf_prog_99aee04c1c96cc7e_sd_devices addr 0xffffffffc0233888 size 290
+# bpf_prog_info 82903: bpf_prog_772db7720b2728e9_sd_fw_egress addr 0xffffffffc02086bc size 56
+# bpf_prog_info 82904: bpf_prog_772db7720b2728e9_sd_fw_ingress addr 0xffffffffc020be18 size 56
+# bpf_prog_info 82905: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc024c054 size 273
+# bpf_prog_info 82906: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc02504a0 size 273
+# bpf_prog_info 82908: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020ac94 size 273
+# bpf_prog_info 82909: bpf_prog_99aee04c1c96cc7e_sd_devices addr 0xffffffffc020add8 size 290
+# bpf_prog_info 82910: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020af1c size 273
+# bpf_prog_info 82911: bpf_prog_772db7720b2728e9_sd_fw_egress addr 0xffffffffc0200b7c size 56
+# bpf_prog_info 82912: bpf_prog_772db7720b2728e9_sd_fw_ingress addr 0xffffffffc0200be8 size 56
+# bpf_prog_info 82913: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020b224 size 273
+# bpf_prog_info 82914: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020b348 size 273
+# bpf_prog_info 82915: bpf_prog_470479e7b2a42bb5_sd_devices addr 0xffffffffc02032cc size 103
+# bpf_prog_info 82916: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020b494 size 273
+# bpf_prog_info 82917: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020b724 size 273
+# bpf_prog_info 82918: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020be94 size 273
+# bpf_prog_info 82919: bpf_prog_a97c143260cd9940_sd_devices addr 0xffffffffc020bfe4 size 260
+# bpf_prog_info 82920: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0201f58 size 273
+# bpf_prog_info 82921: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc02024a8 size 273
+# bpf_prog_info 82923: bpf_prog_772db7720b2728e9_sd_fw_egress addr 0xffffffffc0202854 size 56
+# bpf_prog_info 82924: bpf_prog_772db7720b2728e9_sd_fw_ingress addr 0xffffffffc02028cc size 56
+# bpf_prog_info 82925: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020c118 size 273
+# bpf_prog_info 82926: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020c254 size 273
+# bpf_prog_info 82927: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0202f50 size 273
+# bpf_prog_info 82928: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0203094 size 273
+# bpf_prog_info 82929: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020fa5c size 273
+# bpf_prog_info 82930: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc020fb8c size 273
+# bpf_prog_info 82931: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0223c10 size 273
+# bpf_prog_info 82932: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc022418c size 273
+# bpf_prog_info 82933: bpf_prog_bce9868a81378964_sd_devices addr 0xffffffffc0224e2c size 302
+# bpf_prog_info 82934: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc022439c size 273
+# bpf_prog_info 82936: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0227ca8 size 273
+# bpf_prog_info 82937: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0227f48 size 273
+# bpf_prog_info 82938: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc02280a4 size 273
+# bpf_prog_info 82939: bpf_prog_ac649eea392bca3b_sd_devices addr 0xffffffffc0228428 size 273
+# bpf_prog_info 82941: bpf_prog_9f0126175d483e7a_sd_devices addr 0xffffffffc0207290 size 311
+# bpf_prog_info 82942: bpf_prog_772db7720b2728e9_sd_fw_egress addr 0xffffffffc0202964 size 56
+# bpf_prog_info 82943: bpf_prog_772db7720b2728e9_sd_fw_ingress addr 0xffffffffc02029dc size 56
+# bpf_prog_info 83824: bpf_prog_fdbddde2d88502e1_sd_devices addr 0xffffffffc0207b14 size 273
+# bpf_prog_info 83828: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0207c68 size 330
+# bpf_prog_info 83834: bpf_prog_fdbddde2d88502e1_sd_devices addr 0xffffffffc0207f18 size 273
+# bpf_prog_info 83838: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc0208054 size 330
+# bpf_prog_info 85463: bpf_prog_fdbddde2d88502e1_sd_devices addr 0xffffffffc0202e08 size 273
+# bpf_prog_info 85467: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc020741c size 330
+# bpf_prog_info 85468: bpf_prog_fdbddde2d88502e1_sd_devices addr 0xffffffffc020758c size 273
+# bpf_prog_info 85472: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc020b070 size 330
+# bpf_prog_info 85911: bpf_prog_fdbddde2d88502e1_sd_devices addr 0xffffffffc0202720 size 273
+# bpf_prog_info 85915: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc02076d4 size 330
+# bpf_prog_info 85916: bpf_prog_fdbddde2d88502e1_sd_devices addr 0xffffffffc0207854 size 273
+# bpf_prog_info 85920: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc02079a0 size 330
+# bpf_prog_info 89206: bpf_prog_fdbddde2d88502e1_sd_devices addr 0xffffffffc020ab4c size 273
+# bpf_prog_info 89210: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc020b84c size 330
+# bpf_prog_info 89211: bpf_prog_fdbddde2d88502e1_sd_devices addr 0xffffffffc020b5dc size 273
+# bpf_prog_info 89215: bpf_prog_b2c0b2c5432dcbd0 addr 0xffffffffc020b9cc size 330
+# HYBRID_TOPOLOGY info available, use -I to display
+# cpu_atom pmu capabilities: branches=32, branch_counter_nr=4, max_precise=3, pmu_name=arrowlake_hybrid, branch_counter_width=2
+# cpu_core pmu capabilities: branches=32, branch_counter_nr=4, max_precise=3, pmu_name=arrowlake_hybrid, branch_counter_width=2
+# intel_pt pmu capabilities: topa_multiple_entries=1, psb_cyc=1, single_range_output=1, mtc_periods=249, ip_filtering=1, output_subsys=0, cr3_filtering=1, psb_periods=3f, event_trace=0, cycle_thresholds=3f, power_event_trace=0, mtc=1, payloads_lip=0, ptwrite=1, num_address_ranges=2, max_subleaf=1, topa_output=1, tnt_disable=1
+# missing features: TRACING_DATA BUILD_ID BRANCH_STACK GROUP_DESC AUXTRACE STAT CLOCKID DIR_FORMAT COMPRESSED CPU_PMU_CAPS CLOCK_DATA 
+# ========
+#

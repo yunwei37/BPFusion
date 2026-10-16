@@ -114,6 +114,10 @@ forced into a Python per-token loop.
   Local and native each deliver57600/57600 requests at192/s; native retains
   better throughput, completion/token-gap P99 and group CPU. Default8/explicit16
   normal builds and default8 reset/partial-stop checks qualify source adoption.
+- [Kernel CPU localization](docs/findings/0073-kernel-cpu-localization.md):
+  current creator-thread sampling selects BPF coordination/admission as a
+  material cost. It motivates a matched waiting-policy intervention; sampling
+  alone proves no avoidability or speedup.
 - [Opaque graph backend](docs/findings/0067-opaque-graph-backend.md):cuBLAS/cuFFT
   ordinary default8 numerical/lifecycle checks pass on both transports.
 - [Fair native admission](docs/findings/0063-fair-native-admission.md):

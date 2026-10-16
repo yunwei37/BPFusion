@@ -1573,3 +1573,14 @@ exit0 and no pins. Canonical five-file repair selected with16KiB pending tail,
 same-capacity ABI rebuild required. Model math/default8 unchanged.
 [Integration](../bench/results/connection_reclamation_20261016/source_integration/)
 is engineering acceptance, not another performance result.
+
+### 2026-10-16 current creator-CPU localization (complete)
+[Finding0073](findings/0073-kernel-cpu-localization.md) closes the repaired
+creator-TID profile:23040 successes, full binary2455 native/10086 kernel
+samples, lost0. Observed-stack coordination/map fraction70.8507% identifies
+a next intervention; sampled ancestry does not prove avoidability or allocate
+old6.36ms. Kernel93.2382% has an unknown frame; leaf unknown1.4277%.
+Native remains the matched efficient competitor. One profiled pair is not
+repeated performance evidence. Independent raw/binary/metric/source review
+validates supporting localization; actual active/idle waiting repair remains
+a separate candidate, not source adoption. Collection wording corrected.
