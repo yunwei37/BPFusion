@@ -1,0 +1,186 @@
+{
+  "protocol": [
+    {
+      "model": "qwen",
+      "outcomes": 1280,
+      "rejections": 518,
+      "tokens": 46752,
+      "verified": [
+        {
+          "event": "verified",
+          "utc": "2026-10-16T10:55:28Z",
+          "pair": 0,
+          "mode": "uring_loop_8_mixed",
+          "requests": 640,
+          "tokens": 23376,
+          "rejections": 259,
+          "actual_batches": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "actual_queries": [
+            0,
+            1,
+            2,
+            5,
+            8,
+            15,
+            16,
+            17,
+            32,
+            64
+          ],
+          "reference_path": "/tmp/bpfusion-mixed-integration-n4cog5c6/qwen_nodelay_protocol8_p0_uring_loop_8_mixed.gpu.jsonl.references.jsonl"
+        },
+        {
+          "event": "verified",
+          "utc": "2026-10-16T10:57:21Z",
+          "pair": 0,
+          "mode": "userspace_8_mixed",
+          "requests": 640,
+          "tokens": 23376,
+          "rejections": 259,
+          "actual_batches": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "actual_queries": [
+            0,
+            1,
+            2,
+            5,
+            8,
+            15,
+            16,
+            17,
+            32,
+            64
+          ],
+          "reference_path": "/tmp/bpfusion-mixed-integration-n4cog5c6/qwen_nodelay_protocol8_p0_userspace_8_mixed.gpu.jsonl.references.jsonl"
+        }
+      ]
+    },
+    {
+      "model": "smol",
+      "outcomes": 1280,
+      "rejections": 518,
+      "tokens": 46752,
+      "verified": [
+        {
+          "event": "verified",
+          "utc": "2026-10-16T11:01:02Z",
+          "pair": 0,
+          "mode": "uring_loop_8_mixed",
+          "requests": 640,
+          "tokens": 23376,
+          "rejections": 259,
+          "actual_batches": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "actual_queries": [
+            0,
+            1,
+            2,
+            5,
+            8,
+            15,
+            16,
+            17,
+            32,
+            64
+          ],
+          "reference_path": "/tmp/bpfusion-mixed-integration-n4cog5c6/smol_nodelay_protocol8_p0_uring_loop_8_mixed.gpu.jsonl.references.jsonl"
+        },
+        {
+          "event": "verified",
+          "utc": "2026-10-16T11:02:49Z",
+          "pair": 0,
+          "mode": "userspace_8_mixed",
+          "requests": 640,
+          "tokens": 23376,
+          "rejections": 259,
+          "actual_batches": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "actual_queries": [
+            0,
+            1,
+            2,
+            5,
+            8,
+            15,
+            16,
+            17,
+            32,
+            64
+          ],
+          "reference_path": "/tmp/bpfusion-mixed-integration-n4cog5c6/smol_nodelay_protocol8_p0_userspace_8_mixed.gpu.jsonl.references.jsonl"
+        }
+      ]
+    }
+  ],
+  "ordinary": [
+    {
+      "model": "qwen",
+      "mode": "loop",
+      "passed": true,
+      "outcomes": 144,
+      "complete_tokens": 714,
+      "partial_tokens": 91,
+      "unobserved_cancels": 47
+    },
+    {
+      "model": "qwen",
+      "mode": "native",
+      "passed": true,
+      "outcomes": 32,
+      "complete_tokens": 650,
+      "partial_tokens": 2,
+      "unobserved_cancels": 0
+    },
+    {
+      "model": "smol",
+      "mode": "loop",
+      "passed": true,
+      "outcomes": 144,
+      "complete_tokens": 714,
+      "partial_tokens": 123,
+      "unobserved_cancels": 47
+    },
+    {
+      "model": "smol",
+      "mode": "native",
+      "passed": true,
+      "outcomes": 32,
+      "complete_tokens": 650,
+      "partial_tokens": 2,
+      "unobserved_cancels": 0
+    }
+  ]
+}

@@ -69,9 +69,9 @@ The unchanged finite reference set is not expanded after output. Disagreements
 remain visible; current ordinary hidden trajectories are not independently replayed
 in this performance matrix, and no identical-output or task-quality claim follows.
 
-Default8 protocol/replay and ordinary cancellation qualification is running
-separately before canonical source adoption. The candidate remains private until
-that acceptance and the fresh result review finish. Existing homogeneous controls
+The [default8 protocol/replay and ordinary cancellation qualification](qualification/)
+passes all6 commands, and normal source8/16 builds pass. The reviewed candidate
+is adopted exactly into executor/vllm_mixed.cu after this acceptance. Existing homogeneous controls
 retain their original behavior. Generic graph source is outside this measured
 LLM performance contrast.
 
@@ -86,5 +86,4 @@ Offered192 native-before block3 has client scheduling-lagP99 133.515557ms;
 retain it and do not attribute its after-before TTFT shift cleanly to NODELAY.
 All20 full-run parents exit0 with no forced cleanup, ten detach receipts exit0.
 Kernel legacy128-entry admission diagnostics truncate392/520 in each full
-kernel executor; full client outcomes remain complete. Source adoption still
-waits for separate ordinary-default8 acceptance.
+kernel executor; full client outcomes remain complete. Separate ordinary-default8 acceptance is now complete; see qualification/.

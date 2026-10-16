@@ -1,0 +1,33 @@
+[
+  {
+    "banks": 8,
+    "command": [
+      "make",
+      "BUILD=/tmp/bpfusion-mixed-integration-n4cog5c6/tcp_sourcebuild8",
+      "VLLM_PYTHON=/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/bin/python",
+      "vllm-mixed-uring-loop",
+      "vllm-mixed-user-network-wait",
+      "vllm-mixed-trace",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/tcp_sourcebuild8/bpfusion_load",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/tcp_sourcebuild8/fusion.bpf.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T11:05:12.714232+00:00"
+  },
+  {
+    "banks": 16,
+    "command": [
+      "make",
+      "BUILD=/tmp/bpfusion-mixed-integration-n4cog5c6/tcp_sourcebuild16",
+      "VLLM_PYTHON=/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/bin/python",
+      "CPPFLAGS=-DBF_LLM_SLOTS=16",
+      "vllm-mixed-uring-loop",
+      "vllm-mixed-user-network-wait",
+      "vllm-mixed-trace",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/tcp_sourcebuild16/bpfusion_load",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/tcp_sourcebuild16/fusion.bpf.o"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T11:05:32.562982+00:00"
+  }
+]

@@ -47,5 +47,8 @@ truncate392 records per520 outcomes. Complete client histories remain intact.
 
 Run valid, scoped hypothesis supported, research value supporting, paper impact
 mechanism/workload boundary. This does not allocate the old unreproduced
-kernel-specific6.36ms difference. Canonical source adoption waits for the
-separate default8 protocol and mid-output cancellation acceptance.
+kernel-specific6.36ms difference. Canonical mixed source now adopts the exact reviewed change after
+[default8 qualification](../../bench/results/tcp_nodelay_20261016/qualification/):
+2560 protocol outcomes/93504 dual-replayed tokens, plus352 ordinary lifecycle
+outcomes/2728 full and218 prefix tokens. All six commands and normal8/16
+builds pass. Legacy homogeneous controls and generic graph source stay as before.

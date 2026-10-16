@@ -718,3 +718,8 @@ retains finite numerical/lifecycle checks and failed setup/cleanup attempts.
 [Finding0066](findings/0066-tail-path-diagnosis.md) closes the tail diagnostic
 and conservative close-scan candidate. Its confirmation is inconclusive, so
 the production transport header remains unchanged.
+
+The selected mixed executor enables checked TCP_NODELAY on its listener before
+listen, inherited by native and io_uring accepted sockets. This startup-only
+change removes a measured shared small-send/ACK stall; it changes no GPU kernel
+and is not evidence of intrinsic eBPF speedup. See [finding0070](findings/0070-tcp-nodelay.md).

@@ -1487,3 +1487,14 @@ speed contrasts are inconclusive. This is a supporting mechanism/workload
 repair, not intrinsic eBPF superiority or allocation of the old6.36ms gap.
 Default8 qualification is active before source adoption; full resources and
 sustained remote acquisition remain pending. See [finding0070](findings/0070-tcp-nodelay.md).
+
+### 2026-10-16 NODELAY ordinary-source adoption
+The [qualification](../bench/results/tcp_nodelay_20261016/qualification/) passes
+all6 real commands:2560 protocol outcomes,1036 intended rejects,93504 exact
+dual-replayed tokens and352 ordinary lifecycle outcomes, including218 checked
+partial tokens and94 explicit unobserved cancellations. Normal root-source8/16
+ordinary/traced/BPF/loader builds pass. Before/candidate GPU SASS is byte-identical.
+The exact reviewed host-only change is adopted for the explicit mixed targets;
+legacy homogeneous and generic-graph controls retain their semantics.
+This is engineering acceptance of the supported shared TCP fix, not another
+paper speedup or closure of full resources/sustained remote measurement.
