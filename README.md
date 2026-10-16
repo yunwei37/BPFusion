@@ -1,545 +1,147 @@
 # BPFusion
 
-BPFusion is a research prototype for eBPF-driven GPU serving over Linux TCP.
-It studies whether a server can remove its steady userspace request worker
-while reusing the same GPU model computation.
+GPU-driven serving over ordinary Linux TCP, with eBPF admission and reused GPU
+model computation.
 
-```
-client TCP/HTTP -> eBPF framing/admission -> kernel/GPU shared queue
-                -> resident GPU model execution -> kernel TCP reply
-```
+~~~text
+TCP/HTTP -> eBPF framing/admission -> shared queue
+         -> GPU model execution -> completion -> Linux TCP reply
+~~~
 
-Userspace loads weights, captures model graphs and initializes the service.
-After startup, the GPU controls inference and the kernel owns connection
-handling, response transmission and recycling. Linux networking and the kernel
-worker still consume CPU; this is not removal of all host CPU work.
+Userspace loads weights, captures graphs and initializes the service. On the
+kernel-owned paths it does not accept each request, launch each model step or
+send each reply after startup. Linux networking, kernel workers and GPU I/O
+control still consume resources:this is not a CPU-free server.
 
-## Project status
+**Status: working research prototype on a qualified Linux/GPU stack.**
+Two real checkpoints run through HF and upstream vLLM graph adapters.
+A recent-kernel io_uring/eBPF path needs no custom TCP kernel module.
+General eBPF latency/throughput superiority over efficient native TCP is
+**not established**.
 
-The current qualified path reuses Hugging Face FP16 model graphs for
-Qwen2.5-0.5B-Instruct and SmolLM2-135M (Llama architecture). A persistent
-device dispatcher advances up to eight private graph/KV banks and publishes
-tokens without a steady userspace request worker.
+## Start here
 
-The HTTP frontend accepts Content-Length POST requests with binary token-ID
-bodies and returns token IDs. It is not yet a text/JSON or OpenAI-compatible
-service. The optional [vLLM adapter](docs/findings/0032-vllm-kernel-serving.md) now
-qualifies shared-weight tensor batching for both checkpoints through the same
-protocol. Arbitrary model/backend support and full-service CPU attribution
-remain open.
+[Getting started](docs/getting-started.md) covers dependencies, model download,
+build, start, client, native comparison and cleanup. It uses the explicit
+module-free vLLM target; the legacy module transport remains separate.
+[Fresh-environment validation](bench/results/onboarding_20261016/) passes both
+models/transports with real HTTP/TCP requests.
 
-| Path | Compute/control | Network/reply | Role |
-|---|---|---|---|
-| `qwen_graph` | Reused HF graphs, GPU-controlled generation | eBPF admission, kernel accept/drain and TCP TX | Qualified HF prototype |
-| `vllm_graph_trace` | Upstream optimized graphs/head, GPU prefill and tensor-batched decode | Same eBPF/kernel transport | Qualified optimized adapter; matched traced comparison |
-| `qwen_graph_user_network_wait` | Identical resident GPU computation | Efficient native userspace timed epoll and nonblocking send | Matched alternative mechanism |
-| `qwen_graph_uring` | Same HF graphs and GPU-controlled model generation | GPU-owned stock io_uring TCP, eBPF admission/reclamation | Optional multi-connection/streaming path; qualified on the current Linux7.3rc3/RTX5090 setup |
-| `vllm_graph_uring` | Same upstream optimized graphs, packed prefill and FIFO prefix release | Shared GPU-owned stock io_uring TCP and eBPF queue integration | Optional optimized adapter; strict correctness and local comparison complete, no reliable performance gain |
-| `qwen_graph_uring_loop` / `vllm_graph_uring_loop` | Same reused HF/vLLM computation | Upstream sleepable eBPF/io_uring loop, GPU-owned TCP, periodic kernel timeout | Optional qualified path; lower CPU than SQPOLL, mixed delivery against native |
-| `qwen_graph_control` | Same graph banks, host resumes after requests | Same eBPF/kernel transport | Dispatch ablation |
-| `qwen.cu`, Python HF and synthetic MLP paths | Earlier implementations with different maturity | See their individual findings | Historical references and controls |
+Tested stack:Linux 7.3-rc3, x86-64, RTX 5090(sm_120), CUDA toolkit 13.0, libbpf 1.6.3,
+Python 3.12 and the [pinned Python environment](requirements.txt).
+The BPF loop needs its recent io_uring BPF/BTF/UAPI interfaces.
+Another GPU or simply a recent Linux version does not establish compatibility.
+See the [host record](bench/results/HOST.md).
 
-The [offered-load collection](docs/findings/0061-offered-load-admission.md)
-exposes valid-request drops when the next physical model slot is reserved.
-The reviewed [finite admission repair](docs/findings/0062-pending-admission-tails.md)
-completes15,360 measured requests and is selected in the optional BPF-loop path.
-Its primary64/s P99 result is inconclusive. A large secondary Qwen96/s advantage
-also exposes native FD-priority overtaking.
+With the documented dependencies and environment active:
 
-The subsequent [fair-native-admission comparison](docs/findings/0063-fair-native-admission.md)
-completes all10,240 measured requests/655,360 tokens with identical GPU
-computation and eligible-frame FIFO native admission. New96/s TTFT P99 is
-246/220ms Qwen and81/66ms Smol (kernel/native,mean block quantiles); both paired
-intervals cross zero. Completion tails, median/CPU costs and generation-stall
-outliers remain visible. No reliable tail or throughput advantage is established.
-The native eligible-frame FIFO admission is now integrated in ordinary source;
-its protocol qualification is recorded in the [integration archive](bench/results/batch_capacity_integration_20261015/).
-
-Finite kernel queue overflow remains a drop boundary; module/SQPOLL paths
-retain direct admission. Admission-policy differences prevent syscall-only
-attribution.
-
-The [completed traced capacity comparison](docs/findings/0064-batch-capacity.md)
-raises private model banks from8 to16 with unchanged model arithmetic.
-At192 requests/s,kernel throughput rises5653->9673 token/s Qwen and
-7190->10525 Smol,with positive paired intervals and no failures across20480
-measured requests. High-load tails also improve against the eight-bank controls.
-Native16 gains as well and beats kernel16 on Qwen192/s throughput/tails;
-Smol same-width transport differences remain inconclusive. This is a capacity
-result,not an eBPF speedup or ordinary-default selection. The independent review
-finds the traced comparison valid;owned temporary state is removed and original
-state preserved. Mean TPOT worsens with16 banks despite the queueing relief.
-
-The [completed mixed prefill/decode comparison](docs/findings/0065-mixed-prefill-decode.md)
-improves96/s kernel mean TPOT by14.25%/14.04% for Qwen/Smol. Native benefits
-too;no reliable same-mixed transport speedup is established,and Qwen192/s
-ITL P99 is worse on the kernel path. All20,480 measured requests succeed.
-The candidate remains experimental;ordinary/default8/partial-stop adoption
-is not qualified.
-
-Strict regressions cover output agreement, fragmented messages, concurrent
-requests, connection reuse, pipelining, half-close, invalid inputs and queue
-recycling. The [completed cross-node comparison](docs/findings/0029-cross-node-network.md)
-uses a Raspberry Pi client and lab RTX 5090 server over the existing
-flannel/Tailscale/Ethernet path. Its primary latency and throughput intervals
-contain zero for both models; reliable superiority remains unproven.
-[Evaluation status](docs/evaluation.md) links the plans, raw data and reviews.
-The [older HF short-input diagnosis](docs/findings/0030-short-input-latency.md) finds
-that its captured model region occupies about 95%/92% of profiled
-local TTFT for Smol/Qwen; even 2-token inputs traverse 1460/808 GPU kernels.
-This guides backend reuse, without establishing an eBPF speedup.
-The [official optimized-serving comparison](docs/findings/0031-optimized-serving.md)
-finds lower single-request first-token time but much lower eight-client
-long-output throughput, with different compute, outputs and wire interfaces.
-
-The [optional stock io_uring path](docs/findings/0040-io-uring-concurrent.md)
-now has normal make/load/run entrypoints. Both checkpoints pass eight-client
-1/64-token streaming, connection reuse, rejection, reset and in-flight stop
-checks without bfusion_tx or a steady userspace request worker. Its latency,
-throughput and total CPU benefit remain unestablished; default serving stays
-on the existing qualified module path.
-
-The [optimized io_uring adapter](docs/findings/0041-vllm-io-uring.md) reuses the same
-transport with the existing vLLM computation. Both models pass the complete
-622-request strict protocol and independent batch-history replay. Shared
-half-close/final-response-order fixes retain the initial failed run. The
-[completed ordinary comparison](docs/findings/0042-vllm-io-uring-performance.md)
-finds no reliable stock advantage, lower Qwen long-output throughput and
-about31–32 times the native known-worker CPU cost in gen64/c8. This measures
-specific worker brackets, not total service CPU; the module remains default.
-
-The [incremental stock copy comparison](docs/findings/0043-uring-incremental-copy.md)
-completes36 executors/9216 measured requests with unchanged upstream computation.
-All four primary throughput intervals include zero against the full-copy
-ablation and efficient native TCP; a reliable benefit remains unproven.
-Stock still uses about27–30 times the native known-worker CPU in this run.
-The captured transient receive error now rearms EAGAIN/EINTR; same-socket
-ingress redirect passes both idle regressions, full stock protocols and default
-module compatibility. Initial failures remain archived; general reliability
-is not established by these finite workloads.
-
-The [sleepable eBPF/io_uring loop candidate](docs/findings/0044-uring-bpf-loop.md)
-replaces stock SQPOLL with upstream kernel-loop coordination and a standard
-multishot timer, while reusing the same model computation. Its three-path
-preflight and full protocol/idle/lifecycle checks pass for both tested models;
-the complete matched experiment lowers known-worker CPU against SQPOLL, but
-does not establish a latency advantage over efficient native TCP. Qwen
-long-output throughput is lower than native; Smol throughput is inconclusive.
-It requires the qualified recent kernel interfaces and libbpf1.6.3. Independent
-result review admits the complete comparison; owned temporary runtime/build
-outputs are removed and restoration is recorded.
-
-The [CQ progress candidate](docs/findings/0045-uring-cq-progress.md) moves the
-loop's CQ snapshot before SQ submission. Its model and GPU network-controller
-instructions match the former loop, and full vLLM/HF protocol/lifecycle
-qualification passes. The former post-submit loop remains available through
-make vllm-graph-uring-loop-after; finding0044's measured CPU/delivery results
-belong to that former snapshot semantics. The completed36-executor comparison
-and fresh independent review establish no reliable primary latency/throughput
-gain over efficient native TCP; all four primary intervals include zero.
-Negative secondary results and higher long-output process CPU versus native
-are retained. Owned temporary resources are removed; neither unchanged
-computation nor module-free serving establishes a speedup.
-
-The [optimized cross-node comparison](docs/findings/0046-optimized-cross-node.md)
-now completes real different-node module-free serving for both models with
-unchanged backend computation. All four primary performance intervals cross
-zero. A real host OOM/filesystem fault during Smol collection materially
-qualifies the performance interpretation; the full record preserves all
-observations and failures, with no clean stable-host or speedup claim.
-Owned temporary resources are removed after independent review.
-
-The [current optimized short-input localization](docs/findings/0047-optimized-short-input-latency.md)
-completes both models' ordinary/profiling paired workload with unchanged
-computation. Ordinary local TTFT is1.470ms Qwen/1.189ms Smol; profiled model
-kernel spans are1.275/1.044ms. Profiling effect remains uncertain, and kernel
-gaps/remaining stages are not assigned a pure cause. This supports bounded
-latency localization, not an eBPF speedup or model-specific tuning mandate.
-
-## Service and compute boundary
-
-The intended open-source boundary is a reusable serving path around existing
-GPU backends: receive and admit requests, publish inputs, observe completion,
-stream responses and reclaim resources. Backend adapters provide model
-execution, input/output interpretation and their buffer lifetimes. Reusing a
-megakernel or device-launchable captured graph are both valid compute routes.
-
-The current implementation has qualified two LLM architectures, but its token
-protocol and GPU generation dispatcher are still LLM-specific. It is not yet
-an arbitrary-CUDA-kernel server. Linux kernel integration also remains a real
-dependency; see the [architecture and upstream BPF socket boundary](docs/architecture.md#linux-kernel-dependency).
-
-To attribute a latency difference to the serving path, keep the backend
-revision, checkpoint, precision, KV layout and concurrency/batching identical
-between the kernel/eBPF and efficient userspace paths. Model arithmetic
-improvements belong to the backend and do not prove an eBPF benefit.
-
-## Reusing upstream compute
-
-Backend integration reuses upstream optimized computation so a matched
-comparison can attribute effects to the Linux/eBPF serving path.
-[Backend source audit](docs/upstream-backends.md) compares candidates and
-records concrete model, launch, correctness and online-service boundaries.
-No alternative megakernel is qualified yet. The HF executor remains available
-alongside the qualified upstream vLLM graph adapter.
-[Official vLLM FULL-graph reuse](docs/findings/0031-optimized-serving.md#optimized-backend-integration-actual-full-graph-reuse)
-passes1197 actual GPU launches at batch1/2/4/8 with bit-identical hidden states.
-This qualifies the computation interface. The [GPU-owned decode follow-up](docs/findings/0031-optimized-serving.md#optimized-backend-integration-gpu-owned-decode-and-sampling)
-then generates4662 tokens with official head/sampling and GPU metadata advancement,
-matching74 frozen official sequences after CPU prefill. The
-[complete kernel-queue integration](docs/findings/0032-vllm-kernel-serving.md)
-now qualifies GPU prefill and batched online request handling with88896
-checked tokens across both models/transports. The completed matched traced
-comparison measures1.201/1.474ms kernel TTFT and5358/4576tokens/s at eight
-clients for Smol/Qwen. All primary kernel-versus-efficient-userspace intervals
-contain zero; no eBPF speedup or uninstrumented timing is established.
-The [mixed-length prefill packing candidate](docs/findings/0033-prefill-packing.md)
-now passes strict service/replay and bit-identical padded-versus-compact semantic
-checks for both models. The complete160-cell comparison shows a small Qwen
-kernel gen1/c8 benefit, three inconclusive primary conditions and lower gen64/c8
-TTFT in all four model/transport cases. Transport superiority remains workload-dependent.
-The [completed FIFO release comparison](docs/findings/0034-completion-release.md)
-reduces traced eight-client single-token latency from8.821→2.596ms for Qwen
-and7.051→1.891ms for Smol on the kernel path; native controls show the same
-scheduler benefit. All four primary paired intervals favor prefix release.
-Long-output and transport results are mixed; shared-host OOM exposure and FP16
-batch-dependent output differences remain documented. The vLLM adapter now
-uses packed prefill and FIFO prefix release by default,with explicit grouped/
-serial controls. Actual ordinary untraced single-client prompt-edge/gen1/64
-checks pass160 requests/5200 frozen-upstream tokens across both models/transports.
-The [complete ordinary untraced comparison](docs/findings/0035-default-untraced.md)
-now passes80 cells/5120 measured requests/166400 tokens against a pre-observation
-set of independently qualified complete outputs. All four primary transport
-intervals contain0. This is finite output-set/lifecycle fidelity,not current-batch
-replay,universal numerical correctness or general eBPF superiority.
-An opt-in chained device-dispatch candidate adds the existing dispatcher after
-the upstream model/head and tail-launches the next step. Its
-[strict qualification](docs/findings/0036-tail-chain.md) passes both models and
-transports. The complete matched untraced A/B passes160 cells/10240 measured
-requests/332800 tokens; all eight primary intervals contain zero.
-Build with make vllm-graph-chained and use --dispatch-comparison in the existing
-serving benchmark. Ordinary defaults remain separate; no reliable candidate speedup is established.
-The existing HF graph interface now also accepts HF checkpoints/model directories.
-[Qwen and Llama qualification](docs/findings/0023-batch-execution-qualification.md#hf-graph-reuse-across-qwen-and-llama-architectures)
-passes both resident and host-control dispatch for Qwen2.5-0.5B and
-SmolLM2-135M: 1340 valid requests and 81728 exact generated tokens in total.
-This extends tested computation reuse without new model arithmetic; it does
-not establish arbitrary-model support or a new serving-speed result.
-The [MPK qualification](docs/findings/0023-batch-execution-qualification.md#upstream-mpk-sm120-compatibility-and-terminal-numerical-rejection)
-records repaired native memory/synchronization faults and failed whole-model
-outputs under both parallel and serial submission.
-The [Plow qualification](docs/findings/0023-batch-execution-qualification.md#upstream-plow-sm120-build-and-mixed-numerical-qualification)
-records successful SM120 builds and zero-error finite memchecks, with two of
-four32-token sequences matching HF; it is not a qualified replacement.
-
-
-The optional [AMK adapter](docs/findings/0048-reused-amk-dispatch.md) now reuses
-pinned upstream SmolLM2-135M FP16 computation with the existing resident GPU
-dispatcher. Both userspace TCP and the module-free eBPF/io_uring loop pass
-finite c1/c8 streaming, full selected protocol and reset/idle/stop checks
-against pre-observation whole-output pools in a common runtime. A stronger
-eager-HF exact check fails on one long output and is independently reproduced
-by upstream AMK. The complete five-block comparison finds18.360ms TTFT and158 tokens/s
-for AMK loop, versus18.246ms/303 tokens/s for same-AMK native TCP and
-1.158ms/5353 tokens/s for current vLLM loop on the tested Smol workload.
-The faster measured backend remains vLLM; AMK is experimental.
-
-A [residency counterfactual](docs/findings/0049-amk-residency-counterfactual.md)
-finds that adding a non-network resident GPU control to same-AMK native TCP
-also reproduces the c8 throughput loss. This directs the next driver
-investigation; model-overlap causality and generic performance gains remain
-unproved.
-
-The experimental amk-graph-uring-coalesced and vllm-graph-uring-coalesced
-targets advance network work inside the existing GPU dispatcher between model
-rounds, leaving no separate steady network kernel. The
-[coalesced-network experiment](bench/results/coalesced_network_20261014/plan.md)
-completes the matched 45-executor comparison: AMK c8 throughput rises from
-158 to293 token/s, remains below native304, and adds0.62ms gen1/c1 TTFT versus
-native. Both vLLM workloads lose8–9% long-output throughput versus their original loop;
-c8 single-token TTFT increases from2.04/2.64 to6.75/8.25ms.
-See [finding0050](docs/findings/0050-coalesced-gpu-network.md). Model arithmetic
-is unchanged; AMK numerical limits and existing defaults remain explicit.
-
-Finding0050 precedes the experimental queue-publication
-batching change. Existing coalesced targets now snapshot ring cursors and
-publish prepared SQEs/consumed CQEs once per progression round. Ordinary
-noncoalesced targets retain their policy. The
-[completed queue-batching comparison](docs/findings/0051-batched-ring-publication.md)
-passes the selected protocol/lifecycle checks and all45 ordinary executors.
-AMK c8 long-output throughput improves293→301 token/s, still below native304;
-Qwen improves3.8% versus prior coalescing. vLLM c8 single-token latency remains
-7.16/8.59ms versus native1.97/2.63ms. This is a mixed result, without universal
-latency recovery or native-parity proof.
-
-The [model-admission comparison](docs/findings/0052-model-admission-after-sq-consumption.md)
-adds a measured scheduling improvement in experimental vLLM coalesced builds:
-after model completion, published SQ work is consumed before fresh admission.
-Smol/Qwen gen1/c8 TTFT falls6.99/8.60→5.09/6.88ms versus the matched old driver,
-still above native1.97/2.51ms. Long-output throughput gains are unestablished.
-The tested AMK hook regressed latency and is restored to its prior policy;
-the archived two-hook experiment is distinct from this selected main source.
-Defaults, model arithmetic and the absence of a steady userspace request worker
-remain. Full data, trace sensitivity, numerical limits and review are retained.
-
-The [completed-response-drain comparison](docs/findings/0053-final-response-drain-before-admission.md)
-extends that experimental vLLM policy: while the model is idle, advance the
-ordered final-response completion frontier as well as published SQ work before
-fresh admission. Matched gen1/c8 TTFT falls5.21/6.37→2.19/2.55ms for
-Smol/Qwen, with fewer model rounds in the actual ordinary timing processes.
-Native means are2.14/2.64ms; the paired differences cross0, establishing
-neither superiority nor equivalence. Smol gen64/c8 throughput improves about
-1.35% versus the old policy but remains below native; Qwen transfer is
-inconclusive, and single-request native latency losses remain. Model math and
-default/noncoalesced targets are unchanged. Global final-send backpressure
-and finite token-ID/model/kernel coverage remain experimental boundaries.
-
-The [GPU-local bookkeeping experiment](docs/findings/0054-gpu-local-io-bookkeeping.md)
-tests a separate source of long-output cost with the same model computation.
-Five paired blocks find mean gen64/c8 gains of 0.87% Smol and 0.58% Qwen
-versus current host bookkeeping, but both primary intervals cross zero.
-Smol remains below native; Qwen's native contrast is inconclusive. Protocol
-and split-control shutdown checks pass, with all adverse secondary results
-retained. Main keeps the existing host bookkeeping; the candidate allocation,
-control split and full results are archived rather than promoted as a proven
-optimization. This does not add a model/backend acceptance or new mode.
-
-The [current I/O arrangement comparison](docs/findings/0055-current-gpu-io-arrangements.md)
-reuses identical vLLM computation across existing standalone GPU I/O,
-coalesced GPU I/O and efficient native TCP. Smol gen64/c8 reaches5566 token/s
-with standalone versus5175 coalesced and5619 native: recovery over coalesced
-is supported, while native remains faster. Qwen throughput recovery is
-inconclusive and standalone gen1/c8 TTFT worsens2.591→2.766ms versus coalesced.
-The result favors an existing route for the measured Smol long-output scope,
-without a universal backend policy or default change. This compares whole I/O
-constructors; isolated overlap, GPU-time mediation and generic models remain open.
-
-## Independent GPU I/O publication result
-
-[Finding0056](docs/findings/0056-independent-gpu-queue-publication.md) completes
-the missing independent-worker/batched-publication comparison with identical
-reused model computation. Both models' primary throughput intervals cross zero;
-selected source retains original publication, with zero production-code growth.
-Efficient native TCP remains the competitor. The
-[literature/novelty map](docs/background-related-work.md) records prior GPU I/O
-and compute mechanisms and the incomplete generic-driver evidence.
-
-## Long-output GPU timeline result
-
-[Finding0057](docs/findings/0057-long-output-service-timeline.md) completes40
-matched traced-client/replay cells. It establishes no throughput improvement.
-Two of20 profiles miss three model activities each, so the planned integrated
-GPU decomposition fails;18 complete profiles and all40 client outcomes remain
-explicitly scoped. Complete Qwen duration effects are inconclusive for the
-bottleneck. Serving source and defaults remain unchanged.
-
-## Ordinary output qualification boundary
-
-[Finding0058](docs/findings/0058-batched-token-publication.md) preserves an
-incomplete publisher experiment: an unmodified Qwen loop control returns one
-complete output outside its frozen finite reference pool. The cause remains
-unresolved without its ordinary execution history. No performance improvement
-is selected; original source is retained. Traced protocol/lifecycle passes do
-not establish every untraced trajectory.
-
-[Finding0059](docs/findings/0059-batch-invariant-serving.md) tests upstream
-batch-invariant FP16 execution with one official pre-observation sequence per
-prompt. Both models pass independent official controls, full loop/native
-protocol checks and20 ordinary performance executors. Long-output throughput
-intervals cross zero; concurrent long-output first-token latency is worse on
-loop. The tested mode supplies finite exact-output evidence, with no low-latency
-default promotion, default-mode qualification or explanation of0058. Source
-and defaults remain unchanged.
-
-The [adaptive-wait experiment](docs/findings/0060-adaptive-kernel-wait.md)
-reduces process CPU/request by66.3% Qwen and70.2% Smol in finite bursty traced
-serving, but Smol achieved burst TPS falls0.325% versus fixed waiting.
-Native also uses fixed idle polling, so this establishes no eBPF-only CPU
-advantage or total-service CPU saving. Original source/defaults are retained;
-the candidate and complete positive/adverse results are archived.
-
-## Repository layout
-
-```
-bpf/fusion.bpf.c               ingress program (L2/L3/L4 parse, slot publish, doorbell)
-bpf/include/bpfusion_queue.h   canonical kernel<->GPU page layout (single source of truth)
-executor/executor.cu           resident synthetic-MLP CUDA kernel + responder + latency sampling
-executor/llm_executor.py       host HF Qwen baseline on the token ring (--tcp)
-executor/qwen.cu               real Qwen reference in one resident CUDA kernel
-executor/qwen_graph.py/.cu     HF bootstrap capture + GPU-tail graph dispatch
-executor/vllm_graph.py/.cu     optimized graph bootstrap + GPU prefill/batched decode
-module/bfusion_tx.c            kernel accept/drain and asynchronous TCP/HTTP TX
-executor/cuda_timer.h          %globaltimer <-> CLOCK_MONOTONIC calibration
-tools/bpfusion_load.c          attach/detach/stats; owns and pins the BPF maps
-tools/client.c                 verify/own/burst/paced MLP client
-tools/llm_*.py, tools/perfcount.c, tools/insn_token.py   LLM + CPU-cost benches
-bench/run_*.sh                 reproducible benchmark drivers (logs land in bench/results/)
-docs/                          architecture.md + findings/NNNN-*.md
-```
-
-## Build
-
-Requirements: Linux with BTF/libbpf, `clang`/LLVM (BPF target), `libbpf` +
-`libelf` + `zlib` development headers, `tc` (iproute2), Python 3 with `torch` +
-`transformers` (LLM path), and CUDA `nvcc` (executor). Root — or `CAP_BPF` +
-`CAP_NET_ADMIN` — is required to load BPF programs and attach tc.
-
-```
-make            # eBPF objects + userspace tools + GPU executor into build/  (= probes tools executor)
-make probes     # eBPF objects only
-make tools      # userspace C tools only
-make executor   # CUDA executor only
-```
-
-The executor is compiled for `SM_ARCH` (default `sm_120`); override for other
-GPUs, e.g. `make executor SM_ARCH=sm_90`. This tree is verified on one RTX 5090
-(32 GB, `sm_120`) with CUDA 13; the exact host is recorded in
-[bench/results/HOST.md](bench/results/HOST.md).
-
-The queue defaults to eight model banks. The normal Makefile accepts an
-explicit capacity through its existing CPPFLAGS and binds the same flag into
-the BPF object, loader, client and GPU compilation. Use a separate BUILD
-directory for each capacity; Make does not detect a changed compiler flag in
-an existing object.
-
-```sh
-make BUILD=/tmp/bpfusion-build16 CPPFLAGS=-DBF_LLM_SLOTS=16 \
-  /tmp/bpfusion-build16/fusion.bpf.o /tmp/bpfusion-build16/bpfusion_load \
+~~~sh
+make build/fusion.bpf.o build/bpfusion_load \
   vllm-graph-uring-loop vllm-graph-user-network-wait
-```
+./build/bpfusion_load stream-uring-attach
+./build/vllm_graph_uring_loop Qwen/Qwen2.5-0.5B-Instruct 120
+~~~
 
-Use the [recorded vLLM environment](bench/results/batch_capacity_integration_20261015/)
-and set VLLM_PYTHON to that environment's Python for those adapter targets.
-Only the recorded vLLM BPF-loop/native paths are qualified at sixteen banks.
-The legacy module must match the shared-page ABI; an eight-bank module rejects
-a sixteen-bank map. HF/AMK sixteen-bank operation is not qualified.
-This build option does not select a new runtime default or transfer traced
-performance evidence to ordinary operation.
+Wait for the ready line. In another terminal with the same Python environment:
 
-## Run
+~~~sh
+python3 tools/llm_tcp_client.py --http --gen 32 --rounds 1
+~~~
 
-For the qualified graph/TCP path on the recorded host:
+The client tokenizes text and decodes returned IDs. The server's HTTP body
+contains binary token IDs, not JSON or an OpenAI API. The guide also covers
+pinned model revisions, Smol and cleanup. The external-vLLM HTTP baseline
+client is a different protocol.
 
-```sh
-make qwen-graph qwen-graph-user-network-wait
-make -C module KDIR=/usr/src/linux-headers-7.3.0-070300rc3-generic CC=gcc-15
-HF_HOME=/workspaces/.cache/huggingface python3 tests/resident_qwen.py --executor ./build/qwen_graph --gen 64 --prefill-edges
-```
+## Supported scope
 
-The module must be built against the running kernel's headers/compiler; the
-path and compiler above describe the tested host. Use the same strict command
-with `--executor ./build/qwen_graph_user_network_wait` for the native network
-alternative, or add `--model HuggingFaceTB/SmolLM2-135M` for the second qualified
-architecture. These tests check real model outputs and connection/queue
-lifetimes; they do not establish a performance advantage.
+| Surface | Qualified scope |
+|---|---|
+| Models | Qwen2.5-0.5B-Instruct and SmolLM2-135M; Qwen/Llama architectures |
+| Compute | Reused HF graphs or upstream vLLM graphs/head/sampling |
+| Network | Binary TCP and Content-Length HTTP POST; streamed token-ID replies |
+| GPU | Prefill, decode, model/KV progress and output publication |
+| Linux | Framing, admission, asynchronous TCP and reclamation |
+| Module-free path | Explicit HF/vLLM io_uring BPF-loop targets on the tested stack |
+| Main competitor | Efficient native epoll TCP with the same resident GPU compute |
+| Validation | Finite exact outputs/replay, fragmentation, concurrency, reuse, reject, half-close/reset/stop |
 
-The [cross-node plan](bench/results/physical_network_plan_20261011.md) and
-[actual invocations](bench/results/physical_network_full_invocations_20261011.txt)
-describe the completed matched experiment and temporary client lifecycle.
-The older synthetic and Python-driven reference commands follow.
+Default capacity is 8; input and output counts are each 1..64 tokens.
+Explicit16-bank vLLM qualification uses a matching shared-page ABI and separate
+builds. See [architecture](docs/architecture.md) and
+[capacity evidence](docs/findings/0064-batch-capacity.md).
 
+The transport serves two computation adapters, but its request format and
+generation dispatcher remain LLM-specific. There is no stable arbitrary-CUDA
+backend plugin API yet.
 
-The bench drivers in `bench/run_*.sh` are the reproducible entry points: each
-synchronizes on the executor's ready line, runs the client, prints the
-page/BPF counters, and writes a timestamped raw log to `bench/results/`.
+## Results and research meaning
 
-Resident synthetic-MLP path (loopback), or `./bench/run_e2e.sh 30 4 8 6 7 0` for
-the same run plus the plain-userspace UDP baseline:
+The controlled question compares serving paths while keeping upstream model
+computation matched. Native also retains GPU-controlled generation; it is not
+forced into a Python per-token loop.
 
-```
-./build/bpfusion_load attach lo     # pin maps, attach tc to lo ingress (do NOT pre-attach before a bench script)
-./build/executor 30 4 8 6 7 0 &     # 30 s; work=4 batch=8 gpu_cpu=6 resp_cpu=7 idle=0(futex)
-sleep 1
-./build/client verify 0 0 39400 4   # numeric agreement with the CPU reference
-./build/client own 2000 0 39400 4   # one-request latency
-./build/client burst 500 8 39400 4  # pipelined throughput
-./build/bpfusion_load stats         # read counters
-wait
-./build/bpfusion_load detach lo
-```
+- [Optimized latency](docs/findings/0047-optimized-short-input-latency.md):
+  most short-input time remains in the reused model region.
+- [Capacity](docs/findings/0064-batch-capacity.md):more slots improve high-load
+  delivery on both paths.
+- [Mixed scheduling](docs/findings/0065-mixed-prefill-decode.md):the complete
+  reviewed experiment improves mean generation time on both paths.
+  General transport superiority is unproven; Qwen has an adverse tail-token
+  result. This candidate is archived, not selected for ordinary serving.
+- [Fair native admission](docs/findings/0063-fair-native-admission.md):
+  removing a native scheduling disadvantage weakens earlier apparent wins.
+- [Kernel-loop coordination](docs/findings/0044-uring-bpf-loop.md):less known
+  CPU work than SQPOLL does not imply less total CPU than efficient native TCP.
 
-Real-LLM path: use `./bench/run_llm.sh` (UDP page path) or
-`./bench/run_llm_tcp.sh` (TCP reply socket) — both do the attach, wait for the
-executor's `model loaded` line (model load takes tens of seconds), run the
-baseline comparison, and detach. `llm_executor.py` needs the Python environment
-that has `torch` + `transformers`; it attaches to the already-pinned page and
-does not load the BPF object.
+[Evaluation](docs/evaluation.md) links complete plans, failures, raw data, analyses
+and reviews. [All findings](docs/findings/) retain the historical detail.
+Process CPU, throughput, first-token latency, completion time and tail token gaps
+answer different questions; an improvement in one does not imply all improve.
 
-To drive it by hand instead: `tools/llm_bench.py` does `from llm_executor
-import ...`, so the executor directory must be importable (`PYTHONPATH=executor`
-from the repo root; the bench drivers already set this). Start the executor,
-wait for `model loaded`, run the client, then stop the executor and detach:
+The useful target is a reusable Linux TCP service around existing GPU backends:
+programmable admission, shared ownership, GPU-controlled execution and complete
+connection/reply lifetimes without a steady userspace request worker.
+Generic GPU networking, GPU-initiated I/O and megakernel compute have prior work;
+none alone is claimed as new. Current evidence establishes a working
+integration and shared scheduler improvements, not a general faster server.
+See [related work](docs/background-related-work.md) and
+[backend audit](docs/upstream-backends.md).
 
-```
-./build/bpfusion_load attach lo
-PYTHONPATH=executor python3 executor/llm_executor.py --seconds 90 & exec=$!   # model load ~tens of seconds
-# wait for "executor: model loaded" on stdout, then:
-PYTHONPATH=executor python3 tools/llm_bench.py --gen 32 --rounds 8    # --tcp + tools/llm_tcp_client.py for TCP
-kill "$exec"; wait "$exec" 2>/dev/null    # stop only this executor
-./build/bpfusion_load detach lo
-```
+## Remaining work
 
-## Reproducible benchmarks
+- Qualify default 8, ordinary output/lifecycle and partial-output stop before
+  adopting the experimental mixed scheduler.
+- Measure complete service CPU, including kernel I/O, softirq and GPU polling/
+  resource cost; process CPU alone is insufficient.
+- Establish sustained remote offered-load/tail behavior with errors and client
+  lag visible. Current finite runs do not prove production SLOs or isolation.
+- Validate another unchanged compute backend and a practical adapter boundary
+  before claiming arbitrary-model/kernel support.
+- Extend kernel/hardware compatibility and longer-running reliability with real
+  runs. Text/JSON APIs, TLS, long context and multi-GPU serving are not qualified.
 
-Each driver runs an end-to-end scenario and writes a timestamped raw log to
-`bench/results/`; the numbers in `docs/findings/` cite those logs.
+These gaps do not justify repeating closed micro-optimizations or rewriting
+model-specific attention/matrix kernels.
 
-```
-./bench/run_e2e.sh 30 4 8 6 7 0                                  # MLP latency/throughput/drops
-./bench/run_batch_sweep.sh 4 "1 4 8 16 32 64"                    # throughput vs batch depth
-./bench/run_saturation.sh "4 16 64" 32                           # offered-load / SLO
-./bench/run_ingress_latency.sh                                   # RX -> kernel -> userspace wake (PIN=1 to pin CPUs)
-./bench/run_veth.sh 12                                           # over a real netdevice (two netns)
-./bench/run_llm.sh 90 32 8                                       # LLM TTFT/TPOT (UDP page path)
-./bench/run_llm_tcp.sh 70 32 6                                   # LLM over TCP reply socket
-./bench/run_llm_model.sh Qwen/Qwen2.5-1.5B-Instruct 100 32 6     # matched model-size comparison
-./bench/run_http.sh Qwen/Qwen2.5-0.5B-Instruct 32 8              # external vLLM HTTP baseline
-```
+## Repository map
 
-The `run_*` scripts each `detach`/`attach` and clear stale pinned maps
-(`/sys/fs/bpf/bpfusion_*`) themselves, and kill leftover executors first — run
-them with privileges (`sudo -E` or `CAP_BPF`+`CAP_NET_ADMIN`) and do not
-pre-attach. The MLP run also prints the `client verify` numeric check.
+| Path | Purpose |
+|---|---|
+| bpf/ | Framing, admission, sockmap and io_uring BPF coordination |
+| bpf/include/bpfusion_queue.h | Shared kernel/GPU ABI |
+| executor/ | Reused compute adapters, resident dispatch and shared transport |
+| tools/llm_tcp_client.py | Text-to-token TCP/HTTP demo |
+| tools/bpfusion_load.c | Attach, stats and detach |
+| module/ | Legacy TCP transport |
+| tests/, bench/ | Correctness and controlled benchmarks |
+| docs/findings/, bench/results/ | Findings and reproducible evidence |
 
-## Architecture and results index
-
-- [docs/architecture.md](docs/architecture.md) — the data path, page ownership
-  rules, memory-ordering rules, and the component map.
-- [0001-ingress-wake.md](docs/findings/0001-ingress-wake.md) — kernel->userspace
-  wakeup cost (spin vs `epoll_wait` vs blocking `recvfrom`), plus the pinning
-  control experiment.
-- [0002-end-to-end-mlp.md](docs/findings/0002-end-to-end-mlp.md) — first
-  packet->GPU->packet path (superseded by 0003).
-- [0003-direct-page-and-wakeup.md](docs/findings/0003-direct-page-and-wakeup.md)
-  — direct-page execution, the lost-wakeup bugs, 41 µs idle RTT (superseded by 0004).
-- [0004-resident-kernel.md](docs/findings/0004-resident-kernel.md) — launch-once
-  resident GPU kernel, throughput, occupancy vs work, the `__ldcg`/L1 pitfall.
-- [0005-resident-llm.md](docs/findings/0005-resident-llm.md) — real
-  Qwen2.5-0.5B on the packet->page->GPU->page path; TTFT/TPOT vs a direct
-  in-process baseline.
-- [0006-veth-netdevice.md](docs/findings/0006-veth-netdevice.md) — the same path
-  over a real netdevice (veth across two netns), not loopback.
-- [0007-concurrency-slo.md](docs/findings/0007-concurrency-slo.md) — concurrency
-  sweep: token goodput flat, TTFT scales with queue depth (batch-1 executor).
-- [0008-instructions-per-token.md](docs/findings/0008-instructions-per-token.md)
-  — CPU instructions/token via `perf_event_open`: host Python is the CPU bottleneck.
-- [0009-tcp-path.md](docs/findings/0009-tcp-path.md) — request in over TCP,
-  tokens streamed back on the accepted socket (+2.6 ms TTFT, TPOT flat).
-- [0010-model-size.md](docs/findings/0010-model-size.md) — matched 0.5B / 1.5B /
-  Qwen3-1.7B comparison; path overhead is size-independent, decode scales
-  sub-linearly.
-- [0013-resident-qwen.md](docs/findings/0013-resident-qwen.md) — real Qwen inference inside one resident kernel and kernel-owned connection lifecycle.
-- [0014-sockmap-stream.md](docs/findings/0014-sockmap-stream.md) — TCP stream framing and concurrent queue reservation.
-- [0015-http-token-transport.md](docs/findings/0015-http-token-transport.md) — Content-Length POST token API, persistent connection framing and ordered HTTP replies.
-- [0016-cooperative-resident-qwen.md](docs/findings/0016-cooperative-resident-qwen.md) — one cooperative resident grid, strict short-output passes and an explicit longer-decode accuracy failure.
-- [0019-device-scheduled-qwen.md](docs/findings/0019-device-scheduled-qwen.md) — GPU-driven HF graph execution with passing 64-token TCP/HTTP correctness and no userspace request worker.
-- [0020-graph-dispatch.md](docs/findings/0020-graph-dispatch.md) — complete matched graph/64-token dispatch measurement; narrow TTFT evidence, serial queueing and executor-process CPU results.
-- [0017-invalid-token-rejection.md](docs/findings/0017-invalid-token-rejection.md) — invalid model token IDs fail their request and leave subsequent inference live.
-- [0012-kernel-tcp-tx.md](docs/findings/0012-kernel-tcp-tx.md) — exact Qwen
-  tokens returned by kernel TCP TX; lifecycle/reset tests; HF still drives inference.
-- [0011-http-baseline.md](docs/findings/0011-http-baseline.md) — external vLLM
-  HTTP server baseline on the same model: path overhead is within noise of
-  in-process, the gap to vLLM is decode, not transport.
+Synthetic MLP, host-driven Python, handwritten Qwen and experimental variants
+remain controls with their own evidence. Older bench/run_* scripts manage
+hooks/pins and may terminate matching executors; read their lifecycle before
+running alongside another service. The current walkthrough uses explicit
+process and cleanup steps.
 
 ## Contributing
 
@@ -561,7 +163,3 @@ create no other branches.
 Apache-2.0 — see [LICENSE](LICENSE). The separately loaded kernel module
 `module/bfusion_tx.c` is GPL-2.0-only, as marked in its SPDX header; it uses
 GPL-exported Linux TCP internals and does not link into the userspace objects.
-
-The optional resident Qwen reference is built with `make qwen`; its weight
-export is in [finding 0013](docs/findings/0013-resident-qwen.md), and its current
-TCP/HTTP correctness command is in [finding 0015](docs/findings/0015-http-token-transport.md).

@@ -1,0 +1,27 @@
+[
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-m",
+      "venv",
+      "--without-pip",
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:38:24.483783+00:00"
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-m",
+      "pip",
+      "--python",
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "install",
+      "-r",
+      "/workspaces/repository/requirements.txt"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:41:39.892471+00:00"
+  }
+]

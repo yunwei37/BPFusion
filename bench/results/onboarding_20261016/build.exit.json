@@ -1,0 +1,13 @@
+{
+  "command": [
+    "make",
+    "BUILD=/tmp/bpfusion-onboarding-z51zvfh3/build",
+    "VLLM_PYTHON=/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+    "/tmp/bpfusion-onboarding-z51zvfh3/build/fusion.bpf.o",
+    "/tmp/bpfusion-onboarding-z51zvfh3/build/bpfusion_load",
+    "vllm-graph-uring-loop",
+    "vllm-graph-user-network-wait"
+  ],
+  "exit": 0,
+  "utc": "2026-10-16T07:47:43.063412+00:00"
+}

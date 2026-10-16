@@ -1,0 +1,314 @@
+[
+  {
+    "tag": "download_qwen",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "-c",
+      "from huggingface_hub import snapshot_download; print(snapshot_download('Qwen/Qwen2.5-0.5B-Instruct',revision='7ae557604adf67be50417f59c2c2f167def9a775'))"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:49:51.797553+00:00"
+  },
+  {
+    "tag": "qwen_kernel_attach",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/build/bpfusion_load",
+      "stream-uring-attach"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:49:51.833864+00:00"
+  },
+  {
+    "tag": "qwen_kernel_http_gen1",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--gen",
+      "1",
+      "--rounds",
+      "1",
+      "--http"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:51:19.513588+00:00"
+  },
+  {
+    "tag": "qwen_kernel_http_gen32",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--gen",
+      "32",
+      "--rounds",
+      "1",
+      "--http"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:51:23.616551+00:00"
+  },
+  {
+    "tag": "qwen_kernel_tcp_gen32",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--gen",
+      "32",
+      "--rounds",
+      "1"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:51:27.769896+00:00"
+  },
+  {
+    "tag": "qwen_kernel_stats",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/build/bpfusion_load",
+      "stats"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:51:31.567716+00:00"
+  },
+  {
+    "tag": "qwen_kernel_server",
+    "exit": 0,
+    "requests": 3,
+    "output_tokens": 65,
+    "utc": "2026-10-16T07:51:31.568059+00:00"
+  },
+  {
+    "tag": "qwen_kernel_detach",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/build/bpfusion_load",
+      "stream-detach"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:51:31.578486+00:00"
+  },
+  {
+    "tag": "qwen_native_http_gen1",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--gen",
+      "1",
+      "--rounds",
+      "1",
+      "--http"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:52:01.950702+00:00"
+  },
+  {
+    "tag": "qwen_native_http_gen32",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--gen",
+      "32",
+      "--rounds",
+      "1",
+      "--http"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:52:05.892177+00:00"
+  },
+  {
+    "tag": "qwen_native_tcp_gen32",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "--gen",
+      "32",
+      "--rounds",
+      "1"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:52:09.712683+00:00"
+  },
+  {
+    "tag": "qwen_native_server",
+    "exit": 0,
+    "requests": 3,
+    "output_tokens": 65,
+    "utc": "2026-10-16T07:52:13.182745+00:00"
+  },
+  {
+    "tag": "download_smol",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "-c",
+      "from huggingface_hub import snapshot_download; print(snapshot_download('HuggingFaceTB/SmolLM2-135M',revision='93efa2f097d58c2a74874c7e644dbc9b0cee75a2'))"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:52:13.819076+00:00"
+  },
+  {
+    "tag": "smol_kernel_attach",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/build/bpfusion_load",
+      "stream-uring-attach"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:52:13.845701+00:00"
+  },
+  {
+    "tag": "smol_kernel_http_gen1",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--gen",
+      "1",
+      "--rounds",
+      "1",
+      "--http"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:52:44.572463+00:00"
+  },
+  {
+    "tag": "smol_kernel_http_gen32",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--gen",
+      "32",
+      "--rounds",
+      "1",
+      "--http"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:52:48.626983+00:00"
+  },
+  {
+    "tag": "smol_kernel_tcp_gen32",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--gen",
+      "32",
+      "--rounds",
+      "1"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:52:52.403012+00:00"
+  },
+  {
+    "tag": "smol_kernel_stats",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/build/bpfusion_load",
+      "stats"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:52:55.944716+00:00"
+  },
+  {
+    "tag": "smol_kernel_server",
+    "exit": 0,
+    "requests": 3,
+    "output_tokens": 65,
+    "utc": "2026-10-16T07:52:55.945015+00:00"
+  },
+  {
+    "tag": "smol_kernel_detach",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/build/bpfusion_load",
+      "stream-detach"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:52:55.956858+00:00"
+  },
+  {
+    "tag": "smol_native_http_gen1",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--gen",
+      "1",
+      "--rounds",
+      "1",
+      "--http"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:53:24.701851+00:00"
+  },
+  {
+    "tag": "smol_native_http_gen32",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--gen",
+      "32",
+      "--rounds",
+      "1",
+      "--http"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:53:28.363499+00:00"
+  },
+  {
+    "tag": "smol_native_tcp_gen32",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--model",
+      "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "--gen",
+      "32",
+      "--rounds",
+      "1"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T07:53:32.080761+00:00"
+  },
+  {
+    "tag": "smol_native_server",
+    "exit": 0,
+    "requests": 3,
+    "output_tokens": 65,
+    "utc": "2026-10-16T07:53:34.977260+00:00"
+  },
+  {
+    "tag": "invalid_gen",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--gen",
+      "0"
+    ],
+    "exit": 2,
+    "utc": "2026-10-16T07:53:35.008837+00:00"
+  },
+  {
+    "tag": "invalid_rounds",
+    "command": [
+      "/tmp/bpfusion-onboarding-z51zvfh3/runtime/bin/python",
+      "/workspaces/repository/tools/llm_tcp_client.py",
+      "--rounds",
+      "0"
+    ],
+    "exit": 2,
+    "utc": "2026-10-16T07:53:35.041729+00:00"
+  }
+]

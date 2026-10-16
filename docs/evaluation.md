@@ -1,5 +1,20 @@
 # Evaluation status
 
+## Current conclusions and navigation
+
+The [README](../README.md) summarizes the service and current conclusions;
+[getting started](getting-started.md) is the runbook.
+Evidence supports a working Linux/eBPF/GPU service and shared scheduler gains.
+General matched-native superiority,total CPU/energy benefit,production SLOs
+and arbitrary-backend support remain unproven.
+[Finding0065](findings/0065-mixed-prefill-decode.md) is the newest complete
+reviewed scheduling result;its source remains experimental.
+
+The following sections preserve plans,raw outcomes,reviews and failures.
+Historical status refers to its recorded snapshot,not a new audit or default
+selection.
+
+
 The repository has no formal paper RQ or thesis contract. The retained user
 objective is a complete Linux TCP/HTTP + eBPF/shared queue to resident
 real-model inference and asynchronous kernel TX, with reproducible matched

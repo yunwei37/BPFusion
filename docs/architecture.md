@@ -24,6 +24,23 @@ paths. The native userspace alternative also retains GPU-controlled generation;
 it is not forced into a Python per-token loop. Linux/eBPF and kernel TX remain
 host CPU work.
 
+## Current real-model data path
+
+~~~text
+TCP/HTTP -> sockmap framing/admission -> kernel pending queue
+         -> shared model slots -> resident GPU -> reused HF/vLLM graphs
+         -> produced tokens -> GPU-owned io_uring SEND -> Linux TCP
+         -> completion/recycling -> reusable connections and slots
+~~~
+
+The optional BPF loop submits GPU-published SQEs and waits for completion/timer
+progress. Linux still performs socket I/O and reservation atomics.
+GPU execution advances model/KV inputs and publishes outputs.
+Userspace initializes and waits for termination;no steady userspace request
+worker owns admission,model-step launches or replies on this path.
+The native alternative retains reused computation and uses timed epoll and
+nonblocking send for networking.
+
 ## Linux kernel dependency
 
 Observation: 2026-10-12. The tested host runs Linux7.3-rc3. Its installed
@@ -58,7 +75,7 @@ request worker. Current BPF/io_uring interfaces,BTF/UAPI and libbpf remain
 dependencies. The default module stays available; qualified CPU savings
 against SQPOLL do not establish delivery superiority over efficient native.
 
-## Data path
+## Historical UDP and host-driven controls
 
 ```
   client sendto (UDP :39400)
@@ -373,8 +390,8 @@ completion the responder is still reading.
 - General HTTP and text input/output — the resident reference implements
   Content-Length POST with binary token bodies (`0015`), including split writes,
   pipelining, half-close and concurrent correctness controls.
-  The separate Python baseline still uses tc packet ingress (`0012`). Physical
-  packet loss/retransmission and overload response behavior remain unmeasured.
+  The separate Python baseline still uses tc packet ingress (`0012`). Finite offered-load admission and drops are measured in findings0061..0065;
+  physical packet-loss/retransmission and general overload behavior remain unqualified.
 - GPU-side tokenization/detokenization and configurable sampling. The graph
   path already performs greedy token selection on-device, but still consumes
   pretokenized input. Full text conversion and stochastic sampling remain
@@ -387,9 +404,9 @@ completion the responder is still reading.
 - Direct-NIC and loss/retransmission/overload evaluation. Finding0029 now measures
   actual cross-node TCP over flannel/Tailscale and Ethernet; it is not bare-NIC
   TCP or GPUDirect.
-- GPU-completion notification to replace the current kernel worker's
-  60–120us polling sweep. Current measurements do not qualify an interrupt-
-  or event-driven completion path.
+- GPU-triggered completion notification. The legacy custom TCP worker uses
+  a polling sweep;the optional BPF-loop path coordinates CQ/timer progress.
+  Neither establishes a true GPU interrupt path or universal idle/active CPU benefit.
 
 The optional stock SEND loop preserves its buffer until CQ completion, then
 starts the next send at the completed byte offset and recopies only tokens
