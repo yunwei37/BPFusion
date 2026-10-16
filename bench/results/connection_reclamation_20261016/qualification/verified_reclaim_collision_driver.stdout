@@ -1,0 +1,117 @@
+{
+  "model": "qwen",
+  "start": "2026-10-16T12:46:46.814330+00:00",
+  "oracle_frozen_at": "2026-10-16T09:00:30.523112+00:00",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "ready_time_ns": 1792154834618720339,
+  "native_pid": 754410,
+  "collision_pending": {
+    "bucket": 626,
+    "pending": 40,
+    "head": 9,
+    "queued": 88
+  },
+  "collision_drained": {
+    "bucket": 626,
+    "pending": 0,
+    "head": 57,
+    "queued": 40
+  },
+  "at_observed_eof": {
+    "bucket": 626,
+    "pending": 0,
+    "head": 57,
+    "queued": 40
+  },
+  "eof_observed_monotonic_ns": 586207097920735,
+  "final_peer": {
+    "bucket": 626,
+    "pending": 0,
+    "head": 105,
+    "queued": 0
+  },
+  "ports": {
+    "early": 32149,
+    "colliding": 32316,
+    "bucket": 626,
+    "same_peer_reused": true
+  },
+  "exit": 0,
+  "finite_reference_disagreements": 9,
+  "native_stats": {
+    "accepted": 4,
+    "closed": 4,
+    "received": 0,
+    "sends": 872,
+    "bytes": 24612,
+    "completed": 105,
+    "aborted": 0,
+    "max_connections": 3,
+    "max_requests": 8,
+    "pending": 0,
+    "error": 0,
+    "head": 105,
+    "reserved": 0,
+    "dropped": 0,
+    "overflow": 0,
+    "sqhead": 892,
+    "sqtail": 892,
+    "cqhead": 16116,
+    "cqtail": 16116,
+    "trace_count": 105,
+    "trace_overflow": 0
+  },
+  "pass": true,
+  "end": "2026-10-16T12:47:24.379522+00:00",
+  "remaining_pins": []
+}
+64,"sends":1,"early":0,"bytes":256,"aborted":0,"client_ns":586206619138011}
+REPLY {"seq":84,"gen":64,"sends":1,"early":0,"bytes":256,"aborted":0,"client_ns":586206619142332}
+REPLY {"seq":85,"gen":64,"sends":1,"early":0,"bytes":256,"aborted":0,"client_ns":586206619146942}
+REPLY {"seq":86,"gen":64,"sends":1,"early":0,"bytes":256,"aborted":0,"client_ns":586206619151462}
+REPLY {"seq":87,"gen":64,"sends":1,"early":0,"bytes":256,"aborted":0,"client_ns":586206619155214}
+REPLY {"seq":88,"gen":64,"sends":1,"early":0,"bytes":256,"aborted":0,"client_ns":586206619159807}
+REPLY {"seq":89,"gen":64,"sends":64,"early":63,"bytes":256,"aborted":0,"client_ns":586206619163779}
+REPLY {"seq":90,"gen":64,"sends":2,"early":1,"bytes":256,"aborted":0,"client_ns":586206619178242}
+REPLY {"seq":91,"gen":64,"sends":1,"early":0,"bytes":256,"aborted":0,"client_ns":586206619279587}
+REPLY {"seq":92,"gen":64,"sends":1,"early":0,"bytes":256,"aborted":0,"client_ns":586206619285780}
+REPLY {"seq":93,"gen":64,"sends":1,"early":0,"bytes":256,"aborted":0,"client_ns":586206619291579}
+REPLY {"seq":94,"gen":64,"sends":1,"early":0,"bytes":256,"aborted":0,"client_ns":586206619295720}
+REPLY {"seq":95,"gen":64,"sends":1,"early":0,"bytes":256,"aborted":0,"client_ns":586206619299917}
+REPLY {"seq":96,"gen":64,"sends":1,"early":0,"bytes":256,"aborted":0,"client_ns":586206619303801}
+REPLY {"seq":97,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":586207098025804}
+REPLY {"seq":98,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":586207098058972}
+REPLY {"seq":99,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":586207098069453}
+REPLY {"seq":100,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":586207098076898}
+REPLY {"seq":101,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":586207098084080}
+REPLY {"seq":102,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":586207098092328}
+REPLY {"seq":103,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":586207098104430}
+REPLY {"seq":104,"gen":1,"sends":1,"early":0,"bytes":4,"aborted":0,"client_ns":586207098111555}
+CLEANUP ring_connections_buffers_released
+resident vLLM stopped: launches=1 device_graph_launches=782 graph_error=0 max_active=8 admitted=105 retired=105 trace_overflows=0 release_rounds=26 max_release=8 device_launch_calls=1564
+{"event": "vllm_reference_replay", "requests": 105, "checked_tokens": 6153, "rounds": 782, "mixed_rounds": 11, "exact": true}
+{"event": "fresh_metadata_verified", "requests": 105, "checked_tokens": 6153, "rounds": 782, "mixed_rounds": 11, "exact": true}
+
+ed (FULL):  70%|██████▉   | 356/512 [00:03<00:01, 95.52it/s]
+Packed mixed (FULL):  71%|███████▏  | 366/512 [00:03<00:01, 95.82it/s]
+Packed mixed (FULL):  73%|███████▎  | 376/512 [00:04<00:01, 96.36it/s]
+Packed mixed (FULL):  75%|███████▌  | 386/512 [00:04<00:01, 97.20it/s]
+Packed mixed (FULL):  77%|███████▋  | 396/512 [00:04<00:01, 97.04it/s]
+Packed mixed (FULL):  79%|███████▉  | 406/512 [00:04<00:01, 95.20it/s]
+Packed mixed (FULL):  81%|████████▏ | 416/512 [00:04<00:01, 95.95it/s]
+Packed mixed (FULL):  83%|████████▎ | 426/512 [00:04<00:00, 96.60it/s]
+Packed mixed (FULL):  85%|████████▌ | 436/512 [00:04<00:00, 97.02it/s]
+Packed mixed (FULL):  87%|████████▋ | 446/512 [00:04<00:00, 96.66it/s]
+Packed mixed (FULL):  89%|████████▉ | 456/512 [00:04<00:00, 96.70it/s]
+Packed mixed (FULL):  91%|█████████ | 467/512 [00:04<00:00, 98.02it/s]
+Packed mixed (FULL):  93%|█████████▎| 478/512 [00:05<00:00, 98.99it/s]
+Packed mixed (FULL):  95%|█████████▌| 488/512 [00:05<00:00, 98.76it/s]
+Packed mixed (FULL):  97%|█████████▋| 499/512 [00:05<00:00, 100.90it/s]
+Packed mixed (FULL): 100%|█████████▉| 511/512 [00:05<00:00, 104.07it/s]
+Packed mixed (FULL): 100%|██████████| 512/512 [00:05<00:00, 94.51it/s] 
+
+LIFECYCLE_DRIVER_TERMINAL

@@ -1542,3 +1542,14 @@ timeouts in the mislabeled local cell. Actual corrected -dc source/include
 argv is archived and affected checks are rerunning. The claimed local-close
 collision proof is withdrawn; corrected test observes EOF nonblocking and then
 checks unrelated queued>0. No canonical source adoption or full matrix started.
+
+### 2026-10-16 correctly built reclamation preflight
+[Repeated qualification](../bench/results/connection_reclamation_20261016/qualification.md)
+passes default8 protocol/dual replay and cancellation, plus corrected105-request
+collision/port-reuse proof. At observed EOF, unrelated queued40 remains.
+[Corrected remote preflight](../bench/results/connection_reclamation_20261016/preflight.md)
+finds local4608/4608 successes versus global499 E2BIG/zero-token timeouts with
+the same metadata overhead. Both exit0; durable replay byte-identical.
+This engages the lifetime discriminator, not a completed performance finding.
+Five-block global/local/native matrix remains before source adoption and
+same-executor performance interpretation; all failed/invalid earlier runs stay.
