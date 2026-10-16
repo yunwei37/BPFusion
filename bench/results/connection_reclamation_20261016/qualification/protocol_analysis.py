@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 """Recompute complete traced vLLM serving evidence and paired client metrics."""
-import argparse,json,math,re,statistics
+import argparse,json,math,re,statistics,gzip
 from collections import Counter
 from itertools import permutations
 from pathlib import Path
 from analyze import verify_mixed
 
+def readlines(path):
+    return path.open() if path.exists() else gzip.open(str(path)+".gz","rt")
+
 def analyze(path):
-    records=[json.loads(line) for line in path.open()]
+    records=[json.loads(line) for line in readlines(path)]
     meta=next(r for r in records if r["event"]=="metadata")
     assert records[-1]["event"]=="terminal" and records[-1]["exit_code"]==0
     assert not any(r["event"]=="failure" for r in records)
@@ -64,7 +67,7 @@ def analyze(path):
             release_summary=dict(native_counters=counters,reference_scope=v["reference_scope"])
         else:
             prefix=path.with_suffix("").with_name(path.stem+f"_p{pair}_{mode}")
-            refs=[json.loads(line) for line in Path(str(prefix)+".gpu.jsonl.references.jsonl").open()]
+            refs=[json.loads(line) for line in readlines(Path(str(prefix)+".gpu.jsonl.references.jsonl"))]
             by_marker={r["client_ns"]:r for r in refs}
             assert len(refs)==len(requests)==len(by_marker)
             for row in requests:
@@ -78,7 +81,7 @@ def analyze(path):
                     assert row["latency_ms"]==(row["arrival_ns"][-1]-row["start_ns"])/1e6
                     assert row["tpot_ms"]==((row["arrival_ns"][-1]-row["arrival_ns"][0])/(row["gen"]-1)/1e6 if row["gen"]>1 else None)
             assert not by_marker
-            events=[json.loads(line) for line in Path(str(prefix)+".gpu.jsonl").open()]
+            events=[json.loads(line) for line in readlines(Path(str(prefix)+".gpu.jsonl"))]
             assert events[-1]["event"]=="terminal" and events[-1]["overflows"]==0
             if mode.endswith("_mixed"):verify_mixed(prefix,events,refs)
             admissions=[r for r in events if r["event"]=="admission"]

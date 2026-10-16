@@ -1,0 +1,1 @@
+Primary acquisition analysis and durable gzip archive replay stdout are byte-identical; stderr empty. No measured outcome, oracle or metric changed. Secondary thread/idle ledger and source qualification replays follow in separate stdlib outputs.

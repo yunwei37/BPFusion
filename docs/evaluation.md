@@ -1553,3 +1553,14 @@ the same metadata overhead. Both exit0; durable replay byte-identical.
 This engages the lifetime discriminator, not a completed performance finding.
 Five-block global/local/native matrix remains before source adoption and
 same-executor performance interpretation; all failed/invalid earlier runs stay.
+
+### 2026-10-16 sustained reclamation matrix (complete)
+[Finding0072](findings/0072-connection-reclamation.md) closes15 matched cells:
+global4157/57600 timeouts, local/native0/57600. Local pending-reference EOF
+reclamation repairs the capacity failure, with primary failed-fraction effect
+-0.072170[-0.082610,-0.061731]. Native remains better in TPS, completionP99,
+client token-gapP99 and group CPU. Global is a matched component ablation,
+not untouched earlier source. All attempts/failures,1355 finite-reference
+disagreements, invalid builds and collection recovery remain. Shared total
+resources are not exclusive cost; zero failures is not rare-failure equivalence.
+See raw result/review, source provenance, archive replay and all-attempt CDF.

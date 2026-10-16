@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Recompute source-native offered-load outcomes and standard linear percentiles."""
-import argparse,json,math,re,statistics
+import argparse,json,math,re,statistics,gzip
 from pathlib import Path
+
+def readlines(path):
+    return path.open() if path.exists() else gzip.open(str(path)+".gz","rt")
 
 def percentile(values,q):
     if not values:return None
@@ -11,7 +14,7 @@ def percentile(values,q):
 
 def verify_mixed(prefix,events,refs):
     by_id={x["id"]:x for x in refs};progress={key:0 for key in by_id}
-    checks=[json.loads(s) for s in Path(str(prefix)+".gpu.jsonl.fresh_metadata.jsonl").open()]
+    checks=[json.loads(s) for s in readlines(Path(str(prefix)+".gpu.jsonl.fresh_metadata.jsonl"))]
     assert checks[-1]["event"]=="fresh_metadata_verified" and checks[-1]["exact"]
     computes=[e for e in events if e["event"]=="compute"]
     raw=checks[:-1];assert len(raw)==len(computes)
@@ -35,7 +38,7 @@ def verify_mixed(prefix,events,refs):
     return mixed
 
 def main(path):
-    rows=[json.loads(s) for s in path.open()]
+    rows=[json.loads(s) for s in readlines(path)]
     meta=next(r for r in rows if r["event"]=="metadata")
     assert rows[-1]["event"]=="terminal" and rows[-1]["exit_code"]==0
     assert not any(r["event"] in ("failure","request_invalid") for r in rows)
@@ -58,8 +61,8 @@ def main(path):
             assert "graph_error=0" in log and "launches=1 " in log and "trace_overflows=0" in log
             assert next(r for r in selected if r["event"]=="executor_terminal")["success"]
             prefix=path.with_suffix("").with_name(path.stem+f"_p{pair}_{mode}")
-            refs=[json.loads(s) for s in Path(str(prefix)+".gpu.jsonl.references.jsonl").open()]
-            events=[json.loads(s) for s in Path(str(prefix)+".gpu.jsonl").open()]
+            refs=[json.loads(s) for s in readlines(Path(str(prefix)+".gpu.jsonl.references.jsonl"))]
+            events=[json.loads(s) for s in readlines(Path(str(prefix)+".gpu.jsonl"))]
             assert events[-1]["event"]=="terminal" and events[-1]["overflows"]==0
             if mode.endswith("_mixed"):verify_mixed(prefix,events,refs)
             by_marker={r["client_ns"]:r for r in refs};assert len(by_marker)==len(refs)

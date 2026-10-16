@@ -1,0 +1,1 @@
+Acquisition analyzers are preserved as *.acquisition.py. Reader-only gzip fallback is reused from the previous qualified archive; metric/oracle calculations remain unchanged. CPU replay will run after the active GPU matrix is terminal, to avoid heavy analysis overlapping measured cells.
