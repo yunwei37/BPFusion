@@ -1472,3 +1472,18 @@ matrix has not completed and source is not adopted. Five blocks compare both
 transports before/after at persistent16 and offered192 with observers off.
 Mechanism evidence does not allocate the old unreproduced6.36ms difference,
 prove eBPF superiority, or close full-resource/remote tasks.
+
+### 2026-10-16 persistent TCP stall confirmation (complete)
+The [full result](../bench/results/tcp_nodelay_20261016/result.md) and
+[independent review](../bench/results/tcp_nodelay_20261016/result-review.md)
+close20 ordinary executors/40 cells/10240 successes/655360 tokens.
+Both predeclared persistent16 token-gapP99 effects are supported:
+kernel-38.172577[-38.550854,-37.794300]ms;
+native-37.752547[-38.667032,-36.838063], nominal paired t95df4.
+Actual queued-before-ACK evidence and observer-free intervention support
+Nagle/delayedACK as a material cause of this shared stall. Process CPU rises
+on both paths, all offered192 effects/outliers remain, and after-fix same-compute
+speed contrasts are inconclusive. This is a supporting mechanism/workload
+repair, not intrinsic eBPF superiority or allocation of the old6.36ms gap.
+Default8 qualification is active before source adoption; full resources and
+sustained remote acquisition remain pending. See [finding0070](findings/0070-tcp-nodelay.md).

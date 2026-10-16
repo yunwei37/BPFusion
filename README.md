@@ -100,6 +100,9 @@ forced into a Python per-token loop.
   the finite whole-service comparison has mixed results. Persistent connections
   expose approximately40ms token-gap P99 in both own paths; no eBPF speedup or
   total-resource saving is established.
+- [TCP small-send repair](docs/findings/0070-tcp-nodelay.md):
+  a controlled server NODELAY change removes the shared persistent40ms stall,
+  improving both transports. CPU rises; default8 adoption qualification is pending.
 - [Opaque graph backend](docs/findings/0067-opaque-graph-backend.md):cuBLAS/cuFFT
   ordinary default8 numerical/lifecycle checks pass on both transports.
 - [Fair native admission](docs/findings/0063-fair-native-admission.md):
