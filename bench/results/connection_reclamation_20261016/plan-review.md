@@ -293,3 +293,96 @@ repair: RST/send-error sockets without receive EOF retain the global dependency,
 and sustained hash collisions can also postpone reclaim. Those boundaries
 do not invalidate the graceful completed-connection192/s comparison, but they
 must remain explicit if the candidate fixes that measured failure class.
+
+## Follow-up 2: collision qualification oracle revision
+
+2026-10-16 UTC. Final allowed plan-review follow-up. Inspected the actual
+TEMP/reclaim_collision.py, failed collision_reclaim_vllm_qwen_8_loop/qwen.results.json,
+current plan, executor/vllm_mixed.py and the complete source-native
+executor/mixed_replay.py. This review runs no GPU/load/build and changes only
+this appended review.
+
+**Verdict: admit the recorded traced qualification-path correction before any
+candidate remote acquisition.** This is not permission to relabel the failed
+trial as a pass or to change the scientific full-run oracle after observing
+results. No candidate remote preflight/full cell has yet run, and the
+scientific remote oracle, timeout, outcomes and paired matrix remain frozen.
+
+### What failed and what remains unknown
+
+The actual ordinary collision trial reaches bucket626 pending40, head9 and
+global queued88, and its early-EOF check does not fail. It then stops on a
+gen64 reply outside the finite pre-observation reference set. The saved result
+has pass=false,97 requested rows,41 rows with checked reply transcripts and
+the failing reply bytes in the retained exception text. Error handling closes
+clients and stops the server; remaining work is partly canceled.
+
+That run therefore establishes initial collision engagement, not completion
+of the intended105-request collision/drain/same-peer-reuse workload. Exit0 from
+the server and no remaining pins are cleanup receipts, not qualification.
+There is no captured serving compute trace in that trial, so it cannot
+distinguish a schedule-dependent numerical variant from incorrect transport,
+slot association or memory contents. The observed failure must remain visible.
+
+### Why the proposed discriminator is valid
+
+The revised qualification uses the existing BF_TRACE implementation and
+bootstrap --trace-output/--trace-requests path. The bootstrap runs
+mixed_replay.audit after serving, with two exact checks: replay of captured
+graphs, then reconstruction of fresh upstream attention metadata. Both
+zero the model KV caches before reconstructing each trace history.
+
+The replay derives packed inputs, positions, sequence lengths, physical pages
+and metadata from admitted requests and previously verified history, then
+compares independently executed model outputs token-for-token against each
+serving compute event. Following traced history is not circular when every
+step's output is independently verified; a wrong earlier token fails at that
+step. Fresh-metadata reconstruction additionally checks the captured metadata
+path. Both remain same-model/backend finite engineering oracles, not a
+universal model quality or external official-server equivalence proof.
+
+The replay alone verifies the model trace, not bytes delivered over TCP.
+Accordingly, the proposed exact join from unique client_ns to admission and
+compute history is necessary: request prompt/gen/identity must match, every
+returned token must equal the traced per-request output, and all105 requested
+responses must be accounted for without duplicated or missing stamps.
+For the unchanged cases, the expected complete returned token count is6153
+(1 early token,96 gen64 responses and8 gen1 reuse responses).
+Trace overflow, incomplete release, unexpected token count, either replay
+failure, or a client/trace mismatch leaves qualification failed.
+
+The revised client must retain raw received bytes/tokens before classifying
+finite-reference membership, including membership=false. It must not throw
+away a disagreeing reply before the independent comparison, expand the frozen
+pool, select a favorable replay, or compare only the first candidate sequence.
+If exact dual replay and client correlation pass, report schedule-specific
+independent replay agreement alongside the still-false finite membership flags.
+Calling the disagreement specifically an FP16 numerical effect would require
+additional numerical evidence; passing replay more narrowly excludes the
+tested transport/model-trace mismatch and establishes the observed schedule's
+upstream computation result.
+
+### Scope of the correction
+
+Record this as a changed qualification evaluation path and rerun the affected
+collision/reuse workload in full, keeping its original trace-less failure and
+all diagnostic/cleanup files. It is a genuine missing-oracle repair, not an
+unchanged repeat until favorable output. The basic source, workload,
+collision/EOF/reuse conditions and frozen membership set remain unchanged.
+
+Keep tracing/replay outside the ordinary remote performance matrix. Tracing
+can change scheduling, so its timing does not replace ordinary latency or
+resource results. The already completed ordinary lifecycle and protocol
+qualifications supply distinct evidence; they do not erase this failed trial.
+The new traced bootstrap must terminate both replay modes before success:
+a serving-ready line, server return or a first replay summary is insufficient.
+Its existing outer communication timeout must not cause an unfinished replay
+to be reported as passed; any actual timeout remains a recorded execution
+failure.
+
+This is the third and final plan-review discussion (initial plus two
+follow-ups), not a reset of review count. If a blocking oracle or correctness
+defect remains after this correction, return the failed qualification and
+history to the owner rather than adding another reviewer round or weakening
+the hypothesis. No additional baseline, infrastructure or model optimization
+is required for this discriminator.

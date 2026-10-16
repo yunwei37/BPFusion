@@ -1532,3 +1532,13 @@ Later snapshot is post-drain, not simultaneous full-map inventory. Candidate
 has conservative peer pending references, EOF-only reclamation, matched global
 ablation accounting and unchanged model math; default8 qualification active,
 not source adoption or completed causal-performance result.
+
+### 2026-10-16 candidate build defect (affected acceptance withdrawn)
+[Build deviation](../bench/results/connection_reclamation_20261016/build-deviation.md)
+records an adapter missing nvcc -dc: mixed GPU libraries used the old global
+guard, while BPF had reference metadata. Initial mixed qualification/preflight
+cannot establish candidate behavior; all raw failures remain, including498
+timeouts in the mislabeled local cell. Actual corrected -dc source/include
+argv is archived and affected checks are rerunning. The claimed local-close
+collision proof is withdrawn; corrected test observes EOF nonblocking and then
+checks unrelated queued>0. No canonical source adoption or full matrix started.

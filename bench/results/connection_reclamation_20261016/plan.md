@@ -113,3 +113,42 @@ Keep raw JSONL lossless gzip, commands/source/build receipts and stdlib replay,
 one result and fresh independent result review. Publish each completed step
 directly main as authorized. Cleanup client Job after bounded repair/retest.
 No assertion that old unreproduced6.36ms is now quantitatively decomposed.
+
+## Recorded qualification-path correction (before candidate remote acquisition)
+
+The trace-less targeted collision trial failed frozen finite-reference membership
+after41 checked reads; preserve collision_finite_trial/ and do not call it
+numerically benign. Candidate remote preflight did not start. Ordinary default8
+protocol dual-replay and cancellation checks already pass, but do not settle
+this particular batch trajectory.
+
+Use the same105 real collision/EOF/reuse request workload with the existing
+BF_TRACE entry and source-native mixed_replay.audit. Store every received wire
+transcript before any membership classification; keep frozen membership as a
+reported flag, never expand that pool. Every unique client_ns/request must
+match all returned tokens in the trace, and captured-graph replay plus fresh
+upstream attention-metadata replay must independently agree exactly. Only a
+passing dual replay can distinguish schedule-specific output from wrong
+transport/memory ownership. If either replay or identity correlation fails,
+the repair remains unqualified and requires source diagnosis. Scientific
+remote oracle, timeouts, workload and metrics remain unchanged. This is a
+qualification discriminator, not a favorable replacement performance cell.
+
+## Systematic build deviation / affected reruns
+
+See build-deviation.md. nvcc -dc was missed in private source rewriting, so
+initial mixed libraries used the unchanged old global guard. Those mixed
+qualifications and both candidate preflight cells cannot validate the proposed
+implementation. Retain all outputs, repair build argv/include selection and
+repeat affected checks and comparisons. No hypothesis/oracle/metric change,
+no favorable cell substitution: original intended source was never executed.
+Generic private graph builds did correctly select changed source and remain
+a separate dependency receipt. The next remote preflight is the third attempt
+including initial errno diagnostic and invalid build attempt.
+
+Correct the collision check to record positive unrelated queued count AFTER
+nonblocking observation of EOF, with no new request produced in that interval.
+Its previous blocking read did not establish closure during global backlog.
+Keep the same105 requests and exact independent dual replay; retain all earlier
+failed/non-engaged runs. No first-run numerical discrepancy is retroactively
+explained by the later successful trajectory.
