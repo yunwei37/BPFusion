@@ -4,7 +4,7 @@ All4 ordinary GPU library instruction streams equal immutable before libraries;
 normal-library strings bind each intended before/candidate BPF object directory.
 fusion BPF instructions/relocations equal before at8/16; loop BPF differs as
 intended by the single may_idle condition. Shared header/model/native code
-and active60000ns timer unchanged. Build argv/stdout/stderr/exit are in build/.
+and active60000ns timer unchanged. Build argv/stdout/stderr/exit are in build_records/.
 
 Candidate-only default8 Qwen and Smol traced protocol each pass640 outcomes,
 259 intended rejects and23376 exact dual-replayed tokens, actual batches1..8.
