@@ -114,6 +114,11 @@ forced into a Python per-token loop.
   Local and native each deliver57600/57600 requests at192/s; native retains
   better throughput, completion/token-gap P99 and group CPU. Default8/explicit16
   normal builds and default8 reset/partial-stop checks qualify source adoption.
+- [Active admission wait](docs/findings/0074-active-admission-wait.md):
+  a one-condition BPF repair reduces group CPU63.22% versus before and18.66%
+  versus native in five matched Qwen192/s blocks. Throughput improvement versus
+  before is inconclusive; native retains better throughput and completionP99.
+  Shared host/device savings are unproven.
 - [Kernel CPU localization](docs/findings/0073-kernel-cpu-localization.md):
   current creator-thread sampling selects BPF coordination/admission as a
   material cost. It motivates a matched waiting-policy intervention; sampling

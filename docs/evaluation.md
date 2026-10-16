@@ -1602,3 +1602,40 @@ change. Candidate Qwen/Smol1280 protocol outcomes/46752 dual-replayed tokens,
 288 ordinary lifecycle outcomes and4 generic graph cases pass. Both archive
 CPU replays match. This is dependency acceptance, not performance or adoption;
 remote before/candidate/native preflight and five blocks remain.
+
+
+### 2026-10-16 active wait matrix, mechanism context and source adoption
+
+[Finding0074](findings/0074-active-admission-wait.md) completes the admitted
+supporting intervention within the retained same-compute serving throughput/
+latency question. Its load-bearing uncertainty is whether the coordination
+cost localized by0073 is avoidable without changing model computation.
+Fixed primary is groupCPU/all attempts; before is the condition ablation,
+efficient native epoll is the main competitor. The
+[complete result](../bench/results/active_admission_wait_20261016/result.md)
+and [fresh review](../bench/results/active_admission_wait_20261016/result-review.md)
+validate all15 cells,172800 successes/11059200 measured tokens and all46
+paired contrasts. Candidate-before CPU-1.075795[-1.222797,-0.928793]ms/attempt
+supports the primary. Candidate-native CPU-0.143572[-0.182094,-0.105049]
+is lower too. Throughput versus before is inconclusive; native throughput
+remains higher by20.259[10.244,30.273]tokens/s and completionP99 lower by
+98.249[48.700,147.797]ms. These are nominal pairedt intervals over5blocks.
+All752 finite-reference disagreements and all adverse/inconclusive rows stay.
+No exact full-run model parity, equivalence or total-host saving follows.
+
+The separate candidate creator-TID
+[profile](../bench/results/active_admission_wait_20261016/profile.md) has
+3427samples/no loss/throttle; coordination/maps501/3427 versus earlier
+7146/10086 is consistent context only, with2896 unknown-frame samples.
+It neither replaces unprofiled performance cells nor partitions old6.36ms.
+Source retention is the exact normally built one-line condition after
+[qualification](../bench/results/active_admission_wait_20261016/qualification.md)
+and [integration](../bench/results/active_admission_wait_20261016/source-integration.md).
+No model arithmetic, default8, ABI, timer or persistent entity changes.
+Client Job/Pod are deleted; original Workspace/PIDs/WIP remain.
+
+Research value is supporting/additional RQ evidence and a local mechanism
+boundary. Next decision: keep the CPU repair, preserve the native speed
+advantage and investigate a distinct transport/progression cause only when
+it outranks remeasurement or a redundant small tuning sweep. The full
+throughput/latency objective remains active; CPU efficiency is not speedup.

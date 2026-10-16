@@ -748,3 +748,16 @@ The compile-only BF_IO_GLOBAL_PENDING_GUARD keeps a matched global ablation;
 it is not selected by normal Make targets. sockhash_first_errno exposes only
 the first observed insertion error, not a distribution. Model arithmetic and
 dispatch GPU instructions are unchanged.
+
+
+## Active admission waiting
+
+The selected BPF loop keeps its immediate unacknowledged-admission exception
+only while may_idle is true. During active execution, pending admission allows
+the next CQ/timer wait instead of forcing repeated immediate callbacks.
+The existing60us timer, snapshot-before-SQ ordering, idle wake handling and
+stop/quiescence sequence remain. No model kernel, ABI or configuration flag
+changes. [Finding0074](findings/0074-active-admission-wait.md) supports lower
+owned-group CPU after normal8/16 and finite lifecycle qualification; native
+still has better throughput/completionP99. This is not an arbitrary-concurrency
+proof or a bound on scheduler/timer service latency.

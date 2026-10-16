@@ -145,4 +145,5 @@ There is no scientific blocker or requested unchanged rerun. The bounded
 client Job and dependent Pod are both absent; client_cleanup.json captures
 the actual UIDs and normal deletion grace observation. cleanup_runtime.json
 confirms original sessions unchanged, foreign WIP preserved and no own GPU
-application or BPF pins. Source adoption follows as its own engineering step.
+application or BPF pins. The exact qualified condition is now retained in canonical source; see
+source-integration.md for the separate engineering adoption decision.

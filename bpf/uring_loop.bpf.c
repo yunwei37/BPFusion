@@ -56,7 +56,7 @@ int BPF_PROG(uring_loop_step, struct iou_ctx *loop_ctx, struct iou_loop_params *
     __u32 admitted=*(volatile __u32 *)&page->llm_head;
     __u32 admission_seen=*(volatile __u32 *)&control->admission_seen;
     __u32 wait=observed+(!may_idle || acknowledged==observed);
-    if(admitted!=admission_seen)wait=observed;
+    if(may_idle && admitted!=admission_seen)wait=observed;
 #endif
     __u32 head=*(volatile __u32 *)(rings+sh);
     __u32 tail=*(volatile __u32 *)(rings+st);
