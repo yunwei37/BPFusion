@@ -119,6 +119,9 @@ forced into a Python per-token loop.
   versus native in five matched Qwen192/s blocks. Throughput improvement versus
   before is inconclusive; native retains better throughput and completionP99.
   Shared host/device savings are unproven.
+- [Peer identity cache](docs/findings/0075-peer-identity-cache.md):the complete
+  matched follow-up finds throughput benefit inconclusive and rejects the cache.
+  Native retains better throughput/completionP99; selected0074 source remains.
 - [Kernel CPU localization](docs/findings/0073-kernel-cpu-localization.md):
   current creator-thread sampling selects BPF coordination/admission as a
   material cost. It motivates a matched waiting-policy intervention; sampling

@@ -7,9 +7,9 @@ Candidate-minus-native is-19.271234036[-22.505644825,-16.036823248]tokens/s,
 and completionP99 is+104.870609988[74.187468727,135.553751249]ms, both adverse.
 
 The predeclared source decision for an inconclusive primary is to keep the
-already-selected0074 header and archive the candidate. Independent result
-review and the physical source restoration are pending at this publication;
-nothing is promoted from this result. No unchanged rerun, larger N, new flag
+already-selected0074 header and archive the candidate. The fresh [independent review](result-review.md) validates the run and
+inconclusive primary. [Source selection](selection.md) restores the exact
+already-selected header; nothing is promoted from this result. No unchanged rerun, larger N, new flag
 or favorable secondary metric replaces the fixed primary.
 
 ## Scope and controlled source
@@ -33,8 +33,9 @@ Candidate controller SASS is expected to differ. All model implementation/
 graph capture source, weights/precision, shared ABI, BPF policy, socket option,
 native implementation, timer and host settings are unchanged. Actual receipts
 use the correct before/candidate header snapshots rather than treating artifact
-HEAD as proof of source adoption. Canonical header remains candidate WIP during
-the entire frozen matrix; no post-qualification source edit occurred.
+HEAD as proof of source adoption. Canonical header remained candidate WIP during
+the entire frozen matrix; no post-qualification source edit occurred before
+collection. It now byte-matches the archived before and selected HEAD header.
 
 ## Complete actual remote workload
 
@@ -143,7 +144,12 @@ visually checked; all labels/units and adverse native rows are retained.
 
 See reproduce.md for actual normal build, qualification and full-run commands.
 Raw requests, metadata/source/argv, idle/active observers, terminal receipts,
-analysis and replay are under peer_identity_full. At this publication the
-independent review, selected-source restoration and bounded client cleanup
-remain separate delivery work. Full speed objective is not declared achieved
-by protocol success or this inconclusive supporting result.
+analysis and replay are under peer_identity_full. The [fresh independent review](result-review.md) audits all fifteen cells,
+46 contrasts, actual archive readers, source/binary controls and finite
+correctness scope. [Selection](selection.md) rejects the cache and restores
+only our uncommitted header. The bounded Job and its dependent Pod are both
+absent, with actual UID/UTC receipts in client_cleanup.json. Its technical
+passed-restored outcome describes cleanup, not a supported performance
+hypothesis. cleanup_runtime.json confirms original process identities,
+foreign WIP, no GPU applications/pins and the selected source bytes.
+The full speed objective remains open.

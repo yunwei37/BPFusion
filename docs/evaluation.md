@@ -1639,3 +1639,31 @@ boundary. Next decision: keep the CPU repair, preserve the native speed
 advantage and investigate a distinct transport/progression cause only when
 it outranks remeasurement or a redundant small tuning sweep. The full
 throughput/latency objective remains active; CPU efficiency is not speedup.
+
+
+### 2026-10-16 immutable peer identity: complete, candidate rejected
+
+[Finding0075](findings/0075-peer-identity-cache.md) closes a supporting
+placement intervention within the retained same-compute serving throughput/
+latency question. The admitted uncertainty was whether repeated mapped peer
+identity reads limit delivery after0074. No earlier matched cache ablation
+answers it; a positive result could justify retaining the change, while the
+fixed inconclusive/negative decision restores the selected source. Before is
+a component ablation; efficient same-executor native epoll is the main competitor.
+[Plan/review](../bench/results/peer_identity_cache_20261016/plan.md),
+[complete result/raw data](../bench/results/peer_identity_cache_20261016/result.md)
+and [fresh result review](../bench/results/peer_identity_cache_20261016/result-review.md)
+validate15 cells,172800 successes/11059200 measured tokens and46 paired contrasts.
+Primary throughput+1.390100488[-2.910413831,+5.690614807]tokens/s is inconclusive.
+Native remains faster by19.271234[16.036823,22.505645]tokens/s and completionP99
+lower by104.870610[74.187469,135.553751]ms. All643 finite-pool flags stay.
+No equivalence, exact full-run fidelity or exclusive total-resource claim.
+
+Research value is supporting; paper impact a mechanism/workload boundary.
+[Source selection](../bench/results/peer_identity_cache_20261016/selection.md)
+rejects the cache and restores only our uncommitted header to accepted0074.
+No unchanged rerun/increased N/retained flag. Actual cleanup receipts confirm
+Job/Pod absence, preserved original sessions/WIP and no GPU applications/pins.
+Remaining uncertainty is the native delivery advantage and internal critical
+path, not whether this fixed cache primary passed. Existing data should select
+a distinct discriminator before another run. Full speed objective stays open.

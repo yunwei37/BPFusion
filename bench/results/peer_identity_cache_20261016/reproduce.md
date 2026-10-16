@@ -35,3 +35,14 @@ Acquisition versions of both readers are retained and differ only in
 compression input handling; mathematical/fixed oracle logic is unchanged.
 Generic and ordinary lifecycle raw records state their finite cancellation
 and analytic-oracle scope. No source promotion follows from a smoke pass.
+
+## Source selection and cleanup
+
+This candidate is not selected. Current executor/io_uring_tcp.h matches
+io_uring_tcp.before.h and the previously accepted0074 source. Reproducing the
+candidate requires the archived candidate header/diff in the owning Workspace,
+normal Make builds and the recorded same-capacity ABI; a current main build
+alone produces the selected before condition. Do not treat artifact-publication
+HEAD as a candidate source revision. See selection.md and result-review.md.
+client_cleanup.json records actual Job/Pod deletion; cleanup_runtime.json
+records preserved original sessions and no remaining GPU applications/pins.
