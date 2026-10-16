@@ -167,3 +167,55 @@ Subject to the declared real preflight, the command, raw path, complete-matrix
 analysis, fixed primary, failure retention, uncertainty calculation and
 cleanup plan are sufficient for the narrow supporting comparison. No
 outstanding blocker remains at this initial plan-review stage.
+
+## Follow-up 1: actual preflight and proposed common event-loop repair
+
+The first real preflight is complete for all three actual conditions:
+384 successful attempts, 24576 measured output tokens, no failures, checked
+warmups/authentication and zero parent/drain terminals. Its frozen-pool flags
+K1/N1/O3 are retained. These are executable preflight facts, not the sustained
+experiment result. Full collection has not started.
+
+I read its actual analysis.stdout. K/N/O client CPU is respectively
+5.842985/5.795271/5.813577 ms per attempt. Client scheduling-lag P99 is
+6.275930/10.976557/49.134080 ms, and durations are
+0.787484/0.782381/0.849613 seconds. O's approximately 0.876 average CPU-core
+fraction versus K/N approximately 0.950/0.948 is partly a different drain
+denominator. Similar CPU per attempt does not establish greater SSE CPU
+demand; a short event-loop lag spike does not establish sustained client
+saturation or allocate its cause. It does, however, make the previously
+identified adapter/scheduling uncertainty real enough to address before
+the longer run.
+
+One common upstream uvloop event loop for K/N/O is a scientifically valid,
+targeted executable repair before full acquisition. It does not change the
+server hypothesis, primary, oracle, timeout, request schedule, protocol or
+baseline capacity. Run the second real preflight for all three paths and
+retain the original source/raw/preflight as the first attempt. Do not combine
+old and new client-loop cells into the fixed full matrix. If used, freeze
+the resulting one common client and actual dependency version before every
+full cell. No concurrency cap, official-only acceleration or broad parameter
+sweep is implied or needed.
+
+The installed upstream source must be described accurately:
+vllm/benchmarks/serve.py:2022 calls asyncio.run(main_async(args));
+vllm/benchmarks/throughput.py imports uvloop and calls uvloop.run around its
+async throughput path; vllm/entrypoints/cli/serve.py:154 uses uvloop.run for
+the serving process. Therefore common-client uvloop is a proposed use of an
+existing upstream runtime, not a claim that the official serving-benchmark
+client itself defaults to uvloop. The official SERVER already uses it.
+
+This repair is preferable to knowingly carrying an avoidable client-risk
+into a purported service-level ranking. It is not a mandatory method for
+obtaining a pass: retaining the present client could still support a narrowly
+labeled client-delivery measurement, provided its lag/CPU and inability to
+measure exclusive server capacity are explicit and no bottlenecked baseline
+is called a server loss. Such a narrow measurement is less responsive to the
+user's request for credible official-server performance positioning.
+
+The second preflight must establish actual successful API/client lifecycle
+and record comparable lag/CPU/schedule facts. Improvement is not proof of
+unlimited client headroom at 60 seconds; full-run client context and
+scheduling distributions remain necessary. This is follow-up 1 in the same
+plan review, not a new experiment or permission for an indefinite repair/
+benchmark sweep. No new scientific blocker to this common repair is found.

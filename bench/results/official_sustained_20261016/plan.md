@@ -133,3 +133,18 @@ adverse rows retained. No primary switch, larger N or unchanged retry.
 Research value supporting, paper impact additional serving-objective evidence
 and workload/method boundary. Old6.36ms allocation, total service CPU and generic
 plugin compatibility remain open; this experiment does not claim to solve them.
+
+## Preflight-driven common client repair, before full acquisition
+
+Initial preflight1 is retained in preflight1.md/official_remote_preflight/:
+all protocol/outcomes pass, but official client lagP99~49ms versus6--11ms on
+binary and clientCPU near one core exposes a comparison risk. Full not started.
+Replace only asyncio.run with uvloop0.23.0.run for all3 clients and record actual
+event-loop version in metadata. Installed official vLLM throughput benchmark
+uses this upstream event-loop library; serve benchmark uses asyncio.run.
+No parser/request/schedule/oracle/timeout/analysis change or extra concurrency
+setting. initial_client/ preserves old client/driver/context. Second real
+preflight uses official_remote_preflight2 and the same128 offsets; evaluate
+actual lag/CPU before full collection. At most3 total preflight attempts still
+applies. This is a necessary client repair, not a new scientific hypothesis or
+a favorable-prefix rerun of server performance.

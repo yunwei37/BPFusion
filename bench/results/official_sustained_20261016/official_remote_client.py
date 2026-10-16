@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Bounded offered-arrival remote client; one async task per attempt, no cap."""
 import argparse,asyncio,json,os,socket,struct,sys,time,traceback
+import uvloop
 from pathlib import Path
 def now():return time.monotonic_ns()
 async def external_attempt(session,host,ids,gen,row,tokens,arrival,vocab):
@@ -43,7 +44,7 @@ async def main(args):
     headers={"Authorization":"Bearer "+Path(args.key_file).read_text().strip()})
  raw=Path(args.output).open("x",buffering=1)
  def emit(event,**kw):raw.write(json.dumps(dict(event=event,mono_ns=now(),**kw))+"\n")
- emit("client_metadata",python=sys.version,host=args.host,pair=args.pair,mode=args.mode,rate=args.rate,process_cpu_ns=time.process_time_ns(),scope="remote client-local stamps; no cross-host clock subtraction",source=Path(__file__).read_text(),config=cfg,
+ emit("client_metadata",python=sys.version,event_loop="uvloop "+uvloop.__version__,host=args.host,pair=args.pair,mode=args.mode,rate=args.rate,process_cpu_ns=time.process_time_ns(),scope="remote client-local stamps; no cross-host clock subtraction",source=Path(__file__).read_text(),config=cfg,
       proc={f:Path("/proc/"+f).read_text() for f in ["stat","softirqs","interrupts","net/route","self/stat","self/cgroup","loadavg","pressure/cpu"]})
  async def attempt(index,gen,due=None,warmup=False):
   ids=prompts[index%4];tokens=[];arrival=[];writer=None
@@ -130,4 +131,4 @@ if __name__=="__main__":
  ap=argparse.ArgumentParser();ap.add_argument("--host",required=True);ap.add_argument("--config",required=True);ap.add_argument("--offsets",required=True)
  ap.add_argument("--output",required=True);ap.add_argument("--pair",type=int,required=True);ap.add_argument("--rate",type=int,choices=[96,192],required=True)
  ap.add_argument("--mode",choices=["kernel","native","official"],required=True);ap.add_argument("--key-file",default="/tmp/official_remote_key");ap.add_argument("--warmup",action="store_true");ap.add_argument("--preflight",action="store_true")
- raise SystemExit(asyncio.run(main(ap.parse_args())))
+ raise SystemExit(uvloop.run(main(ap.parse_args())))
