@@ -1584,3 +1584,13 @@ Native remains the matched efficient competitor. One profiled pair is not
 repeated performance evidence. Independent raw/binary/metric/source review
 validates supporting localization; actual active/idle waiting repair remains
 a separate candidate, not source adoption. Collection wording corrected.
+
+### 2026-10-16 active admission wait (admitted, qualification active)
+The [plan](../bench/results/active_admission_wait_20261016/plan.md) and
+[independent review](../bench/results/active_admission_wait_20261016/plan-review.md)
+admit one may_idle condition in the current BPF admission wait. Primary is
+owned-group CPU; full same-compute before/candidate/native delivery and resource
+contrasts retain adverse/inconclusive outcomes. GPU/model/timer unchanged.
+Normal8/16 builds and two-model correctness/cancellation precede the planned
+five-block remote matrix. Prepared candidate is not canonical adoption or a
+claimed speedup; old profile only localizes the next discriminator.
