@@ -124,3 +124,43 @@ Use the original Workspace and current GPU. Do not change services, host
 settings, model arithmetic, credentials or other active sessions. Remove owned
 trace instance/pins/processes and temporary env/builds after reference checks;
 verify original path stats/Coder sessions/base packages and source status.
+
+## Concrete repair proposal after diagnostic (2026-10-16 UTC)
+The two-pair diagnostic and independent CPU analysis locate submission-thread
+runnable waiting, plus GPU I/O iteration cost and client waiting. No source
+fix can erase unrelated CPU runqueue/client waiting. The targeted removable
+queue cost is repeated host-mapped admission loads in each connection's close
+check. With only16 model slots, active connections peak245/160 because EOF
+connections wait for global admission drain. A post-hoc kernel accept-minus-
+close approximation shows per-progress median rising from0.103/0.132ms at
+0..32 connections to0.654/0.527ms above128. This is association, not proof of
+exclusive cause; kernel/GPU CQ consumption lag bounds the approximation.
+
+Candidate in candidate-close-guard.diff adds a per-io_progress tri-state cached
+guard. After one EOF/dead peer finds admission not drained, skip further
+expensive host-mapped close checks for that scan. If the cached guard is true,
+retain the entire original per-close predicate and live rechecks. This can
+only conservatively postpone a close within a scan; it cannot authorize an
+earlier close. Recompute on the next progress iteration. There is no timer,
+priority, affinity, queue capacity, protocol, numerical or admission-order
+change. Single-in-flight sends and FIFO retirement stay unchanged.
+
+Freeze candidate and before Cu/Py plus both network headers and compile through
+ordinary Make at8/16. Ordinary8 mid-output cancellation and exact traced8
+protocol regression qualify safety. Before/fixed/native confirmatory collection
+then uses the exact same mixed constructor and original clean client,
+identical BF_TRACE on all3, explicit16 slots,96/192,256 attempts/cell,
+8 warmups and5 paired process blocks. Source changes only the network close
+scan. Names:uring_loop_16_before_mixed,uring_loop_16_fixed_mixed,
+userspace_16_mixed. Per-block orders are[before,fixed,native],
+[fixed,native,before],[native,before,fixed],[native,fixed,before],
+[fixed,before,native]; rate order alternates. No timeline/ftrace is active.
+Primary and uncertainty remain after-minus-before ITLP99 at192 with t95df4;
+same-fixed-vs-native is reported alongside. All existing exact dual history/
+fresh-metadata checks, errors, timeouts, lag and secondary metrics remain.
+
+If the effect is inconclusive or adverse, do not call the candidate a fix for
+the6.36ms or repeat a timer/model sweep. Retain the complete source/result and
+use the diagnosed CPU/client limits to choose the next causal discriminator.
+If supported, adopt only after ordinary source integration/regressions.
+The complete resource/remote/official-server/generic-backend tasks remain.

@@ -182,3 +182,148 @@ repair and unchanged controls; and frozen commands/correctness/metric bindings.
 If no concrete valid repair emerges, report the diagnosis and retained adverse
 or unresolved result instead of manufacturing a fix. Broader official-server,
 complete CPU and remote-load work can then follow the user's order.
+
+
+## Focused follow-up 1: concrete close-scan candidate
+
+Observed 2026-10-16 UTC. **Admit the fixed before/after/native confirmation
+design, after the already planned candidate safety regressions and real
+preflight succeed.** No blocking scientific or source-level correctness
+defect was found in the proposed intervention. This is the planned first
+focused follow-up by the original plan reviewer, not a new experiment or
+reviewer reset. It approves neither a speedup claim nor ordinary-source
+adoption in advance. A failed, adverse or inconclusive repair comparison
+remains a valid possible outcome.
+
+### Evidence and causal discriminator
+
+I read the appended concrete proposal, exact candidate-close-guard.diff,
+diagnostic-result.md, diagnostic-result-review.md, connection_progress.json,
+the original network close/progress code, actual private fixed_sources and
+the ordinary Make build commands/statuses. The diagnostic result review is
+the independent result audit of those completed traces; this plan follow-up
+does not impersonate a second independent numerical recomputation.
+
+The diagnostic establishes substantial post-production delay, creator-thread
+runnable waiting and client receive/recording delay. It does not assign an
+exclusive additive share of the historical6.36 ms, and the candidate does
+not repair external host runqueue contention, Python scheduling or an unknown
+softirq/GIL component. SEND io-wq involvement is absent for the associated
+operations, not for the entire service. Client receipt can precede SEND
+completion; completion-to-receive is a signed association, not a universally
+serial causal stage. The legacy128-record admission sample is truncated;
+complete logical/timeline/ftrace joins are the authoritative evidence.
+
+The removable source-level cost is specific: retained EOF/dead connections
+independently reload mapped-host admission head/queued values inside every
+close eligibility check, even after the scan already knows that admission
+has not drained. Only16 active model slots do not bound that connection list.
+The two diagnostic peaks are245 and160; the post-hoc progress medians rise
+from0.103/0.132 ms at at-most32 inferred connections to0.654/0.527 ms
+above128. These strata support a plausible progress-cost candidate, not its
+exclusive causal contribution: accepted-minus-closed is an approximation
+subject to CQ-consumption lag, and connection pressure can covary with backlog
+and time. No per-bin process-level causal inference follows from the many
+correlated iteration samples.
+
+The concrete intervention is therefore a reasonable discriminator. It removes
+repeated blocked close checks while retaining all safety predicates and
+everything else, then tests the actual end-to-end finite metric against its
+own unchanged before condition. The single variable is transport close-scan
+work; numerical computation is not tuned. A positive primary after-before
+effect would support this implementation repair at the tested workload. It
+would not by itself measure how many milliseconds of historical6.36 came from
+these loads or establish that this mechanism dominates the runqueue/client
+delays. A crossing-zero/adverse effect would show that this correct local
+optimization has not established the targeted latency benefit; the data must
+remain rather than trigger another arbitrary tuning sweep.
+
+### Candidate safety and source binding
+
+The exact diff adds a local tri-state close_ready initialized to -1 for each
+io_progress call. A close-eligible connection initializes it using the same
+seen/head and stopping/queued predicate as before.
+
+- A cached false skips later close checks during that scan. It cannot
+  authorize a close; it may defer one that becomes eligible concurrently.
+- A cached true still evaluates the original live seen/head and
+  stopping/queued predicate for each attempted close, together with the
+  unchanged receive/reply/closing checks. It cannot turn a stale positive
+  cache result into an early close.
+- The flag is local and resets on the next progress invocation. io_network
+  continues calling io_progress; stopping/pending/active termination remains
+  unchanged. A one-scan deferral is not a permanent disable or new queue
+  admission rule.
+- Receive rearm and receive cancellation are unchanged. A connection skipped
+  by the false guard is already EOF/dead, so it does not become eligible for
+  the live-peer rearm else branch. SEND byte order, one outstanding send,
+  FIFO response retirement, buffer lifetime and numerical model execution
+  are untouched.
+
+The first true check performs an additional host-load predicate before the
+live recheck; at low connection pressure it can add overhead. That is a
+reason to retain the96/s condition and adverse results, not a correctness
+defect or justification to remove the live check.
+
+The private fixed vllm_graph.cu is byte-identical to the private before mixed
+constructor; before Cu is byte-identical to the qualified0065 candidate.
+The actual fixed io_uring_tcp.h diff matches candidate-close-guard.diff.
+Quoted local inclusion resolves the header beside the copied Cu; ordinary
+Make8/16 commands compile that actual source. Both completed build statuses
+are exit0. The fixed native compilation may carry the same copied Cu but
+does not engage the loop network header; its same numerical constructor
+remains the efficient comparator.
+
+These observations do not substitute for the already planned real safety
+checks. Candidate default8 ordinary mid-output cancellation, traced8 exact
+protocol/lifetime regression and32-arrival real preflight precede collection.
+The already completed ordinary baseline cancellation controls qualify the
+before path, not the changed candidate. Preserve failures and exact full
+history/fresh-metadata oracle semantics. No output-pool expansion or canceled
+prefix substitution is permitted. No additional idealized safety matrix is
+required by this review.
+
+Before the first candidate GPU preflight, freeze the actual Cu/Py, both
+network headers, client, replay/analyzer sources, actual binary/launcher
+bindings and runnable command in the archive, as the existing plan requires.
+The current review certifies the inspected diff and proposed comparison,
+not as-yet-unwritten collection entrypoints. That ordinary source/command
+binding is execution work, not a new scientific review round.
+
+### Confirmatory comparison and interpretation
+
+The three conditions are before loop, fixed loop and efficient native, with
+the same qualified mixed model constructor, same Qwen revision/FP16/runtime,
+explicit16 slots and equal BF_TRACE. Timeline/ftrace is absent. None of the
+diagnostic instrumented timing rows enters the confirmatory effect estimate.
+
+The five orders
+[before,fixed,native], [fixed,native,before], [native,before,fixed],
+[native,fixed,before], [fixed,before,native]
+cover five distinct permutations, spread every condition across all process
+positions, and keep paired block comparisons. Five blocks cannot give equal
+counts at each of three positions; the slight residual order imbalance is a
+finite design limit, not a blocker or reason to demand a sixth block. Rate
+order alternates by block and remains identical for its three conditions.
+Seeds, gamma schedules, timeouts, prompts,256 attempts/cell and8 excluded
+checked warmups retain0065 definitions; actual offsets should be compared
+during analysis rather than inferred from condition names.
+
+Primary192/s after-minus-before block ITL P99 and nominal paired t95 df4
+remain fixed. Fixed-minus-native is reported alongside it; the claim is not
+changed to whichever contrast wins. Keep all five blocks, all30 cells,
+failures/timeouts/client lag, scheduled-origin latency, TTFT/completion
+P50/P95/P99, TPOT and delivered-window throughput. Correlated tokens are not
+additional independent replicates. Other tails and throughput can qualify a
+narrow improvement, while correctness or unfair comparison invalidates the
+affected claim. Different actual batch trajectories may occur and should
+remain visible; identical computation source does not promise identical
+per-request timing or model invocation sequences.
+
+A supported local effect could justify adopting this small transport change
+only after ordinary source integration/regressions, with remaining native gap
+and adverse metrics reported. An unsupported effect leaves the overall task
+incomplete and the historical adverse result visible. It does not mean the
+diagnosis failed, nor that unrelated CPU/client delays were repaired. Complete
+resource accounting, sustained remote load, current official vLLM reference
+and generic backend work remain subsequent authorized tasks.

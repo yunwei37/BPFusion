@@ -40,3 +40,38 @@ The full two-pair timeline diagnostic is now running with additional client
 TID/recvfrom observation, as documented in preflight-deviations.md.
 The host exposure snapshots record another Pod's busy processes; no other
 workload is paused and no ownership or causal claim follows from the snapshot.
+
+## Complete timestamp diagnostic (awaiting independent result review)
+[Result and boundaries](diagnostic-result.md),[full compressed raw](full/),
+[retained failed capture](failed_full_trace_overrun/),[capture repair](full-trace-repair.md).
+Four full executors/1056 replies65568 tokens pass exact dual replays and coverage.
+Large observed waits are after production, including kernel submit-thread
+runnable delay and client delivery/recording delay. No fix or speedup selected.
+Gzip stores the original raw text losslessly; no runtime/build/weights enter Git.
+Independent CPU replay (paths without.gz automatically discover compressed text):
+
+    python3 analyze_timeline.py full/tail_full.jsonl
+    python3 scheduler_attribution.py full/tail_full.jsonl
+
+Replay writes the derived per-token/gap reports beside its input. Original
+results are compressed; compare uncompressed JSON/text, not gzip timestamps.
+Source snapshots preserve actual collection and earlier parser versions.
+
+## Ordinary8 and concrete next intervention
+All4 ordinary default8 lifecycle cases pass;[wire,syscall,freeze and cancellation
+records](ordinary_before/README.md) distinguish complete answers from observed
+prefixes and unobserved cancellations. This is engineering acceptance, not
+a latency/throughput result or source promotion.
+[Independent diagnostic review](diagnostic-result-review.md) finds the
+two-pair timestamp run valid/supporting, with explicit signed-CQ/clock/sample
+limits. The unchanged complete throughput/latency objective remains open.
+
+[Connection-progress association](connection_progress.json) motivates the
+[small close-scan candidate](candidate-close-guard.diff); recompute with:
+
+    python3 connection_progress.py full/tail_full.jsonl
+
+The same[plan review](plan-review.md) admits the candidate's exact frozen
+before/fixed/native confirmation after safety/preflight. It does not establish
+a causal improvement. Candidate ordinary8/16 builds pass; runtime regressions
+are in progress. No serving source/default has changed.

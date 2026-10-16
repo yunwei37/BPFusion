@@ -1,0 +1,88 @@
+{
+  "totals": {
+    "outcomes": 352,
+    "exact_complete_tokens": 2728,
+    "exact_prefix_tokens": 402,
+    "unobserved_cancel": 94
+  },
+  "cases": [
+    {
+      "case": "lifecycle_vllm_smol_8_loop",
+      "passed": true,
+      "stats": {
+        "accepted": 78,
+        "closed": 78,
+        "received": 95,
+        "sends": 856,
+        "bytes": 6745,
+        "completed": 88,
+        "aborted": 58,
+        "max_connections": 64,
+        "max_requests": 8,
+        "pending": 0,
+        "error": 0,
+        "head": 88,
+        "reserved": 0,
+        "dropped": 0,
+        "overflow": 0,
+        "sqhead": 1336,
+        "sqtail": 1336,
+        "cqhead": 13597,
+        "cqtail": 13597,
+        "trace_count": 88,
+        "trace_overflow": 0
+      },
+      "rows": 144
+    },
+    {
+      "case": "lifecycle_vllm_smol_8_native",
+      "passed": true,
+      "stats": {
+        "accepted": 13,
+        "published": 32,
+        "completed": 31,
+        "rejected": 10
+      },
+      "rows": 32
+    },
+    {
+      "case": "lifecycle_vllm_qwen_8_native",
+      "passed": true,
+      "stats": {
+        "accepted": 13,
+        "published": 32,
+        "completed": 31,
+        "rejected": 10
+      },
+      "rows": 32
+    },
+    {
+      "case": "lifecycle_vllm_qwen_8_loop",
+      "passed": true,
+      "stats": {
+        "accepted": 78,
+        "closed": 78,
+        "received": 97,
+        "sends": 859,
+        "bytes": 6581,
+        "completed": 88,
+        "aborted": 58,
+        "max_connections": 64,
+        "max_requests": 8,
+        "pending": 0,
+        "error": 0,
+        "head": 88,
+        "reserved": 0,
+        "dropped": 0,
+        "overflow": 0,
+        "sqhead": 1417,
+        "sqtail": 1417,
+        "cqhead": 19296,
+        "cqtail": 19296,
+        "trace_count": 88,
+        "trace_overflow": 0
+      },
+      "rows": 144
+    }
+  ]
+}

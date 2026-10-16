@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-16T08:53:13.343809+00:00",
+  "begin_ns": 572164973891860,
+  "end_ns": 572165343415272,
+  "boot_id": "04dc0087-5ccc-4c46-9997-b9a92f0e5167",
+  "kernel_journal": {
+    "command": [
+      "journalctl",
+      "-k",
+      "--since",
+      "2026-10-16 08:21:00 UTC",
+      "--no-pager",
+      "-o",
+      "short-iso"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "selected": [],
+    "all_line_count": 2341
+  },
+  "gpu": {
+    "exit": 0,
+    "stdout": "NVIDIA GeForce RTX 5090, 610.57.04, 400.00 W, 180 MHz, 43\n",
+    "stderr": ""
+  },
+  "apps": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "scope": "Bounded kernel journal read and endpoint GPU snapshot; not continuous exclusive ownership."
+}

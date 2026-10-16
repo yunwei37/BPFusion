@@ -1,0 +1,22 @@
+--- executor/io_uring_tcp.h before
++++ executor/io_uring_tcp.h candidate
+@@ -299,6 +299,7 @@
+         }
+         if(active_requests>out->max_requests)out->max_requests=active_requests;
+         // Rearm receive and close only after replies and receive references end.
++        int close_ready=-1; // Memoize a blocked close scan; positive paths still recheck below.
+         int *link=&active;
+         while(*link>=0) {
+             unsigned i=*link;auto &c=conns[i];
+@@ -310,7 +311,10 @@
+                 io_uring_sqe e{};e.opcode=IORING_OP_ASYNC_CANCEL;e.addr=io_id(2,i,c.generation);e.user_data=io_id(6,i,c.generation);
+                 if(io_submit(ring,e,out))c.closing=2; // wait for receive CQE
+             }
+-            if((c.dead||c.eof)&&!c.receiving&&c.reply<0&&seen==io_load(&page->llm_head)&&
++            if((c.dead||c.eof)&&!c.receiving&&c.reply<0&&
++               (close_ready<0 ? (close_ready=seen==io_load(&page->llm_head)&&
++                   (stopping||!io_load(&page->llm_queued))) : close_ready)&&
++               seen==io_load(&page->llm_head)&&
+                (stopping||!io_load(&page->llm_queued))&&c.closing!=1) {
+                 io_uring_sqe e{};e.opcode=IORING_OP_CLOSE;e.fd=c.fd;e.user_data=io_id(4,i,c.generation);
+                 if(io_submit(ring,e,out))c.closing=1;

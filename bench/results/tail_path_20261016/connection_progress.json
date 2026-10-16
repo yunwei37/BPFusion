@@ -1,0 +1,98 @@
+[
+  {
+    "pair": 0,
+    "sample_scope": "Post-hoc association only. Kernel accepted-minus-closed approximates GPU active-list length with CQ consumption delay; no causal allocation.",
+    "inferred_initial_connections": 0,
+    "peak_kernel_count": 245,
+    "strata": [
+      {
+        "connections": [
+          0,
+          32
+        ],
+        "samples": 301,
+        "p50_ms": 0.103264,
+        "p99_ms": 0.320416,
+        "mean_ms": 0.11602126245847176
+      },
+      {
+        "connections": [
+          33,
+          64
+        ],
+        "samples": 114,
+        "p50_ms": 0.199904,
+        "p99_ms": 0.321184,
+        "mean_ms": 0.19974708771929825
+      },
+      {
+        "connections": [
+          65,
+          128
+        ],
+        "samples": 309,
+        "p50_ms": 0.333344,
+        "p99_ms": 0.495072,
+        "mean_ms": 0.3379383300970874
+      },
+      {
+        "connections": [
+          129,
+          256
+        ],
+        "samples": 642,
+        "p50_ms": 0.6535519999999999,
+        "p99_ms": 0.98112,
+        "mean_ms": 0.6594605856697819
+      }
+    ]
+  },
+  {
+    "pair": 1,
+    "sample_scope": "Post-hoc association only. Kernel accepted-minus-closed approximates GPU active-list length with CQ consumption delay; no causal allocation.",
+    "inferred_initial_connections": 0,
+    "peak_kernel_count": 160,
+    "strata": [
+      {
+        "connections": [
+          0,
+          32
+        ],
+        "samples": 542,
+        "p50_ms": 0.131808,
+        "p99_ms": 0.293408,
+        "mean_ms": 0.13042574169741697
+      },
+      {
+        "connections": [
+          33,
+          64
+        ],
+        "samples": 337,
+        "p50_ms": 0.222656,
+        "p99_ms": 0.419744,
+        "mean_ms": 0.2261299465875371
+      },
+      {
+        "connections": [
+          65,
+          128
+        ],
+        "samples": 395,
+        "p50_ms": 0.338592,
+        "p99_ms": 0.571584,
+        "mean_ms": 0.3523430075949367
+      },
+      {
+        "connections": [
+          129,
+          256
+        ],
+        "samples": 175,
+        "p50_ms": 0.526976,
+        "p99_ms": 0.799296,
+        "mean_ms": 0.5420256914285714
+      }
+    ]
+  }
+]

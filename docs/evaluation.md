@@ -1390,3 +1390,23 @@ Qwen192/s ITL P99 and active process CPU include adverse kernel costs.
 Run valid/complete,hypothesis supported for the scheduler,role supporting,
 impact additional mechanism evidence. No ordinary/default8/partial-stop
 adoption or total-host CPU/energy claim follows. Close the unchanged matrix.
+
+## Qwen192 tail diagnosis and ordinary8 acceptance (2026-10-16 UTC)
+The user's next priority is locating the adverse mixed-kernel ITLP99 before
+complete resource/remote-load work. The[reviewed plan](../bench/results/tail_path_20261016/plan.md),
+[complete diagnostic and limits](../bench/results/tail_path_20261016/diagnostic-result.md)
+and[fresh independent result review](../bench/results/tail_path_20261016/diagnostic-result-review.md)
+record a valid supporting two-pair timestamp run, with retained failed capture.
+Measured submission-thread runnable waiting and client delivery/recording delay
+bound the mechanism; this neither allocates the old6.36ms marginal-quantile
+difference nor establishes a fix or eBPF advantage. An associated active-
+connection/GPU-scan cost motivates the[small generic close-guard candidate](../bench/results/tail_path_20261016/candidate-close-guard.diff);
+its safety/preflight/5-block before-fixed-native confirmation is pending.
+
+The default8 mixed candidate now passes[traced protocol](../bench/results/tail_path_20261016/default8/README.md)
+and[ordinary cancellation/lifetime](../bench/results/tail_path_20261016/ordinary_before/README.md)
+acceptance for both qualified models/transports. Ordinary checks use fixed
+pre-observation complete-output sets with explicit prefix/canceled scope.
+Serving sources/defaults remain selected as before; no candidate performance,
+total CPU saving, remote-tail, current official-server or generic-backend
+acceptance follows. Publish each completed step onmain with raw evidence.

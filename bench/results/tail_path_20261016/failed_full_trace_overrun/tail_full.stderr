@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/tail_diagnostic.py", line 276, in main
+    ft=ftrace.finish();ftrace=None
+       ^^^^^^^^^^^^^^^
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/tail_ftrace.py", line 63, in finish
+    for key in ['overrun','commit overrun','dropped events']:assert values.get(key,0)==0,(name,key,values)
+                                                                    ^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('cpu13', 'overrun', {'entries': 0.0, 'overrun': 238013.0, 'commit overrun': 0.0, 'bytes': 0.0, 'oldest event ts': 571649.38716, 'now ts': 571649.514738, 'dropped events': 0.0, 'read events': 82052.0})
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/tail_diagnostic.py", line 375, in main
+    if ftrace is not None:ftrace.finish()
+                          ^^^^^^^^^^^^^^^
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/tail_ftrace.py", line 54, in finish
+    self.root.joinpath('tracing_on').write_text('0');self.stop_event.set();self.thread.join();os.close(self.marker_fd)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1049, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/sys/kernel/tracing/instances/bpfusion-tail-693371-693448/tracing_on'
