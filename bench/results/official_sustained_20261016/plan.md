@@ -242,3 +242,19 @@ One instrumented same-workload payload control tests this fault repair before
 the ordinary full restart. It is a diagnostic causal control, not an extra
 preflight or changed scientific primary. All earlier incomplete prefixes,
 transfer failures and instrumented values remain distinct and preserved.
+
+## Fault control complete; ordinary full retry2
+
+The payload-recording diagnostic completes all11520 successes/737280 tokens;
+raw payload reconstruction independently matches every prompt/finish/token/
+arrival field. Client lagP99 drops211.219ms to3.257ms, maximum GC472.670ms
+to48.791ms with default GC unchanged. See client_diagnosis/payload_result.md.
+This is a client-dependency control, not a server ranking or extra preflight.
+
+Freeze the uninstrumented raw-payload client and existing4-worker topology,
+unchanged full request/arrival/oracle/timeout/primary. The ordinary complete
+matrix restarts fromblock0 as official_remote_full_retry2, no old/new mixing.
+Transfer uses the recovered1MiB chunk path after the whole-file WebSocket
+failure. All adverse/failure/flag/scheduling observations remain. Full15cells,
+archive analysis/reconstruction/replay, fresh result review and exactUID
+cleanup still determine the final comparison's validity.

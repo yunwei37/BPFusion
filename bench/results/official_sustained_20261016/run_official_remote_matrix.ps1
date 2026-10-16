@@ -2,7 +2,7 @@ param([Parameter(Mandatory=$true)][string]$ClientPod,[Parameter(Mandatory=$true)
 $ErrorActionPreference="Stop"
 $taskServerPod="coder-eb48d962-76f4-4ff7-bac5-7bc62ec2ada3-5c8bb655f6-khnns"
 $taskTemp="/tmp/bpfusion-mixed-integration-n4cog5c6"
-$taskStage=if($Preflight){"official_remote_preflight3"}else{"official_remote_full_retry1"}
+$taskStage=if($Preflight){"official_remote_preflight3"}else{"official_remote_full_retry2"}
 $taskDirectory="$taskTemp/$taskStage"
 function Invoke-Workspace([string]$Code) {
  $taskAnswer=$Code | & $KubectlHome -n coder exec -i $taskServerPod '--' python3 -

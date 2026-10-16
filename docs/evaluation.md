@@ -1815,3 +1815,14 @@ archive replay, fresh result review and exactUID cleanup are still required.
 Research value/paper impact remain planned supporting objective evidence and
 a workload/method boundary until completion. Historical6.36ms allocation and
 total attributed CPU remain distinct open limits.
+
+Client diagnosis identifies a retained-object GC mechanism:
+[original interval evidence](../bench/results/official_sustained_20261016/client_diagnosis/original_result.md)
+covers89.37% of the worst1% task-start delay time with GC pauses.
+[Raw-payload control](../bench/results/official_sustained_20261016/client_diagnosis/payload_result.md)
+reduces instrumented client lagP99 211.219ms to3.257ms with default GC,
+same11520 successes and every raw prompt/finish/token/arrival independently
+reconstructed. This is a client dependency repair, not server acceleration.
+Freeze ordinary uninstrumented raw-payload collection and restart all15cells
+in official_remote_full_retry2; old prefixes and instrumented controls remain
+separate. Full results/review/cleanup remain pending.
