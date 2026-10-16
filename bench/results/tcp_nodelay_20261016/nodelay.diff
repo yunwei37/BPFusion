@@ -1,0 +1,18 @@
+--- a/executor/vllm_mixed.cu
++++ b/executor/vllm_mixed.cu
+@@ -6,6 +6,7 @@
+ #include <sys/syscall.h>
+ #include <fcntl.h>
+ #include <netinet/in.h>
++#include <netinet/tcp.h>
+ #include <arpa/inet.h>
+ #include <unistd.h>
+ #include <cstdio>
+@@ -225,6 +226,7 @@
+     CUDA(cudaHostRegister(page,BF_PAGE_MMAP_BYTES,cudaHostRegisterMapped));
+     bf_page* device;CUDA(cudaHostGetDevicePointer((void**)&device,page,0));
+     int listener=socket(AF_INET,SOCK_STREAM,0),yes=1;setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));
++    if(setsockopt(listener,IPPROTO_TCP,TCP_NODELAY,&yes,sizeof(yes))) { perror("TCP_NODELAY");close(listener);return 1; }
+     sockaddr_in addr={};addr.sin_family=AF_INET;addr.sin_port=htons(BF_LLM_TCP_PORT);
+     const char* bind_addr=getenv("BF_BIND");
+     if(inet_pton(AF_INET,bind_addr ? bind_addr : "127.0.0.1",&addr.sin_addr)!=1) { fprintf(stderr,"BF_BIND must be an IPv4 address\n");return 1; }

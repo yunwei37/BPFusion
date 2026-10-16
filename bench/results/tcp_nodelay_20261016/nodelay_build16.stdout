@@ -1,0 +1,4 @@
+mkdir -p /tmp/bpfusion-mixed-integration-n4cog5c6/nodelaybuild16
+clang -DBF_LLM_SLOTS=16 -DBF_BUILD_DIR='"/tmp/bpfusion-mixed-integration-n4cog5c6/nodelaybuild16"' -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -Ibpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value -c bpf/uring_loop.bpf.c -o /tmp/bpfusion-mixed-integration-n4cog5c6/nodelaybuild16/uring_loop.bpf.o
+/usr/local/cuda/bin/nvcc -DBF_LLM_SLOTS=16 -DBF_BUILD_DIR='"/tmp/bpfusion-mixed-integration-n4cog5c6/nodelaybuild16"' -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_PAD_PREFILL -DBF_PREFIX_RELEASE -DBF_URING_NETWORK -DBF_URING_BPF_LOOP -I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi  /tmp/bpfusion-mixed-integration-n4cog5c6/nodelay_vllm_mixed.cu -o /tmp/bpfusion-mixed-integration-n4cog5c6/nodelaybuild16/vllm_mixed_uring_loop.so.o

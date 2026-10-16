@@ -1458,3 +1458,17 @@ Run valid; tested external primaries narrowly supported; research value
 supporting; impact additional RQ evidence/workload boundary. Next decision:
 diagnose the new repeatable shared40ms stall before sustained remote resources;
 do not rerun the unchanged reference or attribute its effects to eBPF.
+
+### 2026-10-16 persistent TCP stall discriminator (full run active)
+The [admitted plan/review](../bench/results/tcp_nodelay_20261016/plan.md)
+and [actual preflight](../bench/results/tcp_nodelay_20261016/preflight.md)
+test a single server TCP_NODELAY intervention on both own transports with
+unchanged GPU computation. Real accepted socket values0->1 are verified.
+Before has queued unsent data while an earlier small packet is unacknowledged;
+one sampled kernel hold lower-bounds40.485ms, followed by release12.502us after
+ACK. Before/after sample counts and complete raw packet/TCP_INFO data are
+retained. All128 preflight attempts/8192 tokens succeed. The primary performance
+matrix has not completed and source is not adopted. Five blocks compare both
+transports before/after at persistent16 and offered192 with observers off.
+Mechanism evidence does not allocate the old unreproduced6.36ms difference,
+prove eBPF superiority, or close full-resource/remote tasks.
