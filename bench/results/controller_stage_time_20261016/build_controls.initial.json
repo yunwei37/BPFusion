@@ -1,0 +1,313 @@
+{
+  "fusion.bpf.o": "instructions/relocations byte-equal normalized disassembly",
+  "uring_loop.bpf.o": "instructions/relocations byte-equal normalized disassembly",
+  "vllm_mixed_uring_loop_trace.so": {
+    "timer_counts": {
+      "_Z8dispatchP7bf_pageP4Step6InputsjP7Control": 8,
+      "_Z10io_networkP7IoState": 10
+    },
+    "timer_context": {
+      "_Z8dispatchP7bf_pageP4Step6InputsjP7Control": [
+        {
+          "line": 26,
+          "instruction": "/*0060*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+          "context": [
+            "        /*0050*/                   LDCU.64 UR42, c[0x0][0x358] ;                               /* 0x00006b00ff2a77ac */",
+            "                                                                                               /* 0x000e620008000a00 */",
+            "        /*0060*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*0070*/                   LDC.64 R8, c[0x0][0x3e8] ;                                  /* 0x0000fa00ff087b82 */"
+          ]
+        },
+        {
+          "line": 78,
+          "instruction": "/*0200*/                   CS2UR UR40, SR_GLOBALTIMERLO ;                              /* 0x00000000002878cb */",
+          "context": [
+            "        /*01f0*/                   IADD.64 R2, R2, 0x3230 ;                                    /* 0x0000323002027835 */",
+            "                                                                                               /* 0x002fd000078e0200 */",
+            "        /*0200*/                   CS2UR UR40, SR_GLOBALTIMERLO ;                              /* 0x00000000002878cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*0210*/                   LDC.64 R4, c[0x0][0x3e8] ;                                  /* 0x0000fa00ff047b82 */"
+          ]
+        },
+        {
+          "line": 486,
+          "instruction": "/*0ec0*/                   CS2UR UR38, SR_GLOBALTIMERLO ;                              /* 0x00000000002678cb */",
+          "context": [
+            "        /*0eb0*/              @!P1 ST.E desc[UR42][R4.64+0x20], R7 ;                           /* 0x0000200704009985 */",
+            "                                                                                               /* 0x0009e4000c10192a */",
+            "        /*0ec0*/                   CS2UR UR38, SR_GLOBALTIMERLO ;                              /* 0x00000000002678cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*0ed0*/                   LDC.64 R4, c[0x0][0x3e8] ;                                  /* 0x0000fa00ff047b82 */"
+          ]
+        },
+        {
+          "line": 1878,
+          "instruction": "/*3a40*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+          "context": [
+            "        /*3a30*/               @P0 ATOMG.E.ADD.STRONG.GPU PT, RZ, desc[UR42][R4.64], R7 ;      /* 0x8000000704ff09a8 */",
+            "                                                                                               /* 0x00436400081ef12a */",
+            "        /*3a40*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+            "                                                                                               /* 0x000fc80000015200 */",
+            "        /*3a50*/                   UISETP.GE.U64.AND UP0, UPT, UR4, UR38, UPT ;                /* 0x000000260400728c */"
+          ]
+        },
+        {
+          "line": 3350,
+          "instruction": "/*6840*/                   CS2UR UR36, SR_GLOBALTIMERLO ;                              /* 0x00000000002478cb */",
+          "context": [
+            "        /*6830*/                   CCTL.IVALL ;                                                /* 0x00000000ff00798f */",
+            "                                                                                               /* 0x000fe20002000000 */",
+            "        /*6840*/                   CS2UR UR36, SR_GLOBALTIMERLO ;                              /* 0x00000000002478cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*6850*/                   LDC.64 R8, c[0x0][0x388] ;                                  /* 0x0000e200ff087b82 */"
+          ]
+        },
+        {
+          "line": 3416,
+          "instruction": "/*6a50*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+          "context": [
+            "        /*6a40*/              @!P0 STG.E desc[UR42][R6.64+0x14], R3 ;                          /* 0x0000140306008986 */",
+            "                                                                                               /* 0x0001e2000c10192a */",
+            "        /*6a50*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*6a60*/                   UISETP.GE.U64.AND UP2, UPT, UR38, UR40, UPT ;               /* 0x000000282600728c */"
+          ]
+        },
+        {
+          "line": 3530,
+          "instruction": "/*6de0*/                   CS2R R2, SR_GLOBALTIMERLO ;                                 /* 0x0000000000027805 */",
+          "context": [
+            "        /*6dd0*/                   STG.E.64 desc[UR42][R2.64+0xa8], R14 ;                      /* 0x0000a80e02007986 */",
+            "                                                                                               /* 0x0001e4000c101b2a */",
+            "        /*6de0*/                   CS2R R2, SR_GLOBALTIMERLO ;                                 /* 0x0000000000027805 */",
+            "                                                                                               /* 0x001fca0000015200 */",
+            "        /*6df0*/                   STG.E.64 desc[UR42][R6.64+0xa0], R2 ;                       /* 0x0000a00206007986 */"
+          ]
+        },
+        {
+          "line": 3536,
+          "instruction": "/*6e10*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+          "context": [
+            "        /*6e00*/                   EXIT ;                                                      /* 0x000000000000794d */",
+            "                                                                                               /* 0x000fea0003800000 */",
+            "        /*6e10*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+            "                                                                                               /* 0x000fc80000015200 */",
+            "        /*6e20*/                   UISETP.GE.U64.AND UP0, UPT, UR4, UR40, UPT ;                /* 0x000000280400728c */"
+          ]
+        }
+      ],
+      "_Z10io_networkP7IoState": [
+        {
+          "line": 3623,
+          "instruction": "/*00a0*/                   CS2UR UR10, SR_GLOBALTIMERLO ;                              /* 0x00000000000a78cb */",
+          "context": [
+            "        /*0090*/                   UIADD3.64 UR26, UPT, UPT, UR4, 0x4a, URZ ;                  /* 0x0000004a041a7897 */",
+            "                                                                                               /* 0x000fd8000fffe0ff */",
+            "        /*00a0*/                   CS2UR UR10, SR_GLOBALTIMERLO ;                              /* 0x00000000000a78cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*00b0*/                   LDC.64 R12, c[0x0][0x380] ;                                 /* 0x0000e000ff0c7b82 */"
+          ]
+        },
+        {
+          "line": 4331,
+          "instruction": "/*16c0*/                   CS2UR UR12, SR_GLOBALTIMERLO ;                              /* 0x00000000000c78cb */",
+          "context": [
+            "        /*16b0*/               @P0 BRA 0x2f0 ;                                                 /* 0xffffffec000c0947 */",
+            "                                                                                               /* 0x000fea000383ffff */",
+            "        /*16c0*/                   CS2UR UR12, SR_GLOBALTIMERLO ;                              /* 0x00000000000c78cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*16d0*/                   LDC.64 R2, c[0x0][0x380] ;                                  /* 0x0000e000ff027b82 */"
+          ]
+        },
+        {
+          "line": 4463,
+          "instruction": "/*1ae0*/                   CS2UR UR8, SR_GLOBALTIMERLO ;                               /* 0x00000000000878cb */",
+          "context": [
+            "        /*1ad0*/                   STG.E.STRONG.SYS desc[UR24][R18.64+0x20], R5 ;              /* 0x0000200512007986 */",
+            "                                                                                               /* 0x0001e4000c115918 */",
+            "        /*1ae0*/                   CS2UR UR8, SR_GLOBALTIMERLO ;                               /* 0x00000000000878cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*1af0*/                   NANOSLEEP 0x3e8 ;                                           /* 0x000003e80000795d */"
+          ]
+        },
+        {
+          "line": 4515,
+          "instruction": "/*1c80*/                   CS2UR UR6, SR_GLOBALTIMERLO ;                               /* 0x00000000000678cb */",
+          "context": [
+            "        /*1c70*/               @P0 ATOMG.E.ADD.STRONG.GPU PT, RZ, desc[UR24][R4.64], R7 ;      /* 0x8000000704ff09a8 */",
+            "                                                                                               /* 0x00256400081ef118 */",
+            "        /*1c80*/                   CS2UR UR6, SR_GLOBALTIMERLO ;                               /* 0x00000000000678cb */",
+            "                                                                                               /* 0x000fc80000015200 */",
+            "        /*1c90*/                   UISETP.GE.U64.AND UP0, UPT, UR6, UR8, UPT ;                 /* 0x000000080600728c */"
+          ]
+        },
+        {
+          "line": 4823,
+          "instruction": "/*2620*/                   CS2UR UR14, SR_GLOBALTIMERLO ;                              /* 0x00000000000e78cb */",
+          "context": [
+            "        /*2610*/                   HFMA2 R13, -RZ, RZ, 0, 0 ;                                  /* 0x00000000ff0d7431 */",
+            "                                                                                               /* 0x000fe200000001ff */",
+            "        /*2620*/                   CS2UR UR14, SR_GLOBALTIMERLO ;                              /* 0x00000000000e78cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*2630*/                   UMOV UR6, URZ ;                                             /* 0x000000ff00067c82 */"
+          ]
+        },
+        {
+          "line": 6103,
+          "instruction": "/*4e20*/                   CS2UR UR20, SR_GLOBALTIMERLO ;                              /* 0x00000000001478cb */",
+          "context": [
+            "        /*4e10*/               @P0 ST.E desc[UR24][R18.64+0x58], R3 ;                          /* 0x0000580312000985 */",
+            "                                                                                               /* 0x0003e2000c101918 */",
+            "        /*4e20*/                   CS2UR UR20, SR_GLOBALTIMERLO ;                              /* 0x00000000001478cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*4e30*/                   LDC.64 R2, c[0x0][0x380] ;                                  /* 0x0000e000ff027b82 */"
+          ]
+        },
+        {
+          "line": 6717,
+          "instruction": "/*6150*/                   CS2UR UR22, SR_GLOBALTIMERLO ;                              /* 0x00000000001678cb */",
+          "context": [
+            "        /*6140*/                   ST.E desc[UR24][R20.64+0x20], R7 ;                          /* 0x0000200714007985 */",
+            "                                                                                               /* 0x0003e4000c101918 */",
+            "        /*6150*/                   CS2UR UR22, SR_GLOBALTIMERLO ;                              /* 0x00000000001678cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*6160*/                   LDG.E.64.STRONG.SYS R4, desc[UR24][R18.64+0x18] ;           /* 0x0000181812047981 */"
+          ]
+        },
+        {
+          "line": 7025,
+          "instruction": "/*6af0*/                   CS2UR UR6, SR_GLOBALTIMERLO ;                               /* 0x00000000000678cb */",
+          "context": [
+            "        /*6ae0*/              @!P0 BRA 0x71c0 ;                                                /* 0x0000000400b48947 */",
+            "                                                                                               /* 0x000fea0003800000 */",
+            "        /*6af0*/                   CS2UR UR6, SR_GLOBALTIMERLO ;                               /* 0x00000000000678cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*6b00*/                   NANOSLEEP 0x3e8 ;                                           /* 0x000003e80000795d */"
+          ]
+        },
+        {
+          "line": 7149,
+          "instruction": "/*6ed0*/                   CS2UR UR8, SR_GLOBALTIMERLO ;                               /* 0x00000000000878cb */",
+          "context": [
+            "        /*6ec0*/               @P0 ATOMG.E.ADD.STRONG.GPU PT, RZ, desc[UR24][R2.64], R7 ;      /* 0x8000000702ff09a8 */",
+            "                                                                                               /* 0x00196400081ef118 */",
+            "        /*6ed0*/                   CS2UR UR8, SR_GLOBALTIMERLO ;                               /* 0x00000000000878cb */",
+            "                                                                                               /* 0x000fc80000015200 */",
+            "        /*6ee0*/                   UISETP.GE.U64.AND UP0, UPT, UR8, UR6, UPT ;                 /* 0x000000060800728c */"
+          ]
+        },
+        {
+          "line": 7405,
+          "instruction": "/*76d0*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+          "context": [
+            "        /*76c0*/               @P0 ATOMG.E.ADD.STRONG.GPU PT, RZ, desc[UR24][R4.64], R7 ;      /* 0x8000000704ff09a8 */",
+            "                                                                                               /* 0x00196400081ef118 */",
+            "        /*76d0*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+            "                                                                                               /* 0x000fc80000015200 */",
+            "        /*76e0*/                   UISETP.GE.U64.AND UP0, UPT, UR4, UR22, UPT ;                /* 0x000000160400728c */"
+          ]
+        }
+      ]
+    },
+    "bpf_binding": true
+  },
+  "vllm_mixed_user_network_wait_trace.so": {
+    "timer_counts": {
+      "_Z8dispatchP7bf_pageP4Step6InputsjP7Control": 8
+    },
+    "timer_context": {
+      "_Z8dispatchP7bf_pageP4Step6InputsjP7Control": [
+        {
+          "line": 26,
+          "instruction": "/*0060*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+          "context": [
+            "        /*0050*/                   LDCU.64 UR42, c[0x0][0x358] ;                               /* 0x00006b00ff2a77ac */",
+            "                                                                                               /* 0x000e620008000a00 */",
+            "        /*0060*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*0070*/                   LDC.64 R8, c[0x0][0x3e8] ;                                  /* 0x0000fa00ff087b82 */"
+          ]
+        },
+        {
+          "line": 78,
+          "instruction": "/*0200*/                   CS2UR UR40, SR_GLOBALTIMERLO ;                              /* 0x00000000002878cb */",
+          "context": [
+            "        /*01f0*/                   IADD.64 R2, R2, 0x3230 ;                                    /* 0x0000323002027835 */",
+            "                                                                                               /* 0x002fd000078e0200 */",
+            "        /*0200*/                   CS2UR UR40, SR_GLOBALTIMERLO ;                              /* 0x00000000002878cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*0210*/                   LDC.64 R4, c[0x0][0x3e8] ;                                  /* 0x0000fa00ff047b82 */"
+          ]
+        },
+        {
+          "line": 486,
+          "instruction": "/*0ec0*/                   CS2UR UR38, SR_GLOBALTIMERLO ;                              /* 0x00000000002678cb */",
+          "context": [
+            "        /*0eb0*/              @!P1 ST.E desc[UR42][R4.64+0x20], R7 ;                           /* 0x0000200704009985 */",
+            "                                                                                               /* 0x0009e4000c10192a */",
+            "        /*0ec0*/                   CS2UR UR38, SR_GLOBALTIMERLO ;                              /* 0x00000000002678cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*0ed0*/                   LDC.64 R4, c[0x0][0x3e8] ;                                  /* 0x0000fa00ff047b82 */"
+          ]
+        },
+        {
+          "line": 1878,
+          "instruction": "/*3a40*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+          "context": [
+            "        /*3a30*/               @P0 ATOMG.E.ADD.STRONG.GPU PT, RZ, desc[UR42][R4.64], R7 ;      /* 0x8000000704ff09a8 */",
+            "                                                                                               /* 0x00436400081ef12a */",
+            "        /*3a40*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+            "                                                                                               /* 0x000fc80000015200 */",
+            "        /*3a50*/                   UISETP.GE.U64.AND UP0, UPT, UR4, UR38, UPT ;                /* 0x000000260400728c */"
+          ]
+        },
+        {
+          "line": 3350,
+          "instruction": "/*6840*/                   CS2UR UR36, SR_GLOBALTIMERLO ;                              /* 0x00000000002478cb */",
+          "context": [
+            "        /*6830*/                   CCTL.IVALL ;                                                /* 0x00000000ff00798f */",
+            "                                                                                               /* 0x000fe20002000000 */",
+            "        /*6840*/                   CS2UR UR36, SR_GLOBALTIMERLO ;                              /* 0x00000000002478cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*6850*/                   LDC.64 R8, c[0x0][0x388] ;                                  /* 0x0000e200ff087b82 */"
+          ]
+        },
+        {
+          "line": 3416,
+          "instruction": "/*6a50*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+          "context": [
+            "        /*6a40*/              @!P0 STG.E desc[UR42][R6.64+0x14], R3 ;                          /* 0x0000140306008986 */",
+            "                                                                                               /* 0x0001e2000c10192a */",
+            "        /*6a50*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+            "                                                                                               /* 0x000fe20000015200 */",
+            "        /*6a60*/                   UISETP.GE.U64.AND UP2, UPT, UR38, UR40, UPT ;               /* 0x000000282600728c */"
+          ]
+        },
+        {
+          "line": 3530,
+          "instruction": "/*6de0*/                   CS2R R2, SR_GLOBALTIMERLO ;                                 /* 0x0000000000027805 */",
+          "context": [
+            "        /*6dd0*/                   STG.E.64 desc[UR42][R2.64+0xa8], R14 ;                      /* 0x0000a80e02007986 */",
+            "                                                                                               /* 0x0001e4000c101b2a */",
+            "        /*6de0*/                   CS2R R2, SR_GLOBALTIMERLO ;                                 /* 0x0000000000027805 */",
+            "                                                                                               /* 0x001fca0000015200 */",
+            "        /*6df0*/                   STG.E.64 desc[UR42][R6.64+0xa0], R2 ;                       /* 0x0000a00206007986 */"
+          ]
+        },
+        {
+          "line": 3536,
+          "instruction": "/*6e10*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+          "context": [
+            "        /*6e00*/                   EXIT ;                                                      /* 0x000000000000794d */",
+            "                                                                                               /* 0x000fea0003800000 */",
+            "        /*6e10*/                   CS2UR UR4, SR_GLOBALTIMERLO ;                               /* 0x00000000000478cb */",
+            "                                                                                               /* 0x000fc80000015200 */",
+            "        /*6e20*/                   UISETP.GE.U64.AND UP0, UPT, UR4, UR40, UPT ;                /* 0x000000280400728c */"
+          ]
+        }
+      ]
+    },
+    "bpf_binding": null
+  }
+}

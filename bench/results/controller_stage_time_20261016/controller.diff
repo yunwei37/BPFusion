@@ -1,5 +1,5 @@
 --- /workspaces/repository/bench/results/controller_stage_time_20261016/vllm_mixed.before.cu	2026-10-16 17:37:30.016465546 +0000
-+++ /workspaces/repository/bench/results/controller_stage_time_20261016/vllm_mixed.instrumented.cu	2026-10-16 17:41:04.731518728 +0000
++++ /workspaces/repository/bench/results/controller_stage_time_20261016/vllm_mixed.instrumented.cu	2026-10-16 17:47:45.084233365 +0000
 @@ -15,6 +15,18 @@
  #include <vector>
  #include "bpfusion_queue.h"
@@ -50,18 +50,19 @@
          if(c->batch) {
              Trace* event=trace_next(c);
              if(event) { event->kind=2;event->query=c->query;event->batch=c->batch;event->input_tokens=c->input_tokens; }
-@@ -77,7 +103,9 @@
+@@ -77,7 +103,10 @@
              }
              c->batch=0;
          }
 -        if(queue_load((unsigned long long*)&p->stop_ns))return;
 +        if(queue_load((unsigned long long*)&p->stop_ns)) {
-+            stage_record(c,2,stage_delta(stage_begin,stage_now()),0,0);return;
++            auto stage_stop_end=stage_now();
++            stage_record(c,2,stage_delta(stage_begin,stage_stop_end),0,0);return;
 +        }
          unsigned release_begin=c->retired,i=c->retired%BF_LLM_SLOTS;
  #ifdef BF_PREFIX_RELEASE
          // Model/head work is complete. TX owns each reservation until its
-@@ -111,6 +139,7 @@
+@@ -111,6 +140,7 @@
             (io_state->next_final!=c->retired ||
              io_load(io_state->ring.head)!=io_load(io_state->ring.tail)))continue;
  #endif
@@ -69,18 +70,19 @@
          while(queue_load(&p->llm_head)!=c->seen) {
              i=c->seen%BF_LLM_SLOTS;bf_llm_slot* slot=&p->llm[i];
              if(c->requests[i].phase || queue_load(&slot->state)!=BF_PENDING)break;
-@@ -144,7 +173,9 @@
+@@ -144,7 +174,10 @@
              i=id%BF_LLM_SLOTS;Request* r=&c->requests[i];
              if(r->phase==3 || r->phase==1)c->selected[c->batch++]=i;
          }
 -        if(!c->batch)continue;
 +        if(!c->batch) {
-+            stage_record(c,1,stage_delta(stage_begin,stage_pack_begin),stage_delta(stage_pack_begin,stage_now()),0);continue;
++            auto stage_idle_end=stage_now();
++            stage_record(c,1,stage_delta(stage_begin,stage_pack_begin),stage_delta(stage_pack_begin,stage_idle_end),0);continue;
 +        }
          unsigned count=0;
          for(unsigned row=0;row<c->batch;row++) {
              i=c->selected[row];Request* r=&c->requests[i];
-@@ -170,6 +201,7 @@
+@@ -170,6 +203,7 @@
          in.starts[graph_reqs]=count;c->query=query;c->input_tokens=count;
          if(c->batch>c->max_active)c->max_active=c->batch;
          __threadfence();
@@ -88,7 +90,7 @@
          cudaError_t e=cudaGraphLaunch(steps[count].graph,
  #ifdef BF_CHAINED_DISPATCH
              cudaStreamGraphTailLaunch);
-@@ -182,6 +214,11 @@
+@@ -182,6 +216,11 @@
          e=cudaGraphLaunch(cudaGetCurrentGraphExec(),cudaStreamGraphTailLaunch);
          if(e)c->error=e;else c->device_launch_calls++;
  #endif
@@ -100,7 +102,7 @@
          return;
      }
  }
-@@ -311,6 +348,22 @@
+@@ -311,6 +350,22 @@
      CUDA(cudaHostUnregister(page));munmap(page,BF_PAGE_MMAP_BYTES);
      CUDA(cudaGraphExecDestroy(parent));CUDA(cudaGraphDestroy(parent_graph));CUDA(cudaFree(steps));CUDA(cudaFree(control));
      for(unsigned index=1;index<size;index++) { CUDA(cudaGraphExecDestroy(host[index].graph));CUDA(cudaGraphDestroy(combined[index])); }

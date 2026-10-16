@@ -220,8 +220,9 @@ __device__ bool io_progress(IoState *s) {
             io_acknowledge(out,ch);
 #endif
             auto stage_sleep_begin=stage_now();__nanosleep(1000);
+            auto stage_sleep_end=stage_now();
             stage_record_io(s,2,stage_delta(stage_begin,stage_cq_end),0,0,0,
-                            stage_delta(stage_cq_end,stage_sleep_begin),stage_delta(stage_sleep_begin,stage_now()));return true;
+                            stage_delta(stage_cq_end,stage_sleep_begin),stage_delta(stage_sleep_begin,stage_sleep_end));return true;
         }
 #ifdef BF_URING_BPF_LOOP
         if(stopping && cancel_done && timeout_active && !timeout_removing) {
@@ -390,15 +391,17 @@ __device__ bool io_progress(IoState *s) {
 #ifdef BF_URING_BPF_LOOP
     io_store(&out->loop.finished,1);
 #endif
+        auto stage_stop_end=stage_now();
         stage_record_io(s,2,stage_delta(stage_begin,stage_cq_end),stage_delta(stage_cq_end,stage_claim_end),
                         stage_delta(stage_claim_end,stage_send_end),stage_delta(stage_send_end,stage_conn_end),
-                        stage_delta(stage_conn_end,stage_now()),0);return false;
+                        stage_delta(stage_conn_end,stage_stop_end),0);return false;
         }
     unsigned stage_kind=stopping?2:((stage_owned||active_requests||seen!=next_final)?0:1);
     auto stage_sleep_begin=stage_now();__nanosleep(1000);
+    auto stage_sleep_end=stage_now();
     stage_record_io(s,stage_kind,stage_delta(stage_begin,stage_cq_end),stage_delta(stage_cq_end,stage_claim_end),
                     stage_delta(stage_claim_end,stage_send_end),stage_delta(stage_send_end,stage_conn_end),
-                    stage_delta(stage_conn_end,stage_sleep_begin),stage_delta(stage_sleep_begin,stage_now()));return true;
+                    stage_delta(stage_conn_end,stage_sleep_begin),stage_delta(stage_sleep_begin,stage_sleep_end));return true;
 }
 __global__ void io_network(IoState *s) {
     if(threadIdx.x||blockIdx.x)return;

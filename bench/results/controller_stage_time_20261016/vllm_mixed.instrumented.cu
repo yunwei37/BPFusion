@@ -104,7 +104,8 @@ __global__ void dispatch(bf_page* p,Step* steps,Inputs in,unsigned vocab,Control
             c->batch=0;
         }
         if(queue_load((unsigned long long*)&p->stop_ns)) {
-            stage_record(c,2,stage_delta(stage_begin,stage_now()),0,0);return;
+            auto stage_stop_end=stage_now();
+            stage_record(c,2,stage_delta(stage_begin,stage_stop_end),0,0);return;
         }
         unsigned release_begin=c->retired,i=c->retired%BF_LLM_SLOTS;
 #ifdef BF_PREFIX_RELEASE
@@ -174,7 +175,8 @@ __global__ void dispatch(bf_page* p,Step* steps,Inputs in,unsigned vocab,Control
             if(r->phase==3 || r->phase==1)c->selected[c->batch++]=i;
         }
         if(!c->batch) {
-            stage_record(c,1,stage_delta(stage_begin,stage_pack_begin),stage_delta(stage_pack_begin,stage_now()),0);continue;
+            auto stage_idle_end=stage_now();
+            stage_record(c,1,stage_delta(stage_begin,stage_pack_begin),stage_delta(stage_pack_begin,stage_idle_end),0);continue;
         }
         unsigned count=0;
         for(unsigned row=0;row<c->batch;row++) {
