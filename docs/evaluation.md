@@ -7,8 +7,12 @@ The [README](../README.md) summarizes the service and current conclusions;
 Evidence supports a working Linux/eBPF/GPU service and shared scheduler gains.
 General matched-native superiority,total CPU/energy benefit,production SLOs
 and arbitrary-backend support remain unproven.
-[Finding0065](findings/0065-mixed-prefill-decode.md) is the newest complete
-reviewed scheduling result;its source remains experimental.
+[Finding0065](findings/0065-mixed-prefill-decode.md) is the complete reviewed
+scheduling result, selected as explicit mixed targets after the ordinary
+default8/cancellation qualification in [0068](findings/0068-mixed-source-integration.md).
+[0074](findings/0074-active-admission-wait.md) is the accepted CPU repair;
+[0076](findings/0076-current-controller-stage-time.md) is the latest complete
+diagnostic and preserves the remaining native delivery advantage.
 
 The following sections preserve plans,raw outcomes,reviews and failures.
 Historical status refers to its recorded snapshot,not a new audit or default
@@ -1731,3 +1735,16 @@ Next decision: keep0074 and test a distinct network-placement mechanism with
 ordinary controls. The private kernel-owned BPF candidate now compiles/loads
 verifier-only at8/16 with identical GPU dispatch; application/correctness and
 performance are still unproven. No source/default adoption from this diagnostic.
+
+### 2026-10-16 kernel-owned network placement: proposed intervention
+
+The next [plan](../bench/results/kernel_network_placement_20261016/plan.md)
+uses0076 to select one ordinary network-placement intervention: BPF owns
+CQ/SQ/connection/reply progression, GPU retains reused computation and the same
+resident dispatch. Efficient same-executor native is the main competitor;
+current0074 loop is the component ablation. Primary candidate-minus-before TPS
+has five paired blocks; failure, TTFT/completion/receive-gap tails and resource
+tradeoffs remain. This is proposed supporting RQ evidence, not a result.
+Source/build preparations are dependencies only. Fresh plan review, actual
+protocol/lifetime/cancel/model qualification, three-condition remote preflight,
+full15-cell ordinary matrix and fresh result review remain before any decision.
