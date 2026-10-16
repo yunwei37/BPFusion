@@ -52,3 +52,9 @@ kernel-specific6.36ms difference. Canonical mixed source now adopts the exact re
 2560 protocol outcomes/93504 dual-replayed tokens, plus352 ordinary lifecycle
 outcomes/2728 full and218 prefix tokens. All six commands and normal8/16
 builds pass. Legacy homogeneous controls and generic graph source stay as before.
+
+SEND completion is not client delivery: successful socket send can leave data
+in TCP buffers. A short submit-to-CQE interval therefore does not exclude a
+later ACK-dependent hold, consistent with [send(2)](https://man7.org/linux/man-pages/man2/send.2.html).
+The old timestamp run and new packet run are separate observations, not an exact
+joined phase decomposition of the historical6.36ms marginal-quantile gap.

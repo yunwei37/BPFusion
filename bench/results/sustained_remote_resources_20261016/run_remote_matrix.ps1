@@ -10,10 +10,10 @@ function Invoke-Workspace([string]$Code) {
  return ($taskAnswer -join [Environment]::NewLine)
 }
 function Receive-ClientFile([string]$Name,[string]$Destination) {
- $taskCompress="import base64,gzip,pathlib;print(base64.b64encode(gzip.compress(pathlib.Path('/tmp/$Name').read_bytes())).decode())"
+ $taskCompress='import base64,gzip,pathlib;print(base64.b64encode(gzip.compress(pathlib.Path("/tmp/{0}").read_bytes())).decode())' -f $Name
  $taskPayload=& $KubectlHome -n coder exec $ClientPod '--' python3 -c $taskCompress
  if($LASTEXITCODE -ne 0){throw "Client data transfer failed"}
- $taskSink="import sys,base64,pathlib;pathlib.Path('$Destination.gz').write_bytes(base64.b64decode(sys.stdin.buffer.read()))"
+ $taskSink='import sys,base64,pathlib;pathlib.Path("{0}.gz").write_bytes(base64.b64decode(sys.stdin.buffer.read()))' -f $Destination
  $taskPayload | & $KubectlHome -n coder exec -i $taskServerPod '--' python3 -c $taskSink
  if($LASTEXITCODE -ne 0){throw "Workspace data write failed"}
 }
@@ -94,7 +94,7 @@ print(json.loads(Path(str(prefix)+'.server_started.json').read_text())['pid'])
     Stop-Observer $taskObserverPid $taskCell;$taskObserverPid=$null
     $taskReceipt=@{command=$taskClientArgs;exit=$taskClientExit;stdout_stderr=($taskClientOutput -join [Environment]::NewLine);begin_utc=$taskBegin;end_utc=$taskEnd;clientPod=$ClientPod}
     $taskReceiptJSON=$taskReceipt|ConvertTo-Json -Depth 5 -Compress
-    $taskSink="import sys,pathlib;pathlib.Path('$taskCell.client_exit.json').write_bytes(sys.stdin.buffer.read())"
+    $taskSink='import sys,pathlib;pathlib.Path("{0}.client_exit.json").write_bytes(sys.stdin.buffer.read())' -f $taskCell
     $taskReceiptJSON | & $KubectlHome -n coder exec -i $taskServerPod '--' python3 -c $taskSink
     if($LASTEXITCODE -ne 0){throw "Receipt write failed"}
     Receive-ClientFile $taskName "$taskCell.client.jsonl"

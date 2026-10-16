@@ -236,3 +236,12 @@ port39403/39404 is listening in /proc/net/tcp or tcp6. These support bounded
 cleanup, not a general assertion that every unrelated Workspace process or
 all possible OS resources have been audited. No extra experiment, code change,
 baseline or re-review is required to publish this valid bounded result.
+
+## Post-review accounting clarification,2026-10-16
+Subsequent real remote preflight verifies an io-wq worker with the server's
+TGID, consistent with Linux7.3 create_io_thread(CLONE_THREAD). Its execution
+is included in the process/group CPU clock. The earlier sentence listing io-wq
+among work outside that group was too broad; do not add its CPU a second time.
+This correction changes no recorded timing/CPU arithmetic or review verdict.
+Other softirq/IRQ/TCP work remains incompletely attributable. See the
+[socket/thread resource receipt](../sustained_remote_resources_20261016/preflight.md).

@@ -1498,3 +1498,14 @@ The exact reviewed host-only change is adopted for the explicit mixed targets;
 legacy homogeneous and generic-graph controls retain their semantics.
 This is engineering acceptance of the supported shared TCP fix, not another
 paper speedup or closure of full resources/sustained remote measurement.
+
+### 2026-10-16 sustained remote/resource preflight
+The [admitted plan/review](../bench/results/sustained_remote_resources_20261016/plan.md)
+and [real preflight](../bench/results/sustained_remote_resources_20261016/preflight.md)
+exercise both current ordinary16 transports on lab from a g10 client.
+All128 attempts/8192 tokens succeed, with actual process/thread/cgroup/host/GPU
+energy data and byte-identical CPU archive replay. This is an executable
+dependency, not a sustained performance/resource conclusion; all20 full cells
+remain. Actual io-wq worker TGID equals the owned server, so its CPU is already
+inside group CPU and must not be double-counted. Shared root IRQ/softirq and
+device totals remain distinct, not exclusive attribution.
