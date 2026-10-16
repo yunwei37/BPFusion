@@ -1410,3 +1410,17 @@ pre-observation complete-output sets with explicit prefix/canceled scope.
 Serving sources/defaults remain selected as before; no candidate performance,
 total CPU saving, remote-tail, current official-server or generic-backend
 acceptance follows. Publish each completed step onmain with raw evidence.
+
+
+### 2026-10-16 close-scan confirmation (complete, independently reviewed)
+The tail-path candidate completed all15 matched executors/30 cells:
+7680 successful attempts,491520 measured exact output tokens, no failures.
+Primary after-before Qwen192 ITLP99 is-0.167588[-1.533927,+1.198750]ms:
+benefit is inconclusive and the candidate is not adopted. Before/candidate/native
+block-mean P99 is4.608/4.441/4.718ms; the earlier14.723/8.363 difference did not
+reproduce even before modification. Candidate-native process CPU is adverse,
++0.258141[+0.177460,+0.338822]ms/attempt, and is not total service CPU.
+See [complete result](../bench/results/tail_path_20261016/confirmation-result.md),
+[raw/replay](../bench/results/tail_path_20261016/confirmation/),
+and the [independent result review](../bench/results/tail_path_20261016/confirmation-result-review.md). This is supporting mechanism
+boundary evidence, not a throughput/latency win or a whole-RQ conclusion.

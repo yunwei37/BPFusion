@@ -75,3 +75,13 @@ The same[plan review](plan-review.md) admits the candidate's exact frozen
 before/fixed/native confirmation after safety/preflight. It does not establish
 a causal improvement. Candidate ordinary8/16 builds pass; runtime regressions
 are in progress. No serving source/default has changed.
+
+## Complete close-scan confirmation
+[Result](confirmation-result.md), [independent review](confirmation-result-review.md),
+[all raw/frozen commands/replay](confirmation/), and [candidate safety](candidate_safety/).
+All15 executors/30 cells complete,7680 successful measured requests. Primary
+after-before ITLP99-0.167588[-1.533927,+1.198750]ms: no established benefit;
+candidate not adopted. Earlier14.723/8.363ms gap absent already before change.
+Process CPU is adverse versus native here; this is not a total CPU experiment.
+Large raw files use lossless gzip. Replay:
+python3 bench/results/tail_path_20261016/confirmation/analyze.py bench/results/tail_path_20261016/confirmation/full.jsonl

@@ -1,0 +1,50 @@
+[
+  {
+    "banks": 8,
+    "command": [
+      "make",
+      "-f",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/fixed.Makefile",
+      "BUILD=/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed8",
+      "VLLM_PYTHON=/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/bin/python",
+      "CPPFLAGS=-I/workspaces/repository/executor",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed8/fusion.bpf.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed8/uring_loop.bpf.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed8/bpfusion_load",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed8/vllm_graph_uring_loop.so",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed8/vllm_graph_uring_loop",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed8/vllm_graph_user_network_wait.so",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed8/vllm_graph_user_network_wait",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed8/vllm_graph_uring_loop_trace.so",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed8/vllm_graph_uring_loop_trace",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed8/vllm_graph_user_network_wait_trace.so",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed8/vllm_graph_user_network_wait_trace"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T09:08:01.733376+00:00"
+  },
+  {
+    "banks": 16,
+    "command": [
+      "make",
+      "-f",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/fixed.Makefile",
+      "BUILD=/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed16",
+      "VLLM_PYTHON=/tmp/bpfusion-mixed-integration-n4cog5c6/runtime/bin/python",
+      "CPPFLAGS=-DBF_LLM_SLOTS=16 -I/workspaces/repository/executor",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed16/fusion.bpf.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed16/uring_loop.bpf.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed16/bpfusion_load",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed16/vllm_graph_uring_loop.so",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed16/vllm_graph_uring_loop",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed16/vllm_graph_user_network_wait.so",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed16/vllm_graph_user_network_wait",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed16/vllm_graph_uring_loop_trace.so",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed16/vllm_graph_uring_loop_trace",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed16/vllm_graph_user_network_wait_trace.so",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/build_fixed16/vllm_graph_user_network_wait_trace"
+    ],
+    "exit": 0,
+    "utc": "2026-10-16T09:08:25.401532+00:00"
+  }
+]
