@@ -1,0 +1,13 @@
+--- before
++++ after
+@@ -29,7 +29,9 @@
+ };
+ struct Request { unsigned id,prompt,gen,k,position,last,phase; };
+ struct Trace {
+-    unsigned kind,id,query,batch,gen,bad,input_tokens;
++    unsigned kind,id,query,batch;
++    union { unsigned gen; unsigned input_tokens; };
++    unsigned bad;
+     unsigned long long client_ns;
+     unsigned requests[BF_LLM_SLOTS],tokens[BF_LLM_MAX_TOK];
+ };

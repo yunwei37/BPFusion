@@ -1,0 +1,33 @@
+[
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-m",
+      "venv",
+      "--without-pip",
+      "/tmp/bpfusion-mixed-batching-pa97uj6t/runtime"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T17:29:13.905695+00:00"
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-m",
+      "pip",
+      "--python",
+      "/tmp/bpfusion-mixed-batching-pa97uj6t/runtime/bin/python",
+      "install",
+      "vllm==0.31.0",
+      "torch==2.13.0+cu129",
+      "transformers==5.17.0",
+      "numpy==2.3.5",
+      "cuda-python==12.9.7",
+      "cuda-bindings==12.9.9",
+      "--extra-index-url",
+      "https://download.pytorch.org/whl/cu129"
+    ],
+    "exit": 0,
+    "utc": "2026-10-15T17:33:48.896693+00:00"
+  }
+]

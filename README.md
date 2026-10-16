@@ -70,6 +70,13 @@ result,not an eBPF speedup or ordinary-default selection. The independent review
 finds the traced comparison valid;owned temporary state is removed and original
 state preserved. Mean TPOT worsens with16 banks despite the queueing relief.
 
+The [completed mixed prefill/decode comparison](docs/findings/0065-mixed-prefill-decode.md)
+improves96/s kernel mean TPOT by14.25%/14.04% for Qwen/Smol. Native benefits
+too;no reliable same-mixed transport speedup is established,and Qwen192/s
+ITL P99 is worse on the kernel path. All20,480 measured requests succeed.
+The candidate remains experimental;ordinary/default8/partial-stop adoption
+is not qualified.
+
 Strict regressions cover output agreement, fragmented messages, concurrent
 requests, connection reuse, pipelining, half-close, invalid inputs and queue
 recycling. The [completed cross-node comparison](docs/findings/0029-cross-node-network.md)

@@ -666,3 +666,14 @@ Four ordinary native lifecycle cases pass:HF/vLLM with both checkpoints at8,
 Frozen references are unchanged; no untraced performance or universal fidelity
 generalization follows.
 Default8 and model arithmetic remain unchanged.
+
+
+## Mixed prefill/decode candidate
+
+[Finding0065](findings/0065-mixed-prefill-decode.md) packs real prefill inputs
+and active decode tokens into one upstream graph call. It changes request
+offsets/metadata and scheduling,not arithmetic or network ownership.
+Full/protocol trajectories pass graph replay and independently reconstructed
+attention metadata at16 banks. Both transports gain in mean TPOT;general
+eBPF speed superiority is unproven and adverse Qwen ITL P99 remains.
+The candidate stays in its archive;ordinary/default8/partial-stop adoption is open.

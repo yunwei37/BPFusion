@@ -1359,3 +1359,19 @@ with no process/map/FD/cwd user,pin or module remaining. Four archived CPU
 analyses replay bytewise after removal;the original8 file fingerprints,Coder
 process identities and base packages remain unchanged. See the integration
 restoration/replay records. This closes implementation qualification only.
+
+
+## Packed mixed prefill/decode
+
+[Finding0065](findings/0065-mixed-prefill-decode.md) and the
+[full archive/review](../bench/results/mixed_batching_20261015/) close the
+equally BF_TRACE16-bank comparison. All40 executors/80 cells pass20,480 measured
+requests/1,310,720 tokens without failure;four protocol executors verify188,800
+tokens and2,060 intended rejections. Both96/s primary kernel scheduling TPOT
+effects are negative:Qwen-0.204394[-0.303490,-0.105298]ms;
+Smol-0.155325[-0.279908,-0.030742]ms. Native benefits too.
+All same-mixed throughput/TTFT/completion transport intervals cross zero;
+Qwen192/s ITL P99 and active process CPU include adverse kernel costs.
+Run valid/complete,hypothesis supported for the scheduler,role supporting,
+impact additional mechanism evidence. No ordinary/default8/partial-stop
+adoption or total-host CPU/energy claim follows. Close the unchanged matrix.

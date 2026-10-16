@@ -1,0 +1,1798 @@
+651610 write(1, "326 libs found in cache `/etc/ld"..., 4096) = 4096
+651610 write(1, "5 (libc6,x86-64) => /lib/x86_64-"..., 4096) = 4096
+651610 write(1, "-linux-gnu/libnvidia-gpucomp.so."..., 4096) = 4096
+651610 write(1, "ts/x86_64-linux/lib/libnppicc.so"..., 4096) = 4096
+651610 write(1, " => /lib/x86_64-linux-gnu/libgpg"..., 4096) = 4096
+651610 write(1, "ebugger.so.1 (libc6,x86-64) => /"..., 4096) = 4096
+651610 write(1, "lib/x86_64-linux-gnu/ld-linux-x8"..., 130) = 130
+651610 +++ exited with 0 +++
+651582 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651610, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651582 write(3, "blat", 4)              = 4
+651582 write(9, "cuda00001800007", 15)  = 15
+651582 write(4, "\1\0\0\0\0\0\0\0", 8)  = 8
+651612 write(1, "x86_64\n", 7)          = 7
+651612 +++ exited with 0 +++
+651582 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651612, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651582 socket(AF_UNIX, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0) = 9
+651582 connect(9, {sa_family=AF_UNIX, sun_path="/var/run/nscd/socket"}, 110) = -1 ENOENT (No such file or directory)
+651582 socket(AF_UNIX, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0) = 9
+651582 connect(9, {sa_family=AF_UNIX, sun_path="/var/run/nscd/socket"}, 110) = -1 ENOENT (No such file or directory)
+651582 socket(AF_INET6, SOCK_STREAM|SOCK_CLOEXEC, IPPROTO_IP) = 9
+651582 bind(9, {sa_family=AF_INET6, sin6_port=htons(0), sin6_flowinfo=htonl(0), inet_pton(AF_INET6, "::1", &sin6_addr), sin6_scope_id=0}, 28) = 0
+651647 write(19, "OSError:", 8)         = 8
+651647 write(19, "2", 1)                = 1
+651647 write(19, ":", 1)                = 1
+651647 write(19, "", 0)                 = 0
+651647 +++ exited with 255 +++
+651587 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651647, si_uid=0, si_status=255, si_utime=0, si_stime=0} ---
+651649 +++ exited with 0 +++
+651648 +++ exited with 0 +++
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 283) = 283
+651582 write(1, "(MainProcess pid=651582) WARNING"..., 233) = 233
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 100) = 100
+651582 write(1, "(MainProcess pid=651582) WARNING"..., 105) = 105
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 85) = 85
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 125) = 125
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 228) = 228
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 4434) = 4434
+651582 write(15, "\1\0\0\0\0\0\0\0\200\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 32) = 32
+651582 socket(AF_UNIX, SOCK_SEQPACKET|SOCK_CLOEXEC, 0) = 15
+651582 setsockopt(15, SOL_SOCKET, SO_PASSCRED, [1], 4) = 0
+651582 connect(15, {sa_family=AF_UNIX, sun_path="/tmp/nvidia-mps/control"}, 26) = -1 ENOENT (No such file or directory)
+651582 socket(AF_UNIX, SOCK_SEQPACKET|SOCK_CLOEXEC, 0) = 22
+651582 bind(22, {sa_family=AF_UNIX, sun_path=@"cuda-uvmfd-4026534627-651582\0"}, 32) = 0
+651582 listen(22, 128)                  = 0
+651582 write(4, "\1\0\0\0\0\0\0\0", 8)  = 8
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 195) = 195
+651582 write(23, "\t\0\0\0", 4)         = 4
+651582 write(23, "refcount/", 9)        = 9
+651582 write(23, "\1\0\0\0", 4)         = 4
+651582 write(23, "1", 1)                = 1
+651702 write(1, "326 libs found in cache `/etc/ld"..., 4096) = 4096
+651702 write(1, "5 (libc6,x86-64) => /lib/x86_64-"..., 4096) = 4096
+651702 write(1, "-linux-gnu/libnvidia-gpucomp.so."..., 4096) = 4096
+651702 write(1, "ts/x86_64-linux/lib/libnppicc.so"..., 4096) = 4096
+651702 write(1, " => /lib/x86_64-linux-gnu/libgpg"..., 4096) = 4096
+651702 write(1, "ebugger.so.1 (libc6,x86-64) => /"..., 4096) = 4096
+651582 socket(AF_UNIX, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0 <unfinished ...>
+651702 write(1, "lib/x86_64-linux-gnu/ld-linux-x8"..., 130) = 130
+651582 <... socket resumed>)            = 25
+651582 connect(25, {sa_family=AF_UNIX, sun_path="/var/run/nscd/socket"}, 110) = -1 ENOENT (No such file or directory)
+651702 +++ exited with 0 +++
+651653 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651702, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651582 socket(AF_UNIX, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0) = 25
+651582 connect(25, {sa_family=AF_UNIX, sun_path="/var/run/nscd/socket"}, 110) = -1 ENOENT (No such file or directory)
+651582 socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 25
+651582 bind(25, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 25
+651582 bind(25, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 socket(AF_INET, SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_IP) = 28
+651582 setsockopt(28, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+651582 bind(28, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 listen(28, -1)                   = 0
+651582 getsockname(28, {sa_family=AF_INET, sin_port=htons(38437), sin_addr=inet_addr("10.42.1.238")}, [128 => 16]) = 0
+651582 socket(AF_NETLINK, SOCK_RAW|SOCK_CLOEXEC, NETLINK_ROUTE) = 29
+651582 bind(29, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 0
+651582 getsockname(29, {sa_family=AF_NETLINK, nl_pid=651582, nl_groups=00000000}, [12]) = 0
+651582 sendto(29, [{nlmsg_len=20, nlmsg_type=RTM_GETLINK, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1792087028, nlmsg_pid=0}, {ifi_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20
+651582 recvmsg(29, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[[{nlmsg_len=1488, nlmsg_type=RTM_NEWLINK, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087028, nlmsg_pid=651582}, {ifi_family=AF_UNSPEC, ifi_type=ARPHRD_LOOPBACK, ifi_index=if_nametoindex("lo"), ifi_flags=IFF_UP|IFF_LOOPBACK|IFF_RUNNING|IFF_LOWER_UP, ifi_change=0}, [[{nla_len=7, nla_type=IFLA_IFNAME}, "lo"], [{nla_len=8, nla_type=IFLA_TXQLEN}, 1000], [{nla_len=5, nla_type=IFLA_OPERSTATE}, 0], [{nla_len=5, nla_type=IFLA_LINKMODE}, 0], [{nla_len=5, nla_type=0x43 /* IFLA_??? */}, "\x01"], [{nla_len=8, nla_type=IFLA_MTU}, 65536], [{nla_len=8, nla_type=IFLA_MIN_MTU}, 0], [{nla_len=8, nla_type=IFLA_MAX_MTU}, 0], [{nla_len=8, nla_type=IFLA_GROUP}, 0], [{nla_len=8, nla_type=IFLA_PROMISCUITY}, 0], [{nla_len=8, nla_type=IFLA_ALLMULTI}, 0], [{nla_len=8, nla_type=IFLA_NUM_TX_QUEUES}, 1], [{nla_len=8, nla_type=IFLA_GSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=IFLA_GSO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GSO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_TSO_MAX_SIZE}, 524280], [{nla_len=8, nla_type=IFLA_TSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=0x42 /* IFLA_??? */}, "\x00\x00\x00\x00"], [{nla_len=8, nla_type=IFLA_NUM_RX_QUEUES}, 1], [{nla_len=5, nla_type=IFLA_CARRIER}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_CHANGES}, 0], [{nla_len=8, nla_type=IFLA_CARRIER_UP_COUNT}, 0], [{nla_len=8, nla_type=IFLA_CARRIER_DOWN_COUNT}, 0], [{nla_len=6, nla_type=0x44 /* IFLA_??? */}, "\x00\x00"], [{nla_len=6, nla_type=0x45 /* IFLA_??? */}, "\x00\x00"], [{nla_len=5, nla_type=IFLA_PROTO_DOWN}, 0], [{nla_len=10, nla_type=IFLA_ADDRESS}, 00:00:00:00:00:00], [{nla_len=10, nla_type=IFLA_BROADCAST}, 00:00:00:00:00:00], [{nla_len=204, nla_type=IFLA_STATS64}, {rx_packets=28661680, tx_packets=28661680, rx_bytes=1666920931, tx_bytes=1666920931, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0, rx_otherhost_dropped=0}], [{nla_len=100, nla_type=IFLA_STATS}, {rx_packets=28661680, tx_packets=28661680, rx_bytes=1666920931, tx_bytes=1666920931, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0}], ...]], [{nlmsg_len=832, nlmsg_type=RTM_NEWLINK, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087028, nlmsg_pid=651582}, {ifi_family=AF_UNSPEC, ifi_type=ARPHRD_ETHER, ifi_index=if_nametoindex("eth0"), ifi_flags=IFF_UP|IFF_BROADCAST|IFF_RUNNING|IFF_MULTICAST|IFF_LOWER_UP, ifi_change=0}, [[{nla_len=9, nla_type=IFLA_IFNAME}, "eth0"], [{nla_len=8, nla_type=IFLA_TXQLEN}, 1000], [{nla_len=5, nla_type=IFLA_OPERSTATE}, 6], [{nla_len=5, nla_type=IFLA_LINKMODE}, 0], [{nla_len=5, nla_type=0x43 /* IFLA_??? */}, "\x00"], [{nla_len=8, nla_type=IFLA_MTU}, 1230], [{nla_len=8, nla_type=IFLA_MIN_MTU}, 68], [{nla_len=8, nla_type=IFLA_MAX_MTU}, 65535], [{nla_len=8, nla_type=IFLA_GROUP}, 0], [{nla_len=8, nla_type=IFLA_PROMISCUITY}, 0], [{nla_len=8, nla_type=IFLA_ALLMULTI}, 0], [{nla_len=8, nla_type=IFLA_NUM_TX_QUEUES}, 24], [{nla_len=8, nla_type=IFLA_GSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=IFLA_GSO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GSO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_TSO_MAX_SIZE}, 524280], [{nla_len=8, nla_type=IFLA_TSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=0x42 /* IFLA_??? */}, "\x00\x00\x00\x00"], [{nla_len=8, nla_type=IFLA_NUM_RX_QUEUES}, 24], [{nla_len=5, nla_type=IFLA_CARRIER}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_CHANGES}, 2], [{nla_len=8, nla_type=IFLA_CARRIER_UP_COUNT}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_DOWN_COUNT}, 1], [{nla_len=6, nla_type=0x44 /* IFLA_??? */}, "\x00\x00"], [{nla_len=6, nla_type=0x45 /* IFLA_??? */}, "\x00\x00"], [{nla_len=5, nla_type=IFLA_PROTO_DOWN}, 0], [{nla_len=10, nla_type=IFLA_ADDRESS}, 26:3f:ff:a5:25:d2], [{nla_len=10, nla_type=IFLA_BROADCAST}, ff:ff:ff:ff:ff:ff], [{nla_len=204, nla_type=IFLA_STATS64}, {rx_packets=14605004, tx_packets=10874862, rx_bytes=109772950482, tx_bytes=1198972769, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0, rx_otherhost_dropped=23}], [{nla_len=100, nla_type=IFLA_STATS}, {rx_packets=14605004, tx_packets=10874862, rx_bytes=2398768082, tx_bytes=1198972769, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0}], ...]]], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 2320
+651582 recvmsg(29, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=20, nlmsg_type=NLMSG_DONE, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087028, nlmsg_pid=651582}, 0], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 20
+651582 sendto(29, [{nlmsg_len=20, nlmsg_type=RTM_GETADDR, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1792087029, nlmsg_pid=0}, {ifa_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20
+651582 recvmsg(29, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[[{nlmsg_len=76, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=8, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("127.0.0.1")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("127.0.0.1")], [{nla_len=7, nla_type=IFA_LABEL}, "lo"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}]]], [{nlmsg_len=88, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=24, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_UNIVERSE, ifa_index=if_nametoindex("eth0")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_BROADCAST}, inet_addr("10.42.1.255")], [{nla_len=9, nla_type=IFA_LABEL}, "eth0"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626286, tstamp=8626286}]]], [{nlmsg_len=80, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, {ifa_family=AF_INET6, ifa_prefixlen=128, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=20, nla_type=IFA_ADDRESS}, inet_pton(AF_INET6, "::1")], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=5, nla_type=IFA_PROTO}, "\x01"]]]], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 244
+651582 recvmsg(29, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=20, nlmsg_type=NLMSG_DONE, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, 0], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 20
+651582 socket(AF_INET, SOCK_DGRAM, IPPROTO_IP) = 29
+651582 write(29, "\17\0\0\0", 4)        = 4
+651582 write(29, "/0//2//cpu//0/0", 15) = 15
+651582 write(29, "\333\0\0\0", 4)       = 4
+651582 write(29, ";\0\0\0\0\0\0\0coder-eb48d962-76f4-4ff7"..., 219) = 219
+651582 socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 29
+651582 bind(29, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 29
+651582 bind(29, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 socket(AF_INET, SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_IP) = 32
+651582 setsockopt(32, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+651582 bind(32, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 listen(32, -1)                   = 0
+651582 getsockname(32, {sa_family=AF_INET, sin_port=htons(43739), sin_addr=inet_addr("10.42.1.238")}, [128 => 16]) = 0
+651582 socket(AF_NETLINK, SOCK_RAW|SOCK_CLOEXEC, NETLINK_ROUTE) = 33
+651582 bind(33, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 0
+651582 getsockname(33, {sa_family=AF_NETLINK, nl_pid=651582, nl_groups=00000000}, [12]) = 0
+651582 sendto(33, [{nlmsg_len=20, nlmsg_type=RTM_GETLINK, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1792087029, nlmsg_pid=0}, {ifi_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20
+651582 recvmsg(33, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[[{nlmsg_len=1488, nlmsg_type=RTM_NEWLINK, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, {ifi_family=AF_UNSPEC, ifi_type=ARPHRD_LOOPBACK, ifi_index=if_nametoindex("lo"), ifi_flags=IFF_UP|IFF_LOOPBACK|IFF_RUNNING|IFF_LOWER_UP, ifi_change=0}, [[{nla_len=7, nla_type=IFLA_IFNAME}, "lo"], [{nla_len=8, nla_type=IFLA_TXQLEN}, 1000], [{nla_len=5, nla_type=IFLA_OPERSTATE}, 0], [{nla_len=5, nla_type=IFLA_LINKMODE}, 0], [{nla_len=5, nla_type=0x43 /* IFLA_??? */}, "\x01"], [{nla_len=8, nla_type=IFLA_MTU}, 65536], [{nla_len=8, nla_type=IFLA_MIN_MTU}, 0], [{nla_len=8, nla_type=IFLA_MAX_MTU}, 0], [{nla_len=8, nla_type=IFLA_GROUP}, 0], [{nla_len=8, nla_type=IFLA_PROMISCUITY}, 0], [{nla_len=8, nla_type=IFLA_ALLMULTI}, 0], [{nla_len=8, nla_type=IFLA_NUM_TX_QUEUES}, 1], [{nla_len=8, nla_type=IFLA_GSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=IFLA_GSO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GSO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_TSO_MAX_SIZE}, 524280], [{nla_len=8, nla_type=IFLA_TSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=0x42 /* IFLA_??? */}, "\x00\x00\x00\x00"], [{nla_len=8, nla_type=IFLA_NUM_RX_QUEUES}, 1], [{nla_len=5, nla_type=IFLA_CARRIER}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_CHANGES}, 0], [{nla_len=8, nla_type=IFLA_CARRIER_UP_COUNT}, 0], [{nla_len=8, nla_type=IFLA_CARRIER_DOWN_COUNT}, 0], [{nla_len=6, nla_type=0x44 /* IFLA_??? */}, "\x00\x00"], [{nla_len=6, nla_type=0x45 /* IFLA_??? */}, "\x00\x00"], [{nla_len=5, nla_type=IFLA_PROTO_DOWN}, 0], [{nla_len=10, nla_type=IFLA_ADDRESS}, 00:00:00:00:00:00], [{nla_len=10, nla_type=IFLA_BROADCAST}, 00:00:00:00:00:00], [{nla_len=204, nla_type=IFLA_STATS64}, {rx_packets=28661680, tx_packets=28661680, rx_bytes=1666920931, tx_bytes=1666920931, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0, rx_otherhost_dropped=0}], [{nla_len=100, nla_type=IFLA_STATS}, {rx_packets=28661680, tx_packets=28661680, rx_bytes=1666920931, tx_bytes=1666920931, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0}], ...]], [{nlmsg_len=832, nlmsg_type=RTM_NEWLINK, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, {ifi_family=AF_UNSPEC, ifi_type=ARPHRD_ETHER, ifi_index=if_nametoindex("eth0"), ifi_flags=IFF_UP|IFF_BROADCAST|IFF_RUNNING|IFF_MULTICAST|IFF_LOWER_UP, ifi_change=0}, [[{nla_len=9, nla_type=IFLA_IFNAME}, "eth0"], [{nla_len=8, nla_type=IFLA_TXQLEN}, 1000], [{nla_len=5, nla_type=IFLA_OPERSTATE}, 6], [{nla_len=5, nla_type=IFLA_LINKMODE}, 0], [{nla_len=5, nla_type=0x43 /* IFLA_??? */}, "\x00"], [{nla_len=8, nla_type=IFLA_MTU}, 1230], [{nla_len=8, nla_type=IFLA_MIN_MTU}, 68], [{nla_len=8, nla_type=IFLA_MAX_MTU}, 65535], [{nla_len=8, nla_type=IFLA_GROUP}, 0], [{nla_len=8, nla_type=IFLA_PROMISCUITY}, 0], [{nla_len=8, nla_type=IFLA_ALLMULTI}, 0], [{nla_len=8, nla_type=IFLA_NUM_TX_QUEUES}, 24], [{nla_len=8, nla_type=IFLA_GSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=IFLA_GSO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GSO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_TSO_MAX_SIZE}, 524280], [{nla_len=8, nla_type=IFLA_TSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=0x42 /* IFLA_??? */}, "\x00\x00\x00\x00"], [{nla_len=8, nla_type=IFLA_NUM_RX_QUEUES}, 24], [{nla_len=5, nla_type=IFLA_CARRIER}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_CHANGES}, 2], [{nla_len=8, nla_type=IFLA_CARRIER_UP_COUNT}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_DOWN_COUNT}, 1], [{nla_len=6, nla_type=0x44 /* IFLA_??? */}, "\x00\x00"], [{nla_len=6, nla_type=0x45 /* IFLA_??? */}, "\x00\x00"], [{nla_len=5, nla_type=IFLA_PROTO_DOWN}, 0], [{nla_len=10, nla_type=IFLA_ADDRESS}, 26:3f:ff:a5:25:d2], [{nla_len=10, nla_type=IFLA_BROADCAST}, ff:ff:ff:ff:ff:ff], [{nla_len=204, nla_type=IFLA_STATS64}, {rx_packets=14605004, tx_packets=10874862, rx_bytes=109772950482, tx_bytes=1198972769, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0, rx_otherhost_dropped=23}], [{nla_len=100, nla_type=IFLA_STATS}, {rx_packets=14605004, tx_packets=10874862, rx_bytes=2398768082, tx_bytes=1198972769, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0}], ...]]], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 2320
+651582 recvmsg(33, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=20, nlmsg_type=NLMSG_DONE, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, 0], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 20
+651582 sendto(33, [{nlmsg_len=20, nlmsg_type=RTM_GETADDR, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1792087030, nlmsg_pid=0}, {ifa_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20
+651582 recvmsg(33, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[[{nlmsg_len=76, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=8, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("127.0.0.1")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("127.0.0.1")], [{nla_len=7, nla_type=IFA_LABEL}, "lo"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}]]], [{nlmsg_len=88, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=24, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_UNIVERSE, ifa_index=if_nametoindex("eth0")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_BROADCAST}, inet_addr("10.42.1.255")], [{nla_len=9, nla_type=IFA_LABEL}, "eth0"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626286, tstamp=8626286}]]], [{nlmsg_len=80, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET6, ifa_prefixlen=128, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=20, nla_type=IFA_ADDRESS}, inet_pton(AF_INET6, "::1")], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=5, nla_type=IFA_PROTO}, "\x01"]]]], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 244
+651582 recvmsg(33, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=20, nlmsg_type=NLMSG_DONE, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, 0], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 20
+651582 socket(AF_INET, SOCK_DGRAM, IPPROTO_IP) = 33
+651582 write(33, "\17\0\0\0", 4)        = 4
+651582 write(33, "/0//4//cpu//0/0", 15) = 15
+651582 write(33, "\333\0\0\0", 4)       = 4
+651582 write(33, ";\0\0\0\0\0\0\0coder-eb48d962-76f4-4ff7"..., 219) = 219
+651582 socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 33
+651582 bind(33, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 33
+651582 bind(33, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 socket(AF_INET, SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_IP) = 36
+651582 setsockopt(36, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+651582 bind(36, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 listen(36, -1)                   = 0
+651582 getsockname(36, {sa_family=AF_INET, sin_port=htons(38691), sin_addr=inet_addr("10.42.1.238")}, [128 => 16]) = 0
+651582 socket(AF_NETLINK, SOCK_RAW|SOCK_CLOEXEC, NETLINK_ROUTE) = 37
+651582 bind(37, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 0
+651582 getsockname(37, {sa_family=AF_NETLINK, nl_pid=651582, nl_groups=00000000}, [12]) = 0
+651582 sendto(37, [{nlmsg_len=20, nlmsg_type=RTM_GETLINK, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1792087029, nlmsg_pid=0}, {ifi_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20
+651582 recvmsg(37, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[[{nlmsg_len=1488, nlmsg_type=RTM_NEWLINK, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, {ifi_family=AF_UNSPEC, ifi_type=ARPHRD_LOOPBACK, ifi_index=if_nametoindex("lo"), ifi_flags=IFF_UP|IFF_LOOPBACK|IFF_RUNNING|IFF_LOWER_UP, ifi_change=0}, [[{nla_len=7, nla_type=IFLA_IFNAME}, "lo"], [{nla_len=8, nla_type=IFLA_TXQLEN}, 1000], [{nla_len=5, nla_type=IFLA_OPERSTATE}, 0], [{nla_len=5, nla_type=IFLA_LINKMODE}, 0], [{nla_len=5, nla_type=0x43 /* IFLA_??? */}, "\x01"], [{nla_len=8, nla_type=IFLA_MTU}, 65536], [{nla_len=8, nla_type=IFLA_MIN_MTU}, 0], [{nla_len=8, nla_type=IFLA_MAX_MTU}, 0], [{nla_len=8, nla_type=IFLA_GROUP}, 0], [{nla_len=8, nla_type=IFLA_PROMISCUITY}, 0], [{nla_len=8, nla_type=IFLA_ALLMULTI}, 0], [{nla_len=8, nla_type=IFLA_NUM_TX_QUEUES}, 1], [{nla_len=8, nla_type=IFLA_GSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=IFLA_GSO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GSO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_TSO_MAX_SIZE}, 524280], [{nla_len=8, nla_type=IFLA_TSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=0x42 /* IFLA_??? */}, "\x00\x00\x00\x00"], [{nla_len=8, nla_type=IFLA_NUM_RX_QUEUES}, 1], [{nla_len=5, nla_type=IFLA_CARRIER}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_CHANGES}, 0], [{nla_len=8, nla_type=IFLA_CARRIER_UP_COUNT}, 0], [{nla_len=8, nla_type=IFLA_CARRIER_DOWN_COUNT}, 0], [{nla_len=6, nla_type=0x44 /* IFLA_??? */}, "\x00\x00"], [{nla_len=6, nla_type=0x45 /* IFLA_??? */}, "\x00\x00"], [{nla_len=5, nla_type=IFLA_PROTO_DOWN}, 0], [{nla_len=10, nla_type=IFLA_ADDRESS}, 00:00:00:00:00:00], [{nla_len=10, nla_type=IFLA_BROADCAST}, 00:00:00:00:00:00], [{nla_len=204, nla_type=IFLA_STATS64}, {rx_packets=28661680, tx_packets=28661680, rx_bytes=1666920931, tx_bytes=1666920931, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0, rx_otherhost_dropped=0}], [{nla_len=100, nla_type=IFLA_STATS}, {rx_packets=28661680, tx_packets=28661680, rx_bytes=1666920931, tx_bytes=1666920931, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0}], ...]], [{nlmsg_len=832, nlmsg_type=RTM_NEWLINK, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, {ifi_family=AF_UNSPEC, ifi_type=ARPHRD_ETHER, ifi_index=if_nametoindex("eth0"), ifi_flags=IFF_UP|IFF_BROADCAST|IFF_RUNNING|IFF_MULTICAST|IFF_LOWER_UP, ifi_change=0}, [[{nla_len=9, nla_type=IFLA_IFNAME}, "eth0"], [{nla_len=8, nla_type=IFLA_TXQLEN}, 1000], [{nla_len=5, nla_type=IFLA_OPERSTATE}, 6], [{nla_len=5, nla_type=IFLA_LINKMODE}, 0], [{nla_len=5, nla_type=0x43 /* IFLA_??? */}, "\x00"], [{nla_len=8, nla_type=IFLA_MTU}, 1230], [{nla_len=8, nla_type=IFLA_MIN_MTU}, 68], [{nla_len=8, nla_type=IFLA_MAX_MTU}, 65535], [{nla_len=8, nla_type=IFLA_GROUP}, 0], [{nla_len=8, nla_type=IFLA_PROMISCUITY}, 0], [{nla_len=8, nla_type=IFLA_ALLMULTI}, 0], [{nla_len=8, nla_type=IFLA_NUM_TX_QUEUES}, 24], [{nla_len=8, nla_type=IFLA_GSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=IFLA_GSO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GSO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_TSO_MAX_SIZE}, 524280], [{nla_len=8, nla_type=IFLA_TSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=0x42 /* IFLA_??? */}, "\x00\x00\x00\x00"], [{nla_len=8, nla_type=IFLA_NUM_RX_QUEUES}, 24], [{nla_len=5, nla_type=IFLA_CARRIER}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_CHANGES}, 2], [{nla_len=8, nla_type=IFLA_CARRIER_UP_COUNT}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_DOWN_COUNT}, 1], [{nla_len=6, nla_type=0x44 /* IFLA_??? */}, "\x00\x00"], [{nla_len=6, nla_type=0x45 /* IFLA_??? */}, "\x00\x00"], [{nla_len=5, nla_type=IFLA_PROTO_DOWN}, 0], [{nla_len=10, nla_type=IFLA_ADDRESS}, 26:3f:ff:a5:25:d2], [{nla_len=10, nla_type=IFLA_BROADCAST}, ff:ff:ff:ff:ff:ff], [{nla_len=204, nla_type=IFLA_STATS64}, {rx_packets=14605004, tx_packets=10874862, rx_bytes=109772950482, tx_bytes=1198972769, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0, rx_otherhost_dropped=23}], [{nla_len=100, nla_type=IFLA_STATS}, {rx_packets=14605004, tx_packets=10874862, rx_bytes=2398768082, tx_bytes=1198972769, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0}], ...]]], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 2320
+651582 recvmsg(37, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=20, nlmsg_type=NLMSG_DONE, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, 0], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 20
+651582 sendto(37, [{nlmsg_len=20, nlmsg_type=RTM_GETADDR, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1792087030, nlmsg_pid=0}, {ifa_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20
+651582 recvmsg(37, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[[{nlmsg_len=76, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=8, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("127.0.0.1")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("127.0.0.1")], [{nla_len=7, nla_type=IFA_LABEL}, "lo"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}]]], [{nlmsg_len=88, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=24, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_UNIVERSE, ifa_index=if_nametoindex("eth0")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_BROADCAST}, inet_addr("10.42.1.255")], [{nla_len=9, nla_type=IFA_LABEL}, "eth0"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626286, tstamp=8626286}]]], [{nlmsg_len=80, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET6, ifa_prefixlen=128, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=20, nla_type=IFA_ADDRESS}, inet_pton(AF_INET6, "::1")], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=5, nla_type=IFA_PROTO}, "\x01"]]]], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 244
+651582 recvmsg(37, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=20, nlmsg_type=NLMSG_DONE, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, 0], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 20
+651582 socket(AF_INET, SOCK_DGRAM, IPPROTO_IP) = 37
+651582 write(37, "\17\0\0\0", 4)        = 4
+651582 write(37, "/0//6//cpu//0/0", 15) = 15
+651582 write(37, "\333\0\0\0", 4)       = 4
+651582 write(37, ";\0\0\0\0\0\0\0coder-eb48d962-76f4-4ff7"..., 219) = 219
+651582 socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 37
+651582 bind(37, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 37
+651582 bind(37, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 socket(AF_INET, SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_IP) = 40
+651582 setsockopt(40, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+651582 bind(40, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 listen(40, -1)                   = 0
+651582 getsockname(40, {sa_family=AF_INET, sin_port=htons(36407), sin_addr=inet_addr("10.42.1.238")}, [128 => 16]) = 0
+651582 socket(AF_NETLINK, SOCK_RAW|SOCK_CLOEXEC, NETLINK_ROUTE) = 41
+651582 bind(41, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 0
+651582 getsockname(41, {sa_family=AF_NETLINK, nl_pid=651582, nl_groups=00000000}, [12]) = 0
+651582 sendto(41, [{nlmsg_len=20, nlmsg_type=RTM_GETLINK, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1792087029, nlmsg_pid=0}, {ifi_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20
+651582 recvmsg(41, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[[{nlmsg_len=1488, nlmsg_type=RTM_NEWLINK, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, {ifi_family=AF_UNSPEC, ifi_type=ARPHRD_LOOPBACK, ifi_index=if_nametoindex("lo"), ifi_flags=IFF_UP|IFF_LOOPBACK|IFF_RUNNING|IFF_LOWER_UP, ifi_change=0}, [[{nla_len=7, nla_type=IFLA_IFNAME}, "lo"], [{nla_len=8, nla_type=IFLA_TXQLEN}, 1000], [{nla_len=5, nla_type=IFLA_OPERSTATE}, 0], [{nla_len=5, nla_type=IFLA_LINKMODE}, 0], [{nla_len=5, nla_type=0x43 /* IFLA_??? */}, "\x01"], [{nla_len=8, nla_type=IFLA_MTU}, 65536], [{nla_len=8, nla_type=IFLA_MIN_MTU}, 0], [{nla_len=8, nla_type=IFLA_MAX_MTU}, 0], [{nla_len=8, nla_type=IFLA_GROUP}, 0], [{nla_len=8, nla_type=IFLA_PROMISCUITY}, 0], [{nla_len=8, nla_type=IFLA_ALLMULTI}, 0], [{nla_len=8, nla_type=IFLA_NUM_TX_QUEUES}, 1], [{nla_len=8, nla_type=IFLA_GSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=IFLA_GSO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GSO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_TSO_MAX_SIZE}, 524280], [{nla_len=8, nla_type=IFLA_TSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=0x42 /* IFLA_??? */}, "\x00\x00\x00\x00"], [{nla_len=8, nla_type=IFLA_NUM_RX_QUEUES}, 1], [{nla_len=5, nla_type=IFLA_CARRIER}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_CHANGES}, 0], [{nla_len=8, nla_type=IFLA_CARRIER_UP_COUNT}, 0], [{nla_len=8, nla_type=IFLA_CARRIER_DOWN_COUNT}, 0], [{nla_len=6, nla_type=0x44 /* IFLA_??? */}, "\x00\x00"], [{nla_len=6, nla_type=0x45 /* IFLA_??? */}, "\x00\x00"], [{nla_len=5, nla_type=IFLA_PROTO_DOWN}, 0], [{nla_len=10, nla_type=IFLA_ADDRESS}, 00:00:00:00:00:00], [{nla_len=10, nla_type=IFLA_BROADCAST}, 00:00:00:00:00:00], [{nla_len=204, nla_type=IFLA_STATS64}, {rx_packets=28661680, tx_packets=28661680, rx_bytes=1666920931, tx_bytes=1666920931, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0, rx_otherhost_dropped=0}], [{nla_len=100, nla_type=IFLA_STATS}, {rx_packets=28661680, tx_packets=28661680, rx_bytes=1666920931, tx_bytes=1666920931, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0}], ...]], [{nlmsg_len=832, nlmsg_type=RTM_NEWLINK, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, {ifi_family=AF_UNSPEC, ifi_type=ARPHRD_ETHER, ifi_index=if_nametoindex("eth0"), ifi_flags=IFF_UP|IFF_BROADCAST|IFF_RUNNING|IFF_MULTICAST|IFF_LOWER_UP, ifi_change=0}, [[{nla_len=9, nla_type=IFLA_IFNAME}, "eth0"], [{nla_len=8, nla_type=IFLA_TXQLEN}, 1000], [{nla_len=5, nla_type=IFLA_OPERSTATE}, 6], [{nla_len=5, nla_type=IFLA_LINKMODE}, 0], [{nla_len=5, nla_type=0x43 /* IFLA_??? */}, "\x00"], [{nla_len=8, nla_type=IFLA_MTU}, 1230], [{nla_len=8, nla_type=IFLA_MIN_MTU}, 68], [{nla_len=8, nla_type=IFLA_MAX_MTU}, 65535], [{nla_len=8, nla_type=IFLA_GROUP}, 0], [{nla_len=8, nla_type=IFLA_PROMISCUITY}, 0], [{nla_len=8, nla_type=IFLA_ALLMULTI}, 0], [{nla_len=8, nla_type=IFLA_NUM_TX_QUEUES}, 24], [{nla_len=8, nla_type=IFLA_GSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=IFLA_GSO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GSO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_TSO_MAX_SIZE}, 524280], [{nla_len=8, nla_type=IFLA_TSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=0x42 /* IFLA_??? */}, "\x00\x00\x00\x00"], [{nla_len=8, nla_type=IFLA_NUM_RX_QUEUES}, 24], [{nla_len=5, nla_type=IFLA_CARRIER}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_CHANGES}, 2], [{nla_len=8, nla_type=IFLA_CARRIER_UP_COUNT}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_DOWN_COUNT}, 1], [{nla_len=6, nla_type=0x44 /* IFLA_??? */}, "\x00\x00"], [{nla_len=6, nla_type=0x45 /* IFLA_??? */}, "\x00\x00"], [{nla_len=5, nla_type=IFLA_PROTO_DOWN}, 0], [{nla_len=10, nla_type=IFLA_ADDRESS}, 26:3f:ff:a5:25:d2], [{nla_len=10, nla_type=IFLA_BROADCAST}, ff:ff:ff:ff:ff:ff], [{nla_len=204, nla_type=IFLA_STATS64}, {rx_packets=14605004, tx_packets=10874862, rx_bytes=109772950482, tx_bytes=1198972769, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0, rx_otherhost_dropped=23}], [{nla_len=100, nla_type=IFLA_STATS}, {rx_packets=14605004, tx_packets=10874862, rx_bytes=2398768082, tx_bytes=1198972769, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0}], ...]]], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 2320
+651582 recvmsg(41, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=20, nlmsg_type=NLMSG_DONE, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, 0], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 20
+651582 sendto(41, [{nlmsg_len=20, nlmsg_type=RTM_GETADDR, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1792087030, nlmsg_pid=0}, {ifa_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20
+651582 recvmsg(41, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[[{nlmsg_len=76, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=8, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("127.0.0.1")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("127.0.0.1")], [{nla_len=7, nla_type=IFA_LABEL}, "lo"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}]]], [{nlmsg_len=88, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=24, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_UNIVERSE, ifa_index=if_nametoindex("eth0")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_BROADCAST}, inet_addr("10.42.1.255")], [{nla_len=9, nla_type=IFA_LABEL}, "eth0"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626286, tstamp=8626286}]]], [{nlmsg_len=80, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET6, ifa_prefixlen=128, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=20, nla_type=IFA_ADDRESS}, inet_pton(AF_INET6, "::1")], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=5, nla_type=IFA_PROTO}, "\x01"]]]], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 244
+651582 recvmsg(41, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=20, nlmsg_type=NLMSG_DONE, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, 0], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 20
+651582 socket(AF_INET, SOCK_DGRAM, IPPROTO_IP) = 41
+651582 write(41, "\17\0\0\0", 4)        = 4
+651582 write(41, "/0//8//cpu//0/0", 15) = 15
+651582 write(41, "\333\0\0\0", 4)       = 4
+651582 write(41, ";\0\0\0\0\0\0\0coder-eb48d962-76f4-4ff7"..., 219) = 219
+651582 socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 41
+651582 bind(41, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 41
+651582 bind(41, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 socket(AF_INET, SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_IP) = 44
+651582 setsockopt(44, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+651582 bind(44, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 listen(44, -1)                   = 0
+651582 getsockname(44, {sa_family=AF_INET, sin_port=htons(38381), sin_addr=inet_addr("10.42.1.238")}, [128 => 16]) = 0
+651582 socket(AF_NETLINK, SOCK_RAW|SOCK_CLOEXEC, NETLINK_ROUTE) = 45
+651582 bind(45, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 0
+651582 getsockname(45, {sa_family=AF_NETLINK, nl_pid=651582, nl_groups=00000000}, [12]) = 0
+651582 sendto(45, [{nlmsg_len=20, nlmsg_type=RTM_GETLINK, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1792087029, nlmsg_pid=0}, {ifi_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20
+651582 recvmsg(45, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[[{nlmsg_len=1488, nlmsg_type=RTM_NEWLINK, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, {ifi_family=AF_UNSPEC, ifi_type=ARPHRD_LOOPBACK, ifi_index=if_nametoindex("lo"), ifi_flags=IFF_UP|IFF_LOOPBACK|IFF_RUNNING|IFF_LOWER_UP, ifi_change=0}, [[{nla_len=7, nla_type=IFLA_IFNAME}, "lo"], [{nla_len=8, nla_type=IFLA_TXQLEN}, 1000], [{nla_len=5, nla_type=IFLA_OPERSTATE}, 0], [{nla_len=5, nla_type=IFLA_LINKMODE}, 0], [{nla_len=5, nla_type=0x43 /* IFLA_??? */}, "\x01"], [{nla_len=8, nla_type=IFLA_MTU}, 65536], [{nla_len=8, nla_type=IFLA_MIN_MTU}, 0], [{nla_len=8, nla_type=IFLA_MAX_MTU}, 0], [{nla_len=8, nla_type=IFLA_GROUP}, 0], [{nla_len=8, nla_type=IFLA_PROMISCUITY}, 0], [{nla_len=8, nla_type=IFLA_ALLMULTI}, 0], [{nla_len=8, nla_type=IFLA_NUM_TX_QUEUES}, 1], [{nla_len=8, nla_type=IFLA_GSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=IFLA_GSO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GSO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_TSO_MAX_SIZE}, 524280], [{nla_len=8, nla_type=IFLA_TSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=0x42 /* IFLA_??? */}, "\x00\x00\x00\x00"], [{nla_len=8, nla_type=IFLA_NUM_RX_QUEUES}, 1], [{nla_len=5, nla_type=IFLA_CARRIER}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_CHANGES}, 0], [{nla_len=8, nla_type=IFLA_CARRIER_UP_COUNT}, 0], [{nla_len=8, nla_type=IFLA_CARRIER_DOWN_COUNT}, 0], [{nla_len=6, nla_type=0x44 /* IFLA_??? */}, "\x00\x00"], [{nla_len=6, nla_type=0x45 /* IFLA_??? */}, "\x00\x00"], [{nla_len=5, nla_type=IFLA_PROTO_DOWN}, 0], [{nla_len=10, nla_type=IFLA_ADDRESS}, 00:00:00:00:00:00], [{nla_len=10, nla_type=IFLA_BROADCAST}, 00:00:00:00:00:00], [{nla_len=204, nla_type=IFLA_STATS64}, {rx_packets=28661680, tx_packets=28661680, rx_bytes=1666920931, tx_bytes=1666920931, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0, rx_otherhost_dropped=0}], [{nla_len=100, nla_type=IFLA_STATS}, {rx_packets=28661680, tx_packets=28661680, rx_bytes=1666920931, tx_bytes=1666920931, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0}], ...]], [{nlmsg_len=832, nlmsg_type=RTM_NEWLINK, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, {ifi_family=AF_UNSPEC, ifi_type=ARPHRD_ETHER, ifi_index=if_nametoindex("eth0"), ifi_flags=IFF_UP|IFF_BROADCAST|IFF_RUNNING|IFF_MULTICAST|IFF_LOWER_UP, ifi_change=0}, [[{nla_len=9, nla_type=IFLA_IFNAME}, "eth0"], [{nla_len=8, nla_type=IFLA_TXQLEN}, 1000], [{nla_len=5, nla_type=IFLA_OPERSTATE}, 6], [{nla_len=5, nla_type=IFLA_LINKMODE}, 0], [{nla_len=5, nla_type=0x43 /* IFLA_??? */}, "\x00"], [{nla_len=8, nla_type=IFLA_MTU}, 1230], [{nla_len=8, nla_type=IFLA_MIN_MTU}, 68], [{nla_len=8, nla_type=IFLA_MAX_MTU}, 65535], [{nla_len=8, nla_type=IFLA_GROUP}, 0], [{nla_len=8, nla_type=IFLA_PROMISCUITY}, 0], [{nla_len=8, nla_type=IFLA_ALLMULTI}, 0], [{nla_len=8, nla_type=IFLA_NUM_TX_QUEUES}, 24], [{nla_len=8, nla_type=IFLA_GSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=IFLA_GSO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GSO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_TSO_MAX_SIZE}, 524280], [{nla_len=8, nla_type=IFLA_TSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=0x42 /* IFLA_??? */}, "\x00\x00\x00\x00"], [{nla_len=8, nla_type=IFLA_NUM_RX_QUEUES}, 24], [{nla_len=5, nla_type=IFLA_CARRIER}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_CHANGES}, 2], [{nla_len=8, nla_type=IFLA_CARRIER_UP_COUNT}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_DOWN_COUNT}, 1], [{nla_len=6, nla_type=0x44 /* IFLA_??? */}, "\x00\x00"], [{nla_len=6, nla_type=0x45 /* IFLA_??? */}, "\x00\x00"], [{nla_len=5, nla_type=IFLA_PROTO_DOWN}, 0], [{nla_len=10, nla_type=IFLA_ADDRESS}, 26:3f:ff:a5:25:d2], [{nla_len=10, nla_type=IFLA_BROADCAST}, ff:ff:ff:ff:ff:ff], [{nla_len=204, nla_type=IFLA_STATS64}, {rx_packets=14605004, tx_packets=10874862, rx_bytes=109772950482, tx_bytes=1198972769, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0, rx_otherhost_dropped=23}], [{nla_len=100, nla_type=IFLA_STATS}, {rx_packets=14605004, tx_packets=10874862, rx_bytes=2398768082, tx_bytes=1198972769, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0}], ...]]], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 2320
+651582 recvmsg(45, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=20, nlmsg_type=NLMSG_DONE, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, 0], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 20
+651582 sendto(45, [{nlmsg_len=20, nlmsg_type=RTM_GETADDR, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1792087030, nlmsg_pid=0}, {ifa_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20
+651582 recvmsg(45, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[[{nlmsg_len=76, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=8, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("127.0.0.1")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("127.0.0.1")], [{nla_len=7, nla_type=IFA_LABEL}, "lo"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}]]], [{nlmsg_len=88, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=24, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_UNIVERSE, ifa_index=if_nametoindex("eth0")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_BROADCAST}, inet_addr("10.42.1.255")], [{nla_len=9, nla_type=IFA_LABEL}, "eth0"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626286, tstamp=8626286}]]], [{nlmsg_len=80, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET6, ifa_prefixlen=128, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=20, nla_type=IFA_ADDRESS}, inet_pton(AF_INET6, "::1")], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=5, nla_type=IFA_PROTO}, "\x01"]]]], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 244
+651582 recvmsg(45, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=20, nlmsg_type=NLMSG_DONE, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, 0], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 20
+651582 socket(AF_INET, SOCK_DGRAM, IPPROTO_IP) = 45
+651582 write(45, "\20\0\0\0", 4)        = 4
+651582 write(45, "/0//10//cpu//0/0", 16) = 16
+651582 write(45, "\333\0\0\0", 4)       = 4
+651582 write(45, ";\0\0\0\0\0\0\0coder-eb48d962-76f4-4ff7"..., 219) = 219
+651582 socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 45
+651582 bind(45, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 45
+651582 bind(45, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 socket(AF_INET, SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_IP) = 48
+651582 setsockopt(48, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+651582 bind(48, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.42.1.238")}, 16) = 0
+651582 listen(48, -1)                   = 0
+651582 getsockname(48, {sa_family=AF_INET, sin_port=htons(35697), sin_addr=inet_addr("10.42.1.238")}, [128 => 16]) = 0
+651582 socket(AF_NETLINK, SOCK_RAW|SOCK_CLOEXEC, NETLINK_ROUTE) = 49
+651582 bind(49, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 0
+651582 getsockname(49, {sa_family=AF_NETLINK, nl_pid=651582, nl_groups=00000000}, [12]) = 0
+651582 sendto(49, [{nlmsg_len=20, nlmsg_type=RTM_GETLINK, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1792087029, nlmsg_pid=0}, {ifi_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20
+651582 recvmsg(49, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[[{nlmsg_len=1488, nlmsg_type=RTM_NEWLINK, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, {ifi_family=AF_UNSPEC, ifi_type=ARPHRD_LOOPBACK, ifi_index=if_nametoindex("lo"), ifi_flags=IFF_UP|IFF_LOOPBACK|IFF_RUNNING|IFF_LOWER_UP, ifi_change=0}, [[{nla_len=7, nla_type=IFLA_IFNAME}, "lo"], [{nla_len=8, nla_type=IFLA_TXQLEN}, 1000], [{nla_len=5, nla_type=IFLA_OPERSTATE}, 0], [{nla_len=5, nla_type=IFLA_LINKMODE}, 0], [{nla_len=5, nla_type=0x43 /* IFLA_??? */}, "\x01"], [{nla_len=8, nla_type=IFLA_MTU}, 65536], [{nla_len=8, nla_type=IFLA_MIN_MTU}, 0], [{nla_len=8, nla_type=IFLA_MAX_MTU}, 0], [{nla_len=8, nla_type=IFLA_GROUP}, 0], [{nla_len=8, nla_type=IFLA_PROMISCUITY}, 0], [{nla_len=8, nla_type=IFLA_ALLMULTI}, 0], [{nla_len=8, nla_type=IFLA_NUM_TX_QUEUES}, 1], [{nla_len=8, nla_type=IFLA_GSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=IFLA_GSO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GSO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_TSO_MAX_SIZE}, 524280], [{nla_len=8, nla_type=IFLA_TSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=0x42 /* IFLA_??? */}, "\x00\x00\x00\x00"], [{nla_len=8, nla_type=IFLA_NUM_RX_QUEUES}, 1], [{nla_len=5, nla_type=IFLA_CARRIER}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_CHANGES}, 0], [{nla_len=8, nla_type=IFLA_CARRIER_UP_COUNT}, 0], [{nla_len=8, nla_type=IFLA_CARRIER_DOWN_COUNT}, 0], [{nla_len=6, nla_type=0x44 /* IFLA_??? */}, "\x00\x00"], [{nla_len=6, nla_type=0x45 /* IFLA_??? */}, "\x00\x00"], [{nla_len=5, nla_type=IFLA_PROTO_DOWN}, 0], [{nla_len=10, nla_type=IFLA_ADDRESS}, 00:00:00:00:00:00], [{nla_len=10, nla_type=IFLA_BROADCAST}, 00:00:00:00:00:00], [{nla_len=204, nla_type=IFLA_STATS64}, {rx_packets=28661680, tx_packets=28661680, rx_bytes=1666920931, tx_bytes=1666920931, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0, rx_otherhost_dropped=0}], [{nla_len=100, nla_type=IFLA_STATS}, {rx_packets=28661680, tx_packets=28661680, rx_bytes=1666920931, tx_bytes=1666920931, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0}], ...]], [{nlmsg_len=832, nlmsg_type=RTM_NEWLINK, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, {ifi_family=AF_UNSPEC, ifi_type=ARPHRD_ETHER, ifi_index=if_nametoindex("eth0"), ifi_flags=IFF_UP|IFF_BROADCAST|IFF_RUNNING|IFF_MULTICAST|IFF_LOWER_UP, ifi_change=0}, [[{nla_len=9, nla_type=IFLA_IFNAME}, "eth0"], [{nla_len=8, nla_type=IFLA_TXQLEN}, 1000], [{nla_len=5, nla_type=IFLA_OPERSTATE}, 6], [{nla_len=5, nla_type=IFLA_LINKMODE}, 0], [{nla_len=5, nla_type=0x43 /* IFLA_??? */}, "\x00"], [{nla_len=8, nla_type=IFLA_MTU}, 1230], [{nla_len=8, nla_type=IFLA_MIN_MTU}, 68], [{nla_len=8, nla_type=IFLA_MAX_MTU}, 65535], [{nla_len=8, nla_type=IFLA_GROUP}, 0], [{nla_len=8, nla_type=IFLA_PROMISCUITY}, 0], [{nla_len=8, nla_type=IFLA_ALLMULTI}, 0], [{nla_len=8, nla_type=IFLA_NUM_TX_QUEUES}, 24], [{nla_len=8, nla_type=IFLA_GSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=IFLA_GSO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GSO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_GRO_IPV4_MAX_SIZE}, 65536], [{nla_len=8, nla_type=IFLA_TSO_MAX_SIZE}, 524280], [{nla_len=8, nla_type=IFLA_TSO_MAX_SEGS}, 65535], [{nla_len=8, nla_type=0x42 /* IFLA_??? */}, "\x00\x00\x00\x00"], [{nla_len=8, nla_type=IFLA_NUM_RX_QUEUES}, 24], [{nla_len=5, nla_type=IFLA_CARRIER}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_CHANGES}, 2], [{nla_len=8, nla_type=IFLA_CARRIER_UP_COUNT}, 1], [{nla_len=8, nla_type=IFLA_CARRIER_DOWN_COUNT}, 1], [{nla_len=6, nla_type=0x44 /* IFLA_??? */}, "\x00\x00"], [{nla_len=6, nla_type=0x45 /* IFLA_??? */}, "\x00\x00"], [{nla_len=5, nla_type=IFLA_PROTO_DOWN}, 0], [{nla_len=10, nla_type=IFLA_ADDRESS}, 26:3f:ff:a5:25:d2], [{nla_len=10, nla_type=IFLA_BROADCAST}, ff:ff:ff:ff:ff:ff], [{nla_len=204, nla_type=IFLA_STATS64}, {rx_packets=14605004, tx_packets=10874862, rx_bytes=109772950482, tx_bytes=1198972769, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0, rx_otherhost_dropped=23}], [{nla_len=100, nla_type=IFLA_STATS}, {rx_packets=14605004, tx_packets=10874862, rx_bytes=2398768082, tx_bytes=1198972769, rx_errors=0, tx_errors=0, rx_dropped=0, tx_dropped=0, multicast=0, collisions=0, rx_length_errors=0, rx_over_errors=0, rx_crc_errors=0, rx_frame_errors=0, rx_fifo_errors=0, rx_missed_errors=0, tx_aborted_errors=0, tx_carrier_errors=0, tx_fifo_errors=0, tx_heartbeat_errors=0, tx_window_errors=0, rx_compressed=0, tx_compressed=0, rx_nohandler=0}], ...]]], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 2320
+651582 recvmsg(49, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=20, nlmsg_type=NLMSG_DONE, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087029, nlmsg_pid=651582}, 0], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 20
+651582 sendto(49, [{nlmsg_len=20, nlmsg_type=RTM_GETADDR, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1792087030, nlmsg_pid=0}, {ifa_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20
+651582 recvmsg(49, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[[{nlmsg_len=76, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=8, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("127.0.0.1")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("127.0.0.1")], [{nla_len=7, nla_type=IFA_LABEL}, "lo"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}]]], [{nlmsg_len=88, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=24, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_UNIVERSE, ifa_index=if_nametoindex("eth0")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_BROADCAST}, inet_addr("10.42.1.255")], [{nla_len=9, nla_type=IFA_LABEL}, "eth0"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626286, tstamp=8626286}]]], [{nlmsg_len=80, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, {ifa_family=AF_INET6, ifa_prefixlen=128, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=20, nla_type=IFA_ADDRESS}, inet_pton(AF_INET6, "::1")], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=5, nla_type=IFA_PROTO}, "\x01"]]]], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 244
+651582 recvmsg(49, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=20, nlmsg_type=NLMSG_DONE, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087030, nlmsg_pid=651582}, 0], iov_len=8192}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 20
+651582 socket(AF_INET, SOCK_DGRAM, IPPROTO_IP) = 49
+651582 write(49, "\20\0\0\0", 4)        = 4
+651582 write(49, "/0//12//cpu//0/0", 16) = 16
+651582 write(49, "\333\0\0\0", 4)       = 4
+651582 write(49, ";\0\0\0\0\0\0\0coder-eb48d962-76f4-4ff7"..., 219) = 219
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 192) = 192
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 87) = 87
+651582 write(23, "\1\0\0\0\0\0\0\0", 8) = 8
+651582 write(23, "\1\0\0\0\0\0\0\0", 8) = 8
+651582 write(23, "\1\0\0\0\0\0\0\0", 8) = 8
+651582 write(23, "\1\0\0\0\0\0\0\0", 8) = 8
+651582 write(23, "\1\0\0\0\0\0\0\0", 8) = 8
+651582 write(23, "\1\0\0\0\0\0\0\0", 8) = 8
+651582 write(23, "\1\0\0\0\0\0\0\0", 8) = 8
+651582 write(23, "\1\0\0\0\0\0\0\0", 8) = 8
+651582 write(63, "cuda-EvtHandlr", 14)  = 14
+651582 write(65, "\1\0\0\0\0\0\0\0", 8) = 8
+651582 write(23, "\1\0\0\0\0\0\0\0", 8) = 8
+651653 write(3, "blat", 4)              = 4
+651582 write(23, "\1\0\0\0\0\0\0\0", 8) = 8
+651738 write(1, "326 libs found in cache `/etc/ld"..., 4096) = 4096
+651738 write(1, "5 (libc6,x86-64) => /lib/x86_64-"..., 4096) = 4096
+651738 write(1, "-linux-gnu/libnvidia-gpucomp.so."..., 4096) = 4096
+651738 write(1, "ts/x86_64-linux/lib/libnppicc.so"..., 4096) = 4096
+651738 write(1, " => /lib/x86_64-linux-gnu/libgpg"..., 4096) = 4096
+651738 write(1, "ebugger.so.1 (libc6,x86-64) => /"..., 4096) = 4096
+651738 write(1, "lib/x86_64-linux-gnu/ld-linux-x8"..., 130) = 130
+651738 +++ exited with 0 +++
+651651 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651738, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 97) = 97
+651651 write(3, "blat", 4)              = 4
+651741 write(1, "nvcc: NVIDIA (R) Cuda compiler d"..., 211) = 211
+651741 +++ exited with 0 +++
+651582 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651741, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651742 write(7, "OSError:", 8)          = 8
+651742 write(7, "2", 1)                 = 1
+651742 write(7, ":", 1)                 = 1
+651742 write(7, "", 0)                  = 0
+651742 +++ exited with 255 +++
+651740 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651742, si_uid=0, si_status=255, si_utime=0, si_stime=0} ---
+651743 write(1, "x86_64\n", 7)          = 7
+651743 +++ exited with 0 +++
+651740 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651743, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651744 write(1, "processor\t: 0\nvendor_id\t: Genuin"..., 3586) = 3586
+651744 write(1, "processor\t: 2\nvendor_id\t: Genuin"..., 3592) = 3592
+651744 write(1, "processor\t: 4\nvendor_id\t: Genuin"..., 3592) = 3592
+651744 write(1, "processor\t: 6\nvendor_id\t: Genuin"..., 3592) = 3592
+651744 write(1, "processor\t: 8\nvendor_id\t: Genuin"..., 3590) = 3590
+651744 write(1, "processor\t: 10\nvendor_id\t: Genui"..., 3594) = 3594
+651744 write(1, "processor\t: 12\nvendor_id\t: Genui"..., 3594) = 3594
+651744 write(1, "processor\t: 14\nvendor_id\t: Genui"..., 3594) = 3594
+651744 write(1, "processor\t: 16\nvendor_id\t: Genui"..., 3594) = 3594
+651744 write(1, "processor\t: 18\nvendor_id\t: Genui"..., 3594) = 3594
+651744 write(1, "processor\t: 20\nvendor_id\t: Genui"..., 3594) = 3594
+651744 write(1, "processor\t: 22\nvendor_id\t: Genui"..., 3594) = 3594
+651744 +++ exited with 0 +++
+651740 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651744, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651745 --- SIGSEGV {si_signo=SIGSEGV, si_code=SI_KERNEL, si_addr=NULL} ---
+651745 write(1, "Architecture:                   "..., 3753) = 3753
+651745 +++ exited with 0 +++
+651740 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651745, si_uid=0, si_status=0, si_utime=0, si_stime=1 /* 0.01 s */} ---
+651746 write(2, "sysctl: ", 8)          = 8
+651746 write(2, "cannot stat /proc/sys/machdep/cp"..., 33) = 33
+651746 write(2, ": No such file or directory", 27) = 27
+651746 write(2, "\n", 1)                = 1
+651746 write(2, "sysctl: ", 8)          = 8
+651746 write(2, "cannot stat /proc/sys/hw/cpufreq"..., 37) = 37
+651746 write(2, ": No such file or directory", 27) = 27
+651746 write(2, "\n", 1)                = 1
+651746 +++ exited with 2 +++
+651740 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651746, si_uid=0, si_status=2, si_utime=0, si_stime=0} ---
+651747 write(2, "dmesg: invalid option -- 'a'\n", 29) = 29
+651747 write(2, "Try 'dmesg --help' for more info"..., 41) = 41
+651747 +++ exited with 1 +++
+651740 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651747, si_uid=0, si_status=1, si_utime=0, si_stime=0} ---
+651740 write(5, "\1\0\0\0\0\0\0\0\200\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 32) = 32
+651740 write(5, "\1\0\0\0\0\0\0\0\200\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 32) = 32
+651740 write(5, "\377\377\377\177\0\0\0\0\200\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 32) = 32
+651750 write(4, "\0\0\6.\200\4\225#\6\0\0\0\0\0\0X\34\6\0\0gASViQQAAAAA"..., 1586) = 1586
+651750 +++ exited with 0 +++
+651748 +++ exited with 0 +++
+651740 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651748, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651740 write(1, "{\"python_version\": \"3.12.3.final"..., 2079) = 2079
+651740 write(1, "\n", 1)                = 1
+651740 +++ exited with 0 +++
+651739 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651740, si_uid=0, si_status=0, si_utime=6 /* 0.06 s */, si_stime=3 /* 0.03 s */} ---
+651739 write(69, "{\"uuid\": \"eae5dd56-8556-44d5-a93"..., 1505) = 1505
+651739 socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC|SOCK_NONBLOCK, IPPROTO_IP) = 69
+651739 setsockopt(69, SOL_IP, IP_RECVERR, [1], 4) = 0
+651739 connect(69, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, 16) = 0
+651739 sendmmsg(69, [{msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="&I\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\5coder"..., iov_len=55}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=55}, {msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="\27O\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\5coder"..., iov_len=55}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=55}], 2, MSG_NOSIGNAL) = 2
+651739 recvfrom(69, "\27O\205\3\0\1\0\0\0\1\0\0\5stats\4vllm\2ai\5coder"..., 2048, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 148
+651739 recvfrom(69, "&I\205\3\0\1\0\0\0\1\0\0\5stats\4vllm\2ai\5coder"..., 65536, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 148
+651739 socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC|SOCK_NONBLOCK, IPPROTO_IP) = 69
+651739 setsockopt(69, SOL_IP, IP_RECVERR, [1], 4) = 0
+651739 connect(69, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, 16) = 0
+651739 sendmmsg(69, [{msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="\32\301\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\3svc\7c"..., iov_len=49}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=49}, {msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="`\336\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\3svc\7c"..., iov_len=49}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=49}], 2, MSG_NOSIGNAL) = 2
+651739 recvfrom(69, "\32\301\205\3\0\1\0\0\0\1\0\0\5stats\4vllm\2ai\3svc\7c"..., 2048, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 142
+651739 recvfrom(69, "`\336\205\3\0\1\0\0\0\1\0\0\5stats\4vllm\2ai\3svc\7c"..., 65536, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 142
+651739 socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC|SOCK_NONBLOCK, IPPROTO_IP) = 69
+651739 setsockopt(69, SOL_IP, IP_RECVERR, [1], 4) = 0
+651739 connect(69, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, 16) = 0
+651739 sendmmsg(69, [{msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="Q\37\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\7clust"..., iov_len=45}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=45}, {msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="x\35\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\7clust"..., iov_len=45}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=45}], 2, MSG_NOSIGNAL) = 2
+651739 recvfrom(69, "Q\37\205\3\0\1\0\0\0\1\0\0\5stats\4vllm\2ai\7clust"..., 2048, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 138
+651739 recvfrom(69, "x\35\205\3\0\1\0\0\0\1\0\0\5stats\4vllm\2ai\7clust"..., 65536, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 138
+651739 socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC|SOCK_NONBLOCK, IPPROTO_IP) = 69
+651739 setsockopt(69, SOL_IP, IP_RECVERR, [1], 4) = 0
+651739 connect(69, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, 16) = 0
+651739 sendmmsg(69, [{msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="\311S\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\4ucsc\3"..., iov_len=40}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=40}, {msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="\274]\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\4ucsc\3"..., iov_len=40}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=40}], 2, MSG_NOSIGNAL) = 2
+651739 recvfrom(69, "\274]\201\203\0\1\0\0\0\1\0\0\5stats\4vllm\2ai\4ucsc\3"..., 2048, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 117
+651739 recvfrom(69, "\311S\201\203\0\1\0\0\0\1\0\0\5stats\4vllm\2ai\4ucsc\3"..., 65536, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 117
+651739 socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC|SOCK_NONBLOCK, IPPROTO_IP) = 69
+651739 setsockopt(69, SOL_IP, IP_RECVERR, [1], 4) = 0
+651739 connect(69, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, 16) = 0
+651739 sendmmsg(69, [{msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="iE\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\3soe\4u"..., iov_len=44}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=44}, {msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="5C\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\3soe\4u"..., iov_len=44}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=44}], 2, MSG_NOSIGNAL) = 2
+651739 recvfrom(69, "5C\201\203\0\1\0\0\0\1\0\0\5stats\4vllm\2ai\3soe\4u"..., 2048, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 134
+651739 recvfrom(69, "iE\201\203\0\1\0\0\0\1\0\0\5stats\4vllm\2ai\3soe\4u"..., 65536, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 134
+651739 socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC|SOCK_NONBLOCK, IPPROTO_IP) = 69
+651739 setsockopt(69, SOL_IP, IP_RECVERR, [1], 4) = 0
+651739 connect(69, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, 16) = 0
+651739 sendmmsg(69, [{msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="\32\330\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\ntail3"..., iov_len=49}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=49}, {msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="r\332\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\ntail3"..., iov_len=49}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=49}], 2, MSG_NOSIGNAL) = 2
+651739 recvfrom(69, "r\332\205\203\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\ntail3"..., 2048, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 49
+651739 recvfrom(69, "\32\330\205\203\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\ntail3"..., 65536, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 49
+651739 socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC|SOCK_NONBLOCK, IPPROTO_IP) = 69
+651739 setsockopt(69, SOL_IP, IP_RECVERR, [1], 4) = 0
+651739 connect(69, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, 16) = 0
+651739 sendmmsg(69, [{msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="\263\316\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\0\0\1\0\1", iov_len=31}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=31}, {msg_hdr={msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="W\317\1\0\0\1\0\0\0\0\0\0\5stats\4vllm\2ai\0\0\34\0\1", iov_len=31}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=31}], 2, MSG_NOSIGNAL) = 2
+651739 recvfrom(69, "W\317\201\200\0\1\0\2\0\0\0\0\5stats\4vllm\2ai\0\0\34\0\1\5"..., 2048, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 113
+651739 recvfrom(69, "\263\316\201\200\0\1\0\2\0\0\0\0\5stats\4vllm\2ai\0\0\1\0\1\5"..., 65536, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("10.43.0.10")}, [28 => 16]) = 89
+651739 socket(AF_NETLINK, SOCK_RAW|SOCK_CLOEXEC, NETLINK_ROUTE) = 69
+651739 bind(69, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 0
+651739 getsockname(69, {sa_family=AF_NETLINK, nl_pid=651582, nl_groups=00000000}, [12]) = 0
+651739 sendto(69, [{nlmsg_len=20, nlmsg_type=RTM_GETADDR, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1792087039, nlmsg_pid=0}, {ifa_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20
+651739 recvmsg(69, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[[{nlmsg_len=76, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087039, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=8, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("127.0.0.1")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("127.0.0.1")], [{nla_len=7, nla_type=IFA_LABEL}, "lo"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}]]], [{nlmsg_len=88, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087039, nlmsg_pid=651582}, {ifa_family=AF_INET, ifa_prefixlen=24, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_UNIVERSE, ifa_index=if_nametoindex("eth0")}, [[{nla_len=8, nla_type=IFA_ADDRESS}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_LOCAL}, inet_addr("10.42.1.238")], [{nla_len=8, nla_type=IFA_BROADCAST}, inet_addr("10.42.1.255")], [{nla_len=9, nla_type=IFA_LABEL}, "eth0"], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626286, tstamp=8626286}]]], [{nlmsg_len=80, nlmsg_type=RTM_NEWADDR, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087039, nlmsg_pid=651582}, {ifa_family=AF_INET6, ifa_prefixlen=128, ifa_flags=IFA_F_PERMANENT, ifa_scope=RT_SCOPE_HOST, ifa_index=if_nametoindex("lo")}, [[{nla_len=20, nla_type=IFA_ADDRESS}, inet_pton(AF_INET6, "::1")], [{nla_len=20, nla_type=IFA_CACHEINFO}, {ifa_prefered=4294967295, ifa_valid=4294967295, cstamp=8626285, tstamp=8626285}], [{nla_len=8, nla_type=IFA_FLAGS}, IFA_F_PERMANENT], [{nla_len=5, nla_type=IFA_PROTO}, "\x01"]]]], iov_len=4096}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 244
+651739 recvmsg(69, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=20, nlmsg_type=NLMSG_DONE, nlmsg_flags=NLM_F_MULTI, nlmsg_seq=1792087039, nlmsg_pid=651582}, 0], iov_len=4096}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 20
+651739 socket(AF_INET6, SOCK_DGRAM|SOCK_CLOEXEC, IPPROTO_IP) = 69
+651739 connect(69, {sa_family=AF_INET6, sin6_port=htons(443), sin6_flowinfo=htonl(0), inet_pton(AF_INET6, "2606:4700:3032::6815:58f5", &sin6_addr), sin6_scope_id=0}, 28) = -1 ENETUNREACH (Network is unreachable)
+651739 connect(69, {sa_family=AF_UNSPEC, sa_data="\0\0\0\0\0\0\0\0\0\0\0\0\0\0"}, 16) = 0
+651739 connect(69, {sa_family=AF_INET6, sin6_port=htons(443), sin6_flowinfo=htonl(0), inet_pton(AF_INET6, "2606:4700:3030::ac43:9a7f", &sin6_addr), sin6_scope_id=0}, 28) = -1 ENETUNREACH (Network is unreachable)
+651739 connect(69, {sa_family=AF_UNSPEC, sa_data="\0\0\0\0\0\0\0\0\0\0\0\0\0\0"}, 16) = 0
+651739 connect(69, {sa_family=AF_INET, sin_port=htons(443), sin_addr=inet_addr("172.67.154.127")}, 16) = 0
+651739 getsockname(69, {sa_family=AF_INET6, sin6_port=htons(47081), sin6_flowinfo=htonl(0), inet_pton(AF_INET6, "::ffff:10.42.1.238", &sin6_addr), sin6_scope_id=0}, [28]) = 0
+651739 connect(69, {sa_family=AF_UNSPEC, sa_data="\0\0\0\0\0\0\0\0\0\0\0\0\0\0"}, 16) = 0
+651739 connect(69, {sa_family=AF_INET, sin_port=htons(443), sin_addr=inet_addr("104.21.88.245")}, 16) = 0
+651739 getsockname(69, {sa_family=AF_INET6, sin6_port=htons(56479), sin6_flowinfo=htonl(0), inet_pton(AF_INET6, "::ffff:10.42.1.238", &sin6_addr), sin6_scope_id=0}, [28]) = 0
+651739 socket(AF_INET, SOCK_STREAM|SOCK_CLOEXEC, IPPROTO_TCP) = 69
+651739 setsockopt(69, SOL_TCP, TCP_NODELAY, [1], 4) = 0
+651739 connect(69, {sa_family=AF_INET, sin_port=htons(443), sin_addr=inet_addr("172.67.154.127")}, 16) = 0
+651739 getsockopt(69, SOL_SOCKET, SO_TYPE, [1], [4]) = 0
+651739 getsockname(69, {sa_family=AF_INET, sin_port=htons(33034), sin_addr=inet_addr("10.42.1.238")}, [128 => 16]) = 0
+651739 getpeername(69, {sa_family=AF_INET, sin_port=htons(443), sin_addr=inet_addr("172.67.154.127")}, [16]) = 0
+651739 setsockopt(69, SOL_TCP, TCP_ULP, [7564404], 4) = 0
+651739 write(69, "\26\3\1\2\0\1\0\1\374\3\3\217\7\260\351!m\24\331\274c\1\6\256\351\30\222\212\2479\t\246"..., 517) = 517
+651739 write(69, "\24\3\3\0\1\1\27\3\3\0EKAS\220\260SJ%\320\306\230F\2408\370Bw\376\20\235\270"..., 80) = 80
+651739 write(69, "\27\3\3\0\330T\244\227\357\361\373\237\245j<\r\343\301i\20\336\6QDs\356S\3R\373\315\243"..., 221) = 221
+651739 write(69, "\27\3\3\5\361\204-\371\267?D\227\276\241\376\357d\254\247\0006z\343S\247l\3\206\355\0\25_"..., 1526) = 1526
+651653 write(9, "cuda00001800007", 15)  = 15
+651653 write(4, "\1\0\0\0\0\0\0\0", 8)  = 8
+651760 write(1, "ptxas: NVIDIA (R) Ptx optimizing"..., 43) = 43
+651760 write(1, "Copyright (c) 2005-2025 NVIDIA C"..., 43) = 43
+651760 write(1, "Built on Wed_Aug_20_01:55:12_PM_"..., 41) = 41
+651760 write(1, "Cuda compilation tools, release "..., 88) = 88
+651760 write(1, "\n", 1)                = 1
+651760 +++ exited with 0 +++
+651587 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651760, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 184) = 184
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 97) = 97
+651582 write(2, "<frozen importlib._bootstrap_ext"..., 201) = 201
+651582 write(2, "<frozen importlib._bootstrap_ext"..., 198) = 198
+651651 write(9, "cuda00001800007", 15)  = 15
+651651 write(4, "\1\0\0\0\0\0\0\0", 8)  = 8
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 160) = 160
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 257) = 257
+651582 write(69, "\1\0\0\0\0\0\0\0\200\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 32) = 32
+651582 write(2, "\rLoading safetensors checkpoint "..., 78) = 78
+651582 write(2, "\rLoading safetensors checkpoint "..., 86) = 86
+651582 write(2, "", 0)                  = 0
+651582 write(2, "\rLoading safetensors checkpoint "..., 86) = 86
+651582 write(2, "\n", 1)                = 1
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 103) = 103
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 124) = 124
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 117) = 117
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 176) = 176
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 89) = 89
+651582 write(1, "{\"event\": \"vllm_protocol_cache\","..., 2516) = 2516
+651582 write(1, "\n", 1)                = 1
+651656 +++ exited with 0 +++
+651659 +++ exited with 0 +++
+651660 +++ exited with 0 +++
+651662 +++ exited with 0 +++
+651667 +++ exited with 0 +++
+651666 +++ exited with 0 +++
+651655 +++ exited with 0 +++
+651669 +++ exited with 0 +++
+651665 +++ exited with 0 +++
+651670 +++ exited with 0 +++
+651672 +++ exited with 0 +++
+651663 +++ exited with 0 +++
+651658 +++ exited with 0 +++
+651657 +++ exited with 0 +++
+651664 +++ exited with 0 +++
+651661 +++ exited with 0 +++
+651676 +++ exited with 0 +++
+651673 +++ exited with 0 +++
+651677 +++ exited with 0 +++
+651675 +++ exited with 0 +++
+651668 +++ exited with 0 +++
+651674 +++ exited with 0 +++
+651671 +++ exited with 0 +++
+651759 +++ exited with 0 +++
+651653 +++ exited with 0 +++
+651736 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651653, si_uid=0, si_status=0, si_utime=413 /* 4.13 s */, si_stime=80 /* 0.80 s */} ---
+651654 +++ exited with 0 +++
+651798 write(1, "326 libs found in cache `/etc/ld"..., 4096) = 4096
+651798 write(1, "5 (libc6,x86-64) => /lib/x86_64-"..., 4096) = 4096
+651798 write(1, "-linux-gnu/libnvidia-gpucomp.so."..., 4096) = 4096
+651798 write(1, "ts/x86_64-linux/lib/libnppicc.so"..., 4096) = 4096
+651798 write(1, " => /lib/x86_64-linux-gnu/libgpg"..., 4096) = 4096
+651798 write(1, "ebugger.so.1 (libc6,x86-64) => /"..., 4096) = 4096
+651798 write(1, "lib/x86_64-linux-gnu/ld-linux-x8"..., 130) = 130
+651798 +++ exited with 0 +++
+651795 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651798, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651800 write(1, "326 libs found in cache `/etc/ld"..., 4096) = 4096
+651800 write(1, "5 (libc6,x86-64) => /lib/x86_64-"..., 4096) = 4096
+651800 write(1, "-linux-gnu/libnvidia-gpucomp.so."..., 4096) = 4096
+651801 write(81, "OSError:", 8)         = 8
+651800 write(1, "ts/x86_64-linux/lib/libnppicc.so"..., 4096 <unfinished ...>
+651801 write(81, "2", 1 <unfinished ...>
+651800 <... write resumed>)             = 4096
+651800 write(1, " => /lib/x86_64-linux-gnu/libgpg"..., 4096) = 4096
+651801 <... write resumed>)             = 1
+651800 write(1, "ebugger.so.1 (libc6,x86-64) => /"..., 4096 <unfinished ...>
+651801 write(81, ":", 1)                = 1
+651800 <... write resumed>)             = 4096
+651801 write(81, "", 0)                 = 0
+651801 +++ exited with 255 +++
+651587 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651801, si_uid=0, si_status=255, si_utime=0, si_stime=0} ---
+651800 write(1, "lib/x86_64-linux-gnu/ld-linux-x8"..., 130) = 130
+651800 +++ exited with 0 +++
+651795 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651800, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651799 write(1, "326 libs found in cache `/etc/ld"..., 4096) = 4096
+651799 write(1, "5 (libc6,x86-64) => /lib/x86_64-"..., 4096) = 4096
+651799 write(1, "-linux-gnu/libnvidia-gpucomp.so."..., 4096) = 4096
+651799 write(1, "ts/x86_64-linux/lib/libnppicc.so"..., 4096) = 4096
+651799 write(1, " => /lib/x86_64-linux-gnu/libgpg"..., 4096) = 4096
+651799 write(1, "ebugger.so.1 (libc6,x86-64) => /"..., 4096) = 4096
+651799 write(1, "lib/x86_64-linux-gnu/ld-linux-x8"..., 130) = 130
+651799 +++ exited with 0 +++
+651797 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651799, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651802 write(1, "ptxas: NVIDIA (R) Ptx optimizing"..., 43) = 43
+651802 write(1, "Copyright (c) 2005-2025 NVIDIA C"..., 43) = 43
+651802 write(1, "Built on Wed_Aug_20_01:55:12_PM_"..., 41) = 41
+651802 write(1, "Cuda compilation tools, release "..., 88) = 88
+651802 write(1, "\n", 1)                = 1
+651802 +++ exited with 0 +++
+651795 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651802, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651804 write(1, "ptxas: NVIDIA (R) Ptx optimizing"..., 43) = 43
+651804 write(1, "Copyright (c) 2005-2025 NVIDIA C"..., 43) = 43
+651804 write(1, "Built on Wed_Aug_20_01:55:12_PM_"..., 41) = 41
+651804 write(1, "Cuda compilation tools, release "..., 88) = 88
+651804 write(1, "\n", 1)                = 1
+651804 +++ exited with 0 +++
+651797 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651804, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651805 write(1, "ptxas: NVIDIA (R) Ptx optimizing"..., 43) = 43
+651805 write(1, "Copyright (c) 2005-2025 NVIDIA C"..., 43) = 43
+651805 write(1, "Built on Wed_Aug_20_01:55:12_PM_"..., 41) = 41
+651805 write(1, "Cuda compilation tools, release "..., 88) = 88
+651805 write(1, "\n", 1)                = 1
+651805 +++ exited with 0 +++
+651797 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651805, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651803 write(1, "ptxas: NVIDIA (R) Ptx optimizing"..., 43) = 43
+651803 write(1, "Copyright (c) 2005-2025 NVIDIA C"..., 43) = 43
+651803 write(1, "Built on Wed_Aug_20_01:55:12_PM_"..., 41) = 41
+651803 write(1, "Cuda compilation tools, release "..., 88) = 88
+651803 write(1, "\n", 1)                = 1
+651803 +++ exited with 0 +++
+651796 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651803, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651806 write(1, "ptxas: NVIDIA (R) Ptx optimizing"..., 43) = 43
+651806 write(1, "Copyright (c) 2005-2025 NVIDIA C"..., 43) = 43
+651806 write(1, "Built on Wed_Aug_20_01:55:12_PM_"..., 41) = 41
+651806 write(1, "Cuda compilation tools, release "..., 88) = 88
+651806 write(1, "\n", 1)                = 1
+651806 +++ exited with 0 +++
+651727 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651806, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651807 write(1, "ptxas: NVIDIA (R) Ptx optimizing"..., 43) = 43
+651807 write(1, "Copyright (c) 2005-2025 NVIDIA C"..., 43) = 43
+651807 write(1, "Built on Wed_Aug_20_01:55:12_PM_"..., 41) = 41
+651807 write(1, "Cuda compilation tools, release "..., 88) = 88
+651807 write(1, "\n", 1)                = 1
+651807 +++ exited with 0 +++
+651707 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651807, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651796 +++ exited with 0 +++
+651795 +++ exited with 0 +++
+651797 +++ exited with 0 +++
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 158) = 158
+651808 write(1, "nvcc: NVIDIA (R) Cuda compiler d"..., 211) = 211
+651808 +++ exited with 0 +++
+651651 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651808, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 241) = 241
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 96) = 96
+651682 +++ exited with 0 +++
+651680 +++ exited with 0 +++
+651686 +++ exited with 0 +++
+651683 +++ exited with 0 +++
+651679 +++ exited with 0 +++
+651688 +++ exited with 0 +++
+651687 +++ exited with 0 +++
+651681 +++ exited with 0 +++
+651689 +++ exited with 0 +++
+651684 +++ exited with 0 +++
+651685 +++ exited with 0 +++
+651695 +++ exited with 0 +++
+651693 +++ exited with 0 +++
+651690 +++ exited with 0 +++
+651692 +++ exited with 0 +++
+651691 +++ exited with 0 +++
+651694 +++ exited with 0 +++
+651698 +++ exited with 0 +++
+651699 +++ exited with 0 +++
+651700 +++ exited with 0 +++
+651697 +++ exited with 0 +++
+651701 +++ exited with 0 +++
+651696 +++ exited with 0 +++
+651762 +++ exited with 0 +++
+651651 +++ exited with 0 +++
+651587 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651651, si_uid=0, si_status=0, si_utime=404 /* 4.04 s */, si_stime=79 /* 0.79 s */} ---
+651652 +++ exited with 0 +++
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 102) = 102
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 530) = 530
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 158) = 158
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 96) = 96
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 105) = 105
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 254) = 254
+651582 write(69, "{\n  \"_metadata\": {\n    \"flashinf"..., 517) = 517
+651816 write(1, "326 libs found in cache `/etc/ld"..., 4096) = 4096
+651816 write(1, "5 (libc6,x86-64) => /lib/x86_64-"..., 4096) = 4096
+651816 write(1, "-linux-gnu/libnvidia-gpucomp.so."..., 4096) = 4096
+651816 write(1, "ts/x86_64-linux/lib/libnppicc.so"..., 4096) = 4096
+651816 write(1, " => /lib/x86_64-linux-gnu/libgpg"..., 4096) = 4096
+651816 write(1, "ebugger.so.1 (libc6,x86-64) => /"..., 4096) = 4096
+651816 write(1, "lib/x86_64-linux-gnu/ld-linux-x8"..., 130) = 130
+651816 +++ exited with 0 +++
+651582 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651816, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651817 write(1, "326 libs found in cache `/etc/ld"..., 4096) = 4096
+651817 write(1, "5 (libc6,x86-64) => /lib/x86_64-"..., 4096) = 4096
+651817 write(1, "-linux-gnu/libnvidia-gpucomp.so."..., 4096) = 4096
+651817 write(1, "ts/x86_64-linux/lib/libnppicc.so"..., 4096) = 4096
+651817 write(1, " => /lib/x86_64-linux-gnu/libgpg"..., 4096) = 4096
+651817 write(1, "ebugger.so.1 (libc6,x86-64) => /"..., 4096) = 4096
+651817 write(1, "lib/x86_64-linux-gnu/ld-linux-x8"..., 130) = 130
+651817 +++ exited with 0 +++
+651582 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651817, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+651582 write(2, "2026-10-15 17:58:04,257 - INFO -"..., 252) = 252
+651582 write(68, "2026-10-15 17:58:04,257 - INFO -"..., 252) = 252
+651582 write(2, "2026-10-15 17:58:04,267 - INFO -"..., 112) = 112
+651582 write(68, "2026-10-15 17:58:04,267 - INFO -"..., 112) = 112
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 237) = 237
+651582 write(2, "2026-10-15 17:58:04,414 - INFO -"..., 106) = 106
+651582 write(68, "2026-10-15 17:58:04,414 - INFO -"..., 106) = 106
+651582 write(69, "{\n  \"_metadata\": {\n    \"flashinf"..., 517) = 517
+651582 write(2, "2026-10-15 17:58:04,415 - INFO -"..., 281) = 281
+651582 write(68, "2026-10-15 17:58:04,415 - INFO -"..., 281) = 281
+651818 write(1, "ninja: Entering directory `/root"..., 89) = 89
+651818 write(1, "ninja: no work to do.\n", 22) = 22
+651818 +++ exited with 0 +++
+651582 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=651818, si_uid=0, si_status=0, si_utime=1 /* 0.01 s */, si_stime=1 /* 0.01 s */} ---
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 74) = 74
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 84) = 84
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 84) = 84
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 84) = 84
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 86) = 86
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 87) = 87
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 89) = 89
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 89) = 89
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 91) = 91
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 91) = 91
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 93) = 93
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 93) = 93
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 93) = 93
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 95) = 95
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 95) = 95
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 97) = 97
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 97) = 97
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 99) = 99
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 101) = 101
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 101) = 101
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 103) = 103
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 103) = 103
+651582 write(2, "", 0)                  = 0
+651582 write(2, "\rCapturing CUDA graphs (PIECEWIS"..., 103) = 103
+651582 write(2, "\n", 1)                = 1
+651582 write(2, "\rCapturing CUDA graphs (FULL):  "..., 69) = 69
+651582 write(2, "\rCapturing CUDA graphs (FULL):  "..., 79) = 79
+651582 write(2, "\rCapturing CUDA graphs (FULL):  "..., 81) = 81
+651582 write(2, "\rCapturing CUDA graphs (FULL):  "..., 81) = 81
+651582 write(2, "\rCapturing CUDA graphs (FULL):  "..., 84) = 84
+651582 write(2, "\rCapturing CUDA graphs (FULL):  "..., 86) = 86
+651582 write(2, "\rCapturing CUDA graphs (FULL):  "..., 86) = 86
+651582 write(2, "\rCapturing CUDA graphs (FULL):  "..., 88) = 88
+651582 write(2, "\rCapturing CUDA graphs (FULL):  "..., 90) = 90
+651582 write(2, "\rCapturing CUDA graphs (FULL):  "..., 92) = 92
+651582 write(2, "\rCapturing CUDA graphs (FULL):  "..., 94) = 94
+651582 write(2, "\rCapturing CUDA graphs (FULL):  "..., 96) = 96
+651582 write(2, "\rCapturing CUDA graphs (FULL):  "..., 98) = 98
+651582 write(2, "", 0)                  = 0
+651582 write(2, "\rCapturing CUDA graphs (FULL): 1"..., 98) = 98
+651582 write(2, "\n", 1)                = 1
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 118) = 118
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 159) = 159
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 147) = 147
+651582 write(1, "(MainProcess pid=651582) INFO 10"..., 178) = 178
+651582 write(2, "\rPacked mixed (FULL):   0%|     "..., 62) = 62
+651582 write(2, "\rPacked mixed (FULL):   0%|     "..., 70) = 70
+651582 write(2, "\rPacked mixed (FULL):   0%|     "..., 70) = 70
+651582 write(2, "\rPacked mixed (FULL):   1%|     "..., 70) = 70
+651582 write(2, "\rPacked mixed (FULL):   2%|\342\226\217  "..., 73) = 73
+651582 write(2, "\rPacked mixed (FULL):   2%|\342\226\217  "..., 73) = 73
+651582 write(2, "\rPacked mixed (FULL):   3%|\342\226\216  "..., 73) = 73
+651582 write(2, "\rPacked mixed (FULL):   4%|\342\226\215  "..., 73) = 73
+651582 write(2, "\rPacked mixed (FULL):   4%|\342\226\215  "..., 73) = 73
+651582 write(2, "\rPacked mixed (FULL):   5%|\342\226\214  "..., 73) = 73
+651582 write(2, "\rPacked mixed (FULL):   6%|\342\226\214  "..., 73) = 73
+651582 write(2, "\rPacked mixed (FULL):   7%|\342\226\213  "..., 73) = 73
+651582 write(2, "\rPacked mixed (FULL):   8%|\342\226\212  "..., 73) = 73
+651582 write(2, "\rPacked mixed (FULL):   8%|\342\226\212  "..., 73) = 73
+651582 write(2, "\rPacked mixed (FULL):   9%|\342\226\211  "..., 73) = 73
+651582 write(2, "\rPacked mixed (FULL):  10%|\342\226\211  "..., 74) = 74
+651582 write(2, "\rPacked mixed (FULL):  11%|\342\226\210  "..., 74) = 74
+651582 write(2, "\rPacked mixed (FULL):  11%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  12%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  13%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  14%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  15%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  15%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  16%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  17%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  18%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  18%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  19%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  19%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  20%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  20%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  21%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  21%|\342\226\210\342\226"..., 76) = 76
+651582 write(2, "\rPacked mixed (FULL):  21%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  22%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  22%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  23%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  23%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  24%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  24%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  25%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  25%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  26%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  26%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  26%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  27%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  27%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  28%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  28%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  28%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  28%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  29%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  29%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  29%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  30%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  30%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  31%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  31%|\342\226\210\342\226"..., 78) = 78
+651582 write(2, "\rPacked mixed (FULL):  31%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  32%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  32%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  33%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  33%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  33%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  34%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  34%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  34%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  35%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  35%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  36%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  36%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  37%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  37%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  38%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  38%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  38%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  39%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  39%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  39%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  40%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  40%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  41%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  41%|\342\226\210\342\226"..., 80) = 80
+651582 write(2, "\rPacked mixed (FULL):  42%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  42%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  43%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  43%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  44%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  44%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  45%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  45%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  46%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  46%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  46%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  47%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  47%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  48%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  48%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  49%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  49%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  50%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  50%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  51%|\342\226\210\342\226"..., 82) = 82
+651582 write(2, "\rPacked mixed (FULL):  51%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  52%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  52%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  53%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  53%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  54%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  54%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  55%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  55%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  55%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  56%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  56%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  57%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  57%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  58%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  58%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  59%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  59%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  60%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  60%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  61%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  61%|\342\226\210\342\226"..., 84) = 84
+651582 write(2, "\rPacked mixed (FULL):  62%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  62%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  62%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  63%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  63%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  64%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  64%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  65%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  65%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  66%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  66%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  67%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  67%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  68%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  68%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  69%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  69%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  69%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  70%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  70%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  70%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  71%|\342\226\210\342\226"..., 86) = 86
+651582 write(2, "\rPacked mixed (FULL):  71%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  72%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  72%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  73%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  73%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  73%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  74%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  74%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  75%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  75%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  76%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  76%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  76%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  77%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  77%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  77%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  78%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  78%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  78%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  79%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  79%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  79%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  80%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  80%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  80%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  81%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  81%|\342\226\210\342\226"..., 88) = 88
+651582 write(2, "\rPacked mixed (FULL):  82%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  82%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  82%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  83%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  83%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  83%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  84%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  84%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  84%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  84%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  84%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  85%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  85%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  86%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  86%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  87%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  87%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  88%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  89%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  89%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  90%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  90%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  91%|\342\226\210\342\226"..., 90) = 90
+651582 write(2, "\rPacked mixed (FULL):  92%|\342\226\210\342\226"..., 92) = 92
+651582 write(2, "\rPacked mixed (FULL):  92%|\342\226\210\342\226"..., 92) = 92
+651582 write(2, "\rPacked mixed (FULL):  93%|\342\226\210\342\226"..., 92) = 92
+651582 write(2, "\rPacked mixed (FULL):  93%|\342\226\210\342\226"..., 92) = 92
+651582 write(2, "\rPacked mixed (FULL):  94%|\342\226\210\342\226"..., 92) = 92
+651582 write(2, "\rPacked mixed (FULL):  94%|\342\226\210\342\226"..., 92) = 92
+651582 write(2, "\rPacked mixed (FULL):  95%|\342\226\210\342\226"..., 92) = 92
+651582 write(2, "\rPacked mixed (FULL):  96%|\342\226\210\342\226"..., 92) = 92
+651582 write(2, "\rPacked mixed (FULL):  96%|\342\226\210\342\226"..., 92) = 92
+651582 write(2, "\rPacked mixed (FULL):  97%|\342\226\210\342\226"..., 92) = 92
+651582 write(2, "\rPacked mixed (FULL):  97%|\342\226\210\342\226"..., 92) = 92
+651582 write(2, "\rPacked mixed (FULL):  98%|\342\226\210\342\226"..., 93) = 93
+651582 write(2, "\rPacked mixed (FULL):  98%|\342\226\210\342\226"..., 93) = 93
+651582 write(2, "\rPacked mixed (FULL):  99%|\342\226\210\342\226"..., 93) = 93
+651582 write(2, "\rPacked mixed (FULL):  99%|\342\226\210\342\226"..., 93) = 93
+651582 write(2, "\rPacked mixed (FULL): 100%|\342\226\210\342\226"..., 93) = 93
+651582 write(2, "", 0)                  = 0
+651582 write(2, "\rPacked mixed (FULL): 100%|\342\226\210\342\226"..., 93) = 93
+651582 write(2, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 44) = 44
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 45) = 45
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "captured packed mixed input toke"..., 46) = 46
+651582 write(1, "\n", 1)                = 1
+651582 write(1, "{\"event\": \"vllm_bootstrap\", \"mod"..., 5993) = 5993
+651582 write(1, "\n", 1)                = 1
+651582 socket(AF_INET, SOCK_STREAM, IPPROTO_IP) = 70
+651582 setsockopt(70, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+651582 bind(70, {sa_family=AF_INET, sin_port=htons(39403), sin_addr=inet_addr("127.0.0.1")}, 16) = 0
+651582 listen(70, 4096)                 = 0
+651582 io_uring_enter(72, 1, 1, IORING_ENTER_GETEVENTS, NULL, 0) = 1
+651582 io_uring_enter(72, 1, 0, 0, NULL, 0) = 1
+651582 write(1, "NET_READY pid=651582 port=39403 "..., 76) = 76
+651582 write(1, "resident vLLM ready: 30 layers h"..., 90) = 90
+651582 io_uring_enter(72, 0, 0, 0, NULL, 0 <unfinished ...>
+651587 --- SIGTERM {si_signo=SIGTERM, si_code=SI_TKILL, si_pid=651499, si_uid=0} ---
+651582 <... io_uring_enter resumed>)    = -1 EINTR (Interrupted system call)
+651582 --- SIGTERM {si_signo=SIGTERM, si_code=SI_TKILL, si_pid=651582, si_uid=0} ---
+651582 io_uring_enter(72, 0, 0, 0, NULL, 0) = 0
+651582 write(1, "ADMISSION queued_peak=24\n", 25) = 25
+651582 write(1, "RESULT {\"accepted\":5202,\"closed\""..., 128) = 128
+651582 write(1, "\":71,\"max_requests\":16,\"pending\""..., 128) = 128
+651582 write(1, "head\":128396,\"cqtail\":128396,\"tr"..., 71) = 71
+651582 write(1, "REPLY {\"seq\":0,\"gen\":64,\"sends\":"..., 99) = 99
+651582 write(1, "REPLY {\"seq\":1,\"gen\":64,\"sends\":"..., 99) = 99
+651582 write(1, "REPLY {\"seq\":2,\"gen\":64,\"sends\":"..., 99) = 99
+651582 write(1, "REPLY {\"seq\":3,\"gen\":64,\"sends\":"..., 99) = 99
+651582 write(1, "REPLY {\"seq\":4,\"gen\":64,\"sends\":"..., 99) = 99
+651582 write(1, "REPLY {\"seq\":5,\"gen\":64,\"sends\":"..., 99) = 99
+651582 write(1, "REPLY {\"seq\":6,\"gen\":64,\"sends\":"..., 99) = 99
+651582 write(1, "REPLY {\"seq\":7,\"gen\":64,\"sends\":"..., 99) = 99
+651582 write(1, "REPLY {\"seq\":8,\"gen\":64,\"sends\":"..., 99) = 99
+651582 write(1, "REPLY {\"seq\":9,\"gen\":64,\"sends\":"..., 99) = 99
+651582 write(1, "REPLY {\"seq\":10,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":11,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":12,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":13,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":14,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":15,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":16,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":17,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":18,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":19,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":20,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":21,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":22,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":23,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":24,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":25,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":26,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":27,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":28,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":29,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":30,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":31,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":32,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":33,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":34,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":35,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":36,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":37,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":38,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":39,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":40,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":41,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":42,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":43,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":44,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":45,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":46,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":47,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":48,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":49,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":50,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":51,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":52,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":53,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":54,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":55,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":56,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":57,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":58,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":59,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":60,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":61,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":62,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":63,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":64,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":65,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":66,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":67,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":68,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":69,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":70,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":71,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":72,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":73,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":74,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":75,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":76,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":77,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":78,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":79,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":80,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":81,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":82,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":83,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":84,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":85,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":86,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":87,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":88,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":89,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":90,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":91,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":92,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":93,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":94,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":95,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":96,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":97,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":98,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":99,\"gen\":64,\"sends\""..., 100) = 100
+651582 write(1, "REPLY {\"seq\":100,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":101,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":102,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":103,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":104,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":105,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":106,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":107,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":108,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":109,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":110,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":111,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":112,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":113,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":114,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":115,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":116,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":117,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":118,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":119,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":120,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":121,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":122,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":123,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":124,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":125,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":126,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "REPLY {\"seq\":127,\"gen\":64,\"sends"..., 101) = 101
+651582 write(1, "CLEANUP ring_connections_buffers"..., 41) = 41
+651582 write(1, "\n", 1)                = 1
+651582 write(69, "{\"event\":\"admission\",\"id\":0,\"que"..., 4096) = 4096
+651582 write(69, "nt\":\"compute\",\"query\":0,\"batch\":"..., 4096) = 4096
+651582 write(69, "ns\":1,\"request_ids\":[1],\"tokens\""..., 4096) = 4096
+651582 write(69, "\",\"query\":0,\"batch\":1,\"input_tok"..., 4096) = 4096
+651582 write(69, "ns\":1,\"request_ids\":[2],\"tokens\""..., 4096) = 4096
+651582 write(69, ",\"query\":0,\"batch\":1,\"input_toke"..., 4096) = 4096
+651582 write(69, "[253]}\n{\"event\":\"compute\",\"query"..., 4096) = 4096
+651582 write(69, ",\"batch\":1,\"input_tokens\":1,\"req"..., 4096) = 4096
+651582 write(69, ":0,\"batch\":1,\"input_tokens\":1,\"r"..., 4096) = 4096
+651582 write(69, "\",\"query\":0,\"batch\":1,\"input_tok"..., 4096) = 4096
+651582 write(69, "_tokens\":1,\"request_ids\":[6],\"to"..., 4096) = 4096
+651582 write(69, "batch\":1,\"input_tokens\":1,\"reque"..., 4096) = 4096
+651582 write(69, "input_tokens\":1,\"request_ids\":[8"..., 4096) = 4096
+651582 write(69, "\":[8],\"tokens\":[504]}\n{\"event\":\""..., 4096) = 4096
+651582 write(69, "0,\"batch\":1,\"input_tokens\":1,\"re"..., 4096) = 4096
+651582 write(69, "\"request_ids\":[10],\"tokens\":[357"..., 4096) = 4096
+651582 write(69, "okens\":1,\"request_ids\":[10],\"tok"..., 4096) = 4096
+651582 write(69, "ns\":1,\"request_ids\":[11],\"tokens"..., 4096) = 4096
+651582 write(69, "request_ids\":[12],\"tokens\":[416]"..., 4096) = 4096
+651582 write(69, "_tokens\":1,\"request_ids\":[12],\"t"..., 4096) = 4096
+651582 write(69, "request_ids\":[13],\"tokens\":[904]"..., 4096) = 4096
+651582 write(69, "ens\":[346]}\n{\"event\":\"compute\",\""..., 4096) = 4096
+651582 write(69, "4649,314,504,3575,282,4649,314,5"..., 4096) = 4096
+651582 write(69, "uery\":0,\"batch\":1,\"input_tokens\""..., 4096) = 4096
+651582 write(69, "equest_ids\":[16],\"tokens\":[4649]"..., 4096) = 4096
+651582 write(69, "}\n{\"event\":\"compute\",\"query\":0,\""..., 4096) = 4096
+651582 write(69, "7],\"tokens\":[282]}\n{\"event\":\"com"..., 4096) = 4096
+651582 write(69, ",\"input_tokens\":1,\"request_ids\":"..., 4096) = 4096
+651582 write(69, "4,504,3575,282,4649,314,504,3575"..., 4096) = 4096
+651582 write(69, "\"batch\":1,\"input_tokens\":1,\"requ"..., 4096) = 4096
+651582 write(69, "\"batch\":1,\"input_tokens\":1,\"requ"..., 4096) = 4096
+651582 write(69, "ry\":0,\"batch\":1,\"input_tokens\":1"..., 4096) = 4096
+651582 write(69, "ry\":0,\"batch\":1,\"input_tokens\":1"..., 4096) = 4096
+651582 write(69, ",\"batch\":1,\"input_tokens\":1,\"req"..., 4096) = 4096
+651582 write(69, "\"input_tokens\":1,\"request_ids\":["..., 4096) = 4096
+651582 write(69, "\"batch\":1,\"input_tokens\":1,\"requ"..., 4096) = 4096
+651582 write(69, "\":1,\"request_ids\":[24],\"tokens\":"..., 4096) = 4096
+651582 write(69, "\":\"compute\",\"query\":0,\"batch\":1,"..., 4096) = 4096
+651582 write(69, "[282]}\n{\"event\":\"compute\",\"query"..., 4096) = 4096
+651582 write(69, "\"batch\":1,\"input_tokens\":1,\"requ"..., 4096) = 4096
+651582 write(69, "est_ids\":[27],\"tokens\":[3575]}\n{"..., 4096) = 4096
+651582 write(69, "t_tokens\":1,\"request_ids\":[27],\""..., 4096) = 4096
+651582 write(69, "\"compute\",\"query\":0,\"batch\":1,\"i"..., 4096) = 4096
+651582 write(69, "\",\"query\":0,\"batch\":1,\"input_tok"..., 4096) = 4096
+651582 write(69, "{\"event\":\"compute\",\"query\":0,\"ba"..., 4096) = 4096
+651582 write(69, "event\":\"compute\",\"query\":0,\"batc"..., 4096) = 4096
+651582 write(69, "98]}\n{\"event\":\"compute\",\"query\":"..., 4096) = 4096
+651582 write(69, "s\":[31,32],\"tokens\":[4649,8055]}"..., 4096) = 4096
+651582 write(69, "ns\":3,\"request_ids\":[33,34,35],\""..., 4096) = 4096
+651582 write(69, "ch\":3,\"input_tokens\":3,\"request_"..., 4096) = 4096
+651582 write(69, "uery\":0,\"batch\":4,\"input_tokens\""..., 4096) = 4096
+651582 write(69, "compute\",\"query\":0,\"batch\":3,\"in"..., 4096) = 4096
+651582 write(69, "equest_ids\":[40,41,42,43,44],\"to"..., 4096) = 4096
+651582 write(69, ",42,43,44],\"tokens\":[260,2988,17"..., 4096) = 4096
+651582 write(69, "batch\":6,\"input_tokens\":6,\"reque"..., 4096) = 4096
+651582 write(69, "\"request_ids\":[45,46,47,48,49,50"..., 4096) = 4096
+651582 write(69, "\"query\":0,\"batch\":7,\"input_token"..., 4096) = 4096
+651582 write(69, ",52,53,54,55,56,57],\"tokens\":[50"..., 4096) = 4096
+651582 write(69, "ids\":[58,59,60,61],\"tokens\":[282"..., 4096) = 4096
+651582 write(69, "s\":[282,469,34,30,198,4649,4649,"..., 4096) = 4096
+651582 write(69, ",61,62,63,64,65],\"tokens\":[3575,"..., 4096) = 4096
+651582 write(69, "}\n{\"event\":\"compute\",\"query\":0,\""..., 4096) = 4096
+651582 write(69, "t_ids\":[66,67,68,69,70,71,72,73,"..., 4096) = 4096
+651582 write(69, "5,282,808,429,47,597]}\n{\"event\":"..., 4096) = 4096
+651582 write(69, ",80,81,82,83,84],\"tokens\":[4649,"..., 4096) = 4096
+651582 write(69, "\":10,\"request_ids\":[75,76,77,78,"..., 4096) = 4096
+651582 write(69, "\"query\":0,\"batch\":10,\"input_toke"..., 4096) = 4096
+651582 write(69, "94],\"tokens\":[30,3575,216,282,17"..., 4096) = 4096
+651582 write(69, "}\n{\"event\":\"compute\",\"query\":0,\""..., 4096) = 4096
+651582 write(69, "ns\":[657,504,216,4649,3575,3575,"..., 4096) = 4096
+651582 write(69, "ds\":[96,97,98],\"tokens\":[36,820,"..., 4096) = 4096
+651582 write(69, ",\"request_ids\":[96,97,98,99,100,"..., 4096) = 4096
+651582 write(69, "378,314,30]}\n{\"event\":\"compute\","..., 4096) = 4096
+651582 write(69, "kens\":9,\"request_ids\":[99,100,10"..., 4096) = 4096
+651582 write(69, ",198,3575,198,2775,504,198]}\n{\"e"..., 4096) = 4096
+651582 write(69, "te\",\"query\":0,\"batch\":13,\"input_"..., 4096) = 4096
+651582 write(69, ":13,\"request_ids\":[108,109,110,1"..., 4096) = 4096
+651582 write(69, "ad\":0,\"client_ns\":51851522834815"..., 4096) = 4096
+651582 write(69, "75,3575,504,804,198,198,314,282]"..., 4096) = 4096
+651582 write(69, "ch\":14,\"input_tokens\":14,\"reques"..., 4096) = 4096
+651582 write(69, "27,128,129,130,131,132,133,134],"..., 4096) = 4096
+651582 write(69, "4,3575,282,4649,314,504,3575,282"..., 4096) = 4096
+651582 write(69, "42,260,504,314,3253,896,99,504,2"..., 4096) = 4096
+651582 write(69, "st_ids\":[135,136,137,138,139,140"..., 4096) = 4096
+651582 write(69, "4,284,835,314,314,314,314,8055]}"..., 4096) = 4096
+651582 write(69, "\"bad\":0,\"client_ns\":518515415490"..., 4096) = 4096
+651582 write(69, "\":[198,314,30099,314,30099,2801,"..., 4096) = 4096
+651582 write(69, "6,157,158,159,160,161,162,163,16"..., 4096) = 4096
+651582 write(69, "6,\"request_ids\":[150,151,152,153"..., 4096) = 4096
+651582 write(69, "ds\":[170]}\n{\"event\":\"admission\","..., 4096) = 4096
+651582 write(69, "798,2775,1798,3575,314,282]}\n{\"e"..., 4096) = 4096
+651582 write(69, "\"query\":0,\"batch\":8,\"input_token"..., 4096) = 4096
+651582 write(69, "ids\":[174,178,179,180,181,185,18"..., 4096) = 4096
+651582 write(69, "96,314,99,417,282,314]}\n{\"event\""..., 4096) = 4096
+651582 write(69, "_ids\":[190,191,192,193,194,195,1"..., 4096) = 4096
+651582 write(69, "}\n{\"event\":\"compute\",\"query\":0,\""..., 4096) = 4096
+651582 write(69, "75,282,4649,314,504,3575,282,464"..., 4096) = 4096
+651582 write(69, ",209,210,211,212,213],\"tokens\":["..., 4096) = 4096
+651582 write(69, "14,338,2775,3575]}\n{\"event\":\"com"..., 4096) = 4096
+651582 write(69, "158081,\"input_ids\":[37656,314]}\n"..., 4096) = 4096
+651582 write(69, "ens\":[198,288,504,314,282,3341,2"..., 4096) = 4096
+651582 write(69, "31],\"tokens\":[260,198,314,314,35"..., 4096) = 4096
+651582 write(69, ":241,\"query\":8,\"gen\":64,\"bad\":0,"..., 4096) = 4096
+651582 write(69, ":7,\"request_ids\":[239,240,241,24"..., 4096) = 4096
+651582 write(69, "41,242,243,244,245],\"tokens\":[28"..., 4096) = 4096
+651582 write(69, "ids\":[245],\"tokens\":[260]}\n{\"eve"..., 4096) = 4096
+651582 write(69, ",261,262],\"tokens\":[282,3575,314"..., 4096) = 4096
+651582 write(69, "\"compute\",\"query\":0,\"batch\":9,\"i"..., 4096) = 4096
+651582 write(69, "49,30,504,314,260,416]}\n{\"event\""..., 4096) = 4096
+651582 write(69, "934,\"input_ids\":[49152,3575,282,"..., 4096) = 4096
+651582 write(69, ",272,273,274,276,277,278],\"token"..., 4096) = 4096
+651582 write(69, "56,260,29]}\n{\"event\":\"compute\",\""..., 4096) = 4096
+651582 write(69, "\":[504,3575,282,4649,314,504,357"..., 4096) = 4096
+651582 write(69, "282,282,282,504,34,504]}\n{\"event"..., 4096) = 4096
+651582 write(69, "\"bad\":1,\"client_ns\":518516036158"..., 4096) = 4096
+651582 write(69, "1,292,293]}\n{\"event\":\"compute\",\""..., 4096) = 4096
+651582 write(69, ",\"request_ids\":[305,306,307,308,"..., 4096) = 4096
+651582 write(69, "311,312,313],\"tokens\":[3575,4649"..., 4096) = 4096
+651582 write(69, ",253,3575]}\n{\"event\":\"compute\",\""..., 4096) = 4096
+651582 write(69, "}\n{\"event\":\"admission\",\"id\":330,"..., 4096) = 4096
+651582 write(69, "mission\",\"id\":334,\"query\":15,\"ge"..., 4096) = 4096
+651582 write(69, "4,198,314,198,536,198]}\n{\"event\""..., 4096) = 4096
+651582 write(69, "2718,\"input_ids\":[504,3575,282,4"..., 4096) = 4096
+651582 write(69, "5],\"tokens\":[4649,314,314,282,35"..., 4096) = 4096
+651582 write(69, "query\":0,\"batch\":7,\"input_tokens"..., 4096) = 4096
+651582 write(69, "y\":15,\"gen\":64,\"bad\":0,\"client_n"..., 4096) = 4096
+651582 write(69, "253,30099,3575,3575]}\n{\"event\":\""..., 4096) = 4096
+651582 write(69, "0,361,362,363],\"tokens\":[198,464"..., 4096) = 4096
+651582 write(69, "5,356,357,358,359,360,361,362,36"..., 4096) = 4096
+651582 write(69, "1,372,373,374,375,376,377],\"toke"..., 4096) = 4096
+651582 write(69, "uest_ids\":[371,372,373,374,375,3"..., 4096) = 4096
+651582 write(69, "2,314,504,504,8055,314]}\n{\"event"..., 4096) = 4096
+651582 write(69, "}\n{\"event\":\"compute\",\"query\":0,\""..., 4096) = 4096
+651582 write(69, "516416327665,\"input_ids\":[49152,"..., 4096) = 4096
+651582 write(69, "\"event\":\"compute\",\"query\":0,\"bat"..., 4096) = 4096
+651582 write(69, "57178974,\"input_ids\":[19161,253,"..., 4096) = 4096
+651582 write(69, "ry\":0,\"batch\":7,\"input_tokens\":7"..., 4096) = 4096
+651582 write(69, "7,\"input_tokens\":7,\"request_ids\""..., 4096) = 4096
+651582 write(69, "[504,3575,282,4649,314,504,3575,"..., 4096) = 4096
+651582 write(69, "_ids\":[419,420,421,422,423,424,4"..., 4096) = 4096
+651582 write(69, "424,425,426,427],\"tokens\":[3575,"..., 4096) = 4096
+651582 write(69, "tokens\":[3575,4649,314,2435,3575"..., 4096) = 4096
+651582 write(69, ":\"admission\",\"id\":450,\"query\":5,"..., 4096) = 4096
+651582 write(69, "98,260,314,282,4649,284,504,216,"..., 4096) = 4096
+651582 write(69, "pute\",\"query\":0,\"batch\":11,\"inpu"..., 4096) = 4096
+651582 write(69, "75]}\n{\"event\":\"release\",\"batch\":"..., 4096) = 4096
+651582 write(69, "uery\":0,\"batch\":5,\"input_tokens\""..., 4096) = 4096
+651582 write(69, "\":[314,4649,314,1695,198]}\n{\"eve"..., 4096) = 4096
+651582 write(69, "575,282,4649,314,504,3575,282,46"..., 4096) = 4096
+651582 write(69, "ute\",\"query\":0,\"batch\":11,\"input"..., 4096) = 4096
+651582 write(69, "input_ids\":[49152,253,1890,30099"..., 4096) = 4096
+651582 write(69, "ery\":0,\"batch\":11,\"input_tokens\""..., 4096) = 4096
+651582 write(69, "\"query\":0,\"batch\":5,\"input_token"..., 4096) = 4096
+651582 write(69, "90,491],\"tokens\":[8055,4575,597,"..., 4096) = 4096
+651582 write(69, "y\":0,\"batch\":5,\"input_tokens\":5,"..., 4096) = 4096
+651582 write(69, "14,3575,314,3575]}\n{\"event\":\"com"..., 4096) = 4096
+651582 write(69, ":\"admission\",\"id\":514,\"query\":1,"..., 4096) = 4096
+651582 write(69, ",314]}\n{\"event\":\"compute\",\"query"..., 4096) = 4096
+651582 write(69, "atch\":5,\"input_tokens\":5,\"reques"..., 4096) = 4096
+651582 write(69, ":\"admission\",\"id\":526,\"query\":8,"..., 4096) = 4096
+651582 write(69, "ch\":5,\"input_tokens\":5,\"request_"..., 4096) = 4096
+651582 write(69, "\"tokens\":[657,216,504,2378,282,5"..., 4096) = 4096
+651582 write(69, "ch\":11,\"input_tokens\":11,\"reques"..., 4096) = 4096
+651582 write(69, "\"query\":0,\"batch\":11,\"input_toke"..., 4096) = 4096
+651582 write(69, "ry\":0,\"batch\":1,\"input_tokens\":1"..., 4096) = 4096
+651582 write(69, "554,555],\"tokens\":[314,3575,198,"..., 4096) = 4096
+651582 write(69, "t_ids\":[551,552,553,554,555],\"to"..., 4096) = 4096
+651582 write(69, ",\"query\":17,\"gen\":64,\"bad\":0,\"cl"..., 4096) = 4096
+651582 write(69, ":\"compute\",\"query\":0,\"batch\":11,"..., 4096) = 4096
+651582 write(69, ",504,504]}\n{\"event\":\"compute\",\"q"..., 4096) = 4096
+651582 write(69, "4649]}\n{\"event\":\"compute\",\"query"..., 4096) = 4096
+651582 write(69, "98,30099,2801]}\n{\"event\":\"comput"..., 4096) = 4096
+651582 write(69, "dmission\",\"id\":596,\"query\":16,\"g"..., 4096) = 4096
+651582 write(69, "tch\":15,\"request_ids\":[584,585,5"..., 4096) = 4096
+651582 write(69, "4649,4649,282,4649,417]}\n{\"event"..., 4096) = 4096
+651582 write(69, "event\":\"admission\",\"id\":610,\"que"..., 4096) = 4096
+651582 write(69, "607,608,609],\"tokens\":[260,314,6"..., 4096) = 4096
+651582 write(69, "15,616,617,618,619],\"tokens\":[28"..., 4096) = 4096
+651582 write(69, "4,504,3575,282,4649,314,504,3575"..., 4096) = 4096
+651582 write(69, ",\"input_tokens\":5,\"request_ids\":"..., 4096) = 4096
+651582 write(69, ",282,808,536,4649,288,504,198,50"..., 4096) = 4096
+651582 write(69, "649]}\n{\"event\":\"compute\",\"query\""..., 4096) = 4096
+651582 write(69, "75,4649,957,288,314,314,1780,314"..., 4096) = 4096
+651582 write(69, "\":64,\"bad\":0,\"client_ns\":5185174"..., 4096) = 4096
+651582 write(69, "\"request_ids\":[647,648,649,650,6"..., 4096) = 4096
+651582 write(69, "_tokens\":5,\"request_ids\":[647,64"..., 4096) = 4096
+651582 write(69, "\":5,\"input_tokens\":40,\"request_i"..., 4096) = 4096
+651582 write(69, "671,672,673,674,675,676],\"tokens"..., 4096) = 4096
+651582 write(69, "3,674,675,676],\"tokens\":[3575,59"..., 4096) = 4096
+651582 write(69, "tokens\":[314,597,1798,4649,3575,"..., 4096) = 4096
+651582 write(69, ",504]}\n{\"event\":\"compute\",\"query"..., 4096) = 4096
+651582 write(69, "ient_ns\":518517583497511,\"input_"..., 4096) = 4096
+651582 write(69, ":4,\"request_ids\":[680,681,682,68"..., 4096) = 4096
+651582 write(69, ",3575,282,4649,314,504,3575]}\n{\""..., 4096) = 4096
+651582 write(69, "\":12,\"request_ids\":[696,697,698,"..., 4096) = 4096
+651582 write(69, ",8055,4649,4649,42,314,346,282,3"..., 4096) = 4096
+651582 write(69, "705,706,707],\"tokens\":[36,282,26"..., 4096) = 4096
+651582 write(69, "okens\":[504,282,4649,4649,3575,2"..., 4096) = 4096
+651582 write(69, "kens\":[282,314,198,198,4649,260]"..., 4096) = 4096
+651582 write(69, "y\":0,\"batch\":6,\"input_tokens\":6,"..., 4096) = 4096
+651582 write(69, "ute\",\"query\":0,\"batch\":10,\"input"..., 4096) = 4096
+651582 write(69, "kens\":10,\"request_ids\":[730,731,"..., 4096) = 4096
+651582 write(69, "quest_ids\":[730,731,732,733,734,"..., 4096) = 4096
+651582 write(69, "2,4649,314,504,3575,282,4649,314"..., 4096) = 4096
+651582 write(69, ",4649,1780,4649,3575,281]}\n{\"eve"..., 4096) = 4096
+651582 write(69, "_ids\":[749,750,751,752,753,754,7"..., 4096) = 4096
+651582 write(69, "8,314,30,8055,314,282,314]}\n{\"ev"..., 4096) = 4096
+651582 write(69, "{\"event\":\"compute\",\"query\":0,\"ba"..., 4096) = 4096
+651582 write(69, "_ids\":[765,766,767,768,769,770,7"..., 4096) = 4096
+651582 write(69, "\"compute\",\"query\":0,\"batch\":7,\"i"..., 4096) = 4096
+651582 write(69, "te\",\"query\":0,\"batch\":9,\"input_t"..., 4096) = 4096
+651582 write(69, "4,504,3575,282,4649,314,504,3575"..., 4096) = 4096
+651582 write(69, ",\"batch\":9,\"input_tokens\":9,\"req"..., 4096) = 4096
+651582 write(69, ":0,\"client_ns\":518518014343360,\""..., 4096) = 4096
+651582 write(69, ":0,\"batch\":7,\"input_tokens\":7,\"r"..., 4096) = 4096
+651582 write(69, "vent\":\"compute\",\"query\":0,\"batch"..., 4096) = 4096
+651582 write(69, "event\":\"admission\",\"id\":816,\"que"..., 4096) = 4096
+651582 write(69, "5,28]}\n{\"event\":\"compute\",\"query"..., 4096) = 4096
+651582 write(69, "819,820,821],\"tokens\":[282,253,3"..., 4096) = 4096
+651582 write(69, ",\"tokens\":[3575]}\n{\"event\":\"admi"..., 4096) = 4096
+651582 write(69, "kens\":7,\"request_ids\":[829,830,8"..., 4096) = 4096
+651582 write(69, "equest_ids\":[829,830,831,832,833"..., 4096) = 4096
+651582 write(69, "4,504,3575,282,4649,314,504,3575"..., 4096) = 4096
+651582 write(69, "ute\",\"query\":0,\"batch\":9,\"input_"..., 4096) = 4096
+651582 write(69, "4575,198]}\n{\"event\":\"compute\",\"q"..., 4096) = 4096
+651582 write(69, "216,868,2435,2435,3575,327,42]}\n"..., 4096) = 4096
+651582 write(69, "ns\":7,\"request_ids\":[861,862,863"..., 4096) = 4096
+651582 write(69, "65,\"input_ids\":[49152,3575,282,4"..., 4096) = 4096
+651582 write(69, ":[861,862,863,864,865,866,867],\""..., 4096) = 4096
+651582 write(69, "879,880,881,882,883,884,885],\"to"..., 4096) = 4096
+651582 write(69, "1175,\"input_ids\":[49152,3575,282"..., 4096) = 4096
+651582 write(69, "okens\":[30,4649,34,260,657,970,3"..., 4096) = 4096
+651582 write(69, "compute\",\"query\":0,\"batch\":7,\"in"..., 4096) = 4096
+651582 write(69, "0,\"batch\":7,\"input_tokens\":7,\"re"..., 4096) = 4096
+651582 write(69, "atch\":7,\"input_tokens\":7,\"reques"..., 4096) = 4096
+651582 write(69, "y\":2,\"batch\":9,\"input_tokens\":10"..., 4096) = 4096
+651582 write(69, "kens\":9,\"request_ids\":[909,910,9"..., 4096) = 4096
+651582 write(69, ",314,3388,4649,314,346,6256]}\n{\""..., 4096) = 4096
+651582 write(69, "ompute\",\"query\":32,\"batch\":6,\"in"..., 4096) = 4096
+651582 write(69, "\"tokens\":[2705,3575,3575,4649,35"..., 4096) = 4096
+651582 write(69, "nput_tokens\":7,\"request_ids\":[92"..., 4096) = 4096
+651582 write(69, "96472658,\"input_ids\":[504,3575,2"..., 4096) = 4096
+651582 write(69, "9,4649,314,284,282,4649,282]}\n{\""..., 4096) = 4096
+651582 write(69, ",943,944,945,946,947,948,949],\"t"..., 4096) = 4096
+651582 write(69, "okens\":[504]}\n{\"event\":\"compute\""..., 4096) = 4096
+651582 write(69, "417,8412,282,314]}\n{\"event\":\"com"..., 4096) = 4096
+651582 write(69, "compute\",\"query\":0,\"batch\":7,\"in"..., 4096) = 4096
+651582 write(69, "962,963],\"tokens\":[198,1248,198,"..., 4096) = 4096
+651582 write(69, "3163,281,282,4649,198,4649]}\n{\"e"..., 4096) = 4096
+651582 write(69, ",260,3575]}\n{\"event\":\"compute\",\""..., 4096) = 4096
+651582 write(69, "3575,3575,504,970,30,4649,282,46"..., 4096) = 4096
+651582 write(69, "]}\n{\"event\":\"compute\",\"query\":0,"..., 4096) = 4096
+651582 write(69, "827276062,\"input_ids\":[49152,357"..., 4096) = 4096
+651582 write(69, "3575,314,314,346,346]}\n{\"event\":"..., 4096) = 4096
+651582 write(69, ",504,3575,282,4649,314,504,3575,"..., 4096) = 4096
+651582 write(69, "4,3575,4649,536,282,4649,504,464"..., 4096) = 4096
+651582 write(69, "198]}\n{\"event\":\"compute\",\"query\""..., 4096) = 4096
+651582 write(69, "quest_ids\":[1005,1006,1007,1008,"..., 4096) = 4096
+651582 write(69, "}\n{\"event\":\"compute\",\"query\":0,\""..., 4096) = 4096
+651582 write(69, "1,\"client_ns\":518518956501605,\"i"..., 4096) = 4096
+651582 write(69, "t\":\"compute\",\"query\":0,\"batch\":7"..., 4096) = 4096
+651582 write(69, ",1041,1042,1043,1044,1045],\"toke"..., 4096) = 4096
+651582 write(69, "5,2965,4649]}\n{\"event\":\"compute\""..., 4096) = 4096
+651582 write(69, "1037,1038,1039,1040,1041,1042,10"..., 4096) = 4096
+651582 write(69, "649,314,504,3575,282,4649,314,50"..., 4096) = 4096
+651582 write(69, "okens\":[3575,4649,416,346,198,16"..., 4096) = 4096
+651582 write(69, "314,504,198,282,260,314]}\n{\"even"..., 4096) = 4096
+651582 write(69, "4,260,282,282,1462,504]}\n{\"event"..., 4096) = 4096
+651582 write(69, "equest_ids\":[1069,1070,1071,1072"..., 4096) = 4096
+651582 write(69, ",1073,1074,1075,1076,1077],\"toke"..., 4096) = 4096
+651582 write(69, "60,34,314,504,216,504,284,282]}\n"..., 4096) = 4096
+651582 write(69, ":0,\"batch\":7,\"input_tokens\":7,\"r"..., 4096) = 4096
+651582 write(69, "82,314,216,260,314,768,282]}\n{\"e"..., 4096) = 4096
+651582 write(69, "98]}\n{\"event\":\"compute\",\"query\":"..., 4096) = 4096
+651582 write(69, "\"bad\":0,\"client_ns\":518519243136"..., 4096) = 4096
+651582 write(69, "416,30099]}\n{\"event\":\"compute\",\""..., 4096) = 4096
+651582 write(69, "ute\",\"query\":0,\"batch\":9,\"input_"..., 4096) = 4096
+651582 write(69, "4,1105,1106]}\n{\"event\":\"compute\""..., 4096) = 4096
+651582 write(69, "input_tokens\":9,\"request_ids\":[1"..., 4096) = 4096
+651582 write(69, ",3575,198,4575,30,868,4649,504,3"..., 4096) = 4096
+651582 write(69, "event\":\"compute\",\"query\":0,\"batc"..., 4096) = 4096
+651582 write(69, "\",\"query\":0,\"batch\":7,\"input_tok"..., 4096) = 4096
+651582 write(69, ",314,282]}\n{\"event\":\"compute\",\"q"..., 4096) = 4096
+651582 write(69, ",314,282]}\n{\"event\":\"compute\",\"q"..., 4096) = 4096
+651582 write(69, "54,1155,1156,1157,1158,1159],\"to"..., 4096) = 4096
+651582 write(69, "]}\n{\"event\":\"compute\",\"query\":0,"..., 4096) = 4096
+651582 write(69, "53,1154,1155,1156,1157,1158,1159"..., 4096) = 4096
+651582 write(69, ",282,4649,314,504,3575,282,4649,"..., 4096) = 4096
+651582 write(69, "tokens\":[504,3341,3575,3575,416,"..., 4096) = 4096
+651582 write(69, ",\"request_ids\":[1167,1168,1169,1"..., 4096) = 4096
+651582 write(69, "mission\",\"id\":1187,\"query\":16,\"g"..., 4096) = 4096
+651582 write(69, "[1181,1182,1183,1184,1185,1186,1"..., 4096) = 4096
+651582 write(69, ",1109,722,282,314,4649]}\n{\"event"..., 4096) = 4096
+651582 write(69, "tch\":1,\"input_tokens\":1,\"request"..., 4096) = 4096
+651582 write(69, "ns\":[198]}\n{\"event\":\"release\",\"b"..., 4096) = 4096
+651582 write(69, "\"query\":0,\"batch\":9,\"input_token"..., 4096) = 4096
+651582 write(69, "1202,1203,1204,1206],\"tokens\":[5"..., 4096) = 4096
+651582 write(69, "event\":\"compute\",\"query\":0,\"batc"..., 4096) = 4096
+651582 write(69, "uery\":2,\"gen\":1,\"bad\":0,\"client_"..., 4096) = 4096
+651582 write(69, "nt\":\"compute\",\"query\":0,\"batch\":"..., 4096) = 4096
+651582 write(69, "ut_tokens\":7,\"request_ids\":[1207"..., 4096) = 4096
+651582 write(69, "4,504,3575,282,4649,314,504]}\n{\""..., 4096) = 4096
+651582 write(69, "nput_tokens\":9,\"request_ids\":[12"..., 4096) = 4096
+651582 write(69, ",820,282,4649,282,416,3575]}\n{\"e"..., 4096) = 4096
+651582 write(69, ",\"input_tokens\":16,\"request_ids\""..., 4096) = 4096
+651582 write(69, "y\":8,\"gen\":1,\"bad\":0,\"client_ns\""..., 4096) = 4096
+651582 write(69, "244,1245],\"tokens\":[504,1796,314"..., 4096) = 4096
+651582 write(69, "\"query\":8,\"gen\":64,\"bad\":0,\"clie"..., 4096) = 4096
+651582 write(69, ",1261,1262,1263,1264,1265,1266,1"..., 4096) = 4096
+651582 write(69, "724,198]}\n{\"event\":\"compute\",\"qu"..., 4096) = 4096
+651582 write(69, "1,1262,1263,1264,1265,1266,1267,"..., 4096) = 4096
+651582 write(69, "}\n{\"event\":\"compute\",\"query\":0,\""..., 4096) = 4096
+651582 write(69, ":8,\"request_ids\":[1270,1271,1272"..., 4096) = 4096
+651582 write(69, "ch\":8,\"input_tokens\":8,\"request_"..., 4096) = 4096
+651582 write(69, "e\",\"query\":0,\"batch\":8,\"input_to"..., 4096) = 4096
+651582 write(69, "request_ids\":[1279,1281],\"tokens"..., 4096) = 4096
+651582 write(69, "4]}\n{\"event\":\"compute\",\"query\":5"..., 4096) = 4096
+651582 write(69, "s\":[1798]}\n{\"event\":\"compute\",\"q"..., 1976) = 1976
+651582 write(1, "resident vLLM stopped: launches="..., 128) = 128
+651582 write(1, "ows=0 release_rounds=344 max_rel"..., 66) = 66
+651582 write(69, "{\"id\": 0, \"prompt\": [504, 3575, "..., 8426) = 8426
+651582 write(69, "{\"id\": 17, \"prompt\": [504, 3575,"..., 8439) = 8439
+651582 write(69, "{\"id\": 33, \"prompt\": [1780, 314,"..., 8614) = 8614
+651582 write(69, "{\"id\": 52, \"prompt\": [504, 3575,"..., 8528) = 8528
+651582 write(69, "{\"id\": 70, \"prompt\": [504, 3575,"..., 8504) = 8504
+651582 write(69, "{\"id\": 87, \"prompt\": [1780, 314,"..., 8337) = 8337
+651582 write(69, "{\"id\": 103, \"prompt\": [504, 3575"..., 8472) = 8472
+651582 write(69, "{\"id\": 120, \"prompt\": [19161, 25"..., 8373) = 8373
+651582 write(69, "{\"id\": 137, \"prompt\": [504, 3575"..., 8546) = 8546
+651582 write(69, "{\"id\": 154, \"prompt\": [19161, 25"..., 8277) = 8277
+651582 write(69, "{\"id\": 178, \"prompt\": [1780, 314"..., 8202) = 8202
+651582 write(69, "{\"id\": 199, \"prompt\": [49152, 35"..., 8466) = 8466
+651582 write(69, "{\"id\": 227, \"prompt\": [504, 3575"..., 8282) = 8282
+651582 write(69, "{\"id\": 252, \"prompt\": [49152], \""..., 8309) = 8309
+651582 write(69, "{\"id\": 274, \"prompt\": [504, 3575"..., 8453) = 8453
+651582 write(69, "{\"id\": 298, \"prompt\": [49152, 35"..., 8253) = 8253
+651582 write(69, "{\"id\": 324, \"prompt\": [504, 3575"..., 8330) = 8330
+651582 write(69, "{\"id\": 345, \"prompt\": [504, 3575"..., 8594) = 8594
+651582 write(69, "{\"id\": 368, \"prompt\": [49152, 35"..., 8415) = 8415
+651582 write(69, "{\"id\": 391, \"prompt\": [504, 3575"..., 8598) = 8598
+651582 write(69, "{\"id\": 412, \"prompt\": [49152, 35"..., 8278) = 8278
+651582 write(69, "{\"id\": 440, \"prompt\": [49152, 25"..., 8518) = 8518
+651582 write(69, "{\"id\": 460, \"prompt\": [49152], \""..., 8291) = 8291
+651582 write(69, "{\"id\": 485, \"prompt\": [49152, 35"..., 8633) = 8633
+651582 write(69, "{\"id\": 511, \"prompt\": [504, 3575"..., 8660) = 8660
+651582 write(69, "{\"id\": 540, \"prompt\": [504, 3575"..., 8525) = 8525
+651582 write(69, "{\"id\": 567, \"prompt\": [504], \"ge"..., 8576) = 8576
+651582 write(69, "{\"id\": 587, \"prompt\": [504], \"ge"..., 8260) = 8260
+651582 write(69, "{\"id\": 614, \"prompt\": [49152, 35"..., 8580) = 8580
+651582 write(69, "{\"id\": 638, \"prompt\": [504], \"ge"..., 8502) = 8502
+651582 write(69, "{\"id\": 665, \"prompt\": [37656, 31"..., 8271) = 8271
+651582 write(69, "{\"id\": 682, \"prompt\": [504, 3575"..., 8467) = 8467
+651582 write(69, "{\"id\": 705, \"prompt\": [504, 3575"..., 8667) = 8667
+651582 write(69, "{\"id\": 731, \"prompt\": [19161, 25"..., 8268) = 8268
+651582 write(69, "{\"id\": 752, \"prompt\": [504, 3575"..., 8303) = 8303
+651582 write(69, "{\"id\": 775, \"prompt\": [49152, 35"..., 8202) = 8202
+651582 write(69, "{\"id\": 799, \"prompt\": [19161, 25"..., 8548) = 8548
+651582 write(69, "{\"id\": 822, \"prompt\": [49152, 35"..., 8402) = 8402
+651582 write(69, "{\"id\": 850, \"prompt\": [504], \"ge"..., 8615) = 8615
+651582 write(69, "{\"id\": 879, \"prompt\": [1780, 314"..., 8364) = 8364
+651582 write(69, "{\"id\": 899, \"prompt\": [504, 3575"..., 8283) = 8283
+651582 write(69, "{\"id\": 927, \"prompt\": [504, 3575"..., 8221) = 8221
+651582 write(69, "{\"id\": 949, \"prompt\": [504, 3575"..., 8442) = 8442
+651582 write(69, "{\"id\": 975, \"prompt\": [504, 3575"..., 8459) = 8459
+651582 write(69, "{\"id\": 996, \"prompt\": [49152, 35"..., 8274) = 8274
+651582 write(69, "{\"id\": 1017, \"prompt\": [49152, 3"..., 8409) = 8409
+651582 write(69, "{\"id\": 1040, \"prompt\": [504, 357"..., 8223) = 8223
+651582 write(69, "{\"id\": 1062, \"prompt\": [49152, 3"..., 8262) = 8262
+651582 write(69, "{\"id\": 1086, \"prompt\": [504, 357"..., 8265) = 8265
+651582 write(69, "{\"id\": 1108, \"prompt\": [504], \"g"..., 8278) = 8278
+651582 write(69, "{\"id\": 1135, \"prompt\": [37656, 3"..., 8280) = 8280
+651582 write(69, "{\"id\": 1158, \"prompt\": [19161, 2"..., 8450) = 8450
+651582 write(69, "{\"id\": 1185, \"prompt\": [504, 357"..., 8578) = 8578
+651582 write(69, "{\"id\": 1208, \"prompt\": [504, 357"..., 8556) = 8556
+651582 write(69, "{\"id\": 1231, \"prompt\": [504, 357"..., 8606) = 8606
+651582 write(69, "{\"id\": 1258, \"prompt\": [504], \"g"..., 8578) = 8578
+651582 write(69, "{\"id\": 1274, \"prompt\": [504, 357"..., 3532) = 3532
+651582 write(1, "{\"event\": \"vllm_reference_replay"..., 129) = 129
+651582 write(1, "\n", 1)                = 1
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8303) = 8303
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8330) = 8330
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8298) = 8298
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8347) = 8347
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8333) = 8333
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8332) = 8332
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8322) = 8322
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8329) = 8329
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8202) = 8202
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8335) = 8335
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8210) = 8210
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8211) = 8211
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8337) = 8337
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8210) = 8210
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8337) = 8337
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8210) = 8210
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8389) = 8389
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8365) = 8365
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8406) = 8406
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8359) = 8359
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8385) = 8385
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8372) = 8372
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8370) = 8370
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8359) = 8359
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8366) = 8366
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8240) = 8240
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8394) = 8394
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8285) = 8285
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8284) = 8284
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8192) = 8192
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8284) = 8284
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8192) = 8192
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8284) = 8284
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8219) = 8219
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8205) = 8205
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8223) = 8223
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8400) = 8400
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8198) = 8198
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8410) = 8410
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8406) = 8406
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8402) = 8402
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8403) = 8403
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8275) = 8275
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8411) = 8411
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8285) = 8285
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8284) = 8284
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8192) = 8192
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8284) = 8284
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8192) = 8192
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8284) = 8284
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8214) = 8214
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8212) = 8212
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8312) = 8312
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8298) = 8298
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8269) = 8269
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8364) = 8364
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8217) = 8217
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8361) = 8361
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8276) = 8276
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8295) = 8295
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8293) = 8293
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8428) = 8428
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8463) = 8463
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8288) = 8288
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8285) = 8285
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8285) = 8285
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8251) = 8251
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8376) = 8376
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8196) = 8196
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8423) = 8423
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8434) = 8434
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8355) = 8355
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8530) = 8530
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8551) = 8551
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8561) = 8561
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8488) = 8488
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8532) = 8532
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8230) = 8230
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8599) = 8599
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8224) = 8224
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8383) = 8383
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8231) = 8231
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8215) = 8215
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8226) = 8226
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8484) = 8484
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8531) = 8531
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8545) = 8545
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8558) = 8558
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8354) = 8354
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8400) = 8400
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8415) = 8415
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8460) = 8460
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8201) = 8201
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8233) = 8233
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8241) = 8241
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8342) = 8342
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8230) = 8230
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8255) = 8255
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8424) = 8424
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8235) = 8235
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8407) = 8407
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8306) = 8306
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8226) = 8226
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8279) = 8279
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8456) = 8456
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8305) = 8305
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8369) = 8369
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8284) = 8284
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8478) = 8478
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8485) = 8485
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8416) = 8416
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8316) = 8316
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8411) = 8411
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8515) = 8515
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8503) = 8503
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8256) = 8256
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8296) = 8296
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8294) = 8294
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8194) = 8194
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8300) = 8300
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8338) = 8338
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8325) = 8325
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8279) = 8279
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8287) = 8287
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8418) = 8418
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8486) = 8486
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8351) = 8351
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8293) = 8293
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8327) = 8327
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8355) = 8355
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8476) = 8476
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8492) = 8492
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8194) = 8194
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8298) = 8298
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8266) = 8266
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8255) = 8255
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8495) = 8495
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8209) = 8209
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8264) = 8264
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8309) = 8309
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8480) = 8480
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8357) = 8357
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8372) = 8372
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8408) = 8408
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8390) = 8390
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8356) = 8356
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8501) = 8501
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8356) = 8356
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8399) = 8399
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8358) = 8358
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8452) = 8452
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8264) = 8264
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8323) = 8323
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8355) = 8355
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8281) = 8281
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8338) = 8338
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8448) = 8448
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8229) = 8229
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8357) = 8357
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8368) = 8368
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8399) = 8399
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8439) = 8439
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8264) = 8264
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8234) = 8234
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8367) = 8367
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8397) = 8397
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8397) = 8397
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8458) = 8458
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8310) = 8310
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8358) = 8358
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8362) = 8362
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8478) = 8478
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8462) = 8462
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8213) = 8213
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8576) = 8576
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8368) = 8368
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8238) = 8238
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8270) = 8270
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8464) = 8464
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8400) = 8400
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8316) = 8316
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8317) = 8317
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8390) = 8390
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8243) = 8243
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8334) = 8334
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8359) = 8359
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8319) = 8319
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8237) = 8237
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8440) = 8440
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8343) = 8343
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8425) = 8425
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8266) = 8266
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8403) = 8403
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8452) = 8452
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8523) = 8523
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8303) = 8303
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8407) = 8407
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8434) = 8434
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8462) = 8462
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8280) = 8280
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8284) = 8284
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8302) = 8302
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8337) = 8337
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8477) = 8477
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8337) = 8337
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8214) = 8214
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8282) = 8282
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8212) = 8212
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8272) = 8272
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8482) = 8482
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8350) = 8350
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8287) = 8287
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8302) = 8302
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8231) = 8231
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8460) = 8460
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8469) = 8469
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8399) = 8399
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8286) = 8286
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8283) = 8283
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8259) = 8259
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8501) = 8501
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8445) = 8445
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8274) = 8274
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8290) = 8290
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8242) = 8242
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8483) = 8483
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8482) = 8482
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8239) = 8239
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8306) = 8306
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8327) = 8327
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8450) = 8450
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8474) = 8474
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8446) = 8446
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8223) = 8223
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8307) = 8307
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8513) = 8513
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8477) = 8477
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8485) = 8485
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8427) = 8427
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8512) = 8512
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8555) = 8555
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8441) = 8441
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8341) = 8341
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8529) = 8529
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8539) = 8539
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8523) = 8523
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8418) = 8418
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8315) = 8315
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8341) = 8341
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8256) = 8256
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8490) = 8490
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8533) = 8533
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8495) = 8495
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8307) = 8307
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8242) = 8242
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8472) = 8472
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8509) = 8509
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8373) = 8373
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8470) = 8470
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8496) = 8496
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8478) = 8478
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8318) = 8318
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8337) = 8337
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8313) = 8313
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8497) = 8497
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8497) = 8497
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8361) = 8361
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8328) = 8328
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8275) = 8275
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8300) = 8300
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8321) = 8321
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8328) = 8328
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8264) = 8264
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8310) = 8310
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8502) = 8502
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8484) = 8484
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8252) = 8252
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8389) = 8389
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8568) = 8568
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8491) = 8491
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8333) = 8333
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8477) = 8477
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8298) = 8298
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8398) = 8398
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8429) = 8429
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8496) = 8496
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8508) = 8508
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8518) = 8518
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8367) = 8367
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8435) = 8435
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8257) = 8257
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8208) = 8208
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8305) = 8305
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 8260) = 8260
+651582 write(1, "{\"event\": \"fresh_metadata_verifi"..., 131) = 131
+651582 write(1, "\n", 1)                = 1
+651582 write(69, "{\"event\": \"fresh_metadata_comput"..., 4151) = 4151
+651710 +++ exited with 0 +++
+651711 +++ exited with 0 +++
+651714 +++ exited with 0 +++
+651713 +++ exited with 0 +++
+651712 +++ exited with 0 +++
+651715 +++ exited with 0 +++
+651717 +++ exited with 0 +++
+651718 +++ exited with 0 +++
+651719 +++ exited with 0 +++
+651716 +++ exited with 0 +++
+651720 +++ exited with 0 +++
+651721 +++ exited with 0 +++
+651724 +++ exited with 0 +++
+651723 +++ exited with 0 +++
+651722 +++ exited with 0 +++
+651725 +++ exited with 0 +++
+651726 +++ exited with 0 +++
+651729 +++ exited with 0 +++
+651728 +++ exited with 0 +++
+651727 +++ exited with 0 +++
+651730 +++ exited with 0 +++
+651734 +++ exited with 0 +++
+651732 +++ exited with 0 +++
+651733 +++ exited with 0 +++
+651731 +++ exited with 0 +++
+651704 +++ exited with 0 +++
+651706 +++ exited with 0 +++
+651708 +++ exited with 0 +++
+651709 +++ exited with 0 +++
+651707 +++ exited with 0 +++
+651703 +++ exited with 0 +++
+651582 write(25, "\10\0\0\0", 4)        = 4
+651582 write(25, "cleanup/", 8)         = 8
+651582 write(25, "\1\0\0\0", 4)         = 4
+651582 write(25, "1", 1)                = 1
+651582 write(25, "\t\0\0\0", 4)         = 4
+651582 write(25, "refcount/", 9)        = 9
+651582 write(25, "\1\0\0\0", 4)         = 4
+651582 write(25, "0", 1)                = 1
+651705 +++ exited with 0 +++
+651763 +++ exited with 0 +++
+651819 +++ exited with 0 +++
+651587 +++ exited with 0 +++
+651588 +++ exited with 0 +++
+651589 +++ exited with 0 +++
+651591 +++ exited with 0 +++
+651594 +++ exited with 0 +++
+651592 +++ exited with 0 +++
+651590 +++ exited with 0 +++
+651593 +++ exited with 0 +++
+651604 +++ exited with 0 +++
+651606 +++ exited with 0 +++
+651601 +++ exited with 0 +++
+651595 +++ exited with 0 +++
+651605 +++ exited with 0 +++
+651603 +++ exited with 0 +++
+651599 +++ exited with 0 +++
+651596 +++ exited with 0 +++
+651598 +++ exited with 0 +++
+651608 +++ exited with 0 +++
+651609 +++ exited with 0 +++
+651597 +++ exited with 0 +++
+651600 +++ exited with 0 +++
+651607 +++ exited with 0 +++
+651602 +++ exited with 0 +++
+651624 +++ exited with 0 +++
+651626 +++ exited with 0 +++
+651628 +++ exited with 0 +++
+651631 +++ exited with 0 +++
+651625 +++ exited with 0 +++
+651632 +++ exited with 0 +++
+651627 +++ exited with 0 +++
+651630 +++ exited with 0 +++
+651629 +++ exited with 0 +++
+651638 +++ exited with 0 +++
+651633 +++ exited with 0 +++
+651634 +++ exited with 0 +++
+651637 +++ exited with 0 +++
+651636 +++ exited with 0 +++
+651635 +++ exited with 0 +++
+651639 +++ exited with 0 +++
+651640 +++ exited with 0 +++
+651641 +++ exited with 0 +++
+651642 +++ exited with 0 +++
+651643 +++ exited with 0 +++
+651645 +++ exited with 0 +++
+651644 +++ exited with 0 +++
+651646 +++ exited with 0 +++
+651786 +++ exited with 0 +++
+651785 +++ exited with 0 +++
+651784 +++ exited with 0 +++
+651783 +++ exited with 0 +++
+651782 +++ exited with 0 +++
+651781 +++ exited with 0 +++
+651780 +++ exited with 0 +++
+651779 +++ exited with 0 +++
+651778 +++ exited with 0 +++
+651777 +++ exited with 0 +++
+651776 +++ exited with 0 +++
+651775 +++ exited with 0 +++
+651774 +++ exited with 0 +++
+651773 +++ exited with 0 +++
+651739 +++ exited with 0 +++
+651772 +++ exited with 0 +++
+651771 +++ exited with 0 +++
+651770 +++ exited with 0 +++
+651769 +++ exited with 0 +++
+651768 +++ exited with 0 +++
+651767 +++ exited with 0 +++
+651766 +++ exited with 0 +++
+651764 +++ exited with 0 +++
+651737 +++ exited with 0 +++
+651736 +++ exited with 0 +++
+651735 +++ exited with 0 +++
+651611 +++ exited with 0 +++
+651765 +++ exited with 0 +++
+651582 +++ exited with 0 +++

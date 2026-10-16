@@ -1,0 +1,1 @@
+Before GPU execution, reuse the admission-only gen field for the compute-only input_tokens field with a kind-tagged union. This retains the original Trace record layout and per-record byte count. No computation or measured condition changes.

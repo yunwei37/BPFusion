@@ -1,0 +1,143 @@
+--- original.cu
++++ mixed.cu
+@@ -29,12 +29,13 @@
+ };
+ struct Request { unsigned id,prompt,gen,k,position,last,phase; };
+ struct Trace {
+-    unsigned kind,id,query,batch,gen,bad;
++    unsigned kind,id,query,batch,gen,bad,input_tokens;
+     unsigned long long client_ns;
+     unsigned requests[BF_LLM_SLOTS],tokens[BF_LLM_MAX_TOK];
+ };
+ struct Control {
+     unsigned seen,retired,reclaim,error,launches,device_launch_calls,max_active,batch,query,release_rounds,max_release;
++    unsigned input_tokens;
+     unsigned selected[BF_LLM_SLOTS];
+     Request requests[BF_LLM_SLOTS];
+     Trace* trace;
+@@ -59,8 +60,8 @@
+     for(;;) {
+         if(c->batch) {
+             Trace* event=trace_next(c);
+-            if(event) { event->kind=2;event->query=c->query;event->batch=c->batch; }
+-            Step* step=&steps[c->query*BF_LLM_SLOTS+c->batch-1];
++            if(event) { event->kind=2;event->query=c->query;event->batch=c->batch;event->input_tokens=c->input_tokens; }
++            Step* step=&steps[c->input_tokens];
+             for(unsigned row=0;row<c->batch;row++) {
+                 unsigned i=c->selected[row];Request* r=&c->requests[i];
+                 unsigned token=(unsigned)step->output[row];
+@@ -68,7 +69,7 @@
+                 bf_llm_slot* slot=&p->llm[i];
+                 __stcg(&slot->tok_out[r->k],token);__threadfence_system();__stcg(&slot->produced,r->k+1);
+                 r->last=token;r->k++;
+-                r->position=c->query ? r->prompt : r->position+1;
++                r->position=r->k==1 ? r->prompt : r->position+1;
+                 r->phase=r->k==r->gen ? 2 : 1;
+             }
+             c->batch=0;
+@@ -138,34 +139,35 @@
+         }
+         for(unsigned id=c->retired;id!=c->seen;id++) {
+             i=id%BF_LLM_SLOTS;Request* r=&c->requests[i];
+-            if((query && r->phase==3
+-#ifndef BF_PAD_PREFILL
+-                && r->prompt==query
+-#endif
+-            ) || (!query && r->phase==1))c->selected[c->batch++]=i;
++            if(r->phase==3 || r->phase==1)c->selected[c->batch++]=i;
+         }
+         if(!c->batch)continue;
+-        unsigned length=query ? query : 1;
++        unsigned count=0;
+         for(unsigned row=0;row<c->batch;row++) {
+             i=c->selected[row];Request* r=&c->requests[i];
+-            in.lens[row]=query ? r->prompt : r->position+1;
+-            in.starts[row]=row*length;
++            bool prefill=r->phase==3;
++            unsigned length=prefill ? r->prompt : 1;
++            in.lens[row]=prefill ? r->prompt : r->position+1;
++            in.starts[row]=count;
+             for(unsigned column=0;column<in.pages_per_request;column++)
+                 in.table[row*in.stride+column]=in.pages[i*in.pages_per_request+column];
+             for(unsigned j=0;j<length;j++) {
+-                unsigned index=row*length+j,pad=query ? query-r->prompt : 0;
+-                bool dummy=j<pad;
+-                unsigned position=query ? (dummy ? 0 : j-pad) : r->position;
+-                in.ids[index]=dummy ? 0 : (query ? __ldcg(&p->llm[i].tok_in[j-pad]) : r->last);
+-                in.positions[index]=position;in.padding[index]=dummy;
+-                in.slots[index]=dummy ? -1 : (long long)in.pages[i*in.pages_per_request+position/in.block_size]*in.block_size+position%in.block_size;
+-            }
+-            r->phase=4;
+-        }
+-        in.starts[c->batch]=c->batch*length;c->query=query;
++                unsigned index=count+j,position=prefill ? j : r->position;
++                in.ids[index]=prefill ? __ldcg(&p->llm[i].tok_in[j]) : r->last;
++                in.positions[index]=position;in.padding[index]=false;
++                in.slots[index]=(long long)in.pages[i*in.pages_per_request+position/in.block_size]*in.block_size+position%in.block_size;
++            }
++            count+=length;r->phase=4;
++        }
++        unsigned graph_reqs=count<BF_LLM_SLOTS ? count : BF_LLM_SLOTS;
++        for(unsigned row=c->batch;row<graph_reqs;row++) {
++            in.lens[row]=0;in.starts[row]=count;
++            for(unsigned column=0;column<in.pages_per_request;column++)in.table[row*in.stride+column]=0;
++        }
++        in.starts[graph_reqs]=count;c->query=query;c->input_tokens=count;
+         if(c->batch>c->max_active)c->max_active=c->batch;
+         __threadfence();
+-        cudaError_t e=cudaGraphLaunch(steps[query*BF_LLM_SLOTS+c->batch-1].graph,
++        cudaError_t e=cudaGraphLaunch(steps[count].graph,
+ #ifdef BF_CHAINED_DISPATCH
+             cudaStreamGraphTailLaunch);
+ #else
+@@ -196,7 +198,7 @@
+  const unsigned long long* outputs,const unsigned long long* pointers,unsigned stride,
+  unsigned block_size,unsigned pages_per_request,unsigned vocab,unsigned layers,unsigned h,
+  unsigned seconds,unsigned trace_requests,const char* trace_path) {
+-    unsigned size=(BF_LLM_MAX_TOK+1)*BF_LLM_SLOTS;
++    unsigned size=BF_LLM_MAX_TOK*BF_LLM_SLOTS+1;
+     std::vector<Step> host(size);std::vector<cudaGraph_t> combined(size);
+     Step* steps;CUDA(cudaMalloc(&steps,size*sizeof(Step)));
+     Inputs in={};
+@@ -228,21 +230,14 @@
+     __atomic_store_n(&page->stop_ns,0,__ATOMIC_RELEASE);
+     void* args[]={&device,&steps,&in,&vocab,&control};
+     cudaKernelNodeParams params={};params.func=(void*)dispatch;params.gridDim=dim3(1);params.blockDim=dim3(32);params.kernelParams=args;
+-    for(unsigned q=1;q<=BF_LLM_MAX_TOK;q++)for(unsigned b=1;b<=BF_LLM_SLOTS;b++) {
+-        unsigned index=q*BF_LLM_SLOTS+b-1;cudaGraphNode_t body,head;
++    for(unsigned index=1;index<size;index++) {
++        cudaGraphNode_t body,head;
+         CUDA(cudaGraphCreate(&combined[index],0));
+         CUDA(cudaGraphAddChildGraphNode(&body,combined[index],nullptr,0,(cudaGraph_t)bodies[index]));
+         CUDA(cudaGraphAddChildGraphNode(&head,combined[index],&body,1,(cudaGraph_t)heads[index]));
+-#ifdef BF_CHAINED_DISPATCH
+-        // All body/head writes precede dispatch. Tail launch finishes this
+-        // environment before the next step, including self-relaunch.
+-        cudaGraphNode_t next;
+-        CUDA(cudaGraphAddKernelNode(&next,combined[index],&head,1,&params));
+-#endif
+         CUDA(cudaGraphInstantiateWithFlags(&host[index].graph,combined[index],cudaGraphInstantiateFlagDeviceLaunch));
+         CUDA(cudaGraphUpload(host[index].graph,0));host[index].output=(long long*)outputs[index];
+     }
+-    for(unsigned b=0;b<BF_LLM_SLOTS;b++)host[b]=host[BF_LLM_SLOTS+b];
+     CUDA(cudaMemcpy(steps,host.data(),size*sizeof(Step),cudaMemcpyHostToDevice));
+     cudaGraph_t parent_graph;cudaGraphNode_t node;cudaGraphExec_t parent;
+     CUDA(cudaGraphCreate(&parent_graph,0));CUDA(cudaGraphAddKernelNode(&node,parent_graph,nullptr,0,&params));
+@@ -298,7 +293,7 @@
+             fprintf(file,"{\"event\":\"release\",\"batch\":%u,\"request_ids\":[",r.batch);
+             for(unsigned j=0;j<r.batch;j++)fprintf(file,"%s%u",j ? "," : "",r.requests[j]);
+         }else {
+-            fprintf(file,"{\"event\":\"compute\",\"query\":%u,\"batch\":%u,\"request_ids\":[",r.query,r.batch);
++            fprintf(file,"{\"event\":\"compute\",\"query\":%u,\"batch\":%u,\"input_tokens\":%u,\"request_ids\":[",r.query,r.batch,r.input_tokens);
+             for(unsigned j=0;j<r.batch;j++)fprintf(file,"%s%u",j ? "," : "",r.requests[j]);
+             fprintf(file,"],\"tokens\":[");
+             for(unsigned j=0;j<r.batch;j++)fprintf(file,"%s%u",j ? "," : "",r.tokens[j]);
+@@ -311,7 +306,7 @@
+ #endif
+     CUDA(cudaHostUnregister(page));munmap(page,BF_PAGE_MMAP_BYTES);
+     CUDA(cudaGraphExecDestroy(parent));CUDA(cudaGraphDestroy(parent_graph));CUDA(cudaFree(steps));CUDA(cudaFree(control));
+-    for(unsigned index=BF_LLM_SLOTS;index<size;index++) { CUDA(cudaGraphExecDestroy(host[index].graph));CUDA(cudaGraphDestroy(combined[index])); }
++    for(unsigned index=1;index<size;index++) { CUDA(cudaGraphExecDestroy(host[index].graph));CUDA(cudaGraphDestroy(combined[index])); }
+     printf("resident vLLM stopped: launches=1 device_graph_launches=%u graph_error=%u max_active=%u admitted=%u retired=%u trace_overflows=%u release_rounds=%u max_release=%u device_launch_calls=%u\n",result.launches,result.error,result.max_active,result.seen,result.retired,result.trace_overflows,result.release_rounds,result.max_release,result.device_launch_calls);fflush(stdout);
+     return result.error || result.trace_overflows;
+ }

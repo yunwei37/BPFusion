@@ -1,0 +1,49 @@
+{
+  "utc": "2026-10-16T07:51:55.418257+00:00",
+  "owned_temp": "/tmp/bpfusion-mixed-batching-pa97uj6t",
+  "owned_temp_removed": true,
+  "old_process_mapping_fd_cwd_references": [],
+  "preserved_build_files": {
+    "tools/setup_env.sh": true,
+    "build/qwen_graph.so": true,
+    "build/vllm_graph_uring_loop_trace.so": true,
+    "build/vllm_graph_uring_loop_trace.so.o": true,
+    "build/vllm_graph_uring_loop_trace.so.dlink.o": true,
+    "build/vllm_graph_uring_loop_trace": true,
+    "build/bpfusion_load": true,
+    "build/uring_loop.bpf.o": true
+  },
+  "coder_start_identities_preserved": {
+    "1": true,
+    "10909": true
+  },
+  "base_packages_equal": true,
+  "post_removal_analyses": [
+    {
+      "name": "preflight_qwen",
+      "exit": 0,
+      "stdout_identical": true
+    },
+    {
+      "name": "protocol_qwen",
+      "exit": 0,
+      "stdout_identical": true
+    },
+    {
+      "name": "protocol_smol",
+      "exit": 0,
+      "stdout_identical": true
+    },
+    {
+      "name": "full_qwen",
+      "exit": 0,
+      "stdout_identical": true
+    },
+    {
+      "name": "full_smol",
+      "exit": 0,
+      "stdout_identical": true
+    }
+  ],
+  "scope": "Current BPF pins/GPU activity may belong to the separate onboarding validation. Those are preserved, not mistaken for old experimental state. No global host-isolation claim."
+}
