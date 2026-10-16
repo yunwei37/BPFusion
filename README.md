@@ -151,7 +151,7 @@ See [related work](docs/background-related-work.md) and
 
 - Broaden reliability and workload coverage beyond the finite default8
   mixed-scheduling protocol and partial-output cancellation checks.
-- Resolve the remaining native performance/CPU advantage using matched paths.
+- Resolve native's remaining delivery advantage and determine total resource cost.
   Measured TGID/cgroup totals include owned io-wq; shared host IRQ/softirq,
   GPU energy and finite queue occupancy do not provide exclusive attribution.
 - Extend sustained reliability beyond the repaired EOF workload, including
