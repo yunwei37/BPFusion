@@ -87,11 +87,12 @@ def main(args):
   stopped=log.split("resident vLLM stopped:",1)[1].splitlines()[0]
   counters={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",stopped)}
   assert counters["graph_error"]==counters["trace_overflows"]==0
-  assert counters["admitted"]==counters["retired"]
-  if not bad:assert counters["admitted"]==len(good)+8
+  if not bad:assert counters["admitted"]==counters["retired"]==len(good)+8
   if result["condition"]!="native":
    net=json.loads(next(x[7:] for x in log.splitlines() if x.startswith("RESULT ")))
-   assert net["completed"]==net["head"]==counters["admitted"] and net["accepted"]==net["closed"]
+   assert net["completed"]==net["head"] and net["accepted"]==net["closed"]
+   if not bad:assert net["head"]==counters["admitted"]
+   result["network_counters"]=net
    assert net["pending"]==net["error"]==net["reserved"]==net["dropped"]==net["overflow"]==0
    assert net["sqhead"]==net["sqtail"] and net["cqhead"]==net["cqtail"]
    assert terminal["detach"]["exit"]==0 and terminal["final_bpf_stats"]["exit"]==0

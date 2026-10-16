@@ -1,0 +1,24 @@
+[
+  {
+    "model": "qwen",
+    "exit": 0,
+    "archive_stdout_byte_equal": true,
+    "stderr_empty": true,
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/kernel_network_placement_20261016/protocol_analysis.py",
+      "/tmp/bpfusion-kernel-network-archive-replay-ojjvt8ib/qwen_kernel_network_protocol8.jsonl"
+    ]
+  },
+  {
+    "model": "smol",
+    "exit": 0,
+    "archive_stdout_byte_equal": true,
+    "stderr_empty": true,
+    "command": [
+      "/usr/bin/python3",
+      "/workspaces/repository/bench/results/kernel_network_placement_20261016/protocol_analysis.py",
+      "/tmp/bpfusion-kernel-network-archive-replay-ojjvt8ib/smol_kernel_network_protocol8.jsonl"
+    ]
+  }
+]

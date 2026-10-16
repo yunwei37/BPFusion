@@ -155,3 +155,45 @@ declared finite qualification, real three-condition preflight and fixed
 fifteen-cell ordinary matrix. All interpretation and completion boundaries
 in the first review remain. One first review and one substantive follow-up
 have been used; an unchanged-plan rereview is unnecessary.
+
+## Second follow-up: newly added terminal checks
+
+Only the added kernel_network_analysis.py terminal-check block is reviewed;
+the unchanged scientific plan, primary, client, timeout and qualification
+coverage are not reopened. TEMP/archive analyzer copies are identical.
+
+Server/client exit checks, eight successful checked gen1 warmups, graph error/
+trace overflow checks and transport-internal completed==head, accepted==closed,
+pending/error/reserved/drop/overflow0 and balanced rings fit the original
+completion scope. They do not hide adverse client records.
+
+Two unconditional new cross-scope equalities need correction to preserve
+timeouts and partial cancellation: GPU admitted==retired, and network head==
+GPU admitted. The existing dispatcher returns on stop_ns at vllm_mixed.cu:80
+before FIFO retirement at85--87. Host stop sets stop_ns at271, synchronizes the
+model and then invokes transport quiesce/drain. A failed/timed-out client can
+therefore leave an in-flight generation (GPU admitted>retired), or a published
+slot not yet claimed by GPU (network head>GPU admitted). The transport may
+correctly abort/drain these and still exit0. Rejecting those records would
+invalidate promised all-attempt adverse retention.
+
+Require the complete-generation cross-scope equalities only when there are no
+bad client rows, along with admitted==successes+8 as already conditioned.
+When bad rows exist, retain all raw counters and client failures, while keeping
+the transport-internal drain and graph/exit checks. This preserves independent
+network ownership accounting without pretending canceled model generations
+were all normally retired. It changes neither request/oracle nor primary.
+
+The newly added block is not executable for its full promised adverse scope
+as initially written. The original scientific admission remains; this narrow
+correction is needed before execution. This is the second and final follow-up,
+not authorization for a broader matrix or another unchanged-plan review.
+
+The exact correction was supplied and checked within this same second
+follow-up, before remote preflight/full execution: both cross-scope complete-
+generation equalities are now inside if not bad, transport-internal accounting
+remains unconditional, and network_counters retains the original values beside
+server_counters. TEMP/archive analyzer copies match and parse. No request,
+primary, oracle or timeout changes. The introduced adverse-retention defect is
+closed. Final diagnostic verdict: admitted with no remaining blocking defect
+found for the declared scope. First review plus two follow-ups are complete.
