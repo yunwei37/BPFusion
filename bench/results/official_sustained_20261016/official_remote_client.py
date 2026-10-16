@@ -3,6 +3,7 @@
 import argparse,asyncio,json,os,socket,struct,sys,time,traceback
 import uvloop
 import multiprocessing,copy
+CLIENT_WORKERS=4
 from pathlib import Path
 def now():return time.monotonic_ns()
 async def external_attempt(session,host,ids,gen,row,tokens,arrival,vocab):
@@ -116,7 +117,7 @@ async def main(args):
    epoch=getattr(args,"epoch_ns",None) or now();emit("arrival_schedule",epoch_ns=epoch,offsets_ns=offsets,scheduled_ns=[epoch+x for x in offsets],seed=20261015+args.pair)
    if getattr(args,"worker_id",None) is not None:assert now()<epoch,"worker schedule serialization missed common epoch"
    for i,offset in enumerate(offsets):
-    if getattr(args,"worker_id",None) is not None and i%2!=args.worker_id:continue
+    if getattr(args,"worker_id",None) is not None and i%CLIENT_WORKERS!=args.worker_id:continue
     due=epoch+offset;delay=(due-now())/1e9
     if delay>0:await asyncio.sleep(delay)
     tasks.append(asyncio.create_task(tracked(i,due)))
@@ -133,11 +134,11 @@ async def main(args):
 def worker(args):
  raise SystemExit(uvloop.run(main(args)))
 def sharded(args):
- # Two unrestricted async clients, one unchanged global arrival schedule.
+ # Common unrestricted async clients, one unchanged global arrival schedule.
  parent_start=time.process_time_ns();epoch=now()+1000000000
  output=Path(args.output);raw=output.open("x",buffering=1);workers=[]
  try:
-  for index in range(2):
+  for index in range(CLIENT_WORKERS):
    child=copy.copy(args);child.worker_id=index;child.epoch_ns=epoch
    child.output=str(output).removesuffix(".client.jsonl")+".worker"+str(index)+".jsonl"
    proc=multiprocessing.Process(target=worker,args=(child,));proc.start()
@@ -165,7 +166,7 @@ def sharded(args):
   active=0;peak=0
   for _,delta in changes:active+=delta;peak=max(peak,active)
   assert active==0
-  metadata.update(worker_id=None,workers=2,worker_files=[x.name for _,x in workers],
+  metadata.update(worker_id=None,workers=CLIENT_WORKERS,worker_files=[x.name for _,x in workers],
     client_cpu_scope="sum of child acquisition CPU deltas plus supervisor startup/wait/merge; raw worker counters retained",
     duration_scope="one common future scheduled epoch through last original request close",
     inflight_scope="task-start through request-close timestamps",

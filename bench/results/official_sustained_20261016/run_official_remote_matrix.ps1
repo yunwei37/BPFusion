@@ -2,7 +2,7 @@ param([Parameter(Mandatory=$true)][string]$ClientPod,[Parameter(Mandatory=$true)
 $ErrorActionPreference="Stop"
 $taskServerPod="coder-eb48d962-76f4-4ff7-bac5-7bc62ec2ada3-5c8bb655f6-khnns"
 $taskTemp="/tmp/bpfusion-mixed-integration-n4cog5c6"
-$taskStage=if($Preflight){"official_remote_preflight3"}else{"official_remote_full"}
+$taskStage=if($Preflight){"official_remote_preflight3"}else{"official_remote_full_retry1"}
 $taskDirectory="$taskTemp/$taskStage"
 function Invoke-Workspace([string]$Code) {
  $taskAnswer=$Code | & $KubectlHome -n coder exec -i $taskServerPod '--' python3 -
@@ -23,7 +23,7 @@ print(p.stat().st_size)
  $taskOffset=[long](Invoke-Workspace $taskInit)
  if($taskOffset -gt $taskInfo[1]){throw "Existing transfer longer than original"}
  while($taskOffset -lt $taskInfo[1]) {
-  $taskChunk=[Math]::Min([long]262144,[long]$taskInfo[1]-$taskOffset)
+  $taskChunk=[long]$taskInfo[1]-$taskOffset
   $taskRead='import base64,pathlib;p=pathlib.Path("/tmp/{0}.transfer.gz");print(base64.b64encode(p.read_bytes()[{1}:{2}]).decode())' -f $Name,$taskOffset,($taskOffset+$taskChunk)
   $taskPayload=& $KubectlHome -n coder exec $ClientPod '--' python3 -c $taskRead
   if($LASTEXITCODE -ne 0){throw "Original data chunk read failed; retain durable prefix"}
@@ -160,9 +160,11 @@ print('server terminal')
   }
   Receive-ClientFile $taskWarm "$taskPrefix.warmup.jsonl"
   Receive-ClientFile $taskName "$taskCell.client.jsonl"
-  foreach($taskWorker in @(0,1)){
-   $taskWorkerName=$taskName.Replace(".client.jsonl",".worker$taskWorker.jsonl")
-   Receive-ClientFile $taskWorkerName "$taskCell.worker$taskWorker.jsonl"
+  $taskWorkerListing='import json,pathlib;p=pathlib.Path("/tmp/{0}");print("\n".join(json.loads(p.open().readline())["worker_files"]))' -f $taskName
+  $taskWorkerNames=& $KubectlHome -n coder exec $ClientPod '--' python3 -c $taskWorkerListing
+  if($LASTEXITCODE -ne 0){throw "Actual worker list read failed"}
+  foreach($taskWorkerName in $taskWorkerNames){
+   Receive-ClientFile $taskWorkerName "$taskDirectory/$taskWorkerName"
   }
   $taskCode=@"
 from pathlib import Path

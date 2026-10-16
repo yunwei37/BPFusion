@@ -187,3 +187,37 @@ client_failure/terminal failure and raw worker file; it cannot silently qualify
 late injected traffic. Parent and archive analysis also check readiness stamps.
 The final review's conditional executable concern is therefore addressed
 before the third real preflight; no additional review round or run occurred.
+
+## Full-acquisition repair after the first sustained block
+
+first_full.md retains the incomplete3-cell/34560-success prefix and
+two_worker_client/ its exact source. Sustained official arrival-lagP99~415ms
+(max796ms) exposes a client-fairness defect absent from the128-request
+preflight. No server defeat/paired primary is claimed. After all server
+groups exited0, stop only the verified Windows driver/tool descendants in
+raw recovery, preserve/recover all originals, and leave the original
+Workspace/PIDs/Job intact.
+
+Repair only common client distribution from2 to4 unrestricted OS processes
+for allK/N/O. Original indices/offsets are partitioned modulo actual worker
+count; client owns the one count, raw transfer/analysis discover metadata.
+Same request/parser/oracle/timeout/epoch/last-close denominator/primary.
+This changes no backend computation, default or persistent configuration.
+The full-run systematic-defect rule requires all affected comparisons to
+restart: official_remote_full_retry1 runs the complete15 planned cells from
+block0; original cells remain separate, no mixing/favorable replacements.
+This is not a fourth preflight. Full eligibility uses already-qualified
+actual API/parser/worker-join path; fixed full matrix and result review
+determine the repaired comparison's validity. No additional preflight or
+review round is introduced. Client lag/CPU can still invalidate an external
+ranking, and must remain explicit rather than calling a client limit a win.
+
+Post-serving acquisition-only change: remove the inherited256KiB chunk cap
+from raw gzip recovery and send the remaining original file through the
+existing stdin stream. Fleet's existing Invoke-FleetSsh/Invoke-Kubectl path
+already streams pipeline data without command-argument embedding. Actual
+initial11.36MB official gzip recovery took minutes of repeated SSH/API calls.
+This changes only after-stop archival, not any measured client/server/clock/
+metric. Durable prefix lengths, original byte counts and lossless gzip checks
+remain. No new transfer helper, checksum gate, persistent setting or runtime
+configuration. Initial chunked driver remains in two_worker_client/.

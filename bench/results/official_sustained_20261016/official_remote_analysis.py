@@ -33,8 +33,9 @@ def main(args):
    if x["outcome"]!="success":continue
    assert len(x["tokens"])==64 and all(type(v)==int and 0<=v<frozen["frozen_model"]["vocab"] for v in x["tokens"])
    assert x["reference_set_match"]==(x["tokens"] in pool[tuple(x["input_ids"]),64])
-  if meta.get("workers")==2:
-   assert len(meta["worker_files"])==2 and len(cell["worker_cells"])==2
+  if meta.get("workers"):
+   worker_count=meta["workers"]
+   assert len(meta["worker_files"])==worker_count and len(cell["worker_cells"])==worker_count
    worker_raw=[rows(root/name) for name in meta["worker_files"]]
    assert all(w[-1]["event"]=="client_terminal" and w[-1]["exit"]==0 for w in worker_raw)
    joined=sorted([x for w in worker_raw for x in w if x["event"]=="request"],key=lambda x:x["index"])
@@ -42,7 +43,7 @@ def main(args):
    worker_schedules=[next(x for x in w if x["event"]=="arrival_schedule") for w in worker_raw]
    assert all(x["mono_ns"]<cell["epoch_ns"] for x in worker_schedules)
    assert all({k:v for k,v in x.items() if k!="mono_ns"}=={k:v for k,v in schedule.items() if k!="mono_ns"} for x in worker_schedules)
-   assert all([x["index"] for x in sorted([x for x in w if x["event"]=="request"],key=lambda x:x["index"])]==list(range(i,n,2)) for i,w in enumerate(worker_raw))
+   assert all([x["index"] for x in sorted([x for x in w if x["event"]=="request"],key=lambda x:x["index"])]==list(range(i,n,worker_count)) for i,w in enumerate(worker_raw))
    actual_cells=[next(x for x in w if x["event"]=="cell") for w in worker_raw]
    assert cell["worker_cells"]==actual_cells
    assert cell["child_cpu_ns"]==sum(c["client_process_cpu_ns"]-w[0]["process_cpu_ns"] for c,w in zip(actual_cells,worker_raw))
