@@ -200,8 +200,10 @@ def main():
                         "host_cpu": x["host_active_cpu_ms_per_attempt"], "throughput": x["throughput"]}[key]
             effect[key] = ratio([(get(by["kernel", pair]), get(by["native", pair])) for pair in range(5)])
         effect["failures"] = sum(x["failures"] for x in by.values())
+        effect["valid"] = all(x["group_stable"] and x["service_affinity_verified"] and
+            x["latency"]["timer_dispatch_lag_ms"]["p99"] <= max(1, .1 * x["latency"]["scheduled_response_ms"]["p99"]) for x in by.values())
         cpu, tail, rate = effect["group_cpu"], effect["p99"], effect["throughput"]
-        effect["advantage"] = (not effect["failures"] and rate[1] >= .98 and
+        effect["advantage"] = (effect["valid"] and not effect["failures"] and rate[1] >= .98 and
                                ((cpu[2] < .90 and tail[2] <= 1.05) or (tail[2] < .90 and cpu[2] <= 1.05)))
         effects.append(effect)
         if index < 2:
@@ -323,6 +325,8 @@ def main():
     inline("approximate slot tail factor", r"a (\d+)\$\\times\$ lower completion", [fixes[4][0] / fixes[4][1]], tolerance=1)
     inline("approximate NODELAY tail factor", r"a (\d+)\$\\times\$ lower token-gap", [tcp_before / tcp_after], tolerance=1)
     inline("LLM top request count", r"over ([\d,]+)\s+requests with no failures", [sum(x["attempts"] for x in official)])
+    checks.append(dict(item="confirmation resource/mask/timing validity", recomputed=all(x["valid"] for x in effects),
+                       status="PASS" if all(x["valid"] for x in effects) else "MISMATCH"))
     count = sum(x["attempts"] for x in official + capacity + screen + confirmation)
     minimum = float(re.search(r"more than ([\d.]+) million", paper)[1]) * 1e6
     checks.append(dict(item="abstract final-experiment request lower bound", paper=minimum, recomputed=count,
@@ -391,11 +395,11 @@ def main():
     for i, x in enumerate(figure_cpu):
         ax.text(i, 40.5, "%.2f" % x["total"], ha="center", fontsize=9)
     ax.set(ylim=(0, 46), ylabel="CPU per request (microseconds)")
-    ax.legend(ncols=2, loc="upper center")
+    ax.legend(ncols=2, loc="lower center", bbox_to_anchor=(.5, 1.01), frameon=False)
     for ext in ["png", "pdf"]:
         fig.savefig(out / ("figure2_cpu." + ext), dpi=180)
     plt.close(fig)
-    fig, ax = plt.subplots(figsize=(6.8, 2.6), layout="constrained")
+    fig, ax = plt.subplots(figsize=(6.8, 3.0), layout="constrained")
     left = [0, 0]
     for i, (label, color) in enumerate(zip(["network and softirq", "loop coordination", "BPF map operations", "other"],
                                          ["#91bad5", "#da8c8c", "#eda64a", "#cccccc"])):
@@ -403,7 +407,7 @@ def main():
         ax.barh(["Native epoll", "Kernel-owned"], values, left=left, label=label, color=color)
         left = [a + b for a, b in zip(left, values)]
     ax.set(xlim=(0, 100), xlabel="Share of on-CPU kernel sampled periods (%)")
-    ax.legend(ncols=2, loc="upper center", bbox_to_anchor=(.5, 1.65), fontsize=8)
+    ax.legend(ncols=2, loc="lower center", bbox_to_anchor=(.5, 1.02), fontsize=8, frameon=False)
     for ext in ["png", "pdf"]:
         fig.savefig(out / ("figure3_perf." + ext), dpi=180)
     plt.close(fig)
