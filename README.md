@@ -60,8 +60,10 @@ module-free vLLM target; the legacy module transport remains separate.
 [Fresh-environment validation](bench/results/onboarding_20261016/) passes both
 models/transports with real HTTP/TCP requests.
 
-Tested stack:Linux 7.3-rc3, x86-64, RTX 5090(sm_120), CUDA toolkit 13.0, libbpf 1.6.3,
-Python 3.12 and the [pinned Python environment](requirements.txt).
+Tested stack:Linux 7.3-rc3, x86-64, RTX 5090(sm_120), CUDA toolkit 13.0,
+Python 3.12 and the [pinned Python environment](requirements.txt). Ordinary builds
+were qualified with system libbpf 1.3 headers and the 1.6.3 library; see the
+[header/runtime compatibility note](ARTIFACT.md#live-reruns).
 The BPF loop needs its recent io_uring BPF/BTF/UAPI interfaces.
 Another GPU or simply a recent Linux version does not establish compatibility.
 See the [host record](bench/results/HOST.md).

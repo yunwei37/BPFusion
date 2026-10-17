@@ -12,7 +12,7 @@ models and transports. This is a tested-host walkthrough, not a fresh-OS test.
 
 Demonstrated stack:x86-64 Linux 7.3-rc3 with BTF, cgroup v2, bpffs, io_uring BPF
 struct_ops/kfuncs and matching kernel UAPI headers; RTX 5090, CUDA toolkit 13.0(nvcc 13.0.88) and
-driver 610.57.04; Python 3.12 and libbpf 1.6.3.
+driver 610.57.04; Python 3.12, system libbpf 1.3 headers and the libbpf 1.6.3 library.
 See [host](../bench/results/HOST.md) and [kernel boundary](architecture.md#capacity-and-compatibility).
 Use an existing root shell or privileged development container with GPU/BPF/
 cgroup/bpffs access. These steps do not change the host kernel or driver.
@@ -37,12 +37,18 @@ UAPI headers; missing recent io_uring definitions are a compatibility failure.
 Use your existing checkout, or obtain the public project:
 
 ~~~sh
-git clone --depth 1 https://github.com/yunwei37/BPFusion.git
-cd BPFusion
+git clone --depth 1 https://github.com/yunwei37/bpf-gpu-server.git source
+cd source
 ~~~
 
-Install libbpf privately, without replacing system libraries. The demonstrated
-x86-64 install layout is usr/lib64:
+Install the libbpf 1.6.3 library privately, without replacing system libraries.
+Keep the system 1.3 headers on the compiler include path: adding the private
+1.6.3 headers via C_INCLUDE_PATH or CPLUS_INCLUDE_PATH conflicts with
+bpf_stream_vprintk in the checked-in vmlinux.h. The
+[artifact compatibility note](../ARTIFACT.md#live-reruns) retains the
+failed build and the passing ordinary-build smokes. A distribution with different
+headers is not qualified by this walkthrough. The demonstrated x86-64 private
+library install layout is usr/lib64:
 
 ~~~sh
 bpfusion_deps="$(mktemp -d /tmp/bpfusion-deps.XXXXXX)"
@@ -51,6 +57,7 @@ curl -L https://codeload.github.com/libbpf/libbpf/tar.gz/refs/tags/v1.6.3 \
 tar -xzf "$bpfusion_deps/libbpf.tar.gz" -C "$bpfusion_deps"
 make -C "$bpfusion_deps/libbpf-1.6.3/src" \
   DESTDIR="$bpfusion_deps/install" install
+export LIBRARY_PATH="$bpfusion_deps/install/usr/lib64${LIBRARY_PATH:+:$LIBRARY_PATH}"
 export LD_LIBRARY_PATH="$bpfusion_deps/install/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 export CUDA_HOME=/usr/local/cuda
 export PATH="$CUDA_HOME/bin:$PATH"

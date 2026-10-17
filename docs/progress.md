@@ -183,3 +183,24 @@ builds removed after published evidence and process-user checks. Public files
 returnHTTP200 and match workspace bytes;main is synchronized. Original
 Workspace/PVC/PID identities and foreign WIP remain. The artifact task is
 complete with the paper rounding discrepancy and interpretation limits explicit.
+
+## 2026-10-17 08:59 Los Angeles: setup documentation follow-up
+
+The remaining reproducibility constraint is the qualified host/header combination,
+not another unresolved performance search. The artifact captured a real failure
+when private libbpf 1.6.3 headers conflicted with generated vmlinux.h, but the
+entry-point setup prose still named only 1.6.3. The most useful immediate action
+is carrying that evidence into onboarding: README and getting-started now name
+system 1.3 headers plus the 1.6.3 library, keep private headers off the include
+path, and expose the private link-library path. The download example uses the
+renamed public remote and a name-independent local directory.
+
+Verification: the live Workspace has libbpf-dev 1:1.3.0-2build2 and the retained
+private 1.6.3 library, matching the archived failure/passing-build receipts.
+All 181 relative links/fragments in the seven current entry-point documents
+resolve; all 14 getting-started shell blocks pass bash syntax checking.
+The directory inspection found no reason to remove historical evidence or
+foreign/ignored work. No new benchmark is needed for these prose corrections.
+The closed negative result and paper-owner discrepancy decisions remain as
+recorded in ARTIFACT.md; further progress requires a concrete new fault or
+hypothesis. Paper files, serving code, defaults and frozen data are unchanged.
