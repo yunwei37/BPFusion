@@ -24,6 +24,13 @@ def cell(p):
     ca,cb=kv(a["cgroup"]["cpu.stat"]),kv(b["cgroup"]["cpu.stat"])
     cg={k:cb[k]-ca[k] for k in set(ca)&set(cb)}
     pa,pb=psi(a["host"]["pressure/cpu"]),psi(b["host"]["pressure/cpu"])
+    tick_parts={}
+    for label,index in [("user",11),("system",12)]:
+        value=sum(int(fields(v)[index]) for v in b["process_group"].values())-sum(int(fields(v)[index]) for v in a["process_group"].values())
+        tick_parts[label]=value/tick*1000/attempts
+    intervals=[x for x in samples if not x["device"]]
+    durations=[(x["sample_end_ns"]-x["sample_begin_ns"])/1e6 for x in intervals]
+    detail_durations=[(x["sample_end_ns"]-x["sample_begin_ns"])/1e6 for x in intervals if "service_threads" in x]
     mask=m["sampled_affinity_masks"]
     gpu=[s["device"] for s in samples if s["device"]]
     return dict(tag=m["tag"],operation=m["operation"],repeat=m["repeat"],cores=m["cores"],mode=m["mode"],
@@ -31,6 +38,9 @@ def cell(p):
       owned_group_cpu_ms_per_attempt=m["owned_group_cpu_ms_per_attempt"],
       host_active_cpu_ms_per_attempt=m["host_active_cpu_ms_per_attempt"],
       host_classes_ms_per_attempt={k:v/attempts for k,v in m["host_cpu_ms_by_class"].items()},
+      group_tick_cpu_ms_per_attempt=tick_parts,
+      observer_interval_sample_duration_ms=dict(mean=sum(durations)/len(durations),max=max(durations),
+        detail_max=max(detail_durations) if detail_durations else None,count=len(durations)),
       observer_cpu_ms_per_attempt=(b["observer_cpu_ns"]-a["observer_cpu_ns"])/1e6/attempts,
       sampled_masks=mask,observed_service_threads=threads,
       boundary_service_thread_changes=dict(first_only=sorted(set(ta)-set(tb)),last_only=sorted(set(tb)-set(ta))),

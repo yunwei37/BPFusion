@@ -1,0 +1,929 @@
+{
+  "cells": 92,
+  "measured": 3132000,
+  "measured_cell_warmups": 2944,
+  "extra_unmeasured_interruption_warmups": 32,
+  "checked": [
+    {
+      "phase": "client_dispatch_initial",
+      "tag": "screen_cpp_fft_w1_c2_r1000_kernel",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": 1544192,
+      "network_sends": 7369,
+      "server_exit": 0
+    },
+    {
+      "phase": "client_dispatch_initial",
+      "tag": "screen_cpp_fft_w1_c2_r1000_native",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w16_c0_r1000_kernel",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": 1544192,
+      "network_sends": 6942,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w16_c0_r1000_native",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w16_c0_r16000_kernel",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": 24584192,
+      "network_sends": 171183,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w16_c0_r16000_native",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w16_c0_r4000_kernel",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": 6152192,
+      "network_sends": 33749,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w16_c0_r4000_native",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w1_c0_r1000_kernel",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": 1544192,
+      "network_sends": 7013,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w1_c0_r1000_native",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w1_c0_r16000_kernel",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": 24584192,
+      "network_sends": 169250,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w1_c0_r16000_native",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w1_c0_r4000_kernel",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": 6152192,
+      "network_sends": 34632,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w1_c0_r4000_native",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w1_c1_r1000_kernel",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": 1544192,
+      "network_sends": 7438,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w1_c1_r1000_native",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w1_c1_r16000_kernel",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": 24584192,
+      "network_sends": 169833,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w1_c1_r16000_native",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w1_c1_r4000_kernel",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": 6152192,
+      "network_sends": 36572,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w1_c1_r4000_native",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w256_c0_r1000_kernel",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": 1544192,
+      "network_sends": 7389,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w256_c0_r1000_native",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w256_c0_r16000_kernel",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": 24584192,
+      "network_sends": 190231,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w256_c0_r16000_native",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w256_c0_r4000_kernel",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": 6152192,
+      "network_sends": 43230,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_fft_w256_c0_r4000_native",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w16_c0_r1000_kernel",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": 1544192,
+      "network_sends": 6841,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w16_c0_r1000_native",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w16_c0_r16000_kernel",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": 24584192,
+      "network_sends": 160765,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w16_c0_r16000_native",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w16_c0_r4000_kernel",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": 6152192,
+      "network_sends": 32872,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w16_c0_r4000_native",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c0_r1000_kernel",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": 1544192,
+      "network_sends": 7053,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c0_r1000_native",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c0_r16000_kernel",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": 24584192,
+      "network_sends": 160898,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c0_r16000_native",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c0_r4000_kernel",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": 6152192,
+      "network_sends": 34664,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c0_r4000_native",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c1_r1000_kernel",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": 1544192,
+      "network_sends": 7075,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c1_r1000_native",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c1_r16000_kernel",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": 24584192,
+      "network_sends": 161210,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c1_r16000_native",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c1_r4000_kernel",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": 6152192,
+      "network_sends": 35731,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c1_r4000_native",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c2_r1000_kernel",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": 1544192,
+      "network_sends": 7195,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c2_r1000_native",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c2_r16000_kernel",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": 24584192,
+      "network_sends": 161550,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c2_r16000_native",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c2_r4000_kernel",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": 6152192,
+      "network_sends": 35488,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w1_c2_r4000_native",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w256_c0_r1000_kernel",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": 1544192,
+      "network_sends": 6991,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w256_c0_r1000_native",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w256_c0_r16000_kernel",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": 24584192,
+      "network_sends": 190289,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w256_c0_r16000_native",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w256_c0_r4000_kernel",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": 6152192,
+      "network_sends": 39101,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_matmul_w256_c0_r4000_native",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_recovered_fft_w1_c2_r1000_kernel",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": 1544192,
+      "network_sends": 7303,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_recovered_fft_w1_c2_r1000_native",
+      "measured": 6000,
+      "warmups": 32,
+      "graph_launches": 6032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_recovered_fft_w1_c2_r16000_kernel",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": 24584192,
+      "network_sends": 169680,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_recovered_fft_w1_c2_r16000_native",
+      "measured": 96000,
+      "warmups": 32,
+      "graph_launches": 96032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_recovered_fft_w1_c2_r4000_kernel",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": 6152192,
+      "network_sends": 36672,
+      "server_exit": 0
+    },
+    {
+      "phase": "screen",
+      "tag": "screen_cpp_recovered_fft_w1_c2_r4000_native",
+      "measured": 24000,
+      "warmups": 32,
+      "graph_launches": 24032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s0_p0_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 23983,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s0_p0_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s0_p1_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 23858,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s0_p1_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s0_p2_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 24046,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s0_p2_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s0_p3_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 23881,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s0_p3_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s0_p4_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 23746,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s0_p4_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s1_p0_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 23911,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s1_p0_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s1_p1_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 23750,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s1_p1_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s1_p2_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 23705,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s1_p2_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s1_p3_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 23769,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s1_p3_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s1_p4_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 23389,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s1_p4_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s2_p0_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 23496,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s2_p0_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s2_p1_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 23887,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s2_p1_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s2_p2_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 23585,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s2_p2_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s2_p3_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 24208,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s2_p3_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s2_p4_kernel",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": 5128192,
+      "network_sends": 23846,
+      "server_exit": 0
+    },
+    {
+      "phase": "confirmation",
+      "tag": "confirm_s2_p4_native",
+      "measured": 20000,
+      "warmups": 32,
+      "graph_launches": 20032,
+      "reply_bytes": null,
+      "network_sends": null,
+      "server_exit": 0
+    }
+  ],
+  "scope": "Actual graph calls/counts/normal stop and kernel reply byte accounting. No GPU-interval timing or universal numerical claim."
+}

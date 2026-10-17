@@ -52,8 +52,11 @@ def main(a):
             v=effect["geometric_ratio"];lo,hi=effect["t95_ratio"]
             ax.errorbar(v,pos,xerr=[[v-lo],[hi-v]],fmt="o",capsize=4,color="0.15")
         ax.set_yticks(range(4),["group CPU","P99","throughput","shared-host CPU"])
-        ax.set_xscale("log");ax.axvline(1,color="0.5");ax.axvline(.9,color=K,ls=":");ax.axvline(1.05,color=N,ls=":")
+        ax.set_xscale("log");ax.axvline(1,color="0.5")
         ax.set_xlabel("Kernel / native ratio; nominal paired t95, df4");ax.grid(True,axis="x",alpha=.2)
+        bounds=ax.get_xlim();ticks=[v for v in [.25,.5,1,2,4,8] if bounds[0]<=v<=bounds[1]]
+        ax.set_xticks(ticks,[format(v,"g") for v in ticks]);ax.minorticks_off()
     fig.suptitle("New-seed five-pair confirmation; thin curves = individual cells\nSuccess-conditional tails; counts include every scheduled attempt; no multiplicity guarantee")
     save(a,"confirmation",fig)
+    print(json.dumps(dict(matplotlib=matplotlib.__version__,numpy=np.__version__,figures=["screen_matmul","screen_fft","confirmation"])))
 if __name__=="__main__":main(Path(sys.argv[1]))

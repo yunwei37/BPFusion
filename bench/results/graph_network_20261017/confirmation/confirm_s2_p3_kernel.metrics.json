@@ -1,0 +1,136 @@
+{
+  "event": "cell",
+  "tag": "confirm_s2_p3_kernel",
+  "mode": "kernel",
+  "operation": "matmul",
+  "repeat": 1,
+  "cores": 1,
+  "affinity": [
+    0
+  ],
+  "offered_rate": 1000,
+  "seed": 420261220,
+  "offered_seconds": 20.0,
+  "duration_s": 20.000634271,
+  "attempts": 20000,
+  "successes": 20000,
+  "failures": 0,
+  "throughput": 999.9682874557174,
+  "failure_fraction": 0.0,
+  "failure_types": {},
+  "latency": {
+    "scheduled_response_ms": {
+      "mean": 1.74077848165,
+      "p50": 1.021821,
+      "p90": 1.6822287000000018,
+      "p95": 4.664217649999992,
+      "p99": 19.263737909999964,
+      "p999": 37.40872500400026,
+      "max": 53.54434
+    },
+    "begin_response_ms": {
+      "mean": 1.69295490305,
+      "p50": 0.983585,
+      "p90": 1.609200900000001,
+      "p95": 4.450453849999996,
+      "p99": 19.056451049999993,
+      "p999": 37.372735518000255,
+      "max": 53.478564
+    },
+    "client_connection_wait_ms": {
+      "mean": 0.0478235786,
+      "p50": 0.033297,
+      "p90": 0.052058099999999996,
+      "p95": 0.06879594999999998,
+      "p99": 0.23770485999999824,
+      "p999": 1.9488881230000077,
+      "max": 16.063716
+    },
+    "timer_dispatch_lag_ms": {
+      "mean": 0.065446301743968,
+      "p50": 0.04191,
+      "p90": 0.09819920000000001,
+      "p95": 0.131744,
+      "p99": 0.31410174999999774,
+      "p999": 1.804807415000096,
+      "max": 23.845232
+    }
+  },
+  "first_quarter_response_mean_ms": 1.6708644658,
+  "last_quarter_response_mean_ms": 1.5221810768,
+  "failure_aware_p99_ms": 19.263737909999964,
+  "failure_aware_p99_status": "all_attempt_rank_with_failed_requests_at_infinity",
+  "service_affinity_verified": true,
+  "sampled_affinity_masks": [
+    "0"
+  ],
+  "group_stable": true,
+  "owned_group_cpu_ms_per_attempt": 0.0339859758,
+  "owned_group_cpu_ms_per_success": 0.0339859758,
+  "host_active_cpu_ms_per_attempt": 12.6665,
+  "host_cpu_ms_by_class": {
+    "user": 220840.0,
+    "nice": 50.0,
+    "system": 30150.0,
+    "idle": 343390.0,
+    "iowait": 940.0,
+    "irq": 0.0,
+    "softirq": 2290.0,
+    "steal": 0.0,
+    "guest": 0.0,
+    "guest_nice": 0.0
+  },
+  "observation_s": 24.643035978,
+  "client_cpu_ms_per_attempt": 0.42120501525,
+  "service_thread_affinity": [
+    {
+      "tid": "868430",
+      "allowed": "0"
+    },
+    {
+      "tid": "868432",
+      "allowed": "0"
+    },
+    {
+      "tid": "868433",
+      "allowed": "0"
+    },
+    {
+      "tid": "868434",
+      "allowed": "0"
+    },
+    {
+      "tid": "868435",
+      "allowed": "0"
+    }
+  ],
+  "counters": {
+    "accepted": 256,
+    "received": 20032,
+    "sends": 24208,
+    "bytes": 5128192,
+    "completed": 20032,
+    "closed": 256,
+    "aborted": 0,
+    "max_connections": 128,
+    "max_requests": 8,
+    "pending": 0,
+    "error": 0,
+    "head": 20032,
+    "reserved": 0,
+    "dropped": 0,
+    "overflow": 0,
+    "sqhead": 76449,
+    "sqtail": 76449,
+    "cqhead": 103187,
+    "cqtail": 103187,
+    "trace_count": 20032,
+    "trace_overflow": 19904
+  },
+  "idle_window_s": 4.28374979,
+  "idle_host_active_cpu_ms_per_s": 9914.211165914057,
+  "idle_group_cpu_ms_per_s": 0.6139436542581074,
+  "idle_context_host_delta_ms_per_attempt": 0.45068687724452755,
+  "idle_context_group_delta_ms_per_attempt": 0.03322950402198263,
+  "scope": "Process/group, cgroup and host overlap; host includes foreign tasks and observer."
+}
