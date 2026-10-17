@@ -775,3 +775,15 @@ ordinary15-cell remote comparison. Identical model dispatch accompanies a
 small0.22% TPS/124ms completionP99 local improvement at28.5% higher owned CPU;
 native superiority and receive-gap improvement remain unproven. The candidate
 stays an unselected archived source; normal Make targets retain0074.
+
+
+## Sustained external serving reference
+
+[Finding0078](findings/0078-sustained-official-vllm.md) completes the matched
+same-model/GPU official optimized vLLM reference. Official owns its normal
+API/scheduler/KV/capacity,while K/N share the resident16-slot GPU executor.
+The full remote192/s test finds official higher delivered throughput and much
+lower completion/TTFT tails; K-N throughput/completion intervals cross0.
+Lower resident group CPU/TPOT is a design tradeoff,not an eBPF-only saving.
+Residual client lag/streaming/coalescing and finite trajectory flags remain.
+Current evidence does not support general transport speed superiority.

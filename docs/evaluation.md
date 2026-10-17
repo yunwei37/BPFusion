@@ -1826,3 +1826,27 @@ reconstructed. This is a client dependency repair, not server acceleration.
 Freeze ordinary uninstrumented raw-payload collection and restart all15cells
 in official_remote_full_retry2; old prefixes and instrumented controls remain
 separate. Full results/review/cleanup remain pending.
+
+
+### 2026-10-17 sustained official comparison complete
+
+[Finding0078](findings/0078-sustained-official-vllm.md) closes the reviewed
+supporting comparison for the unchanged serving objective. All15 ordinary
+retry2 cells deliver172800 requests/11059200tokens with0 failures; original
+invalid prefixes and client-GC controls remain separate. Independent archived
+raw replay is byte-identical. [Complete result](../bench/results/official_sustained_20261016/result.md)
+links source/frozen inputs/raw workers, all69 paired effects, resource ledger,
+visuals, fresh review and actual cleanup.
+
+Fixed N-O deliveredTPS -599.430 [-623.509,-575.351],~4.90% adverse,contradicts
+resident keeping up at this fixed offered load. Official default optimization
+is engaged; completionP99~611ms versus native3314ms/K3304ms. K-N TPS and
+completionP99 cross0,not equivalence or superiority. Residual official client
+lagP99 up to41.99ms/protocol coalescing prevents GPU/kernel ITL attribution;
+all scheduled-origin/adverse/finite reference-pool flags remain. Resource
+subsets include group user/system and stable threads; shared softirq/device
+and missing kernel-worker visibility leave exclusive total cost unresolved.
+Research value supporting; impact additional objective evidence/design boundary.
+No intrinsic eBPF speedup, maximum-capacity ranking or old6.36ms allocation.
+Kernel candidate unselected; default0074 stays. Next decision follows the
+finite reusable-backend implementation goal,not repeated closed micro-sweeps.

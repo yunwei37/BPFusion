@@ -1,17 +1,21 @@
-# Ordinary sustained acquisition checkpoint, incomplete
+# Complete ordinary sustained acquisition
 
-Two complete blocks/six cells have original merged/worker/warmup/server/resource
-archives recovered. Source input main8d565c7 remains frozen; actual client,
-model libraries, offsets, oracle, timer and standard analysis are unchanged.
-This artifact-only checkpoint is published in post-serving raw recovery with
-no GPU service active at publication entry. Later receipt HEAD can change
-without code/binary selection changing. Final publication receipt retains actual
-time/context; no canonical source/default is adopted.
+2026-10-17 UTC. All15 cells/five paired blocks complete in official_remote_full_retry2.
+Each has11520 successes,0 failures and full merged/four-worker/warmup/server/resource
+raw data. Frozen source8d565c7; later8e88d46/4309883 are artifact/transfer changes.
+See result.md for the full fixed-primary result, adverse rows, finite oracle
+flags, client residual lag, and earlier failed/diagnostic contexts.
 
-Full15cells/five paired blocks remain incomplete; no prefix primary/paired
-effect is computed or interpreted. Actual failure/timeout/pool flags, all
-client timing and worker data remain for full analysis. No exclusions or
-favorable cell replacements. Current raw-payload client is uninstrumented;
-both failed earlier prefixes and instrumented fault controls remain separate.
-Original sessions/WIP and the bounded client Job remain for this same matrix.
-Full analysis/replay/figure/fresh review and actual owned-client cleanup remain.
+Checkpoint_publication.json retains the actual historical6-cell publication,
+with GPU absent at entry/exit. transfer_recovery.md records window8 acknowledgment
+loss, idempotent original-byte recovery and resume at9 without rerunning cells.
+No prefix primary was interpreted. No measured request/clock/oracle/client/model
+change occurred within retry2. All old incomplete prefixes remain separate.
+
+All15 acquisition terminals0; independent archived-gzip analysis exits0 and
+matches acquisition analysis byte-for-byte, stderr empty (full_archive_replay.json).
+resource_context.jsonl uses the existing raw process/thread/host counters;
+shared/nested views do not become exclusive total attribution. PNG/PDF are
+generated from the same fixed analysis. Final visual check, result-review and
+exactUID Job/Pod cleanup receipts are linked by result.md/cleanup.json.
+Canonical source/default remains0074 throughout acquisition.

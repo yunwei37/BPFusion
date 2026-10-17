@@ -134,6 +134,11 @@ forced into a Python per-token loop.
   an unselected candidate removes the GPU I/O CTA with identical model dispatch.
   TPS improves0.22% and completionP99 falls124ms versus the old loop, while owned
   CPU rises28.5%. It establishes no native advantage or historical6.36ms repair.
+- [Sustained official reference](docs/findings/0078-sustained-official-vllm.md):
+  complete15-cell Qwen192/s remote comparison:official~12245 versus resident
+  ~11645 tokens/s,completionP99~611 versus3304--3314ms. Native-minus-official
+  primary is about4.90% adverse. BPF-versus-native speed superiority remains
+  unproven; CPU,client-gap,finite oracle and residual client-lag limits are explicit.
 - [Opaque graph backend](docs/findings/0067-opaque-graph-backend.md):cuBLAS/cuFFT
   ordinary default8 numerical/lifecycle checks pass on both transports.
 - [Fair native admission](docs/findings/0063-fair-native-admission.md):

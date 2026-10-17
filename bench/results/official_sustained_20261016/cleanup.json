@@ -1,0 +1,46 @@
+{
+  "utc": "2026-10-17T00:34:37.393872+00:00",
+  "owned_client": {
+    "job": "bpfusion-sustained-client-20261016",
+    "job_uid": "05dd90ec-61ee-4009-a679-07b23c79556c",
+    "pod": "bpfusion-sustained-client-20261016-8bnhx",
+    "pod_uid": "560550e8-05c1-4c6d-a48a-963690855182",
+    "deletion": "exactUID verified before owning Job deletion; actual Job/Pod absence checked separately by kubectl"
+  },
+  "original_pids": [
+    {
+      "pid": 1,
+      "starttime": "8626595"
+    },
+    {
+      "pid": 10909,
+      "starttime": "8662925"
+    }
+  ],
+  "pins": [],
+  "gpu_apps": "",
+  "source_unchanged_from_frozen": {
+    "Makefile": true,
+    "executor/vllm_mixed.cu": true,
+    "executor/graph_server.cu": true,
+    "executor/io_uring_tcp.h": true,
+    "executor/userspace_tcp.h": true,
+    "bpf/uring_loop.bpf.c": true,
+    "bpf/include/bpfusion_queue.h": true
+  },
+  "ephemeral_key_removed": true,
+  "foreign_setup_env_preserved": true,
+  "ordinary_cells": 15,
+  "service_terminals_exit0": true,
+  "archive_replay": {
+    "exit": 0,
+    "byte_equal": true,
+    "stderr_bytes": 0
+  },
+  "visual": {
+    "png": "root and independent reviewer inspected all four panels",
+    "pdf": "same figure savefig vector output; not separately rasterized"
+  },
+  "generic_followup": "Only after all15serving windows stopped/GPU empty: private graph backend4cells/182checks each; default source unchanged at cleanup",
+  "fleet": "all11nodes Ready/fresh lease at2026-10-17T00:33:46Z; g10/lab included; foreign CPU work unchanged"
+}
