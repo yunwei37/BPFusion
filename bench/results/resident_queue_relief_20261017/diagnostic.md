@@ -14,13 +14,14 @@ optimization. Both cases use nativeepoll and the same upstream graph adapter.
 | TTFTP99,ms |3244.200|225.900|
 | MeanTTFT,ms |1786.157|53.406|
 | MeanTPOT,ms |1.354614|1.427012|
+| ClientreceivegapP99,ms |3.272828|9.804483|
 | Clientarrival-lagP99,ms |1.552435|2.608308|
 | OwnedgroupCPU,ms/attempt |0.751162|0.588059|
 | Peakinflight |621|94|
 | Frozen-pooldisagreementflags |1|123|
 
 Tail reduction is~89.26%,throughput~+5.29% in this single control; no five-pair
-uncertainty or current official superiority is claimed. MeanTPOT worsens and
+uncertainty or current official superiority is claimed. MeanTPOT and clientreceivegapP99 worsen and
 all123N32poolflags remain; finite exact protocol/replay is not universal
 ordinary trajectory parity. Request/parser/oracle/timeout/metrics are unchanged.
 All raw merged/four-worker/warmup/server/resource files and exit0analysis are
