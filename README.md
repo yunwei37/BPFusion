@@ -22,6 +22,16 @@ A recent-kernel io_uring/eBPF path needs no custom TCP kernel module.
 General eBPF latency/throughput superiority over efficient native TCP is
 **not established**.
 
+## Paper and write-ups
+
+The four-page report [*Does Kernel-Owned Networking Make GPU Serving Cheaper?
+Lessons from BPFusion*](paper/bpfusion.pdf) summarizes the design, the
+same-executor comparison and why the kernel-owned path saves no CPU: per-request
+work moves from user to system time because the Linux TCP stack and GPU
+completion coordination remain on both paths. Blog posts:
+[English](https://eunomia.dev/blog/2026/10/17/bpfusion-kernel-owned-networking/) and
+[中文](https://eunomia.dev/zh/blog/2026/10/17/bpfusion-kernel-owned-networking/).
+
 ## Start here
 
 For the model-independent surface, follow the [captured-graph runbook](docs/graph-backends.md).
@@ -191,6 +201,7 @@ rewriting model-specific attention/matrix kernels.
 | module/ | Legacy TCP transport |
 | tests/, bench/ | Correctness and controlled benchmarks |
 | docs/findings/, bench/results/ | Findings and reproducible evidence |
+| paper/ | Four-page report source and PDF |
 
 Synthetic MLP, host-driven Python, handwritten Qwen and experimental variants
 remain controls with their own evidence. Older bench/run_* scripts manage
