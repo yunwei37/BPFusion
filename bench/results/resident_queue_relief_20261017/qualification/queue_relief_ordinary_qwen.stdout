@@ -1,0 +1,105 @@
+{
+  "model": "qwen",
+  "start": "2026-10-17T02:03:02.308131+00:00",
+  "oracle_frozen_at": "2026-10-16T09:00:30.523112+00:00",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "ready_time_ns": 1792202635755817464,
+  "native_pid": 841006,
+  "before_backlog_rst": {
+    "head": 63,
+    "queued": 160,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 31\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 223\nsockhash linked 13\nsockhash failed 0\nparser calls   223\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=63\nllm_queued=160 sockhash_first_errno=0\nllm_reserved=0xffffffff\nllm[0]: state=1 prompt=5 gen=64 produced=1 client_ns=634028362820601\nllm[1]: state=1 prompt=5 gen=64 produced=1 client_ns=634028362831248\nllm[2]: state=1 prompt=5 gen=64 produced=1 client_ns=634028362839360\nllm[3]: state=1 prompt=5 gen=64 produced=1 client_ns=634028362846887\nllm[4]: state=1 prompt=5 gen=64 produced=1 client_ns=634028362854447\nllm[5]: state=1 prompt=5 gen=64 produced=1 client_ns=634028362861473\nllm[6]: state=1 prompt=5 gen=64 produced=1 client_ns=634028362868189\nllm[7]: state=1 prompt=5 gen=64 produced=1 client_ns=634028362875087\nllm[8]: state=1 prompt=5 gen=64 produced=1 client_ns=634028362882443\nllm[9]: state=1 prompt=5 gen=64 produced=1 client_ns=634028362889654\nllm[10]: state=1 prompt=5 gen=64 produced=1 client_ns=634028362896892\nllm[11]: state=1 prompt=5 gen=64 produced=1 client_ns=634028362904282\nllm[12]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363091979\nllm[13]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363100980\nllm[14]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363107606\nllm[15]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363114473\nllm[16]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363121554\nllm[17]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363133490\nllm[18]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363140494\nllm[19]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363147508\nllm[20]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363154217\nllm[21]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363161222\nllm[22]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363170594\nllm[23]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363178144\nllm[24]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363185649\nllm[25]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363192811\nllm[26]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363199571\nllm[27]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363208903\nllm[28]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363215509\nllm[29]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363222248\nllm[30]: state=1 prompt=5 gen=64 produced=1 client_ns=634028363229161\nllm[31]: state=1 prompt=5 gen=64 produced=1 client_ns=634028362790505\n"
+  },
+  "before_backlog_stop": {
+    "head": 256,
+    "queued": 224,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 224\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 480\nsockhash linked 270\nsockhash failed 0\nparser calls   480\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=256\nllm_queued=224 sockhash_first_errno=0\nllm_reserved=0xffffffff\nllm[0]: state=1 prompt=5 gen=64 produced=12 client_ns=634029037046807\nllm[1]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037114933\nllm[2]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037154200\nllm[3]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037188729\nllm[4]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037222345\nllm[5]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037255226\nllm[6]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037288047\nllm[7]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037319769\nllm[8]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037351548\nllm[9]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037383427\nllm[10]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037414501\nllm[11]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037446192\nllm[12]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037478940\nllm[13]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037509419\nllm[14]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037540120\nllm[15]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037578829\nllm[16]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037610648\nllm[17]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037644493\nllm[18]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037675939\nllm[19]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037710092\nllm[20]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037741644\nllm[21]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037772418\nllm[22]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037804028\nllm[23]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037835368\nllm[24]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037866066\nllm[25]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037895909\nllm[26]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037926636\nllm[27]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037956691\nllm[28]: state=1 prompt=5 gen=64 produced=11 client_ns=634029037987211\nllm[29]: state=1 prompt=5 gen=64 produced=11 client_ns=634029038028835\nllm[30]: state=1 prompt=5 gen=64 produced=11 client_ns=634029038061503\nllm[31]: state=1 prompt=5 gen=64 produced=11 client_ns=634029038093791\n"
+  },
+  "exit": 0,
+  "native_stats": {
+    "accepted": 270,
+    "received": 291,
+    "sends": 855,
+    "bytes": 9205,
+    "completed": 256,
+    "closed": 270,
+    "aborted": 226,
+    "max_connections": 256,
+    "max_requests": 32,
+    "pending": 0,
+    "error": 0,
+    "head": 256,
+    "reserved": 0,
+    "dropped": 0,
+    "overflow": 0,
+    "sqhead": 2502,
+    "sqtail": 2502,
+    "cqhead": 25992,
+    "cqtail": 25992,
+    "trace_count": 256,
+    "trace_overflow": 128
+  },
+  "bpf_stats": {
+    "exit": 0,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 256\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 480\nsockhash linked 270\nsockhash failed 0\nparser calls   480\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=256\nllm_queued=224 sockhash_first_errno=0\nllm_reserved=0x0\nllm[0]: state=0 prompt=5 gen=64 produced=13 client_ns=634029037046807\nllm[1]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037114933\nllm[2]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037154200\nllm[3]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037188729\nllm[4]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037222345\nllm[5]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037255226\nllm[6]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037288047\nllm[7]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037319769\nllm[8]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037351548\nllm[9]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037383427\nllm[10]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037414501\nllm[11]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037446192\nllm[12]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037478940\nllm[13]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037509419\nllm[14]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037540120\nllm[15]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037578829\nllm[16]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037610648\nllm[17]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037644493\nllm[18]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037675939\nllm[19]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037710092\nllm[20]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037741644\nllm[21]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037772418\nllm[22]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037804028\nllm[23]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037835368\nllm[24]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037866066\nllm[25]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037895909\nllm[26]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037926636\nllm[27]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037956691\nllm[28]: state=0 prompt=5 gen=64 produced=12 client_ns=634029037987211\nllm[29]: state=0 prompt=5 gen=64 produced=12 client_ns=634029038028835\nllm[30]: state=0 prompt=5 gen=64 produced=12 client_ns=634029038061503\nllm[31]: state=0 prompt=5 gen=64 produced=12 client_ns=634029038093791\n",
+    "stderr": ""
+  },
+  "queued_at_stop_cleanup": 224,
+  "model_errors": [
+    0
+  ],
+  "pass": true,
+  "end": "2026-10-17T02:04:21.159950+00:00",
+  "remaining_pins": []
+}
+aborted":1,"client_ns":634028363513204}
+REPLY {"seq":104,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363519355}
+REPLY {"seq":105,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363525669}
+REPLY {"seq":106,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363532377}
+REPLY {"seq":107,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363539054}
+REPLY {"seq":108,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363548094}
+REPLY {"seq":109,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363555215}
+REPLY {"seq":110,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363561643}
+REPLY {"seq":111,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363567945}
+REPLY {"seq":112,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363574379}
+REPLY {"seq":113,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363581005}
+REPLY {"seq":114,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363587635}
+REPLY {"seq":115,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363593757}
+REPLY {"seq":116,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363602006}
+REPLY {"seq":117,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363608476}
+REPLY {"seq":118,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363616768}
+REPLY {"seq":119,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363622836}
+REPLY {"seq":120,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363629246}
+REPLY {"seq":121,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363635424}
+REPLY {"seq":122,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363641655}
+REPLY {"seq":123,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363647889}
+REPLY {"seq":124,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363654990}
+REPLY {"seq":125,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363661934}
+REPLY {"seq":126,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363668619}
+REPLY {"seq":127,"gen":64,"sends":0,"early":0,"bytes":0,"aborted":1,"client_ns":634028363676517}
+CLEANUP ring_connections_buffers_released
+resident vLLM stopped: launches=1 device_graph_launches=1113 graph_error=0 max_active=32 admitted=256 retired=224 trace_overflows=0 release_rounds=38 max_release=32 device_launch_calls=2226
+
+5/2048 [00:25<00:01, 85.12it/s]
+Packed mixed (FULL):  93%|█████████▎| 1914/2048 [00:25<00:01, 85.47it/s]
+Packed mixed (FULL):  94%|█████████▍| 1923/2048 [00:25<00:01, 86.50it/s]
+Packed mixed (FULL):  94%|█████████▍| 1932/2048 [00:25<00:01, 87.20it/s]
+Packed mixed (FULL):  95%|█████████▍| 1941/2048 [00:25<00:01, 87.04it/s]
+Packed mixed (FULL):  95%|█████████▌| 1950/2048 [00:25<00:01, 87.29it/s]
+Packed mixed (FULL):  96%|█████████▌| 1959/2048 [00:25<00:01, 87.27it/s]
+Packed mixed (FULL):  96%|█████████▌| 1968/2048 [00:25<00:00, 87.58it/s]
+Packed mixed (FULL):  97%|█████████▋| 1977/2048 [00:25<00:00, 87.60it/s]
+Packed mixed (FULL):  97%|█████████▋| 1986/2048 [00:26<00:00, 87.54it/s]
+Packed mixed (FULL):  97%|█████████▋| 1995/2048 [00:26<00:00, 88.25it/s]
+Packed mixed (FULL):  98%|█████████▊| 2004/2048 [00:26<00:00, 88.39it/s]
+Packed mixed (FULL):  98%|█████████▊| 2014/2048 [00:26<00:00, 89.12it/s]
+Packed mixed (FULL):  99%|█████████▉| 2023/2048 [00:26<00:00, 89.00it/s]
+Packed mixed (FULL):  99%|█████████▉| 2032/2048 [00:26<00:00, 89.14it/s]
+Packed mixed (FULL): 100%|█████████▉| 2042/2048 [00:26<00:00, 91.53it/s]
+Packed mixed (FULL): 100%|██████████| 2048/2048 [00:26<00:00, 76.64it/s]
+
+LIFECYCLE_DRIVER_TERMINAL

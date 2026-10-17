@@ -74,3 +74,19 @@ scheduled-origin/TPOT/receivegap/failures/clientlag/resources; do not substitute
 another metric after seeing results. Report exact ratios/distances to official
 rather than inventing a posthoc universal definition of "close". Nomaximum-
 capacity claim at fixed192/s. No independent agent audit is claimed.
+
+
+## Diagnostic outcome and continuation
+
+Both diagnostic cellscomplete11520successes0failures; completionP99 falls
+3328.880->357.484ms,TPS11649.608->12266.103,meanTTFT1786.157->53.406ms.
+MeanTPOTworsens1.354614->1.427012ms and referenceflags1/123 remain.
+Archive CPUreplay byte-identical. This is one mechanism/repaircontrol,no
+full five-pair or contemporaneous official result. It supports continuing
+the predeclared fullmatrix after32-model/lifecyclequalification completes.
+
+User clarified: "Codex 自己的子代理也不允许用，只能由你这个线程本身干活。
+实现、实验、文档、论文，以及独立复核和审计，都在本线程里完成，不再派生任何
+subagent，也不用 OMP 或其他 agent。" Existing prior reviews are retained;
+live inventory shows all old subagentscompleted,no running child. This run's
+checks are owner recomputation/self-audit,not an independent-person review.

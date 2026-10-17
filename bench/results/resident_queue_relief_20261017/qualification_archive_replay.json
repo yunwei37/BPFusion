@@ -1,0 +1,24 @@
+[
+  {
+    "model": "qwen",
+    "command": [
+      "python3",
+      "/workspaces/repository/bench/results/resident_queue_relief_20261017/queue_relief_protocol_analysis.py",
+      "/workspaces/repository/bench/results/resident_queue_relief_20261017/qualification/qwen_queue_relief_protocol32.jsonl"
+    ],
+    "exit": 0,
+    "stdout_byte_equal": true,
+    "stderr_empty": true
+  },
+  {
+    "model": "smol",
+    "command": [
+      "python3",
+      "/workspaces/repository/bench/results/resident_queue_relief_20261017/queue_relief_protocol_analysis.py",
+      "/workspaces/repository/bench/results/resident_queue_relief_20261017/qualification/smol_queue_relief_protocol32.jsonl"
+    ],
+    "exit": 0,
+    "stdout_byte_equal": true,
+    "stderr_empty": true
+  }
+]
