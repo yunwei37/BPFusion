@@ -101,3 +101,14 @@ unrestrictedmatmul1000,andCPU1matmul1000 (allrepeat1),before confirmation.
 Next decisive action:five new-seed20s pairs per selection,unchanged criteria.
 The original GPU/client/observer source stays3d3878c;no more source tuning.
 Commit/push this completed screen and selection first.
+
+Confirmation control transport pauses at22completed cells. The next CPU1 GEMM
+native cell has only32successful warmups and an idle observer:zero measured
+attempts. Kubernetes exec timeout/502 interrupts its premeasurement controller.
+Original Pods remain0restarts,Ready/freshLease;real lab SSH and required
+services are healthy,and original boot/PIDstart times match. Exact cause is
+unknown. No reboot/configuration/credential/Workspace change occurs.
+All54warm-only files are retained;owned observer/service stop normally.
+Resume the same previously unmeasured tag/seed only after preserving that
+original attempt. No measured confirmation sample is replaced or excluded.
+Checkpoint the first22raw cells and recovery record before continuing.

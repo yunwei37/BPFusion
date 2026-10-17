@@ -1,0 +1,5 @@
+E1016 22:51:42.918579 v2.go:151 Copying stdout failed: next reader: read tcp 127.0.0.1:59426->127.0.0.1:6443: i/o timeout
+E1016 22:51:42.918579 v2.go:130 Waiting for server to close stdin failed: next reader: read tcp 127.0.0.1:59426->127.0.0.1:6443: i/o timeout
+E1016 22:51:42.918580 v2.go:168 Copying stderr failed: next reader: read tcp 127.0.0.1:59426->127.0.0.1:6443: i/o timeout
+error: unable to upgrade connection: error dialing backend: proxy error from 127.0.0.1:6443 while dialing 100.79.109.31:10250, code 502: 502 Bad Gateway
+Workspace command failed; original outer driver exited1.
