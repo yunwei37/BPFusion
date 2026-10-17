@@ -49,3 +49,28 @@ Temporary serving/client steps use the requested benchmark lifecycle; no new
 persistent service/scheduler/Workspace/configuration. Cleanup exactowned
 Job/PodUIDs,pins,GPUgroups; preserve all existing work. Source implementation,
 builds/tests and experimental choices are owner-executed only.
+
+
+## Executable diagnostic and final comparison contract
+
+The32real-model protocol passes2764outcomes/107136tokens with exact same-graph
+and rebuilt-metadata replay. Subsequent CPUanalysis's hardcoded8padding is
+repaired from existingbanks metadata without altering measured checks/outputs;
+initial error and original8byte-equalcontrol remain in analyzer_repair.md.
+
+Diagnostic: one native16/native32 process pair,unchanged0078client192/s60s,
+stagequeue_relief_diagnostic. This completed causal repair check is not a
+substitute for five-block uncertainty or the contemporaneous official result.
+Fixed final matrix (if executable repair is supported) is5blocksN16/N32/O:
+before,native,official; native,official,before; official,before,native;
+official,native,before; native,before,official. Both native labels use the
+same clientmode=native,with actual matchingbuild16/32 respectively.
+Official uses defaults/actual auth and sameoriginalmodel/seed/client.
+
+Fixed primary final effect: N32-minus-N16 connect-origin completionP99,
+nominal pairedt95df4. Negative interval supports a local tail improvement;
+crossing0 is inconclusive. Preserve N32-O throughput/completion/TTFT and
+scheduled-origin/TPOT/receivegap/failures/clientlag/resources; do not substitute
+another metric after seeing results. Report exact ratios/distances to official
+rather than inventing a posthoc universal definition of "close". Nomaximum-
+capacity claim at fixed192/s. No independent agent audit is claimed.

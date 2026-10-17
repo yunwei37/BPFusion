@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/protocol_analysis.py", line 228, in <module>
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument("path",type=Path);args=ap.parse_args();analyze(args.path)
+                                                                                                           ^^^^^^^^^^^^^^^^^^
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/protocol_analysis.py", line 83, in analyze
+    if mode.endswith("_mixed"):verify_mixed(prefix,events,refs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/bpfusion-mixed-integration-n4cog5c6/analyze.py", line 25, in verify_mixed
+    assert check["query_lengths"]==qlens+[0]*trailing and check["sequence_lengths"]==lens+[0]*trailing
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

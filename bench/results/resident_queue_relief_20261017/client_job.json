@@ -1,0 +1,45 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "bpfusion-sustained-client-20261016",
+    "namespace": "coder",
+    "annotations": {
+      "admission.yunwei37.com/approval-ref": "https://github.com/yunwei37/BPFusion/blob/main/bench/results/resident_queue_relief_20261017/plan.md",
+      "admission.yunwei37.com/user-words": "请先定位这 5 倍差距的来源（批调度、chunked prefill、准入或排队策略、KV 管理），修到接近官方，再去量 eBPF 能带来多少增益。"
+    }
+  },
+  "spec": {
+    "template": {
+      "spec": {
+        "restartPolicy": "Never",
+        "affinity": {
+          "podAntiAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": [
+              {
+                "labelSelector": {
+                  "matchLabels": {
+                    "com.coder.workspace.id": "eb48d962-76f4-4ff7-bac5-7bc62ec2ada3"
+                  }
+                },
+                "topologyKey": "kubernetes.io/hostname"
+              }
+            ]
+          }
+        },
+        "containers": [
+          {
+            "name": "client",
+            "image": "docker.io/library/python@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c",
+            "command": [
+              "python3",
+              "-u",
+              "-c",
+              "import signal; signal.pause()"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
