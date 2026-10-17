@@ -15,7 +15,7 @@
 \begin{document}
 
 \title{Does Kernel-Owned Networking Make GPU Serving Cheaper?}
-\subtitle{Lessons from BPFusion}
+\subtitle{Lessons from an eBPF-Driven GPU Server}
 
 \author{Yusheng Zheng}
 \affiliation{%
@@ -29,7 +29,7 @@
 A tempting design for small-model GPU serving removes the userspace request
 loop entirely: eBPF frames and admits requests arriving on ordinary Linux TCP
 sockets, a resident GPU dispatcher executes CUDA graphs, and a BPF program
-driving io\_uring sends the replies. We built such a system, BPFusion, on stock
+driving io\_uring sends the replies. We built such a system, bpf-gpu-server, on stock
 Linux~7.3 without a kernel module, and compared it with an efficient C++ epoll
 server that drives the same GPU executor. Across LLM serving with
 Qwen2.5-0.5B and high-rate cuBLAS/cuFFT requests (more than 3.4 million
@@ -62,7 +62,7 @@ after initialization no user thread reads, schedules or sends a request.
 Intuitively this should save CPU and shorten tails, because it skips system
 calls, user copies and thread wakeups.
 
-We built this design as BPFusion and asked a narrow question: \emph{compared
+We built this design as bpf-gpu-server and asked a narrow question: \emph{compared
 with a well-engineered userspace server that drives the same GPU executor, does
 kernel-owned networking reduce CPU or latency?} The answer on our testbed is
 no. This paper reports:
@@ -79,7 +79,7 @@ with an explanation of where the cost goes (\S\ref{sec:results},
 (\S\ref{sec:fixes}).
 \end{itemize}
 
-\section{BPFusion}
+\section{Design}
 \label{sec:design}
 
 \begin{figure}[t]
@@ -372,7 +372,7 @@ Electrode~\cite{electrode} act at XDP~\cite{xdp} before the network stack, and
 XRP~\cite{xrp} resubmits storage requests from the NVMe driver. GPU networking
 systems that remove the CPU from the data path bypass the host stack entirely,
 through RDMA in GPUnet~\cite{gpunet} or direct NIC queues in DOCA
-GPUNetIO~\cite{gpunetio}. Keeping ordinary Linux TCP, as BPFusion does for
+GPUNetIO~\cite{gpunetio}. Keeping ordinary Linux TCP, as bpf-gpu-server does for
 compatibility, means accepting the stack's cost on every request.
 
 \section{Related Work}
@@ -381,7 +381,7 @@ compatibility, means accepting the stack's cost on every request.
 socket interface backed by a CPU proxy and RDMA. The LLVM GPU libc work exposes
 an io\_uring submission ring to device code~\cite{llvmgpuio}, so letting a GPU
 program drive Linux I/O without a userspace proxy is not new. DOCA
-GPUNetIO~\cite{gpunetio} lets GPU kernels operate NIC queues directly. BPFusion
+GPUNetIO~\cite{gpunetio} lets GPU kernels operate NIC queues directly. bpf-gpu-server
 differs in keeping the unmodified Linux TCP stack and putting connection
 ownership in eBPF, and our results suggest that this choice is what bounds its
 benefit.
@@ -390,13 +390,13 @@ benefit.
 XRP~\cite{xrp} report large gains from eBPF because they act before costly
 stack layers. Kernel-bypass datapaths such as Demikernel~\cite{demikernel} skip
 the kernel entirely. Sockmap and the io\_uring BPF interfaces~\cite{iouring}
-run after TCP, which places BPFusion in a different cost regime.
+run after TCP, which places bpf-gpu-server in a different cost regime.
 
 \emph{LLM serving.} Continuous batching~\cite{orca}, paged KV
 memory~\cite{vllm} and mixed prefill and decode batches~\cite{sarathi} are the
 scheduling techniques that moved our tail latency. Persistent GPU kernels for
 inference, such as Mirage's persistent kernel~\cite{mpk}, move step scheduling
-onto the GPU. BPFusion reuses existing model graphs and does not contribute
+onto the GPU. bpf-gpu-server reuses existing model graphs and does not contribute
 model-level optimizations.
 
 \section{Limitations}
@@ -423,10 +423,10 @@ and whole-host totals were unchanged. \emph{In small-model serving, look at
 capacity and TCP small-send behavior first}: those changes moved tails by an
 order of magnitude, while the transport did not.
 
-BPFusion remains useful as an open research prototype for kernel-owned TCP
+The bpf-gpu-server prototype remains useful as an open research artifact for kernel-owned TCP
 around reusable CUDA graphs on stock Linux, and as a starting point for
 designs that bypass the host stack. Source, raw data and all findings are at
-\url{https://github.com/yunwei37/BPFusion} (Apache-2.0).
+\url{https://github.com/yunwei37/bpf-gpu-server} (Apache-2.0).
 
 \begin{acks}
 The prototype and experiments were developed with AI coding agents under the

@@ -25,12 +25,12 @@ General eBPF latency/throughput superiority over efficient native TCP is
 ## Paper and write-ups
 
 The four-page report [*Does Kernel-Owned Networking Make GPU Serving Cheaper?
-Lessons from BPFusion*](paper/bpfusion.pdf) summarizes the design, the
+Lessons from an eBPF-Driven GPU Server*](paper/bpf-gpu-server.pdf) summarizes the design, the
 same-executor comparison and why the kernel-owned path saves no CPU: per-request
 work moves from user to system time because the Linux TCP stack and GPU
 completion coordination remain on both paths. Blog posts:
-[English](https://eunomia.dev/blog/2026/10/17/bpfusion-kernel-owned-networking/) and
-[中文](https://eunomia.dev/zh/blog/2026/10/17/bpfusion-kernel-owned-networking/).
+[English](https://eunomia.dev/blog/2026/10/17/bpf-gpu-server/) and
+[中文](https://eunomia.dev/zh/blog/2026/10/17/bpf-gpu-server/).
 
 The [paper artifact](ARTIFACT.md) maps every table, data figure and key number
 to original data, with an offline replay and a bounded GPU smoke.

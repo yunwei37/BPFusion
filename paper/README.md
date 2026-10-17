@@ -1,7 +1,7 @@
 # Paper
 
-[bpfusion.pdf](bpfusion.pdf) is a four-page workshop-style report:
-*Does Kernel-Owned Networking Make GPU Serving Cheaper? Lessons from BPFusion*.
+[bpf-gpu-server.pdf](bpf-gpu-server.pdf) is a four-page workshop-style report:
+*Does Kernel-Owned Networking Make GPU Serving Cheaper? Lessons from an eBPF-Driven GPU Server*.
 It summarizes the design, the same-executor comparison against native epoll,
 the small-request experiment and why the kernel-owned path saves no CPU.
 
@@ -13,9 +13,9 @@ Build with a TeX Live installation that provides `acmart`, `tikz` and `pgfplots`
 
 ~~~sh
 cd paper
-latexmk -pdf bpfusion.tex
+latexmk -pdf bpf-gpu-server.tex
 ~~~
 
 Blog posts based on the report:
-[English](https://eunomia.dev/blog/2026/10/17/bpfusion-kernel-owned-networking/) and
-[中文](https://eunomia.dev/zh/blog/2026/10/17/bpfusion-kernel-owned-networking/).
+[English](https://eunomia.dev/blog/2026/10/17/bpf-gpu-server/) and
+[中文](https://eunomia.dev/zh/blog/2026/10/17/bpf-gpu-server/).
