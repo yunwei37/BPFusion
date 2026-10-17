@@ -329,8 +329,8 @@ def main():
            [figure_cpu[0]["user"], figure_cpu[0]["system"], figure_cpu[1]["user"], figure_cpu[1]["system"]])
     inline("official tail near 0.6 seconds", r"vLLM stayed near ([\d.]+)\\,s",
            [mean(official, "connect_completion_ms_p99", condition="official") / 1000])
-    inline("FFT total CPU change about one percent", r"totals\s+stayed within about (\d+)\\%",
-           [(figure_cpu[1]["total"] / figure_cpu[0]["total"] - 1) * 100])
+    inline("FFT/GEMM total CPU change percent", r"differed by only ([\d.]+)\\% for FFT and ([\d.]+)\\% for GEMM",
+           [(figure_cpu[i + 1]["total"] / figure_cpu[i]["total"] - 1) * 100 for i in (0, 2)])
     inline("roughly 38 microseconds", r"roughly (\d+)\\us",
            [st.mean(x["total"] for x in figure_cpu)])
     # Approximate order-of-magnitude prose, explicitly looser than rounded table values.

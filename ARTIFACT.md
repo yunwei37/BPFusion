@@ -1,7 +1,8 @@
 # Paper artifact
 
 This artifact audits the four-page report in [paper/](paper/README.md), entry
-revision ad7982f; the paper owner renamed the main file in06d2c598.
+revision ad7982f; the paper owner renamed the main file in06d2c598 and
+corrected rounding/claim scope in1e2303ee and5b7dbb75.
 The replay discovers the main TeX by its table label rather than its name.
 It does not edit paper prose/PDF. Paths are relative to the
 source root; programs locate that root from their own file, so the directory
@@ -39,9 +40,13 @@ Figures use unrounded data; their layout differs from pgfplots.
 
 Exit0 means numerical agreement. Exit1 with a completed comparison.json means
 a reported discrepancy; an exception means a validation/program failure.
-The unchanged paper has one expected rounding discrepancy below. Table shape
-changes fail visibly. Allow4–10min. No network, GPU, model weights or original
+The paper owner corrected the previously reported rounding discrepancy; its
+historical receipt is retained below. Table shape changes fail visibly. Allow4–10min. No network, GPU, model weights or original
 Workspace is required. Full Git tree:about4.24GB before archive compression.
+
+Current paper5b7dbb75: [full raw replay](bench/results/paper_artifact_20261017/author-update/README.md)
+completes136PASS/0MISMATCH/0PAPER_CHANGED, exit0 in214.085s. The previous
+rounding report is retained as historical evidence.
 
 ## Complete paper-to-data map
 
@@ -56,7 +61,7 @@ Perf is the explicit single-pair exception.
 | Table1 bottom:N16/N32/official;11640/12265/12249token/s;3337/217/406ms;CPU .751/.523/8.327ms | [0080](docs/findings/0080-resident-queue-relief.md) | resident_queue_relief_20261017/queue_relief_full/ same raw families | queue_relief_analysis.py |
 | Table2:three CPU/P99 ratios and all95% interval endpoints | [0081](docs/findings/0081-small-graph-network-cpu.md) | graph_network_20261017/confirmation/confirm_s*_p*_{kernel,native}.* including binary records/timers, schedules, patterns and counters | bench/graph_network_analysis.py plus paired log ratios,t95(df4) |
 | Figure2:FFT/GEMM user/system splits;37.56/37.96/37.29/38.01us totals | 0081 | same confirmation resource records:process_group stat and cpu_ns | tick deltas and high-resolution CPU separately; figure2_cpu.* |
-| Figure3:K26.7/43.8/27.0/2.5%,N84.5/0/0/15.5% | [0073](docs/findings/0073-kernel-cpu-localization.md) | kernel_cpu_profile_20261016/cpu_profile_full/*.perf_script.txt.gz; matching perf.data.gz/header/decode/terminal retained | profile_summary.py ancestor categories; figure3_perf.* |
+| Figure3:K26.7/43.8/27.0/2.4%,N84.5/0/0/15.5% | [0073](docs/findings/0073-kernel-cpu-localization.md) | kernel_cpu_profile_20261016/cpu_profile_full/*.perf_script.txt.gz; matching perf.data.gz/header/decode/terminal retained | profile_summary.py ancestor categories; figure3_perf.* |
 | Table3 NODELAY:40.5→2.3ms;8842→11260token/s | [0070](docs/findings/0070-tcp-nodelay.md) | tcp_nodelay_20261016/tcp_full/full.jsonl.gz | tcp_analysis.py,closed16/kernel before-after |
 | Table3 EOF:4157→0 failures/57600;7793→11623token/s | [0072](docs/findings/0072-connection-reclamation.md) | connection_reclamation_20261016/verified_reclaim_full/ clients/resources/receipts | reclaim_analysis.py |
 | Table3 active wait:1.70→.63ms CPU | [0074](docs/findings/0074-active-admission-wait.md) | active_admission_wait_20261016/active_wait_full/ | active_wait_analysis.py |
@@ -68,7 +73,7 @@ Perf is the explicit single-pair exception.
 | Queue TTFT235→3003ms;generation≈86ms | 0078/0080 diagnosis | original0078 native request timestamps | first/last10s original scheduled-arrival buckets |
 | Capacity costs .033ms TPOT/.34J device;10–16× group-CPU gap | 0080,0078 | raw requests/resource windows | separate process/device scopes |
 | Screen best CPU reduction5.8%;one-CPU P99≈2.6×;host ratios .990/.925/.988 | 0081 | all60 screen/30 confirmation cells | full-grid and selected-pair replay |
-| 11.3+26.2 vs2.8+35.2us;≈38us/request;observer2–34us | 0081 | original process/resource windows | coarse ticks,high-resolution CPU and observer extrema |
+| 11.3+26.2 vs2.8+35.2us;FFT/GEMM totals +1.1/+1.9%;≈38us/request;observer2–34us | 0081 | original process/resource windows | coarse ticks,high-resolution CPU and observer extrema |
 | 4-byte send,36-byte release,≈41ms ACK wait | 0070 | tcp_nodelay_20261016/tcp_preflight/*.tcp.jsonl.gz | tcp_diagnostic_analysis.py,longest kernel-before packet episode |
 | 2947 CLOSE_WAIT/E2BIG/4157 missing completions | 0072 | connection_reclamation_20261016/errno/kernel_snapshot_now.json and errno logs;full matrix | owned-inode/TCP state08 intersection plus failure count |
 | Perf71% coordination/maps,native85% network,10086/2455 samples,4.1×,499Hz | 0073 | raw callchains/header/record command | mutually exclusive observed ancestors,not total CPU |
@@ -93,12 +98,13 @@ External citation/related-work claims are outside numerical replay.
 
 ## Discrepancy and author-facing limits
 
-Figure3 kernel “other” prints2.5%. Raw scheduler103 plus unknown-leaf144
-give247/10086×100=2.4489391235%, directly rounded to2.4%.
+The initial paper printed Figure3 kernel “other” as2.5%. Raw scheduler103
+plus unknown-leaf144 give247/10086×100=2.4489391235%, directly rounded to2.4%.
 The other three printed percentages sum97.5%, making2.5% their rounded
-complement. No samples are missing. The checker intentionally flags this
-rounding-convention mismatch; the generated figure uses unrounded data.
-The paper owner decides whether to correct or annotate it.
+complement. No samples are missing. The initial134PASS/1MISMATCH receipt is
+historical:the paper owner corrected this value to2.4% in1e2303ee. Generated
+figures continue to use unrounded data. The current two-workload CPU prose
+from5b7dbb75 is checked against unrounded FFT/GEMM means separately.
 
 Numerical agreement cannot resolve these interpretation issues:
 
@@ -112,9 +118,10 @@ Numerical agreement cannot resolve these interpretation issues:
   TCP. “Most” of the official-vLLM CPU gap coming from scheduling/protocol
   is an inference. Official used tokens-only HTTP/SSE:both paths return IDs,
   although framing/parsing/scheduler/KV still differ.
-- The “within about1%” CPU sentence fits its quoted FFT example (+1.06%);
-  GEMM high-resolution means differ by+1.93%. If intended for both operations,
-  that sentence needs a wider1–2% qualification.
+- The former “within about1%” CPU sentence was corrected by the paper owner
+  in5b7dbb75 to FFT1.1% and GEMM1.9%, matching high-resolution changes of
+  +1.06%/+1.93%. The Table3 native-only32-slot footnote was added in1e2303ee;
+  these corrections do not remove the other interpretation limits above.
 - Exact replay qualifies finite traced cases; ordinary LLM trajectories retain
   finite-reference disagreement flags. Protocol success is not exact parity.
 - Service affinity does not create exclusive CPU scarcity; IRQ/foreign work
@@ -122,7 +129,7 @@ Numerical agreement cannot resolve these interpretation issues:
 - Linux7.3-rc3 is the tested release candidate; broader/stable/fresh-OS/TLS/
   arbitrary-plugin compatibility is not demonstrated.
 
-No paper/ file is changed.
+This thread does not edit paper/; the updates above are paper-owner commits.
 
 ## Data availability
 

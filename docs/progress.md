@@ -204,3 +204,20 @@ foreign/ignored work. No new benchmark is needed for these prose corrections.
 The closed negative result and paper-owner discrepancy decisions remain as
 recorded in ARTIFACT.md; further progress requires a concrete new fault or
 hypothesis. Paper files, serving code, defaults and frozen data are unchanged.
+
+## 2026-10-17 09:05 Los Angeles: paper-owner update replay
+
+The setup correction is pushed as0989daf0. During publication, the remote
+advanced with paper-owner commits1e2303ee/5b7dbb75; only this thread’s unpushed
+setup commit was rebased onto them. The owner corrected Figure3 rounding,
+added native-only32-slot scope and split the CPU sentence into FFT1.1%/GEMM1.9%.
+The substantive next action was preventing stale artifact status: adapt the
+obsolete prose matcher, retain all original receipts, and rerun every raw stage
+rather than reuse cached metrics. A new inference-free Python environment with
+GPU visibility disabled completes136PASS/0MISMATCH/0PAPER_CHANGED in214.085s,
+exit0; the7182-input set is unchanged. Both data figures are regenerated.
+No analyzer, rounding tolerance, serving source or frozen raw measurement changes.
+The current blocker for stronger paper claims remains interpretation/scope,
+not numerical disagreement; the negative graph performance exit still holds.
+The updated artifact documents this result while retaining the original mismatch.
+This thread edits no paper file and does not rerun closed GPU experiments.

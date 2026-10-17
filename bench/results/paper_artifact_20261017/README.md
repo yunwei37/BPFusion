@@ -3,11 +3,13 @@
 2026-10-17 Los Angeles. Sole-thread work; paper entry revision ad7982f.
 The paper source/PDF are unchanged by this thread.
 
-**Current status: complete with one reported paper rounding difference.**
-Final published replay3d551783:134PASS,1MISMATCH,0PAPER_CHANGED,
-196.142s in a new plotting-only environment without Torch/vLLM or visible GPU.
-Both current graph and LLM smokes pass. Detailed historical checkpoints below
-are retained as development provenance,not outstanding work.
+**Current status:136PASS,0MISMATCH,0PAPER_CHANGED after paper-owner corrections.**
+The [updated replay](author-update/README.md) uses current paper5b7dbb75 and
+exits0 in214.085s in a new plotting-only environment. The paper owner resolved
+Figure3 rounding and clarified workload percentages/native-only32-slot scope.
+The original published replay3d551783 remains below:134PASS,1MISMATCH,
+0PAPER_CHANGED in196.142s. Its difference belongs to the earlier paper.
+Existing graph/LLM smokes pass; their historical receipts are unchanged.
 
 ## Initial development checkpoint (historical)
 - All eight archived primary raw-data stages are executable; original main
