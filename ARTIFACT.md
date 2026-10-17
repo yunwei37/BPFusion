@@ -1,7 +1,9 @@
 # Paper artifact
 
 This artifact audits the four-page report in [paper/](paper/README.md), entry
-revision ad7982f. It does not edit paper prose/PDF. Paths are relative to the
+revision ad7982f; the paper owner renamed the main file in06d2c598.
+The replay discovers the main TeX by its table label rather than its name.
+It does not edit paper prose/PDF. Paths are relative to the
 source root; programs locate that root from their own file, so the directory
 and remote repository may be renamed.
 

@@ -82,6 +82,7 @@ def ratio(values):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--output", type=Path, required=True, help="New output directory outside the source tree")
+    ap.add_argument("--paper", type=Path, help="Optional source-relative main TeX; default discovers the one paper containing tab:llm")
     args = ap.parse_args()
     out = args.output.resolve()
     if out.is_relative_to(ROOT):
@@ -89,7 +90,11 @@ def main():
     out.mkdir(parents=True, exist_ok=False)
     sys.addaudithook(audit)
     start = time.monotonic()
-    paper = (ROOT / "paper/bpfusion.tex").read_text()
+    candidates = [ROOT / args.paper] if args.paper else [p for p in (ROOT / "paper").glob("*.tex") if r"\label{tab:llm}" in p.read_text()]
+    if len(candidates) != 1:
+        ap.error("Specify --paper when exactly one main paper cannot be discovered")
+    paper_path = candidates[0].resolve()
+    paper = paper_path.read_text()
     checks = []
 
     def compare(label, actual, printed, tolerance=None):
@@ -411,7 +416,7 @@ def main():
     for ext in ["png", "pdf"]:
         fig.savefig(out / ("figure3_perf." + ext), dpi=180)
     plt.close(fig)
-    report = dict(paper="paper/bpfusion.tex", checks=checks, counts={status: sum(x["status"] == status for x in checks)
+    report = dict(paper=paper_path.relative_to(ROOT).as_posix(), checks=checks, counts={status: sum(x["status"] == status for x in checks)
                   for status in ["PASS", "MISMATCH", "PAPER_CHANGED"]}, elapsed_s=time.monotonic() - start,
                   python=sys.version, matplotlib=matplotlib.__version__,
                   method="Archived primary analyzers replay raw logs, native binary records and counters; current TeX tables, plots and prose provide expected values. Linear quantiles and five process-block t(df4), not pooled quantiles. Figures use recomputed unrounded data.")
