@@ -253,10 +253,20 @@ python3 official_remote_client.py --host "$SERVER_IP" \
 ~~~
 
 Use --mode kernel/official as appropriate and --warmup separately first.
-Use --preflight for128measured attempts with64tokens as a short workload check;
-it does not estimate P99/capacity. The new graph smoke does not qualify LLM
-inference in that new Python environment;existing original LLM qualification
-is preserved rather than represented as a new run.
+Use --preflight for128 measured attempts with64 tokens;this does not estimate
+P99/capacity. A standalone local smoke builds both capacities and exercises
+native16,kernel16,native32 and official with the same archived client:
+
+~~~sh
+python3 -m pip install -r requirements.txt
+python3 bench/smoke_paper_llm.py --model ../models/qwen --output ../llm-smoke
+~~~
+
+Run this in a separate new inference environment,with CUDA/library paths set
+as above. Allow2–10min for fresh graph capture and official compilation.
+It checks512 protocol-valid requests/32768 output tokens plus32 warmups;
+finite-reference flags are counted rather than hidden. It is local correctness/
+workload smoke,not the remote performance experiment or universal exact fidelity.
 
 Full protocol:5blocks×3conditions×60s at192rps plus drain,same4prompts/gen64,
 original normalized arrivals/counterbalance. Controllers:
