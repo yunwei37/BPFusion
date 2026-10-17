@@ -153,6 +153,25 @@ GPU-controlled model work is retained; network/admission uses efficient native
 epoll. Demo timings are not controlled benchmark results.
 [Evaluation](evaluation.md) defines matched measurement and limitations.
 
+## Experimental kernel-owned networking
+
+[Finding0079](findings/0079-kernel-network-source-integration.md) provides the
+0077 network-placement candidate through ordinary Make targets:
+
+~~~sh
+make build/fusion.bpf.o build/bpfusion_load vllm-mixed-kernel-network
+./build/bpfusion_load stream-uring-attach
+./build/vllm_mixed_kernel_network "$model" 120
+~~~
+
+Use the same client and stop/cleanup steps above. Default capacity is8.
+The BPF loop owns io_uring CQ/SQ,connections and replies; model GPU computation
+is reused and there is no GPU networking CTA. This is an explicit experimental
+alternative:0078 finds no throughput advantage over the same-executor native
+path, and0077 records higher CPU than the selected oldloop. Existing target
+names keep their selected semantics. Use a separate BUILD plus matching
+CPPFLAGS=-DBF_LLM_SLOTS=16 only when reproducing the recorded16-slot experiment.
+
 ## Correctness and experiment reproduction
 
 [Ordinary integration](../bench/results/batch_capacity_integration_20261015/)

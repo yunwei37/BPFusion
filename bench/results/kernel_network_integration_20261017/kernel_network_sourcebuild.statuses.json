@@ -1,0 +1,39 @@
+[
+  {
+    "banks": 8,
+    "command": [
+      "make",
+      "BUILD=/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_network_sourcebuild8",
+      "CPPFLAGS=",
+      "vllm-mixed-kernel-network",
+      "vllm-mixed-kernel-network-trace",
+      "vllm-mixed-user-network-wait",
+      "vllm-mixed-uring-loop",
+      "vllm-mixed-trace",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_network_sourcebuild8/fusion.bpf.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_network_sourcebuild8/bpfusion_load",
+      "graph-server-kernel-network",
+      "graph-server-user-network-wait",
+      "graph-server-uring-loop"
+    ],
+    "exit": 0,
+    "utc": "2026-10-17T00:37:14.085404+00:00"
+  },
+  {
+    "banks": 16,
+    "command": [
+      "make",
+      "BUILD=/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_network_sourcebuild16",
+      "CPPFLAGS=-DBF_LLM_SLOTS=16",
+      "vllm-mixed-kernel-network",
+      "vllm-mixed-kernel-network-trace",
+      "vllm-mixed-user-network-wait",
+      "vllm-mixed-uring-loop",
+      "vllm-mixed-trace",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_network_sourcebuild16/fusion.bpf.o",
+      "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_network_sourcebuild16/bpfusion_load"
+    ],
+    "exit": 0,
+    "utc": "2026-10-17T00:37:41.107125+00:00"
+  }
+]

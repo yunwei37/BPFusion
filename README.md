@@ -141,6 +141,11 @@ forced into a Python per-token loop.
   unproven; CPU,client-gap,finite oracle and residual client-lag limits are explicit.
 - [Opaque graph backend](docs/findings/0067-opaque-graph-backend.md):cuBLAS/cuFFT
   ordinary default8 numerical/lifecycle checks pass on both transports.
+- [Ordinary kernel-network source](docs/findings/0079-kernel-network-source-integration.md):
+  explicit experimental Make targets reuse the same BPF/CPU networking for
+  mixed LLM generation and opaque cuBLAS/cuFFT graphs. Default8 numerical,
+  protocol,replay and cancellation checks qualify the finite boundary;
+  this does not select a faster default or establish arbitrary-kernel support.
 - [Fair native admission](docs/findings/0063-fair-native-admission.md):
   removing a native scheduling disadvantage weakens earlier apparent wins.
 - [Kernel-loop coordination](docs/findings/0044-uring-bpf-loop.md):less known

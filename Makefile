@@ -16,7 +16,7 @@ CC       ?= cc
 CFLAGS   ?= -O2 -g -Wall -Wextra -Wno-unused-parameter
 LDLIBS   := -lbpf -lelf -lz -lpthread
 
-BPF_SRCS := $(filter-out bpf/uring_loop.bpf.c,$(wildcard bpf/*.bpf.c))
+BPF_SRCS := $(filter-out bpf/uring_loop.bpf.c bpf/kernel_tcp.bpf.c,$(wildcard bpf/*.bpf.c))
 BPF_OBJS := $(patsubst bpf/%.bpf.c,$(BUILD)/%.bpf.o,$(BPF_SRCS))
 TOOLS    := $(BUILD)/wake_probe $(BUILD)/client $(BUILD)/echo_udp \
             $(BUILD)/bpfusion_load $(BUILD)/perfcount
@@ -219,20 +219,24 @@ $(BUILD)/amk_graph_uring_loop_coalesced: executor/amk_graph.py | $(BUILD)
 
 
 # Opaque captured-graph backend; the compute graph and buffers are caller-owned.
-GRAPH_SERVER_NAMES := graph_server_uring_loop graph_server_user_network_wait
+GRAPH_SERVER_NAMES := graph_server_uring_loop graph_server_user_network_wait graph_server_kernel_network
 .PHONY: graph-server-uring-loop graph-server-user-network-wait
 graph-server-uring-loop: $(BUILD)/uring_loop.bpf.o $(BUILD)/graph_server_uring_loop.so
 graph-server-user-network-wait: $(BUILD)/graph_server_user_network_wait.so
 
+# Experimental0077 network placement; existing targets retain the selected path.
+.PHONY: graph-server-kernel-network
+graph-server-kernel-network: $(BUILD)/kernel_tcp.bpf.o $(BUILD)/graph_server_kernel_network.so
+
 $(addprefix $(BUILD)/,$(addsuffix .so,$(GRAPH_SERVER_NAMES))): $(BUILD)/%.so: executor/graph_server.cu executor/graph_backend.h executor/userspace_tcp.h executor/io_uring_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
 	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
-		$(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT,-DBF_URING_NETWORK -DBF_URING_BPF_LOOP -I$(KERNEL_UAPI)) $< -o $@.o
+		$(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT,-DBF_URING_NETWORK -DBF_URING_BPF_LOOP $(if $(findstring kernel_network,$*),-DBF_KERNEL_TCP) -I$(KERNEL_UAPI)) $< -o $@.o
 	$(NVCC) -arch=$(SM_ARCH) -dlink -Xcompiler=-fPIC $@.o -o $@.dlink.o
 	$(CXX) -shared -Wl,-z,defs $@.o $@.dlink.o $(VLLM_CUDART) -Wl,-rpath,$(dir $(VLLM_CUDART)) -o $@ $(LDLIBS)
 
 
 # Qualified packed mixed prefill/decode; legacy homogeneous controls stay explicit.
-VLLM_MIXED_NAMES := vllm_mixed_uring_loop vllm_mixed_uring_loop_trace vllm_mixed_user_network_wait vllm_mixed_user_network_wait_trace
+VLLM_MIXED_NAMES := vllm_mixed_uring_loop vllm_mixed_uring_loop_trace vllm_mixed_user_network_wait vllm_mixed_user_network_wait_trace vllm_mixed_kernel_network vllm_mixed_kernel_network_trace
 .PHONY: vllm-mixed-uring-loop vllm-mixed-user-network-wait vllm-mixed-trace
 vllm-mixed-uring-loop: $(BUILD)/uring_loop.bpf.o $(BUILD)/vllm_mixed_uring_loop.so $(BUILD)/vllm_mixed_uring_loop
 vllm-mixed-user-network-wait: $(BUILD)/vllm_mixed_user_network_wait.so $(BUILD)/vllm_mixed_user_network_wait
@@ -243,6 +247,17 @@ $(addprefix $(BUILD)/,$(VLLM_MIXED_NAMES)): executor/vllm_mixed.py executor/mixe
 
 $(addprefix $(BUILD)/,$(addsuffix .so,$(VLLM_MIXED_NAMES))): $(BUILD)/%.so: executor/vllm_mixed.cu executor/userspace_tcp.h executor/io_uring_tcp.h bpf/include/bpfusion_queue.h | $(BUILD)
 	$(NVCC) $(CPPFLAGS) -O3 -std=c++17 -arch=$(SM_ARCH) --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
-		-DBF_PAD_PREFILL -DBF_PREFIX_RELEASE $(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT,-DBF_URING_NETWORK -DBF_URING_BPF_LOOP -I$(KERNEL_UAPI)) $(if $(findstring trace,$*),-DBF_TRACE) $< -o $@.o
+		-DBF_PAD_PREFILL -DBF_PREFIX_RELEASE $(if $(findstring user_network,$*),-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT,-DBF_URING_NETWORK -DBF_URING_BPF_LOOP $(if $(findstring kernel_network,$*),-DBF_KERNEL_TCP) -I$(KERNEL_UAPI)) $(if $(findstring trace,$*),-DBF_TRACE) $< -o $@.o
 	$(NVCC) -arch=$(SM_ARCH) -dlink -Xcompiler=-fPIC $@.o -o $@.dlink.o
 	$(CXX) -shared -Wl,-z,defs $@.o $@.dlink.o $(VLLM_CUDART) -Wl,-rpath,$(dir $(VLLM_CUDART)) -o $@ $(LDLIBS)
+
+
+# Shared CPU-only transport state is independent of model or graph arithmetic.
+.PHONY: vllm-mixed-kernel-network vllm-mixed-kernel-network-trace
+vllm-mixed-kernel-network: $(BUILD)/kernel_tcp.bpf.o $(BUILD)/vllm_mixed_kernel_network.so $(BUILD)/vllm_mixed_kernel_network
+vllm-mixed-kernel-network-trace: $(BUILD)/kernel_tcp.bpf.o $(BUILD)/vllm_mixed_kernel_network_trace.so $(BUILD)/vllm_mixed_kernel_network_trace
+
+$(BUILD)/vllm_mixed_kernel_network.so $(BUILD)/vllm_mixed_kernel_network_trace.so $(BUILD)/graph_server_kernel_network.so: executor/kernel_tcp.h bpf/include/kernel_tcp_state.h
+
+$(BUILD)/kernel_tcp.bpf.o: bpf/kernel_tcp.bpf.c bpf/include/kernel_tcp_state.h bpf/include/vmlinux.h bpf/include/bpfusion_admission.h bpf/include/bpfusion_queue.h | $(BUILD)
+	clang $(CPPFLAGS) $(BPF_CFLAGS) -c $< -o $@

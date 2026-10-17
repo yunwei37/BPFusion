@@ -1,0 +1,15 @@
+{
+  "command": [
+    "make",
+    "-f",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_network_graph_draft/Makefile",
+    "BUILD=/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_network_graph8",
+    "CPPFLAGS=-I/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_owned_tcp_prototype -I/workspaces/repository/executor",
+    "graph-server-uring-loop",
+    "graph-server-user-network-wait",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_network_graph8/fusion.bpf.o",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_network_graph8/bpfusion_load"
+  ],
+  "exit": 0,
+  "utc": "2026-10-17T00:28:12.687193+00:00"
+}

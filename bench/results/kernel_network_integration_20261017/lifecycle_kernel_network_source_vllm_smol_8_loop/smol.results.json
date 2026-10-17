@@ -1,0 +1,4171 @@
+{
+  "model": "smol",
+  "start": "2026-10-17T00:41:42.301621+00:00",
+  "oracle_frozen_at": "2026-10-16T09:00:30.523112+00:00",
+  "attach": {
+    "exit": 0,
+    "stdout": "sockhash capacity follows somaxconn=4096\nstream parser/verdict and sockops attached to current Workspace cgroup\n",
+    "stderr": ""
+  },
+  "ready_time_ns": 1792197730255558574,
+  "native_pid": 836511,
+  "before_backlog_rst": {
+    "head": 39,
+    "queued": 40,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 31\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 79\nsockhash linked 13\nsockhash failed 0\nparser calls   79\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=39\nllm_queued=40 sockhash_first_errno=0\nllm_reserved=0xff\nllm[0]: state=1 prompt=5 gen=64 produced=2 client_ns=629122557762776\nllm[1]: state=1 prompt=5 gen=64 produced=2 client_ns=629122557773700\nllm[2]: state=1 prompt=5 gen=64 produced=2 client_ns=629122557781764\nllm[3]: state=1 prompt=5 gen=64 produced=2 client_ns=629122557789464\nllm[4]: state=1 prompt=5 gen=64 produced=2 client_ns=629122557796791\nllm[5]: state=1 prompt=5 gen=64 produced=2 client_ns=629122557804792\nllm[6]: state=1 prompt=5 gen=64 produced=2 client_ns=629122557811862\nllm[7]: state=1 prompt=5 gen=64 produced=2 client_ns=629122557729708\n"
+  },
+  "before_backlog_stop": {
+    "head": 88,
+    "queued": 56,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 80\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 144\nsockhash linked 78\nsockhash failed 0\nparser calls   144\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=88\nllm_queued=56 sockhash_first_errno=0\nllm_reserved=0xff\nllm[0]: state=1 prompt=5 gen=64 produced=7 client_ns=629122953563970\nllm[1]: state=1 prompt=5 gen=64 produced=6 client_ns=629122953623680\nllm[2]: state=1 prompt=5 gen=64 produced=6 client_ns=629122953657688\nllm[3]: state=1 prompt=5 gen=64 produced=6 client_ns=629122953682826\nllm[4]: state=1 prompt=5 gen=64 produced=6 client_ns=629122953703469\nllm[5]: state=1 prompt=5 gen=64 produced=6 client_ns=629122953732568\nllm[6]: state=1 prompt=5 gen=64 produced=6 client_ns=629122953750952\nllm[7]: state=1 prompt=5 gen=64 produced=6 client_ns=629122953771125\n"
+  },
+  "cmd": [
+    "strace",
+    "-D",
+    "-f",
+    "-ttt",
+    "-o",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/lifecycle_kernel_network_source_vllm_smol_8_loop/smol.strace",
+    "-e",
+    "trace=accept,accept4,recvfrom,recvmsg,sendto,sendmsg,io_uring_setup,io_uring_enter,io_uring_register",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/kernel_network_sourcebuild8/vllm_mixed_kernel_network",
+    "/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+    "180"
+  ],
+  "exit": 0,
+  "stdout": "(MainProcess pid=836511) INFO 10-17 00:41:51 [api_utils.py:286] non-default args: {'dtype': 'half', 'max_model_len': 128, 'disable_log_stats': True, 'model': '/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2'}\n(MainProcess pid=836511) WARNING 10-17 00:41:51 [arg_utils.py:1910] The global random seed is set to 0. Since VLLM_ENABLE_V1_MULTIPROCESSING is set to False, this may affect the random state of the Python process that launched vLLM.\n(MainProcess pid=836511) INFO 10-17 00:41:51 [model.py:699] Resolved architecture: LlamaForCausalLM\n(MainProcess pid=836511) WARNING 10-17 00:41:51 [model.py:2442] Casting torch.bfloat16 to torch.float16.\n(MainProcess pid=836511) INFO 10-17 00:41:51 [model.py:2109] Using max model len 128\n(MainProcess pid=836511) INFO 10-17 00:41:51 [scheduler.py:308] Chunked prefill is enabled with max_num_batched_tokens=8192.\n(MainProcess pid=836511) INFO 10-17 00:41:51 [kernel.py:408] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])\n(MainProcess pid=836511) INFO 10-17 00:41:52 [core.py:129] Initializing a V1 LLM engine (v0.31.0) with config: model='/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2', speculative_config=None, tokenizer='/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, max_seq_len=128, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)\n(MainProcess pid=836511) INFO 10-17 00:41:52 [parallel_state.py:1825] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_a7d441b232454c1fa2e0c610ee5a7ee2 backend=nccl\n(MainProcess pid=836511) INFO 10-17 00:41:52 [parallel_state.py:2269] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A\n(MainProcess pid=836511) INFO 10-17 00:41:52 [gpu_worker.py:479] Using V2 Model Runner\n(MainProcess pid=836511) INFO 10-17 00:41:52 [model_runner.py:375] Loading model from scratch...\n(MainProcess pid=836511) INFO 10-17 00:41:53 [cuda.py:526] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].\n(MainProcess pid=836511) INFO 10-17 00:41:53 [flash_attn.py:1167] Using FlashAttention version 2\n(MainProcess pid=836511) INFO 10-17 00:41:54 [weight_utils.py:1063] Filesystem type for checkpoints: EXT4. Checkpoint size: 0.25 GiB. Available RAM: 95.39 GiB.\n(MainProcess pid=836511) INFO 10-17 00:41:54 [weight_utils.py:1086] Auto-prefetch is disabled because the filesystem (EXT4) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.\n(MainProcess pid=836511) INFO 10-17 00:41:56 [default_loader.py:484] Loading weights took 1.96 seconds\n(MainProcess pid=836511) INFO 10-17 00:41:56 [model_runner.py:407] Model loading took 0.26 GiB memory and 3.979223 seconds\n(MainProcess pid=836511) INFO 10-17 00:41:56 [topk_topp_sampler.py:124] Using FlashInfer for top-p & top-k sampling.\n(MainProcess pid=836511) INFO 10-17 00:41:56 [torch_utils.py:286] Reducing Torch threads from 24 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.\n(MainProcess pid=836511) INFO 10-17 00:41:56 [utils.py:343] Using LBNHC KV cache layout.\n{\"event\": \"vllm_protocol_cache\", \"context_tokens\": 128, \"banks\": 8, \"needed_blocks\": 65, \"cache_bytes\": 23961600, \"specs\": {\"model.layers.0.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.1.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.2.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.3.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.4.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.5.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.6.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.7.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.8.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.9.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.10.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.11.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.12.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.13.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.14.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.15.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.16.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.17.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.18.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.19.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.20.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.21.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.22.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.23.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.24.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.25.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.26.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.27.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.28.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}, \"model.layers.29.self_attn.attn\": {\"block_size\": 16, \"page_size_bytes\": 12288}}}\n(MainProcess pid=836511) INFO 10-17 00:41:57 [caching.py:342] reconstructed serializable fn from standalone compile artifacts. num_artifacts=3 num_submods=31\n(MainProcess pid=836511) INFO 10-17 00:41:57 [decorators.py:312] Directly load AOT compilation from path /root/.cache/vllm/torch_compile_cache/torch_aot_compile/40f788bf8846af4ecba942211527e61680993c31c859721634e78546999ea04b/rank_0_0/model\n(MainProcess pid=836511) INFO 10-17 00:41:57 [monitor.py:53] torch.compile took 0.19 s in total\n(MainProcess pid=836511) INFO 10-17 00:41:57 [monitor.py:81] Initial profiling/warmup run took 0.18 s\n(MainProcess pid=836511) INFO 10-17 00:41:58 [gpu_worker.py:603] Initial free memory 30.89 GiB, reserved 0.02 GiB memory for KV Cache as specified by kv_cache_memory_bytes config and skipped memory profiling. This does not respect the gpu_memory_utilization config. Only use kv_cache_memory_bytes config when you want manual control of KV cache memory size. If OOM'ed, check the difference of initial free memory between the current run and the previous run where kv_cache_memory_bytes is suggested and update it correspondingly.\n(MainProcess pid=836511) INFO 10-17 00:41:58 [kv_cache_utils.py:2464] GPU KV cache size: 1,040 tokens, Maximum concurrency for 128 tokens per request: 8.12x\n(MainProcess pid=836511) INFO 10-17 00:41:58 [kernel_warmup.py:172] JIT kernel warmup starting.\n(MainProcess pid=836511) INFO 10-17 00:41:58 [kernel_warmup.py:185] JIT kernel warmup finished in 0.00s.\n(MainProcess pid=836511) INFO 10-17 00:41:58 [kernel_warmup.py:437] Using FlashInfer autotune cache file: /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/90b12f24124ea812861e80e5144bfd064429de7dd1b156425bfda6ebd10460fc/autotune_configs.json\n(MainProcess pid=836511) INFO 10-17 00:41:58 [kernel_warmup.py:359] Running FlashInfer autotune with 8192 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192).\n(MainProcess pid=836511) INFO 10-17 00:42:01 [model_runner.py:1087] Graph capturing finished in 2 secs, took 0.06 GiB\n(MainProcess pid=836511) INFO 10-17 00:42:02 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.\n(MainProcess pid=836511) INFO 10-17 00:42:02 [core.py:373] init engine (profile, create kv cache, warmup model) took 6.09 s (compilation: 0.19 s)\n(MainProcess pid=836511) INFO 10-17 00:42:02 [hf.py:646] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.\ncaptured packed mixed input tokens1..64/512\ncaptured packed mixed input tokens1..128/512\ncaptured packed mixed input tokens1..192/512\ncaptured packed mixed input tokens1..256/512\ncaptured packed mixed input tokens1..320/512\ncaptured packed mixed input tokens1..384/512\ncaptured packed mixed input tokens1..448/512\ncaptured packed mixed input tokens1..512/512\n{\"event\": \"vllm_bootstrap\", \"model\": \"/workspaces/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2\", \"block_sizes\": [16], \"kernel_block_sizes\": [16], \"pages\": [[1, 2, 3, 4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15, 16], [17, 18, 19, 20, 21, 22, 23, 24], [25, 26, 27, 28, 29, 30, 31, 32], [33, 34, 35, 36, 37, 38, 39, 40], [41, 42, 43, 44, 45, 46, 47, 48], [49, 50, 51, 52, 53, 54, 55, 56], [57, 58, 59, 60, 61, 62, 63, 64]], \"graph_count\": 512, \"captured_input_tokens\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512], \"graph_request_padding\": \"min(input_tokens,banks)\", \"capture\": \"upstream mixed descriptor; no attention support override\"}\nnetwork=kernel BPF TCP controller; no GPU I/O CTA\nNET_READY pid=836511 port=39403 ring_bound=1 capacity=4096 sq=8192 cq=16384\nresident vLLM ready: 30 layers h=576 vocab=49152; tensor batches1..8, GPU prefill/decode\nADMISSION queued_peak=56\nRESULT {\"accepted\":78,\"received\":97,\"sends\":736,\"bytes\":6069,\"completed\":88,\"closed\":78,\"aborted\":58,\"max_connections\":64,\"max_requests\":8,\"pending\":0,\"error\":0,\"head\":88,\"reserved\":0,\"dropped\":0,\"overflow\":0,\"sqhead\":1246,\"sqtail\":1246,\"cqhead\":15087,\"cqtail\":15087,\"trace_count\":88,\"trace_overflow\":0}\nREPLY {\"seq\":0,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":629104457851502}\nREPLY {\"seq\":1,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":629104459071301}\nREPLY {\"seq\":2,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":629104459241758}\nREPLY {\"seq\":3,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":629106705395906}\nREPLY {\"seq\":4,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":629106706534445}\nREPLY {\"seq\":5,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":629106706739646}\nREPLY {\"seq\":6,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":629108952869838}\nREPLY {\"seq\":7,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":629108954022968}\nREPLY {\"seq\":8,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":629108954202418}\nREPLY {\"seq\":9,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":629111200440629}\nREPLY {\"seq\":10,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":629111201926822}\nREPLY {\"seq\":11,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":629111202282055}\nREPLY {\"seq\":12,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":629113448850002}\nREPLY {\"seq\":13,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":629113450306647}\nREPLY {\"seq\":14,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":629113450501591}\nREPLY {\"seq\":15,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":629115696686771}\nREPLY {\"seq\":16,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":629115697960900}\nREPLY {\"seq\":17,\"gen\":64,\"sends\":63,\"early\":62,\"bytes\":336,\"aborted\":0,\"client_ns\":629115698176563}\nREPLY {\"seq\":18,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":629117944279942}\nREPLY {\"seq\":19,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":629117945594504}\nREPLY {\"seq\":20,\"gen\":64,\"sends\":63,\"early\":62,\"bytes\":336,\"aborted\":0,\"client_ns\":629117945780432}\nREPLY {\"seq\":21,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":629120191883271}\nREPLY {\"seq\":22,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":629120193160177}\nREPLY {\"seq\":23,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":629120193351576}\nREPLY {\"seq\":24,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":82,\"aborted\":0,\"client_ns\":629122439461775}\nREPLY {\"seq\":25,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":87,\"aborted\":0,\"client_ns\":629122440709481}\nREPLY {\"seq\":26,\"gen\":64,\"sends\":64,\"early\":63,\"bytes\":336,\"aborted\":0,\"client_ns\":629122440899723}\nREPLY {\"seq\":27,\"gen\":1,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122486725454}\nREPLY {\"seq\":28,\"gen\":1,\"sends\":1,\"early\":0,\"bytes\":4,\"aborted\":0,\"client_ns\":629122486981029}\nREPLY {\"seq\":29,\"gen\":64,\"sends\":1,\"early\":1,\"bytes\":4,\"aborted\":1,\"client_ns\":629122488048180}\nREPLY {\"seq\":30,\"gen\":64,\"sends\":63,\"early\":62,\"bytes\":336,\"aborted\":0,\"client_ns\":629122489139238}\nREPLY {\"seq\":31,\"gen\":64,\"sends\":2,\"early\":2,\"bytes\":8,\"aborted\":1,\"client_ns\":629122557729708}\nREPLY {\"seq\":32,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122557762776}\nREPLY {\"seq\":33,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122557773700}\nREPLY {\"seq\":34,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122557781764}\nREPLY {\"seq\":35,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122557789464}\nREPLY {\"seq\":36,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122557796791}\nREPLY {\"seq\":37,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122557804792}\nREPLY {\"seq\":38,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122557811862}\nREPLY {\"seq\":39,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122557818612}\nREPLY {\"seq\":40,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122557825407}\nREPLY {\"seq\":41,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122557832828}\nREPLY {\"seq\":42,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122557840048}\nREPLY {\"seq\":43,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122557847228}\nREPLY {\"seq\":44,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122557859799}\nREPLY {\"seq\":45,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558054951}\nREPLY {\"seq\":46,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558064057}\nREPLY {\"seq\":47,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558070917}\nREPLY {\"seq\":48,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558077777}\nREPLY {\"seq\":49,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558086412}\nREPLY {\"seq\":50,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558093598}\nREPLY {\"seq\":51,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558100361}\nREPLY {\"seq\":52,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558107502}\nREPLY {\"seq\":53,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558114556}\nREPLY {\"seq\":54,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558121695}\nREPLY {\"seq\":55,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558129359}\nREPLY {\"seq\":56,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558136273}\nREPLY {\"seq\":57,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558142794}\nREPLY {\"seq\":58,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558150044}\nREPLY {\"seq\":59,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558156715}\nREPLY {\"seq\":60,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558166797}\nREPLY {\"seq\":61,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558173759}\nREPLY {\"seq\":62,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558180278}\nREPLY {\"seq\":63,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558186988}\nREPLY {\"seq\":64,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558194633}\nREPLY {\"seq\":65,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558202535}\nREPLY {\"seq\":66,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558209519}\nREPLY {\"seq\":67,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558216205}\nREPLY {\"seq\":68,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558222825}\nREPLY {\"seq\":69,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558230952}\nREPLY {\"seq\":70,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558238182}\nREPLY {\"seq\":71,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558244838}\nREPLY {\"seq\":72,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558251818}\nREPLY {\"seq\":73,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558258542}\nREPLY {\"seq\":74,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558265385}\nREPLY {\"seq\":75,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558272106}\nREPLY {\"seq\":76,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558279851}\nREPLY {\"seq\":77,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558288111}\nREPLY {\"seq\":78,\"gen\":64,\"sends\":0,\"early\":0,\"bytes\":0,\"aborted\":1,\"client_ns\":629122558295337}\nREPLY {\"seq\":79,\"gen\":64,\"sends\":61,\"early\":60,\"bytes\":336,\"aborted\":0,\"client_ns\":629122560857174}\nREPLY {\"seq\":80,\"gen\":64,\"sends\":2,\"early\":2,\"bytes\":108,\"aborted\":1,\"client_ns\":629122953563970}\nREPLY {\"seq\":81,\"gen\":64,\"sends\":2,\"early\":2,\"bytes\":104,\"aborted\":1,\"client_ns\":629122953623680}\nREPLY {\"seq\":82,\"gen\":64,\"sends\":2,\"early\":2,\"bytes\":104,\"aborted\":1,\"client_ns\":629122953657688}\nREPLY {\"seq\":83,\"gen\":64,\"sends\":2,\"early\":2,\"bytes\":104,\"aborted\":1,\"client_ns\":629122953682826}\nREPLY {\"seq\":84,\"gen\":64,\"sends\":2,\"early\":2,\"bytes\":104,\"aborted\":1,\"client_ns\":629122953703469}\nREPLY {\"seq\":85,\"gen\":64,\"sends\":2,\"early\":2,\"bytes\":104,\"aborted\":1,\"client_ns\":629122953732568}\nREPLY {\"seq\":86,\"gen\":64,\"sends\":2,\"early\":2,\"bytes\":104,\"aborted\":1,\"client_ns\":629122953750952}\nREPLY {\"seq\":87,\"gen\":64,\"sends\":2,\"early\":2,\"bytes\":104,\"aborted\":1,\"client_ns\":629122953771125}\nCLEANUP ring_connections_buffers_released\nresident vLLM stopped: launches=1 device_graph_launches=1108 graph_error=0 max_active=8 admitted=88 retired=80 trace_overflows=0 release_rounds=38 max_release=8 device_launch_calls=2216\n",
+  "stderr": "<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.\n<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.\n\nLoading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]\n\nLoading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.94s/it]\n\nLoading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.94s/it]\n\n2026-10-17 00:41:58,856 - INFO - autotuner.py:3691 - flashinfer.jit: [Autotuner]: Loaded 0 configs from /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/90b12f24124ea812861e80e5144bfd064429de7dd1b156425bfda6ebd10460fc/autotune_configs.json\n2026-10-17 00:41:58,856 - INFO - autotuner.py:1046 - flashinfer.jit: [Autotuner]: Autotuning process starts ...\n2026-10-17 00:41:58,950 - INFO - autotuner.py:1069 - flashinfer.jit: [Autotuner]: Autotuning process ends\n2026-10-17 00:41:58,951 - INFO - autotuner.py:3554 - flashinfer.jit: [Autotuner]: Saved 0 configs to /root/.cache/vllm/flashinfer_autotune_cache/0.7.0.post1/120f/90b12f24124ea812861e80e5144bfd064429de7dd1b156425bfda6ebd10460fc/autotune_configs.json (0 new, 0 from previous config)\n\nCapturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]\nCapturing CUDA graphs (PIECEWISE):  10%|\u2589         | 5/51 [00:00<00:01, 44.22it/s]\nCapturing CUDA graphs (PIECEWISE):  20%|\u2588\u2589        | 10/51 [00:00<00:00, 44.63it/s]\nCapturing CUDA graphs (PIECEWISE):  29%|\u2588\u2588\u2589       | 15/51 [00:00<00:00, 45.38it/s]\nCapturing CUDA graphs (PIECEWISE):  39%|\u2588\u2588\u2588\u2589      | 20/51 [00:00<00:00, 43.86it/s]\nCapturing CUDA graphs (PIECEWISE):  49%|\u2588\u2588\u2588\u2588\u2589     | 25/51 [00:00<00:00, 42.77it/s]\nCapturing CUDA graphs (PIECEWISE):  59%|\u2588\u2588\u2588\u2588\u2588\u2589    | 30/51 [00:00<00:00, 42.92it/s]\nCapturing CUDA graphs (PIECEWISE):  69%|\u2588\u2588\u2588\u2588\u2588\u2588\u258a   | 35/51 [00:00<00:00, 43.30it/s]\nCapturing CUDA graphs (PIECEWISE):  78%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a  | 40/51 [00:00<00:00, 44.43it/s]\nCapturing CUDA graphs (PIECEWISE):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 45/51 [00:01<00:00, 45.29it/s]\nCapturing CUDA graphs (PIECEWISE): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 51/51 [00:01<00:00, 47.81it/s]\nCapturing CUDA graphs (PIECEWISE): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 51/51 [00:01<00:00, 45.21it/s]\n\nCapturing CUDA graphs (FULL):   0%|          | 0/35 [00:00<?, ?it/s]\nCapturing CUDA graphs (FULL):  14%|\u2588\u258d        | 5/35 [00:00<00:00, 44.28it/s]\nCapturing CUDA graphs (FULL):  29%|\u2588\u2588\u258a       | 10/35 [00:00<00:00, 45.01it/s]\nCapturing CUDA graphs (FULL):  46%|\u2588\u2588\u2588\u2588\u258c     | 16/35 [00:00<00:00, 47.43it/s]\nCapturing CUDA graphs (FULL):  63%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 22/35 [00:00<00:00, 50.20it/s]\nCapturing CUDA graphs (FULL):  83%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e | 29/35 [00:00<00:00, 55.36it/s]\nCapturing CUDA graphs (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 35/35 [00:00<00:00, 54.56it/s]\n\nPacked mixed (FULL):   0%|          | 0/512 [00:00<?, ?it/s]\nPacked mixed (FULL):   2%|\u258f         | 9/512 [00:00<00:06, 83.39it/s]\nPacked mixed (FULL):   4%|\u258e         | 18/512 [00:00<00:05, 82.41it/s]\nPacked mixed (FULL):   5%|\u258c         | 27/512 [00:00<00:05, 82.03it/s]\nPacked mixed (FULL):   7%|\u258b         | 36/512 [00:00<00:05, 81.80it/s]\nPacked mixed (FULL):   9%|\u2589         | 45/512 [00:00<00:05, 81.72it/s]\nPacked mixed (FULL):  11%|\u2588         | 54/512 [00:00<00:05, 81.34it/s]\nPacked mixed (FULL):  12%|\u2588\u258f        | 63/512 [00:00<00:05, 81.38it/s]\nPacked mixed (FULL):  14%|\u2588\u258d        | 72/512 [00:00<00:05, 82.41it/s]\nPacked mixed (FULL):  16%|\u2588\u258c        | 81/512 [00:00<00:05, 80.88it/s]\nPacked mixed (FULL):  18%|\u2588\u258a        | 90/512 [00:01<00:05, 80.08it/s]\nPacked mixed (FULL):  19%|\u2588\u2589        | 99/512 [00:01<00:05, 80.19it/s]\nPacked mixed (FULL):  21%|\u2588\u2588        | 108/512 [00:01<00:04, 81.11it/s]\nPacked mixed (FULL):  23%|\u2588\u2588\u258e       | 117/512 [00:01<00:04, 81.73it/s]\nPacked mixed (FULL):  25%|\u2588\u2588\u258d       | 126/512 [00:01<00:04, 81.98it/s]\nPacked mixed (FULL):  26%|\u2588\u2588\u258b       | 135/512 [00:01<00:04, 82.38it/s]\nPacked mixed (FULL):  28%|\u2588\u2588\u258a       | 144/512 [00:01<00:04, 83.19it/s]\nPacked mixed (FULL):  30%|\u2588\u2588\u2589       | 153/512 [00:01<00:04, 83.25it/s]\nPacked mixed (FULL):  32%|\u2588\u2588\u2588\u258f      | 162/512 [00:01<00:04, 84.42it/s]\nPacked mixed (FULL):  33%|\u2588\u2588\u2588\u258e      | 171/512 [00:02<00:04, 85.18it/s]\nPacked mixed (FULL):  35%|\u2588\u2588\u2588\u258c      | 180/512 [00:02<00:03, 83.84it/s]\nPacked mixed (FULL):  37%|\u2588\u2588\u2588\u258b      | 189/512 [00:02<00:03, 82.65it/s]\nPacked mixed (FULL):  39%|\u2588\u2588\u2588\u258a      | 198/512 [00:02<00:03, 82.54it/s]\nPacked mixed (FULL):  40%|\u2588\u2588\u2588\u2588      | 207/512 [00:02<00:03, 82.38it/s]\nPacked mixed (FULL):  42%|\u2588\u2588\u2588\u2588\u258f     | 216/512 [00:02<00:03, 83.35it/s]\nPacked mixed (FULL):  44%|\u2588\u2588\u2588\u2588\u258d     | 225/512 [00:02<00:03, 83.94it/s]\nPacked mixed (FULL):  46%|\u2588\u2588\u2588\u2588\u258c     | 234/512 [00:02<00:03, 82.17it/s]\nPacked mixed (FULL):  47%|\u2588\u2588\u2588\u2588\u258b     | 243/512 [00:02<00:03, 82.75it/s]\nPacked mixed (FULL):  49%|\u2588\u2588\u2588\u2588\u2589     | 252/512 [00:03<00:03, 82.97it/s]\nPacked mixed (FULL):  51%|\u2588\u2588\u2588\u2588\u2588     | 261/512 [00:03<00:03, 82.49it/s]\nPacked mixed (FULL):  53%|\u2588\u2588\u2588\u2588\u2588\u258e    | 270/512 [00:03<00:02, 81.95it/s]\nPacked mixed (FULL):  54%|\u2588\u2588\u2588\u2588\u2588\u258d    | 279/512 [00:03<00:02, 82.97it/s]\nPacked mixed (FULL):  56%|\u2588\u2588\u2588\u2588\u2588\u258b    | 288/512 [00:03<00:02, 84.27it/s]\nPacked mixed (FULL):  58%|\u2588\u2588\u2588\u2588\u2588\u258a    | 297/512 [00:03<00:02, 83.33it/s]\nPacked mixed (FULL):  60%|\u2588\u2588\u2588\u2588\u2588\u2589    | 306/512 [00:03<00:02, 83.38it/s]\nPacked mixed (FULL):  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258f   | 315/512 [00:03<00:02, 82.21it/s]\nPacked mixed (FULL):  63%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 324/512 [00:03<00:02, 83.14it/s]\nPacked mixed (FULL):  65%|\u2588\u2588\u2588\u2588\u2588\u2588\u258c   | 333/512 [00:04<00:02, 83.30it/s]\nPacked mixed (FULL):  67%|\u2588\u2588\u2588\u2588\u2588\u2588\u258b   | 342/512 [00:04<00:02, 82.89it/s]\nPacked mixed (FULL):  69%|\u2588\u2588\u2588\u2588\u2588\u2588\u258a   | 351/512 [00:04<00:01, 81.80it/s]\nPacked mixed (FULL):  70%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | 360/512 [00:04<00:01, 82.14it/s]\nPacked mixed (FULL):  72%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f  | 369/512 [00:04<00:01, 82.41it/s]\nPacked mixed (FULL):  74%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d  | 378/512 [00:04<00:01, 83.48it/s]\nPacked mixed (FULL):  76%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 387/512 [00:04<00:01, 84.05it/s]\nPacked mixed (FULL):  77%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b  | 396/512 [00:04<00:01, 83.80it/s]\nPacked mixed (FULL):  79%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589  | 405/512 [00:04<00:01, 84.21it/s]\nPacked mixed (FULL):  81%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  | 414/512 [00:04<00:01, 85.21it/s]\nPacked mixed (FULL):  83%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e | 424/512 [00:05<00:01, 86.88it/s]\nPacked mixed (FULL):  85%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d | 434/512 [00:05<00:00, 88.57it/s]\nPacked mixed (FULL):  87%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b | 443/512 [00:05<00:00, 88.86it/s]\nPacked mixed (FULL):  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 453/512 [00:05<00:00, 89.98it/s]\nPacked mixed (FULL):  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 463/512 [00:05<00:00, 90.54it/s]\nPacked mixed (FULL):  92%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f| 473/512 [00:05<00:00, 89.85it/s]\nPacked mixed (FULL):  94%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d| 482/512 [00:05<00:00, 89.56it/s]\nPacked mixed (FULL):  96%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 491/512 [00:05<00:00, 89.51it/s]\nPacked mixed (FULL):  98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a| 500/512 [00:05<00:00, 88.56it/s]\nPacked mixed (FULL):  99%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589| 509/512 [00:06<00:00, 88.69it/s]\nPacked mixed (FULL): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 512/512 [00:06<00:00, 84.08it/s]\n",
+  "rows": [
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629104457851502,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000006ea2bccb2a3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        53892
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 629104459071301,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000453fcfcb2a3c020000c00000",
+      "peer": [
+        "127.0.0.1",
+        53892
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629104459241758,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000001ed9d1cb2a3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        53892
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629106705395906,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000000100000000000000c270b3512b3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        53896
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 629106706534445,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c510100000001000000000000002dd0c4512b3c020000c00000",
+      "peer": [
+        "127.0.0.1",
+        53896
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629106706739646,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000bef1c7512b3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        53896
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629108952869838,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000000100000000000000ce2ba9d72b3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        53908
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 629108954022968,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c5101000000010000000000000038c4bad72b3c020000c00000",
+      "peer": [
+        "127.0.0.1",
+        53908
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629108954202418,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000003281bdd72b3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        53908
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629111200440629,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000003561a05d2c3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        53914
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 629111201926822,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000a60eb75d2c3c020000c00000",
+      "peer": [
+        "127.0.0.1",
+        53914
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629111202282055,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000477abc5d2c3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        53914
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629113448850002,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000005262a4e32c3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        60462
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 629113450306647,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000579cbae32c3c020000c00000",
+      "peer": [
+        "127.0.0.1",
+        60462
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629113450501591,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000d795bde32c3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        60462
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629115696686771,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000000100000000000000b3a69f692d3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        60476
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 629115697960900,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000c417b3692d3c020000c00000",
+      "peer": [
+        "127.0.0.1",
+        60476
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629115698176563,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000003362b6692d3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        60476
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629117944279942,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000000100000000000000863397ef2d3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        60492
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 629117945594504,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c510100000001000000000000008842abef2d3c020000c00000",
+      "peer": [
+        "127.0.0.1",
+        60492
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629117945780432,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000d018aeef2d3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        60492
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629120191883271,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000010000000000000007e88e752e3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        60494
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 629120193160177,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000f163a2752e3c020000c00000",
+      "peer": [
+        "127.0.0.1",
+        60494
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629120193351576,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000984fa5752e3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        60494
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122439461775,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000001000000000000008f3b86fb2e3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        60496
+      ],
+      "gen": 1,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20340d0a0d0a04010000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "http",
+      "invalid": true,
+      "client_ns": 629122440709481,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2032380d0a0d0a514d4c51010000000100000000000000694599fb2e3c020000c00000",
+      "peer": [
+        "127.0.0.1",
+        60496
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "485454502f312e31203430302042616420526571756573740d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a20300d0a0d0a",
+      "status": 400,
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 1,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122440899723,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000008b2c9cfb2e3c0200f8010000f70d00001a010000291200003a010000",
+      "peer": [
+        "127.0.0.1",
+        60496
+      ],
+      "gen": 64,
+      "prompt": [
+        504,
+        3575,
+        282,
+        4649,
+        314
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0a04010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a010000291200003a01000004010000f70d00001a01000004010000060700001e000000c6000000c6000000f8010000f70d00001a01000029120000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 0,
+      "protocol": "binary",
+      "invalid": true,
+      "client_ns": 629122486725454,
+      "request_hex": "514d4c510100000001000000000000004e6b57fe2e3c020000c00000",
+      "peer": [
+        "127.0.0.1",
+        60496
+      ],
+      "gen": 1,
+      "prompt": [
+        49152
+      ],
+      "reply_hex": "",
+      "status": "EOF",
+      "checked_tokens": 0,
+      "exact": true
+    },
+    {
+      "case": 2,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122486981029,
+      "request_hex": "514d4c51080000000100000000000000a5515bfe2e3c0200f40600003a010000d800000022000000771f0000d8000000220000002f000000",
+      "peer": [
+        "127.0.0.1",
+        60502
+      ],
+      "gen": 1,
+      "prompt": [
+        1780,
+        314,
+        216,
+        34,
+        8055,
+        216,
+        34,
+        47
+      ],
+      "reply_hex": "c6000000",
+      "checked_tokens": 1,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122488048180,
+      "request_hex": "514d4c51050000004000000000000000349a6bfe2e3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60510
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "reply_hex": "c6000000",
+      "checked_tokens": 1,
+      "partial": true,
+      "exact": true,
+      "action": "RST"
+    },
+    {
+      "case": 3,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122489139238,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2035360d0a0d0a514d4c5108000000400000000000000026407cfe2e3c0200f40600003a010000d800000022000000771f0000d8000000220000002f000000",
+      "peer": [
+        "127.0.0.1",
+        60524
+      ],
+      "gen": 64,
+      "prompt": [
+        1780,
+        314,
+        216,
+        34,
+        8055,
+        216,
+        34,
+        47
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000c6000000f8010000ac0b00003a010000d8000000240000001e000000c6000000c6000000dc200000d8000000220000002a000000c6000000c6000000f40600003a010000d800000022000000771f0000d800000022000000771f0000d8000000220000002f000000c6000000c6000000f8010000ac0b00003a010000d8000000240000001e000000c6000000c6000000dc200000d8000000230000002a000000c6000000c6000000f40600003a010000d800000022000000771f0000d800000022000000771f0000d800000022000000771f0000d8000000220000002f000000c6000000c6000000f8010000ac0b00003a010000d800000024000000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557729708,
+      "request_hex": "514d4c51050000004000000000000000acdb92022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "reply_hex": "c6000000",
+      "checked_tokens": 1,
+      "partial": true,
+      "exact": true,
+      "action": "backlog_RST"
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557762776,
+      "request_hex": "514d4c51050000004000000000000000d85c93022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557773700,
+      "request_hex": "514d4c51050000004000000000000000848793022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557781764,
+      "request_hex": "514d4c5105000000400000000000000004a793022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557789464,
+      "request_hex": "514d4c5105000000400000000000000018c593022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557796791,
+      "request_hex": "514d4c51050000004000000000000000b7e193022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557804792,
+      "request_hex": "514d4c51050000004000000000000000f80094022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557811862,
+      "request_hex": "514d4c51050000004000000000000000961c94022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557818612,
+      "request_hex": "514d4c51050000004000000000000000f43694022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557825407,
+      "request_hex": "514d4c510500000040000000000000007f5194022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557832828,
+      "request_hex": "514d4c510500000040000000000000007c6e94022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557840048,
+      "request_hex": "514d4c51050000004000000000000000b08a94022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557847228,
+      "request_hex": "514d4c51050000004000000000000000bca694022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122557859799,
+      "request_hex": "514d4c51050000004000000000000000d7d794022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558054951,
+      "request_hex": "514d4c5105000000400000000000000027d297022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558064057,
+      "request_hex": "514d4c51050000004000000000000000b9f597022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558070917,
+      "request_hex": "514d4c51050000004000000000000000851098022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558077777,
+      "request_hex": "514d4c51050000004000000000000000512b98022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558086412,
+      "request_hex": "514d4c510500000040000000000000000c4d98022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558093598,
+      "request_hex": "514d4c510500000040000000000000001e6998022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558100361,
+      "request_hex": "514d4c51050000004000000000000000898398022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558107502,
+      "request_hex": "514d4c510500000040000000000000006e9f98022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558114556,
+      "request_hex": "514d4c51050000004000000000000000fcba98022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558121695,
+      "request_hex": "514d4c51050000004000000000000000dfd698022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558129359,
+      "request_hex": "514d4c51050000004000000000000000cff498022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558136273,
+      "request_hex": "514d4c51050000004000000000000000d10f99022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558142794,
+      "request_hex": "514d4c510500000040000000000000004a2999022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558150044,
+      "request_hex": "514d4c510500000040000000000000009c4599022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558156715,
+      "request_hex": "514d4c51050000004000000000000000ab5f99022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558166797,
+      "request_hex": "514d4c510500000040000000000000000d8799022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558173759,
+      "request_hex": "514d4c510500000040000000000000003fa299022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558180278,
+      "request_hex": "514d4c51050000004000000000000000b6bb99022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558186988,
+      "request_hex": "514d4c51050000004000000000000000ecd599022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558194633,
+      "request_hex": "514d4c51050000004000000000000000c9f399022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558202535,
+      "request_hex": "514d4c51050000004000000000000000a7129a022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558209519,
+      "request_hex": "514d4c51050000004000000000000000ef2d9a022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558216205,
+      "request_hex": "514d4c510500000040000000000000000d489a022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558222825,
+      "request_hex": "514d4c51050000004000000000000000e9619a022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558230952,
+      "request_hex": "514d4c51050000004000000000000000a8819a022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558238182,
+      "request_hex": "514d4c51050000004000000000000000e69d9a022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558244838,
+      "request_hex": "514d4c51050000004000000000000000e6b79a022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558251818,
+      "request_hex": "514d4c510500000040000000000000002ad39a022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558258542,
+      "request_hex": "514d4c510500000040000000000000006eed9a022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558265385,
+      "request_hex": "514d4c5105000000400000000000000029089b022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558272106,
+      "request_hex": "514d4c510500000040000000000000006a229b022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558279851,
+      "request_hex": "514d4c51050000004000000000000000ab409b022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558288111,
+      "request_hex": "514d4c51050000004000000000000000ef609b022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 7,
+      "protocol": "binary",
+      "invalid": false,
+      "client_ns": 629122558295337,
+      "request_hex": "514d4c51050000004000000000000000297d9b022f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60528
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_RST",
+      "checked_tokens": 0,
+      "unobserved_cancel": true
+    },
+    {
+      "case": 3,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122560857174,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2035360d0a0d0a514d4c510800000040000000000000005694c2022f3c0200f40600003a010000d800000022000000771f0000d8000000220000002f000000",
+      "peer": [
+        "127.0.0.1",
+        60532
+      ],
+      "gen": 64,
+      "prompt": [
+        1780,
+        314,
+        216,
+        34,
+        8055,
+        216,
+        34,
+        47
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000c6000000f8010000ac0b00003a010000d8000000240000001e000000c6000000c6000000f40600003a010000d800000022000000771f0000d8000000220000005b010000fd0000001c4600002f000000c6000000c6000000f8010000ac0b00003a010000d8000000240000001e000000c6000000c6000000f40600003a010000d800000022000000771f0000d8000000220000005b010000fd000000fc2700002f000000c6000000c6000000f8010000ac0b00003a010000d8000000240000001e000000c6000000c6000000f40600003a010000d800000022000000771f0000d8000000220000005b010000fd0000004e0700002f000000c6000000",
+      "checked_tokens": 64,
+      "partial": false,
+      "exact": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953563970,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000042cf2a1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60546
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "reply_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000",
+      "checked_tokens": 7,
+      "partial": true,
+      "exact": true,
+      "action": "backlog_SIGTERM",
+      "post_stop_extra_hex": "c6000000f801000028030000d70a00005a01000064030000",
+      "observed_wire_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000c6000000f801000028030000d70a00005a01000064030000"
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953623680,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000080b82b1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60562
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000c6000000f801000028030000d70a00005a010000",
+      "checked_tokens": 6,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953657688,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000583d2c1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60576
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000c6000000f801000028030000d70a00005a010000",
+      "checked_tokens": 6,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953682826,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000008a9f2c1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60580
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000c6000000f801000028030000d70a00005a010000",
+      "checked_tokens": 6,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953703469,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000002df02c1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60592
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000c6000000f801000028030000d70a00005a010000",
+      "checked_tokens": 6,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953732568,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000d8612d1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60602
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000c6000000f801000028030000d70a00005a010000",
+      "checked_tokens": 6,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953750952,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000a8a92d1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60604
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000c6000000f801000028030000d70a00005a010000",
+      "checked_tokens": 6,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953771125,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000075f82d1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60612
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "485454502f312e3120323030204f4b0d0a436f6e74656e742d547970653a206170706c69636174696f6e2f6f637465742d73747265616d0d0a436f6e74656e742d4c656e6774683a203235360d0a0d0ac6000000c6000000f801000028030000d70a00005a010000",
+      "checked_tokens": 6,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953790709,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000f5442e1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60628
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953811192,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000f8942e1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60634
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953829089,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000e1da2e1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60642
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953846756,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000e41f2f1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60652
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953868031,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000ff722f1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60666
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953887303,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000047be2f1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60676
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953903785,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000a9fe2f1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60680
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953924333,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000ed4e301a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60682
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953943029,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000f597301a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60694
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953965464,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000098ef301a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60700
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122953983781,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000002537311a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60708
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954006321,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000318f311a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60724
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954023388,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000dcd1311a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60730
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954040697,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000007915321a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60736
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954061749,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000b567321a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60738
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954078628,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000a4a9321a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60742
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954099189,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000f5f9321a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60744
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954114885,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000004537331a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60746
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954136358,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000268b331a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60756
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954153514,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000002ace331a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60762
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954169833,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000e90d341a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60766
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954190062,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000ee5c341a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60776
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954207443,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000d3a0341a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60792
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954223222,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000076de341a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60796
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954243581,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000fd2d351a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60800
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954262381,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000006d77351a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60806
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954279034,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000007ab8351a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60812
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954294760,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000e8f5351a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60826
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954314091,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000006b41361a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60842
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954331247,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000006f84361a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60854
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954349738,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000aacc361a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60864
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954366160,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000d00c371a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60880
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954385123,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000e356371a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60886
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954402389,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000559a371a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60892
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954416985,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000059d3371a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60902
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954435493,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000a51b381a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60904
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954451595,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000008b5a381a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60910
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954472786,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000052ad381a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60914
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954489196,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000006ced381a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60928
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954508447,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000009f38391a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60936
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954526967,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000f780391a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60952
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954543728,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000070c2391a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60960
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954559295,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000003fff391a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60972
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954574215,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000087393a1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60988
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954591175,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000c77b3a1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        60998
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954607595,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000ebbb3a1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        32776
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954630538,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000008a153b1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        32786
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954648957,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000007d5d3b1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        32798
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954663874,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000c2973b1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        32814
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954682249,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000089df3b1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        32826
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954699687,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000a7233c1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        32828
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954714896,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000105f3c1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        32830
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954730007,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000179a3c1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        32842
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954745362,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c5105000000400000000000000012d63c1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        32848
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954760714,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c510500000040000000000000000a123d1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        32862
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    },
+    {
+      "case": 7,
+      "protocol": "http",
+      "invalid": false,
+      "client_ns": 629122954775395,
+      "request_hex": "504f5354202f67656e657261746520485454502f312e310d0a436f6e74656e742d4c656e6774683a2034340d0a0d0a514d4c51050000004000000000000000634b3d1a2f3c0200d94a0000fd00000062070000937500001e000000",
+      "peer": [
+        "127.0.0.1",
+        32878
+      ],
+      "gen": 64,
+      "prompt": [
+        19161,
+        253,
+        1890,
+        30099,
+        30
+      ],
+      "action": "backlog_SIGTERM",
+      "observed_wire_hex": "",
+      "checked_tokens": 0,
+      "exact": true,
+      "partial": true
+    }
+  ],
+  "native_stats": {
+    "accepted": 78,
+    "received": 97,
+    "sends": 736,
+    "bytes": 6069,
+    "completed": 88,
+    "closed": 78,
+    "aborted": 58,
+    "max_connections": 64,
+    "max_requests": 8,
+    "pending": 0,
+    "error": 0,
+    "head": 88,
+    "reserved": 0,
+    "dropped": 0,
+    "overflow": 0,
+    "sqhead": 1246,
+    "sqtail": 1246,
+    "cqhead": 15087,
+    "cqtail": 15087,
+    "trace_count": 88,
+    "trace_overflow": 0
+  },
+  "replies": [
+    {
+      "seq": 0,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 629104457851502
+    },
+    {
+      "seq": 1,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 629104459071301
+    },
+    {
+      "seq": 2,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 629104459241758
+    },
+    {
+      "seq": 3,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 629106705395906
+    },
+    {
+      "seq": 4,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 629106706534445
+    },
+    {
+      "seq": 5,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 629106706739646
+    },
+    {
+      "seq": 6,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 629108952869838
+    },
+    {
+      "seq": 7,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 629108954022968
+    },
+    {
+      "seq": 8,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 629108954202418
+    },
+    {
+      "seq": 9,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 629111200440629
+    },
+    {
+      "seq": 10,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 629111201926822
+    },
+    {
+      "seq": 11,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 629111202282055
+    },
+    {
+      "seq": 12,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 629113448850002
+    },
+    {
+      "seq": 13,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 629113450306647
+    },
+    {
+      "seq": 14,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 629113450501591
+    },
+    {
+      "seq": 15,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 629115696686771
+    },
+    {
+      "seq": 16,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 629115697960900
+    },
+    {
+      "seq": 17,
+      "gen": 64,
+      "sends": 63,
+      "early": 62,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 629115698176563
+    },
+    {
+      "seq": 18,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 629117944279942
+    },
+    {
+      "seq": 19,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 629117945594504
+    },
+    {
+      "seq": 20,
+      "gen": 64,
+      "sends": 63,
+      "early": 62,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 629117945780432
+    },
+    {
+      "seq": 21,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 629120191883271
+    },
+    {
+      "seq": 22,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 629120193160177
+    },
+    {
+      "seq": 23,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 629120193351576
+    },
+    {
+      "seq": 24,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 82,
+      "aborted": 0,
+      "client_ns": 629122439461775
+    },
+    {
+      "seq": 25,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 87,
+      "aborted": 0,
+      "client_ns": 629122440709481
+    },
+    {
+      "seq": 26,
+      "gen": 64,
+      "sends": 64,
+      "early": 63,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 629122440899723
+    },
+    {
+      "seq": 27,
+      "gen": 1,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122486725454
+    },
+    {
+      "seq": 28,
+      "gen": 1,
+      "sends": 1,
+      "early": 0,
+      "bytes": 4,
+      "aborted": 0,
+      "client_ns": 629122486981029
+    },
+    {
+      "seq": 29,
+      "gen": 64,
+      "sends": 1,
+      "early": 1,
+      "bytes": 4,
+      "aborted": 1,
+      "client_ns": 629122488048180
+    },
+    {
+      "seq": 30,
+      "gen": 64,
+      "sends": 63,
+      "early": 62,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 629122489139238
+    },
+    {
+      "seq": 31,
+      "gen": 64,
+      "sends": 2,
+      "early": 2,
+      "bytes": 8,
+      "aborted": 1,
+      "client_ns": 629122557729708
+    },
+    {
+      "seq": 32,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122557762776
+    },
+    {
+      "seq": 33,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122557773700
+    },
+    {
+      "seq": 34,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122557781764
+    },
+    {
+      "seq": 35,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122557789464
+    },
+    {
+      "seq": 36,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122557796791
+    },
+    {
+      "seq": 37,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122557804792
+    },
+    {
+      "seq": 38,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122557811862
+    },
+    {
+      "seq": 39,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122557818612
+    },
+    {
+      "seq": 40,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122557825407
+    },
+    {
+      "seq": 41,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122557832828
+    },
+    {
+      "seq": 42,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122557840048
+    },
+    {
+      "seq": 43,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122557847228
+    },
+    {
+      "seq": 44,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122557859799
+    },
+    {
+      "seq": 45,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558054951
+    },
+    {
+      "seq": 46,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558064057
+    },
+    {
+      "seq": 47,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558070917
+    },
+    {
+      "seq": 48,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558077777
+    },
+    {
+      "seq": 49,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558086412
+    },
+    {
+      "seq": 50,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558093598
+    },
+    {
+      "seq": 51,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558100361
+    },
+    {
+      "seq": 52,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558107502
+    },
+    {
+      "seq": 53,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558114556
+    },
+    {
+      "seq": 54,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558121695
+    },
+    {
+      "seq": 55,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558129359
+    },
+    {
+      "seq": 56,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558136273
+    },
+    {
+      "seq": 57,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558142794
+    },
+    {
+      "seq": 58,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558150044
+    },
+    {
+      "seq": 59,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558156715
+    },
+    {
+      "seq": 60,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558166797
+    },
+    {
+      "seq": 61,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558173759
+    },
+    {
+      "seq": 62,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558180278
+    },
+    {
+      "seq": 63,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558186988
+    },
+    {
+      "seq": 64,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558194633
+    },
+    {
+      "seq": 65,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558202535
+    },
+    {
+      "seq": 66,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558209519
+    },
+    {
+      "seq": 67,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558216205
+    },
+    {
+      "seq": 68,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558222825
+    },
+    {
+      "seq": 69,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558230952
+    },
+    {
+      "seq": 70,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558238182
+    },
+    {
+      "seq": 71,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558244838
+    },
+    {
+      "seq": 72,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558251818
+    },
+    {
+      "seq": 73,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558258542
+    },
+    {
+      "seq": 74,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558265385
+    },
+    {
+      "seq": 75,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558272106
+    },
+    {
+      "seq": 76,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558279851
+    },
+    {
+      "seq": 77,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558288111
+    },
+    {
+      "seq": 78,
+      "gen": 64,
+      "sends": 0,
+      "early": 0,
+      "bytes": 0,
+      "aborted": 1,
+      "client_ns": 629122558295337
+    },
+    {
+      "seq": 79,
+      "gen": 64,
+      "sends": 61,
+      "early": 60,
+      "bytes": 336,
+      "aborted": 0,
+      "client_ns": 629122560857174
+    },
+    {
+      "seq": 80,
+      "gen": 64,
+      "sends": 2,
+      "early": 2,
+      "bytes": 108,
+      "aborted": 1,
+      "client_ns": 629122953563970
+    },
+    {
+      "seq": 81,
+      "gen": 64,
+      "sends": 2,
+      "early": 2,
+      "bytes": 104,
+      "aborted": 1,
+      "client_ns": 629122953623680
+    },
+    {
+      "seq": 82,
+      "gen": 64,
+      "sends": 2,
+      "early": 2,
+      "bytes": 104,
+      "aborted": 1,
+      "client_ns": 629122953657688
+    },
+    {
+      "seq": 83,
+      "gen": 64,
+      "sends": 2,
+      "early": 2,
+      "bytes": 104,
+      "aborted": 1,
+      "client_ns": 629122953682826
+    },
+    {
+      "seq": 84,
+      "gen": 64,
+      "sends": 2,
+      "early": 2,
+      "bytes": 104,
+      "aborted": 1,
+      "client_ns": 629122953703469
+    },
+    {
+      "seq": 85,
+      "gen": 64,
+      "sends": 2,
+      "early": 2,
+      "bytes": 104,
+      "aborted": 1,
+      "client_ns": 629122953732568
+    },
+    {
+      "seq": 86,
+      "gen": 64,
+      "sends": 2,
+      "early": 2,
+      "bytes": 104,
+      "aborted": 1,
+      "client_ns": 629122953750952
+    },
+    {
+      "seq": 87,
+      "gen": 64,
+      "sends": 2,
+      "early": 2,
+      "bytes": 104,
+      "aborted": 1,
+      "client_ns": 629122953771125
+    }
+  ],
+  "bpf_stats": {
+    "exit": 0,
+    "stdout": "seen pkts      0\nip+udp/ip+tcp pkts 0\nmagic pkts     0\ndrops          0\nuring recycled 88\ndrop: ctl busy 0\ndrop: done busy 0\nllm magic      0\nllm busy       0\ntcp dest       0\ntcp magic      0\nstream publish 144\nsockhash linked 78\nsockhash failed 0\nparser calls   144\nparser invalid 0\nhead=0 done_seq=0 published=0 acked=0 drops=0 ready=0\nslot[0]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[1]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[2]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nslot[3]: state=0 id=0 client_ns=0 x[0]=0.000000 | done state=0 id=0 y[0]=0.000000\nllm_head=88\nllm_queued=56 sockhash_first_errno=0\nllm_reserved=0x0\nllm[0]: state=0 prompt=5 gen=64 produced=8 client_ns=629122953563970\nllm[1]: state=0 prompt=5 gen=64 produced=7 client_ns=629122953623680\nllm[2]: state=0 prompt=5 gen=64 produced=7 client_ns=629122953657688\nllm[3]: state=0 prompt=5 gen=64 produced=7 client_ns=629122953682826\nllm[4]: state=0 prompt=5 gen=64 produced=7 client_ns=629122953703469\nllm[5]: state=0 prompt=5 gen=64 produced=7 client_ns=629122953732568\nllm[6]: state=0 prompt=5 gen=64 produced=7 client_ns=629122953750952\nllm[7]: state=0 prompt=5 gen=64 produced=7 client_ns=629122953771125\n",
+    "stderr": ""
+  },
+  "queued_at_stop_cleanup": 56,
+  "model_errors": [
+    0
+  ],
+  "pass": true,
+  "end": "2026-10-17T00:42:33.901094+00:00",
+  "remaining_pins": []
+}

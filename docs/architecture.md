@@ -787,3 +787,22 @@ lower completion/TTFT tails; K-N throughput/completion intervals cross0.
 Lower resident group CPU/TPOT is a design tradeoff,not an eBPF-only saving.
 Residual client lag/streaming/coalescing and finite trajectory flags remain.
 Current evidence does not support general transport speed superiority.
+
+
+## Explicit experimental kernel-network targets
+
+[Ordinary integration0079](findings/0079-kernel-network-source-integration.md)
+places the0077 transport in executor/kernel_tcp.h,bpf/kernel_tcp.bpf.c and
+bpf/include/kernel_tcp_state.h. Mixed-generation and opaque-graph adapters use
+the same registered CPU transport state and BPF connection/CQ/SQ/reply loop.
+BF_KERNEL_TCP selects only that header; their GPU dispatch/arithmetic remains.
+Explicit vllm-mixed-kernel-network and graph-server-kernel-network targets leave
+the selected0074 target behavior/default8 intact. There is no steady userspace
+request worker or GPU I/O CTA on this candidate,while Linux/BPF still uses CPU.
+
+Ordinary8/16 builds and default8 Qwen/Smol protocol/replay/cancel plus independent
+cuBLAS/cuFFT graph lifecycle checks qualify this finite source boundary. Opaque
+graphs use fixed input/output buffers of at most64words; generation has its own
+LLM scheduler. No arbitrary-CUDA plugin stability,long context,multiGPU or new
+kernel/hardware compatibility is claimed. Earlier0077/0078 performance limits
+still apply; integration is an engineering result,not a new speed contribution.

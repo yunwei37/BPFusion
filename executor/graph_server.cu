@@ -16,6 +16,8 @@
 #include "graph_backend.h"
 #ifdef BF_USER_NETWORK
 #include "userspace_tcp.h"
+#elif defined(BF_KERNEL_TCP)
+#include "kernel_tcp.h"
 #else
 #include "io_uring_tcp.h"
 #endif

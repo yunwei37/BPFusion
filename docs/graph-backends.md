@@ -69,6 +69,24 @@ HTTP uses the same binary frame with Content-Length, as in the LLM transport.
 A valid frame with the wrong backend input/output count receives HTTP400 or
 binary EOF. There is no tokenizer, vocabulary check, text or JSON tensor API.
 
+## Experimental BPF-owned networking
+
+The same captured-graph caller and arithmetic can use the
+[ordinary kernel-network candidate](findings/0079-kernel-network-source-integration.md):
+
+~~~sh
+make build/fusion.bpf.o build/bpfusion_load graph-server-kernel-network
+./build/bpfusion_load stream-uring-attach
+python3 examples/torch_graph_server.py build/graph_server_kernel_network.so matmul --seconds 120
+~~~
+
+Substitute fft for matmul,then use the same client/cleanup above. This transport
+moves io_uring CQ/SQ,connection/reply lifetime into BPF and removes the GPU I/O
+CTA. It changes no caller graph,buffer,ABI or graph-dispatch instruction.
+Default8 cuBLAS/cuFFT finite numerical/lifecycle qualification is recorded in0079.
+It is an experimental control,not a selected faster transport or stable
+arbitrary-kernel plugin. The autoregressive scheduler stays a separate adapter.
+
 ## Qualified boundary
 
 [Four real lifecycle runs](findings/0067-opaque-graph-backend.md) cover both

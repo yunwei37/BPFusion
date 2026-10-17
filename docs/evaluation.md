@@ -1850,3 +1850,24 @@ Research value supporting; impact additional objective evidence/design boundary.
 No intrinsic eBPF speedup, maximum-capacity ranking or old6.36ms allocation.
 Kernel candidate unselected; default0074 stays. Next decision follows the
 finite reusable-backend implementation goal,not repeated closed micro-sweeps.
+
+
+### 2026-10-17 ordinary kernel-network source and backend boundary
+
+[Finding0079](findings/0079-kernel-network-source-integration.md) implements the
+user's normal-source/backend-reuse acceptance boundary after0078 closes.
+This is dependency/engineering value,not an additional paper experiment or
+new scientific evidence of speed. Explicit normal Make targets reuse the
+same BPF TCP/CQ/SQ/lifetime transport for mixedLLM and opaque graphs; current
+selected0074/default8 semantics remain. No arithmetic or plugin framework change.
+
+Actual normal8/16 builds and compiled instruction controls pass. Qwen/Smol
+default8 each pass640 outcomes/23376 replayedtokens/259intended rejects and
+144-action ordinary reset/backlog-stop; archive CPU replay is byte-identical.
+Four canonical cuBLAS/cuFFT kernel/native graph cells pass182 checks each.
+[Complete record](../bench/results/kernel_network_integration_20261017/result.md)
+retains commands/raw/source/builds,stop canceled/unobserved outputs,finite
+oracle limits,bounded diagnostic-record overflow and cleanup. Original
+PIDs/WIP/default sources preserved. This establishes the finite reusable
+boundary,not arbitrary-model/kernel support,native superiority,old6.36ms
+repair or complete exclusive resource attribution.

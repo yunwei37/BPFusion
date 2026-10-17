@@ -19,7 +19,11 @@
 #include "userspace_tcp.h"
 #endif
 #ifdef BF_URING_NETWORK
+#ifdef BF_KERNEL_TCP
+#include "kernel_tcp.h"
+#else
 #include "io_uring_tcp.h"
+#endif
 #endif
 struct Step { cudaGraphExec_t graph; long long* output; };
 struct Inputs {
