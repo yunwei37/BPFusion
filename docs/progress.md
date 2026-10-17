@@ -45,3 +45,12 @@ shutdown. CUDA-event host-replay calibration is retained separately.
 The plan/exit criteria are published before performance acquisition; remote
 client implementation must pass an actual first matched pair before being
 presented as qualified. No GPU arithmetic kernel has been optimized.
+
+Client fairness required two real fixes:high-resolution timerfd scheduling and
+atomic epoch publication. Original invalid/incomplete prefixes and all error
+logs remain. A fresh matched12000-request pair passes the original timing gate,
+but exposes a kernel22ms P99 versus native2.86ms. The most promising next step
+is the already-planned shared TCP_NODELAY fault repair:the graph caller omitted
+the LLM caller's policy while the transport can withhold the final4bytes.
+Verify with same-client before/after controls and ordinary qualification,then
+restart the bounded matrix. Do not call the client repair an eBPF speed gain.

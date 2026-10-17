@@ -1,0 +1,25 @@
+{
+  "worker_exit": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1
+  ],
+  "actual_request_rows": 5250,
+  "planned": 6000,
+  "worker_stderr": {
+    "screen_hrtimer_matmul_w1_c0_r1000_native.client.jsonl.w0.jsonl": "",
+    "screen_hrtimer_matmul_w1_c0_r1000_native.client.jsonl.w1.jsonl": "",
+    "screen_hrtimer_matmul_w1_c0_r1000_native.client.jsonl.w2.jsonl": "",
+    "screen_hrtimer_matmul_w1_c0_r1000_native.client.jsonl.w3.jsonl": "",
+    "screen_hrtimer_matmul_w1_c0_r1000_native.client.jsonl.w4.jsonl": "",
+    "screen_hrtimer_matmul_w1_c0_r1000_native.client.jsonl.w5.jsonl": "",
+    "screen_hrtimer_matmul_w1_c0_r1000_native.client.jsonl.w6.jsonl": "",
+    "screen_hrtimer_matmul_w1_c0_r1000_native.client.jsonl.w7.jsonl": "Traceback (most recent call last):\n  File \"/tmp/graph_network_client.py\", line 185, in <module>\n    uvloop.run(worker(args))\n  File \"/usr/local/lib/python3.12/site-packages/uvloop/__init__.py\", line 96, in run\n    return __asyncio.run(\n           ^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/asyncio/runners.py\", line 195, in run\n    return runner.run(main)\n           ^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"uvloop/loop.pyx\", line 1515, in uvloop.loop.Loop.run_until_complete\n  File \"/usr/local/lib/python3.12/site-packages/uvloop/__init__.py\", line 48, in wrapper\n    return await main\n           ^^^^^^^^^^\n  File \"/tmp/graph_network_client.py\", line 86, in worker\n    epoch=int(Path(args.epoch_file).read_text())\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: invalid literal for int() with base 10: ''\n"
+  },
+  "all_worker_contents_retained_in_merged_log": true
+}

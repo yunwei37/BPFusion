@@ -110,6 +110,18 @@ nor a pure device-launched-kernel timing. The served graphs contain no timing
 nodes. The example's capture_graphs helper keeps the calibration and actual
 caller graph construction shared; it is not a new plugin API.
 
+A remote client with Linux, Python 3.12 and uvloop 0.23.0 can use:
+
+~~~sh
+python3 bench/graph_network_client.py --host "$server_ip" --operation fft \
+  --rate 1000 --seconds 6 --output /tmp/fft-remote.jsonl
+~~~
+
+The client opens persistent TCP connections, preserves scheduled arrivals,
+checks every complete numerical output, and retains failed/partial requests.
+Run it on another machine for a remote test. Raw logs use the binary float
+protocol; this is separate from the text/token demonstration client.
+
 ## Qualified boundary
 
 [Four real lifecycle runs](findings/0067-opaque-graph-backend.md) cover both
