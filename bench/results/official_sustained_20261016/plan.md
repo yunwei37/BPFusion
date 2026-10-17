@@ -258,3 +258,18 @@ Transfer uses the recovered1MiB chunk path after the whole-file WebSocket
 failure. All adverse/failure/flag/scheduling observations remain. Full15cells,
 archive analysis/reconstruction/replay, fresh result review and exactUID
 cleanup still determine the final comparison's validity.
+
+## Post-window8 archive acknowledgment recovery
+
+A transfer SSH reset occurs after the first8 serving windows finish; all
+server terminals exit0 and original sessions/pins/GPU state remain intact.
+Existing gateway failover can repeat a command whose write already completed.
+Actual duplicate1MiB replay proves the committed range is correct. The existing
+raw-copy function now reads the final successful response and verifies/writes
+the original fixed byte range with native pwrite; no new lock/helper/controller.
+All original window8 data recover with lossless checks, and a fixed-offset
+replay leaves the entire compressed file byte-identical. See
+transfer_recovery.md. This is acquisition-only; continue this same retry2 at
+condition9, without rerunning/omitting any measured cell or changing frozen
+client/backend/oracle/metrics. Artifact-only checkpoint8e88d46 is documented;
+later HEAD receipt differences do not imply changed computation.

@@ -13,21 +13,23 @@ function Receive-ClientFile([string]$Name,[string]$Destination) {
  $taskCompress='import pathlib,gzip,json;p=pathlib.Path("/tmp/{0}");q=pathlib.Path("/tmp/{0}.transfer.gz");raw=p.read_bytes();q.write_bytes(gzip.compress(raw,mtime=0)) if not q.exists() else None;assert gzip.decompress(q.read_bytes())==raw;print(json.dumps([len(raw),q.stat().st_size]))' -f $Name
  $taskReply=& $KubectlHome -n coder exec $ClientPod '--' python3 -c $taskCompress
  if($LASTEXITCODE -ne 0){throw "Prepare original data transfer failed"}
- $taskInfo=($taskReply -join "") | ConvertFrom-Json
+ $taskInfo=@($taskReply)[-1] | ConvertFrom-Json
  $taskInit=@"
 from pathlib import Path
 p=Path('$Destination.gz')
 if not p.exists():p.touch(exist_ok=False)
 print(p.stat().st_size)
 "@
- $taskOffset=[long](Invoke-Workspace $taskInit)
+ $taskInitialOffset=Invoke-Workspace $taskInit
+ $taskOffset=[long](($taskInitialOffset -split "\r?\n")[-1])
  if($taskOffset -gt $taskInfo[1]){throw "Existing transfer longer than original"}
  while($taskOffset -lt $taskInfo[1]) {
   $taskChunk=[Math]::Min([long]1048576,[long]$taskInfo[1]-$taskOffset)
   $taskRead='import base64,pathlib;p=pathlib.Path("/tmp/{0}.transfer.gz");print(base64.b64encode(p.read_bytes()[{1}:{2}]).decode())' -f $Name,$taskOffset,($taskOffset+$taskChunk)
   $taskPayload=& $KubectlHome -n coder exec $ClientPod '--' python3 -c $taskRead
   if($LASTEXITCODE -ne 0){throw "Original data chunk read failed; retain durable prefix"}
-  $taskWrite='import sys,base64,pathlib;p=pathlib.Path("{0}.gz");data=base64.b64decode(sys.stdin.buffer.read());assert len(data)=={1} and p.stat().st_size=={2};p.open("ab").write(data)' -f $Destination,$taskChunk,$taskOffset
+  $taskPayload=@($taskPayload)[-1]
+  $taskWrite='import sys,base64,pathlib,os;p=pathlib.Path("{0}.gz");data=base64.b64decode(sys.stdin.buffer.read());raw=p.read_bytes();assert len(data)=={1} and len(raw)>={2};present=raw[{2}:{2}+len(data)];assert present==data[:len(present)];fd=os.open(p,os.O_WRONLY);written=os.pwrite(fd,data,{2});os.close(fd);assert written==len(data)' -f $Destination,$taskChunk,$taskOffset
   $taskPayload | & $KubectlHome -n coder exec -i $taskServerPod '--' python3 -c $taskWrite
   if($LASTEXITCODE -ne 0){throw "Original data chunk write failed; retain durable prefix"}
   $taskOffset+=$taskChunk
