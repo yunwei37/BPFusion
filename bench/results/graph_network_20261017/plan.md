@@ -68,7 +68,7 @@ specific epoll bottleneck; graph_server_uring_loop is NOT that comparator.
    confirmation; no retuning, exclusions or extra searches after its results.
    Categories without an eligible repetition1 cell are left unselected; if no
    selection remains use the three stated fallback cells. Ties sort by operation
-   name then rate. Confirmation seeds=20262017+selection_index*100+pair; even
+   name then rate. Confirmation seeds=420261017+selection_index*100+pair; even
    (pair+selection_index) runs kernel then native, odd runs native then kernel.
    Screening itself supplies work-duration/load/core crossovers, with honest
    unbracketed boundaries where no crossover occurs.
@@ -121,3 +121,9 @@ UIDs; preserve original session PIDs and unrelated tools/setup_env.sh.
 No new service, scheduler, Workspace, permanent helper or runtime policy.
 Record commands/source/environment/seeds/raw traces/errors and cleanup. Commit
 and push each completed milestone. Keep historical negative evidence.
+
+Pre-acquisition correction:confirmation seeds are420261017+selection_index*100+
+pair. The earlier20262017base accidentally overlapped the first screening
+seed under the fixed rate-dependent screening rule. No performance cell had
+started when this was corrected; calibration/qualification are deterministic.
+The forward correction restores the promised distinct confirmation seeds.
