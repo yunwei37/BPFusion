@@ -92,3 +92,12 @@ architecture/evaluation duplicate chronicles have been consolidated into
 current contracts and the complete80-finding index. All historical raw/source/
 reviews and foreign tools/setup_env.sh remain. Commit this verified partial
 milestone and the forward continuation decision before replacement acquisition.
+
+Full graph screening now completes60cells/2520000measured requests/1920warmups,
+zero failures and full owner-code recomputation. All20paths first saturate
+the configured setup at16000/s after4000/s. The old client-interruption pair
+remains separate. Deterministic selection is frozen to unrestrictedFFT1000,
+unrestrictedmatmul1000,andCPU1matmul1000 (allrepeat1),before confirmation.
+Next decisive action:five new-seed20s pairs per selection,unchanged criteria.
+The original GPU/client/observer source stays3d3878c;no more source tuning.
+Commit/push this completed screen and selection first.

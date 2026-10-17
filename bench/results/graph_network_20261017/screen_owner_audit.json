@@ -1,0 +1,1178 @@
+{
+  "phase": "screen",
+  "frozen_source": "3d3878c80edbaa7cc1a0bb7c87519b737ffae4f1",
+  "cells": 60,
+  "attempts": 2520000,
+  "failures": 0,
+  "checks": [
+    {
+      "tag": "screen_cpp_fft_w16_c0_r1000_kernel",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 105,
+      "scalar": {
+        "cpu": 0.038961692166666666,
+        "host": 18.54,
+        "p99": 16.88305079000001,
+        "throughput": 1000.0
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w16_c0_r1000_native",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 105,
+      "scalar": {
+        "cpu": 0.037579055666666666,
+        "host": 17.755,
+        "p99": 2.188564910000001,
+        "throughput": 1000.0
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w16_c0_r16000_kernel",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 145,
+      "scalar": {
+        "cpu": 0.02211470332291667,
+        "host": 1.76,
+        "p99": 4176.044835850001,
+        "throughput": 9392.487334668656
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w16_c0_r16000_native",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 129,
+      "scalar": {
+        "cpu": 0.016839621989583334,
+        "host": 1.4025,
+        "p99": 2250.4217016000002,
+        "throughput": 11591.327773290552
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w16_c0_r4000_kernel",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 104,
+      "scalar": {
+        "cpu": 0.02592256175,
+        "host": 4.759166666666666,
+        "p99": 4.460538979999994,
+        "throughput": 3999.548947534484
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w16_c0_r4000_native",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 106,
+      "scalar": {
+        "cpu": 0.021513124041666668,
+        "host": 4.47,
+        "p99": 17.15114259999999,
+        "throughput": 3999.520552141118
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w1_c0_r1000_kernel",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 105,
+      "scalar": {
+        "cpu": 0.0364229395,
+        "host": 8.908333333333333,
+        "p99": 1.7926282100000035,
+        "throughput": 999.8375335662977
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w1_c0_r1000_native",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 106,
+      "scalar": {
+        "cpu": 0.03868492816666667,
+        "host": 13.913333333333334,
+        "p99": 10.392147260000007,
+        "throughput": 999.8215335226355
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w1_c0_r16000_kernel",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 150,
+      "scalar": {
+        "cpu": 0.023121323760416666,
+        "host": 1.7275,
+        "p99": 4611.65739982,
+        "throughput": 9004.056695863681
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w1_c0_r16000_native",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 134,
+      "scalar": {
+        "cpu": 0.017013830270833332,
+        "host": 1.3730208333333334,
+        "p99": 2837.0075158799996,
+        "throughput": 10805.4114805448
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w1_c0_r4000_kernel",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 108,
+      "scalar": {
+        "cpu": 0.02536084179166667,
+        "host": 3.1345833333333335,
+        "p99": 2.341811879999995,
+        "throughput": 3999.3296536932057
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w1_c0_r4000_native",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 106,
+      "scalar": {
+        "cpu": 0.020260007916666666,
+        "host": 2.2129166666666666,
+        "p99": 2.120078349999999,
+        "throughput": 3998.753733749243
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w1_c1_r1000_kernel",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 122,
+      "scalar": {
+        "cpu": 0.03482636966666666,
+        "host": 18.698333333333334,
+        "p99": 11.929219560000162,
+        "throughput": 999.8844671827076
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w1_c1_r1000_native",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 105,
+      "scalar": {
+        "cpu": 0.031693352833333334,
+        "host": 15.375,
+        "p99": 2.87132087,
+        "throughput": 999.8768213415177
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w1_c1_r16000_kernel",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 153,
+      "scalar": {
+        "cpu": 0.016221990218750003,
+        "host": 1.4310416666666668,
+        "p99": 4560.35027346,
+        "throughput": 9052.116491702596
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w1_c1_r16000_native",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 129,
+      "scalar": {
+        "cpu": 0.012874038333333334,
+        "host": 1.1642708333333334,
+        "p99": 2397.6341239,
+        "throughput": 11369.809468985939
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w1_c1_r4000_kernel",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 104,
+      "scalar": {
+        "cpu": 0.019008647916666666,
+        "host": 3.755,
+        "p99": 4.271526839999998,
+        "throughput": 3999.1197490863888
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w1_c1_r4000_native",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 106,
+      "scalar": {
+        "cpu": 0.01641016225,
+        "host": 3.325833333333333,
+        "p99": 16.045187179999985,
+        "throughput": 3999.1122090869194
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w256_c0_r1000_kernel",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 104,
+      "scalar": {
+        "cpu": 0.0471726545,
+        "host": 18.878333333333334,
+        "p99": 14.416136050000022,
+        "throughput": 999.8907747647885
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w256_c0_r1000_native",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 105,
+      "scalar": {
+        "cpu": 0.04548565416666667,
+        "host": 17.768333333333334,
+        "p99": 12.983547200000034,
+        "throughput": 999.8646021683886
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w256_c0_r16000_kernel",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 185,
+      "scalar": {
+        "cpu": 0.027528109989583334,
+        "host": 2.2903125,
+        "p99": 7982.92708207,
+        "throughput": 6828.332293690461
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w256_c0_r16000_native",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 185,
+      "scalar": {
+        "cpu": 0.019510247739583333,
+        "host": 1.9932291666666666,
+        "p99": 8016.204596889999,
+        "throughput": 6809.099851922144
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w256_c0_r4000_kernel",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 105,
+      "scalar": {
+        "cpu": 0.02921557841666667,
+        "host": 5.57375,
+        "p99": 168.81153295,
+        "throughput": 3996.9707178762606
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w256_c0_r4000_native",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 104,
+      "scalar": {
+        "cpu": 0.023345946583333336,
+        "host": 4.557083333333333,
+        "p99": 4.156496479999992,
+        "throughput": 3999.1188641428666
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w16_c0_r1000_kernel",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 105,
+      "scalar": {
+        "cpu": 0.03612102366666667,
+        "host": 13.648333333333333,
+        "p99": 12.600250980000078,
+        "throughput": 999.9893211140399
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w16_c0_r1000_native",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 104,
+      "scalar": {
+        "cpu": 0.03825088716666667,
+        "host": 14.376666666666667,
+        "p99": 4.113096650000006,
+        "throughput": 1000.0
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w16_c0_r16000_kernel",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 150,
+      "scalar": {
+        "cpu": 0.020238551135416668,
+        "host": 1.3675,
+        "p99": 4356.45011809,
+        "throughput": 9217.373028735039
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w16_c0_r16000_native",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 127,
+      "scalar": {
+        "cpu": 0.014479202416666666,
+        "host": 1.0821875,
+        "p99": 2280.2179251099997,
+        "throughput": 11558.29369082305
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w16_c0_r4000_kernel",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 103,
+      "scalar": {
+        "cpu": 0.024545487499999998,
+        "host": 3.609583333333333,
+        "p99": 3.172654339999997,
+        "throughput": 3998.766625753641
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w16_c0_r4000_native",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 106,
+      "scalar": {
+        "cpu": 0.020476385958333333,
+        "host": 3.7958333333333334,
+        "p99": 16.236201969999996,
+        "throughput": 3998.2516225401114
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c0_r1000_kernel",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 109,
+      "scalar": {
+        "cpu": 0.03740956116666667,
+        "host": 12.096666666666666,
+        "p99": 2.0510880800000004,
+        "throughput": 999.8600737487625
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c0_r1000_native",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 104,
+      "scalar": {
+        "cpu": 0.03886948566666667,
+        "host": 16.338333333333335,
+        "p99": 17.791437780000006,
+        "throughput": 999.8938805958564
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c0_r16000_kernel",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 148,
+      "scalar": {
+        "cpu": 0.01992649432291667,
+        "host": 1.5378125,
+        "p99": 4405.77298956,
+        "throughput": 9179.17907139293
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c0_r16000_native",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 126,
+      "scalar": {
+        "cpu": 0.013436927927083333,
+        "host": 1.2811458333333334,
+        "p99": 2142.23521257,
+        "throughput": 11739.83651911511
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c0_r4000_kernel",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 106,
+      "scalar": {
+        "cpu": 0.024686484375,
+        "host": 3.4808333333333334,
+        "p99": 144.7997546199998,
+        "throughput": 3999.3955166971564
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c0_r4000_native",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 104,
+      "scalar": {
+        "cpu": 0.020353962666666666,
+        "host": 3.58375,
+        "p99": 2.4613674999999993,
+        "throughput": 3999.457284978224
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c1_r1000_kernel",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 106,
+      "scalar": {
+        "cpu": 0.035107948166666667,
+        "host": 10.358333333333333,
+        "p99": 14.826207380000003,
+        "throughput": 999.8937527896693
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c1_r1000_native",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 105,
+      "scalar": {
+        "cpu": 0.032991306,
+        "host": 10.971666666666666,
+        "p99": 2.1943455899999997,
+        "throughput": 999.8707222149066
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c1_r16000_kernel",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 155,
+      "scalar": {
+        "cpu": 0.015141989645833335,
+        "host": 1.1779166666666667,
+        "p99": 4676.81663406,
+        "throughput": 8938.216115402936
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c1_r16000_native",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 132,
+      "scalar": {
+        "cpu": 0.012035243895833332,
+        "host": 1.1189583333333333,
+        "p99": 2136.00488741,
+        "throughput": 11750.825184102916
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c1_r4000_kernel",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 104,
+      "scalar": {
+        "cpu": 0.01899497425,
+        "host": 3.8320833333333333,
+        "p99": 12.40566011999997,
+        "throughput": 3999.650379228009
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c1_r4000_native",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 105,
+      "scalar": {
+        "cpu": 0.015624215291666669,
+        "host": 3.279166666666667,
+        "p99": 2.318702419999998,
+        "throughput": 3999.5730562417743
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c2_r1000_kernel",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 111,
+      "scalar": {
+        "cpu": 0.038240807833333335,
+        "host": 12.855,
+        "p99": 3.2923679900000056,
+        "throughput": 1000.0
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c2_r1000_native",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 106,
+      "scalar": {
+        "cpu": 0.0349566045,
+        "host": 13.906666666666666,
+        "p99": 1.89559633,
+        "throughput": 1000.0
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c2_r16000_kernel",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 149,
+      "scalar": {
+        "cpu": 0.015622725791666667,
+        "host": 1.5395833333333333,
+        "p99": 4322.89039894,
+        "throughput": 9256.9853381314
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c2_r16000_native",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 132,
+      "scalar": {
+        "cpu": 0.013744603895833334,
+        "host": 1.3764583333333333,
+        "p99": 2672.46192467,
+        "throughput": 11029.616972098212
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c2_r4000_kernel",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 104,
+      "scalar": {
+        "cpu": 0.019659165583333332,
+        "host": 3.5708333333333333,
+        "p99": 16.933171449999996,
+        "throughput": 3999.277988348734
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c2_r4000_native",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 109,
+      "scalar": {
+        "cpu": 0.016627863416666666,
+        "host": 5.209583333333334,
+        "p99": 3.929122929999995,
+        "throughput": 3999.7188144343872
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w256_c0_r1000_kernel",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 105,
+      "scalar": {
+        "cpu": 0.038232469666666664,
+        "host": 13.641666666666667,
+        "p99": 3.4490996400000022,
+        "throughput": 1000.0
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w256_c0_r1000_native",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 106,
+      "scalar": {
+        "cpu": 0.039023439666666666,
+        "host": 13.958333333333334,
+        "p99": 2.8679316500000014,
+        "throughput": 1000.0
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w256_c0_r16000_kernel",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 159,
+      "scalar": {
+        "cpu": 0.022563485083333334,
+        "host": 1.4064583333333334,
+        "p99": 5269.86931034,
+        "throughput": 8475.707611302021
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w256_c0_r16000_native",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 160,
+      "scalar": {
+        "cpu": 0.016041675625,
+        "host": 1.1584375,
+        "p99": 5289.17540403,
+        "throughput": 8461.300985905644
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w256_c0_r4000_kernel",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 104,
+      "scalar": {
+        "cpu": 0.025493071041666666,
+        "host": 3.5945833333333335,
+        "p99": 3.3285969299999985,
+        "throughput": 3998.176074721923
+      }
+    },
+    {
+      "tag": "screen_cpp_matmul_w256_c0_r4000_native",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 105,
+      "scalar": {
+        "cpu": 0.020356044125,
+        "host": 3.47625,
+        "p99": 16.337957299999967,
+        "throughput": 3997.9807052360406
+      }
+    },
+    {
+      "tag": "screen_cpp_recovered_fft_w1_c2_r1000_kernel",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 106,
+      "scalar": {
+        "cpu": 0.03666832516666667,
+        "host": 16.925,
+        "p99": 9.742411060000014,
+        "throughput": 1000.0
+      }
+    },
+    {
+      "tag": "screen_cpp_recovered_fft_w1_c2_r1000_native",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 106,
+      "scalar": {
+        "cpu": 0.030367710333333336,
+        "host": 21.105,
+        "p99": 11.985069350000034,
+        "throughput": 1000.0
+      }
+    },
+    {
+      "tag": "screen_cpp_recovered_fft_w1_c2_r16000_kernel",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 149,
+      "scalar": {
+        "cpu": 0.017195807239583333,
+        "host": 1.4890625,
+        "p99": 4323.56302212,
+        "throughput": 9251.14405094427
+      }
+    },
+    {
+      "tag": "screen_cpp_recovered_fft_w1_c2_r16000_native",
+      "attempts": 96000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 133,
+      "scalar": {
+        "cpu": 0.013661485895833332,
+        "host": 1.3926041666666666,
+        "p99": 2538.9752921399995,
+        "throughput": 11207.95721437987
+      }
+    },
+    {
+      "tag": "screen_cpp_recovered_fft_w1_c2_r4000_kernel",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 109,
+      "scalar": {
+        "cpu": 0.020919358125,
+        "host": 4.445,
+        "p99": 125.18407193,
+        "throughput": 3997.912420066395
+      }
+    },
+    {
+      "tag": "screen_cpp_recovered_fft_w1_c2_r4000_native",
+      "attempts": 24000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 106,
+      "scalar": {
+        "cpu": 0.017553062124999998,
+        "host": 4.465,
+        "p99": 3.0925246499999974,
+        "throughput": 3998.3164242385433
+      }
+    }
+  ],
+  "review_scope": "Sole-thread independent-code recomputation; no independent-person review. GPU observations only at boundaries.",
+  "coverage": {
+    "configurations": 10,
+    "paths": 20,
+    "cells": 60,
+    "boundaries": [
+      {
+        "operation": "matmul",
+        "repeat": 1,
+        "cores": 0,
+        "mode": "kernel",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 9179.17907139293,
+        "growing_backlog": true
+      },
+      {
+        "operation": "matmul",
+        "repeat": 1,
+        "cores": 0,
+        "mode": "native",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 11739.83651911511,
+        "growing_backlog": true
+      },
+      {
+        "operation": "matmul",
+        "repeat": 16,
+        "cores": 0,
+        "mode": "kernel",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 9217.373028735039,
+        "growing_backlog": true
+      },
+      {
+        "operation": "matmul",
+        "repeat": 16,
+        "cores": 0,
+        "mode": "native",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 11558.29369082305,
+        "growing_backlog": true
+      },
+      {
+        "operation": "matmul",
+        "repeat": 256,
+        "cores": 0,
+        "mode": "kernel",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 8475.707611302021,
+        "growing_backlog": true
+      },
+      {
+        "operation": "matmul",
+        "repeat": 256,
+        "cores": 0,
+        "mode": "native",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 8461.300985905644,
+        "growing_backlog": true
+      },
+      {
+        "operation": "matmul",
+        "repeat": 1,
+        "cores": 1,
+        "mode": "kernel",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 8938.216115402936,
+        "growing_backlog": true
+      },
+      {
+        "operation": "matmul",
+        "repeat": 1,
+        "cores": 1,
+        "mode": "native",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 11750.825184102916,
+        "growing_backlog": true
+      },
+      {
+        "operation": "matmul",
+        "repeat": 1,
+        "cores": 2,
+        "mode": "kernel",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 9256.9853381314,
+        "growing_backlog": true
+      },
+      {
+        "operation": "matmul",
+        "repeat": 1,
+        "cores": 2,
+        "mode": "native",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 11029.616972098212,
+        "growing_backlog": true
+      },
+      {
+        "operation": "fft",
+        "repeat": 1,
+        "cores": 0,
+        "mode": "kernel",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 9004.056695863681,
+        "growing_backlog": true
+      },
+      {
+        "operation": "fft",
+        "repeat": 1,
+        "cores": 0,
+        "mode": "native",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 10805.4114805448,
+        "growing_backlog": true
+      },
+      {
+        "operation": "fft",
+        "repeat": 16,
+        "cores": 0,
+        "mode": "kernel",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 9392.487334668656,
+        "growing_backlog": true
+      },
+      {
+        "operation": "fft",
+        "repeat": 16,
+        "cores": 0,
+        "mode": "native",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 11591.327773290552,
+        "growing_backlog": true
+      },
+      {
+        "operation": "fft",
+        "repeat": 256,
+        "cores": 0,
+        "mode": "kernel",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 6828.332293690461,
+        "growing_backlog": true
+      },
+      {
+        "operation": "fft",
+        "repeat": 256,
+        "cores": 0,
+        "mode": "native",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 6809.099851922144,
+        "growing_backlog": true
+      },
+      {
+        "operation": "fft",
+        "repeat": 1,
+        "cores": 1,
+        "mode": "kernel",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 9052.116491702596,
+        "growing_backlog": true
+      },
+      {
+        "operation": "fft",
+        "repeat": 1,
+        "cores": 1,
+        "mode": "native",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 11369.809468985939,
+        "growing_backlog": true
+      },
+      {
+        "operation": "fft",
+        "repeat": 1,
+        "cores": 2,
+        "mode": "kernel",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 9251.14405094427,
+        "growing_backlog": true
+      },
+      {
+        "operation": "fft",
+        "repeat": 1,
+        "cores": 2,
+        "mode": "native",
+        "previous_offered_rate": 4000,
+        "first_saturated_offered_rate": 16000,
+        "observed_delivery": 11207.95721437987,
+        "growing_backlog": true
+      }
+    ],
+    "scope": "Observed brackets of this 8-slot/128-connection configuration, not exact crossover or hardware maxima."
+  }
+}
