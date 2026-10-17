@@ -1871,3 +1871,24 @@ oracle limits,bounded diagnostic-record overflow and cleanup. Original
 PIDs/WIP/default sources preserved. This establishes the finite reusable
 boundary,not arbitrary-model/kernel support,native superiority,old6.36ms
 repair or complete exclusive resource attribution.
+
+### 2026-10-17 shared resident queue relief complete
+
+[Finding0080](findings/0080-resident-queue-relief.md) closes the frozen five-block
+16/32/official experiment. [Complete result](../bench/results/resident_queue_relief_20261017/result.md)
+retains ordinary builds,two-model32qualification,diagnostic,all15raw cells,
+all69paired effects,byte-equal archive replay,sourcefreeze,owner-only
+independent-code recomputation,resource ledger and plots. All172800measured
+requests complete,0 failures. Fixed32-minus16 completionP99:
+-3119.915[-3227.115,-3012.715]ms. Means3337.271->217.356ms;
+throughput11639.616->12265.069tokens/s. Official12249.355/405.869ms is
+contemporaneous. Both approach the12288offered ceiling,not maximum capacity.
+
+Common active/capture/KV/batch capacity explains sustained queue growth;
+no new model math or exclusive KV-stage cause. MeanTPOT worsens+0.033308ms;
+receive-gapP99 point estimate adverse/inconclusive. All2324finite-pool flags
+remain. Device-wide energy versus official is+0.335718J/attempt; shared-host
+32-minus16 CPU crosses0. Historical6.36ms remains unallocated. Run valid,
+hypothesis supported locally,research role supporting repair evidence,not
+transport novelty. The user closes LLM speed competition and requests one
+bounded small-cuBLAS/cuFFT network/CPU experiment with predefined exit criteria.

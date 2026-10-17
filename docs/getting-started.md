@@ -158,9 +158,10 @@ epoll. Demo timings are not controlled benchmark results.
 Stop the previous server and clean its pins before switching profiles.
 For sustained mixed serving, use this separately built32-bank constructor.
 Both checkpoints pass [protocol/replay and cancellation](../bench/results/resident_queue_relief_20261017/qualification.md).
-The first [matched60s diagnostic](../bench/results/resident_queue_relief_20261017/diagnostic.md)
-reduces the16-bank queue buildup; the five-block official comparison is still
-being collected. This is a shared capacity fix,not an eBPF-specific speed claim.
+The [completed five-block comparison](findings/0080-resident-queue-relief.md)
+reduces completionP99 from3337ms to217ms at192requests/s; contemporaneous
+optimized official vLLM is406ms. All172800requests complete without failures.
+This is a shared capacity fix,not an eBPF-specific speed claim.
 
 ~~~sh
 make BUILD=build/mixed32 CPPFLAGS=-DBF_LLM_SLOTS=32 \
@@ -191,7 +192,7 @@ the older Python token executor still assumes that layout. This profile
 qualifies modern mixed serving for these two checkpoints only. It captures
 more graphs and allocates more private KV banks; token gaps/TPOT need not
 improve with wider batching. Maximum throughput and arbitrary-model support
-are not established by the fixed192/s diagnostic.
+are not established by the fixed192/s comparison.
 
 ## Experimental kernel-owned networking
 

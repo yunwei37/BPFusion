@@ -1,7 +1,8 @@
 # BPFusion
 
 GPU-driven serving over ordinary Linux TCP, with eBPF admission and reused GPU
-model computation.
+backends. Userspace initializes the service; the kernel-owned path manages
+request and reply lifetimes around GPU-controlled execution.
 
 ~~~text
 TCP/HTTP -> eBPF framing/admission -> shared queue
@@ -63,7 +64,7 @@ client is a different protocol.
 | GPU | Prefill, decode, model/KV progress and output publication |
 | Linux | Framing, admission, asynchronous TCP and reclamation |
 | Module-free path | Explicit HF/vLLM io_uring BPF-loop targets on the tested stack |
-| Main competitor | Efficient native epoll TCP with the same resident GPU compute |
+| Internal comparator | Efficient native epoll TCP with the same resident GPU compute |
 | Validation | Finite exact outputs/replay, fragmentation, concurrency, reuse, reject, half-close/reset/stop |
 
 Default capacity is 8; input and output counts are each 1..64 tokens.
@@ -72,121 +73,74 @@ builds. See [architecture](docs/architecture.md) and
 [capacity evidence](docs/findings/0064-batch-capacity.md).
 
 For sustained mixed serving, the [qualified32-bank profile](docs/getting-started.md#qualified-32-bank-mixed-profile)
-uses a separate matching build. Initial matched evidence relieves the shared
-16-bank queue limit; the full official comparison is ongoing. This does not
-change legacy defaults or establish an intrinsic eBPF speed advantage.
+uses a separate matching build. The completed five-block comparison relieves
+the shared 16-bank queue limit; see the results below. Legacy defaults remain
+unchanged. This is a common capacity repair, not an intrinsic eBPF speed advantage.
 
 An experimental [opaque CUDA Graph adapter](docs/graph-backends.md) also runs
 unchanged cuBLAS/cuFFT computation through both transports. It accepts fixed
 input/output buffers and is separate from LLM generation; arbitrary-CUDA
 plugin stability and compatibility are not established.
 
-## Results and research meaning
+## Results and current research question
 
-The controlled question compares serving paths while keeping upstream model
-computation matched. Native also retains GPU-controlled generation; it is not
-forced into a Python per-token loop.
+The internal comparator is efficient native epoll with the **same resident GPU
+executor and protocol**. Native also uses GPU-controlled execution; there is no
+Python per-token or per-request compute loop in this comparator. Official vLLM
+is a separate external reference with its normal API, scheduler and KV cache.
 
-- [Optimized latency](docs/findings/0047-optimized-short-input-latency.md):
-  most short-input time remains in the reused model region.
-- [Capacity](docs/findings/0064-batch-capacity.md):more slots improve high-load
-  delivery on both paths.
-- [Mixed scheduling](docs/findings/0065-mixed-prefill-decode.md):the complete
-  reviewed experiment improves mean generation time on both paths.
-  General transport superiority is unproven; Qwen has an adverse tail-token
-  result. [Ordinary integration](docs/findings/0068-mixed-source-integration.md)
-  selects explicit mixed Make targets after default8 and cancellation validation;
-  old homogeneous controls retain their semantics.
-- [Tail-path diagnosis](docs/findings/0066-tail-path-diagnosis.md):the complete
-  close-scan retest is inconclusive; the candidate is not adopted. The old tail
-  gap does not reproduce even before modification, and process CPU is adverse
-  versus native in this retest.
-- [Official vLLM reference](docs/findings/0069-current-official-vllm.md):
-  the dated comparison before the TCP repair has mixed results, including
-  approximately40ms token-gap P99 in both own paths; no eBPF speedup or
-  total-resource saving is established.
-- [TCP small-send repair](docs/findings/0070-tcp-nodelay.md):
-  a controlled server NODELAY change removes the shared persistent40ms stall,
-  improving both transports. CPU rises; ordinary mixed source adopts the repair
-  after default8 protocol and cancellation qualification.
-- [Sustained remote/resources](docs/findings/0071-sustained-remote-resources.md):
-  at192 requests/s kernel times out3926/57600 while native delivers all;
-  throughput and group CPU adverse. Sockhash failures expose a connection
-  lifetime investigation.96/s latency/host inconclusive; host/device totals
-  are not exclusive service costs.
-- [Connection reclamation](docs/findings/0072-connection-reclamation.md):
-  a matched global/local/native retest repairs EOF connection retention.
-  Local and native each deliver57600/57600 requests at192/s; native retains
-  better throughput, completion/token-gap P99 and group CPU. Default8/explicit16
-  normal builds and default8 reset/partial-stop checks qualify source adoption.
-- [Active admission wait](docs/findings/0074-active-admission-wait.md):
-  a one-condition BPF repair reduces group CPU63.22% versus before and18.66%
-  versus native in five matched Qwen192/s blocks. Throughput improvement versus
-  before is inconclusive; native retains better throughput and completionP99.
-  Shared host/device savings are unproven.
-- [Peer identity cache](docs/findings/0075-peer-identity-cache.md):the complete
-  matched follow-up finds throughput benefit inconclusive and rejects the cache.
-  Native retains better throughput/completionP99; selected0074 source remains.
-- [Kernel CPU localization](docs/findings/0073-kernel-cpu-localization.md):
-  current creator-thread sampling selects BPF coordination/admission as a
-  material cost. It motivates a matched waiting-policy intervention; sampling
-  alone proves no avoidability or speedup.
-- [Current stage diagnosis](docs/findings/0076-current-controller-stage-time.md):
-  the complete20-cell experiment finds a small instrumented dispatch difference;
-  instrumentation itself affects delivery. Ordinary loop still has lower owned
-  CPU but slower TPS/completionP99. Historical6.36ms is not explained or repaired.
-- [Kernel-owned network placement](docs/findings/0077-kernel-network-placement.md):
-  an unselected candidate removes the GPU I/O CTA with identical model dispatch.
-  TPS improves0.22% and completionP99 falls124ms versus the old loop, while owned
-  CPU rises28.5%. It establishes no native advantage or historical6.36ms repair.
-- [Sustained official reference](docs/findings/0078-sustained-official-vllm.md):
-  complete15-cell Qwen192/s remote comparison:official~12245 versus resident
-  ~11645 tokens/s,completionP99~611 versus3304--3314ms. Native-minus-official
-  primary is about4.90% adverse. BPF-versus-native speed superiority remains
-  unproven; CPU,client-gap,finite oracle and residual client-lag limits are explicit.
-- [Opaque graph backend](docs/findings/0067-opaque-graph-backend.md):cuBLAS/cuFFT
-  ordinary default8 numerical/lifecycle checks pass on both transports.
-- [Ordinary kernel-network source](docs/findings/0079-kernel-network-source-integration.md):
-  explicit experimental Make targets reuse the same BPF/CPU networking for
-  mixed LLM generation and opaque cuBLAS/cuFFT graphs. Default8 numerical,
-  protocol,replay and cancellation checks qualify the finite boundary;
-  this does not select a faster default or establish arbitrary-kernel support.
-- [Fair native admission](docs/findings/0063-fair-native-admission.md):
-  removing a native scheduling disadvantage weakens earlier apparent wins.
-- [Kernel-loop coordination](docs/findings/0044-uring-bpf-loop.md):less known
-  CPU work than SQPOLL does not imply less total CPU than efficient native TCP.
+[The completed 16/32/official comparison](docs/findings/0080-resident-queue-relief.md)
+uses Qwen2.5-0.5B FP16 on RTX 5090, a remote client, 192 requests/s for 60 seconds,
+five process blocks, short prompts and 64 output tokens:
 
-[Evaluation](docs/evaluation.md) links complete plans, failures, raw data, analyses
-and reviews. [All findings](docs/findings/) retain the historical detail.
-Process CPU, throughput, first-token latency, completion time and tail token gaps
-answer different questions; an improvement in one does not imply all improve.
+| Path | Delivered tokens/s | Completion P99 | Owned group CPU/request |
+|---|---:|---:|---:|
+| Resident native, 16 slots | 11,640 | 3337 ms | 0.751 ms |
+| Resident native, 32 slots | 12,265 | 217 ms | 0.523 ms |
+| Official optimized vLLM | 12,249 | 406 ms | 8.327 ms |
 
-The useful target is a reusable Linux TCP service around existing GPU backends:
-programmable admission, shared ownership, GPU-controlled execution and complete
-connection/reply lifetimes without a steady userspace request worker.
-Generic GPU networking, GPU-initiated I/O and megakernel compute have prior work;
-none alone is claimed as new. Current evidence establishes a working
-integration and shared scheduler improvements, not a general faster server.
-See [related work](docs/background-related-work.md) and
-[backend audit](docs/upstream-backends.md).
+All 172,800 requests complete with no observed failures. Increasing common
+active capacity removes sustained queue growth; mean token time slightly
+worsens. The fixed load is near its 12,288 token/s offered ceiling, so this does
+not rank maximum capacity. Device-wide energy is higher than official vLLM;
+shared host CPU, finite trajectory flags and client/protocol limits remain
+explicit in the complete report. **These results do not measure an eBPF gain.**
 
-## Remaining work
+Earlier [same-executor transport comparisons](docs/findings/0078-sustained-official-vllm.md)
+establish no general kernel-path speed advantage. The
+[ordinary kernel-network targets](docs/findings/0079-kernel-network-source-integration.md)
+and [opaque CUDA Graph adapter](docs/graph-backends.md) provide the reusable
+implementation boundary; cuBLAS/cuFFT numerical and lifecycle checks pass in
+the qualified cases. They do not promise a stable arbitrary-kernel plugin.
 
-- Broaden reliability and workload coverage beyond the finite default8
-  mixed-scheduling protocol and partial-output cancellation checks.
-- Resolve native's remaining delivery advantage and determine total resource cost.
-  Measured TGID/cgroup totals include owned io-wq; shared host IRQ/softirq,
-  GPU energy and finite queue occupancy do not provide exclusive attribution.
-- Extend sustained reliability beyond the repaired EOF workload, including
-  continuous reset/non-EOF disconnect pressure. Zero observed failures in
-  this finite retest does not establish long-duration SLOs.
-- Broaden the experimental fixed-shape graph boundary beyond the qualified
-  cuBLAS/cuFFT cases before claiming arbitrary-model/kernel support.
-- Extend kernel/hardware compatibility and longer-running reliability with real
-  runs. Text/JSON APIs, TLS, long context and multi-GPU serving are not qualified.
+The next bounded question is whether the kernel path saves CPU or improves P99
+for high-rate small cuBLAS/cuFFT requests. LLM speed competition is closed as
+the main line. A positive claim requires matched computation, complete
+resource/tail/failure reporting and confirmation; a negative result closes the
+search with documented limits. [Daily progress and decisions](docs/progress.md)
+record the current blocker, next decisive action and repository upkeep.
 
-These gaps do not justify repeating closed micro-optimizations or rewriting
-model-specific attention/matrix kernels.
+[Evaluation](docs/evaluation.md), [all findings](docs/findings/) and their raw
+archives preserve the full history, including failed and unselected candidates.
+The [related-work map](docs/background-related-work.md) and
+[backend audit](docs/upstream-backends.md) distinguish existing GPU networking,
+GPU-initiated I/O and megakernel computation from the integration question.
+
+## Supported limits and remaining work
+
+This is a research prototype on the qualified stack, with short fixed-shape
+requests and finite correctness/lifecycle evidence. Longer reset/churn loads,
+broader CUDA/library and kernel/hardware compatibility, text/JSON APIs, TLS,
+long context and multi-GPU serving remain unqualified. The LLM scheduler is a
+separate adapter; the graph interface takes fixed buffers of at most 64 words.
+
+Process-group, cgroup, host and device totals overlap. Kernel workers and
+IRQ/softirq still consume resources; lower userspace CPU alone is not proof of
+lower total service cost. Do not sum these scopes or call the service CPU-free.
+The historical 6.36 ms token-gap difference remains unreproduced/unallocated.
+
+These boundaries do not justify repeating closed micro-optimizations or
+rewriting model-specific attention/matrix kernels.
 
 ## Repository map
 

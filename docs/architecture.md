@@ -818,8 +818,9 @@ and KV allocation. No model arithmetic,wire protocol,new runtime registry or
 global legacy layout change is introduced. Two-model protocol/replay and
 ordinary480-action reset/backlog-stop checks qualify this finite profile.
 
-The diagnostic16->32 intervention directly addresses sustained work piling up
-before first output; a complete same-executor/official comparison is ongoing.
+The [completed five-block16/32/official comparison](findings/0080-resident-queue-relief.md)
+reduces completionP99 from3337ms to217ms at the same192requests/s,removing
+sustained work piling up before first output. Contemporaneous official is406ms.
 Both transports share the batching/capacity benefit. Wider capture/KV footprint
 and adverse per-token latency remain explicit; this is not universal scaling
 or a transport-speed result. Existing legacy Python code still fixes8slots,

@@ -90,3 +90,15 @@ User clarified: "Codex 自己的子代理也不允许用，只能由你这个线
 subagent，也不用 OMP 或其他 agent。" Existing prior reviews are retained;
 live inventory shows all old subagentscompleted,no running child. This run's
 checks are owner recomputation/self-audit,not an independent-person review.
+
+## User continuation decision during full acquisition
+
+2026-10-17 UTC: complete and commit this unchanged five-block16/32/official
+comparison first. Afterwards LLM speed competition is closed as the main line.
+The earlier planned K32/N32 LLM continuation above is superseded, not executed.
+Proceed instead to one bounded cuBLAS/cuFFT small-request network/CPU experiment
+with same-executor epoll controls, work/load/core crossovers, remote client,
+complete tails, predeclared confirmation/exit criteria and owner-only execution.
+No frozen comparison input, order, primary or exclusion changes.
+Daily OSS upkeep and substantive-progress reflection are recorded in
+docs/progress.md and committed/pushed with completed milestones.

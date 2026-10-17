@@ -1,0 +1,41 @@
+[
+  {
+    "condition": "before",
+    "buckets": {
+      "0": {
+        "ttft_mean_ms": 240.73822457211674,
+        "generation_span_mean_ms": 85.84554215232114
+      },
+      "50": {
+        "ttft_mean_ms": 3022.1328704206703,
+        "generation_span_mean_ms": 85.35698717586266
+      }
+    }
+  },
+  {
+    "condition": "native",
+    "buckets": {
+      "0": {
+        "ttft_mean_ms": 31.97465211360025,
+        "generation_span_mean_ms": 87.03582780585879
+      },
+      "50": {
+        "ttft_mean_ms": 39.72688027595503,
+        "generation_span_mean_ms": 88.21743371709022
+      }
+    }
+  },
+  {
+    "condition": "official",
+    "buckets": {
+      "0": {
+        "ttft_mean_ms": 88.99191496255287,
+        "generation_span_mean_ms": 146.5734898774788
+      },
+      "50": {
+        "ttft_mean_ms": 102.57191924543656,
+        "generation_span_mean_ms": 149.36624001011663
+      }
+    }
+  }
+]
