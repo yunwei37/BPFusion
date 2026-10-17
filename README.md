@@ -71,6 +71,11 @@ Explicit16-bank vLLM qualification uses a matching shared-page ABI and separate
 builds. See [architecture](docs/architecture.md) and
 [capacity evidence](docs/findings/0064-batch-capacity.md).
 
+For sustained mixed serving, the [qualified32-bank profile](docs/getting-started.md#qualified-32-bank-mixed-profile)
+uses a separate matching build. Initial matched evidence relieves the shared
+16-bank queue limit; the full official comparison is ongoing. This does not
+change legacy defaults or establish an intrinsic eBPF speed advantage.
+
 An experimental [opaque CUDA Graph adapter](docs/graph-backends.md) also runs
 unchanged cuBLAS/cuFFT computation through both transports. It accepts fixed
 input/output buffers and is separate from LLM generation; arbitrary-CUDA

@@ -806,3 +806,22 @@ graphs use fixed input/output buffers of at most64words; generation has its own
 LLM scheduler. No arbitrary-CUDA plugin stability,long context,multiGPU or new
 kernel/hardware compatibility is claimed. Earlier0077/0078 performance limits
 still apply; integration is an engineering result,not a new speed contribution.
+
+
+## Qualified wider mixed constructor
+
+The [32-bank profile](getting-started.md#qualified-32-bank-mixed-profile)
+uses the existing compile-time capacity through normal Make,with matching
+BPF/loader/native/GPU objects in one separate BUILD directory. The native
+library's max_requests() remains the bootstrap authority for graph descriptors
+and KV allocation. No model arithmetic,wire protocol,new runtime registry or
+global legacy layout change is introduced. Two-model protocol/replay and
+ordinary480-action reset/backlog-stop checks qualify this finite profile.
+
+The diagnostic16->32 intervention directly addresses sustained work piling up
+before first output; a complete same-executor/official comparison is ongoing.
+Both transports share the batching/capacity benefit. Wider capture/KV footprint
+and adverse per-token latency remain explicit; this is not universal scaling
+or a transport-speed result. Existing legacy Python code still fixes8slots,
+so changing the canonical default globally would be a separate compatibility
+change rather than a necessary part of this repair.

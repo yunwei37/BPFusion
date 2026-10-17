@@ -153,6 +153,46 @@ GPU-controlled model work is retained; network/admission uses efficient native
 epoll. Demo timings are not controlled benchmark results.
 [Evaluation](evaluation.md) defines matched measurement and limitations.
 
+## Qualified 32-bank mixed profile
+
+Stop the previous server and clean its pins before switching profiles.
+For sustained mixed serving, use this separately built32-bank constructor.
+Both checkpoints pass [protocol/replay and cancellation](../bench/results/resident_queue_relief_20261017/qualification.md).
+The first [matched60s diagnostic](../bench/results/resident_queue_relief_20261017/diagnostic.md)
+reduces the16-bank queue buildup; the five-block official comparison is still
+being collected. This is a shared capacity fix,not an eBPF-specific speed claim.
+
+~~~sh
+make BUILD=build/mixed32 CPPFLAGS=-DBF_LLM_SLOTS=32 \
+  build/mixed32/fusion.bpf.o build/mixed32/bpfusion_load \
+  vllm-mixed-kernel-network vllm-mixed-user-network-wait
+./build/mixed32/bpfusion_load stream-uring-attach
+./build/mixed32/vllm_mixed_kernel_network "$model" 120
+~~~
+
+Use the same token client. After the kernel server exits,clean its own pins:
+
+~~~sh
+./build/mixed32/bpfusion_load stats
+./build/mixed32/bpfusion_load stream-detach
+rm -f /sys/fs/bpf/bpfusion_ctl /sys/fs/bpf/bpfusion_stats /sys/fs/bpf/bpfusion_db
+~~~
+
+Then run the matching native alternative:
+
+~~~sh
+./build/mixed32/vllm_mixed_user_network_wait "$model" 120
+~~~
+
+Use the matching loader/BPF/native/GPU objects from this one directory.
+The library reports its actual capacity and bootstrap derives graph/KV sizes
+from it. Do not mix8/16/32 page layouts. Global legacy defaults remain8;
+the older Python token executor still assumes that layout. This profile
+qualifies modern mixed serving for these two checkpoints only. It captures
+more graphs and allocates more private KV banks; token gaps/TPOT need not
+improve with wider batching. Maximum throughput and arbitrary-model support
+are not established by the fixed192/s diagnostic.
+
 ## Experimental kernel-owned networking
 
 [Finding0079](findings/0079-kernel-network-source-integration.md) provides the
