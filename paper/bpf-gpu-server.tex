@@ -273,9 +273,9 @@ system time.}
 \label{fig:cpu}
 \end{figure}
 
-Figure~\ref{fig:cpu} shows why. The kernel path cut user time from 11.3 to
+Figure~\ref{fig:cpu} shows why. For FFT, the kernel path cut user time from 11.3 to
 2.8\us{} per request, but system time grew from 26.2 to 35.2\us. The totals
-stayed within about 1\%.
+differed by only 1.1\% for FFT and 1.9\% for GEMM.
 
 \subsection{Fixes that mattered more than the transport}
 \label{sec:fixes}
