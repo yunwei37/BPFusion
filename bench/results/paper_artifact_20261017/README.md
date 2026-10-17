@@ -1,9 +1,15 @@
 # Paper artifact validation
 
 2026-10-17 Los Angeles. Sole-thread work; paper entry revision ad7982f.
-The paper source/PDF are unchanged.
+The paper source/PDF are unchanged by this thread.
 
-Initial development:
+**Current status: complete with one reported paper rounding difference.**
+Final published replay3d551783:134PASS,1MISMATCH,0PAPER_CHANGED,
+196.142s in a new plotting-only environment without Torch/vLLM or visible GPU.
+Both current graph and LLM smokes pass. Detailed historical checkpoints below
+are retained as development provenance,not outstanding work.
+
+## Initial development checkpoint (historical)
 - All eight archived primary raw-data stages are executable; original main
   graph raw replay checks 90 cells.
 - A development check using those already-recomputed stage outputs produces
@@ -53,3 +59,32 @@ plus8warmups but incorrectly expects128. Its assertion failure and normal
 preflight as32;the later capacity client uses128. Correct the new harness/
 instructions,not the immutable client. Fresh four-condition LLM smoke remains
 pending at this milestone. The original paper is untouched by artifact commits.
+
+## Final acceptance
+
+- [validation.json](validation.json) records the final135 numerical comparisons,
+  new source/environment, exact command exits and evidence paths.
+- [comparison.md](comparison.md) shows every number; exit1 is the completed
+  Figure3 rounding report,not a replay exception.
+- [input audit](input-availability.json):7182 public committed reads/no missing
+  data; both original perf binaries also validate.
+- [graph smoke](graph-smoke.json):4ordinary cells/64exact replies,16.352s.
+- [LLM smoke](llm-smoke.json):native16/kernel16/native32/official,128requests/
+  8192tokens plus32excluded gen1 warmups,185.343s. Every server exits0.
+  One native16 finite-reference flag is retained; protocol pass is not universal
+  exact trajectory fidelity. Raw clients,workers and failed first harness
+  attempt are retained in llm-smoke-raw/ and llm-first-harness-attempt/.
+  Server log copies omit API-key configuration lines; client records are intact.
+- [PDF spot check](pdf-consistency.json):four pages and ten key published values
+  agree with the TeX-replayed results.
+- [runtime receipt](runtime-safety.json):original PID starts preserved,GPU apps/
+  BPF pins/test keys/semaphores absent. A transient kubelet502 interrupted a
+  later control call;existing SSH/exec returned with the same host boot/Pod/PIDs
+  and attached healthy PVC. No host/Workspace mutation or GPU rerun occurred.
+- [owner review](self-review.md) and [relative links](authored-link-audit.json)
+  complete;no delegated agent,PR,new CI or serving-default change.
+
+The original 205.397s full clean replay and296.989s plotting-only replay precede
+the final196.142s run. They agree numerically;the final version adds three prose
+checks and derives the failure denominator from raw attempts. Their wall times
+are validation timings,not paper performance results.

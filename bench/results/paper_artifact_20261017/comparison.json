@@ -702,6 +702,27 @@
       "status": "PASS"
     },
     {
+      "item": "official tail near 0.6 seconds",
+      "paper": 0.6,
+      "recomputed": 0.6107298402679999,
+      "tolerance": 0.050000000100000004,
+      "status": "PASS"
+    },
+    {
+      "item": "FFT total CPU change about one percent",
+      "paper": 1.0,
+      "recomputed": 1.0612628418151804,
+      "tolerance": 0.5000000001,
+      "status": "PASS"
+    },
+    {
+      "item": "roughly 38 microseconds",
+      "paper": 38.0,
+      "recomputed": 37.70269018,
+      "tolerance": 0.5000000001,
+      "status": "PASS"
+    },
+    {
       "item": "approximate slot tail factor",
       "paper": 15.0,
       "recomputed": 15.35390998002536,
@@ -816,7 +837,7 @@
     {
       "item": "LLM tokens/rate/duration/offered tokens [1]",
       "paper": 60.0,
-      "recomputed": 60,
+      "recomputed": 60.0,
       "tolerance": 0.5000000001,
       "status": "PASS"
     },
@@ -920,11 +941,11 @@
     }
   ],
   "counts": {
-    "PASS": 131,
+    "PASS": 134,
     "MISMATCH": 1,
     "PAPER_CHANGED": 0
   },
-  "elapsed_s": 205.21699848794378,
+  "elapsed_s": 195.99311141693033,
   "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
   "matplotlib": "3.11.2",
   "method": "Archived primary analyzers replay raw logs, native binary records and counters; current TeX tables, plots and prose provide expected values. Linear quantiles and five process-block t(df4), not pooled quantiles. Figures use recomputed unrounded data."

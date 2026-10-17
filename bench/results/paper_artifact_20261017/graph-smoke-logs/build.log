@@ -1,0 +1,24 @@
+mkdir -p /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build
+clang -DBF_BUILD_DIR='"/tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build"' -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -Ibpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value -c bpf/fusion.bpf.c -o /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/fusion.bpf.o
+cc -DBF_BUILD_DIR='"/tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build"' -O2 -g -Wall -Wextra -Wno-unused-parameter -Ibpf/include tools/bpfusion_load.c -o /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/bpfusion_load -lbpf -lelf -lz -lpthread
+clang -DBF_BUILD_DIR='"/tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build"' -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -Ibpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value -c bpf/kernel_tcp.bpf.c -o /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/kernel_tcp.bpf.o
+/usr/local/cuda/bin/nvcc -DBF_BUILD_DIR='"/tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build"' -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_URING_NETWORK -DBF_URING_BPF_LOOP -DBF_KERNEL_TCP -I/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi executor/graph_server.cu -o /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/graph_server_kernel_network.so.o
+In file included from /usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi/linux/bpf.h:11,
+                 from /usr/include/bpf/bpf.h:26,
+                 from executor/graph_server.cu:4:
+/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi/linux/types.h:10:2: warning: #warning "Attempt to use kernel headers from user space, see https://kernelnewbies.org/KernelHeaders" [-Wcpp]
+   10 | #warning "Attempt to use kernel headers from user space, see https://kernelnewbies.org/KernelHeaders"
+      |  ^~~~~~~
+In file included from /usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi/linux/bpf.h:11,
+                 from /usr/include/bpf/bpf.h:26,
+                 from executor/graph_server.cu:4:
+/usr/src/linux-headers-7.3.0-070300rc3-generic/include/uapi/linux/types.h:10:2: warning: #warning "Attempt to use kernel headers from user space, see https://kernelnewbies.org/KernelHeaders" [-Wcpp]
+   10 | #warning "Attempt to use kernel headers from user space, see https://kernelnewbies.org/KernelHeaders"
+      |  ^~~~~~~
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/graph_server_kernel_network.so.o -o /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/graph_server_kernel_network.so.dlink.o
+g++ -shared -Wl,-z,defs /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/graph_server_kernel_network.so.o /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/graph_server_kernel_network.so.dlink.o /tmp/paper-artifact-validation-hntwg0cx/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/paper-artifact-validation-hntwg0cx/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/graph_server_kernel_network.so -lbpf -lelf -lz -lpthread
+/usr/local/cuda/bin/nvcc -DBF_BUILD_DIR='"/tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build"' -O3 -std=c++17 -arch=sm_120 --cudart=none -dc -Xcompiler=-fPIC -Ibpf/include \
+	-DBF_USER_NETWORK -DBF_USER_NETWORK_WAIT executor/graph_server.cu -o /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/graph_server_user_network_wait.so.o
+/usr/local/cuda/bin/nvcc -arch=sm_120 -dlink -Xcompiler=-fPIC /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/graph_server_user_network_wait.so.o -o /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/graph_server_user_network_wait.so.dlink.o
+g++ -shared -Wl,-z,defs /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/graph_server_user_network_wait.so.o /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/graph_server_user_network_wait.so.dlink.o /tmp/paper-artifact-validation-hntwg0cx/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12 -Wl,-rpath,/tmp/paper-artifact-validation-hntwg0cx/venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/ -o /tmp/paper-artifact-validation-hntwg0cx/clean-gpu-smoke/build/graph_server_user_network_wait.so -lbpf -lelf -lz -lpthread

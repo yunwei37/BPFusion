@@ -102,6 +102,9 @@
 | abstract CPU split [1] | PASS | 26.2 | 26.2 |
 | abstract CPU split [2] | PASS | 2.8 | 2.8 |
 | abstract CPU split [3] | PASS | 35.2 | 35.2 |
+| official tail near 0.6 seconds | PASS | 0.6 | 0.6107298402679999 |
+| FFT total CPU change about one percent | PASS | 1.0 | 1.0612628418151804 |
+| roughly 38 microseconds | PASS | 38.0 | 37.70269018 |
 | approximate slot tail factor | PASS | 15.0 | 15.35390998002536 |
 | approximate NODELAY tail factor | PASS | 17.0 | 17.689534642468 |
 | LLM top request count | PASS | 172800.0 | 172800 |
@@ -119,7 +122,7 @@
 | graph request/reply bytes and connections [1] | PASS | 256.0 | 256 |
 | graph request/reply bytes and connections [2] | PASS | 128.0 | 128 |
 | LLM tokens/rate/duration/offered tokens [0] | PASS | 192.0 | 192 |
-| LLM tokens/rate/duration/offered tokens [1] | PASS | 60.0 | 60 |
+| LLM tokens/rate/duration/offered tokens [1] | PASS | 60.0 | 60.0 |
 | LLM tokens/rate/duration/offered tokens [2] | PASS | 12288.0 | 12288 |
 | LLM output tokens | PASS | 64.0 | 64.0 |
 | logical CPUs | PASS | 24.0 | 24 |

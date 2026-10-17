@@ -1,0 +1,79 @@
+{
+  "utc": "2026-10-17T08:46:21.963838+00:00",
+  "status": "complete_with_reported_paper_rounding_difference",
+  "source_replay_revision": "3d5517833279c4bd6e2a4ba854c906db825a2d87",
+  "paper_owner_revision": "06d2c598",
+  "source_directory_renamed": true,
+  "minimal_python_environment": {
+    "torch_installed": false,
+    "vllm_installed": false,
+    "gpu_visible": false,
+    "requirements": "bench/artifact-requirements.txt"
+  },
+  "offline_command": {
+    "exit": 1,
+    "elapsed_s": 196.1421337010106,
+    "command": [
+      "python",
+      "bench/reproduce_paper.py",
+      "--output",
+      "../final-output"
+    ],
+    "environment": "plotting-only new venv,no Torch/vLLM,GPU hidden"
+  },
+  "comparison_counts": {
+    "PASS": 134,
+    "MISMATCH": 1,
+    "PAPER_CHANGED": 0
+  },
+  "graph_smoke": {
+    "exit": 0,
+    "elapsed_s": 16.35167360305786,
+    "command": [
+      "python",
+      "bench/smoke_paper.py",
+      "--output",
+      "../clean-gpu-smoke"
+    ]
+  },
+  "graph_cells": 4,
+  "graph_exact_requests": 64,
+  "llm_smoke": {
+    "exit": 0,
+    "elapsed_s": 185.34335445205215,
+    "command": [
+      "python",
+      "bench/smoke_paper_llm.py",
+      "--model",
+      "<pinned-Qwen-checkpoint>",
+      "--output",
+      "../clean-llm-smoke-v2"
+    ]
+  },
+  "llm_conditions": [
+    "native16",
+    "kernel16",
+    "native32",
+    "official"
+  ],
+  "llm_measured_requests": 128,
+  "llm_output_tokens": 8192,
+  "llm_excluded_gen1_warmups": 32,
+  "llm_finite_reference_flags": 1,
+  "data_availability": "input-availability.json",
+  "raw_read_files": 7182,
+  "missing_inputs": 0,
+  "regenerated_figures": [
+    "figure2_cpu.png",
+    "figure2_cpu.pdf",
+    "figure3_perf.png",
+    "figure3_perf.pdf"
+  ],
+  "unchanged_numerical_data_and_PNGs_across_clean_environments": true,
+  "pdf_pages": 4,
+  "pdf_spot_check": "pdf-consistency.json",
+  "original_paper_edited_by_artifact_thread": false,
+  "production_serving_code_or_defaults_changed": false,
+  "experiment_reacquisition_scope": "Portable current graph/LLM local smokes executed. Historical full experiments have exact source/data/protocol recipes but require relocating their original infrastructure/runtime paths; no new full-matrix acquisition or portable historical controller claim.",
+  "known_limits": "See ARTIFACT.md and interpretation_limits.json; one numerical rounding-convention mismatch,finite LLM flags,shared host/CPU attribution,one ordered perf pair and native-only32-slot performance arm."
+}

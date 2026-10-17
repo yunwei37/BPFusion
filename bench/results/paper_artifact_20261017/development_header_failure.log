@@ -1,0 +1,11 @@
+mkdir -p /tmp/paper-artifact-validation-hntwg0cx/first-smoke/build
+clang -DBF_BUILD_DIR='"/tmp/paper-artifact-validation-hntwg0cx/first-smoke/build"' -O2 -g -target bpf -mcpu=v3 -D__TARGET_ARCH_x86 -I/usr/include/x86_64-linux-gnu -Ibpf/include -Wall -Werror -Wno-missing-declarations -Wno-unused-value -c bpf/fusion.bpf.c -o /tmp/paper-artifact-validation-hntwg0cx/first-smoke/build/fusion.bpf.o
+In file included from bpf/fusion.bpf.c:23:
+/tmp/bpfusion-mixed-integration-n4cog5c6/libbpf_install/usr/include/bpf/bpf_helpers.h:318:12: error: conflicting types for 'bpf_stream_vprintk'
+  318 | extern int bpf_stream_vprintk(int stream_id, const char *fmt__str, const void *args,
+      |            ^
+bpf/include/vmlinux.h:170744:12: note: previous declaration is here
+ 170744 | extern int bpf_stream_vprintk(int stream_id, const char *fmt__str, const void *args, u32 len__sz) __weak __ksym;
+        |            ^
+1 error generated.
+make: *** [Makefile:40: /tmp/paper-artifact-validation-hntwg0cx/first-smoke/build/fusion.bpf.o] Error 1

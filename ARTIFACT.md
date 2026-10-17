@@ -112,6 +112,9 @@ Numerical agreement cannot resolve these interpretation issues:
   TCP. “Most” of the official-vLLM CPU gap coming from scheduling/protocol
   is an inference. Official used tokens-only HTTP/SSE:both paths return IDs,
   although framing/parsing/scheduler/KV still differ.
+- The “within about1%” CPU sentence fits its quoted FFT example (+1.06%);
+  GEMM high-resolution means differ by+1.93%. If intended for both operations,
+  that sentence needs a wider1–2% qualification.
 - Exact replay qualifies finite traced cases; ordinary LLM trajectories retain
   finite-reference disagreement flags. Protocol success is not exact parity.
 - Service affinity does not create exclusive CPU scarcity; IRQ/foreign work

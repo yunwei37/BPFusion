@@ -165,3 +165,15 @@ smoke passes4cells/64exact replies. The qualified libbpf header/runtime mix
 and Figure3 rounding mismatch are documented. Next decisive work is a clean
 committed-source replay and downloadable-input audit,not more performance
 search. README gains one artifact entry point;history/foreign setup_env.sh stay.
+
+Artifact delivery:public-source/new-directory/new-venv acceptance completes.
+Final CPU-only replay has134matching items and one explicit Figure3 rounding
+difference;all7182inputs are committed/downloadable. Ordinary graph4cells/64
+exact replies and LLM4conditions/128requests/8192tokens pass;one finite model
+flag remains. PDF/source spot check and authored links pass. The intermediate
+32-versus128preflight harness mistake and libbpf header failure stay in records.
+A transient exec502 recovers through existing paths with original state intact.
+Daily reflection is fulfilled by this reproducibility closure;the next paper
+action is the owner's scope/wording decision on the documented qualifications.
+Cleanup and final publication receipts follow;no new performance claim or
+experiment branch is opened.
