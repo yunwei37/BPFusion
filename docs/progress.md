@@ -74,3 +74,21 @@ Original timing/epoch/capacity prefixes remain; server kernels are unchanged.
 The kernel4000/s screening P99 is still adverse (~145ms versus native2.46ms),
 so no benefit is claimed from client repair. Continue the same bounded full
 scan with this qualified source,then independent confirmation and honest exit.
+
+Nine graph configurations complete54cells/2268000measured requests with zero
+failures; independent-code NumPy replay verifies outputs,tails,CPU,actual
+masks and frozen sources. The final CPU2 FFT1000 kernel cell hits the unchanged
+client timing guard. Both original paths/12000requests remain in a separate
+client_dispatch_initial prefix. All eight workers share a brief delay;
+the exact historical host cause is unknown. A48000-sample client-only timerfd
+probe has .206ms P99; its initial Windows argv transfer failure is recorded
+and original worker files recovered without rerunning.
+
+Substantive progress now means finishing that last whole configuration under
+new tags/seeds with unchanged timing criteria,then sealing deterministic
+selection and five-pair confirmation. No extra GPU optimization or result-based
+threshold change. Current README now leads with the generic graph transport;
+architecture/evaluation duplicate chronicles have been consolidated into
+current contracts and the complete80-finding index. All historical raw/source/
+reviews and foreign tools/setup_env.sh remain. Commit this verified partial
+milestone and the forward continuation decision before replacement acquisition.

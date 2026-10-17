@@ -1,12 +1,13 @@
 # BPFusion
 
-GPU-driven serving over ordinary Linux TCP, with eBPF admission and reused GPU
-backends. Userspace initializes the service; the kernel-owned path manages
-request and reply lifetimes around GPU-controlled execution.
+Experimental serving transport over ordinary Linux TCP, with eBPF admission
+and caller-supplied GPU execution. Userspace initializes the service; the
+kernel-owned path manages request/reply lifetimes around reused CUDA graphs.
+The transport is separate from model arithmetic.
 
 ~~~text
 TCP/HTTP -> eBPF framing/admission -> shared queue
-         -> GPU model execution -> completion -> Linux TCP reply
+         -> GPU backend execution -> completion -> Linux TCP reply
 ~~~
 
 Userspace loads weights, captures graphs and initializes the service. On the
@@ -15,13 +16,31 @@ send each reply after startup. Linux networking, kernel workers and GPU I/O
 control still consume resources:this is not a CPU-free server.
 
 **Status: working research prototype on a qualified Linux/GPU stack.**
-Two real checkpoints run through HF and upstream vLLM graph adapters.
+Unchanged cuBLAS/cuFFT graphs and two real checkpoints through HF/upstream
+vLLM graph adapters have finite numerical/lifecycle qualification.
 A recent-kernel io_uring/eBPF path needs no custom TCP kernel module.
 General eBPF latency/throughput superiority over efficient native TCP is
 **not established**.
 
 ## Start here
 
+For the model-independent surface, follow the [captured-graph runbook](docs/graph-backends.md).
+It includes prerequisites, normal builds, cuBLAS/cuFFT examples, a binary client,
+the same-executor native comparator and cleanup. With those dependencies active:
+
+~~~sh
+make build/fusion.bpf.o build/bpfusion_load \
+  graph-server-kernel-network graph-server-user-network-wait
+./build/bpfusion_load stream-uring-attach
+python3 examples/torch_graph_server.py build/graph_server_kernel_network.so fft --seconds 120
+~~~
+
+Use the guide's client in another terminal. Input/output are fixed raw32-bit
+words; graphs and buffers stay caller-owned. Stop/detach this service before
+starting the native comparator. This is an experimental ABI, not a stable
+arbitrary-kernel plugin.
+
+For LLM generation, the separate
 [Getting started](docs/getting-started.md) covers dependencies, model download,
 build, start, client, native comparison and cleanup. It uses the explicit
 module-free vLLM target; the legacy module transport remains separate.
@@ -59,15 +78,16 @@ client is a different protocol.
 | Surface | Qualified scope |
 |---|---|
 | Models | Qwen2.5-0.5B-Instruct and SmolLM2-135M; Qwen/Llama architectures |
-| Compute | Reused HF graphs or upstream vLLM graphs/head/sampling |
-| Network | Binary TCP and Content-Length HTTP POST; streamed token-ID replies |
-| GPU | Prefill, decode, model/KV progress and output publication |
+| Compute | Caller-supplied CUDA graphs; reused cuBLAS/cuFFT or HF/vLLM model computation |
+| Network | Binary TCP and Content-Length HTTP POST; opaque words or streamed token IDs |
+| GPU | Graph dispatch/output publication; generation adapter also owns prefill/decode/KV progress |
 | Linux | Framing, admission, asynchronous TCP and reclamation |
 | Module-free path | Explicit HF/vLLM io_uring BPF-loop targets on the tested stack |
 | Internal comparator | Efficient native epoll TCP with the same resident GPU compute |
 | Validation | Finite exact outputs/replay, fragmentation, concurrency, reuse, reject, half-close/reset/stop |
 
-Default capacity is 8; input and output counts are each 1..64 tokens.
+Default capacity is8; graph input/output counts are each1..64words.
+Generation uses the same framing for1..64token inputs/outputs.
 Explicit16-bank vLLM qualification uses a matching shared-page ABI and separate
 builds. See [architecture](docs/architecture.md) and
 [capacity evidence](docs/findings/0064-batch-capacity.md).

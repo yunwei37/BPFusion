@@ -179,3 +179,24 @@ changing eligibility,CPU/P99/throughput thresholds,seeds or five-pair protocol.
 The independent confirmation still makes the decision; screen-only wins do
 not count. Larger-repetition performance data had not been acquired at this
 clarification. The bounded three-category/negative-exit contract remains.
+
+## Client execution interruption before the final CPU2 FFT sweep
+
+After54 timing-valid cells,a shared20-44ms client-worker pause invalidates
+the original CPU2 FFT1000 kernel cell (timerP993.899ms >2.501ms gate).
+Both original paths are retained losslessly in client_dispatch_initial/.
+No numerical/request failure occurred. Later no-quota/no-throttling and a
+client-only48000-sample timerfd probe (P99 .206ms) show restored execution
+headroom; they do not identify the historical host pause cause or prove
+network capacity. The first probe transfer hits Windows SSH argv size and
+original worker files are recovered without rerunning; the missing original
+before/after stdout and absolute epoch remain explicitly unknown.
+
+Before any replacement measurement,declare one new labeled acquisition of
+the whole final FFT/repeat1/CPU2 configuration:screen_cpp_recovered_*,
+same rate ladder/path order,seed=original rule+1000000.
+The unchanged timing gate applies to every new cell. This is client-environment
+recovery with new labels,not a demonstrated software repair or a retry of
+an unfavorable server result. All earlier timing-valid configurations and
+confirmation selection/thresholds/seeds remain fixed. CPU2 is not one of
+the selection categories. No failed prefix is hidden or pooled.

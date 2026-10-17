@@ -20,9 +20,9 @@ Use the Linux/GPU/CUDA/libbpf/Python prerequisites in
 
 ~~~sh
 make build/fusion.bpf.o build/bpfusion_load \
-  graph-server-uring-loop graph-server-user-network-wait
+  graph-server-kernel-network graph-server-user-network-wait
 ./build/bpfusion_load stream-uring-attach
-python3 examples/torch_graph_server.py build/graph_server_uring_loop.so matmul --seconds 120
+python3 examples/torch_graph_server.py build/graph_server_kernel_network.so matmul --seconds 120
 ~~~
 
 Wait for the ready line with abi=1, slots=8, input_words=64, output_words=64.
@@ -74,23 +74,24 @@ HTTP uses the same binary frame with Content-Length, as in the LLM transport.
 A valid frame with the wrong backend input/output count receives HTTP400 or
 binary EOF. There is no tokenizer, vocabulary check, text or JSON tensor API.
 
-## Experimental BPF-owned networking
+## Transport ownership and older control
 
-The same captured-graph caller and arithmetic can use the
+The primary commands above use the
 [ordinary kernel-network candidate](findings/0079-kernel-network-source-integration.md):
 
-~~~sh
-make build/fusion.bpf.o build/bpfusion_load graph-server-kernel-network
-./build/bpfusion_load stream-uring-attach
-python3 examples/torch_graph_server.py build/graph_server_kernel_network.so matmul --seconds 120
-~~~
-
-Substitute fft for matmul,then use the same client/cleanup above. This transport
+Substitute fft for matmul in the primary example,then use the same client/cleanup.
+This transport
 moves io_uring CQ/SQ,connection/reply lifetime into BPF and removes the GPU I/O
-CTA. It changes no caller graph,buffer,ABI or graph-dispatch instruction.
+CTA. It changes no caller graph,buffer,ABI or graph-dispatch instruction
+relative to the matched native construction.
 Default8 cuBLAS/cuFFT finite numerical/lifecycle qualification is recorded in0079.
 It is an experimental control,not a selected faster transport or stable
 arbitrary-kernel plugin. The autoregressive scheduler stays a separate adapter.
+
+The older graph-server-uring-loop target remains a qualified GPU-I/O control.
+It runs an independent GPU I/O CTA with a BPF submit/wait loop and the same
+caller graph. It is not the primary kernel-network comparison or an io_uring
+userspace baseline. See [architecture](architecture.md) for target meanings.
 
 ## Varying real library work for transport experiments
 

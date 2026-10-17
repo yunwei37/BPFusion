@@ -26,3 +26,10 @@ new seeds/selected cells before the five-pair confirmation. Full raw resources,
 workers, failures, tails and code are retained. Whole-host counters are shared,
 not exclusive service cost. The final report will state supported boundaries
 and close this bounded search if the predeclared benefit is absent.
+
+The final CPU2 FFT sweep's original client-timing interruption is retained in
+client_dispatch_initial/,with handling,raw timer diagnosis and a client-only
+probe. The entire final configuration is acquired under screen_cpp_recovered
+tags with forward-declared new seeds. No failed data is pooled or overwritten;
+the original unchanged timing guard still applies. The first54valid cells have
+a separate owner recomputation receipt;terminal coverage remains pending.

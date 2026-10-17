@@ -1,0 +1,5 @@
+graph backend ready: abi=1 slots=8 input_words=64 output_words=64
+userspace completion wait=epoll_pwait2 active_timeout_ns=60000 idle=socket_or_deadline shutdown=eventfd
+USER_ADMISSION policy=eligible_frame_fifo queued_peak=99 queued_at_stop=0
+userspace TCP stopped: accepted=256 published=96032 completed=96032 rejected=0
+graph backend stopped: admitted=96032 retired=96032 graph_launches=96032 graph_error=0
