@@ -174,8 +174,10 @@ The bounded [small-graph experiment](../bench/results/graph_network_20261017/pla
 uses the same8-slot executor, remote native epoll/timerfd clients, real library
 work repetitions, load through saturation, service CPU masks and full tails.
 GPU/NVML is observed only at window boundaries; missing interval device samples
-are unavailable, not zero GPU activity. Its fixed confirmation decides whether
-any narrow CPU/P99 advantage is supported.
+are unavailable, not zero GPU activity. Its [completed confirmation](findings/0081-small-graph-network-cpu.md) meets
+no predeclared useful CPU/P99 advantage criterion. Worker removal changes
+ownership without establishing lower total work;the bounded performance
+search is closed and the prototype/compatibility limits remain.
 
 Broader kernels/libraries/hardware, variable shapes, long context, shared-prefix
 KV caching, configurable sampling, multi-GPU, general HTTP/text/TLS and

@@ -1,0 +1,43 @@
+{
+  "phase": "client_dispatch_initial",
+  "frozen_source": "3d3878c80edbaa7cc1a0bb7c87519b737ffae4f1",
+  "cells": 2,
+  "attempts": 12000,
+  "failures": 0,
+  "checks": [
+    {
+      "tag": "screen_cpp_fft_w1_c2_r1000_kernel",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 105,
+      "scalar": {
+        "cpu": 0.03683514,
+        "host": 14.485,
+        "p99": 25.01423840000003,
+        "throughput": 999.8289226058159
+      }
+    },
+    {
+      "tag": "screen_cpp_fft_w1_c2_r1000_native",
+      "attempts": 6000,
+      "failures": 0,
+      "recorded_worker_files": 8,
+      "all_sample_group_stable": true,
+      "observed_gpu_boundaries": 2,
+      "gpu_boundaries_owned": true,
+      "interval_gpu_samples_unavailable": 104,
+      "scalar": {
+        "cpu": 0.03319842766666666,
+        "host": 14.671666666666667,
+        "p99": 5.077595610000009,
+        "throughput": 999.9494665537583
+      }
+    }
+  ],
+  "review_scope": "Sole-thread independent-code recomputation; no independent-person review. GPU observations only at boundaries.",
+  "retention_scope": "Original invalid client-timing pair; no server-capacity ranking or selection."
+}

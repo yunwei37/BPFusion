@@ -1,5 +1,16 @@
 # Reusing upstream megakernel backends
 
+Current integration status,2026-10-17UTC (internal evidence):
+[opaque cuBLAS/cuFFT graphs](graph-backends.md) and
+[HF/vLLM model adapters](architecture.md) are the qualified reuse boundaries.
+[0080](findings/0080-resident-queue-relief.md) completes shared32-bank queue
+relief;[0081](findings/0081-small-graph-network-cpu.md) closes the bounded
+small-work transport experiment without a predeclared CPU/P99 advantage.
+AMK/other candidates retain their recorded negative or partial qualification.
+The source landscapes below are dated discovery/audit records,not freshly
+verified upstream compatibility or instructions to reopen closed experiments.
+
+
 BPFusion's research direction is to reuse upstream model computation and
 measure the Linux TCP/HTTP + eBPF/kernel-to-GPU serving path. Model-specific
 operator tuning is not evidence of an eBPF benefit. A useful comparison keeps

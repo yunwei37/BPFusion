@@ -30,13 +30,17 @@ transports share capacity/batching/KV changes; these are not eBPF-only gains.
 The finding retains paired intervals, finite fidelity flags, full tails,
 resource context, source snapshots, raw data and owner-only recomputation.
 
-The current bounded question is whether small real cuBLAS/cuFFT work makes
-transport CPU or tail latency important. The
-[pre-acquisition plan](../bench/results/graph_network_20261017/plan.md)
-fixes work/load/core sweeps, remote clients, eligibility, selection, new-seed
-five-pair confirmation and a positive/negative exit. Final performance
-acquisition uses native epoll/timerfd workers; failed Python timer/epoch/client
-capacity prefixes remain separate. No screen-only positive point is a claim.
+The [completed bounded small-graph experiment](findings/0081-small-graph-network-cpu.md)
+adds60screening cells/2520000requests and30new-seed confirmation cells/
+600000requests,all main requests completing without observed failure.
+No selected point satisfies the fixed CPU/P99 advantage criterion.
+Single-CPU GEMM P99 is adverse (K/N2.589,t95[1.196,5.607]);other selected
+CPU/P99 intervals do not establish an advantage or equivalence.
+All20path sweeps first saturate the configured setup at16000/s after4000/s.
+Shared-host/observer costs,finite numerical patterns and coarse work/load
+brackets remain explicit. The original client-timing pair and a later
+premeasurement control timeout are preserved separately. Close this bounded
+performance search and retain the OSS prototype with its qualified scope.
 
 ## Comparators and interpretation
 
@@ -202,3 +206,4 @@ unselected candidates. None of those records is deleted by this consolidation.
 - [0078: Official vLLM wins sustained delivery; transport speed advantage unproven](findings/0078-sustained-official-vllm.md)
 - [0079: Ordinary kernel-network targets reuse LLM and opaque graph backends](findings/0079-kernel-network-source-integration.md)
 - [0080: relieve the shared resident queue with a qualified32-bank profile](findings/0080-resident-queue-relief.md)
+- [Bounded small-graph network / CPU comparison](findings/0081-small-graph-network-cpu.md)

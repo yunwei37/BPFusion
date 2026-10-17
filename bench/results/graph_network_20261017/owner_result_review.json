@@ -1,0 +1,97 @@
+{
+  "utc": "2026-10-17T06:30:14.048416+00:00",
+  "reviewer": "This root thread only; different-code recomputation is not independent-person review.",
+  "decision": "No predeclared eligible CPU/P99 advantage;bounded research branch closed,OSSprototype retained.",
+  "main_cells": 90,
+  "main_measured": 3120000,
+  "main_failures": 0,
+  "retained_original_timing_pair": {
+    "cells": 2,
+    "requests": 12000,
+    "request_failures": 0,
+    "kernel_timer_gate_failed": true
+  },
+  "retained_control_only_warmups": 32,
+  "measured_confirmation_repeated_or_excluded": 0,
+  "audit_cells": 92,
+  "preincident_replay_pass": true,
+  "postincident_replay_pass": true,
+  "all_actual_gpu_launch_and_reply_counts_reconciled": true,
+  "frozen_serving_source": "3d3878c80edbaa7cc1a0bb7c87519b737ffae4f1",
+  "frozen_paths": [
+    "executor/graph_server.cu",
+    "examples/torch_graph_server.py",
+    "executor/graph_backend.h",
+    "executor/userspace_tcp.h",
+    "executor/kernel_tcp.h",
+    "bpf/kernel_tcp.bpf.c",
+    "bpf/fusion.bpf.c",
+    "bpf/include/kernel_tcp_state.h",
+    "bpf/include/bpfusion_queue.h",
+    "bench/graph_network_client.cpp",
+    "bench/graph_network_client.py",
+    "bench/resource_observer.py",
+    "bench/graph_network_analysis.py"
+  ],
+  "visual_review": {
+    "figures": [
+      "screen_matmul",
+      "screen_fft",
+      "confirmation"
+    ],
+    "ratio_ticks_fixed": true,
+    "screen_titles_shortened": true,
+    "PNG_and_PDF_same_figure": true
+  },
+  "limits": [
+    "nominal small-n selected-cell intervals",
+    "shared host/observer cost not exclusive service cost",
+    "GPU ownership only observed at boundaries",
+    "affinity not exclusive CPU saturation",
+    "8slots/64words/128connections/finite library patterns/qualified stack",
+    "historical6.36ms attribution unresolved"
+  ],
+  "cleanup": {
+    "pvc_state": "attached",
+    "workspace_restarts": 0,
+    "observed_utc": "2026-10-17T06:28:36.8771523Z",
+    "pvc_robustness": "healthy",
+    "node_ready": "True",
+    "pvc_node": "lab",
+    "lease": "2026-10-17T06:28:27.192479Z",
+    "client_job_and_pod_absent": true,
+    "workspace_uid": "3e8994f8-77ba-4a73-a3a5-35ed69a0a8a2",
+    "client_cleanup": {
+      "response_stdout_not_retained": "Workspace receipt write returned lab kubelet 502 after successful delete",
+      "delete_uid_precondition": "279160d8-b0b7-46d8-b89a-82a67ec3ace7",
+      "observed_utc": "2026-10-17T06:22:33.4352967Z",
+      "client_key_unlink_rpc_exit": 0,
+      "pod_name": "bpfusion-sustained-client-20261016-4h2br",
+      "job_uid": "279160d8-b0b7-46d8-b89a-82a67ec3ace7",
+      "propagation": "Foreground",
+      "job_name": "bpfusion-sustained-client-20261016",
+      "absence_query_exit": 0,
+      "pod_uid": "9dce0ac1-a881-471b-9103-e9938a551369",
+      "absence_query_items": 0,
+      "delete_rpc_exit": 0,
+      "owner_uid_verified_before_delete": true,
+      "source": "Two get --ignore-not-found reads via existing kubectl-home returned no Job/Pod; exact UID was checked before the raw DELETE"
+    },
+    "original_process_start_ticks": {
+      "1": "8626595",
+      "10909": "8662925"
+    },
+    "gpu_compute_apps": "",
+    "owned_bpf_pins": [],
+    "remaining_benchmark_server_or_observer_pids": [],
+    "legacy_module_loaded": false,
+    "ephemeral_server_test_key_removed": true,
+    "foreign_wip_preserved": true,
+    "source_branch": "main",
+    "post_measurement_node_event": "Repeated control/node/storage interruption after all 30 measured cells completed; existing infrastructure owner handled recovery. This thread sent no power/ATX action, changed no Workspace/host/credential configuration and retained the original Pod/PVC/PIDs.",
+    "no_new_gpu_measurement_after_recovery": true,
+    "actual_measurement_end_utc": "2026-10-17T06:07:26.1922221Z",
+    "retained_private_runtime_scope": "Original private build/analysis cache retained for same-Workspace reproduction; not an active server or new persistent service."
+  },
+  "postincident_measured_window_overlaps": 0
+}

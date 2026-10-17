@@ -107,8 +107,10 @@ python3 examples/torch_graph_server.py build/graph_server_kernel_network.so fft 
 This adds actual cuFFT work; it does not optimize or replace the library kernel.
 Use the identical repetition count on native and kernel paths. The
 [bounded network/CPU plan](../bench/results/graph_network_20261017/plan.md)
-defines the rate/work/core sweeps, complete tails, failure accounting and
-independent confirmation. Performance conclusions remain pending.
+defines the rate/work/core sweeps,complete tails,failure accounting and
+independent confirmation. The [completed result](findings/0081-small-graph-network-cpu.md)
+establishes no predeclared useful CPU/P99 advantage;single-CPU GEMM P99 is
+adverse. Keep the finite prototype/compatibility boundary explicit.
 
 bench/graph_work_calibration.py uses CUDA events around host graph replays.
 Its elapsed time includes host submission gaps; it is neither request latency

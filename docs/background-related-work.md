@@ -1,6 +1,16 @@
 # Background and related work
 
-Last updated: 2026-10-15 UTC (scoped reusable-backend refresh below; earlier source checks retain their dated scope).
+Project decision update,2026-10-17UTC:the
+[bounded same-executor library-work confirmation](findings/0081-small-graph-network-cpu.md)
+establishes no predeclared useful CPU/P99 advantage. The reusable
+Linux/eBPF/graph integration remains an OSS prototype;it is not a newly
+established performance contribution. This is an internal-evidence update,
+not a fresh literature search. External observations and proposed-next-step
+wording below retain their dated historical scope;they are not an active
+GPU-kernel/LLM search backlog.
+
+
+External-source map last updated: 2026-10-15 UTC (scoped reusable-backend refresh below; earlier source checks retain their dated scope).
 Source/command: web searches and primary papers, official documentation, upstream source and artifacts; current repository findings.
 Completeness: covers GPU networking/proxy removal, GPU-owned Linux I/O, reusable model execution, and recent contradictory performance evidence. This is a scoped map, not an exhaustive bibliography or a new thesis/RQ. No paper contract, idea-story or user-instruction document exists here.
 

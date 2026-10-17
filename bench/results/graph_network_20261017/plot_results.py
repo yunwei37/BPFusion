@@ -24,7 +24,7 @@ def main(a):
             axes[i,2].set_ylabel("Delivered requests/s")
             rates=sorted({x["offered_rate"] for x in rows if x["operation"]==op and x["repeat"]==repeat and x["cores"]==cores})
             axes[i,2].plot(rates,rates,":",color="0.5",label="offered")
-            for ax in axes[i]:ax.set_title("repetitions %d; service CPUs %s"%(repeat,cores or "unrestricted"))
+            for ax in axes[i]:ax.set_title("Repeat %d; service CPUs %s"%(repeat,cores or "all"),fontsize=11)
         axes[0,0].legend();axes[0,2].legend()
         fig.suptitle(op+": exploratory single-cell screening; CPU is group accounting\nSame 8-slot GPU executor; remote g10 client; shared lab host; all failures retained")
         save(a,"screen_"+op,fig)

@@ -112,3 +112,32 @@ All54warm-only files are retained;owned observer/service stop normally.
 Resume the same previously unmeasured tag/seed only after preserving that
 original attempt. No measured confirmation sample is replaced or excluded.
 Checkpoint the first22raw cells and recovery record before continuing.
+
+All30confirmation cells now finish600000measured requests with0failures and
+all validity gates. None meets the predeclared useful advantage:CPU K/N
+1.011/1.019/1.129;CPU1GEMM P99 is2.589[1.196,5.607],adverse.
+All92native measured-cell analyses replay to identical metrics/ECDF bytes;
+owner NumPy/df4 audits and real GPU-launch/network-byte/lifecycle counts pass.
+The user-defined negative exit therefore applies:close this performance search.
+
+Today's substantive-progress reflection:the main uncertainty is resolved for
+this bounded implementation,not converted into an all-eBPF impossibility claim.
+User CPU disappears into system CPU rather than producing a measured group
+saving. Shared-host attribution,observer cost and nonexclusive CPU affinity
+remain limits. The highest-value next action is delivering the usable prototype
+honestly:current README/architecture/evaluation and graph commands reconciled,
+all historical/failed prefixes retained,raw tables/figures/source audits linked,
+then actual temporary-resource cleanup and verified commit/push. Those actions
+are being completed in this turn. Do not restart LLM speed competition or
+new GPU-kernel variants to find a positive number. Future daily upkeep checks
+real reproduction/link/compatibility issues within this documented scope.
+
+Delivery checks complete after the later06:17shared-node outage:the same
+original Pod remains0restarts,the same PVC is attached/healthy,and original
+PID1/10909start times match. BPFusion's last measured invocation ended06:07:26.
+This thread sends no power/configuration action and preserves the existing
+infrastructure owner's recovery record. A postincident replay and independent
+raw/source audits pass again without rerunning GPU measurements or replacing
+data. Actual client Job/Pod and ephemeral keys are gone;GPU contexts,BPF pins
+and benchmark/observer processes are absent. Final relative-link and owner
+result-review receipts are retained with the complete negative result.

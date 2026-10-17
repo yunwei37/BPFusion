@@ -11,7 +11,7 @@ Existing real SSH returns lab,boot04dc0087-5ccc-4c46-9997-b9a92f0e5167,
 k3s-agent/tailscaled active and kernel7.3rc3. Boot matches original observer
 metadata;original PID1/10909start times remain8626595/8662925.
 Workspace exec recovers through its existing path. No reboot,power operation,
-service/policy/credential change or replacement Workspace/Pod is performed.
+host-service/policy/credential configuration change or replacement Workspace/Pod is performed.
 The exact transient control-network cause is unknown.
 
 The owned idle observer and native service are signalled normally after

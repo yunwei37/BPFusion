@@ -86,7 +86,7 @@ client is a different protocol.
 | Internal comparator | Efficient native epoll TCP with the same resident GPU compute |
 | Validation | Finite exact outputs/replay, fragmentation, concurrency, reuse, reject, half-close/reset/stop |
 
-Default capacity is8; graph input/output counts are each1..64words.
+Default capacity is8; graph input/output counts are each1..64 words.
 Generation uses the same framing for1..64token inputs/outputs.
 Explicit16-bank vLLM qualification uses a matching shared-page ABI and separate
 builds. See [architecture](docs/architecture.md) and
@@ -102,7 +102,7 @@ unchanged cuBLAS/cuFFT computation through both transports. It accepts fixed
 input/output buffers and is separate from LLM generation; arbitrary-CUDA
 plugin stability and compatibility are not established.
 
-## Results and current research question
+## Results and boundaries
 
 The internal comparator is efficient native epoll with the **same resident GPU
 executor and protocol**. Native also uses GPU-controlled execution; there is no
@@ -133,12 +133,29 @@ and [opaque CUDA Graph adapter](docs/graph-backends.md) provide the reusable
 implementation boundary; cuBLAS/cuFFT numerical and lifecycle checks pass in
 the qualified cases. They do not promise a stable arbitrary-kernel plugin.
 
-The next bounded question is whether the kernel path saves CPU or improves P99
-for high-rate small cuBLAS/cuFFT requests. LLM speed competition is closed as
-the main line. A positive claim requires matched computation, complete
-resource/tail/failure reporting and confirmation; a negative result closes the
-search with documented limits. [Daily progress and decisions](docs/progress.md)
-record the current blocker, next decisive action and repository upkeep.
+The [bounded small-graph experiment](docs/findings/0081-small-graph-network-cpu.md)
+is complete: 60 screening cells with 2.52 million measured requests, followed
+by three new-seed, five-pair confirmations with 600,000 requests. No main
+request fails. Matched cuBLAS/cuFFT work, load through saturation, owned-service
+CPU masks and remote clients establish **no predeclared useful CPU/P99 advantage**.
+
+| Confirmation at 1,000 requests/s | Group CPU K/N, t95 | P99 K/N, t95 |
+|---|---:|---:|
+| FFT, unrestricted | 1.011 [0.995, 1.027] | 1.254 [0.514, 3.058] |
+| GEMM, unrestricted | 1.019 [0.967, 1.074] | 1.160 [0.497, 2.706] |
+| GEMM, one logical CPU | 1.129 [0.956, 1.334] | 2.589 [1.196, 5.607] |
+
+Ratios below 1 favor K for CPU/P99. These are nominal five-pair intervals;
+crossing 1 does not establish equivalence. Single-CPU P99 is adverse.
+Userspace CPU falls while system CPU offsets it; whole-host savings remain
+unestablished. Full tails, observer cost, client timing faults and actual
+cleanup are explicit in the report.
+
+The bounded performance search is closed. BPFusion remains an OSS research
+prototype for the qualified transport/graph boundary, with no general speed,
+total-CPU or stable arbitrary-kernel-plugin claim.
+[Daily progress and decisions](docs/progress.md) retain repository upkeep and
+the reasoning behind the next substantive action.
 
 [Evaluation](docs/evaluation.md), [all findings](docs/findings/) and their raw
 archives preserve the full history, including failed and unselected candidates.

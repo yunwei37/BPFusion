@@ -1,0 +1,42 @@
+{
+  "pvc_state": "attached",
+  "workspace_restarts": 0,
+  "observed_utc": "2026-10-17T06:28:36.8771523Z",
+  "pvc_robustness": "healthy",
+  "node_ready": "True",
+  "pvc_node": "lab",
+  "lease": "2026-10-17T06:28:27.192479Z",
+  "client_job_and_pod_absent": true,
+  "workspace_uid": "3e8994f8-77ba-4a73-a3a5-35ed69a0a8a2",
+  "client_cleanup": {
+    "response_stdout_not_retained": "Workspace receipt write returned lab kubelet 502 after successful delete",
+    "delete_uid_precondition": "279160d8-b0b7-46d8-b89a-82a67ec3ace7",
+    "observed_utc": "2026-10-17T06:22:33.4352967Z",
+    "client_key_unlink_rpc_exit": 0,
+    "pod_name": "bpfusion-sustained-client-20261016-4h2br",
+    "job_uid": "279160d8-b0b7-46d8-b89a-82a67ec3ace7",
+    "propagation": "Foreground",
+    "job_name": "bpfusion-sustained-client-20261016",
+    "absence_query_exit": 0,
+    "pod_uid": "9dce0ac1-a881-471b-9103-e9938a551369",
+    "absence_query_items": 0,
+    "delete_rpc_exit": 0,
+    "owner_uid_verified_before_delete": true,
+    "source": "Two get --ignore-not-found reads via existing kubectl-home returned no Job/Pod; exact UID was checked before the raw DELETE"
+  },
+  "original_process_start_ticks": {
+    "1": "8626595",
+    "10909": "8662925"
+  },
+  "gpu_compute_apps": "",
+  "owned_bpf_pins": [],
+  "remaining_benchmark_server_or_observer_pids": [],
+  "legacy_module_loaded": false,
+  "ephemeral_server_test_key_removed": true,
+  "foreign_wip_preserved": true,
+  "source_branch": "main",
+  "post_measurement_node_event": "Repeated control/node/storage interruption after all 30 measured cells completed; existing infrastructure owner handled recovery. This thread sent no power/ATX action, changed no Workspace/host/credential configuration and retained the original Pod/PVC/PIDs.",
+  "no_new_gpu_measurement_after_recovery": true,
+  "actual_measurement_end_utc": "2026-10-17T06:07:26.1922221Z",
+  "retained_private_runtime_scope": "Original private build/analysis cache retained for same-Workspace reproduction; not an active server or new persistent service."
+}

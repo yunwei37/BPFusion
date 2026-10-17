@@ -24,12 +24,47 @@ Calibration and finite numerical/lifecycle qualification precede performance.
 Screen results cannot establish a benefit; confirmation_selection.json freezes
 new seeds/selected cells before the five-pair confirmation. Full raw resources,
 workers, failures, tails and code are retained. Whole-host counters are shared,
-not exclusive service cost. The final report will state supported boundaries
-and close this bounded search if the predeclared benefit is absent.
+not exclusive service cost. The [complete report](result.md) closes this bounded search:no selected
+confirmation point meets the predeclared useful CPU/P99 advantage criterion.
 
 The final CPU2 FFT sweep's original client-timing interruption is retained in
 client_dispatch_initial/,with handling,raw timer diagnosis and a client-only
 probe. The entire final configuration is acquired under screen_cpp_recovered
 tags with forward-declared new seeds. No failed data is pooled or overwritten;
-the original unchanged timing guard still applies. The first54valid cells have
-a separate owner recomputation receipt;terminal coverage remains pending.
+the original unchanged timing guard still applies. The first54valid cells have a separate owner receipt;full60-cell coverage
+and30-cell confirmation now pass owner-code audits. No result is inferred
+from the retired timing-failure pair.
+
+## Read and replay the completed result
+
+[Result](result.md),[screen table](screen_table.csv),
+[confirmation table](confirmation_table.csv),[paired effects](confirmation_summary.json)
+and[resource ledger](resource_ledger.json) separate every scope and tail.
+[Canonical replay](analysis_replay.json),[owner audit](confirmation_owner_audit.json)
+and[lifecycle counts](lifecycle_audit.json) check original data.
+The[control-stream incident](control_connection_interruption/incident.md)
+contains32warmups but zero measured requests;no confirmation result is replaced.
+
+From the repository root,with Python and NumPy available:
+
+~~~sh
+archive=bench/results/graph_network_20261017
+python3 "$archive/confirmation_analysis.py" "$archive"
+python3 "$archive/owner_audit.py" "$archive" confirmation
+python3 "$archive/replay_analysis.py" "$archive"
+python3 "$archive/resource_ledger.py" "$archive"
+python3 "$archive/export_tables.py" "$archive"
+python3 "$archive/lifecycle_audit.py" "$archive"
+# Optional:Matplotlib in an analysis environment;see analysis_environment.json.
+python3 "$archive/plot_results.py" "$archive"
+~~~
+
+The owner audit requires the frozen3d3878c source commit in Git history.
+Original acquisition wrappers contain the recorded Coder paths;use the current
+graph runbook for portable build/serve/client/cleanup commands. Replaying
+analysis writes its derived outputs;keep original archive copies when comparing.
+The executed canonical-replay check itself uses OS-temp symlinks and does not
+overwrite original metrics or ECDFs. Full raw request/timer formats are documented.
+
+Final[cleanup receipt](cleanup.json) records actual Job/Pod/key removal and
+original Workspace/session preservation.
