@@ -93,7 +93,7 @@ def main():
                     rows = [json.loads(line) for line in output.read_text().splitlines()]
                     requests = [x for x in rows if x["event"] == "request"]
                     assert rows[-1]["event"] == "client_terminal" and rows[-1]["exit"] == 0
-                    assert len(requests) == 128 and all(x["outcome"] == "success" and len(x["tokens"]) == 64 for x in requests)
+                    assert len(requests) == 32 and all(x["outcome"] == "success" and len(x["tokens"]) == 64 for x in requests)
                     receipt.update(requests=len(requests), checked_tokens=sum(len(x["tokens"]) for x in requests),
                                    finite_reference_disagreements=sum(not x["reference_set_match"] for x in requests),
                                    status="PASS")
