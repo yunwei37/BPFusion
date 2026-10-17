@@ -1,0 +1,35 @@
+{
+  "measured_requests": 60000,
+  "excluded_warmups": 128,
+  "cells": [
+    {
+      "tag": "screen_cpp_matmul_w1_c0_r1000_kernel",
+      "requests": 6000,
+      "client_cpu_ms": 0.4263645353333334,
+      "timer_p99_ms": 0.2265259,
+      "response_p99_ms": 2.0510880800000004
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c0_r1000_native",
+      "requests": 6000,
+      "client_cpu_ms": 0.44082380816666666,
+      "timer_p99_ms": 0.634779799999989,
+      "response_p99_ms": 17.791437780000006
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c0_r4000_kernel",
+      "requests": 24000,
+      "client_cpu_ms": 0.18755678270833334,
+      "timer_p99_ms": 0.49137579999999925,
+      "response_p99_ms": 144.7997546199998
+    },
+    {
+      "tag": "screen_cpp_matmul_w1_c0_r4000_native",
+      "requests": 24000,
+      "client_cpu_ms": 0.18006477966666665,
+      "timer_p99_ms": 0.2594757,
+      "response_p99_ms": 2.4613674999999993
+    }
+  ],
+  "all_original_timing_gates_passed": true
+}

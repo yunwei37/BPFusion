@@ -19,7 +19,7 @@ foreach($taskCase in $taskCases){
  foreach($taskRate in @(1000,4000,16000,64000,256000)){
   foreach($taskMode in $taskOrder){
    if($taskStopped.ContainsKey($taskMode)){continue}
-   $taskTag="screen_nodelay_"+$taskCase.operation+"_w"+$taskCase.repeat+"_c"+$taskCase.cores+"_r"+$taskRate+"_"+$taskMode
+   $taskTag="screen_cpp_"+$taskCase.operation+"_w"+$taskCase.repeat+"_c"+$taskCase.cores+"_r"+$taskRate+"_"+$taskMode
    $taskSeed=20261017+$taskIndex*1000+$taskRate
    $taskMetric=Read-Metric $taskTag
    if($null -eq $taskMetric){

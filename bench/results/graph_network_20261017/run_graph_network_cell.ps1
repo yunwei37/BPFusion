@@ -104,7 +104,7 @@ print(json.loads(Path(str(prefix)+'.server_started.json').read_text())['pid'])
  $taskWarm="$Tag.warmup.jsonl"
  & $KubectlHome -n coder exec $ClientPod '--' python3 /tmp/graph_network_client.py --host $ServerIP --operation $Operation --rate 1000 --seconds 0.032 --seed $Seed --output "/tmp/$taskWarm"
  if($LASTEXITCODE -ne 0){throw "Warmup execution failed"}
- $taskWarmCheck='import json,pathlib;rows=[json.loads(x) for x in pathlib.Path("/tmp/{0}").read_text().splitlines()];q=[x for x in rows if x["event"]=="request"];assert len(q)==32 and all(x["outcome"]=="success" for x in q);print("32 numerical warmups passed")' -f $taskWarm
+ $taskWarmCheck='import json,pathlib;m=json.loads(pathlib.Path("/tmp/{0}").open().readline());assert m["attempts"]==m["recorded"]==32 and m["failures"]==0 and all(v==0 for v in m["worker_exit"]);print("32 native numerical warmups passed")' -f $taskWarm
  & $KubectlHome -n coder exec $ClientPod '--' python3 -c $taskWarmCheck
  if($LASTEXITCODE -ne 0){throw "Warmup numerical validation failed"}
 
@@ -136,7 +136,7 @@ print('owned service thread affinity applied')
  $taskSink='import sys,pathlib;pathlib.Path("{0}.client_exit.json").write_bytes(sys.stdin.buffer.read())' -f $taskPrefix
  $taskJSON | & $KubectlHome -n coder exec -i $taskServerPod '--' python3 -c $taskSink
  if($LASTEXITCODE -ne 0){throw "Client receipt write failed"}
- if($taskClientExit -ne 0){throw "Client execution failed"}
+ if($taskClientExit -ne 0){Write-Output "CLIENT_ERROR preserving incomplete raw data before analysis"}
  Write-Output "MEASURED $Tag"
 } finally {
  if($taskObserverPid){Stop-Observer $taskObserverPid $taskPrefix}
@@ -152,50 +152,40 @@ print('server terminal')
 "@ | Out-Null
  }
 }
-Receive-ClientFile $taskWarm "$taskPrefix.warmup.jsonl"
-Receive-ClientFile $taskName "$taskPrefix.client.jsonl"
-$taskProofCode=@"
+$taskBundleCode=@"
 from pathlib import Path
-import json
-p=Path('/tmp/$taskName');proof=[];original=None;meta=None
-with p.open('rb') as source:
- for line in source:
-  if meta is None:meta=json.loads(line);continue
-  if line.startswith(b'{"event":"worker_metadata"'):
-   assert original is None
-   part=json.loads(line)['part'];name=meta['worker_files'][part]
-   original=(p.parent/name).open('rb');size=0
-  if original is not None:
-   assert original.readline()==line,(name,'merged worker bytes differ')
-   size+=len(line)
-  if line.startswith(b'{"event":"worker_terminal"'):
-   assert original.read(1)==b'';original.close();original=None
-   proof.append(dict(name=name,bytes=size))
-assert original is None and len(proof)==meta['workers']
-print(json.dumps(proof))
+import tarfile,json
+root=Path('/tmp');names=[]
+for name in ['$taskWarm','$taskName']:
+ p=root/name;meta=json.loads(p.open().readline())
+ names.extend([name]+meta['input_files']+meta['worker_files'])
+names=list(dict.fromkeys(names));assert all(Path(n).name==n for n in names)
+bundle=root/'$Tag.bundle.tgz';assert not bundle.exists()
+with tarfile.open(bundle,'w:gz') as archive:
+ for name in names:archive.add(root/name,arcname=name,recursive=False)
+print(json.dumps(dict(files=len(names),compressed_bytes=bundle.stat().st_size)))
 "@
-$taskProofOutput=$taskProofCode | & $KubectlHome -n coder exec -i $ClientPod '--' python3 -
-if($LASTEXITCODE -ne 0){throw "Original worker byte proof failed"}
-$taskProofJSON=$taskProofOutput -join [Environment]::NewLine
+$taskBundleCode | & $KubectlHome -n coder exec -i $ClientPod '--' python3 -
+if($LASTEXITCODE -ne 0){throw "Original native log bundle failed"}
+Invoke-Workspace "from pathlib import Path;Path('$taskTemp/graph_native_transfers').mkdir(exist_ok=True)" | Out-Null
+Receive-ClientFile "$Tag.bundle.tgz" "$taskTemp/graph_native_transfers/$Tag.bundle.tgz"
 Invoke-Workspace @"
 from pathlib import Path
-import gzip,json
-d=Path('$taskDirectory');proof=json.loads('''$taskProofJSON''')
-expected={x['name']:x['bytes'] for x in proof};meta=None;dest=None;count=0;written=[]
-with gzip.open(d/'$Tag.client.jsonl.gz','rb') as source:
- for line in source:
-  if meta is None:meta=json.loads(line);continue
-  if line.startswith(b'{"event":"worker_metadata"'):
-   assert dest is None
-   name=meta['worker_files'][json.loads(line)['part']]
-   assert name in expected and Path(name).name==name
-   dest=gzip.GzipFile(filename=str(d/(name+'.gz')),mode='wb',mtime=0);count=0
-  if dest is not None:dest.write(line);count+=len(line)
-  if line.startswith(b'{"event":"worker_terminal"'):
-   dest.close();dest=None;assert count==expected[name];written.append(name)
-assert dest is None and set(written)==set(expected)
-(d/'$Tag.worker_reconstruction.json').write_text(json.dumps(dict(original_client_byte_comparison_passed=True,workers=proof),indent=2))
-print('original worker bytes recovered from lossless merged log')
+import gzip,tarfile,io,json
+d=Path('$taskDirectory');source=Path('$taskTemp/graph_native_transfers/$Tag.bundle.tgz.gz')
+inner=gzip.decompress(source.read_bytes());receipts=[]
+with tarfile.open(fileobj=io.BytesIO(inner),mode='r:gz') as bundle:
+ for member in bundle:
+  assert member.isfile() and Path(member.name).name==member.name,member.name
+  raw=bundle.extractfile(member).read()
+  assert len(raw)==member.size
+  compressed=member.name.endswith(('.bin','.jsonl'))
+  dest=d/(member.name+'.gz' if compressed else member.name);assert not dest.exists(),dest
+  dest.write_bytes(gzip.compress(raw,mtime=0) if compressed else raw)
+  assert (gzip.decompress(dest.read_bytes()) if compressed else dest.read_bytes())==raw
+  receipts.append(dict(name=member.name,bytes=len(raw)))
+(d/'$Tag.native_bundle.json').write_text(json.dumps(dict(lossless_original_files=True,files=receipts),indent=2))
+print('native original files recovered',len(receipts))
 "@ | Out-Null
 Invoke-Workspace @"
 from pathlib import Path

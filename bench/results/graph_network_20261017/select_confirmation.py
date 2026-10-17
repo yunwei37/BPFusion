@@ -32,9 +32,9 @@ def main(root):
     selected=[]
     if eligible:
         for label,cores,metric in [("unrestricted_cpu",0,"cpu_ratio"),("unrestricted_tail",0,"p99_ratio"),("one_cpu",1,"cpu_ratio")]:
-            candidates=[x for x in eligible if x["repeat"]==1 and x["cores"]==cores]
+            candidates=[x for x in eligible if x["cores"]==cores]
             if not candidates:continue
-            best=min(candidates,key=lambda x:(x[metric],x["operation"],x["rate"]))
+            best=min(candidates,key=lambda x:(x[metric],x["repeat"],x["operation"],x["rate"]))
             key=(best["operation"],best["repeat"],best["cores"],best["rate"])
             if key not in [(x["operation"],x["repeat"],x["cores"],x["rate"]) for x in selected]:
                 selected.append(dict(best,selection=label))

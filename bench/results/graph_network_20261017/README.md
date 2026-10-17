@@ -6,11 +6,13 @@ The [pre-acquisition plan](plan.md) and [owner-only design review](plan-review.m
 fix its scope, metrics, screen/confirmation selection and positive/negative exit.
 No other agent participates.
 
-The reusable client is bench/graph_network_client.py; analysis is
-bench/graph_network_analysis.py. The example captures unchanged upstream cuBLAS/
+The [coordinator](../../graph_network_client.py), [native worker](../../graph_network_client.cpp)
+and [analysis](../../graph_network_analysis.py) retain fixed-format raw data.
+[Format and recovery](native_client_format.md) document every byte/timestamp. The example captures unchanged upstream cuBLAS/
 cuFFT, with optional repeated work. See the
 [graph guide](../../../docs/graph-backends.md) for normal build, serve, client
-and cleanup commands. Client runtime is Python3.12.12/uvloop0.23.0. Binary
+and cleanup commands. Client runtime is Linux x86-64/Python3.12.12 plus the static native worker;
+uvloop is not needed by the final client. Binary
 requests/responses are280/256bytes and every observed output is checked.
 
 Historical acquisition wrappers in this directory record the real original

@@ -157,3 +157,25 @@ not establish a causal explanation for all observed outliers. Interval device
 fields are unavailable,not zero/absence. Boundary GPU/clock snapshots and
 unattributed resource limits remain. All final cells use the same source;
 earlier diagnostic observer data are separate.
+
+## Native client capacity repair before work-duration acquisition
+
+The first Python4000/s cell fails the original dispatch gate and consumes
+~3.85client cores. Its whole prefix is retained in client_capacity_initial/.
+Use native epoll/timerfd workers with original schedules/pattern files,eight
+workers/128connections,30sdeadlines and fixed metrics. Binary320-byte request
+records and24-byte timer records retain partial/failing/unsent attempts.
+Python coordination and offline normalization are outside the worker hot path.
+All final screening restarts under screen_cpp_*; no Python prefix is combined.
+
+Before collecting any performance cell at repetitions16/256,the selection
+rule is clarified to cover the requested work-duration crossover:unrestricted
+CPU/tail candidates are chosen across ALL three tested repetition counts.
+Choose minimum provisional CPU/P99 ratio among eligible cells; ties prefer
+smaller repetition,operation name,then rate. CPU1category naturally remains
+repeat1 because that is its declared sweep. This supersedes the earlier
+repeat1-only candidate restriction without adding confirmation cells or
+changing eligibility,CPU/P99/throughput thresholds,seeds or five-pair protocol.
+The independent confirmation still makes the decision; screen-only wins do
+not count. Larger-repetition performance data had not been acquired at this
+clarification. The bounded three-category/negative-exit contract remains.

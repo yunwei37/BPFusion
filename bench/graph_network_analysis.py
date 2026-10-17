@@ -15,13 +15,44 @@ def quantile(v,q):
 def summary(v):
     return dict(mean=statistics.mean(v),p50=quantile(v,.5),p90=quantile(v,.9),
                 p95=quantile(v,.95),p99=quantile(v,.99),p999=quantile(v,.999),max=max(v)) if v else None
+def payload(path):
+    path=Path(path)
+    if not path.exists():path=Path(str(path)+".gz")
+    return gzip.decompress(path.read_bytes()) if path.suffix==".gz" else path.read_bytes()
+
+def client_rows(path):
+    raw=read(path);meta=raw[0]
+    if meta.get("log_format")!="native_fixed_records_v1":return raw
+    root=path.parent;meta=dict(meta)
+    meta["offsets_ns"]=[x[0] for x in struct.iter_unpack("<Q",payload(root/meta["schedule_file"]))]
+    data=payload(root/meta["patterns_file"]);assert len(data)==16*512
+    patterns=[dict(input_hex=data[i*512:i*512+256].hex(),
+                   expected=list(struct.unpack("<64f",data[i*512+256:(i+1)*512]))) for i in range(16)]
+    rows=[meta];layout=struct.Struct("<6Q4I256s")
+    errors={1:"scheduled deadline",2:"connect error",3:"short reply EOF",4:"recv error",5:"send error",6:"independent numeric oracle mismatch"}
+    for part in meta["worker_parts"]:
+        ready=json.loads(payload(root/part["ready"]));terminal=json.loads(payload(root/part["terminal"]))
+        rows.append(dict(ready,event="worker_metadata",source=meta["native_source"],patterns=patterns))
+        records=payload(root/part["records"]);assert len(records)%layout.size==0
+        assert terminal["records"]==len(records)//layout.size
+        for v in layout.iter_unpack(records):
+            index,scheduled,begin,sent,complete,end,pattern,status,size,error,reply=v
+            assert size<=256 and index%meta["workers"]==part["part"] and status in range(7)
+            rows.append(dict(event="request",index=index,pattern=pattern,scheduled_ns=scheduled,begin_ns=begin,
+                sent_ns=sent or None,complete_ns=complete or None,end_ns=end,
+                outcome="success" if status==0 else "failure",error=None if not status else errors[status]+":errno="+str(error),
+                reply_hex=reply[:size].hex(),native_status=status))
+        ticks=list(struct.iter_unpack("<3Q",payload(root/part["timers"])))
+        rows.append(dict(terminal,event="worker_terminal",timer_lag=ticks))
+    rows.append(raw[-1]);return rows
+
 def cell(prefix):
-    p=Path(str(prefix)+".client.jsonl.gz");rows=read(p);m=rows[0]
+    p=Path(str(prefix)+".client.jsonl.gz");rows=client_rows(p);m=rows[0]
     requests=[x for x in rows if x["event"]=="request"]
     assert len(requests)==m["attempts"] and sorted(x["index"] for x in requests)==list(range(m["attempts"]))
     assert m["worker_exit"]==[0]*m["workers"]
     assert all(x["scheduled_ns"]==m["epoch_ns"]+m["offsets_ns"][x["index"]] and x["begin_ns"]>=x["scheduled_ns"] for x in requests)
-    assert all(x["source"]==m["source"] for x in rows if x["event"]=="worker_metadata")
+    assert all(x["source"]==m.get("native_source",m["source"]) for x in rows if x["event"]=="worker_metadata")
     expected={x["part"]:x["patterns"] for x in rows if x["event"]=="worker_metadata"}
     good=[x for x in requests if x["outcome"]=="success"]
     for x in good:
@@ -35,6 +66,12 @@ def cell(prefix):
         ("client_connection_wait_ms",[(x["begin_ns"]-x["scheduled_ns"])/1e6 for x in requests]),
         ("timer_dispatch_lag_ms",[v[2]/1e6 for x in rows if x["event"]=="worker_terminal" for v in x["timer_lag"]])]:
         tails[name]=summary(values)
+    warm=client_rows(Path(str(prefix)+".warmup.jsonl.gz"))
+    wm=warm[0];wr=[x for x in warm if x["event"]=="request"]
+    assert len(wr)==32 and all(x["outcome"]=="success" for x in wr)
+    wpatterns={x["part"]:x["patterns"] for x in warm if x["event"]=="worker_metadata"}
+    for x in wr:
+        assert list(struct.unpack("<64f",bytes.fromhex(x["reply_hex"])))==wpatterns[x["index"]%wm["workers"]][x["pattern"]]["expected"]
     failures=len(requests)-len(good)
     all_rank=(len(requests)-1)*.99
     successful_latencies=sorted((x["complete_ns"]-x["scheduled_ns"])/1e6 for x in good)

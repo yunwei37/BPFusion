@@ -261,3 +261,8 @@ $(BUILD)/vllm_mixed_kernel_network.so $(BUILD)/vllm_mixed_kernel_network_trace.s
 
 $(BUILD)/kernel_tcp.bpf.o: bpf/kernel_tcp.bpf.c bpf/include/kernel_tcp_state.h bpf/include/vmlinux.h bpf/include/bpfusion_admission.h bpf/include/bpfusion_queue.h | $(BUILD)
 	clang $(CPPFLAGS) $(BPF_CFLAGS) -c $< -o $@
+
+.PHONY: graph-network-client
+graph-network-client: $(BUILD)/graph_network_client
+$(BUILD)/graph_network_client: bench/graph_network_client.cpp bpf/include/bpfusion_queue.h | $(BUILD)
+	$(CXX) $(CPPFLAGS) -O3 -std=c++17 -static -Ibpf/include $< -o $@

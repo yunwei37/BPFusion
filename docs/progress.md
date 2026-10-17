@@ -64,3 +64,13 @@ is now acquisition,not missing implementation. Freeze the common repaired
 source,move unnecessary periodic GPU probes outside the request window,then
 run the full planned work/load/core scan and new-seed confirmation without
 another speculative optimization loop.
+
+The Python client itself reaches~3.85cores at4000/s and fails the unchanged
+dispatch gate. A native epoll/timerfd worker now passes matched1000/4000/s
+qualification (60000requests,128warmups,zero failures),with .750client-core
+estimate and .491ms monitorP99 on the4000/s kernel cell. Binary logging
+preserves partial and unsent/failing attempts and is normalized offline.
+Original timing/epoch/capacity prefixes remain; server kernels are unchanged.
+The kernel4000/s screening P99 is still adverse (~145ms versus native2.46ms),
+so no benefit is claimed from client repair. Continue the same bounded full
+scan with this qualified source,then independent confirmation and honest exit.

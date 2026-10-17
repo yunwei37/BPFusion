@@ -115,17 +115,25 @@ nor a pure device-launched-kernel timing. The served graphs contain no timing
 nodes. The example's capture_graphs helper keeps the calibration and actual
 caller graph construction shared; it is not a new plugin API.
 
-A remote client with Linux, Python 3.12 and uvloop 0.23.0 can use:
+For remote load generation, build the native worker in the development
+environment and transfer it with its coordinator/source to a Linux x86-64
+client. The client needs Python 3.12 and no GPU or Python inference package.
 
 ~~~sh
-python3 bench/graph_network_client.py --host "$server_ip" --operation fft \
+make graph-network-client
+# Transfer build/graph_network_client plus bench/graph_network_client.py
+# and bench/graph_network_client.cpp into the same remote directory.
+python3 graph_network_client.py --host "$server_ip" --operation fft \
   --rate 1000 --seconds 6 --output /tmp/fft-remote.jsonl
 ~~~
 
-The client opens persistent TCP connections, preserves scheduled arrivals,
-checks every complete numerical output, and retains failed/partial requests.
-Run it on another machine for a remote test. Raw logs use the binary float
-protocol; this is separate from the text/token demonstration client.
+The static native epoll/timerfd worker emits original binary timing/reply
+records. Python coordinates the unchanged arrival plan and checks results
+offline. No Python request callback or JSON encoding runs in the timed worker.
+The [log format](../bench/results/graph_network_20261017/native_client_format.md)
+and [client-capacity repair](../bench/results/graph_network_20261017/client_capacity.md)
+retain the original failed timing prefixes and real qualification.
+Run the client separately from the server for a remote test.
 
 ## Qualified boundary
 

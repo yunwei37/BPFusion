@@ -1,0 +1,2 @@
+mkdir -p /tmp/bpfusion-mixed-integration-n4cog5c6/graph_native_client_build
+g++ -DBF_BUILD_DIR='"/tmp/bpfusion-mixed-integration-n4cog5c6/graph_native_client_build"' -O3 -std=c++17 -static -Ibpf/include bench/graph_network_client.cpp -o /tmp/bpfusion-mixed-integration-n4cog5c6/graph_native_client_build/graph_network_client
