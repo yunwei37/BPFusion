@@ -88,3 +88,10 @@ The original 205.397s full clean replay and296.989s plotting-only replay precede
 the final196.142s run. They agree numerically;the final version adds three prose
 checks and derives the failure denominator from raw attempts. Their wall times
 are validation timings,not paper performance results.
+
+Cleanup complete:only this task's private validation archive/source,three new
+Python environments,builds and caches are removed after active-user checks.
+All evidence was published first;see [cleanup](cleanup.json) and
+[public publication check](publication.json). Original sessions/PVC/WIP and
+pre-existing runtime/model dependencies remain. No GPU contexts,BPF pins,
+test keys or POSIX semaphores remain from the smoke runs.

@@ -25,5 +25,5 @@ omitted only in redacted server-log copies; raw client JSONLs remain complete.
 
 Public archive and forward-file reads confirm all7182 actual replay inputs
 are tracked/downloaded with matching Git object sizes; original perf binaries
-also exist.59 authored relative links resolve. There is no repository CI
+also exist.61 authored relative links resolve. There is no repository CI
 workflow or PR in this direct-main prototype task; no CI-green claim is made.
