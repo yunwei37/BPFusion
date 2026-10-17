@@ -87,6 +87,29 @@ Default8 cuBLAS/cuFFT finite numerical/lifecycle qualification is recorded in007
 It is an experimental control,not a selected faster transport or stable
 arbitrary-kernel plugin. The autoregressive scheduler stays a separate adapter.
 
+## Varying real library work for transport experiments
+
+The example's optional --repeat repeats the same upstream operation within
+each captured graph. Input/output stay at 64 words and the final result stays
+unchanged; each operation writes the same output from the same input. The
+default is 1. For example:
+
+~~~sh
+python3 examples/torch_graph_server.py build/graph_server_kernel_network.so fft --repeat 16 --seconds 120
+~~~
+
+This adds actual cuFFT work; it does not optimize or replace the library kernel.
+Use the identical repetition count on native and kernel paths. The
+[bounded network/CPU plan](../bench/results/graph_network_20261017/plan.md)
+defines the rate/work/core sweeps, complete tails, failure accounting and
+independent confirmation. Performance conclusions remain pending.
+
+bench/graph_work_calibration.py uses CUDA events around host graph replays.
+Its elapsed time includes host submission gaps; it is neither request latency
+nor a pure device-launched-kernel timing. The served graphs contain no timing
+nodes. The example's capture_graphs helper keeps the calibration and actual
+caller graph construction shared; it is not a new plugin API.
+
 ## Qualified boundary
 
 [Four real lifecycle runs](findings/0067-opaque-graph-backend.md) cover both

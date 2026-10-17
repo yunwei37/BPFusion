@@ -38,3 +38,10 @@ table and links to the full history. Getting-started/architecture/evaluation
 now reflect the completed comparison. No historical measurements were deleted.
 Next action is the bounded graph experiment already planned; no additional
 LLM K32/N32 acquisition. Publication of this completed milestone comes first.
+
+The next experiment's real library repetition qualification passes12cells/
+2184checks on both transports,with unchanged output oracles and ordinary
+shutdown. CUDA-event host-replay calibration is retained separately.
+The plan/exit criteria are published before performance acquisition; remote
+client implementation must pass an actual first matched pair before being
+presented as qualified. No GPU arithmetic kernel has been optimized.
