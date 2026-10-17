@@ -1,0 +1,13 @@
+{
+  "command": [
+    "make",
+    "BUILD=/tmp/bpfusion-mixed-integration-n4cog5c6/queue_relief_build32",
+    "CPPFLAGS=-DBF_LLM_SLOTS=32",
+    "vllm-mixed-user-network-wait",
+    "vllm-mixed-kernel-network",
+    "vllm-mixed-kernel-network-trace",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/queue_relief_build32/fusion.bpf.o",
+    "/tmp/bpfusion-mixed-integration-n4cog5c6/queue_relief_build32/bpfusion_load"
+  ],
+  "exit": 0
+}
