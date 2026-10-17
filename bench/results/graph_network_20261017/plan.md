@@ -127,3 +127,33 @@ pair. The earlier20262017base accidentally overlapped the first screening
 seed under the fixed rate-dependent screening rule. No performance cell had
 started when this was corrected; calibration/qualification are deterministic.
 The forward correction restores the promised distinct confirmation seeds.
+
+## Qualified acquisition dependencies before final screening
+
+77980ae retains the invalid timer prefix and incomplete epoch-publication
+prefix; timerfd plus atomic ready publication passes the original timing gate
+on a fresh matched12000-request pair. This becomes the TCP before control,
+not final screening. nodelay-plan.md/controls record graph caller's omitted
+small-reply TCP policy. Listener TCP_NODELAY now matches the repaired LLM caller
+on BOTH transports; compiled GPU dispatch is identical in all four libraries.
+Kernel control improves22.006->2.566ms P99,130->0responses>10ms. Native control
+is adverse2.864->10.955ms; one pair gives no statistical/native improvement
+claim. All14ordinary numerical/lifecycle cases pass,including legacy graph
+transport at repeat1. Adopt the consistent small-reply policy with that limit;
+the final matrix,not this diagnostic,decides any transport benefit.
+
+A one-second same-client core1 check verifies the requested service affinity
+before broad acquisition; it is engineering qualification,not a paper result.
+Final acquisition uses fresh screen_nodelay_* tags and graph_nodelay_build8
+on both paths. No pre-repair cell is mixed into screening. All source,CPU/P99
+criteria,selection rules,loads and confirmation seeds remain recorded.
+
+Before final acquisition,the reusable bench/resource_observer.py retains the
+same0.1s CPU/group/host/IRQ sampling and1s thread details,but queries GPU/NVML
+only at the two window boundaries. Old diagnostic samples take~3.2ms median,
+up to~8ms every100ms against~1ms requests; periodic GPU queries are unnecessary
+for CPU/latency primaries and are moved out of the request window. This does
+not establish a causal explanation for all observed outliers. Interval device
+fields are unavailable,not zero/absence. Boundary GPU/clock snapshots and
+unattributed resource limits remain. All final cells use the same source;
+earlier diagnostic observer data are separate.

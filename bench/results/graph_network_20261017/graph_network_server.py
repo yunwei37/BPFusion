@@ -5,7 +5,7 @@ import argparse,datetime,json,os,signal,subprocess,time,traceback
 def main(args):
  r=Path("/workspaces/repository");t=Path(args.runtime);prefix=Path(args.prefix)
  env=dict(os.environ,**json.loads((t/"environment.json").read_text()),BF_BIND=args.bind)
- build=t/"kernel_network_sourcebuild8";p=None;attached=False
+ build=Path(args.build) if args.build else t/"graph_nodelay_build8";p=None;attached=False
  pins=["bpfusion_ctl","bpfusion_stats","bpfusion_db","bpfusion_streams","bpfusion_stream_link",
        "bpfusion_uring_link","bpfusion_uring_owner","bpfusion_uring_bind_link","bpfusion_pending"]
  assert subprocess.check_output(["git","symbolic-ref","--short","HEAD"],cwd=r,text=True).strip()=="main"
@@ -18,6 +18,9 @@ def main(args):
   sources={f:(r/f).read_text() for f in ["examples/torch_graph_server.py","executor/graph_server.cu",
     "executor/graph_backend.h","executor/userspace_tcp.h","executor/kernel_tcp.h","bpf/kernel_tcp.bpf.c",
     "bpf/fusion.bpf.c","bpf/include/kernel_tcp_state.h","bpf/include/bpfusion_queue.h"]})
+ snapshot=build/"graph_source_snapshot.cu"
+ if snapshot.exists():receipt["sources"]["executor/graph_server.cu"]=snapshot.read_text()
+ receipt["build"]=str(build)
  try:
   if args.mode=="kernel":
    z=subprocess.run([str(build/"bpfusion_load"),"stream-uring-attach"],cwd=r,env=env,capture_output=True,text=True)
@@ -51,5 +54,5 @@ if __name__=="__main__":
  ap.add_argument("--prefix",required=True);ap.add_argument("--bind",required=True)
  ap.add_argument("--mode",choices=["kernel","native"],required=True)
  ap.add_argument("--operation",choices=["matmul","fft"],required=True)
- ap.add_argument("--repeat",type=int,default=1);ap.add_argument("--cores",type=int,default=0)
+ ap.add_argument("--build");ap.add_argument("--repeat",type=int,default=1);ap.add_argument("--cores",type=int,default=0)
  main(ap.parse_args())

@@ -54,3 +54,13 @@ is the already-planned shared TCP_NODELAY fault repair:the graph caller omitted
 the LLM caller's policy while the transport can withhold the final4bytes.
 Verify with same-client before/after controls and ordinary qualification,then
 restart the bounded matrix. Do not call the client repair an eBPF speed gain.
+
+The graph TCP policy repair is qualified in14ordinary cells/2548checks,with
+identical376-instruction GPU dispatch before/after and a kernel22.006->2.566ms
+P99 control. Native's single control is adverse and remains explicit; no
+transport superiority follows. One-core real checks pass2000responses and
+actual sampled service masks areCPU0 on both paths. The remaining main blocker
+is now acquisition,not missing implementation. Freeze the common repaired
+source,move unnecessary periodic GPU probes outside the request window,then
+run the full planned work/load/core scan and new-seed confirmation without
+another speculative optimization loop.

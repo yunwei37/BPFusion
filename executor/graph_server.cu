@@ -5,6 +5,7 @@
 #include <sys/mman.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -112,6 +113,7 @@ extern "C" int bf_graph_serve(const uint64_t* bodies,const uint64_t* inputs,
     bf_page* device;CUDA(cudaHostGetDevicePointer((void**)&device,page,0));
     int listener=socket(AF_INET,SOCK_STREAM,0),yes=1;
     setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));
+    if(setsockopt(listener,IPPROTO_TCP,TCP_NODELAY,&yes,sizeof(yes))) { perror("TCP_NODELAY");close(listener);return 1; }
     sockaddr_in addr={};addr.sin_family=AF_INET;addr.sin_port=htons(BF_LLM_TCP_PORT);
     const char* bind_addr=getenv("BF_BIND");
     if(inet_pton(AF_INET,bind_addr ? bind_addr : "127.0.0.1",&addr.sin_addr)!=1)return 1;

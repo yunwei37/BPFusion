@@ -1,7 +1,7 @@
 param([Parameter(Mandatory=$true)][string]$ClientPod,[Parameter(Mandatory=$true)][string]$ServerIP,
 [Parameter(Mandatory=$true)][string]$Tag,[Parameter(Mandatory=$true)][string]$Operation,
 [Parameter(Mandatory=$true)][string]$Mode,[int]$Repeat=1,[int]$Cores=0,[int]$Rate=1000,
-[int]$Seconds=6,[int]$Seed=20261017,[string]$Stage="screen",[string]$KubectlHome=".\scripts\kubectl-home.ps1")
+[int]$Seconds=6,[int]$Seed=20261017,[string]$Build="",[string]$Stage="screen",[string]$KubectlHome=".\scripts\kubectl-home.ps1")
 $ErrorActionPreference="Stop"
 $taskServerPod="coder-eb48d962-76f4-4ff7-bac5-7bc62ec2ada3-5c8bb655f6-khnns"
 $taskTemp="/tmp/bpfusion-mixed-integration-n4cog5c6"
@@ -55,7 +55,7 @@ import subprocess,json,os,time
 t=Path('$taskTemp');prefix=Path('$Prefix')
 env=dict(os.environ,**json.loads((t/'environment.json').read_text()))
 with Path(str(prefix)+'.observer.stdout').open('x') as o,Path(str(prefix)+'.observer.stderr').open('x') as e:
- p=subprocess.Popen([str(t/'runtime/bin/python'),str(t/'resource_observer.py'),'--pid','$ServerPid','--output',str(prefix)+'.resources.jsonl'],env=env,stdout=o,stderr=e,start_new_session=True)
+ p=subprocess.Popen([str(t/'runtime/bin/python'),'/workspaces/repository/bench/resource_observer.py','--pid','$ServerPid','--output',str(prefix)+'.resources.jsonl'],env=env,stdout=o,stderr=e,start_new_session=True)
 Path(str(prefix)+'.observer_started.json').write_text(json.dumps(dict(pid=p.pid,command=p.args)))
 while True:
  lines=Path(str(prefix)+'.resources.jsonl').read_text().splitlines() if Path(str(prefix)+'.resources.jsonl').exists() else []
@@ -91,7 +91,7 @@ t=Path('$taskTemp');prefix=Path('$taskPrefix');r=Path('/workspaces/repository')
 with Path(str(prefix)+'.wrapper.stdout').open('x') as o,Path(str(prefix)+'.wrapper.stderr').open('x') as e:
  p=subprocess.Popen(['/usr/bin/python3',str(r/'bench/results/graph_network_20261017/graph_network_server.py'),
  '--runtime',str(t),'--prefix',str(prefix),'--bind','$ServerIP','--mode','$Mode',
- '--operation','$Operation','--repeat','$Repeat','--cores','$Cores'],stdout=o,stderr=e,start_new_session=True)
+ '--operation','$Operation','--repeat','$Repeat','--cores','$Cores','--build','$Build'],stdout=o,stderr=e,start_new_session=True)
 while True:
  log=Path(str(prefix)+'.server.stdout');terminal=Path(str(prefix)+'.server_terminal.json')
  assert not terminal.exists(),terminal.read_text() if terminal.exists() else ''

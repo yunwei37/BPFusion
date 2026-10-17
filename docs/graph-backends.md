@@ -41,6 +41,11 @@ The matched native path needs no BPF attach:
 python3 examples/torch_graph_server.py build/graph_server_user_network_wait.so matmul --seconds 120
 ~~~
 
+The listener enables TCP_NODELAY for small streamed replies,as on the LLM
+adapter; both transports use that policy. See the
+[finite repair control](../bench/results/graph_network_20261017/nodelay-result.md),
+including its adverse native tail and measurement limits.
+
 The example captures upstream torch.mm (cuBLAS) or torch.fft.fft (cuFFT).
 Python remains alive to own the allocations; it does not execute per-request
 computation. Input/output are each64 raw float32 words: matmul takes a row-major
