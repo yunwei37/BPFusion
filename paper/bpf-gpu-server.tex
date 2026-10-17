@@ -175,7 +175,7 @@ all statistics.
 \section{Results}
 \label{sec:results}
 
-\subsection{LLM serving: the transport does not matter}
+\subsection{LLM serving: no measurable transport effect}
 
 \begin{table}[t]
 \centering
@@ -284,7 +284,8 @@ stayed within about 1\%.
 \centering
 \small
 \caption{Before/after effects of individual fixes (LLM workload). ``Both''
-means the fix and its gain apply to both transports.}
+means the fix and its gain apply to both transports; $^*$measured on the
+native transport only.}
 \label{tab:fixes}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.27\columnwidth}l>{\raggedright\arraybackslash}p{0.50\columnwidth}@{}}
 \toprule
@@ -294,7 +295,7 @@ TCP\_NODELAY & both & token-gap P99 40.5$\to$2.3\,ms; tokens/s 8,842$\to$11,260 
 EOF reclamation & kernel & failed requests 4,157$\to$0 of 57,600; tokens/s 7,793$\to$11,623 \\
 Active-wait polling & kernel & process CPU 1.70$\to$0.63\,ms per request \\
 Mixed prefill and decode~\cite{sarathi} & both & mean time per token 1.43$\to$1.23\,ms ($-14\%$) \\
-16$\to$32 GPU slots & both & completion P99 3,337$\to$217\,ms \\
+16$\to$32 GPU slots & both$^*$ & completion P99 3,337$\to$217\,ms \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -352,7 +353,7 @@ coordination still cancelled the user-time savings.
 \addplot[fill=blue!35] coordinates {(26.7,Kernel-owned) (84.5,Native epoll)};
 \addplot[fill=red!45] coordinates {(43.8,Kernel-owned) (0,Native epoll)};
 \addplot[fill=orange!55] coordinates {(27.0,Kernel-owned) (0,Native epoll)};
-\addplot[fill=black!15] coordinates {(2.5,Kernel-owned) (15.5,Native epoll)};
+\addplot[fill=black!15] coordinates {(2.4,Kernel-owned) (15.5,Native epoll)};
 \legend{network and softirq, loop coordination, BPF map operations, other}
 \end{axis}
 \end{tikzpicture}
