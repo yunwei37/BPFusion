@@ -12,5 +12,100 @@
       "target": "findings/0056-independent-gpu-queue-publication.md"
     }
   ],
-  "scope": "Tracked/current requested Markdown file/directory links;two immutable before-source links resolve at original docs/ base. External URLs and fragment anchors not asserted."
+  "scope": "Tracked/current requested Markdown file/directory links;two immutable before-source links resolve at original docs/ base. External URLs and fragment anchors not asserted.",
+  "fragment_audit": {
+    "utc": "2026-10-17T06:42:20.653115+00:00",
+    "scope": "Tracked Markdown local fragment links to existing Markdown targets, excluding immutable .before. source snapshots; fenced code is excluded from heading extraction. No external URL availability claim.",
+    "checked": 14,
+    "broken": [],
+    "links": [
+      {
+        "source": "README.md",
+        "target": "docs/getting-started.md#qualified-32-bank-mixed-profile",
+        "heading_exists": true
+      },
+      {
+        "source": "docs/architecture.md",
+        "target": "evaluation.md#historical-evidence-index",
+        "heading_exists": true
+      },
+      {
+        "source": "docs/architecture.md",
+        "target": "getting-started.md#qualified-32-bank-mixed-profile",
+        "heading_exists": true
+      },
+      {
+        "source": "docs/findings/0028-socket-readiness.md",
+        "target": "0027-timed-network-control.md#follow-up-cpu-localization-dependency-evidence",
+        "heading_exists": true
+      },
+      {
+        "source": "docs/findings/0079-kernel-network-source-integration.md",
+        "target": "../getting-started.md#experimental-kernel-owned-networking",
+        "heading_exists": true
+      },
+      {
+        "source": "docs/findings/0079-kernel-network-source-integration.md",
+        "target": "../graph-backends.md#transport-ownership-and-older-control",
+        "heading_exists": true
+      },
+      {
+        "source": "docs/findings/0080-resident-queue-relief.md",
+        "target": "../getting-started.md#qualified-32-bank-mixed-profile",
+        "heading_exists": true
+      },
+      {
+        "source": "docs/getting-started.md",
+        "target": "architecture.md#capacity-and-compatibility",
+        "heading_exists": true
+      },
+      {
+        "source": "docs/getting-started.md",
+        "target": "architecture.md#framing-queue-ownership-and-publication",
+        "heading_exists": true
+      },
+      {
+        "source": "docs/upstream-backends.md",
+        "target": "findings/0023-batch-execution-qualification.md#upstream-plow-sm120-build-and-mixed-numerical-qualification",
+        "heading_exists": true
+      },
+      {
+        "source": "docs/upstream-backends.md",
+        "target": "findings/0023-batch-execution-qualification.md#alpindale-rtx5090-qwen-qualification-complete-numerical-rejection",
+        "heading_exists": true
+      },
+      {
+        "source": "docs/upstream-backends.md",
+        "target": "findings/0023-batch-execution-qualification.md#upstream-model-as-a-kernel-sm120-qualification",
+        "heading_exists": true
+      },
+      {
+        "source": "docs/upstream-backends.md",
+        "target": "findings/0023-batch-execution-qualification.md#upstream-mpk-sm120-compatibility-and-terminal-numerical-rejection",
+        "heading_exists": true
+      },
+      {
+        "source": "docs/upstream-backends.md",
+        "target": "findings/0023-batch-execution-qualification.md#hf-graph-reuse-across-qwen-and-llama-architectures",
+        "heading_exists": true
+      }
+    ],
+    "repairs": [
+      {
+        "source": "docs/findings/0079-kernel-network-source-integration.md",
+        "old": "../graph-backends.md#experimental-bpf-owned-networking",
+        "new": "../graph-backends.md#transport-ownership-and-older-control"
+      },
+      {
+        "source": "docs/getting-started.md",
+        "old": "architecture.md#linux-kernel-dependency",
+        "new": "architecture.md#capacity-and-compatibility"
+      },
+      {
+        "source": "docs/getting-started.md",
+        "old": "architecture.md#eof-pending-reference-reclamation",
+        "new": "architecture.md#framing-queue-ownership-and-publication"
+      }
+    ]
+  }
 }

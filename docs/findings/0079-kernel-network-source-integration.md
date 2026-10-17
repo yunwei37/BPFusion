@@ -20,7 +20,7 @@ oracles and connection/cancellation coverage. Unobserved canceled requests
 and bounded diagnostic reply-record truncation remain explicit.
 
 See [getting started](../getting-started.md#experimental-kernel-owned-networking)
-and [graph caller guide](../graph-backends.md#experimental-bpf-owned-networking).
+and [graph caller guide](../graph-backends.md#transport-ownership-and-older-control).
 The graph boundary remains experimental fixed buffers/ABI1/at most64words,
 with separate autoregressive scheduling. Arbitrary CUDA/model plugin support
 and broader hardware/kernel compatibility are unproven.

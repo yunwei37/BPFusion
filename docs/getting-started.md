@@ -13,7 +13,7 @@ models and transports. This is a tested-host walkthrough, not a fresh-OS test.
 Demonstrated stack:x86-64 Linux 7.3-rc3 with BTF, cgroup v2, bpffs, io_uring BPF
 struct_ops/kfuncs and matching kernel UAPI headers; RTX 5090, CUDA toolkit 13.0(nvcc 13.0.88) and
 driver 610.57.04; Python 3.12 and libbpf 1.6.3.
-See [host](../bench/results/HOST.md) and [kernel boundary](architecture.md#linux-kernel-dependency).
+See [host](../bench/results/HOST.md) and [kernel boundary](architecture.md#capacity-and-compatibility).
 Use an existing root shell or privileged development container with GPU/BPF/
 cgroup/bpffs access. These steps do not change the host kernel or driver.
 
@@ -87,7 +87,7 @@ and matching BPF, loader, client and executor ABI. The explicit 16-bank result
 is a separate vLLM configuration, not an interchangeable module/map ABI.
 After the connection-reclamation update, rebuild every shared-page consumer
 with the current header; old BPF/loader/executor/module objects are incompatible.
-See the [ABI and EOF ownership contract](architecture.md#eof-pending-reference-reclamation).
+See the [ABI and EOF ownership contract](architecture.md#framing-queue-ownership-and-publication).
 
 ## Run the kernel-owned path
 

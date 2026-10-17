@@ -141,3 +141,17 @@ raw/source audits pass again without rerunning GPU measurements or replacing
 data. Actual client Job/Pod and ephemeral keys are gone;GPU contexts,BPF pins
 and benchmark/observer processes are absent. Final relative-link and owner
 result-review receipts are retained with the complete negative result.
+
+Goal completion audit: the original full TCP/HTTP-to-resident-real-model-to-
+kernel-TX objective is checked requirement by requirement in the existing
+[owner result review](../bench/results/graph_network_20261017/owner_result_review.json).
+Ordinary source builds, both-model replay/cancellation, absence of a steady
+userspace request worker, shared-capacity performance improvement and matched
+controls are evidenced. The later bounded graph experiment reaches the user-
+authorized negative exit; eBPF CPU/P99 superiority remains unproven. Three stale
+Markdown fragment targets are repaired and all 14 scoped fragment links resolve.
+No serving source, default, measurement or frozen historical evidence changes.
+After this forward main commit is remotely verified, the research goal is
+complete. Daily upkeep continues through the existing same-thread follow-up;
+future improvements require a concrete new fault or hypothesis, not another
+search for a favorable number.

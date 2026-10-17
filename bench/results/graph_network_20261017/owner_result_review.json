@@ -93,5 +93,95 @@
     "actual_measurement_end_utc": "2026-10-17T06:07:26.1922221Z",
     "retained_private_runtime_scope": "Original private build/analysis cache retained for same-Workspace reproduction; not an active server or new persistent service."
   },
-  "postincident_measured_window_overlaps": 0
+  "postincident_measured_window_overlaps": 0,
+  "goal_completion_audit": {
+    "utc": "2026-10-17T06:42:20.653115+00:00",
+    "reviewer": "original thread owner only",
+    "pre_audit_main": "215d15800e414e6be534cf7dc2850348e589acf5",
+    "scope": "Original engineering/performance objective together with the later explicit human bounded experiment and negative-result OSS exit; no requirement is discarded merely because it is inconvenient.",
+    "requirements": [
+      {
+        "requirement": "Complete Linux TCP/HTTP + eBPF/sockmap, shared kernel/GPU queue, resident real-model execution, GPU completion and asynchronous kernel TCP TX",
+        "evidence": [
+          "docs/findings/0079-kernel-network-source-integration.md",
+          "bench/results/kernel_network_integration_20261017/qualification_summary.json",
+          "bench/results/kernel_network_integration_20261017/archive_replay.json",
+          "executor/vllm_mixed.cu",
+          "executor/kernel_tcp.h",
+          "bpf/kernel_tcp.bpf.c",
+          "bpf/fusion.bpf.c"
+        ],
+        "result": "Ordinary Make source targets qualified on Qwen and Smol; each has 640 protocol outcomes and 23376 checked token values, with HTTP/binary, fragmentation, wrap, half-close, rejection and independent replay. Current real-model/transport sources remain byte-identical to the qualified snapshot."
+      },
+      {
+        "requirement": "No steady userspace request worker on the kernel path",
+        "evidence": [
+          "executor/vllm_mixed.cu",
+          "executor/kernel_tcp.h",
+          "bpf/kernel_tcp.bpf.c"
+        ],
+        "result": "Host launches the resident graph, then blocks in io_uring_enter. The struct_ops loop handles admission, CQ progress, GPU publication and reply submission until stop/drain. Native user_network is a different compile-time control. Kernel threads/io-wq/softirq still consume CPU; CPU-free serving is not claimed."
+      },
+      {
+        "requirement": "Correctness and lifecycle beyond a loaded module or isolated GPU output",
+        "evidence": [
+          "bench/results/kernel_network_integration_20261017/kernel_network_source_acceptance.statuses.json",
+          "bench/results/kernel_network_integration_20261017/qualification_summary.json",
+          "bench/results/resident_queue_relief_20261017/qualification.md",
+          "bench/results/resident_queue_relief_20261017/qualification_archive_replay.json"
+        ],
+        "result": "Both models pass independent graph/attention-metadata replay. Ordinary 8-slot reset/backlog-stop exercises 144 actions per model; 32-slot qualification checks 2764 outcomes/107136 tokens/1027 intended rejections and 480 lifecycle actions per model. Canceled unobserved generations are not represented as completed replies."
+      },
+      {
+        "requirement": "Try to improve throughput and latency with matched controls and official reference",
+        "evidence": [
+          "docs/findings/0080-resident-queue-relief.md",
+          "bench/results/resident_queue_relief_20261017/result.md",
+          "bench/results/resident_queue_relief_20261017/source_freeze_audit.json",
+          "bench/results/resident_queue_relief_20261017/owner-audit.md"
+        ],
+        "result": "Five blocks of 16/32 slots and official vLLM: 172800 requests, zero failures. Shared 32-slot profile raises 11639.616 to 12265.069 token/s and lowers completion P99 3337.271 to 217.356 ms; official is 12249.355 token/s and 405.869 ms. This fixes common queue/capacity pressure and does not establish an eBPF gain. Offered-load ceiling, adverse TPOT/device energy and quality limits remain explicit."
+      },
+      {
+        "requirement": "Later human decision: bounded real cuBLAS/cuFFT same-executor transport experiment and honest negative exit",
+        "evidence": [
+          "docs/findings/0081-small-graph-network-cpu.md",
+          "bench/results/graph_network_20261017/plan.md",
+          "bench/results/graph_network_20261017/owner_result_review.json"
+        ],
+        "result": "Completed 60 screening cells plus 30 independent confirmation cells: 3120000 measured requests, zero main failures. Work/rate saturation, service-only CPU affinity, remote client, per-request TGID/whole-host CPU and full tails are reported. None passes predeclared useful CPU/P99 criteria. Apply the user-authorized OSS-prototype negative exit rather than restarting tuning to obtain a positive result.",
+        "human_decision": "没有，就按开源项目标准收尾，诚实写明适用边界"
+      },
+      {
+        "requirement": "Reproducible source/raw results, honest OSS documentation and main commit/push",
+        "evidence": [
+          "README.md",
+          "docs/getting-started.md",
+          "docs/architecture.md",
+          "docs/evaluation.md",
+          "docs/graph-backends.md",
+          "docs/progress.md",
+          "bench/results/graph_network_20261017/relative_link_audit.json"
+        ],
+        "result": "Primary and independent replay, raw failed/retired prefixes, source freezes, figures, commands, prerequisites and limitations are published. Pre-audit main/origin main is 215d15800e414e6be534cf7dc2850348e589acf5. This forward documentation commit repairs three stale anchors; all 14 scoped local fragment targets then resolve. No serving source, default, measurement or metric is changed."
+      },
+      {
+        "requirement": "Preserve original session/WIP and spark-manage ownership boundaries; no other agent",
+        "evidence": [
+          "bench/results/graph_network_20261017/cleanup.json",
+          "bench/results/graph_network_20261017/owner_result_review.json"
+        ],
+        "result": "Original Workspace Pod UID/PVC and PID1/10909 start times preserved; temporary client Job/Pod and keys removed, GPU contexts/BPF pins/benchmark observers absent. Foreign tools/setup_env.sh remains untracked. Work stays in the matching Workspace/main. This completion audit, implementation, experiments, documentation and independent-code review are performed by this thread, without subagents or OMP."
+      },
+      {
+        "requirement": "Daily OSS upkeep and substantive-progress reflection",
+        "evidence": [
+          "docs/progress.md"
+        ],
+        "result": "Daily reflection and cleanup records are committed. Existing same-thread automation bpfusion is ACTIVE at daily 09:00 America/Los_Angeles; automation.toml status/rule checked in this audit. No competing schedule/runner is created. Future upkeep does not reopen the completed performance claim without new evidence or user direction."
+      }
+    ],
+    "verdict": "All finite engineering, correctness, matched comparison, performance-improvement attempt, bounded-experiment and publication requirements are evidenced. The later human-authorized negative exit is reached. No eBPF speed/total-CPU advantage, arbitrary-CUDA stable plugin interface, universal compatibility or attribution of the historical 6.36 ms difference is asserted.",
+    "next_action": "Commit/push these navigation repairs and completion records, verify remote publication, then mark the goal complete. Daily upkeep remains the existing separate follow-up."
+  }
 }
