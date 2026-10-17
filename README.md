@@ -32,6 +32,9 @@ completion coordination remain on both paths. Blog posts:
 [English](https://eunomia.dev/blog/2026/10/17/bpfusion-kernel-owned-networking/) and
 [中文](https://eunomia.dev/zh/blog/2026/10/17/bpfusion-kernel-owned-networking/).
 
+The [paper artifact](ARTIFACT.md) maps every table, data figure and key number
+to original data, with an offline replay and a bounded GPU smoke.
+
 ## Start here
 
 For the model-independent surface, follow the [captured-graph runbook](docs/graph-backends.md).

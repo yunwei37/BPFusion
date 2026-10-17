@@ -155,3 +155,13 @@ After this forward main commit is remotely verified, the research goal is
 complete. Daily upkeep continues through the existing same-thread follow-up;
 future improvements require a concrete new fault or hypothesis, not another
 search for a favorable number.
+
+## 2026-10-17 Los Angeles: paper artifact
+
+The user requests the four-page paper artifact at ad7982f;paper prose/PDF stays
+with its owner. This thread adds relative-path raw replay,both data figures,
+number comparisons and live rerun recipes. A new Python environment graph
+smoke passes4cells/64exact replies. The qualified libbpf header/runtime mix
+and Figure3 rounding mismatch are documented. Next decisive work is a clean
+committed-source replay and downloadable-input audit,not more performance
+search. README gains one artifact entry point;history/foreign setup_env.sh stay.
