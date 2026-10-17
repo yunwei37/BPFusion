@@ -235,7 +235,8 @@ def main():
         [tcp_before, tcp_after, mean(tcp, "output_tokens_per_s", mode="kernel_before", regime="closed16"),
          mean(tcp, "output_tokens_per_s", mode="kernel_after", regime="closed16")],
         [sum(x["failures"] for x in eof if x["condition"] == "global"),
-         sum(x["failures"] for x in eof if x["condition"] == "local"), 57600,
+         sum(x["failures"] for x in eof if x["condition"] == "local"),
+         sum(x["attempts"] for x in eof if x["condition"] == "global"),
          mean(eof, "output_tokens_per_s", condition="global"), mean(eof, "output_tokens_per_s", condition="local")],
         [mean(wait, "owned_group_cpu_ms_per_attempt", condition="before"),
          mean(wait, "owned_group_cpu_ms_per_attempt", condition="candidate")],
@@ -326,6 +327,12 @@ def main():
     inline("observer range us", r"cost (\d+) to (\d+)\\us", [min(observer), max(observer)])
     inline("abstract CPU split", r"\(([\d.]+)\+([\d.]+)\\us\{\} versus\s+([\d.]+)\+([\d.]+)\\us\)",
            [figure_cpu[0]["user"], figure_cpu[0]["system"], figure_cpu[1]["user"], figure_cpu[1]["system"]])
+    inline("official tail near 0.6 seconds", r"vLLM stayed near ([\d.]+)\\,s",
+           [mean(official, "connect_completion_ms_p99", condition="official") / 1000])
+    inline("FFT total CPU change about one percent", r"totals\s+stayed within about (\d+)\\%",
+           [(figure_cpu[1]["total"] / figure_cpu[0]["total"] - 1) * 100])
+    inline("roughly 38 microseconds", r"roughly (\d+)\\us",
+           [st.mean(x["total"] for x in figure_cpu)])
     # Approximate order-of-magnitude prose, explicitly looser than rounded table values.
     inline("approximate slot tail factor", r"a (\d+)\$\\times\$ lower completion", [fixes[4][0] / fixes[4][1]], tolerance=1)
     inline("approximate NODELAY tail factor", r"a (\d+)\$\\times\$ lower token-gap", [tcp_before / tcp_after], tolerance=1)
@@ -361,7 +368,7 @@ def main():
     inline("graph request/reply bytes and connections", r"with (\d+)-byte requests,\s+(\d+)-byte replies and (\d+) persistent connections",
            [24 + 64 * 4, 64 * 4, raw_meta["workers"] * raw_meta["connections_per_worker"]])
     inline("LLM tokens/rate/duration/offered tokens", r"output tokens, (\d+) requests/s for (\d+)\\,s \(([\d,]+) offered tokens/s\)",
-           [official[0]["rate"], 60, official[0]["rate"] * 64])
+           [official[0]["rate"], official[0]["attempts"] / official[0]["rate"], official[0]["rate"] * 64])
     inline("LLM output tokens", r"short prompts, (\d+)\s+output tokens", [official[0]["output_tokens"] / official[0]["successes"]])
     host = json.loads((g / "preflight_environment.json").read_text())
     inline("logical CPUs", r"285K \((\d+) logical\s+CPUs\)", [len(host["server_allowed_cpus"])])
